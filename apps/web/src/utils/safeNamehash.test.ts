@@ -1,30 +1,29 @@
-import { namehash } from '@ethersproject/hash'
-import { safeNamehash } from 'utils/safeNamehash'
+import { createUtilities } from '@universe/chains'
+import { safeNamehash } from '~/utils/safeNamehash'
+
+const { namehash: ethersNamehash } = createUtilities({ getViemEnabled: () => false })
+const { namehash: viemNamehash } = createUtilities({ getViemEnabled: () => true })
 
 describe('safeNamehash', () => {
-  const emoji = '🙂'
-  const textname = 'textname'
-  const zeroWidthJoiner = '‍'
+  const zeroWidthJoiner = '\u200D'
 
-  it('namehash works on text', () => {
-    expect(namehash(textname)).toEqual('0xdf9f9b4fcb3ade7e9511f102ef22522bdd82ea57c5e03ce4acb63f1bf78befc6')
-  })
-
-  it('namehash works on emoji', () => {
-    expect(namehash(emoji)).toEqual('0x2d241026bcc4bd7e3be134b85d4a4e2baa61e1a682492f40361ba92aee2bf82e')
-  })
-
-  // suppress console.debug for the next test
+  // suppress console.debug
   beforeEach(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    jest.spyOn(console, 'info').mockImplementation(() => {})
+    vi.spyOn(console, 'info').mockImplementation(() => {})
   })
 
-  it('namehash does not work', () => {
-    expect(() => namehash(zeroWidthJoiner)).toThrow()
+  it('returns undefined on undefined input', () => {
+    expect(safeNamehash(ethersNamehash, undefined)).toEqual(undefined)
+    expect(safeNamehash(viemNamehash, undefined)).toEqual(undefined)
   })
 
-  it('safenamehash works', () => {
-    expect(safeNamehash(zeroWidthJoiner)).toEqual(undefined)
+  it('ethersNamehash returns undefined on invalid input', () => {
+    expect(safeNamehash(ethersNamehash, zeroWidthJoiner)).toEqual(undefined)
+  })
+
+  it('viemNamehash returns undefined on invalid input', () => {
+    // Specified by @adraffy/ens-normalize used in viem
+    const result = '0xd6eddcccdcf5a029b8c6a5ba0d52acbffea6d1f9a1a16cc32591942d464084d7'
+    expect(safeNamehash(viemNamehash, zeroWidthJoiner)).toEqual(result)
   })
 })

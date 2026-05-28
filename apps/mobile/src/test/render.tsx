@@ -2,22 +2,23 @@ import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  render as RNRender,
-  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
+  render as RNRender,
+  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
-import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import type { MobileState } from 'src/app/mobileReducer'
+import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { store as appStore, persistedReducer } from 'src/app/store'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 type AppStore = typeof appStore
@@ -25,7 +26,7 @@ type AppStore = typeof appStore
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -55,17 +56,17 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <BlankUrlProvider>
-          <SharedWalletProvider reduxStore={store}>
-            <UnitagUpdaterContextProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <BlankUrlProvider>
+            <SharedWalletProvider reduxStore={store}>
               <NavigationContainer ref={navigationRef}>
                 <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
               </NavigationContainer>
-            </UnitagUpdaterContextProvider>
-          </SharedWalletProvider>
-        </BlankUrlProvider>
-      </AutoMockedApolloProvider>
+            </SharedWalletProvider>
+          </BlankUrlProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 
@@ -76,7 +77,7 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -123,17 +124,17 @@ export function renderHookWithProviders<P, R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <BlankUrlProvider>
-          <NavigationContainer ref={navigationRef}>
-            <SharedWalletProvider reduxStore={store}>
-              <UnitagUpdaterContextProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <BlankUrlProvider>
+            <NavigationContainer ref={navigationRef}>
+              <SharedWalletProvider reduxStore={store}>
                 <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-              </UnitagUpdaterContextProvider>
-            </SharedWalletProvider>
-          </NavigationContainer>
-        </BlankUrlProvider>
-      </AutoMockedApolloProvider>
+              </SharedWalletProvider>
+            </NavigationContainer>
+          </BlankUrlProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 

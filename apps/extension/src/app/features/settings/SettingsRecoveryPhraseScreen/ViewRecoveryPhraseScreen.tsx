@@ -1,61 +1,74 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
+import { EnterPasswordModal } from 'src/app/features/settings/password/EnterPasswordModal'
 import { SeedPhraseDisplay } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SeedPhraseDisplay'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
-import { EnterPasswordModal } from 'src/app/features/settings/password/EnterPasswordModal'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled, Eye, Key, Laptop } from 'ui/src/components/icons'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useTimeout } from 'utilities/src/time/timing'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
+
+const HIDE_PHRASE_TIMEOUT_MS = ONE_MINUTE_MS * 2
 
 const enum ViewStep {
-  Warning,
-  Password,
-  Reveal,
+  Warning = 0,
+  Password = 1,
+  Reveal = 2,
 }
 
-export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
+/**
+ * This screen is rendered both as a settings route and as a modal in the force upgrade prompt.
+ * When making UI changes, please verify both versions look good.
+ */
+export function ViewRecoveryPhraseScreen({
+  mnemonicId: mnemonicIdProp,
+  showRemoveButton = true,
+  onBackClick,
+}: {
+  mnemonicId?: string
+  showRemoveButton?: boolean
+  onBackClick?: () => void
+}): JSX.Element {
   const { t } = useTranslation()
 
   const [viewStep, setViewStep] = useState(ViewStep.Warning)
 
   const mnemonicAccounts = useSignerAccounts()
   const mnemonicAccount = mnemonicAccounts[0]
-  if (!mnemonicAccount) {
-    throw new Error('Screen should not be accessed unless mnemonic account exists')
+
+  const mnemonicId = mnemonicIdProp ?? mnemonicAccount?.mnemonicId
+
+  const navigateBackToWarningWithPasswordModal = useEvent((): void => {
+    setViewStep(ViewStep.Password)
+  })
+
+  // If the phrase is revealed, navigate back to the warning step after the timeout
+  useTimeout(navigateBackToWarningWithPasswordModal, viewStep === ViewStep.Reveal ? HIDE_PHRASE_TIMEOUT_MS : -1)
+
+  if (!mnemonicId) {
+    throw new Error('Invalid render of `ViewRecoveryPhraseScreen` without `mnemonicId`')
   }
 
   const showPasswordModal = (): void => {
     setViewStep(ViewStep.Password)
   }
 
-  useEffect(() => {
-    sendAnalyticsEvent(WalletEventName.ViewRecoveryPhrase)
-
-    // Clear clipboard when the component unmounts
-    return () => {
-      navigator.clipboard.writeText('').catch((error) => {
-        logger.error(error, {
-          tags: { file: 'SettingsViewRecoveryPhraseScreen.tsx', function: 'maybeClearClipboard' },
-        })
-      })
-    }
-  }, [])
-
   return (
     <Flex grow backgroundColor="$surface1">
-      <ScreenHeader title={t('settings.setting.recoveryPhrase.title')} />
+      <ScreenHeader title={t('settings.setting.recoveryPhrase.title')} onBackClick={onBackClick} />
+
       {viewStep !== ViewStep.Reveal ? (
         <SettingsRecoveryPhrase
           icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
           nextButtonEnabled={true}
           nextButtonText={t('common.button.continue')}
-          nextButtonTheme="secondary_Button"
+          nextButtonEmphasis="secondary"
           subtitle={t('setting.recoveryPhrase.view.warning.message1')}
           title={t('setting.recoveryPhrase.view.warning.title')}
           onNextPressed={showPasswordModal}
@@ -65,6 +78,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             onClose={() => setViewStep(ViewStep.Warning)}
             onNext={() => setViewStep(ViewStep.Reveal)}
           />
+
           <Flex
             alignItems="flex-start"
             borderColor="$surface3"
@@ -72,6 +86,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             borderWidth="$spacing1"
             gap="$spacing24"
             p="$spacing12"
+            mb="$spacing12"
           >
             <Flex row alignItems="center" gap="$spacing12">
               <Flex p={6}>
@@ -81,6 +96,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
                 {t('setting.recoveryPhrase.view.warning.message2')}
               </Text>
             </Flex>
+
             <Flex row alignItems="center" gap="$spacing12" width="100%">
               <Flex p={6}>
                 <Key color="$statusCritical" size="$icon.24" />
@@ -89,6 +105,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
                 {t('setting.recoveryPhrase.view.warning.message3')}
               </Text>
             </Flex>
+
             <Flex row alignItems="center" gap="$spacing12">
               <Flex p={6}>
                 <Laptop color="$statusCritical" size="$icon.24" />
@@ -101,25 +118,32 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
         </SettingsRecoveryPhrase>
       ) : (
         <Flex fill gap="$spacing24" pt="$spacing36">
-          <SeedPhraseDisplay mnemonicId={mnemonicAccount.mnemonicId} />
+          <SeedPhraseDisplay mnemonicId={mnemonicId} expectedWordCount={getExpectedMnemonicLength(mnemonicAccount)} />
+
           <Flex alignItems="center" gap="$spacing8">
             <Text color="$neutral2" textAlign="center" variant="body3">
               {t('setting.recoveryPhrase.warning.view.message')}
             </Text>
           </Flex>
-          <Flex fill justifyContent="flex-end">
-            <DeprecatedButton
-              theme="detrimental"
-              onPress={(): void =>
-                navigate(
-                  `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
-                  { replace: true },
-                )
-              }
-            >
-              {t('setting.recoveryPhrase.remove')}
-            </DeprecatedButton>
-          </Flex>
+
+          {showRemoveButton && (
+            <Flex fill justifyContent="flex-end">
+              <Flex row>
+                <Button
+                  variant="critical"
+                  emphasis="secondary"
+                  onPress={(): void =>
+                    navigate(
+                      `/${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
+                      { replace: true },
+                    )
+                  }
+                >
+                  {t('setting.recoveryPhrase.remove')}
+                </Button>
+              </Flex>
+            </Flex>
+          )}
         </Flex>
       )}
     </Flex>

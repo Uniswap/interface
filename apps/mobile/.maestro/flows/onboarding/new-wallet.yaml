@@ -1,0 +1,116 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+tags:
+  - language-agnostic
+env:
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize tracking at the very beginning
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start flow tracking (includes setup time)
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'onboarding-new-wallet'
+
+# Run prerequisite flows (tracked as sub-flows)
+- runFlow: ../../shared-flows/start.yaml
+
+# Track Create Account tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'CreateAccount'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.CreateAccount}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'CreateAccount'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track Skip Unitag tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-Unitag'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Skip} # unitag
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-Unitag'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track Skip Notifications tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-Notifications'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Skip} # notifications
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-Notifications'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track Skip FaceID tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-FaceID'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Skip} # faceid
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Skip-FaceID'
+      PHASE: 'end'
+
+# Run biometrics confirmation (tracked internally as sub-flow)
+- runFlow: ../../shared-flows/biometrics-confirm.yaml
+
+# Track home screen assertion
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'assertVisible'
+      TARGET: 'AccountHeaderAvatar'
+      PHASE: 'start'
+- assertVisible:
+    id: ${output.testIds.AccountHeaderAvatar}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'assertVisible'
+      TARGET: 'AccountHeaderAvatar'
+      PHASE: 'end'
+
+# End flow tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload metrics to Datadog (for Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

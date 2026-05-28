@@ -1,14 +1,14 @@
-import React, { ReactNode, memo } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import React, { memo, ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle } from 'react-native'
+import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenItemChart } from 'src/components/explore/TokenItemChart'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
-import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -23,6 +23,8 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { noop } from 'utilities/src/react/noop'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 interface TokenItemProps {
@@ -38,7 +40,7 @@ interface TokenItemProps {
   onPriceWrapperLayout?: (layout: LayoutRectangle) => void
 }
 
-export const TokenItem = memo(function _TokenItem({
+export const TokenItem = memo(function TokenItemInner({
   tokenItemData,
   index,
   metadataDisplayType,
@@ -51,8 +53,10 @@ export const TokenItem = memo(function _TokenItem({
   onPriceWrapperLayout,
 }: TokenItemProps) {
   const { t } = useTranslation()
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const colors = useSporeColors()
 
   const {
     name,
@@ -71,7 +75,7 @@ export const TokenItem = memo(function _TokenItem({
   const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
   const totalValueLockedFormatted = convertFiatAmountFormatted(totalValueLocked, NumberType.FiatTokenDetails)
 
-  const getMetadataSubtitle = (): string | undefined => {
+  const metadataSubtitle = useMemo((): string | undefined => {
     switch (metadataDisplayType) {
       case TokenMetadataDisplayType.MarketCap:
         return t('explore.tokens.metadata.marketCap', { number: marketCapFormatted })
@@ -86,9 +90,13 @@ export const TokenItem = memo(function _TokenItem({
       default:
         return undefined
     }
-  }
+  }, [metadataDisplayType, marketCapFormatted, volume24hFormatted, totalValueLockedFormatted, symbol, t])
 
-  const onPress = (): void => {
+  const onLayout = useEvent((e: LayoutChangeEvent): void => {
+    onPriceWrapperLayout?.(e.nativeEvent.layout)
+  })
+
+  const onPress = useEvent((): void => {
     tokenDetailsNavigation.preload(_currencyId)
     tokenDetailsNavigation.navigate(_currencyId)
     sendAnalyticsEvent(eventName, {
@@ -97,7 +105,7 @@ export const TokenItem = memo(function _TokenItem({
       name: tokenItemData.name,
       position: index + 1,
     })
-  }
+  })
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
     chainId,
@@ -106,8 +114,8 @@ export const TokenItem = memo(function _TokenItem({
   })
 
   return (
-    <ContextMenu actions={menuActions} onPress={onContextMenuPress}>
-      <TouchableArea testID={`token-item-${name}`} onLongPress={disableOnPress} onPress={onPress}>
+    <ContextMenu actions={menuActions} previewBackgroundColor={colors.surface1.val} onPress={onContextMenuPress}>
+      <TouchableArea testID={`token-item-${name}`} onLongPress={noop} onPress={onPress}>
         {overlay}
         <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
           <Flex centered row gap="$spacing4">
@@ -118,24 +126,26 @@ export const TokenItem = memo(function _TokenItem({
                 </Text>
               </Flex>
             )}
-            <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl} />
+            <TokenLogo
+              chainId={chainId}
+              hideNetworkLogo={
+                multichainTokenUxEnabled && tokenItemData.networkCount !== undefined && tokenItemData.networkCount > 1
+              }
+              name={name}
+              symbol={symbol}
+              url={logoUrl}
+            />
           </Flex>
           <Flex fill shrink gap="$spacing2">
             <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
             <Text color="$neutral2" numberOfLines={1} testID="token-item/metadata-subtitle" variant="subheading2">
-              {getMetadataSubtitle()}
+              {metadataSubtitle}
             </Text>
           </Flex>
           {showChart && <TokenItemChart height={20} tokenItemData={tokenItemData} width={40} />}
-          <Flex
-            row
-            alignItems="center"
-            justifyContent="flex-end"
-            onLayout={(e) => onPriceWrapperLayout?.(e.nativeEvent.layout)}
-            {...priceWrapperProps}
-          >
+          <Flex row alignItems="center" justifyContent="flex-end" onLayout={onLayout} {...priceWrapperProps}>
             <TokenMetadata>
               <Text lineHeight={24} testID="token-item/price" variant="body1">
                 {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}

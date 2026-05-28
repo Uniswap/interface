@@ -11,7 +11,7 @@ export type InputProps = {
 
 export type Input = TamaguiInput
 
-export const Input = forwardRef<Input, InputProps>(function _Input(
+export const Input = forwardRef<Input, InputProps>(function InputInner(
   { large = false, hideInput = false, centered = false, ...rest }: InputProps,
   ref,
 ): JSX.Element {

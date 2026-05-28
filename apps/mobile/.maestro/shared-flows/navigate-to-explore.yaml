@@ -1,0 +1,26 @@
+appId: com.uniswap.mobile.dev
+---
+# Navigate from the main wallet screen to Explore.
+# Tap the Explore tab in the bottom tab bar.
+
+# Wait for the home screen to be visible
+- extendedWaitUntil:
+    visible: "noop"
+    timeout: 2000
+    optional: true
+
+# Primary — bottom tab bar Explore tab
+- tapOn:
+    id: ${output.testIds.ExploreTab}
+
+# Wait for tab animations to complete (200ms animation duration)
+- waitForAnimationToEnd
+
+# Verify Explore: search input visible
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ExploreSearchInput}
+    timeout: 3000
+
+- assertVisible:
+    id: ${output.testIds.ExploreSearchInput}

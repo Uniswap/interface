@@ -1,5 +1,6 @@
+import { isWebPlatform } from '@universe/environment'
 import { PropsWithChildren } from 'react'
-import { Flex, Text, Tooltip, isWeb } from 'ui/src'
+import { Flex, type PopperProps, Text, Tooltip, useMedia } from 'ui/src'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 
 const TOOLTIP_REST_MS = 20
@@ -16,40 +17,54 @@ export function InfoTooltip({
   maxWidth,
   placement,
   open,
+  enabled = true,
+  onOpenChange,
 }: PropsWithChildren<InfoTooltipProps>): JSX.Element {
+  // On xsmall screens, if tooltip placement is right or left
+  // Override b/c the tooltip will overflow off the screen
+  const media = useMedia()
+  const alignmentsToOverride = ['left', 'right'] as PopperProps['placement'][]
+
+  if (placement && alignmentsToOverride.includes(placement) && media.xs) {
+    placement = 'top'
+  }
+
   return (
     <Flex row shrink alignItems="center" gap="$spacing4">
       {triggerPlacement === 'end' && children}
       <Tooltip
-        {...(open !== undefined && { open })}
+        open={enabled ? open : false}
         delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }}
         placement={placement}
         restMs={TOOLTIP_REST_MS}
+        onOpenChange={onOpenChange}
       >
-        <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
-        {text && (
-          <Tooltip.Content maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
-            <Flex row alignItems="center" gap="$spacing8">
-              <Flex grow>{icon}</Flex>
-              <Flex shrink gap="$spacing4">
-                {title && (
-                  <Text alignSelf="flex-start" variant="body4">
-                    {title}
+        <Flex shrink>
+          <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
+          {text && (
+            <Tooltip.Content pointerEvents="auto" maxWidth={maxWidth ?? (isWebPlatform ? 280 : '100%')} mx="$spacing24">
+              <Flex row alignItems="center" gap="$spacing8">
+                {icon && <Flex grow>{icon}</Flex>}
+                <Flex shrink gap="$spacing4">
+                  {title && (
+                    <Text alignSelf="flex-start" variant="body4">
+                      {title}
+                    </Text>
+                  )}
+                  <Text color="$neutral2" variant="body4">
+                    {text}
                   </Text>
-                )}
-                <Text color="$neutral2" variant="body4">
-                  {text}
-                </Text>
-                {button && (
-                  <Flex alignSelf="flex-start" width="100%">
-                    {button}
-                  </Flex>
-                )}
+                  {button && (
+                    <Flex alignSelf="flex-start" width="100%">
+                      {button}
+                    </Flex>
+                  )}
+                </Flex>
               </Flex>
-            </Flex>
-            <Tooltip.Arrow />
-          </Tooltip.Content>
-        )}
+              <Tooltip.Arrow />
+            </Tooltip.Content>
+          )}
+        </Flex>
       </Tooltip>
       {triggerPlacement === 'start' && children}
     </Flex>

@@ -4,24 +4,22 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
-import { TripleDot } from 'src/components/icons/TripleDot'
-import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { TouchableArea } from 'ui/src'
+import { Ellipsis } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getPortfolioUrl, openUri } from 'uniswap/src/utils/linking'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
-import { getProfileUrl } from 'wallet/src/utils/linking'
+import { noop } from 'utilities/src/react/noop'
 
 type MenuAction = {
   title: string
@@ -32,7 +30,9 @@ type MenuAction = {
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const { defaultChainId } = useEnabledChains()
 
   const onPressCopyAddress = useCallback(async () => {
@@ -49,7 +49,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {
-    await openUri(getExplorerLink(defaultChainId, address, ExplorerDataType.ADDRESS))
+    await openUri({
+      uri: getExplorerLink({ chainId: defaultChainId, data: address, type: ExplorerDataType.ADDRESS }),
+    })
   }, [address, defaultChainId])
 
   const onReportProfile = useCallback(async () => {
@@ -57,7 +59,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     params.append('tf_11041337007757', address) // Wallet Address
     params.append('tf_7005922218125', 'report_unitag') // Report Type Dropdown
     const prefilledRequestUrl = uniswapUrls.helpRequestUrl + '?' + params.toString()
-    openUri(prefilledRequestUrl).catch((e) =>
+    openUri({ uri: prefilledRequestUrl }).catch((e) =>
       logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } }),
     )
   }, [address])
@@ -67,7 +69,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       return
     }
     try {
-      const url = getProfileUrl(address)
+      const url = getPortfolioUrl(address)
       await Share.share({
         message: url,
       })
@@ -115,19 +117,12 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       actions={menuActions}
       dropdownMenuMode={true}
       onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+        // oxlint-disable-next-line typescript/await-thenable -- biome-parity: oxlint is stricter here
         await menuActions[e.nativeEvent.index]?.action()
       }}
     >
-      <TouchableArea
-        backgroundColor="$surface3"
-        borderRadius="$roundedFull"
-        opacity={0.8}
-        p="$spacing8"
-        onLongPress={disableOnPress}
-      >
-        <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
-          <TripleDot color="$white" size={3.5} />
-        </Flex>
+      <TouchableArea centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8" onLongPress={noop}>
+        <Ellipsis color="$neutral2" size="$icon.16" />
       </TouchableArea>
     </ContextMenu>
   )

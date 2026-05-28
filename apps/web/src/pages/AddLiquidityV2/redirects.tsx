@@ -1,25 +1,17 @@
-import AddLiquidityV2 from 'pages/AddLiquidityV2/index'
-import { Navigate, useParams } from 'react-router-dom'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Navigate, useParams } from 'react-router'
+import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
-export default function AddLiquidityV2WithTokenRedirects() {
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+export function AddLiquidityV2WithTokenRedirects() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
 
-  if (isLPRedesignEnabled) {
-    const url = new URL('/positions/create/v2', window.location.origin)
-    if (currencyIdA) {
-      url.searchParams.append('currencyA', currencyIdA)
-    }
-    if (currencyIdB && currencyIdA?.toLowerCase() !== currencyIdB?.toLowerCase()) {
-      url.searchParams.append('currencyB', currencyIdB)
-    }
-    return <Navigate to={url.pathname + url.search} replace />
+  const url = new URL('/positions/create/v2', window.location.origin)
+  if (currencyIdA) {
+    url.searchParams.append('currencyA', currencyIdA)
   }
-  if (currencyIdA && currencyIdB && currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
-    return <Navigate to={`/add/v2/${currencyIdA}`} replace />
+  if (currencyIdB && (!currencyIdA || !areCurrencyIdsEqual(currencyIdA, currencyIdB))) {
+    url.searchParams.append('currencyB', currencyIdB)
   }
-
-  return <AddLiquidityV2 />
+  return <Navigate to={url.pathname + url.search} replace />
 }
+
+export default AddLiquidityV2WithTokenRedirects

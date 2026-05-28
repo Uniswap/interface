@@ -1,0 +1,322 @@
+/* Mycelium Theme Tokens for Tailwind v4 */
+
+@theme {
+  /* Font Families - these create font-* utilities */
+  --font-basel: "Basel Grotesk", sans-serif;
+  --font-basel-book: "Basel Grotesk Book", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-basel-medium: "Basel Grotesk Medium", -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "InputMono-Regular", monospace;
+
+  /* Font Weights */
+  --font-weight-book: 485;
+  --font-weight-medium: 535;
+
+  /* Breakpoints */
+  --breakpoint-xxs: 360px;
+  --breakpoint-xs: 380px;
+  --breakpoint-sm: 450px;
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 768px;
+  --breakpoint-xl: 1024px;
+  --breakpoint-xxl: 1280px;
+  --breakpoint-xxxl: 1536px;
+
+  /* Typography Scale - Headings (creates text-heading-* utilities) */
+  --text-heading-1: 52px;
+  --text-heading-1--line-height: 60px;
+  --text-heading-1--letter-spacing: -0.02em;
+  --text-heading-1--font-weight: 485;
+
+  --text-heading-2: 36px;
+  --text-heading-2--line-height: 44px;
+  --text-heading-2--letter-spacing: -0.01em;
+  --text-heading-2--font-weight: 485;
+
+  --text-heading-3: 24px;
+  --text-heading-3--line-height: 32px;
+  --text-heading-3--letter-spacing: -0.005em;
+  --text-heading-3--font-weight: 485;
+
+  /* Typography Scale - Subheadings */
+  --text-subheading-1: 18px;
+  --text-subheading-1--line-height: 24px;
+  --text-subheading-1--font-weight: 485;
+
+  --text-subheading-2: 16px;
+  --text-subheading-2--line-height: 24px;
+  --text-subheading-2--font-weight: 485;
+
+  /* Typography Scale - Body */
+  --text-body-1: 18px;
+  --text-body-1--line-height: 24px;
+  --text-body-1--font-weight: 485;
+
+  --text-body-2: 16px;
+  --text-body-2--line-height: 24px;
+  --text-body-2--font-weight: 485;
+
+  --text-body-3: 14px;
+  --text-body-3--line-height: 20px;
+  --text-body-3--font-weight: 485;
+
+  --text-body-4: 12px;
+  --text-body-4--line-height: 16px;
+  --text-body-4--font-weight: 485;
+
+  /* Typography Scale - Buttons */
+  --text-button-1: 18px;
+  --text-button-1--line-height: 24px;
+  --text-button-1--font-weight: 535;
+
+  --text-button-2: 16px;
+  --text-button-2--line-height: 24px;
+  --text-button-2--font-weight: 535;
+
+  --text-button-3: 14px;
+  --text-button-3--line-height: 20px;
+  --text-button-3--font-weight: 535;
+
+  --text-button-4: 12px;
+  --text-button-4--line-height: 16px;
+  --text-button-4--font-weight: 535;
+
+  /* Base Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Semantic Colors - Background */
+  --color-background: #ffffff;
+  --color-background-dark: #000000;
+
+  /* Semantic Colors - Neutrals */
+  --color-neutral1-light: #222222;
+  --color-neutral1-dark: #ffffff;
+  --color-neutral2-light: #7d7d7d;
+  --color-neutral2-dark: #9b9b9b;
+  --color-neutral3-light: #cecece;
+  --color-neutral3-dark: #5e5e5e;
+
+  /* Semantic Colors - Surfaces */
+  --color-surface1-light: #ffffff;
+  --color-surface1-dark: #131313;
+  --color-surface1-hovered: #f5f5f5;
+  --color-surface1-hovered-dark: #181818;
+
+  --color-surface2-light: #f9f9f9;
+  --color-surface2-dark: #1b1b1b;
+  --color-surface2-hovered: #f2f2f2;
+  --color-surface2-hovered-dark: #242424;
+
+  --color-surface3-light: #22222212;
+  --color-surface3-dark: #ffffff12;
+  --color-surface3-hovered: rgba(34, 34, 34, 0.12);
+  --color-surface3-hovered-dark: rgba(255, 255, 255, 0.16);
+
+  --color-surface4-light: #ffffff64;
+  --color-surface4-dark: #ffffff20;
+
+  --color-surface5-light: #00000004;
+  --color-surface5-dark: #00000004;
+
+  /* Semantic Colors - Accents */
+  --color-accent1-light: #ff37c7;
+  --color-accent1-dark: #ff37c7;
+  --color-accent2-light: #ffefff;
+  --color-accent2-dark: #311c31;
+  --color-accent3: #4c82fb;
+  --color-accent3-dark: #4c82fb;
+  --color-accent4: #fdaff0;
+  --color-accent4-light: #fef4ff;
+
+  /* Token Colors */
+  --color-token0: #fc72ff;
+  --color-token0-dark: #fc72ff;
+  --color-token1: #4c82fb;
+  --color-token1-dark: #4c82fb;
+
+  /* Status Colors */
+  --color-success-light: #0c8911;
+  --color-success-dark: #21c95e;
+  --color-critical-light: #e10f0f;
+  --color-critical-dark: #ff593c;
+  --color-critical-secondary: #fff2f1;
+  --color-critical-secondary-dark: #2e0805;
+  --color-warning: #eeb317;
+
+  /* Network Colors */
+  --color-network-ethereum: #627eea;
+  --color-network-optimism: #ff0420;
+  --color-network-polygon: #a457ff;
+  --color-network-arbitrum: #28a0f0;
+  --color-network-bsc: #f0b90b;
+  --color-network-base: #0052ff;
+  --color-network-blast: #fcfc03;
+
+  /* Decorative/Pattern Colors */
+  --color-pattern-dots-dark: rgba(252, 116, 254, 0.08);
+  --color-pattern-dots-light: rgba(252, 116, 254, 0.2);
+
+  /* Gray Palette */
+  --color-gray-50: #f5f6fc;
+  --color-gray-100: #e8ecfb;
+  --color-gray-150: #d2d9ee;
+  --color-gray-200: #b8c0dc;
+  --color-gray-250: #a6afca;
+  --color-gray-300: #98a1c0;
+  --color-gray-350: #888fab;
+  --color-gray-400: #7780a0;
+  --color-gray-450: #6b7594;
+  --color-gray-500: #5d6785;
+  --color-gray-550: #505a78;
+  --color-gray-600: #404a67;
+  --color-gray-650: #333d59;
+  --color-gray-700: #293249;
+  --color-gray-750: #1b2236;
+  --color-gray-800: #131a2a;
+  --color-gray-850: #0e1524;
+  --color-gray-900: #0d111c;
+  --color-gray-950: #080b11;
+
+  /* Pink Palette */
+  --color-pink-50: #f9ecf1;
+  --color-pink-100: #ffd9e4;
+  --color-pink-200: #fba4c0;
+  --color-pink-300: #ff6fa3;
+  --color-pink-400: #fb118e;
+  --color-pink-500: #c41969;
+  --color-pink-600: #8c0f49;
+  --color-pink-700: #55072a;
+  --color-pink-800: #350318;
+  --color-pink-900: #2b000b;
+  --color-pink-vibrant: #f50db4;
+  --color-pink-base: #fc74fe;
+
+  /* Red Palette */
+  --color-red-50: #faecea;
+  --color-red-100: #fed5cf;
+  --color-red-200: #fea79b;
+  --color-red-300: #fd766b;
+  --color-red-400: #fa2b39;
+  --color-red-500: #c4292f;
+  --color-red-600: #891e20;
+  --color-red-700: #530f0f;
+  --color-red-800: #380a03;
+  --color-red-900: #240800;
+  --color-red-vibrant: #f14544;
+
+  /* Yellow Palette */
+  --color-yellow-50: #f6f2d5;
+  --color-yellow-100: #dbbc19;
+  --color-yellow-200: #dbbc19;
+  --color-yellow-300: #bb9f13;
+  --color-yellow-400: #a08116;
+  --color-yellow-500: #866311;
+  --color-yellow-600: #5d4204;
+  --color-yellow-700: #3e2b04;
+  --color-yellow-800: #231902;
+  --color-yellow-900: #180f02;
+  --color-yellow-vibrant: #faf40a;
+
+  /* Green Palette */
+  --color-green-50: #e3f3e6;
+  --color-green-100: #bfeeca;
+  --color-green-200: #76d191;
+  --color-green-300: #40b66b;
+  --color-green-400: #209853;
+  --color-green-500: #0b783e;
+  --color-green-600: #0c522a;
+  --color-green-700: #053117;
+  --color-green-800: #091f10;
+  --color-green-900: #09130b;
+  --color-green-vibrant: #5cfe9d;
+
+  /* Blue Palette */
+  --color-blue-50: #edeff8;
+  --color-blue-100: #dee1ff;
+  --color-blue-200: #adbcff;
+  --color-blue-300: #869eff;
+  --color-blue-400: #4c82fb;
+  --color-blue-500: #1267d6;
+  --color-blue-600: #1d4294;
+  --color-blue-700: #09265e;
+  --color-blue-800: #0b193f;
+  --color-blue-900: #040e34;
+  --color-blue-vibrant: #587bff;
+
+  /* Gold Palette */
+  --color-gold-200: #eeb317;
+  --color-gold-400: #b17900;
+  --color-gold-vibrant: #feb239;
+
+  /* Magenta Palette */
+  --color-magenta-300: #fd82ff;
+  --color-magenta-vibrant: #fc72ff;
+
+  /* Purple Palette */
+  --color-purple-300: #8440f2;
+  --color-purple-900: #1c0337;
+  --color-purple-vibrant: #6100ff;
+
+  /* Unicon Avatar Colors - Light Mode */
+  --color-unicon-0-light: #f50db4;
+  --color-unicon-1-light: #ffbf17;
+  --color-unicon-2-light: #ff8934;
+  --color-unicon-3-light: #85754a;
+  --color-unicon-4-light: #0c8911;
+  --color-unicon-5-light: #78e744;
+  --color-unicon-6-light: #00c3a0;
+  --color-unicon-7-light: #23a3ff;
+  --color-unicon-8-light: #4981ff;
+  --color-unicon-9-light: #4300b0;
+
+  /* Unicon Avatar Colors - Dark Mode */
+  --color-unicon-0-dark: #fc74fe;
+  --color-unicon-1-dark: #fff612;
+  --color-unicon-2-dark: #ff4d00;
+  --color-unicon-3-dark: #996f01;
+  --color-unicon-4-dark: #21c95e;
+  --color-unicon-5-dark: #b1f13c;
+  --color-unicon-6-dark: #5cfe9d;
+  --color-unicon-7-dark: #3adcff;
+  --color-unicon-8-dark: #0047ff;
+  --color-unicon-9-dark: #9e62ff;
+
+  /* Legacy/Compatibility Colors */
+  --color-border: #f9f9f9;
+  --color-input: #f9f9f9;
+  --color-ring: #222222;
+  --color-foreground: #222222;
+  --color-card: #ffffff;
+  --color-card-foreground: #222222;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #222222;
+  --color-primary: #222222;
+  --color-primary-foreground: #f9f9f9;
+  --color-secondary: #f9f9f9;
+  --color-secondary-foreground: #222222;
+  --color-muted: #f9f9f9;
+  --color-muted-foreground: #7d7d7d;
+  --color-destructive: #ff5f52;
+  --color-destructive-foreground: #f9f9f9;
+  --color-scrim: rgba(0, 0, 0, 0.6);
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-28: 28px;
+  --radius-32: 32px;
+  --radius-full: 999999px;
+
+  /* Box Shadows */
+  --shadow-short: var(--shadow-short);
+  --shadow-medium: var(--shadow-medium);
+  --shadow-large: var(--shadow-large);
+}

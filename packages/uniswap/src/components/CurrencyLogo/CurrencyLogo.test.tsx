@@ -1,11 +1,16 @@
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { ARBITRUM_DAI_CURRENCY_INFO, UNI_CURRENCY_INFO, arbitrumDaiCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ARBITRUM_DAI_CURRENCY_INFO, arbitrumDaiCurrencyInfo, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { render } from 'uniswap/src/test/test-utils'
 
-jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
-  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
-}))
+const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
+
+vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
+  return { ...actual }
+})
 
 describe(CurrencyLogo, () => {
   it('renders without error', () => {
@@ -23,7 +28,7 @@ describe(CurrencyLogo, () => {
     it('is rendered by default', () => {
       const { queryByTestId } = renderWithProviders(<CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} />)
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeTruthy()
     })
@@ -33,7 +38,7 @@ describe(CurrencyLogo, () => {
         <CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} hideNetworkLogo={false} />,
       )
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeTruthy()
     })
@@ -41,7 +46,7 @@ describe(CurrencyLogo, () => {
     it('is not rendered if hideNetworkLogo is true', () => {
       const { queryByTestId } = render(<CurrencyLogo hideNetworkLogo currencyInfo={arbitrumDaiCurrencyInfo()} />)
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeFalsy()
     })

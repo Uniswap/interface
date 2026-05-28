@@ -1,11 +1,13 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { BaseSyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { AnimatePresence, Flex, Text, TouchableArea, getTokenValue } from 'ui/src'
+import { AnimatePresence, Flex, getTokenValue, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
@@ -13,30 +15,31 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { AnimatedUnitagDisplayNameProps } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 /**
  * Used in the account header that displays the user's unitag and name if available and
  * address. The unitag is animated which shows the unitag suffix.
  */
-function _AnimatedUnitagDisplayName({
+function AnimatedUnitagDisplayNameInner({
   displayName,
   unitagIconSize = '$icon.24',
   address,
 }: AnimatedUnitagDisplayNameProps): JSX.Element {
   const dispatch = useDispatch()
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
-  const isUnitag = displayName?.type === DisplayNameType.Unitag
+  const isUnitag = displayName.type === DisplayNameType.Unitag
 
   const { width: nameTextWidth, onLayout: onNameTextLayout } = useLayoutWidth(showUnitagSuffix)
   const { width: unitagSuffixTextWidth, onLayout: onUnitagSuffixTextLayout } = useLayoutWidth()
   const { width: viewWidth, onLayout: onViewWidthLayout } = useLayoutWidth()
 
   const onPressUnitag = (): void => setShowUnitagSuffix(!showUnitagSuffix)
+
+  // Ensure component changes over on theme switch
+  useIsDarkMode()
 
   const onPressCopyAddress = useCallback(
     async (e: BaseSyntheticEvent): Promise<void> => {
@@ -54,7 +57,7 @@ function _AnimatedUnitagDisplayName({
       )
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         element: ElementName.CopyAddress,
-        screen: isExtension ? ExtensionScreens.Home : isMobileApp ? MobileScreens.Home : undefined,
+        screen: isExtensionApp ? ExtensionScreens.Home : isMobileApp ? MobileScreens.Home : undefined,
       })
     },
     [address, dispatch],
@@ -76,12 +79,12 @@ function _AnimatedUnitagDisplayName({
           unitagSlideX: showUnitagSuffix ? unitagSuffixTextWidth : 0,
         }
       : {
-          paddingRight: isUnitag ? (shouldAnimateSlide ? getTokenValue('$spacing16') : 0) : 0,
+          paddingRight: 0,
           widthAdjust: showUnitagSuffix ? unitagSuffixTextWidth : 0,
           unitagOffset: showUnitagSuffix ? 0 : -unitagSuffixTextWidth,
           unitagSlideX: 0,
         }
-  }, [shouldAnimateSlide, unitagSuffixTextWidth, showUnitagSuffix, isUnitag])
+  }, [shouldAnimateSlide, unitagSuffixTextWidth, showUnitagSuffix])
 
   return (
     <Flex flexGrow={1} cursor="pointer" onPress={isUnitag ? onPressUnitag : undefined} onLayout={onViewWidthLayout}>
@@ -101,7 +104,7 @@ function _AnimatedUnitagDisplayName({
           variant="subheading1"
           onLayout={onNameTextLayout}
         >
-          {displayName?.name}
+          {displayName.name}
         </Text>
 
         {isUnitag && (
@@ -117,7 +120,14 @@ function _AnimatedUnitagDisplayName({
                   {UNITAG_SUFFIX}
                 </Text>
               </Flex>
-              <Flex zIndex={2} alignSelf="center" backgroundColor="$background" animation="semiBouncy" pl="$spacing4">
+              <Flex
+                zIndex={2}
+                alignSelf="center"
+                backgroundColor="$background"
+                animation="semiBouncy"
+                pl="$spacing4"
+                pt="$spacing1"
+              >
                 <Unitag size={unitagIconSize} />
               </Flex>
             </Flex>
@@ -129,7 +139,7 @@ function _AnimatedUnitagDisplayName({
         <TouchableArea testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
           <Flex row alignItems="center" gap="$spacing4">
             <Text color="$neutral2" numberOfLines={1} variant="body2">
-              {sanitizeAddressText(shortenAddress(address))}
+              {sanitizeAddressText(shortenAddress({ address }))}
             </Text>
             <CopyAlt color="$neutral3" size="$icon.16" />
           </Flex>
@@ -158,4 +168,4 @@ export function useLayoutWidth(pause = false): {
   return { width, onLayout }
 }
 
-export const AnimatedUnitagDisplayName = memo(_AnimatedUnitagDisplayName)
+export const AnimatedUnitagDisplayName = memo(AnimatedUnitagDisplayNameInner)

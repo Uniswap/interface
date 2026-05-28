@@ -16,6 +16,10 @@ Shared component library across all applications. Should not import any other pa
 
 Shared code for wallet functionality and larger UI components.
 
+## `api`
+
+Shared utilities for data fetching across all applications.
+
 ## `utilities`
 
-Shared utility functionality used across app applications. Should not import any other packages or applications.
+Shared utility functionality used across all applications. Should not import any other packages or applications.

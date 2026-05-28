@@ -1,19 +1,17 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { UnitagStackScreenProp } from 'src/app/navigation/types'
+import type { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { isIOS } from 'utilities/src/platform'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
 import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitagProfileContent'
@@ -35,26 +33,28 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
     navigation.goBack()
   }
 
-  const onClose = (): void => {
+  const onCloseChangeModal = (): void => {
     setShowChangeUnitagModal(false)
+  }
+
+  const onCloseDeleteModal = (): void => {
+    setShowDeleteUnitagModal(false)
   }
 
   const menuActions = useMemo(() => {
     return [
       { title: t('unitags.profile.action.edit'), systemIcon: 'pencil' },
-      { title: t('unitags.profile.action.delete'), systemIcon: 'trash', destructive: true },
+      {
+        title: t('unitags.profile.action.delete'),
+        systemIcon: 'trash',
+        destructive: true,
+      },
     ]
   }, [t])
 
   return (
     <Screen>
-      <KeyboardAvoidingView
-        behavior={isIOS ? 'padding' : undefined}
-        contentContainerStyle={styles.expand}
-        // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
-        enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
-        style={styles.base}
-      >
+      <Flex style={styles.base}>
         <BackHeader
           alignment="center"
           endAdornment={
@@ -77,7 +77,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 }}
               >
                 <Flex pr="$spacing8">
-                  <Ellipsis color="$neutral2" size={iconSizes.icon24} />
+                  <Ellipsis color="$neutral2" size="$icon.24" />
                 </Flex>
               </ContextMenu>
             ) : undefined
@@ -91,9 +91,9 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
           <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
         </BackHeader>
         <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={entryPoint} onNavigate={onNavigate} />
-      </KeyboardAvoidingView>
+      </Flex>
       {showDeleteUnitagModal && (
-        <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onClose} />
+        <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onCloseDeleteModal} />
       )}
       {showChangeUnitagModal && (
         <ChangeUnitagModal
@@ -101,7 +101,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
           unitag={unitag}
           keyboardHeight={keyboardHeight}
           onSuccess={onBack}
-          onClose={onClose}
+          onClose={onCloseChangeModal}
         />
       )}
     </Screen>
@@ -112,8 +112,5 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     justifyContent: 'flex-end',
-  },
-  expand: {
-    flexGrow: 1,
   },
 })

@@ -1,6 +1,6 @@
 /**
  * Helper function to detect if user is using arc chromium browser
- * Will not work until stylesheets are loaded
+ * Will not work until some time after (eg 1s) stylesheets are loaded
  * @returns true if user is using arc browser
  */
 export function isArcBrowser(): boolean {
@@ -21,5 +21,6 @@ export function isAndroid(): boolean {
  * @returns true if chrome environment supports side panel
  */
 export function checksIfSupportsSidePanel(): boolean {
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   return !!chrome.sidePanel && !isArcBrowser() && !isAndroid()
 }

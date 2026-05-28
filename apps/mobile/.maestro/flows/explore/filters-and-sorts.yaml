@@ -1,0 +1,102 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize Performance Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'explore-filters-and-sorts'
+
+# Setup: Start app, recover wallet, and navigate to explore
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- runFlow: ../../shared-flows/navigate-to-explore.yaml
+
+# --- Test Case: Filter by chain ---
+# Note: The network pills act as the filter mechanism directly
+# There's no separate filter modal - just tap the network pill to filter
+
+- waitForAnimationToEnd
+
+# Select Unichain chain filter (chainId 130)
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreFilterChain130'
+      PHASE: 'start'
+
+# Tap on Unichain filter (chainId 130)
+- tapOn:
+    id: 'explore-filter-chain-130'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreFilterChain130'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Assert that the filter has been applied
+# Look for Unichain-specific token in the results
+- extendedWaitUntil:
+    visible:
+      text: ".*Unichain ETH.*"
+    timeout: 5000
+
+# Sort sub-tests skipped on iOS pending INFRA-2008 — Tamagui portal
+# accessibility follow-up deferred from PR #31866 (RN 0.81). Dropdown
+# options don't reach the iOS accessibility tree. Re-enable once fixed:
+#   - Market Cap (MARKET_CAP)
+#   - TVL (TOTAL_VALUE_LOCKED)
+#   - Price Increase (PRICE_PERCENT_CHANGE_1_DAY_DESC)
+#   - Price Decrease (PRICE_PERCENT_CHANGE_1_DAY_ASC)
+#   - Volume (VOLUME)
+
+# --- Test Case: Clear filters ---
+# Tap on "All" networks to reset to default state
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreFilterChainAll'
+      PHASE: 'start'
+
+# Tap on Ethereum filter to scroll all chains filter back into view
+- tapOn:
+    id: 'explore-filter-chain-1'
+
+- waitForAnimationToEnd
+
+# Tap on All networks filter to show all chains
+- tapOn:
+    id: 'explore-filter-chain-all'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreFilterChainAll'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# End Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload Metrics (for CI/Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

@@ -1,0 +1,68 @@
+{
+  "tags": ["scope:ui", "type:lib"],
+  "targets": {
+    "prepare": {
+      "dependsOn": ["build:icons"]
+    },
+    "build:icons": {
+      "command": "bun run ./src/scripts/componentize-icons.ts && nx run ui:format:generated",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/scripts/componentize-icons.ts",
+        "{projectRoot}/src/assets/icons/**",
+        "{projectRoot}/src/assets/logos/**"
+      ],
+      "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
+    },
+    "build:icons:missing": {
+      "command": "bun run ./src/scripts/componentize-icons.ts --skip-existing && nx run ui:format:generated",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/scripts/componentize-icons.ts",
+        "{projectRoot}/src/assets/icons/**",
+        "{projectRoot}/src/assets/logos/**"
+      ],
+      "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
+    },
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {
+      "command": "oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json . '!src/components/icons' '!src/components/logos'"
+    },
+    "format:check": {},
+    "format:generated": {
+      "command": "for i in 1 2 3; do oxlint --silent --fix --fix-suggestions --fix-dangerously --disable-nested-config -D sort-imports -D no-unused-vars --threads=1 src/components/icons src/components/logos; done; oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    },
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "watch": {
+      "command": "bun run build --watch",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

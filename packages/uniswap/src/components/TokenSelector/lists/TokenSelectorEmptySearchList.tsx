@@ -1,18 +1,21 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useTokenSectionsForEmptySearch } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForEmptySearch'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-function _TokenSelectorEmptySearchList({
-  activeAccountAddress,
+function TokenSelectorEmptySearchListInner({
+  addresses,
   chainFilter,
   onSelectCurrency,
+  renderedInModal,
 }: {
-  activeAccountAddress?: string
+  addresses: AddressGroup
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
+  renderedInModal: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -22,7 +25,7 @@ function _TokenSelectorEmptySearchList({
     error,
     refetch,
   } = useTokenSectionsForEmptySearch({
-    activeAccountAddress,
+    addresses,
     chainFilter,
   })
 
@@ -35,9 +38,10 @@ function _TokenSelectorEmptySearchList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )
 }
 
-export const TokenSelectorEmptySearchList = memo(_TokenSelectorEmptySearchList)
+export const TokenSelectorEmptySearchList = memo(TokenSelectorEmptySearchListInner)

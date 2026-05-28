@@ -1,1 +1,6 @@
-export const restartApp = (): void => chrome.runtime.reload()
+import { getChromeWithThrow } from '@universe/environment'
+
+export const restart = (): void => {
+  const chrome = getChromeWithThrow()
+  chrome.runtime.reload()
+}

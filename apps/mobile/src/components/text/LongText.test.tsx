@@ -31,12 +31,12 @@ describe(LongText, () => {
       const tree = render(<LongText initialDisplayedLines={3} text={SHORT_TEXT} />)
 
       const textInstance = tree.getByText(SHORT_TEXT)
-      expect(textInstance.props.numberOfLines).toBeUndefined()
+      expect(textInstance.props['numberOfLines']).toBeUndefined()
 
       fireTextLayoutEvent(textInstance, 1) // Assume Short text is one line
 
       // the number of lines will be the same as the initialDisplayedLines
-      expect(textInstance.props.numberOfLines).toBe(3)
+      expect(textInstance.props['numberOfLines']).toBe(3)
     })
 
     it('does not display the "read more" button', () => {
@@ -57,7 +57,7 @@ describe(LongText, () => {
         const textInstance = tree.getByText(LONG_TEXT)
         fireTextLayoutEvent(textInstance, 5) // Assume Some very long text is five lines
 
-        expect(textInstance.props.numberOfLines).toBe(3)
+        expect(textInstance.props['numberOfLines']).toBe(3)
       })
 
       it('displays the "read more" button', () => {
@@ -78,12 +78,12 @@ describe(LongText, () => {
         const textInstance = tree.getByText(LONG_TEXT)
         fireTextLayoutEvent(textInstance, 5) // Assume Some very long text is five lines
 
-        expect(textInstance.props.numberOfLines).toBe(3)
+        expect(textInstance.props['numberOfLines']).toBe(3)
 
         const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
         fireEvent.press(readMoreButton)
 
-        expect(textInstance.props.numberOfLines).toBeUndefined()
+        expect(textInstance.props['numberOfLines']).toBeUndefined()
       })
 
       it('displays the "read less" button', () => {
@@ -104,15 +104,15 @@ describe(LongText, () => {
       const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
       fireEvent.press(readMoreButton) // expand
 
-      expect(tree.getByText(LONG_TEXT).props.numberOfLines).toBeUndefined()
+      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBeUndefined()
 
       fireEvent.press(readMoreButton) // collapse
 
-      expect(tree.getByText(LONG_TEXT).props.numberOfLines).toBe(3)
+      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBe(3)
 
       fireEvent.press(readMoreButton) // expand
 
-      expect(tree.getByText(LONG_TEXT).props.numberOfLines).toBeUndefined()
+      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBeUndefined()
     })
   })
 })

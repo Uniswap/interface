@@ -1,0 +1,318 @@
+import { NetworkStatus, QueryHookOptions } from '@apollo/client'
+import { PartialMessage } from '@bufbuild/protobuf'
+import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { GraphQLApi } from '@universe/api'
+import { isAndroid } from '@universe/environment'
+import isEqual from 'lodash/isEqual'
+import { useCallback, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
+import { isLoadingItem, isSectionHeader, LoadingItem } from 'uniswap/src/components/activity/utils'
+import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
+import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
+import { useSyncRemotePlans } from 'uniswap/src/features/activity/hooks/useSyncRemotePlans'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
+import { PaginationControls } from 'uniswap/src/features/dataApi/types'
+import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
+import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
+import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
+
+const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
+const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
+
+// Native FlatList performance degrades with large lists; callers that don't have this constraint
+// (e.g. web) can pass a higher maxItems value
+const MOBILE_MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
+
+function hasReachedLimit(transactions: TransactionDetails[] | undefined, maxItems: number): boolean {
+  const currentTransactionCount = transactions?.length ?? 0
+  return currentTransactionCount >= maxItems
+}
+
+// Contract for returning Transaction data
+
+type TransactionListQueryArgs = QueryHookOptions<
+  GraphQLApi.TransactionListQuery,
+  GraphQLApi.TransactionListQueryVariables
+>
+interface UseFormattedTransactionDataOptions {
+  evmAddress?: Address
+  svmAddress?: Address
+  ownerAddresses: Address[]
+  fiatOnRampParams: PartialMessage<FiatOnRampParams> | undefined
+  hideSpamTokens: boolean
+  pageSize?: number
+  skip?: boolean
+  chainIds?: UniverseChainId[]
+  filterTransactionTypes?: TransactionTypeFilter[]
+  searchText?: string
+  maxItems?: number
+}
+
+type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
+  TransactionListQueryArgs & {
+    showLoadingOnRefetch?: boolean
+  }
+
+export interface FormattedTransactionDataResult extends PaginationControls {
+  hasData: boolean
+  isLoading: boolean
+  isFetching: boolean
+  error: Error | undefined
+  sectionData: ActivityItem[] | undefined
+  keyExtractor: (item: ActivityItem) => string
+  onRetry: () => Promise<void>
+  skip?: boolean
+  /** Epoch ms when transaction data was last successfully fetched. */
+  dataUpdatedAt?: number
+}
+
+/**
+ * Hook that returns transaction data using REST API
+ */
+export function useFormattedTransactionDataForActivity({
+  evmAddress,
+  svmAddress,
+  ownerAddresses,
+  hideSpamTokens,
+  pageSize,
+  skip,
+  chainIds,
+  filterTransactionTypes,
+  searchText,
+  maxItems = MOBILE_MAX_ACTIVITY_ITEMS,
+  showLoadingOnRefetch = false,
+  ...queryOptions
+}: FormattedTransactionInputs): FormattedTransactionDataResult {
+  const { t } = useTranslation()
+
+  const tokenVisibilityOverrides = useCurrencyIdToVisibility(ownerAddresses)
+  const nftVisibility = useSelector(selectNftsVisibility)
+
+  const {
+    data: formattedTransactions,
+    loading,
+    isFetching,
+    error,
+    refetch,
+    networkStatus,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    dataUpdatedAt,
+  } = useListTransactions({
+    evmAddress,
+    svmAddress,
+    pageSize,
+    hideSpamTokens,
+    tokenVisibilityOverrides,
+    nftVisibility,
+    skip,
+    chainIds,
+    filterTransactionTypes,
+    searchText,
+    ...queryOptions,
+  })
+
+  const keyExtractor = useMemo(
+    () => createTransactionKeyExtractor(evmAddress ?? svmAddress ?? ''),
+    [evmAddress, svmAddress],
+  )
+
+  useSyncRemotePlans(formattedTransactions)
+
+  const transactions = useMergeLocalAndRemoteTransactions({
+    evmAddress,
+    svmAddress,
+    remoteTransactions: formattedTransactions,
+    skipLocalTransactions: !!searchText,
+  })
+
+  // TODO(CONS-722): update to only TradingApi.Routing.DUTCH_V2 once limit orders can be excluded from REST query
+  const transactionsWithOutLimitOrders = useMemo(() => {
+    // Filter out limit orders
+    const withoutLimitOrders = transactions?.filter((tx) => !isLimitOrder(tx))
+
+    // Filter by chainIds if provided
+    const filteredByChain = chainIds?.length
+      ? withoutLimitOrders?.filter((tx) => chainIds.includes(tx.chainId))
+      : withoutLimitOrders
+
+    return filteredByChain
+  }, [transactions, chainIds])
+
+  // Format transactions for section list
+  const localizedDayjs = useLocalizedDayjs()
+  const { pending, todayTransactionList, yesterdayTransactionList, priorByMonthTransactionList } = useMemo(
+    () => formatTransactionsByDate(transactionsWithOutLimitOrders, localizedDayjs),
+    [transactionsWithOutLimitOrders, localizedDayjs],
+  )
+
+  const hasTransactions = transactions && transactions.length > 0
+  const hasData = Boolean(formattedTransactions?.length)
+
+  // show loading if:
+  // 1. Query has never completed and not intentionally skipped — this is synchronously true from render 1
+  // when there is no cached data, ensuring skeletons appear immediately on mount.
+  // 2. No data and loading (redundant when condition 1 is true, but kept as a safety net)
+  // 3. Error with a retry in progress (for UX when "retry" is clicked)
+  // 4. Explicitly showing loading on refetch
+  const showLoading =
+    (!hasData && (loading || (!skip && networkStatus === NetworkStatus.loading))) ||
+    (Boolean(error) && networkStatus === NetworkStatus.loading) ||
+    (showLoadingOnRefetch && isFetching && !isFetchingNextPage)
+
+  const sectionData = useMemo(
+    () =>
+      createTransactionSectionData({
+        showLoading,
+        hasTransactions,
+        pending,
+        todayTransactionList,
+        yesterdayTransactionList,
+        priorByMonthTransactionList,
+        todayLabel: t('common.today'),
+        yesterdayLabel: t('common.yesterday'),
+      }),
+    [
+      showLoading,
+      hasTransactions,
+      pending,
+      todayTransactionList,
+      yesterdayTransactionList,
+      priorByMonthTransactionList,
+      t,
+    ],
+  )
+
+  const memoizedSectionData = useMemoizedTransactionSectionData(sectionData, keyExtractor)
+
+  const onRetry = useCallback(async () => {
+    // oxlint-disable-next-line typescript/await-thenable -- biome-parity: oxlint is stricter here
+    await refetch()
+  }, [refetch])
+
+  return {
+    onRetry,
+    sectionData: memoizedSectionData,
+    hasData,
+    error: error ?? undefined,
+    isLoading: showLoading,
+    isFetching,
+    keyExtractor,
+    fetchNextPage,
+    hasNextPage: hasNextPage && !hasReachedLimit(transactions, maxItems),
+    isFetchingNextPage,
+    dataUpdatedAt,
+  }
+}
+
+/**
+ * Extracts a unique key for each transaction list item
+ * Used for caching and as the React key in our List component.
+ */
+function createTransactionKeyExtractor(address: Address) {
+  return (info: ActivityItem): string => {
+    if (isLoadingItem(info)) {
+      return `${address}-${info.id}` // for loading items, use the index as the key
+    }
+
+    if (isSectionHeader(info)) {
+      return `${address}-${info.title}` // for section headers, use the title as the key
+    }
+
+    return info.id // for transactions, use the transaction hash as the key
+  }
+}
+
+/**
+ * Logic to group transactions into discrete sections based on their age
+ * This is how transactions are grouped in the Activity tab
+ */
+function createTransactionSectionData({
+  showLoading,
+  hasTransactions,
+  pending,
+  todayTransactionList,
+  yesterdayTransactionList,
+  priorByMonthTransactionList,
+  todayLabel,
+  yesterdayLabel,
+}: {
+  showLoading: boolean
+  hasTransactions?: boolean
+  pending: TransactionDetails[]
+  todayTransactionList: TransactionDetails[]
+  yesterdayTransactionList: TransactionDetails[]
+  priorByMonthTransactionList: Record<string, TransactionDetails[]>
+  todayLabel: string
+  yesterdayLabel: string
+}): ActivityItem[] | undefined {
+  if (showLoading) {
+    return LOADING_DATA
+  }
+
+  if (!hasTransactions) {
+    return undefined
+  }
+
+  return [
+    // Add Today section if it has transactions (including pending)
+    ...(todayTransactionList.length > 0 || pending.length > 0
+      ? [
+          { itemType: 'HEADER' as const, title: todayLabel },
+          ...pending, // Show pending transactions first
+          ...todayTransactionList,
+        ]
+      : []),
+    // Add Yesterday section if it has transactions
+    ...(yesterdayTransactionList.length > 0
+      ? [{ itemType: 'HEADER' as const, title: yesterdayLabel }, ...yesterdayTransactionList]
+      : []),
+    // for each month prior, detect length and render if includes transactions
+    ...Object.keys(priorByMonthTransactionList).reduce((accum: ActivityItem[], month) => {
+      const transactionList = priorByMonthTransactionList[month]
+      if (transactionList && transactionList.length > 0) {
+        accum.push({ itemType: 'HEADER' as const, title: month }, ...transactionList)
+      }
+      return accum
+    }, []),
+  ]
+}
+
+/**
+ * Memoizing section data to prevent unnecessary re-renders
+ */
+function useMemoizedTransactionSectionData(
+  sectionData: ActivityItem[] | undefined,
+  keyExtractor: (item: ActivityItem) => string,
+): ActivityItem[] | undefined {
+  const memoizedSectionDataRef = useRef<typeof sectionData | undefined>(undefined)
+
+  // Each `transaction` object is recreated every time the query is refetched.
+  // To avoid re-rendering every single item (even the ones that didn't change), we go through the results and compare them with the previous results.
+  // If the `transaction` already exists in the previous results and is equal to the new one, we keep the reference to old one.
+  // This means that `TransactionSummaryLayout` won't re-render because the props will be exactly the same.
+  const memoizedSectionData: ActivityItem[] | undefined = useMemo(() => {
+    if (!memoizedSectionDataRef.current || !sectionData) {
+      return sectionData
+    }
+
+    return sectionData.map((newItem): ActivityItem => {
+      const newItemKey = keyExtractor(newItem)
+      const oldItem = memoizedSectionDataRef.current?.find((_oldItem) => newItemKey === keyExtractor(_oldItem))
+      if (oldItem && isEqual(newItem, oldItem)) {
+        return oldItem
+      }
+      return newItem
+    })
+  }, [keyExtractor, sectionData])
+
+  memoizedSectionDataRef.current = memoizedSectionData
+  return memoizedSectionData
+}

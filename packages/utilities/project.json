@@ -1,0 +1,41 @@
+{
+  "tags": ["scope:utilities", "type:lib"],
+  "targets": {
+    "build": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^build"]
+    },
+    "check:deps:usage": {
+      "dependsOn": ["check-promise-version"]
+    },
+    "check-promise-version": {
+      "command": "../../scripts/check-promise-version.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{workspaceRoot}/scripts/check-promise-version.sh", "dependencies"]
+    },
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

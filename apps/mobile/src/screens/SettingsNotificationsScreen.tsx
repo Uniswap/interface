@@ -10,15 +10,12 @@ import {
 import { Flex, Switch, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isIOS } from 'utilities/src/platform'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountsList } from 'wallet/src/features/wallet/hooks'
 
 const ROW_ITEM_HEIGHT = 40
@@ -44,32 +41,20 @@ type SettingItem = {
 
 type NotificationItem = SettingItem | AccountItem
 
-function _SettingsNotificationsScreen(): JSX.Element {
+function SettingsNotificationsScreenInner(): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
   const { fullWidth, fullHeight } = useDeviceDimensions()
   const accounts = useAccountsList()
 
-  const priceAlertsToggleEnabled = useFeatureFlag(
-    isIOS ? FeatureFlags.NotificationPriceAlertsIOS : FeatureFlags.NotificationPriceAlertsAndroid,
-  )
-
   const onGeneralUpdatesToggle = useCallback(
     (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.GeneralUpdates),
-    [],
-  )
-  const onPriceAlertsToggle = useCallback(
-    (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.PriceAlerts),
     [],
   )
 
   const { isEnabled: updatesNotifEnabled, toggle: toggleUpdatesNotif } = useSettingNotificationToggle({
     type: NotifSettingType.GeneralUpdates,
     onToggle: onGeneralUpdatesToggle,
-  })
-  const { isEnabled: priceAlertsNotifEnabled, toggle: togglePriceAlertsNotif } = useSettingNotificationToggle({
-    type: NotifSettingType.PriceAlerts,
-    onToggle: onPriceAlertsToggle,
   })
 
   const data: NotificationItem[] = useMemo(() => {
@@ -82,16 +67,6 @@ function _SettingsNotificationsScreen(): JSX.Element {
         onCheckedChange: toggleUpdatesNotif,
       },
     ]
-
-    if (priceAlertsToggleEnabled) {
-      items.push({
-        type: NotificationItemType.Setting,
-        title: t('settings.setting.notifications.row.priceAlerts.title'),
-        description: t('settings.setting.notifications.row.priceAlerts.description'),
-        checked: priceAlertsNotifEnabled,
-        onCheckedChange: togglePriceAlertsNotif,
-      })
-    }
 
     // Add a title item for the accounts section
     items.push({
@@ -110,15 +85,7 @@ function _SettingsNotificationsScreen(): JSX.Element {
     })
 
     return items
-  }, [
-    t,
-    updatesNotifEnabled,
-    toggleUpdatesNotif,
-    priceAlertsToggleEnabled,
-    priceAlertsNotifEnabled,
-    togglePriceAlertsNotif,
-    accounts,
-  ])
+  }, [t, updatesNotifEnabled, toggleUpdatesNotif, accounts])
 
   const estimatedListSize = useMemo(() => {
     return {
@@ -150,7 +117,7 @@ function _SettingsNotificationsScreen(): JSX.Element {
   )
 }
 
-export const SettingsNotificationsScreen = memo(_SettingsNotificationsScreen)
+export const SettingsNotificationsScreen = memo(SettingsNotificationsScreenInner)
 
 SettingsNotificationsScreen.displayName = 'SettingsNotificationsScreen'
 
@@ -220,10 +187,10 @@ const AccountNotificationRow = memo(function AccountNotificationRow({
           showIconBackground
           address={address}
           showViewOnlyBadge={isViewOnly}
-          showViewOnlyLabel={isViewOnly}
           size={iconSizes.icon32}
           variant="subheading2"
           captionVariant="body3"
+          alignItems="center"
         />
       </Flex>
       <AddressNotificationsSwitch address={address} />
@@ -239,7 +206,7 @@ function onPermissionChanged(enabled: boolean, type: NotificationToggleLoggingTy
 
 const PENDING_DELAY = 100
 
-function _AddressNotificationsSwitch({ address }: { address: string }): JSX.Element {
+function AddressNotificationsSwitchInner({ address }: { address: string }): JSX.Element {
   const { isEnabled, isPending, toggle } = useAddressNotificationToggle({
     address,
     onToggle: (enabled) => onPermissionChanged(enabled, 'wallet_activity'),
@@ -250,7 +217,7 @@ function _AddressNotificationsSwitch({ address }: { address: string }): JSX.Elem
   const [showDisabled, setShowDisabled] = useState(false)
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
 
     if (isPending) {
       timeoutId = setTimeout(() => {
@@ -269,6 +236,6 @@ function _AddressNotificationsSwitch({ address }: { address: string }): JSX.Elem
 
   return <Switch checked={isEnabled} disabled={showDisabled} variant="branded" onCheckedChange={toggle} />
 }
-const AddressNotificationsSwitch = memo(_AddressNotificationsSwitch)
+const AddressNotificationsSwitch = memo(AddressNotificationsSwitchInner)
 
 AddressNotificationsSwitch.displayName = 'AddressNotificationsSwitch'

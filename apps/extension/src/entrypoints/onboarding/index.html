@@ -1,0 +1,75 @@
+<!--
+-- UI entrypoint for extension onboarding flow.
+--
+-- This exists as a separate React App from the main extension with its own store because it doesn't
+-- need to rely on the service worker to maintain the redux state with web-ext redux. Rather the onboarding
+-- flow is a standard single page app completely decoupled from the background server going to sleep.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="preload" href="assets/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+  <link rel="preload" href="assets/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+
+  <style>
+    html,
+    body,
+    #root {
+      min-height: 100%;
+    }
+
+    * {
+      font-family: 'Basel', sans-serif;
+      box-sizing: border-box;
+    }
+
+    /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+    @font-face {
+      font-family: 'Basel';
+      font-weight: 500;
+      font-style: normal;
+      font-display: block;
+      font-named-instance: 'Medium';
+      src:
+        url(assets/fonts/Basel-Medium.woff) format('woff');
+    }
+
+    @font-face {
+      font-family: 'Basel';
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
+      font-named-instance: 'Book';
+      src:
+        url(assets/fonts/Basel-Book.woff) format('woff');
+    }
+
+    @supports (font-variation-settings: normal) {
+      * {
+        font-family: 'Basel', sans-serif;
+      }
+    }
+
+    html {
+      font-variant: none;
+      font-smooth: always;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+
+  <title>Uniswap Extension</title>
+</head>
+
+<body>
+  <div id="onboarding-root"></div>
+  <script type="module" src="main.tsx"></script>
+</body>
+
+</html>

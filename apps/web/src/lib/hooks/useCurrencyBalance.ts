@@ -1,90 +1,65 @@
-import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useAccount } from 'hooks/useAccount'
-import { useInterfaceMulticall } from 'hooks/useContract'
-import { useTokenBalances } from 'hooks/useTokenBalances'
 import JSBI from 'jsbi'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import ERC20ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { isAddress } from 'utilities/src/addresses'
-import { currencyKey } from 'utils/currencyKey'
-
-/**
- * Returns a map of the given addresses to their eventually consistent ETH balances.
- */
-function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefined)[]): {
-  [address: string]: CurrencyAmount<Currency> | undefined
-} {
-  const { chainId } = useAccount()
-  const multicallContract = useInterfaceMulticall()
-
-  const validAddressInputs: [string][] = useMemo(
-    () =>
-      uncheckedAddresses
-        ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
-            .map((addr) => [addr])
-        : [],
-    [uncheckedAddresses],
-  )
-
-  const results = useSingleContractMultipleData(multicallContract, 'getEthBalance', validAddressInputs)
-
-  return useMemo(
-    () =>
-      validAddressInputs.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, [address], i) => {
-        const value = results?.[i]?.result?.[0]
-        if (value && chainId) {
-          memo[address] = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), JSBI.BigInt(value.toString()))
-        }
-        return memo
-      }, {}),
-    [validAddressInputs, chainId, results],
-  )
-}
-
-const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
-const tokenBalancesGasRequirement = { gasRequired: 185_000 }
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { erc20Abi } from 'viem'
+import { useBalance, useReadContracts } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
+import { useTokenBalances } from '~/hooks/useTokenBalances'
+import { currencyKey } from '~/utils/currencyKey'
+import { assume0xAddress } from '~/utils/wagmi'
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
-export function useRpcTokenBalancesWithLoadingIndicator(
-  address?: string,
-  tokens?: (Token | undefined)[],
-  skip?: boolean,
-): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
+function useRpcTokenBalancesWithLoadingIndicator({
+  address,
+  tokens,
+  skip,
+}: {
+  address?: string
+  tokens?: (Token | undefined)[]
+  skip?: boolean
+}): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
   const { chainId } = useAccount()
   const validatedTokens: Token[] = useMemo(
     () =>
       skip
         ? []
-        : tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? [],
+        : (tokens?.filter((t?: Token): t is Token => isEVMAddress(t?.address) !== false && t.chainId === chainId) ??
+          []),
     [chainId, tokens, skip],
   )
-  const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(
-    validatedTokenAddresses,
-    ERC20Interface,
-    'balanceOf',
-    useMemo(() => [address], [address]),
-    tokenBalancesGasRequirement,
-  )
-
-  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
+  const { data, isLoading: balancesLoading } = useReadContracts({
+    contracts: useMemo(
+      () =>
+        validatedTokens.map(
+          (token) =>
+            ({
+              address: assume0xAddress(token.address),
+              chainId,
+              abi: erc20Abi,
+              functionName: 'balanceOf',
+              args: [address],
+            }) as const,
+        ),
+      [address, chainId, validatedTokens],
+    ),
+    query: { enabled: !!address },
+  })
 
   return useMemo(
     () => [
       address && validatedTokens.length > 0
-        ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
-            const value = balances?.[i]?.result?.[0]
+        ? // oxlint-disable-next-line max-params
+          validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
+            const value = data?.[i].result
+            if (!value) {
+              return memo
+            }
+
             const amount = value ? JSBI.BigInt(value.toString()) : undefined
             if (amount) {
               memo[token.address] = CurrencyAmount.fromRawAmount(token, amount)
@@ -92,9 +67,9 @@ export function useRpcTokenBalancesWithLoadingIndicator(
             return memo
           }, {})
         : {},
-      anyLoading,
+      balancesLoading,
     ],
-    [address, validatedTokens, anyLoading, balances],
+    [address, validatedTokens, balancesLoading, data],
   )
 }
 
@@ -102,7 +77,7 @@ function useRpcTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[],
 ): { [tokenAddress: string]: CurrencyAmount<Token> | undefined } {
-  return useRpcTokenBalancesWithLoadingIndicator(address, tokens)[0]
+  return useRpcTokenBalancesWithLoadingIndicator({ address, tokens })[0]
 }
 
 function useRpcCurrencyBalances(
@@ -117,7 +92,11 @@ function useRpcCurrencyBalances(
   const { chainId } = useAccount()
   const tokenBalances = useRpcTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency?.isNative) ?? false, [currencies])
-  const ethBalance = useNativeCurrencyBalances(useMemo(() => (containsETH ? [account] : []), [containsETH, account]))
+  const { data: nativeBalance } = useBalance({
+    address: assume0xAddress(account),
+    chainId,
+    query: { enabled: containsETH && !!account },
+  })
 
   return useMemo(
     () =>
@@ -125,15 +104,16 @@ function useRpcCurrencyBalances(
         if (!account || !currency || currency.chainId !== chainId) {
           return undefined
         }
+
         if (currency.isToken) {
           return tokenBalances[currency.address]
+        } else if (nativeBalance?.value) {
+          return CurrencyAmount.fromRawAmount(currency, nativeBalance.value.toString())
+        } else {
+          return undefined
         }
-        if (currency.isNative) {
-          return ethBalance[account]
-        }
-        return undefined
       }) ?? [],
-    [account, chainId, currencies, ethBalance, tokenBalances],
+    [account, chainId, currencies, nativeBalance?.value, tokenBalances],
   )
 }
 
@@ -146,7 +126,7 @@ function useGqlCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
 ): (CurrencyAmount<Currency> | undefined)[] {
-  const { balanceMap } = useTokenBalances({ cacheOnly: true })
+  const { balanceMap } = useTokenBalances({ cacheFirst: true })
 
   return useMemo(() => {
     if (!account || !currencies) {
@@ -161,6 +141,7 @@ function useGqlCurrencyBalances(
       const key = currencyKey(currency)
       const balance = balanceMap[key]
 
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (balance) {
         const currencyAmount = getCurrencyAmount({
           value: balance.balance.toString(),
@@ -179,6 +160,8 @@ function useGqlCurrencyBalances(
 }
 
 /**
+ * @deprecated use usePortfolioBalances & getOnChainBalancesFetch from packages/uniswap instead
+ *
  * Returns balances for tokens on currently-connected chainId via RPC.
  * Falls back to graphql TokenBalances if user is not connected to chain, a.k.a !isSynced.
  */
@@ -207,10 +190,7 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
   return useCurrencyBalance(account, token) as CurrencyAmount<Token> | undefined
 }
 
-export default function useCurrencyBalance(
-  account?: string,
-  currency?: Currency,
-): CurrencyAmount<Currency> | undefined {
+export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount<Currency> | undefined {
   return useCurrencyBalances(
     account,
     useMemo(() => [currency], [currency]),

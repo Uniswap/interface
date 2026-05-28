@@ -1,60 +1,65 @@
-import { LiquidityEventName } from '@uniswap/analytics-events'
-import { getLiquidityEventName } from 'components/Liquidity/analytics'
-import { PopupType, addPopup } from 'state/application/reducer'
-import {
-  HandleOnChainStepParams,
-  handleApprovalTransactionStep,
-  handleOnChainStep,
-  handleSignatureStep,
-} from 'state/sagas/transactions/utils'
-import {
-  CollectFeesTransactionInfo,
-  CreatePositionTransactionInfo,
-  DecreaseLiquidityTransactionInfo,
-  IncreaseLiquidityTransactionInfo,
-  MigrateV3LiquidityToV4TransactionInfo,
-  TransactionType,
-} from 'state/transactions/types'
 import invariant from 'tiny-invariant'
-import { call, put } from 'typed-redux-saga'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { call } from 'typed-redux-saga'
+import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import {
-  LiquidityAction,
-  LiquidityTransactionType,
-  ValidatedLiquidityTxContext,
-} from 'uniswap/src/features/transactions/liquidity/types'
-import {
-  CollectFeesTransactionStep,
-  DecreasePositionTransactionStep,
+import type { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import type { CollectFeesTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
+import type { DecreasePositionTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
+import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
+import type {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
+  IncreasePositionTransactionStepWalletCall,
+} from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
+import type {
   MigratePositionTransactionStep,
   MigratePositionTransactionStepAsync,
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/types/steps'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+  MigratePositionTransactionStepWalletCall,
+} from 'uniswap/src/features/transactions/liquidity/steps/migrate'
+import type { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
+import type { HandleOnChainStepParams, TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type {
+  CollectFeesTransactionInfo,
+  CreatePoolTransactionInfo,
+  LiquidityDecreaseTransactionInfo,
+  LiquidityIncreaseTransactionInfo,
+  MigrateV3LiquidityToV4TransactionInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { currencyId } from 'utils/currencyId'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
+import { getLiquidityEventName } from '~/state/sagas/liquidity/getLiquidityEventName'
+import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
+import {
+  getDisplayableError,
+  handleApprovalTransactionStep,
+  handleOnChainStep,
+  handlePermitTransactionStep,
+  handleSignatureStep,
+} from '~/state/sagas/transactions/utils'
 
 type LiquidityParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
-  account: SignerMnemonicAccountMeta
+  account: SignerMnemonicAccountDetails
   analytics?:
-    | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
   liquidityTxContext: ValidatedLiquidityTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
-  onFailure: () => void
+  onFailure: (e?: unknown) => void
+  disableOneClickSwap?: () => void
 }
 
 function* getLiquidityTxRequest(
@@ -69,21 +74,25 @@ function* getLiquidityTxRequest(
 ) {
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
-    step.type === TransactionStepType.DecreasePositionTransaction ||
-    step.type === TransactionStepType.MigratePositionTransactionStep ||
+    step.type === TransactionStepType.DecreasePositionTransaction
+  ) {
+    return { txRequest: step.txRequest }
+  }
+  if (
+    step.type === TransactionStepType.MigratePositionTransaction ||
     step.type === TransactionStepType.CollectFeesTransactionStep
   ) {
-    return step.txRequest
+    return { txRequest: step.txRequest }
   }
 
   if (!signature) {
     throw new Error('Signature required for async increase position transaction step')
   }
 
-  const txRequest = yield* call(step.getTxRequest, signature)
+  const { txRequest } = yield* call(step.getTxRequest, signature)
   invariant(txRequest !== undefined, 'txRequest must be defined')
 
-  return txRequest
+  return { txRequest }
 }
 
 interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -97,19 +106,19 @@ interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' 
   signature?: string
   action: LiquidityAction
   analytics?:
-    | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
 }
 function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const { action, step, signature, analytics } = params
   const info = getLiquidityTransactionInfo(action)
-  const txRequest = yield* call(getLiquidityTxRequest, step, signature)
+  const { txRequest } = yield* call(getLiquidityTxRequest, step, signature)
 
   const onModification = ({ hash, data }: { hash: string; data: string }) => {
     if (analytics) {
-      sendAnalyticsEvent(LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET, {
+      sendAnalyticsEvent(LiquidityEventName.TransactionModifiedInWallet, {
         ...analytics,
         transaction_hash: hash,
         expected: txRequest.data?.toString(),
@@ -120,26 +129,76 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
   // Now that we have the txRequest, we can create a definitive LiquidityTransactionStep, incase we started with an async step.
   const onChainStep = { ...step, txRequest }
-  const hash = yield* call(handleOnChainStep, {
-    ...params,
-    info,
-    step: onChainStep,
-    shouldWaitForConfirmation: false,
-    onModification,
-  })
+  let hash: string | undefined
+  try {
+    hash = yield* call(handleOnChainStep, {
+      ...params,
+      info,
+      step: onChainStep,
+      shouldWaitForConfirmation: false,
+      onModification,
+    })
+  } catch (e) {
+    if (analytics) {
+      sendAnalyticsEvent(InterfaceEventName.OnChainAddLiquidityFailed, {
+        ...analytics,
+        message: e.message,
+      })
+    }
+
+    throw e
+  }
 
   if (analytics) {
     sendAnalyticsEvent(getLiquidityEventName(onChainStep.type), {
       ...analytics,
       transaction_hash: hash,
     } satisfies
-      | UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED])
+      | UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
   }
 
-  yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
+}
+
+interface HandlePositionWalletCallStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
+  step: IncreasePositionTransactionStepWalletCall | MigratePositionTransactionStepWalletCall
+  disableOneClickSwap?: () => void
+  action: LiquidityAction
+  analytics?:
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
+}
+function* handlePositionTransactionWalletCallStep(params: HandlePositionWalletCallStepParams) {
+  const { action, step, analytics, disableOneClickSwap } = params
+
+  const info = getLiquidityTransactionInfo(action)
+
+  const batchId = yield* handleAtomicSendCalls({
+    ...params,
+    info,
+    step,
+    ignoreInterrupt: true,
+    shouldWaitForConfirmation: false,
+    disableOneClickSwap,
+  })
+
+  if (analytics) {
+    sendAnalyticsEvent(getLiquidityEventName(TransactionStepType.IncreasePositionTransaction), {
+      ...analytics,
+      transaction_hash: batchId,
+    } satisfies
+      | UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
+  }
+
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
 }
 
 function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {
@@ -151,40 +210,75 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
     onSuccess,
     onFailure,
     analytics,
+    disableOneClickSwap,
   } = params
 
   let signature: string | undefined
 
-  try {
-    for (const step of steps) {
+  for (const step of steps) {
+    try {
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
+          yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
+          break
+        }
+        case TransactionStepType.Permit2Transaction: {
+          yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.IncreasePositionTransaction:
         case TransactionStepType.IncreasePositionTransactionAsync:
         case TransactionStepType.DecreasePositionTransaction:
-        case TransactionStepType.MigratePositionTransactionStep:
-        case TransactionStepType.MigratePositionTransactionStepAsync:
+        case TransactionStepType.MigratePositionTransaction:
+        case TransactionStepType.MigratePositionTransactionAsync:
         case TransactionStepType.CollectFeesTransactionStep:
-          yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
+          yield* call(handlePositionTransactionStep, {
+            address: account.address,
+            step,
+            setCurrentStep,
+            action,
+            signature,
+            analytics,
+          })
+          break
+        case TransactionStepType.IncreasePositionTransactionWalletCall:
+        case TransactionStepType.MigratePositionTransactionWalletCall:
+          yield* call(handlePositionTransactionWalletCallStep, {
+            address: account.address,
+            step,
+            setCurrentStep,
+            action,
+            analytics,
+            disableOneClickSwap,
+          })
           break
         default: {
           throw new Error('Unexpected step type')
         }
       }
+    } catch (e) {
+      const displayableError = getDisplayableError({ error: e, step, flow: 'liquidity' })
+
+      if (displayableError) {
+        logger.error(displayableError, {
+          tags: { file: 'liquiditySaga', function: 'modifyLiquidity' },
+          extra: {
+            canBatchTransactions: params.liquidityTxContext.canBatchTransactions,
+            delegatedAddress: params.liquidityTxContext.delegatedAddress,
+          },
+        })
+        onFailure(e)
+      } else {
+        onFailure()
+      }
+
+      return
     }
-  } catch (e: unknown) {
-    const cause = e instanceof Error && e.cause // this will contain the trading api error and requestID
-    logger.error(e, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' }, extra: { tradingApiError: cause } })
-    onFailure()
-    return
   }
 
   yield* call(onSuccess)
@@ -193,7 +287,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
 function* liquidity(params: LiquidityParams) {
   const { liquidityTxContext, startChainId, selectChain, onFailure } = params
 
-  const steps = yield* call(generateTransactionSteps, liquidityTxContext)
+  const steps = yield* call(generateLPTransactionSteps, liquidityTxContext)
   params.setSteps(steps)
 
   // Switch chains if needed
@@ -227,27 +321,27 @@ export const liquiditySaga = createSaga(liquidity, 'liquiditySaga')
 function getLiquidityTransactionInfo(
   action: LiquidityAction,
 ):
-  | IncreaseLiquidityTransactionInfo
-  | DecreaseLiquidityTransactionInfo
+  | LiquidityIncreaseTransactionInfo
+  | LiquidityDecreaseTransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
-  | CreatePositionTransactionInfo
+  | CreatePoolTransactionInfo
   | CollectFeesTransactionInfo {
   let type: TransactionType
   switch (action.type) {
     case LiquidityTransactionType.Create:
-      type = TransactionType.CREATE_POSITION
+      type = TransactionType.CreatePool
       break
     case LiquidityTransactionType.Increase:
-      type = TransactionType.INCREASE_LIQUIDITY
+      type = TransactionType.LiquidityIncrease
       break
     case LiquidityTransactionType.Decrease:
-      type = TransactionType.DECREASE_LIQUIDITY
+      type = TransactionType.LiquidityDecrease
       break
     case LiquidityTransactionType.Migrate:
-      type = TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+      type = TransactionType.MigrateLiquidityV3ToV4
       break
     case LiquidityTransactionType.Collect:
-      type = TransactionType.COLLECT_FEES
+      type = TransactionType.CollectFees
   }
 
   const {
@@ -256,9 +350,9 @@ function getLiquidityTransactionInfo(
   } = action
   return {
     type,
-    token0CurrencyId: currencyId(currency0),
-    token1CurrencyId: currencyId(currency1),
-    token0CurrencyAmountRaw: quotient0.toString(),
-    token1CurrencyAmountRaw: quotient1.toString(),
+    currency0Id: currencyId(currency0),
+    currency1Id: currencyId(currency1),
+    currency0AmountRaw: quotient0.toString(),
+    currency1AmountRaw: quotient1.toString(),
   }
 }

@@ -9,18 +9,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uniswap.EthersRs
 import com.uniswap.RnEthersRs
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_EW
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_HD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
-import android.view.View
 
 class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
   private val onInputValidated: (canSubmit: Boolean) -> Unit,
   private val onMnemonicStored: (mnemonicId: String) -> Unit,
+  private val onSubmitError: () -> Unit,
 ) : ViewModel() {
 
   sealed interface Status {
@@ -35,6 +35,7 @@ class SeedPhraseInputViewModel(
     object NotEnoughWords : MnemonicError
     object WrongRecoveryPhrase : MnemonicError
     object InvalidPhrase : MnemonicError
+    object WordIsAddress : MnemonicError
   }
 
   data class ReactNativeStrings(
@@ -44,10 +45,11 @@ class SeedPhraseInputViewModel(
     val errorPhraseLength: String,
     val errorWrongPhrase: String,
     val errorInvalidPhrase: String,
+    val errorWordIsAddress: String,
   )
 
   // Sourced externally from RN
-  var mnemonicIdForRecovery by mutableStateOf<String?>(null)
+  var targetMnemonicId by mutableStateOf<String?>(null)
   var rnStrings by mutableStateOf(
     ReactNativeStrings(
       inputPlaceholder = "",
@@ -56,6 +58,7 @@ class SeedPhraseInputViewModel(
       errorPhraseLength = "",
       errorWrongPhrase = "",
       errorInvalidPhrase = "",
+      errorWordIsAddress = "",
     )
   )
 
@@ -79,10 +82,11 @@ class SeedPhraseInputViewModel(
 
   fun handleInputChange(value: TextFieldValue) {
     input = value
-
     val normalized = normalizeInput(value)
+
     val skipLastWord = normalized.lastOrNull() != ' '
-    validateInput(normalized, skipLastWord)
+    val skipInvalidWord = skipLastWord && !isAddress(normalized)
+    validateInput(normalized, skipInvalidWord)
 
     validateLastWordJob?.cancel()
 
@@ -92,42 +96,53 @@ class SeedPhraseInputViewModel(
     }
   }
 
-  private fun validateInput(normalizedInput: String, skipLastWord: Boolean) {
+  private fun validateInput(normalizedInput: String, skipInvalidWord: Boolean) {
     val mnemonic = normalizedInput.trim()
     val words = mnemonic.split(" ")
 
-    if (words.isEmpty()) {
-      status = Status.None
+    val prevStatus = status
+    val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
+    val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
+    val isFirstWordInvalid = firstInvalidWord == words.last() && skipInvalidWord
+    val isInvalidLengthError =
+      prevStatus is Status.Error && (prevStatus.error == MnemonicError.NotEnoughWords || prevStatus.error == MnemonicError.TooManyWords) && !isValidLength
+
+    if (isFirstWordInvalid) {
       return
     }
 
-    val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
-    val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
-    status = if (firstInvalidWord == words.last() && skipLastWord) {
-      Status.None
-    } else if (firstInvalidWord.isEmpty() && isValidLength) {
-      Status.Valid
-    } else if (firstInvalidWord.isNotEmpty()) {
-      Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
-    } else {
-      Status.None
-    }
+    status =
+      if (isAddress(mnemonic)) {
+        Status.Error(MnemonicError.WordIsAddress)
+      } else if (firstInvalidWord.isNotEmpty()) {
+        Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
+      } else if (isInvalidLengthError) {
+        prevStatus
+      } else if (firstInvalidWord.isEmpty() && isValidLength) {
+        Status.Valid
+      } else {
+        Status.None
+      }
 
-    val canSubmit = status !is Status.Error && mnemonic != "" && firstInvalidWord.isEmpty()
+    val canSubmit = status !is Status.Error && mnemonic != ""
     onInputValidated(canSubmit)
   }
 
   private fun normalizeInput(value: TextFieldValue) =
     value.text.replace("\\s+".toRegex(), " ").lowercase()
 
+  private fun isAddress(value: String) = value.startsWith("0x") && value.length == 42
+
   fun handleSubmit() {
+    validateLastWordJob?.cancel()
+    
     try {
       val normalized = normalizeInput(input)
       val mnemonic = normalized.trim()
       val words = mnemonic.split(" ")
       val valid = EthersRs.validateMnemonic(mnemonic)
 
-      if (words.size < MIN_LENGTH) {
+      if (words.size < MIN_LENGTH || words.size in MIN_LENGTH + 1..<MAX_LENGTH) {
         status = Status.Error(MnemonicError.NotEnoughWords)
       } else if (words.size > MAX_LENGTH) {
         status = Status.Error(MnemonicError.TooManyWords)
@@ -143,14 +158,16 @@ class SeedPhraseInputViewModel(
 
     if (status is Status.Error) {
       onInputValidated(false)
+      onSubmitError()
     }
   }
 
   private fun submitMnemonic(mnemonic: String) {
-    if (mnemonicIdForRecovery != null) {
+    if (targetMnemonicId != null) {
       val generatedId = ethersRs.generateAddressForMnemonic(mnemonic, derivationIndex = 0)
-      if (generatedId != mnemonicIdForRecovery) {
+      if (generatedId != targetMnemonicId) {
         status = Status.Error(MnemonicError.WrongRecoveryPhrase)
+        onSubmitError()
       } else {
         storeMnemonic(mnemonic)
       }
@@ -165,8 +182,8 @@ class SeedPhraseInputViewModel(
   }
 
   companion object {
-    private const val MIN_LENGTH = 12
-    private const val MAX_LENGTH = 24
+    private const val MIN_LENGTH = MNEMONIC_LENGTH_HD
+    private const val MAX_LENGTH = MNEMONIC_LENGTH_EW
   }
-  
+
 }

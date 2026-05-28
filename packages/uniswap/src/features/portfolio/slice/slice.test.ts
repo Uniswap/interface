@@ -46,6 +46,8 @@ describe(portfolioReducer, () => {
     })
 
     it('updates existing overrides', () => {
+      vi.useFakeTimers()
+
       const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
 
       let state = portfolioReducer(
@@ -59,7 +61,7 @@ describe(portfolioReducer, () => {
       const firstTimestamp = state.tokenBalanceOverrides[TEST_ADDRESS1]![currencyId]!.updatedAt
 
       // Wait a small amount to ensure different timestamps
-      jest.advanceTimersByTime(1000)
+      vi.advanceTimersByTime(1000)
 
       state = portfolioReducer(
         state,
@@ -70,6 +72,8 @@ describe(portfolioReducer, () => {
       )
 
       expect(state.tokenBalanceOverrides[TEST_ADDRESS1]![currencyId]!.updatedAt).toBeGreaterThan(firstTimestamp)
+
+      vi.useRealTimers()
     })
   })
 

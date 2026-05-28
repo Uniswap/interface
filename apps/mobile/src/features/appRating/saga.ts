@@ -1,3 +1,4 @@
+import { isAndroid, isUnitTestEnv } from '@universe/environment'
 import { Alert, Platform } from 'react-native'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -7,9 +8,7 @@ import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isJestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { appRatingStateSelector } from 'wallet/src/features/appRating/selectors'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -23,7 +22,8 @@ function isAndroid14(): boolean {
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 
 try {
-  if (!isJestRun && !isAndroid14()) {
+  if (!isUnitTestEnv() && !isAndroid14()) {
+    // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
     import('expo-store-review')
   }
 } catch (error) {
@@ -165,7 +165,7 @@ async function openFeedbackRequestAlert() {
       {
         text: i18n.t('appRating.feedback.button.send'),
         onPress: () => {
-          openUri(uniswapUrls.walletFeedbackForm).catch((e) =>
+          openUri({ uri: uniswapUrls.walletFeedbackForm }).catch((e) =>
             logger.error(e, { tags: { file: 'appRating/saga', function: 'openFeedbackAlert' } }),
           )
           resolve(true)

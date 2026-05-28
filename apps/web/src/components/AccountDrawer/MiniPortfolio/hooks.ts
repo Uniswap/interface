@@ -1,6 +1,10 @@
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useEvent } from 'utilities/src/react/hooks'
+import { passkeySignInPendingAtom, showEmbeddedLoginViewAtom } from '~/components/WalletModal/EmbeddedWalletModal'
 
 const accountDrawerOpenAtom = atom(false)
 const showMoonpayTextAtom = atom(false)
@@ -8,19 +12,28 @@ const showMoonpayTextAtom = atom(false)
 export function useAccountDrawer() {
   const [isOpen, updateAccountDrawerOpen] = useAtom(accountDrawerOpenAtom)
   const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
+  const setShowEmbeddedLoginView = useUpdateAtom(showEmbeddedLoginViewAtom)
+  const setPasskeySignInPending = useUpdateAtom(passkeySignInPendingAtom)
 
-  const open = useCallback(() => {
+  const open = useEvent(() => {
+    sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: 'open' })
     updateAccountDrawerOpen(true)
-  }, [updateAccountDrawerOpen])
+  })
 
-  const close = useCallback(() => {
+  const close = useEvent(() => {
+    sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: 'close' })
     setShowMoonpayTextInDrawer(false)
+    setShowEmbeddedLoginView(false)
+    setPasskeySignInPending(false)
     updateAccountDrawerOpen(false)
-  }, [setShowMoonpayTextInDrawer, updateAccountDrawerOpen])
+  })
 
-  const toggle = useCallback(() => {
-    updateAccountDrawerOpen((prev) => !prev)
-  }, [updateAccountDrawerOpen])
+  const toggle = useEvent(() => {
+    updateAccountDrawerOpen((prev) => {
+      sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: prev ? 'close' : 'open' })
+      return !prev
+    })
+  })
 
   return useMemo(() => ({ isOpen, open, close, toggle }), [isOpen, open, close, toggle])
 }

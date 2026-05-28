@@ -1,10 +1,11 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import {
   initialUserSettingsState,
+  setEnableCustomGasFeeEntry,
   setHideSmallBalances,
   setHideSpamTokens,
-  userSettingsReducer,
   UserSettingsState,
+  userSettingsReducer,
 } from 'uniswap/src/features/settings/slice'
 
 describe(userSettingsReducer, () => {
@@ -24,5 +25,16 @@ describe(userSettingsReducer, () => {
     expect(store.getState().hideSpamTokens).toEqual(true)
     store.dispatch(setHideSpamTokens(false))
     expect(store.getState().hideSpamTokens).toEqual(false)
+  })
+
+  it('starts enableCustomGasFeeEntry as false', () => {
+    expect(store.getState().enableCustomGasFeeEntry).toEqual(false)
+  })
+
+  it('toggles enableCustomGasFeeEntry on and off', () => {
+    store.dispatch(setEnableCustomGasFeeEntry(true))
+    expect(store.getState().enableCustomGasFeeEntry).toEqual(true)
+    store.dispatch(setEnableCustomGasFeeEntry(false))
+    expect(store.getState().enableCustomGasFeeEntry).toEqual(false)
   })
 })

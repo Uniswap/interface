@@ -1,11 +1,11 @@
-import { wordlists } from 'ethers'
+import { wordlists } from '@ethersproject/wordlists'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-  TextInputFocusEventData,
-  TextInputKeyPressEventData,
+  type BlurEvent,
+  type NativeSyntheticEvent,
+  type TextInputChangeEventData,
+  type TextInputKeyPressEventData,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -13,23 +13,24 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { DeprecatedButton, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
+import { Button, Flex, Input, inputStyles, Square, Text } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useDebounce } from 'utilities/src/time/timing'
+import { MNEMONIC_LENGTH_EW, MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { isValidMnemonicWord, validateMnemonic } from 'wallet/src/utils/mnemonics'
 
-const inputRefs: Array<Input | null> = Array(24).fill(null)
+const inputRefs: Array<Input | null> = Array(MNEMONIC_LENGTH_EW).fill(null)
 
 export function ImportMnemonic(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [mnemonic, setMnemonic] = useState<string[]>(new Array(24).fill(''))
+  const [mnemonic, setMnemonic] = useState<string[]>(new Array(MNEMONIC_LENGTH_EW).fill(''))
   const { addOnboardingAccountMnemonic } = useOnboardingContext()
   const [expanded, setExpanded] = useState(false)
   const [errors, setErrors] = useState<Record<number, boolean | undefined>>({})
@@ -55,9 +56,9 @@ export function ImportMnemonic(): JSX.Element {
       // We conditionally prevent default here because we want paste to work as expected in all other cases.
       event.preventDefault()
       const words = validMnemonic.replaceAll(/\s+/g, ' ').split(' ')
-      setExpanded(words.length > 12)
+      setExpanded(words.length > MNEMONIC_LENGTH_HD)
 
-      const newMnemonic = Array(24)
+      const newMnemonic = Array(MNEMONIC_LENGTH_EW)
         .fill('')
         .map((_, i) => words[i] || '')
 
@@ -76,7 +77,7 @@ export function ImportMnemonic(): JSX.Element {
     return () => {
       window.document.removeEventListener('paste', handlePaste)
     }
-  }, [setMnemonic])
+  }, [])
 
   const handleChange = useCallback(
     (index: number) =>
@@ -92,7 +93,7 @@ export function ImportMnemonic(): JSX.Element {
         newMnemonic[index] = word.trim()
         setMnemonic(newMnemonic)
       },
-    [mnemonic, setMnemonic],
+    [mnemonic],
   )
 
   const handleKeyPress = useCallback(
@@ -108,8 +109,8 @@ export function ImportMnemonic(): JSX.Element {
 
   const handleBlur = useCallback(
     (index: number) =>
-      (event: NativeSyntheticEvent<TextInputFocusEventData>): void => {
-        const word = event.nativeEvent.text
+      (_event: BlurEvent): void => {
+        const word = mnemonic[index]
 
         if (!word && errors[index] !== undefined) {
           setErrors({ ...errors, [index]: undefined })
@@ -117,10 +118,10 @@ export function ImportMnemonic(): JSX.Element {
         if (!word) {
           return
         }
-        const wordInList = wordlists.en?.getWordIndex(word) !== -1
+        const wordInList = wordlists['en']?.getWordIndex(word) !== -1
         setErrors({ ...errors, [index]: !wordInList })
       },
-    [errors],
+    [errors, mnemonic],
   )
 
   const { error: mnemonicValidationError, invalidWordCount } = useMemo(() => {
@@ -135,7 +136,7 @@ export function ImportMnemonic(): JSX.Element {
 
   const errorMessageToDisplay = useMemo(() => {
     // If all cells are filled, but there is an error, display the invalid phrase error
-    const trimmedMnemonic = expanded ? mnemonic : mnemonic.slice(0, 12)
+    const trimmedMnemonic = expanded ? mnemonic : mnemonic.slice(0, MNEMONIC_LENGTH_HD)
     const allCellsFilled = trimmedMnemonic.every((word) => word.length > 0)
 
     if (allCellsFilled && mnemonicValidationError) {
@@ -160,6 +161,7 @@ export function ImportMnemonic(): JSX.Element {
 
     if (isResetting) {
       // Remove all accounts before importing mnemonic.
+      // oxlint-disable-next-line typescript/await-thenable -- biome-parity: oxlint is stricter here
       await dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.Remove,
@@ -187,7 +189,7 @@ export function ImportMnemonic(): JSX.Element {
               height={iconSizes.icon48}
               width={iconSizes.icon48}
             >
-              <FileListLock color="$neutral1" size={iconSizes.icon24} />
+              <FileListLock color="$neutral1" size="$icon.24" />
             </Square>
           }
           belowFrameContent={
@@ -212,7 +214,9 @@ export function ImportMnemonic(): JSX.Element {
           }
           nextButtonEnabled={!isEmptyMnemonic && !mnemonicValidationError && !errorMessageToDisplay}
           nextButtonText={t('common.button.continue')}
-          subtitle={t('onboarding.importMnemonic.subtitle')}
+          subtitle={t('onboarding.importMnemonic.subtitle', {
+            count: expanded ? MNEMONIC_LENGTH_EW : MNEMONIC_LENGTH_HD,
+          })}
           title={t('onboarding.importMnemonic.title')}
           onBack={isResetting ? undefined : (): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
           onSubmit={onSubmit}
@@ -227,42 +231,45 @@ export function ImportMnemonic(): JSX.Element {
             >
               {debouncedErrorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
             </Text>
-            <Flex>
-              <Flex row flexWrap="wrap" gap="$spacing16">
-                {mnemonic.map(
-                  (word, index) =>
-                    Boolean(expanded || (!expanded && index < 12)) && (
-                      <Flex key={index} position="relative" style={styles.recoveryPhraseWord}>
-                        <RecoveryPhraseWord
-                          key={index + 'input'}
-                          ref={(ref) => (inputRefs[index] = ref)}
-                          handleBlur={handleBlur}
-                          handleChange={handleChange}
-                          handleKeyPress={handleKeyPress}
-                          index={index}
-                          word={word}
-                          onSubmitEditing={onSubmit}
-                        />
-                      </Flex>
-                    ),
-                )}
-              </Flex>
-              <DeprecatedButton
-                backgroundColor="$transparent"
-                gap="$spacing4"
-                hoverStyle={{ backgroundColor: 'transparent' } as FlexProps}
+            <Flex row flexWrap="wrap" gap="$spacing16">
+              {mnemonic.map(
+                (word, index) =>
+                  Boolean(expanded || index < MNEMONIC_LENGTH_HD) && (
+                    <Flex key={index} style={styles.recoveryPhraseWord}>
+                      <RecoveryPhraseWord
+                        key={index + 'input'}
+                        ref={(ref) => {
+                          inputRefs[index] = ref
+                        }}
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        handleKeyPress={handleKeyPress}
+                        index={index}
+                        word={word}
+                        onSubmitEditing={onSubmit}
+                      />
+                    </Flex>
+                  ),
+              )}
+            </Flex>
+            <Flex row alignSelf="stretch">
+              <Button
                 mt="$spacing16"
-                mx="auto"
-                pressStyle={{ backgroundColor: 'transparent' } as FlexProps}
-                onPress={(): void => setExpanded(!expanded)}
+                mb="$spacing8"
+                icon={<RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} size="$icon.20" />}
+                iconPosition="after"
+                emphasis="text-only"
+                onPress={(): void => {
+                  if (expanded) {
+                    setMnemonic([...mnemonic.slice(0, MNEMONIC_LENGTH_HD), ...Array(MNEMONIC_LENGTH_HD).fill('')])
+                  }
+                  setExpanded(!expanded)
+                }}
               >
-                <Text color="$neutral2" variant="body3">
-                  {expanded
-                    ? t('onboarding.importMnemonic.button.default')
-                    : t('onboarding.importMnemonic.button.longPhrase')}
-                </Text>
-                <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
-              </DeprecatedButton>
+                {expanded
+                  ? t('onboarding.importMnemonic.button.default', { count: MNEMONIC_LENGTH_HD })
+                  : t('onboarding.importMnemonic.button.longPhrase')}
+              </Button>
             </Flex>
           </>
         </OnboardingScreen>
@@ -276,17 +283,17 @@ const RecoveryPhraseWord = forwardRef<
   {
     word: string
     index: number
-    handleBlur: (index: number) => (event: NativeSyntheticEvent<TextInputFocusEventData>) => void
+    handleBlur: (index: number) => (event: BlurEvent) => void
     handleChange: (index: number) => (event: NativeSyntheticEvent<TextInputChangeEventData>) => void
     handleKeyPress: (index: number) => (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
     onSubmitEditing: () => void
   }
->(function _RecoveryPhraseWord(
+>(function RecoveryPhraseWordInner(
   { word, index, handleBlur, handleChange, handleKeyPress, onSubmitEditing },
   ref,
 ): JSX.Element {
   const debouncedWord = useDebounce(word, 500)
-  const showError = isValidMnemonicWord(debouncedWord)
+  const showError = debouncedWord.length > 0 && !isValidMnemonicWord(debouncedWord)
 
   return (
     <Flex key={index} position="relative" width={130}>
@@ -321,7 +328,7 @@ const RecoveryPhraseWord = forwardRef<
         onKeyPress={handleKeyPress(index)}
         onSubmitEditing={onSubmitEditing}
         {...(showError && {
-          backgroundColor: '$DEP_accentCriticalSoft',
+          backgroundColor: '$statusCritical2',
           color: '$statusCritical',
         })}
       />

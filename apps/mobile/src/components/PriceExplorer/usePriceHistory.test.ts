@@ -1,16 +1,13 @@
 import { waitFor } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
+import { USDC, USDC_ARBITRUM, USDC_BASE, USDC_OPTIMISM, USDC_POLYGON } from 'uniswap/src/constants/tokens'
 import {
-  HistoryDuration,
-  TimestampedAmount,
-  TokenProject as TokenProjectType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  SAMPLE_CURRENCY_ID_1,
   getLatestPrice,
   priceHistory,
+  SAMPLE_CURRENCY_ID_1,
   timestampedAmount,
   token,
   tokenMarket,
@@ -20,7 +17,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 
-const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType[] => {
+const mockTokenProjectsQuery = (historyPrices: number[]) => (): GraphQLApi.TokenProject[] => {
   const history = historyPrices.map((value) => timestampedAmount({ value }))
 
   return [
@@ -35,12 +32,30 @@ const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType
   ]
 }
 
-const formatPriceHistory = (history: TimestampedAmount[]): Omit<TimestampedAmount, 'id'>[] =>
+const formatPriceHistory = (history: GraphQLApi.TimestampedAmount[]): Omit<GraphQLApi.TimestampedAmount, 'id'>[] =>
   history.map(({ timestamp, value }) => ({ value, timestamp: timestamp * 1000 }))
+
+/**
+ * Creates a USDC token project with matching priceHistory for both the aggregated market
+ * and the Ethereum token's market. This ensures the hook returns the expected data since
+ * it prefers per-chain price history over aggregated price history.
+ */
+const createUsdcTokenProjectWithMatchingPriceHistory = (
+  history: (GraphQLApi.TimestampedAmount | undefined)[],
+): GraphQLApi.TokenProject => ({
+  ...usdcTokenProject({ priceHistory: history }),
+  tokens: [
+    token({ sdkToken: USDC, market: tokenMarket({ priceHistory: history }) }),
+    token({ sdkToken: USDC_POLYGON }),
+    token({ sdkToken: USDC_ARBITRUM }),
+    token({ sdkToken: USDC_BASE, market: tokenMarket() }),
+    token({ sdkToken: USDC_OPTIMISM }),
+  ],
+})
 
 describe(useTokenPriceHistory, () => {
   it('returns correct initial values', async () => {
-    const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1))
+    const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
     expect(result.current.loading).toBe(true)
     expect(result.current.error).toBe(false)
@@ -48,7 +63,7 @@ describe(useTokenPriceHistory, () => {
       priceHistory: undefined,
       spot: undefined,
     })
-    expect(result.current.selectedDuration).toBe(HistoryDuration.Day) // default initial duration
+    expect(result.current.selectedDuration).toBe(GraphQLApi.HistoryDuration.Day) // default initial duration
     expect(result.current.numberOfDigits).toEqual({
       left: 0,
       right: 0,
@@ -63,9 +78,15 @@ describe(useTokenPriceHistory, () => {
   it('returns on-chain spot price if off-chain spot price is not available', async () => {
     const market = tokenMarket()
     const { resolvers } = queryResolvers({
-      tokenProjects: () => [usdcTokenProject({ markets: undefined, tokens: [token({ market })] })],
+      tokenProjects: () => [
+        usdcTokenProject({
+          markets: undefined,
+          // Ensure token has the correct chain to match SAMPLE_CURRENCY_ID_1 (Ethereum)
+          tokens: [token({ market, chain: GraphQLApi.Chain.Ethereum })],
+        }),
+      ],
     })
-    const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+    const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
       resolvers,
     })
 
@@ -76,8 +97,39 @@ describe(useTokenPriceHistory, () => {
 
     await waitFor(() => {
       expect(result.current.data?.spot).toEqual({
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         value: expect.objectContaining({ value: market.price?.value }),
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         relativeChange: expect.objectContaining({ value: market.pricePercentChange?.value }),
+      })
+    })
+  })
+
+  it('handles gracefully when no token matches the currencyId chain', async () => {
+    const aggregatedMarket = tokenProjectMarket()
+    const { resolvers } = queryResolvers({
+      tokenProjects: () => [
+        usdcTokenProject({
+          markets: [aggregatedMarket],
+          // Provide tokens for different chains, but none matching SAMPLE_CURRENCY_ID_1 (Ethereum)
+          tokens: [token({ chain: GraphQLApi.Chain.Polygon }), token({ chain: GraphQLApi.Chain.Arbitrum })],
+        }),
+      ],
+    })
+    const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+      resolvers,
+    })
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+      expect(result.current.error).toBe(false)
+    })
+
+    // Should fall back to aggregated market data when no chain-specific token is found
+    await waitFor(() => {
+      expect(result.current.data?.spot).toEqual({
+        value: expect.objectContaining({ value: aggregatedMarket.price.value }),
+        relativeChange: expect.objectContaining({ value: aggregatedMarket.pricePercentChange24h.value }),
       })
     })
   })
@@ -87,7 +139,7 @@ describe(useTokenPriceHistory, () => {
       const { resolvers } = queryResolvers({
         tokenProjects: mockTokenProjectsQuery([0.00001, 1, 111_111_111.1111]),
       })
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
       })
 
@@ -106,7 +158,7 @@ describe(useTokenPriceHistory, () => {
       const { resolvers } = queryResolvers({
         tokenProjects: mockTokenProjectsQuery([0.001, 0.002]),
       })
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
       })
 
@@ -123,7 +175,7 @@ describe(useTokenPriceHistory, () => {
 
     it('for max price equal to 1', async () => {
       const { resolvers } = queryResolvers({ tokenProjects: mockTokenProjectsQuery([0.1, 1]) })
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
       })
 
@@ -143,9 +195,9 @@ describe(useTokenPriceHistory, () => {
     it('properly formats price history entries', async () => {
       const history = priceHistory()
       const { resolvers } = queryResolvers({
-        tokenProjects: () => [usdcTokenProject({ priceHistory: history })],
+        tokenProjects: () => [createUsdcTokenProjectWithMatchingPriceHistory(history)],
       })
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
       })
 
@@ -158,14 +210,11 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('filters out invalid price history entries', async () => {
+      const invalidHistory = [undefined, timestampedAmount({ value: 1 }), undefined, timestampedAmount({ value: 2 })]
       const { resolvers } = queryResolvers({
-        tokenProjects: () => [
-          usdcTokenProject({
-            priceHistory: [undefined, timestampedAmount({ value: 1 }), undefined, timestampedAmount({ value: 2 })],
-          }),
-        ],
+        tokenProjects: () => [createUsdcTokenProjectWithMatchingPriceHistory(invalidHistory)],
       })
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
       })
 
@@ -188,26 +237,26 @@ describe(useTokenPriceHistory, () => {
   })
 
   describe('different durations', () => {
-    const dayPriceHistory = priceHistory({ duration: HistoryDuration.Day })
-    const weekPriceHistory = priceHistory({ duration: HistoryDuration.Week })
-    const monthPriceHistory = priceHistory({ duration: HistoryDuration.Month })
-    const yearPriceHistory = priceHistory({ duration: HistoryDuration.Year })
+    const dayPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Day })
+    const weekPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Week })
+    const monthPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Month })
+    const yearPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Year })
 
-    const dayTokenProject = usdcTokenProject({ priceHistory: dayPriceHistory })
-    const weekTokenProject = usdcTokenProject({ priceHistory: weekPriceHistory })
-    const monthTokenProject = usdcTokenProject({ priceHistory: monthPriceHistory })
-    const yearTokenProject = usdcTokenProject({ priceHistory: yearPriceHistory })
+    const dayTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(dayPriceHistory)
+    const weekTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(weekPriceHistory)
+    const monthTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(monthPriceHistory)
+    const yearTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(yearPriceHistory)
 
     const { resolvers } = queryResolvers({
       tokenProjects: (parent, args, context, info) => {
-        switch (info.variableValues.duration) {
-          case HistoryDuration.Day:
+        switch (info.variableValues['duration']) {
+          case GraphQLApi.HistoryDuration.Day:
             return [dayTokenProject]
-          case HistoryDuration.Week:
+          case GraphQLApi.HistoryDuration.Week:
             return [weekTokenProject]
-          case HistoryDuration.Month:
+          case GraphQLApi.HistoryDuration.Month:
             return [monthTokenProject]
-          case HistoryDuration.Year:
+          case GraphQLApi.HistoryDuration.Year:
             return [yearTokenProject]
           default:
             return [dayTokenProject]
@@ -217,7 +266,9 @@ describe(useTokenPriceHistory, () => {
 
     describe('when duration is set to default value (day)', () => {
       it('returns correct price history', async () => {
-        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+          resolvers,
+        })
 
         await waitFor(() => {
           expect(result.current).toEqual(
@@ -226,20 +277,23 @@ describe(useTokenPriceHistory, () => {
                 priceHistory: formatPriceHistory(dayPriceHistory),
                 spot: expect.anything(),
               },
-              selectedDuration: HistoryDuration.Day,
+              selectedDuration: GraphQLApi.HistoryDuration.Day,
             }),
           )
         })
       })
 
       it('returns correct spot price', async () => {
-        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+          resolvers,
+        })
 
         await waitFor(() => {
+          const ethereumToken = dayTokenProject.tokens.find((t) => t.chain === GraphQLApi.Chain.Ethereum)
           expect(result.current.data?.spot).toEqual({
-            value: expect.objectContaining({ value: dayTokenProject.markets[0]?.price.value }),
+            value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
             relativeChange: expect.objectContaining({
-              value: dayTokenProject.markets[0]?.pricePercentChange24h.value,
+              value: dayTokenProject.markets?.[0]?.pricePercentChange24h?.value,
             }),
           })
         })
@@ -249,7 +303,11 @@ describe(useTokenPriceHistory, () => {
     describe('when duration is set to non-default value (year)', () => {
       it('returns correct price history', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, HistoryDuration.Year),
+          () =>
+            useTokenPriceHistory({
+              currencyId: SAMPLE_CURRENCY_ID_1,
+              initialDuration: GraphQLApi.HistoryDuration.Year,
+            }),
           { resolvers },
         )
 
@@ -260,22 +318,32 @@ describe(useTokenPriceHistory, () => {
                 priceHistory: formatPriceHistory(yearPriceHistory),
                 spot: expect.anything(),
               },
-              selectedDuration: HistoryDuration.Year,
+              selectedDuration: GraphQLApi.HistoryDuration.Year,
             }),
           )
         })
       })
 
-      it('returns correct spot price', async () => {
+      it('returns correct spot price with calculated percentage change', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, HistoryDuration.Year),
+          () =>
+            useTokenPriceHistory({
+              currencyId: SAMPLE_CURRENCY_ID_1,
+              initialDuration: GraphQLApi.HistoryDuration.Year,
+            }),
           { resolvers },
         )
         await waitFor(() => {
+          const ethereumToken = yearTokenProject.tokens.find((t) => t.chain === GraphQLApi.Chain.Ethereum)
+          // For non-Day durations, relativeChange is calculated from price history
+          const openPrice = yearPriceHistory[0]?.value ?? 0
+          const closePrice = yearPriceHistory[yearPriceHistory.length - 1]?.value ?? 0
+          const calculatedChange = openPrice > 0 ? ((closePrice - openPrice) / openPrice) * 100 : 0
+
           expect(result.current.data?.spot).toEqual({
-            value: expect.objectContaining({ value: yearTokenProject.markets[0]?.price?.value }),
+            value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
             relativeChange: expect.objectContaining({
-              value: yearTokenProject.markets[0]?.pricePercentChange24h?.value,
+              value: calculatedChange,
             }),
           })
         })
@@ -283,16 +351,20 @@ describe(useTokenPriceHistory, () => {
     })
 
     describe('when duration is changed', () => {
-      it('returns new price history and spot price', async () => {
-        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
+      it('returns new price history and spot price with correct percentage change calculation', async () => {
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+          resolvers,
+        })
 
         await waitFor(() => {
+          const ethereumToken = dayTokenProject.tokens.find((t) => t.chain === GraphQLApi.Chain.Ethereum)
+          // For Day duration, should use API's 24hr value
           expect(result.current.data).toEqual({
             priceHistory: formatPriceHistory(dayPriceHistory),
             spot: {
-              value: expect.objectContaining({ value: dayTokenProject.markets[0]?.price.value }),
+              value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
               relativeChange: expect.objectContaining({
-                value: dayTokenProject.markets[0]?.pricePercentChange24h.value,
+                value: dayTokenProject.markets?.[0]?.pricePercentChange24h?.value,
               }),
             },
           })
@@ -300,16 +372,22 @@ describe(useTokenPriceHistory, () => {
 
         // Change duration
         await act(() => {
-          result.current.setDuration(HistoryDuration.Week)
+          result.current.setDuration(GraphQLApi.HistoryDuration.Week)
         })
 
         await waitFor(() => {
+          const ethereumToken = weekTokenProject.tokens.find((t) => t.chain === GraphQLApi.Chain.Ethereum)
+          // For Week duration, should calculate from price history
+          const openPrice = weekPriceHistory[0]?.value ?? 0
+          const closePrice = weekPriceHistory[weekPriceHistory.length - 1]?.value ?? 0
+          const calculatedChange = openPrice > 0 ? ((closePrice - openPrice) / openPrice) * 100 : 0
+
           expect(result.current.data).toEqual({
             priceHistory: formatPriceHistory(weekPriceHistory),
             spot: {
-              value: expect.objectContaining({ value: weekTokenProject.markets[0]?.price?.value }),
+              value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
               relativeChange: expect.objectContaining({
-                value: weekTokenProject.markets[0]?.pricePercentChange24h?.value,
+                value: calculatedChange,
               }),
             },
           })
@@ -325,7 +403,7 @@ describe(useTokenPriceHistory, () => {
             throw new Error('error')
           },
         })
-        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
           resolvers: errorResolvers,
         })
 

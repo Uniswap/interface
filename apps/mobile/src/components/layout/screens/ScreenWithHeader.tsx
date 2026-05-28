@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useMemo } from 'react'
+import { Edge } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
@@ -12,6 +13,7 @@ type ScreenWithHeaderProps = {
   fullScreen?: boolean // Expand to device edges
   backgroundColor?: ColorTokens
   backButtonColor?: ColorTokens
+  edges?: Edge[]
 }
 
 export function ScreenWithHeader({
@@ -20,10 +22,11 @@ export function ScreenWithHeader({
   fullScreen = false,
   backgroundColor = '$surface1',
   backButtonColor,
+  edges = ['top', 'left', 'right'],
   children,
 }: PropsWithChildren<ScreenWithHeaderProps>): JSX.Element {
   return (
-    <Screen backgroundColor={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
+    <Screen backgroundColor={backgroundColor} edges={edges} noInsets={fullScreen}>
       <ScreenHeader
         backButtonColor={backButtonColor}
         backgroundColor={backgroundColor}
@@ -49,7 +52,7 @@ type ScreenHeaderProps = {
  * Fixed header component that can be used in any screen context.
  * Supports customization of center and right elements, and can expand to device edges.
  */
-export function ScreenHeader({
+function ScreenHeader({
   centerElement,
   rightElement = <Flex width={iconSizes.icon24} />,
   fullScreen = false,

@@ -1,5 +1,3 @@
-// this allows us to use es6, es2017, es2018 syntax (const, spread operators outside of array literals, etc.)
-/* eslint-env es6, es2017, es2018 */
 const globals = require('./globals')
 
 /** @type any */
@@ -19,11 +17,26 @@ module.exports = {
   //   '<rootDir>/packages/**/src/**/*.ts',
   // ],
   moduleDirectories: ['node_modules', 'src'],
-  moduleFileExtensions: ['jest.tsx', 'jest.ts', 'ts', 'tsx', 'js', 'mjs', 'cjs', 'jsx', 'json', 'node', 'mp4'],
+  moduleFileExtensions: [
+    'web.tsx',
+    'web.ts',
+    'jest.tsx',
+    'jest.ts',
+    'ts',
+    'tsx',
+    'js',
+    'mjs',
+    'cjs',
+    'jsx',
+    'json',
+    'node',
+    'mp4',
+  ],
   moduleNameMapper: {
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2|mp4)$': 'jest-transform-stub',
     // Jest by default doesn't support absolute imports out of the box
     '^src/(.*)$': '<rootDir>/src/$1',
+    '^config/(.*)$': '<rootDir>/../../config/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/node_modules'],
   testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],
@@ -33,7 +46,7 @@ module.exports = {
   // changedSince: 'master',
   // https://github.com/facebook/jest/issues/2663#issuecomment-341384494
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|react-native-web|react-native-modal-selector|react-native-modal-datetime-picker|@storybook/react-native|@react-native-community/datetimepicker|react-native-image-colors|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|@react-native-masked-view|statsig-js|statsig-react-native|statsig-react|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker|wagmi|viem)/)',
+    'node_modules/(?!(react-native|@universe|react-native-web|react-native-modal-selector|react-native-modal-datetime-picker|react-native-keyboard-controller|@react-navigation|@shopify/react-native-skia|@storybook/react-native|@react-native-community/datetimepicker|react-native-image-colors|uuid|react-native-reanimated|react-native-gesture-handler|react-native-mmkv|react-native-safe-area-context|react-native-localize|@react-native-masked-view|@statsig-js/js-client|@statsig/react-native-bindings|@statsig/react-bindings|@statsig/js-local-overrides|@react-native|@react-native-firebase|@uniswap/client-embeddedwallet|@uniswap/client-privy-embedded-wallet|@uniswap/client-data-api|@uniswap/client-platform-service|@uniswap/client-notification-service|@uniswap/client-liquidity|@uniswap/client-for|@uniswap/client-unirpc-v2|@uniswap/client-unitag|@connectrpc|@bufbuild|react-native-webview|@gorhom|expo.*|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker|wagmi|viem|rn-qr-generator|@solana|jayson|@uniswap/client-search|@noble|@scure)/)',
   ],
   collectCoverage: false, // only collect in CI
   clearMocks: true,

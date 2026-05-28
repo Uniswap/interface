@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
-import { usePendingTransactions } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { usePendingTransactions } from '~/state/transactions/hooks'
 
 /**
  * Trigger a function when a transaction of a given type is confirmed
@@ -11,7 +11,7 @@ import { usePrevious } from 'utilities/src/react/hooks'
 export function useTriggerOnTransactionType(type: TransactionType, trigger: () => void) {
   const pendingTransactions = usePendingTransactions()
   const numPendingTransactions = useMemo(
-    () => pendingTransactions.filter((tx) => tx.info.type === type).length,
+    () => pendingTransactions.filter((tx) => tx.typeInfo.type === type).length,
     [pendingTransactions, type],
   )
   const prevNumPendingTransactions = usePrevious(numPendingTransactions)

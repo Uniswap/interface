@@ -1,35 +1,40 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
-import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
-import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import { useRouterPreference } from 'state/user/hooks'
-import { ETH_MAINNET } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
+import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useGetQuoteQuery, useGetQuoteQueryState } from '~/state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from '~/state/routing/types'
+import { useRoutingAPITrade } from '~/state/routing/useRoutingAPITrade'
+import { currencyAddressForSwapQuote } from '~/state/routing/utils'
+import { useRouterPreference } from '~/state/user/hooks'
+import { ETH_MAINNET } from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 
-jest.mock('hooks/useIsWindowVisible')
-jest.mock('state/routing/usePreviewTrade')
-jest.mock('./slice', () => {
+vi.mock('utilities/src/react/useIsWindowVisible')
+vi.mock('./slice', () => {
   return {
-    useGetQuoteQuery: jest.fn(),
-    useGetQuoteQueryState: jest.fn(),
+    useGetQuoteQuery: vi.fn(),
+    useGetQuoteQueryState: vi.fn(),
   }
 })
-jest.mock('state/user/hooks')
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('~/state/user/hooks')
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    useFeatureFlag: jest.fn(),
-    useExperimentValue: jest.fn(),
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    useExperimentValue: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
+vi.mock('uniswap/src/features/smartWallet/mismatch/hooks', () => ({
+  useIsMismatchAccountQuery: vi.fn(),
+}))
 
 beforeEach(() => {
   mocked(useIsWindowVisible).mockReturnValue(true)
@@ -37,12 +42,18 @@ beforeEach(() => {
   // @ts-ignore we dont use the response from this hook in useRoutingAPITrade so fine to mock as undefined
   mocked(useGetQuoteQuery).mockReturnValue(undefined)
   mocked(useGetQuoteQueryState).mockReturnValue({
-    refetch: jest.fn(),
+    refetch: vi.fn(),
     isError: false,
     data: undefined,
     error: false,
     currentData: undefined,
   })
+
+  mocked(useIsMismatchAccountQuery).mockReturnValue({
+    data: false,
+    isLoading: false,
+    isError: false,
+  } as any)
 })
 
 const MOCK_ARGS: GetQuoteArgs = {
@@ -58,11 +69,10 @@ const MOCK_ARGS: GetQuoteArgs = {
   tokenOutSymbol: ETH_MAINNET.wrapped.symbol,
   routerPreference: RouterPreference.API,
   tradeType: TradeType.EXACT_INPUT,
-  needsWrapIfUniswapX: USDCAmount.currency.isNative,
   uniswapXForceSyntheticQuotes: false,
   sendPortionEnabled: true,
   protocolPreferences: undefined,
-  routingType: URAQuoteType.DUTCH_V1,
+  routingType: URAQuoteType.DUTCH_V2,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {
@@ -77,7 +87,7 @@ describe('#useRoutingAPITrade ExactIn', () => {
       pollingInterval: AVERAGE_L1_BLOCK_TIME_MS,
       refetchOnMountOrArgChange: 2 * 60,
     })
-    expect(result.current?.trade).toEqual(undefined)
+    expect(result.current.trade).toEqual(undefined)
   })
 
   it('does call routing api when window is focused for quote requests', () => {
@@ -104,7 +114,7 @@ describe('#useRoutingAPITrade pricing', () => {
       pollingInterval: ms(`1m`),
       refetchOnMountOrArgChange: 2 * 60,
     })
-    expect(result.current?.trade).toEqual(undefined)
+    expect(result.current.trade).toEqual(undefined)
   })
 
   it('does call routing api when window is focused for pricing requests', () => {

@@ -1,65 +1,11 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
-import { PositionInfo } from 'components/Liquidity/types'
-import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { PopupType } from '~/state/popups/types'
+import type { AuthenticatorProvider } from '~/types/authenticatorProvider'
+import { ReceiveCryptoModalInitialState } from '~/types/receiveCryptoModal'
 
-export enum PopupType {
-  Transaction = 'transaction',
-  Order = 'order',
-  FailedSwitchNetwork = 'failedSwitchNetwork',
-  SwitchNetwork = 'switchNetwork',
-  Bridge = 'bridge',
-}
-
-export type PopupContent =
-  | {
-      type: PopupType.Transaction
-      hash: string
-    }
-  | {
-      type: PopupType.Order
-      orderHash: string
-    }
-  | {
-      type: PopupType.FailedSwitchNetwork
-      failedSwitchNetwork: UniverseChainId
-    }
-  | {
-      type: PopupType.SwitchNetwork
-      chainId: UniverseChainId
-      action: SwapTab
-    }
-  | {
-      type: PopupType.Bridge
-      inputChainId: UniverseChainId
-      outputChainId: UniverseChainId
-    }
-
-// TODO(WEB-4888): remove this type
-/** @deprecated add new Modals to the ModalName object in uniswap/src/features/telemetry/constants */
-export enum ApplicationModal {
-  ADDRESS_CLAIM,
-  BLOCKED_ACCOUNT,
-  CLAIM_POPUP,
-  DELEGATE,
-  EXECUTE,
-  FEATURE_FLAGS,
-  FIAT_ONRAMP,
-  RECEIVE_CRYPTO,
-  RECEIVE_CRYPTO_QR,
-  RECOVERY_PHRASE,
-  PRIVACY_POLICY,
-  QUEUE,
-  SELF_CLAIM,
-  SETTINGS,
-  VOTE,
-  UK_DISCLAIMER,
-  GET_THE_APP,
-}
-
-export type LiquidityModalInitialState = PositionInfo & { collectAsWeth?: boolean }
+export type LiquidityModalInitialState = PositionInfo
 
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
@@ -76,27 +22,103 @@ type ClaimFeeModalParams = {
   initialState: LiquidityModalInitialState
 }
 
+type BlockedAccountModalParams = {
+  name: typeof ModalName.BlockedAccount
+  initialState: { blockedAddress?: string }
+}
+
+type ReceiveCryptoModalParams = {
+  name: typeof ModalName.ReceiveCryptoModal
+  initialState: ReceiveCryptoModalInitialState
+}
+
+type DeletePasskeyModalInitialState = {
+  authenticatorId: string
+  authenticatorLabel: string
+  authenticatorProvider: AuthenticatorProvider
+  isLastAuthenticator: boolean
+  // Unix ms of the most recent successful seed phrase export, or undefined if never exported.
+  lastExportedMs?: number
+}
+
+export type DeletePasskeyModalParams = {
+  name: typeof ModalName.DeletePasskey
+  initialState: DeletePasskeyModalInitialState
+}
+
+type RemoveBackupLoginModalInitialState = {
+  recoveryMethodType: string
+  recoveryMethodIdentifier?: string
+}
+
+export type RemoveBackupLoginModalParams = {
+  name: typeof ModalName.RemoveBackupLogin
+  initialState: RemoveBackupLoginModalInitialState
+}
+
+type DataApiOutageModalInitialState = {
+  dataUpdatedAt?: number
+}
+
+export type DataApiOutageModalParams = {
+  name: typeof ModalName.DataApiOutage
+  initialState: DataApiOutageModalInitialState
+}
+
+type RecoverWalletModalInitialState = {
+  initialMethod?: 'email'
+}
+
+export type RecoverWalletModalParams = {
+  name: typeof ModalName.RecoverWallet
+  initialState: RecoverWalletModalInitialState
+}
+
+type GetTheAppModalInitialState = {
+  initialInnerPage?: 'mobile'
+}
+
+export type GetTheAppModalParams = {
+  name: typeof ModalName.GetTheApp
+  initialState: GetTheAppModalInitialState
+}
+
+type UnitagRateLimitSpeedbumpModalInitialState = {
+  walletAddress: string
+  walletId: string
+  exported?: boolean
+}
+
+export type UnitagRateLimitSpeedbumpModalParams = {
+  name: typeof ModalName.UnitagRateLimitSpeedbump
+  initialState: UnitagRateLimitSpeedbumpModalInitialState
+}
+
 export type OpenModalParams =
-  | { name: ModalNameType | ApplicationModal; initialState?: undefined }
+  | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
+  | BlockedAccountModalParams
+  | ReceiveCryptoModalParams
+  | DeletePasskeyModalParams
+  | RemoveBackupLoginModalParams
+  | DataApiOutageModalParams
+  | RecoverWalletModalParams
+  | GetTheAppModalParams
+  | UnitagRateLimitSpeedbumpModalParams
 
-export type CloseModalParams = ModalNameType | ApplicationModal
-
-export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+type CloseModalParams = ModalNameType
 
 export interface ApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
-  readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
 
 const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
-  popupList: [],
   suppressedPopups: [],
 }
 
@@ -117,37 +139,13 @@ const applicationSlice = createSlice({
         state.openModal = null
       }
     },
-    addPopup(
-      state,
-      {
-        payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS },
-      }: { payload: { content: PopupContent; key?: string; removeAfterMs?: number } },
-    ) {
-      key = key || nanoid()
-      state.popupList = [
-        ...state.popupList.filter((popup) => popup.key !== key),
-        {
-          key,
-          show: !state.suppressedPopups.includes(content.type),
-          content,
-          removeAfterMs,
-        },
-      ]
-    },
-    removePopup(state, { payload: { key } }) {
-      state.popupList = state.popupList.map((popup) => {
-        if (popup.key === key) {
-          popup.show = false
-        }
-        return popup
-      })
-    },
     addSuppressedPopups(state, { payload: { popupTypes } }) {
       state.suppressedPopups = Array.from(new Set([...state.suppressedPopups, ...popupTypes]))
     },
     removeSuppressedPopups(state, { payload: { popupTypes } }) {
       state.suppressedPopups = state.suppressedPopups.filter((type) => !popupTypes.includes(type))
     },
+    resetApplication: () => initialState,
   },
 })
 
@@ -155,9 +153,8 @@ export const {
   updateChainId,
   setOpenModal,
   setCloseModal,
-  addPopup,
-  removePopup,
   addSuppressedPopups,
   removeSuppressedPopups,
+  resetApplication,
 } = applicationSlice.actions
 export default applicationSlice.reducer

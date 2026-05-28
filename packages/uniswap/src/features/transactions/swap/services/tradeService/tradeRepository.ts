@@ -1,0 +1,104 @@
+import { type DiscriminatedQuoteResponse, type TradingApi, type TradingApiClient } from '@universe/api'
+import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import { type Logger } from 'utilities/src/logger/logger'
+
+// Minimal parameters needed for indicative quotes.
+// Exactly one of autoSlippage or slippageTolerance must be provided.
+interface IndicativeQuoteBase {
+  type: TradingApi.TradeType
+  amount: string
+  tokenInChainId: number
+  tokenOutChainId: number
+  tokenIn: string
+  tokenOut: string
+  swapper: string
+}
+
+export type IndicativeQuoteRequest =
+  | (IndicativeQuoteBase & { autoSlippage: TradingApi.AutoSlippage; slippageTolerance?: never })
+  | (IndicativeQuoteBase & { slippageTolerance: number; autoSlippage?: never })
+
+// Type for the indicative quote fetcher function
+export type FetchIndicativeQuote = (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
+
+export interface TradeRepository {
+  fetchQuote: TradingApiClient['fetchQuote']
+  fetchIndicativeQuote: FetchIndicativeQuote
+}
+
+export function createTradeRepository(ctx: {
+  fetchQuote: TradingApiClient['fetchQuote']
+  fetchIndicativeQuote: FetchIndicativeQuote
+  logger?: Logger
+}): TradeRepository {
+  return {
+    fetchQuote: async ({ isUSDQuote, ...params }): Promise<DiscriminatedQuoteResponse> => {
+      logSwapQuoteFetch({ chainId: params.tokenInChainId, isUSDQuote, quoteSource: 'trading_api' })
+
+      const startTime = ctx.logger ? Date.now() : undefined
+
+      const result = await ctx.fetchQuote(params)
+
+      // Log if API returned an empty quote response
+      // oxlint-disable-next-line typescript/no-unnecessary-condition -- checking for empty quote outside type expectations
+      if (ctx.logger && !result.quote) {
+        ctx.logger.error(new Error('Unexpected empty Trading API response'), {
+          tags: { file: 'tradeRepository', function: 'fetchQuote' },
+          extra: {
+            params,
+            routing: result.routing,
+            requestId: result.requestId,
+          },
+        })
+      }
+
+      if (startTime && ctx.logger) {
+        const quoteLatency = Date.now() - startTime
+
+        if (isUSDQuote) {
+          ctx.logger.info('tradeRepository', 'fetchQuote', 'USD Quote Latency', {
+            quoteLatency,
+            chainIdIn: params.tokenInChainId,
+            chainIdOut: params.tokenOutChainId,
+            isUSDQuote: true,
+          })
+        } else {
+          // keep the log name details the same for historical reasons
+          ctx.logger.info('useTrade', 'useTrade', 'Quote Latency', {
+            quoteLatency,
+            chainIdIn: params.tokenInChainId,
+            chainIdOut: params.tokenOutChainId,
+            isBridging: isBridging(params.tokenInChainId, params.tokenOutChainId),
+          })
+        }
+      }
+
+      return result
+    },
+    fetchIndicativeQuote: async (params): Promise<DiscriminatedQuoteResponse> => {
+      logSwapQuoteFetch({ chainId: params.tokenInChainId, isQuickRoute: true })
+
+      const startTime = ctx.logger ? Date.now() : undefined
+
+      const result = await ctx.fetchIndicativeQuote(params)
+
+      // log latency for indicative quotes
+      if (startTime && ctx.logger) {
+        const quoteLatency = Date.now() - startTime
+
+        ctx.logger.info('tradeRepository', 'fetchIndicativeQuote', 'Indicative Quote Latency', {
+          quoteLatency,
+          chainIdIn: params.tokenInChainId,
+          chainIdOut: params.tokenOutChainId,
+          isBridging: isBridging(params.tokenInChainId, params.tokenOutChainId),
+        })
+      }
+
+      return result
+    },
+  }
+}
+
+function isBridging(tokenInChainId?: number, tokenOutChainId?: number): boolean {
+  return Boolean(tokenInChainId && tokenOutChainId && tokenInChainId !== tokenOutChainId)
+}

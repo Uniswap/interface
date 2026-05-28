@@ -1,4 +1,5 @@
-import { BottomSheetTextInput as GorhomBottomSheetTextInput } from '@gorhom/bottom-sheet'
+/* oxlint-disable-next-line no-restricted-imports -- this is the implementation of a wrapper we recommend to use */
+import type { BottomSheetTextInput as GorhomBottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ComponentProps } from 'react'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'

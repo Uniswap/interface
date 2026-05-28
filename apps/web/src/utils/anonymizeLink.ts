@@ -16,6 +16,7 @@ const EXPLORER_HOSTNAMES: { [hostname: string]: true } = {
 export function anonymizeLink(href: string): string {
   try {
     const url = new URL(href)
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
     if (EXPLORER_HOSTNAMES[url.hostname]) {
       const pathPieces = url.pathname.split('/')
 
@@ -24,7 +25,7 @@ export function anonymizeLink(href: string): string {
       return `${url.protocol}//${url.hostname}${anonymizedPath}`
     }
     return href
-  } catch (error) {
+  } catch {
     return href
   }
 }

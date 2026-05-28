@@ -1,25 +1,23 @@
-import { Flex, useSporeColors } from 'ui/src'
-import { useENSAvatar } from 'uniswap/src/features/ens/api'
-import { isSVGUri } from 'utilities/src/format/urls'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
+import { Flex, Unicon, UniversalImage } from 'ui/src'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 
 export function UnitagProfilePicture({
   address,
   unitagAvatarUri,
   size,
+  forcePassedAvatarUri,
 }: {
   address: Address
   size: number
   unitagAvatarUri?: string
+  forcePassedAvatarUri?: boolean
 }): JSX.Element {
-  const colors = useSporeColors()
-  const { data: ensAvatar } = useENSAvatar(address)
+  const uniconImage = <Unicon address={address} size={size} />
 
-  return unitagAvatarUri ? (
+  return unitagAvatarUri || forcePassedAvatarUri ? (
     <Flex
       shrink
+      centered
       backgroundColor="$surface1"
       borderColor="$surface1"
       borderRadius="$roundedFull"
@@ -31,13 +29,9 @@ export function UnitagProfilePicture({
       shadowRadius="$spacing4"
       width={size}
     >
-      {isSVGUri(unitagAvatarUri) ? (
-        <RemoteImage backgroundColor={colors.surface1.val} height={size} uri={unitagAvatarUri} width={size} />
-      ) : (
-        <ImageUri resizeMode="cover" uri={unitagAvatarUri} />
-      )}
+      <UniversalImage allowLocalUri size={{ height: size, width: size }} uri={unitagAvatarUri} fallback={uniconImage} />
     </Flex>
   ) : (
-    <AccountIcon address={address} avatarUri={ensAvatar} showBackground={true} showBorder={true} size={size} />
+    <AccountIcon address={address} showBackground={true} showBorder={true} size={size} />
   )
 }

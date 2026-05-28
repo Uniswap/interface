@@ -1,12 +1,12 @@
-import { ChainConnectivityWarning } from 'components/ChainConnectivityWarning'
-import Popups from 'components/Popups'
-import TopLevelModals from 'components/TopLevelModals'
+import { ClaimPopup } from '~/components/Popups/ClaimPopup'
+import { PopupRenderer } from '~/components/Popups/PopupRenderer'
+import { TopLevelModals } from '~/pages/App/TopLevelModals'
 
 export default function AppChrome() {
   return (
     <>
-      <Popups />
-      <ChainConnectivityWarning />
+      <PopupRenderer />
+      <ClaimPopup />
       <TopLevelModals />
     </>
   )

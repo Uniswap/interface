@@ -1,0 +1,47 @@
+diff --git a/node_modules/@manypkg/get-packages/.bun-tag-33a6f9cd7c5038b8 b/.bun-tag-33a6f9cd7c5038b8
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/get-packages.cjs.dev.js b/dist/get-packages.cjs.dev.js
+index 7ebb3c698ee59d776b7e0d3aa2b741d3af41ed67..249e424aeeb9dc0e47da23e105881bb8d84d4ade 100644
+--- a/dist/get-packages.cjs.dev.js
++++ b/dist/get-packages.cjs.dev.js
+@@ -187,7 +187,7 @@ function _getPackages() {
+               cwd: cwd,
+               onlyDirectories: true,
+               expandDirectories: false,
+-              ignore: ["**/node_modules"]
++              ignore: ["**/node_modules", "labs/**"]
+             });
+ 
+           case 44:
+@@ -328,7 +328,7 @@ function getPackagesSync(dir) {
+     cwd: cwd,
+     onlyDirectories: true,
+     expandDirectories: false,
+-    ignore: ["**/node_modules"]
++    ignore: ["**/node_modules", "labs/**"]
+   });
+   var directories = relativeDirectories.map(function (p) {
+     return path.resolve(cwd, p);
+diff --git a/dist/get-packages.cjs.prod.js b/dist/get-packages.cjs.prod.js
+index 124d820b92b4c24af03d41f0644279ab2e1bd45b..8916696549bdae67390952e10060ce403f3a226b 100644
+--- a/dist/get-packages.cjs.prod.js
++++ b/dist/get-packages.cjs.prod.js
+@@ -121,7 +121,7 @@ function _getPackages() {
+           cwd: cwd,
+           onlyDirectories: !0,
+           expandDirectories: !1,
+-          ignore: [ "**/node_modules" ]
++          ignore: [ "**/node_modules", "labs/**" ]
+         });
+ 
+        case 44:
+@@ -214,7 +214,7 @@ function getPackagesSync(dir) {
+     cwd: cwd,
+     onlyDirectories: !0,
+     expandDirectories: !1,
+-    ignore: [ "**/node_modules" ]
++    ignore: [ "**/node_modules", "labs/**" ]
+   }).map(function(p) {
+     return path.resolve(cwd, p);
+   }), pkgJsonsMissingNameField = [], results = directories.sort().map(function(dir) {

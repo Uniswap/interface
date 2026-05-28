@@ -9,7 +9,7 @@ interface NewTagProps {
   exclamation?: boolean
 }
 
-function _NewTag({
+function NewTagInner({
   backgroundColor = '$accent2Hovered',
   textColor = '$accent1Hovered',
   ml = '$spacing6',
@@ -36,4 +36,4 @@ function _NewTag({
   )
 }
 
-export const NewTag = memo(_NewTag)
+export const NewTag = memo(NewTagInner)

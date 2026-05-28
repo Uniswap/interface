@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useMemo } from 'react'
-import { SETTINGS_ROW_HEIGHT, SettingsSection } from 'src/components/Settings/SettingsRow'
 import { SectionData, SectionInfo, SettingsListProps } from 'src/components/Settings/lists/types'
+import { SETTINGS_ROW_HEIGHT, SettingsSection } from 'src/components/Settings/SettingsRow'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -86,13 +86,7 @@ type ProcessedRow =
   | { type: 'footer'; data: SectionInfo }
 
 function processSections(sections: SettingsSection[]): ProcessedRow[] {
-  const resultSize = sections.reduce((acc, section) => {
-    const dataLength = section.data.length
-    return acc + (section.subTitle ? 1 : 0) + dataLength
-  }, 0)
-
-  const result: ProcessedRow[] = new Array(resultSize)
-  let index = 0
+  const result: ProcessedRow[] = []
 
   for (const section of sections) {
     if (section.isHidden) {
@@ -100,12 +94,12 @@ function processSections(sections: SettingsSection[]): ProcessedRow[] {
     }
 
     if (section.subTitle) {
-      result[index++] = {
+      result.push({
         type: 'header',
         data: {
           section,
         },
-      }
+      })
     }
 
     for (const data of section.data) {
@@ -113,19 +107,19 @@ function processSections(sections: SettingsSection[]): ProcessedRow[] {
         continue
       }
 
-      result[index++] = {
+      result.push({
         type: 'item',
         data,
-      }
+      })
     }
 
     if (section.subTitle) {
-      result[index++] = {
+      result.push({
         type: 'footer',
         data: {
           section,
         },
-      }
+      })
     }
   }
 

@@ -1,0 +1,83 @@
+{
+  "data": {
+    "token": {
+      "id": "VG9rZW46RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFmNWJmMWQxNzYyZjkyNWJkYWRkYzQyMDFmOTg0",
+      "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "chain": "ETHEREUM",
+      "decimals": 18,
+      "name": "Uniswap",
+      "standard": "ERC20",
+      "symbol": "UNI",
+      "isBridged": false,
+      "bridgedWithdrawalInfo": null,
+      "__typename": "Token",
+      "project": {
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4MWY5ODQwYTg1ZDVhZjViZjFkMTc2MmY5MjViZGFkZGM0MjAxZjk4NF9Vbmlzd2Fw",
+        "isSpam": false,
+        "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "name": "Uniswap",
+        "safetyLevel": "VERIFIED",
+        "spamCode": 0,
+        "tokens": [
+          {
+            "chain": "ETHEREUM",
+            "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+            "__typename": "Token"
+          },
+          {
+            "chain": "POLYGON",
+            "address": "0xb33EaAd8d922B1083446DC23f610c2567fB5180f",
+            "__typename": "Token"
+          },
+          {
+            "chain": "ARBITRUM",
+            "address": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
+            "__typename": "Token"
+          },
+          {
+            "chain": "OPTIMISM",
+            "address": "0x6fd9d7AD17242c41f7131d257212c54A0e816691",
+            "__typename": "Token"
+          },
+          {
+            "chain": "BASE",
+            "address": "0xc3De830EA07524a0761646a6a4e4be0e114a3C83",
+            "__typename": "Token"
+          },
+          {
+            "chain": "BNB",
+            "address": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
+            "__typename": "Token"
+          },
+          {
+            "chain": "AVALANCHE",
+            "address": "0x8eBAf22B6F053dFFeaf46f4Dd9eFA95D89ba8580",
+            "__typename": "Token"
+          },
+          {
+            "chain": "UNICHAIN",
+            "address": "0x8f187aA05619a017077f5308904739877ce9eA21",
+            "__typename": "Token"
+          }
+        ],
+        "__typename": "TokenProject"
+      },
+      "feeData": {
+        "buyFeeBps": null,
+        "sellFeeBps": null,
+        "__typename": "FeeData"
+      },
+      "protectionInfo": {
+        "result": "BENIGN",
+        "attackTypes": [],
+        "blockaidFees": {
+          "buy": 0.0,
+          "sell": 0.0,
+          "transfer": 0.0,
+          "__typename": "BlockaidFees"
+        },
+        "__typename": "ProtectionInfo"
+      }
+    }
+  }
+}

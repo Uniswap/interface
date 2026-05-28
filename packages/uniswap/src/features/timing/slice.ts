@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 /**
  * Used for measuring time to complete key flows for analytics.
@@ -23,8 +23,9 @@ export const slice = createSlice({
     updateSwapStartTimestamp: (state, { payload: { timestamp } }: PayloadAction<{ timestamp?: number }>) => {
       state.swap.startTimestamp = timestamp
     },
+    resetTiming: () => initialTimingState,
   },
 })
 
-export const { updateSwapStartTimestamp } = slice.actions
+export const { updateSwapStartTimestamp, resetTiming } = slice.actions
 export const { reducer: timingReducer } = slice

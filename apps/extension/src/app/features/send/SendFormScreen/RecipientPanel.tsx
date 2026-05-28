@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
-import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
+import { RotatableChevron, UserSearch } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
-import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type RecipientPanelProps = {
@@ -57,7 +57,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
   const noPatternOrFavorites = !pattern && sections.length === 0
 
   return showRecipientSelector || !recipient ? (
-    <Flex gap="$spacing12">
+    <Flex gap="$spacing16">
       <Flex gap="$none">
         <Text color="$neutral2" variant="body3">
           {t('common.text.recipient')}
@@ -69,23 +69,20 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
               backgroundColor="transparent"
               hideIcon={true}
               minHeight={spacing.spacing36}
-              placeholder={t('send.search.placeholder')}
+              placeholder={t('send.recipient.input.placeholder')}
+              placeholderTextColor="$neutral3"
               px="$none"
               py="$none"
-              value={pattern ?? ''}
+              value={pattern}
               onChangeText={setPattern}
               onFocus={() => onSetShowRecipientSelector(true)}
+              borderColor="$transparent"
+              borderWidth="$none"
             />
           </Flex>
           {showRecipientSelector && (
             <TouchableArea onPress={onClose}>
-              <RotatableChevron
-                color="$neutral3"
-                direction="up"
-                flexShrink={1}
-                height={iconSizes.icon20}
-                width={iconSizes.icon20}
-              />
+              <RotatableChevron color="$neutral3" direction="up" flexShrink={1} size="$icon.20" />
             </TouchableArea>
           )}
         </Flex>
@@ -93,14 +90,11 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
       </Flex>
       {showRecipientSelector &&
         (noPatternOrFavorites ? (
-          <Flex centered gap="$spacing12" mt="$spacing48" px="$spacing12">
-            <WalletFilled color="$neutral3" size="$icon.40" />
-            <Flex centered gap="$spacing8">
-              <Text variant="subheading2">{t('send.recipientSelect.search.empty.title')}</Text>
-              <Text color="$neutral3" textAlign="center" variant="body3">
-                {t('send.recipientSelect.search.empty.message')}
-              </Text>
-            </Flex>
+          <Flex centered gap="$spacing8" py="$spacing32">
+            <UserSearch color="$neutral3" size="$icon.32" />
+            <Text color="$neutral3" textAlign="center" variant="body3">
+              {t('send.recipientSelect.search.empty')}
+            </Text>
           </Flex>
         ) : !sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
@@ -125,7 +119,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
     <TouchableArea onPress={onToggleShowRecipientSelector}>
       <Flex centered row justifyContent="space-between">
         <AddressDisplay address={recipient} size={iconSizes.icon36} />
-        <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+        <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
       </Flex>
     </TouchableArea>
   )

@@ -69,7 +69,7 @@ export default function InputWithSuffix({
 
   return (
     <Flex row alignItems={isMultiline ? 'flex-end' : 'center'} justifyContent={inputAlignmentProp} overflow="hidden">
-      {/* 
+      {/*
         Helper Flex to measure the max width of the input and switch to multiline if needed
         (multiline input behavior on Android is weird and the input flickers when the width
         of the TextInput component changes. As a workaround, we measure the max width of the input

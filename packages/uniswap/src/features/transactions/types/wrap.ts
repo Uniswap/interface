@@ -1,5 +1,5 @@
 export enum WrapType {
-  NotApplicable,
-  Wrap,
-  Unwrap,
+  NotApplicable = 0,
+  Wrap = 1,
+  Unwrap = 2,
 }

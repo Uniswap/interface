@@ -1,6 +1,6 @@
-import { ethCurrencyInfo } from 'pages/Swap/Buy/BuyFormContext'
-// eslint-disable-next-line no-restricted-imports
+import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
+import { ethCurrencyInfo } from '~/pages/Swap/Buy/BuyFormContext'
 
 export const mockServiceProvider = {
   serviceProvider: 'test-provider',
@@ -20,6 +20,7 @@ export const mockBuyFormContext = {
       meldCurrencyCode: 'ETH',
     },
     inputAmount: '100',
+    inputInFiat: true,
     selectedCountry: {
       countryCode: 'US',
       displayName: 'United States',
@@ -28,6 +29,7 @@ export const mockBuyFormContext = {
     countryModalOpen: false,
     currencyModalOpen: false,
     providerModalOpen: true,
+    rampDirection: RampDirection.ON_RAMP,
   },
   derivedBuyFormInfo: {
     meldSupportedFiatCurrency: {
@@ -40,5 +42,5 @@ export const mockBuyFormContext = {
     notAvailableInThisRegion: false,
     fetchingQuotes: false,
   },
-  setBuyFormState: jest.fn(),
+  setBuyFormState: vi.fn(),
 }

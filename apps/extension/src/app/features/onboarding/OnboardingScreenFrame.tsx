@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScreenProps'
-import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import i18n from 'uniswap/src/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OnboardingScreenFrame({
   Icon,
@@ -10,7 +11,8 @@ export function OnboardingScreenFrame({
   nextButtonEnabled,
   nextButtonIcon,
   nextButtonText = i18n.t('common.button.next'),
-  nextButtonTheme = 'primary',
+  nextButtonVariant = 'branded',
+  nextButtonEmphasis = 'primary',
   onBack,
   onSubmit,
   onSkip,
@@ -51,6 +53,7 @@ export function OnboardingScreenFrame({
             py="$spacing4"
             right="$none"
             top="$none"
+            testID={TestID.Skip}
             onPress={onSkip}
           >
             <Text color="$neutral2" variant="buttonLabel2">
@@ -85,15 +88,15 @@ export function OnboardingScreenFrame({
       </Flex>
       <Flex row gap="$spacing12" width="100%">
         {Boolean(onSubmit) && nextButtonText && (
-          <DeprecatedButton
+          <Button
             isDisabled={!nextButtonEnabled}
-            flexGrow={1}
             icon={nextButtonIcon}
-            theme={nextButtonTheme}
+            variant={nextButtonVariant}
+            emphasis={nextButtonEmphasis}
             onPress={onSubmit}
           >
             {nextButtonText}
-          </DeprecatedButton>
+          </Button>
         )}
       </Flex>
     </>

@@ -1,13 +1,14 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined>, e: MouseEvent) {
+function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined | null>, e: MouseEvent) {
   if (node.current?.contains(e.target as Node)) {
     return true
   }
 
   // Also check bounding rectangle to handle portal'd elements not caught by `contains`.
   const rect = node.current?.getBoundingClientRect()
-  if (!rect) {
+  // jsdom often reports 0×0 rects before layout; treating (0,0) as "inside" would swallow every outside click.
+  if (!rect || rect.width <= 0 || rect.height <= 0) {
     return false
   }
 
@@ -17,11 +18,17 @@ function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined>
   return withinX && withinY
 }
 
-export function useOnClickOutside<T extends HTMLElement>(
-  node: RefObject<T | undefined>,
-  handler: undefined | (() => void),
-  ignoredNodes: Array<RefObject<HTMLElement | undefined>> = [],
-) {
+export function useOnClickOutside<T extends HTMLElement>({
+  node,
+  handler,
+  ignoredNodes = [],
+  ignoreDialogClicks = false,
+}: {
+  node: RefObject<T | undefined | null>
+  handler?: () => void
+  ignoredNodes?: Array<RefObject<HTMLElement | undefined | null>>
+  ignoreDialogClicks?: boolean
+}) {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 
   useEffect(() => {
@@ -38,6 +45,11 @@ export function useOnClickOutside<T extends HTMLElement>(
         return
       }
 
+      // Ignore clicks on dialog/modal elements if ignoreDialogClicks is true
+      if (ignoreDialogClicks && e.target instanceof Element && e.target.closest('dialog, [role="dialog"]')) {
+        return
+      }
+
       handlerRef.current?.()
     }
 
@@ -46,5 +58,5 @@ export function useOnClickOutside<T extends HTMLElement>(
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [node, ignoredNodes])
+  }, [node, ignoredNodes, ignoreDialogClicks])
 }

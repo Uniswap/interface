@@ -35,26 +35,28 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
     myRef.current?._listRef._scrollRef.scrollTo({
       x: Math.ceil(scroll.value / fullWidth + 0.5) * fullWidth,
     })
-  }, [fullWidth, scroll])
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+  }, [fullWidth])
 
   const goToPrev = useCallback(() => {
     // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976
     myRef.current?._listRef._scrollRef.scrollTo({
       x: Math.floor(scroll.value / fullWidth - 0.5) * fullWidth,
     })
-  }, [fullWidth, scroll])
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+  }, [fullWidth])
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>
       <Flex grow gap="$spacing16" mb="$spacing24">
         <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
         <AnimatedFlatList
+          ref={myRef}
           horizontal
           pagingEnabled
           data={slides}
           keyExtractor={key}
           {...flatListProps}
-          ref={myRef}
           renderItem={({ item }: ListRenderItemInfo<ReactNode>): JSX.Element => (
             <Flex centered grow p="$spacing24" pt="$none" width={fullWidth}>
               {item}

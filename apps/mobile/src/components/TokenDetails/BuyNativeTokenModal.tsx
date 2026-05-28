@@ -1,30 +1,48 @@
 import { useTranslation } from 'react-i18next'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { ReceiveButton } from 'src/components/TokenDetails/ReceiveButton'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
+import { BridgeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BridgeTokenButton'
+import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BuyNativeTokenButton'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function BuyNativeTokenModal({
-  chainId,
-  currencyId,
-  onClose,
-}: {
-  chainId: UniverseChainId
-  currencyId: string
-  onClose: () => void
-}): JSX.Element | null {
+  route,
+}: AppStackScreenProp<typeof ModalName.BuyNativeToken>): JSX.Element | null {
+  const { chainId, currencyId } = route.params
   const { t } = useTranslation()
+  const activeAddress = useActiveAccountAddress()
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const currencyInfo = useCurrencyInfo(currencyId)
+  const { onClose } = useReactNavigationModal()
+
+  const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
+    evmAddress: activeAddress ?? '',
+    currencyAddress: currencyIdToAddress(nativeCurrencyInfo?.currencyId ?? ''),
+    currencyChainId: chainId,
+  })
+
   if (!nativeCurrencyInfo || !currencyInfo) {
     return null
   }
+
+  const isMainnet = chainId === UniverseChainId.Mainnet
+  const chainName = getChainInfo(chainId).label
+  const nativeTokenSymbol = nativeCurrencyInfo.currency.symbol ?? ''
+  const nativeTokenName = nativeCurrencyInfo.currency.name ?? ''
+  const tokenSymbol = currencyInfo.currency.symbol ?? ''
 
   return (
     <Modal isDismissible alignment="top" name={ModalName.BuyNativeToken} onClose={onClose}>
@@ -33,25 +51,45 @@ export function BuyNativeTokenModal({
           <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon48} />
           <Flex centered gap="$spacing8">
             <Text variant="subheading1">
-              {t('token.zeroNativeBalance.title', { nativeTokenName: nativeCurrencyInfo.currency.name })}
+              {isMainnet
+                ? t('token.zeroNativeBalance.title.mainnet', { nativeTokenName })
+                : t('token.zeroNativeBalance.title.otherChains', { nativeTokenName, chainName })}
             </Text>
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {t('token.zeroNativeBalance.description', {
-                tokenSymbol: currencyInfo.currency.symbol,
-                nativeTokenSymbol: nativeCurrencyInfo.currency.symbol,
-              })}
+            <Text color="$neutral2" textAlign="center" variant="body3" px="$spacing8">
+              {t('token.zeroNativeBalance.subtitle', { tokenSymbol })}
+            </Text>
+            <Text color="$neutral2" textAlign="center" variant="body3" px="$spacing8">
+              {isMainnet
+                ? t('token.zeroNativeBalance.description.mainnet', { tokenSymbol })
+                : t('token.zeroNativeBalance.description.otherChains', {
+                    tokenSymbol,
+                    nativeTokenSymbol,
+                    chainName,
+                  })}
             </Text>
           </Flex>
+          <LearnMoreLink
+            textColor="$accent3"
+            textVariant="buttonLabel3"
+            url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+          />
         </Flex>
-        <Flex centered gap="$spacing12" width="100%">
-          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} canBridge={false} onPress={onClose} />
-          <Flex px="$spacing8" py="$spacing4">
-            <LearnMoreLink
-              textColor="$neutral2"
-              textVariant="buttonLabel2"
-              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+        <Flex centered gap="$spacing8" width="100%">
+          {bridgingTokenWithHighestBalance && (
+            <BridgeTokenButton
+              inputToken={bridgingTokenWithHighestBalance.currencyInfo}
+              outputToken={nativeCurrencyInfo}
+              outputNetworkName={chainName}
+              onPress={onClose}
             />
-          </Flex>
+          )}
+          <BuyNativeTokenButton
+            usesStaticText
+            usesStaticTheme={false}
+            nativeCurrencyInfo={nativeCurrencyInfo}
+            onPress={onClose}
+          />
+          {!bridgingTokenWithHighestBalance && <ReceiveButton onPress={onClose} />}
         </Flex>
       </Flex>
     </Modal>

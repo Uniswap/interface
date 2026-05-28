@@ -1,0 +1,5 @@
+{
+  "name": "oxlint-plugins",
+  "type": "module",
+  "private": true
+}

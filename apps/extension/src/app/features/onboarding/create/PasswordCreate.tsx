@@ -1,8 +1,6 @@
 import { ONBOARDING_PANE_TRANSITION_DURATION_WITH_LEEWAY } from 'src/app/features/onboarding/OnboardingPaneAnimatedContents'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { Password } from 'src/app/features/onboarding/Password'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { sleep } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -10,7 +8,6 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 export function PasswordCreate(): JSX.Element {
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { generateOnboardingAccount, resetOnboardingContextData } = useOnboardingContext()
-  const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onComplete = async (password: string): Promise<void> => {
     resetOnboardingContextData()
@@ -22,11 +19,5 @@ export function PasswordCreate(): JSX.Element {
     await generateOnboardingAccount(password)
   }
 
-  return (
-    <Password
-      flow={ExtensionOnboardingFlow.New}
-      onComplete={onComplete}
-      onBack={isClaimUnitagEnabled ? goToPreviousStep : undefined}
-    />
-  )
+  return <Password flow={ExtensionOnboardingFlow.New} onComplete={onComplete} onBack={goToPreviousStep} />
 }

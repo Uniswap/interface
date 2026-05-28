@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import { useState } from 'react'
 import { AnimatePresence, ColorTokens, Flex, TabLayout, Tabs, TabsTabProps, Text } from 'ui/src'
 
@@ -14,12 +15,16 @@ export function PillMultiToggle({
   onSelectOption,
   activePillColor = '$surface3',
   activeTextColor = '$neutral1',
+  containerProps,
+  tabProps,
 }: {
   options: PillMultiToggleOption[]
   defaultOption: string
   onSelectOption?: (option: string | number) => void
   activePillColor?: ColorTokens
   activeTextColor?: ColorTokens
+  containerProps?: Partial<ComponentProps<typeof Tabs>>
+  tabProps?: Partial<TabsTabProps>
 }): JSX.Element {
   const [tabState, setTabState] = useState<{
     currentTab: string
@@ -31,7 +36,10 @@ export function PillMultiToggle({
     intentAt: null,
   })
 
-  const setCurrentTab = (currentTab: string): void => setTabState({ ...tabState, currentTab })
+  const setCurrentTab = (currentTab: string): void => {
+    setTabState({ ...tabState, currentTab })
+    onSelectOption?.(currentTab)
+  }
   const setIntentIndicator = (intentAt: TabLayout | null): void => setTabState({ ...tabState, intentAt })
   const setActiveIndicator = (activeAt: TabLayout | null): void => setTabState({ ...tabState, activeAt })
 
@@ -42,8 +50,6 @@ export function PillMultiToggle({
   }
 
   const handleOnInteraction: TabsTabProps['onInteraction'] = (type, layout) => {
-    onSelectOption?.(currentTab)
-
     if (type === 'select') {
       setActiveIndicator(layout)
     } else {
@@ -63,6 +69,7 @@ export function PillMultiToggle({
       position="relative"
       value={currentTab}
       onValueChange={setCurrentTab}
+      {...containerProps}
     >
       <Flex>
         <AnimatePresence>
@@ -83,6 +90,7 @@ export function PillMultiToggle({
               width={activeAt.width}
               x={activeAt.x}
               y={activeAt.y}
+              zIndex="$mask"
             />
           )}
         </AnimatePresence>
@@ -93,10 +101,12 @@ export function PillMultiToggle({
               <Tabs.Tab
                 key={value}
                 unstyled
+                borderRadius="$roundedFull"
                 px="$spacing12"
                 py="$spacing6"
                 value={value}
                 onInteraction={handleOnInteraction}
+                {...tabProps}
               >
                 <Text color={isActiveTab(value) ? activeTextColor : '$neutral2'} variant="buttonLabel3">
                   {display || value}

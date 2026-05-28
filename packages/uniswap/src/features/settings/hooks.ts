@@ -1,11 +1,13 @@
+import { isMobileApp } from '@universe/environment'
 import { useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
+  // oxlint-disable-next-line no-restricted-imports -- expected usage here
   selectIsTestnetModeEnabled,
+  selectWalletHideReportedActivitySetting,
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
 } from 'uniswap/src/features/settings/selectors'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function useHideSmallBalancesSetting(): boolean {
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -15,6 +17,10 @@ export function useHideSmallBalancesSetting(): boolean {
 
 export function useHideSpamTokensSetting(): boolean {
   return useSelector(selectWalletHideSpamTokensSetting)
+}
+
+export function useHideReportedActivitySetting(): boolean {
+  return useSelector(selectWalletHideReportedActivitySetting)
 }
 
 export const TESTNET_MODE_BANNER_HEIGHT = 44

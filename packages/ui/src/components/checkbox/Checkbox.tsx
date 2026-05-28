@@ -1,17 +1,16 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { isTestEnv } from '@universe/environment'
+import { ReactElement, useId, useMemo, useState } from 'react'
 import {
   AnimatePresence,
   GetThemeValueForKey,
+  getTokenValue,
   Checkbox as TamaguiCheckbox,
   CheckboxProps as TamaguiCheckboxPops,
-  getTokenValue,
 } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
 import { IconSizeTokens } from 'ui/src/theme'
-import { isTestEnv } from 'utilities/src/environment/env'
-import { v4 as uuid } from 'uuid'
 
 type CheckboxSizes = {
   FocusRing: number
@@ -59,19 +58,19 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
 
   const accentColor = getAccentColor(variant, isHovered)
   const sizes = useMemo(() => getSizes(size), [size])
+  const hoverIndicatorKey = useId()
 
   return (
     // This outer ring is only shown when the button is focused.
     <Flex
       alignItems="center"
       {...animationProp}
-      borderColor={getFocusedRingColor(variant, isFocused, checked, accentColor)}
+      borderColor={getFocusedRingColor({ variant, isFocused, isSelected: checked, accentColor })}
       borderRadius="$rounded6"
       borderWidth="$spacing1"
       height={sizes.FocusRing}
       justifyContent="center"
       width={sizes.FocusRing}
-      testID={rest.testID}
     >
       <TamaguiCheckbox
         {...rest}
@@ -121,7 +120,7 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
           <AnimatePresence initial>
             {isHovered && !rest.disabled && (
               <Flex
-                key={`UnselectedHoverIndicator-${uuid()}`}
+                key={hoverIndicatorKey}
                 animation="simple"
                 backgroundColor="$neutral2"
                 borderRadius="$roundedFull"
@@ -146,12 +145,17 @@ function getAccentColor(variant: SporeComponentVariant, isHovered: boolean): Get
   return isHovered ? '$accent3Hovered' : '$accent3'
 }
 
-function getFocusedRingColor(
-  variant: SporeComponentVariant,
-  isFocused: boolean,
-  isSelected: boolean,
-  accentColor: GetThemeValueForKey<'backgroundColor'>,
-): GetThemeValueForKey<'borderColor'> {
+function getFocusedRingColor({
+  variant,
+  isFocused,
+  isSelected,
+  accentColor,
+}: {
+  variant: SporeComponentVariant
+  isFocused: boolean
+  isSelected: boolean
+  accentColor: GetThemeValueForKey<'backgroundColor'>
+}): GetThemeValueForKey<'borderColor'> {
   if (!isFocused) {
     return 'transparent'
   }

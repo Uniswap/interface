@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
 import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
@@ -6,34 +6,41 @@ import { Flex, Separator, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/swap/modals/LowNativeBalanceModal'
+import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
+import { isSafeNumber } from 'utilities/src/primitives/integer'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
+import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
 import { SendAmountInput } from 'wallet/src/features/transactions/send/SendAmountInput'
 import { SendReviewDetails } from 'wallet/src/features/transactions/send/SendReviewDetails'
 import { TokenSelectorPanel } from 'wallet/src/features/transactions/send/TokenSelectorPanel'
-import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
+import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function SendFormScreen(): JSX.Element {
   const colors = useSporeColors()
 
   const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
-  const [showMaxTransferModal, setShowMaxTransferModal] = useState(false)
+  const {
+    value: showMaxTransferModal,
+    setTrue: handleShowMaxTransferModal,
+    setFalse: handleHideMaxTransferModal,
+  } = useBooleanState(false)
 
   const {
     derivedSendInfo,
@@ -85,11 +92,20 @@ export function SendFormScreen(): JSX.Element {
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
   const showTokenSelector = selectingCurrencyField === CurrencyField.INPUT
 
+  const hasValueGreaterThanZero = useMemo(() => {
+    return isAmountGreaterThanZero({
+      exactAmountToken,
+      exactAmountFiat,
+      currency: currencyInInfo?.currency,
+    })
+  }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
+
   // blocked addresses
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
-  const isBlocked = isActiveBlocked || isRecipientBlocked
-  const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
+  const isSubjectBlocked = isActiveBlocked || isRecipientBlocked
+  const isSubjectBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
+  const isButtonBlocked = !hasValueGreaterThanZero || isSubjectBlocked || isSubjectBlockedLoading
 
   const goToReview = useCallback(() => {
     const txId = createTransactionId()
@@ -99,15 +115,20 @@ export function SendFormScreen(): JSX.Element {
 
   const onPressReview = useCallback(() => {
     if (!hasDismissedLowNetworkTokenWarning && isMax && currencyInInfo?.currency.isNative) {
-      sendAnalyticsEvent(WalletEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
-      setShowMaxTransferModal(true)
+      sendAnalyticsEvent(UniswapEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
+      handleShowMaxTransferModal()
       return
     }
     goToReview()
-  }, [goToReview, isMax, hasDismissedLowNetworkTokenWarning, setShowMaxTransferModal, currencyInInfo])
+  }, [goToReview, isMax, hasDismissedLowNetworkTokenWarning, handleShowMaxTransferModal, currencyInInfo])
 
   const onSetExactAmount = useCallback(
     (amount: string) => {
+      // Omit parsing errors by checking if amount exceeds Number range limit
+      if (!isSafeNumber(amount)) {
+        return
+      }
+
       updateSendForm(isFiatInput ? { exactAmountFiat: amount } : { exactAmountToken: amount })
     },
     [isFiatInput, updateSendForm],
@@ -120,15 +141,11 @@ export function SendFormScreen(): JSX.Element {
     [updateSendForm],
   )
 
-  const hideLowNativeBalanceWarning = useCallback(() => {
-    setShowMaxTransferModal(false)
-  }, [setShowMaxTransferModal])
-
   const onAcknowledgeLowNativeBalanceWarning = useCallback(() => {
-    hideLowNativeBalanceWarning()
+    handleHideMaxTransferModal()
 
     goToReview()
-  }, [hideLowNativeBalanceWarning, goToReview])
+  }, [handleHideMaxTransferModal, goToReview])
 
   const onHideTokenSelector = useCallback(() => {
     updateSendForm({ selectingCurrencyField: undefined })
@@ -156,7 +173,7 @@ export function SendFormScreen(): JSX.Element {
       </Modal>
       <LowNativeBalanceModal
         isOpen={showMaxTransferModal}
-        onClose={hideLowNativeBalanceWarning}
+        onClose={handleHideMaxTransferModal}
         onAcknowledge={onAcknowledgeLowNativeBalanceWarning}
       />
       <Flex fill gap="$spacing12">
@@ -205,7 +222,7 @@ export function SendFormScreen(): JSX.Element {
         </Flex>
         {!showRecipientSelector && (
           <>
-            {isBlocked && (
+            {isSubjectBlocked && (
               <BlockedAddressWarning
                 row
                 alignItems="center"
@@ -216,8 +233,8 @@ export function SendFormScreen(): JSX.Element {
                 py="$spacing12"
               />
             )}
-            <ReviewButton disabled={isBlocked || isBlockedLoading} onPress={onPressReview} />
-            <GasFeeRow chainId={chainId as UniverseChainId} gasFee={gasFee} />
+            <ReviewButton disabled={isButtonBlocked} onPress={onPressReview} />
+            {!warnings.insufficientGasFundsWarning && <GasFeeRow chainId={chainId} gasFee={gasFee} />}
             <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </>
         )}

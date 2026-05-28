@@ -1,9 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode } from 'react'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { Locale } from 'uniswap/src/features/language/constants'
-// eslint-disable-next-line no-restricted-imports
+import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import {
   addFiatSymbolToNumber,
   formatCurrencyAmount,
@@ -27,7 +26,7 @@ export function mockLocalizedFormatter(locale: Locale): LocalizationContextState
       })
     },
     formatPercent(value): string {
-      return formatPercent(value, locale)
+      return formatPercent({ rawPercentage: value, locale })
     },
     addFiatSymbolToNumber(input): string {
       return addFiatSymbolToNumber({
@@ -35,6 +34,7 @@ export function mockLocalizedFormatter(locale: Locale): LocalizationContextState
         locale,
       })
     },
+    // oxlint-disable-next-line typescript/no-duplicate-type-constituents -- biome-parity: oxlint is stricter here
     convertFiatAmount(_?: number | undefined): { amount: number; currency: FiatCurrency } {
       throw new Error('Function not implemented.')
     },
@@ -54,7 +54,7 @@ export function mockFiatConverter({
   return {
     conversionRate: 1,
     convertFiatAmount(amount): { amount: number; currency: FiatCurrency } {
-      return { amount: amount ?? 1, currency }
+      return { amount, currency }
     },
     convertFiatAmountFormatted(fromAmount, numberType, placeholder): string {
       return mockLocalizedFormatter(locale).formatNumberOrString({

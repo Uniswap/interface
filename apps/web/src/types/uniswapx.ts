@@ -1,14 +1,5 @@
-import { OffchainOrderType } from 'state/routing/types'
-
-export enum UniswapXOrderStatus {
-  FILLED = 'filled',
-  OPEN = 'open',
-  EXPIRED = 'expired',
-  ERROR = 'error',
-  CANCELLED = 'cancelled',
-  PENDING_CANCELLATION = 'pending-cancellation',
-  INSUFFICIENT_FUNDS = 'insufficient-funds',
-}
+import { TradingApi } from '@universe/api'
+import { OffchainOrderType } from '~/state/routing/types'
 
 // Mirrors UniswapXOrderEntity type at https://github.com/Uniswap/uniswapx-service/blob/main/lib/entities/Order.ts
 interface BaseUniswapXBackendOrder {
@@ -17,7 +8,7 @@ interface BaseUniswapXBackendOrder {
   signature: string
   nonce: string
   orderHash: string
-  orderStatus: UniswapXOrderStatus
+  orderStatus: TradingApi.OrderStatus
   chainId: number
   swapper: string
   reactor: string
@@ -35,7 +26,7 @@ interface BaseUniswapXBackendOrder {
       startAmount: string
       endAmount: string
       token: string
-    }
+    },
   ]
   createdAt?: number
   // QuoteId field is defined when the order has a quote associated with it.
@@ -52,15 +43,15 @@ interface BaseUniswapXBackendOrder {
 
 interface NonfilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   orderStatus:
-    | UniswapXOrderStatus.OPEN
-    | UniswapXOrderStatus.EXPIRED
-    | UniswapXOrderStatus.ERROR
-    | UniswapXOrderStatus.CANCELLED
-    | UniswapXOrderStatus.INSUFFICIENT_FUNDS
+    | TradingApi.OrderStatus.OPEN
+    | TradingApi.OrderStatus.EXPIRED
+    | TradingApi.OrderStatus.ERROR
+    | TradingApi.OrderStatus.CANCELLED
+    | TradingApi.OrderStatus.INSUFFICIENT_FUNDS
 }
 
 interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
-  orderStatus: UniswapXOrderStatus.FILLED
+  orderStatus: TradingApi.OrderStatus.FILLED
   // Filler field is defined when the order has been filled and the status tracking function has recorded the filler address.
   filler?: string
   // TxHash field is defined when the order has been filled and there is a txHash associated with the fill.
@@ -72,7 +63,7 @@ interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
       amountIn: string
       tokenOut: string
       amountOut: string
-    }
+    },
   ]
 }
 

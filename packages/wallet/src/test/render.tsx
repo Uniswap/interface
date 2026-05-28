@@ -1,20 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InMemoryCache } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  render as RNRender,
-  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
+  render as RNRender,
+  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { mockUniswapContext } from 'uniswap/src/test/render'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
+import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/walletReducer'
 
@@ -22,7 +23,7 @@ import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/wal
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
   cache?: InMemoryCache
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<WalletStateReducersOnly>
   store?: EnhancedStore<WalletStateReducersOnly>
 }
@@ -34,13 +35,14 @@ const mockNavigationFunctions: WalletNavigationContextState = {
   navigateToExternalProfile: jest.fn(),
   navigateToFiatOnRamp: jest.fn(),
   navigateToNftDetails: jest.fn(),
-  navigateToNftCollection: jest.fn(),
   navigateToSwapFlow: jest.fn(),
   navigateToTokenDetails: jest.fn(),
   navigateToReceive: jest.fn(),
   navigateToSend: jest.fn(),
-  handleShareNft: jest.fn(),
   handleShareToken: jest.fn(),
+  navigateToPoolDetails: jest.fn(),
+  navigateToAdvancedSettings: jest.fn(),
+  navigateToEarnVault: jest.fn(),
 }
 
 /**
@@ -71,9 +73,11 @@ export function renderWithProviders(
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
         <SharedWalletProvider reduxStore={store}>
-          <WalletNavigationProvider {...mockNavigationFunctions}>
-            <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
-          </WalletNavigationProvider>
+          <NativeWalletProvider>
+            <UniswapProvider {...mockUniswapContext}>
+              <WalletNavigationProvider {...mockNavigationFunctions}>{children}</WalletNavigationProvider>
+            </UniswapProvider>
+          </NativeWalletProvider>
         </SharedWalletProvider>
       </AutoMockedApolloProvider>
     )
@@ -87,7 +91,7 @@ export function renderWithProviders(
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
   cache?: InMemoryCache
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<WalletStateReducersOnly>
   store?: EnhancedStore<WalletStateReducersOnly>
 }
@@ -139,7 +143,9 @@ export function renderHookWithProviders<P extends any[], R>(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        <SharedWalletProvider reduxStore={store}>
+          <NativeWalletProvider>{children}</NativeWalletProvider>
+        </SharedWalletProvider>
       </AutoMockedApolloProvider>
     )
   }
@@ -149,6 +155,7 @@ export function renderHookWithProviders<P extends any[], R>(
     ...(renderOptions as RenderHookOptions<P>),
   }
 
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(...(args ?? [])), options)
 
   // Return an object with the store and all of RTL's query functions

@@ -1,7 +1,7 @@
 import { useScrollToTop } from '@react-navigation/native'
 import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import Animated, { Extrapolate, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { ColorTokens, Flex } from 'ui/src'
@@ -12,13 +12,12 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 type ScrollHeaderProps = {
   scrollY: SharedValue<number>
   showHeaderScrollYDistance: number
+  fullScreen?: boolean
   // hard to type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any -- Ref type varies based on list component used
   listRef: React.MutableRefObject<any>
   centerElement?: JSX.Element
   rightElement?: JSX.Element
-  alwaysShowCenterElement?: boolean
-  fullScreen?: boolean // Expand to device edges
   backgroundColor?: ColorTokens
   backButtonColor?: ColorTokens
 }
@@ -27,8 +26,7 @@ type ScrollHeaderProps = {
  * Fixed header that will fade in on scroll. Define values in parent, to be used by some
  * relevant list component.
  *
- * Used to achieve functionality of HeaderScrollScreen, but can be used in any context. One
- * example is using a scrolled above a full screen view like NFTCollectionScreen.
+ * Used to achieve functionality of HeaderScrollScreen, but can be used in any context.
  */
 export function ScrollHeader({
   listRef,
@@ -36,7 +34,6 @@ export function ScrollHeader({
   showHeaderScrollYDistance,
   centerElement,
   rightElement = <Flex width={iconSizes.icon24} />,
-  alwaysShowCenterElement,
   fullScreen = false,
   backgroundColor,
   backButtonColor,
@@ -74,11 +71,7 @@ export function ScrollHeader({
         >
           <BackButton color={backButtonColor} />
           <Flex shrink gap="$spacing16">
-            {alwaysShowCenterElement ? (
-              centerElement
-            ) : (
-              <AnimatedFlex style={visibleOnScrollStyle}>{centerElement}</AnimatedFlex>
-            )}
+            <AnimatedFlex style={visibleOnScrollStyle}>{centerElement}</AnimatedFlex>
           </Flex>
           {rightElement}
         </Flex>

@@ -1,15 +1,14 @@
 import React, { useCallback } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import { Flex, Text, TouchableArea, UniversalImage, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 function key(item: FORServiceProvider): string {
   return item.serviceProvider
@@ -28,7 +27,7 @@ function CEXItemWrapper({
   const onPress = (): void => onSelectServiceProvider(serviceProvider)
 
   const isDarkMode = useIsDarkMode()
-  const logoUrl = getServiceProviderLogo(serviceProvider.logos, isDarkMode)
+  const logoUrl = getOptionalServiceProviderLogo(serviceProvider.logos, isDarkMode) ?? ''
 
   return (
     <TouchableArea onPress={onPress}>
@@ -45,12 +44,10 @@ function CEXItemWrapper({
         p="$spacing16"
       >
         <Flex grow row alignItems="center" flexShrink={1} gap="$spacing12">
-          <RemoteImage
-            borderRadius={CEX_ICON_BORDER_RADIUS}
-            height={CEX_ICON_SIZE}
-            resizeMode="cover"
+          <UniversalImage
             uri={logoUrl}
-            width={CEX_ICON_SIZE}
+            size={{ height: CEX_ICON_SIZE, width: CEX_ICON_SIZE, resizeMode: UniversalImageResizeMode.Cover }}
+            style={{ image: { borderRadius: CEX_ICON_BORDER_RADIUS } }}
           />
           <Text flexShrink={1} variant="body2">
             {serviceProvider.name}
@@ -68,19 +65,14 @@ export function ServiceProviderSelector({
   onClose: () => void
   serviceProviders: FORServiceProvider[]
 }): JSX.Element {
-  const dispatch = useDispatch()
-
   const onSelectServiceProvider = useCallback(
     (serviceProvider: FORServiceProvider) => {
-      dispatch(
-        openModal({
-          name: ModalName.ExchangeTransferModal,
-          initialState: { serviceProvider },
-        }),
-      )
       onClose()
+      navigate(ModalName.ExchangeTransferModal, {
+        initialState: { serviceProvider },
+      })
     },
-    [dispatch, onClose],
+    [onClose],
   )
 
   const renderItem = useCallback(

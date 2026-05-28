@@ -1,28 +1,39 @@
-import { WatchQueryFetchPolicy } from '@apollo/client'
+import type { WatchQueryFetchPolicy } from '@apollo/client'
+import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/balances/hooks/useBalances'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import type { DataApiOutageState, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 export function useCrossChainBalances({
-  address,
+  evmAddress,
+  svmAddress,
   currencyId,
   crossChainTokens,
   fetchPolicy = 'cache-and-network',
 }: {
-  address: Address
+  evmAddress?: Address
+  svmAddress?: Address
   currencyId: string
-  crossChainTokens: Maybe<{ chain: Chain; address?: Maybe<string> }[]>
+  crossChainTokens: Maybe<{ chain: GraphQLApi.Chain; address?: Maybe<string> }[]>
   fetchPolicy?: WatchQueryFetchPolicy
 }): {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
-} {
+} & DataApiOutageState {
+  // Shares the same React Query cache key as useBalances calls below — no extra network request
+  const { error: balanceError, dataUpdatedAt } = usePortfolioBalances({
+    evmAddress,
+    svmAddress,
+    fetchPolicy,
+  })
+
   const currentChainBalance =
     useBalances({
-      address,
+      evmAddress,
+      svmAddress,
       currencies: [currencyId],
       fetchPolicy,
     })?.[0] ?? null
@@ -47,10 +58,12 @@ export function useCrossChainBalances({
     [crossChainTokens, currentChainId],
   )
 
-  const otherChainBalances = useBalances({ address, currencies: bridgedCurrencyIds })
+  const otherChainBalances = useBalances({ evmAddress, svmAddress, currencies: bridgedCurrencyIds })
 
   return {
     currentChainBalance,
     otherChainBalances,
+    error: balanceError,
+    dataUpdatedAt,
   }
 }

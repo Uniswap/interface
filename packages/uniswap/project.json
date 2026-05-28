@@ -1,0 +1,70 @@
+{
+  "tags": ["scope:uniswap", "type:lib"],
+  "targets": {
+    "prepare": {
+      "executor": "nx:noop",
+      "dependsOn": ["contracts"],
+      "cache": true,
+      "inputs": [],
+      "outputs": []
+    },
+    "build": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["prepare", "^build", "contracts", "graphql:generate"]
+    },
+    "contracts:compile:abi": {
+      "command": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/src/abis/**/*.json", "!{projectRoot}/src/abis/types/**"],
+      "outputs": ["{projectRoot}/src/abis/types/*.ts", "{projectRoot}/src/abis/types/factories"]
+    },
+    "contracts:compile:v3": {
+      "command": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/package.json"],
+      "outputs": ["{projectRoot}/src/abis/types/v3/**"]
+    },
+    "contracts": {
+      "command": "echo \"Compiling contracts...\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
+    },
+    "check:deps:usage": {},
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "snapshots": {
+      "command": "vitest run -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

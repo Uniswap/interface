@@ -1,9 +1,17 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
-// eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-// eslint-disable-next-line no-restricted-imports
-import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
-import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+import { getChromeWithThrow } from '@universe/environment'
+// oxlint-disable-next-line no-restricted-imports -- platform implementation file
+import {
+  Analytics,
+  AnalyticsInitConfig,
+  TestnetModeConfig,
+  UserPropertyValue,
+} from 'utilities/src/telemetry/analytics/analytics'
+import {
+  AnalyticsDebugBridge,
+  captureAnalyticsDebugEvent,
+} from 'utilities/src/telemetry/analytics/analyticsDebugCapture'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
@@ -19,12 +27,14 @@ let testnetMode: boolean = false
 let testnetModeConfig: TestnetModeConfig | undefined
 let commitHash: Maybe<string>
 let userId: Maybe<string>
+let debugBridge: AnalyticsDebugBridge | undefined
 
 async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
   try {
     window.localStorage.setItem(ALLOW_ANALYTICS_ATOM_KEY, JSON.stringify(allowed))
     document.dispatchEvent(new Event('analyticsToggled'))
   } catch {
+    const chrome = getChromeWithThrow()
     await chrome.storage.local.set({ ALLOW_ANALYTICS_ATOM_KEY: JSON.stringify(allowed) })
   }
 }
@@ -33,6 +43,7 @@ async function getAnalyticsAtomFromStorage(): Promise<boolean> {
   try {
     return window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
   } catch {
+    const chrome = getChromeWithThrow()
     const res = await chrome.storage.local.get(ALLOW_ANALYTICS_ATOM_KEY)
     return res[ALLOW_ANALYTICS_ATOM_KEY] !== 'false'
   }
@@ -53,18 +64,21 @@ const updateLocalVar = async (): Promise<void> => {
 try {
   window.document.addEventListener('analyticsToggled', updateLocalVar, false)
 } catch {
+  const chrome = getChromeWithThrow()
   chrome.storage.local.onChanged.addListener(updateLocalVar)
 }
 
 export const analytics: Analytics = {
-  async init(
-    transportProvider: ApplicationTransport,
-    allowed: boolean,
-    initHash?: string,
-    userIdGetter?: () => Promise<string>,
-  ): Promise<void> {
+  async init({
+    transportProvider,
+    allowed,
+    initHash,
+    userIdGetter,
+    debugBridge: bridge,
+  }: AnalyticsInitConfig): Promise<void> {
     // Set properties
     commitHash = initHash
+    debugBridge = bridge
     await setAnalyticsAtomDirect(allowed)
 
     try {
@@ -107,8 +121,8 @@ export const analytics: Analytics = {
     testnetMode = enabled
     testnetModeConfig = config
   },
-  async sendEvent(eventName: string, eventProperties?: Record<string, unknown>): Promise<void> {
-    if (!(await getAnalyticsAtomDirect()) && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+  sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
+    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
     const propertiesWithHash: Record<string, unknown> = {
@@ -126,6 +140,11 @@ export const analytics: Analytics = {
     if (processedTestnetEvent) {
       const { eventName: processedEventName, eventProperties: processedEventProperties } = processedTestnetEvent
       loggers.sendEvent(processedEventName, processedEventProperties)
+      captureAnalyticsDebugEvent({
+        bridge: debugBridge,
+        eventName: processedEventName,
+        properties: processedEventProperties,
+      })
       track(processedEventName, processedEventProperties)
     }
   },
@@ -133,6 +152,7 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
+  // oxlint-disable-next-line max-params
   async setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): Promise<void> {
     if (!(await getAnalyticsAtomDirect())) {
       return

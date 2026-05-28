@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useContext, useMemo, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { UnitagEntryPoint } from 'uniswap/src/types/screens/mobile'
 

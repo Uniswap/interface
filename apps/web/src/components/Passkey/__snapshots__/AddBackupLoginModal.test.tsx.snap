@@ -1,0 +1,301 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AddBackupLoginModal > renders snapshot at method select step 1`] = `
+<body>
+  <div>
+    <span
+      class=""
+      style="display: contents;"
+    >
+      <div>
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div />
+        </span>
+        <div>
+          <div />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+          >
+            <div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602 _alignItems-center _width-10037"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-flex-end"
+                >
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _alignItems-center _width-10037"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _alignItems-center _justifyContent-center"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M21 10.8889C21 17.5559 15.333 20.889 12 22C8.667 20.889 3 17.5559 3 10.8889C3 9.70192 3 6.137 3 5C8 4 9.77807 3.111 12.0181 2C14.2231 3.111 16 4 21 5C21 6.194 21 9.66392 21 10.8889Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _alignItems-center _maxWidth-360px"
+                  >
+                    <span
+                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530 _textAlign-center"
+                      data-disable-theme="true"
+                    >
+                      Add a backup login
+                    </span>
+                    <span
+                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _textAlign-center"
+                      data-disable-theme="true"
+                    >
+                      If you lose your passkey, you can use your backup login method to access your wallet.
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _gap-t-space-spa94665587"
+                >
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; pointer-events: auto; width: 100%; transform: scale(1);"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _width-10037 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _backgroundColor-surface2 _opacity-1 _color-accent3"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-32px _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _alignItems-center _justifyContent-center _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      >
+                        <svg
+                          data-testid="apple-logo"
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px; color: rgb(19, 19, 19);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M16.6093 12.5376C16.6177 11.8898 16.7898 11.2546 17.1095 10.6912C17.4293 10.1278 17.8864 9.6544 18.4383 9.3151C18.0877 8.81439 17.6252 8.40232 17.0875 8.11162C16.5498 7.82093 15.9517 7.65962 15.3407 7.64051C14.0374 7.50371 12.774 8.42036 12.1098 8.42036C11.4329 8.42036 10.4103 7.65409 9.30925 7.67674C8.59704 7.69975 7.90293 7.90686 7.29455 8.27789C6.68617 8.64891 6.18428 9.1712 5.83777 9.79387C4.33678 12.3926 5.45639 16.2119 6.89421 18.3125C7.61359 19.3411 8.45434 20.4901 9.55443 20.4494C10.6309 20.4047 11.033 19.7629 12.3324 19.7629C13.6198 19.7629 13.997 20.4494 15.1195 20.4235C16.2746 20.4047 17.0024 19.3903 17.6965 18.3519C18.2134 17.619 18.6111 16.809 18.875 15.9518C18.2039 15.668 17.6312 15.1928 17.2283 14.5857C16.8254 13.9785 16.6101 13.2662 16.6093 12.5376Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M14.4894 6.25867C15.1192 5.50257 15.4295 4.53074 15.3544 3.54956C14.3922 3.65063 13.5033 4.11052 12.865 4.8376C12.5529 5.1928 12.3138 5.60603 12.1615 6.05366C12.0092 6.5013 11.9466 6.97457 11.9773 7.44641C12.4586 7.45136 12.9348 7.34704 13.3699 7.14131C13.805 6.93557 14.1878 6.63378 14.4894 6.25867Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+                        data-disable-theme="true"
+                      >
+                        Apple
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; pointer-events: auto; width: 100%; transform: scale(1);"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _width-10037 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _backgroundColor-surface2 _opacity-1 _color-accent3"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-32px _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _alignItems-center _justifyContent-center _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px; color: currentColor;"
+                          viewBox="0 0 20 20"
+                        >
+                          <g
+                            clip-path="url(#clip0_10955_6746)"
+                          >
+                            <path
+                              d="M18.8 10.2083C18.8 9.55834 18.7417 8.93334 18.6333 8.33334H10V11.8833H14.9333C14.7167 13.025 14.0667 13.9917 13.0917 14.6417V16.95H16.0667C17.8 15.35 18.8 13 18.8 10.2083Z"
+                              fill="#4285F4"
+                            />
+                            <path
+                              d="M10.0002 19.1667C12.4752 19.1667 14.5502 18.35 16.0669 16.95L13.0919 14.6417C12.2752 15.1917 11.2336 15.525 10.0002 15.525C7.6169 15.525 5.5919 13.9167 4.86689 11.75H1.81689V14.1167C3.32523 17.1083 6.41689 19.1667 10.0002 19.1667Z"
+                              fill="#34A853"
+                            />
+                            <path
+                              d="M4.86683 11.7417C4.6835 11.1917 4.57516 10.6083 4.57516 10C4.57516 9.39166 4.6835 8.80833 4.86683 8.25833V5.89166H1.81683C1.19183 7.125 0.833496 8.51666 0.833496 10C0.833496 11.4833 1.19183 12.875 1.81683 14.1083L4.19183 12.2583L4.86683 11.7417Z"
+                              fill="#FBBC05"
+                            />
+                            <path
+                              d="M10.0002 4.48334C11.3502 4.48334 12.5502 4.95001 13.5086 5.85001L16.1336 3.22501C14.5419 1.74168 12.4752 0.833344 10.0002 0.833344C6.41689 0.833344 3.32523 2.89168 1.81689 5.89168L4.86689 8.25834C5.59189 6.09168 7.61689 4.48334 10.0002 4.48334Z"
+                              fill="#EA4335"
+                            />
+                          </g>
+                          <defs>
+                            <clippath
+                              id="clip0_10955_6746"
+                            >
+                              <rect
+                                fill="white"
+                                height="20"
+                                width="20"
+                              />
+                            </clippath>
+                          </defs>
+                        </svg>
+                      </div>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+                        data-disable-theme="true"
+                      >
+                        Google
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; pointer-events: auto; width: 100%; transform: scale(1);"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _width-10037 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _backgroundColor-surface2 _opacity-1 _color-accent3"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-32px _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _alignItems-center _justifyContent-center _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px; color: rgb(73, 129, 255);"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M15.625 3.43689H4.375C2.5 3.43689 1.5625 4.37439 1.5625 6.24939V14.6869C1.5625 16.5619 2.5 17.4994 4.375 17.4994H15.625C17.5 17.4994 18.4375 16.5619 18.4375 14.6869V6.24939C18.4375 4.37439 17.5 3.43689 15.625 3.43689ZM15.5696 7.75502L10.9647 11.1038C10.676 11.3138 10.3375 11.4188 10 11.4188C9.6625 11.4188 9.32308 11.3138 9.03526 11.1047L4.43039 7.75502C4.11633 7.52721 4.04692 7.08658 4.27567 6.77251C4.50348 6.45939 4.94115 6.38814 5.25803 6.61783L9.86313 9.96657C9.94563 10.0256 10.0553 10.0266 10.1378 9.96657L14.7429 6.61783C15.0588 6.38814 15.4974 6.45939 15.7253 6.77251C15.954 7.08751 15.8837 7.52721 15.5696 7.75502Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+                        data-disable-theme="true"
+                      >
+                        Email
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-spa94665593"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                    data-disable-theme="true"
+                  >
+                    Secured by
+                  </span>
+                  <a
+                    class="sc-bRKDuR dvTvpU"
+                    href="https://www.privy.io/user-help-center"
+                    rel="noopener noreferrer"
+                    style="stroke: none;"
+                    target="_blank"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-14px _overflowX-hidden _overflowY-hidden _justifyContent-center _mt-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 63px; height: 63px; color: rgb(19, 19, 19);"
+                        viewBox="0 0 63 14"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M45.7768 7.44028H45.587L43.1178 0.279785H40.2256V0.575835L43.7088 10.5754H47.5498L51.0341 0.575835V0.279785H48.2677L45.7757 7.44028H45.7768Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          d="M39.456 0.279785H36.5801V10.5743H39.456V0.279785Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M59.5772 0.278916H59.5794L57.0873 7.44158H56.8976L54.4283 0.280001H51.5361V0.578219L55.3197 11.442H51.7368V13.8267H55.2384C56.7338 13.8267 57.8985 13.3224 58.4635 11.7132C58.5394 11.4984 62.3436 0.57605 62.3436 0.57605V0.277832H59.5772V0.278916Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M21.9234 0C20.6156 0 19.3934 0.66584 18.6311 1.91727H18.4543V0.290627H15.7129V13.8232H18.6257V9.26429H18.8046C18.8241 9.2914 18.8436 9.3196 18.8632 9.34237C19.3544 9.93989 20.5017 10.8508 21.9288 10.8508C24.5261 10.8508 26.3024 8.60604 26.3024 5.42649C26.3024 2.24694 24.4382 0 21.9234 0ZM21.0537 8.61905C19.6982 8.61905 18.7623 7.56282 18.7623 5.42758C18.7623 3.29233 19.6982 2.2361 21.0537 2.2361C22.4092 2.2361 23.3907 3.3151 23.3907 5.42758C23.3907 7.54005 22.432 8.61905 21.0537 8.61905Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M33.5271 0.278809C32.177 0.278809 31.3105 0.50437 30.8041 1.91738H30.6306V0.279893H26.4609V2.64395H27.3914C27.6983 2.64395 27.849 2.75239 27.8881 3.00398V4.96897H27.8989V10.5755H30.8117V5.11428C30.8117 3.70019 31.1956 2.83373 32.6097 2.83373H35.6612V0.278809H33.5282H33.5271Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          d="M5.42215 10.8477C8.41627 10.8477 10.8443 8.41968 10.8443 5.42557C10.8443 2.43146 8.41627 0.00341797 5.42215 0.00341797C2.42804 0.00341797 0 2.43146 0 5.42557C0 8.41968 2.42804 10.8477 5.42215 10.8477Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                        />
+                        <path
+                          d="M5.4223 13.9999C7.46862 13.9999 9.12779 13.6507 9.12779 13.2224C9.12779 12.794 7.4697 12.4448 5.4223 12.4448C3.37489 12.4448 1.7168 12.794 1.7168 13.2224C1.7168 13.6507 3.37489 13.9999 5.4223 13.9999Z"
+                          fill="currentColor"
+                          fill-opacity="0.35"
+                        />
+                      </svg>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="display: contents;"
+      />
+    </span>
+  </div>
+</body>
+`;

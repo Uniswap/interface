@@ -1,42 +1,50 @@
+import { GqlResult } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import {
-  formatSearchResults,
-  mergeSearchResultsWithBridgingTokens,
-  useTokenOptionsSection,
-} from 'uniswap/src/components/TokenSelector/utils'
-import { GqlResult } from 'uniswap/src/data/types'
+import { mergeSearchResultsWithBridgingTokens } from 'uniswap/src/components/TokenSelector/utils'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
-export function useTokenSectionsForSearchResults(
-  address: string | undefined,
-  chainFilter: UniverseChainId | null,
-  searchFilter: string | null,
-  isBalancesOnlySearch: boolean,
-  input: TradeableAsset | undefined,
-): GqlResult<TokenSection[]> {
+export function useTokenSectionsForSearchResults({
+  addresses,
+  chainFilter,
+  searchFilter,
+  isBalancesOnlySearch,
+  input,
+}: {
+  addresses: AddressGroup
+  chainFilter: UniverseChainId | null
+  searchFilter: string | null
+  isBalancesOnlySearch: boolean
+  input?: TradeableAsset
+}): GqlResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
 
+  const portfolioData = usePortfolioBalancesForAddressById(addresses)
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
     loading: portfolioBalancesByIdLoading,
-  } = usePortfolioBalancesForAddressById(address)
+  } = portfolioData
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions(address, chainFilter, searchFilter ?? undefined)
+  } = usePortfolioTokenOptions({ chainFilter, searchFilter: searchFilter ?? undefined, portfolioData })
 
   // Bridging tokens are only shown if input is provided
   const {
@@ -44,7 +52,7 @@ export function useTokenSectionsForSearchResults(
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ input, walletAddress: address, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, chainFilter, portfolioData })
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
@@ -52,11 +60,34 @@ export function useTokenSectionsForSearchResults(
     error: searchTokensError,
     refetch: refetchSearchTokens,
     loading: searchTokensLoading,
-  } = useSearchTokens(searchFilter, chainFilter, /*skip*/ isBalancesOnlySearch)
+  } = useSearchTokens({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: isBalancesOnlySearch,
+    hideWSOL: true, // Hide WSOL in token selector
+  })
 
-  const searchResults = useMemo(() => {
-    return formatSearchResults(searchResultCurrencies, portfolioBalancesById, searchFilter)
-  }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
+  const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {
+    if (!searchResultCurrencies) {
+      return [[], []]
+    }
+
+    const selected = searchResultCurrencies.filter((currency) => !currency.isFromOtherNetwork)
+    const other = searchResultCurrencies.filter((currency) => currency.isFromOtherNetwork)
+
+    return [selected, other]
+  }, [searchResultCurrencies])
+
+  const searchResults = useCurrencyInfosToTokenOptions({
+    currencyInfos: selectedNetworkResults,
+    portfolioBalancesById,
+  })
+
+  // Format other networks search results if they exist
+  const otherNetworksResults = useCurrencyInfosToTokenOptions({
+    currencyInfos: otherNetworksSearchResults,
+    portfolioBalancesById,
+  })
 
   const loading =
     portfolioTokenOptionsLoading ||
@@ -64,10 +95,16 @@ export function useTokenSectionsForSearchResults(
     (!isBalancesOnlySearch && searchTokensLoading) ||
     bridgingTokenOptionsLoading
 
-  const searchResultsSections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.SearchResults,
+  const searchResultsSections = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.SearchResults,
     // Use local search when only searching balances
-    tokenOptions: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+    options: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+  })
+
+  // Create section for other chains search results if they exist
+  const otherNetworksSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.OtherChainsTokens,
+    options: otherNetworksResults,
   })
 
   // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
@@ -76,11 +113,23 @@ export function useTokenSectionsForSearchResults(
   const searchResultsSectionHeader = networkName
     ? t('tokens.selector.section.otherSearchResults', { network: networkName })
     : undefined
-  const sections = mergeSearchResultsWithBridgingTokens(
-    searchResultsSections,
-    bridgingTokenOptions,
-    searchResultsSectionHeader,
-  )
+
+  const allSections = useMemo(() => {
+    // Start with existing sections (bridging tokens + search results)
+    const sections =
+      mergeSearchResultsWithBridgingTokens({
+        searchResults: searchResultsSections,
+        bridgingTokens: bridgingTokenOptions,
+        sectionHeaderString: searchResultsSectionHeader,
+      }) ?? []
+
+    // Add other networks section if it exists
+    if (otherNetworksSection?.length) {
+      sections.push(...otherNetworksSection)
+    }
+
+    return sections
+  }, [searchResultsSections, bridgingTokenOptions, searchResultsSectionHeader, otherNetworksSection])
 
   const error =
     (!bridgingTokenOptions && bridgingTokenOptionsError) ||
@@ -97,11 +146,11 @@ export function useTokenSectionsForSearchResults(
 
   return useMemo(
     () => ({
-      data: sections,
+      data: allSections,
       loading,
       error: error || undefined,
       refetch: refetchAll,
     }),
-    [error, loading, refetchAll, sections],
+    [error, loading, refetchAll, allSections],
   )
 }

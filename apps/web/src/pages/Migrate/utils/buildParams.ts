@@ -1,0 +1,173 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import {
+  MigrateV2ToV3LPPositionRequest,
+  MigrateV3ToV4LPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import { Protocols, V3Position, V4Position } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { LPApprovalRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import { LPAction, LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
+import { Pair } from '@uniswap/v2-sdk'
+import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { V2PairInfo, V3PositionInfo } from 'uniswap/src/features/positions/types'
+import { PositionState } from '~/features/Liquidity/Create/types'
+import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
+
+export function isV3ToV4MigrationPositionInfo(
+  positionInfo: V2PairInfo | V3PositionInfo | undefined,
+): positionInfo is V3PositionInfo {
+  return positionInfo?.version === ProtocolVersion.V3
+}
+
+export function buildCheckLPApprovalRequestParams({
+  positionInfo,
+  address,
+  canBatchTransactions,
+}: {
+  positionInfo: V2PairInfo | V3PositionInfo
+  address: string
+  canBatchTransactions?: boolean
+}): LPApprovalRequest | undefined {
+  const protocol = getProtocols(positionInfo.version)
+
+  if (protocol === undefined) {
+    return undefined
+  }
+
+  const chainId = positionInfo.currency0Amount.currency.chainId
+  switch (protocol) {
+    case Protocols.V2:
+      return new LPApprovalRequest({
+        walletAddress: address,
+        protocol: getProtocols(ProtocolVersion.V2),
+        chainId,
+        lpTokens: [
+          new LPToken({
+            tokenAddress: positionInfo.currency0Amount.currency.wrapped.address,
+            amount: '0',
+          }),
+          new LPToken({
+            tokenAddress: positionInfo.currency1Amount.currency.wrapped.address,
+            amount: '0',
+          }),
+        ],
+        action: LPAction.MIGRATE,
+        simulateTransaction: true,
+      })
+    case Protocols.V3:
+      return new LPApprovalRequest({
+        walletAddress: address,
+        protocol: getProtocols(ProtocolVersion.V3),
+        chainId,
+        lpTokens: [
+          new LPToken({
+            tokenAddress: positionInfo.currency0Amount.currency.wrapped.address,
+            amount: '0', // the amounts here don't matter since the approval is based on the positionToken
+          }),
+          new LPToken({
+            tokenAddress: positionInfo.currency1Amount.currency.wrapped.address,
+            amount: '0', // the amounts here don't matter since the approval is based on the positionToken
+          }),
+        ],
+        v3NftTokenId: Number(positionInfo.tokenId),
+        action: LPAction.MIGRATE,
+        simulateTransaction: true,
+        generatePermitAsTransaction: canBatchTransactions ?? false,
+      })
+    default:
+      return undefined
+  }
+}
+
+export function buildMigrationRequest({
+  position,
+  address,
+  poolOrPair,
+  ticks,
+  positionState,
+  approvalsNeeded,
+  creatingPoolOrPair,
+}: {
+  position: V2PairInfo | V3PositionInfo
+  address: string
+  poolOrPair: Pair | V3Pool | V4Pool | undefined
+  ticks: [Maybe<number>, Maybe<number>]
+  positionState: PositionState
+  approvalsNeeded: boolean
+  creatingPoolOrPair?: boolean
+}): MigrateV2ToV3LPPositionRequest | MigrateV3ToV4LPPositionRequest | undefined {
+  const tickLower = ticks[0]
+  const tickUpper = ticks[1]
+
+  if (isV3ToV4MigrationPositionInfo(position)) {
+    if (
+      !poolOrPair ||
+      !position.poolOrPair ||
+      tickLower === undefined ||
+      tickUpper === undefined ||
+      !position.liquidity
+    ) {
+      return undefined
+    }
+
+    const destinationPool = poolOrPair as V4Pool
+    const inputPosition = {
+      pool: {
+        token0: position.currency0Amount.currency.isNative ? ZERO_ADDRESS : position.currency0Amount.currency.address,
+        token1: position.currency1Amount.currency.isNative ? ZERO_ADDRESS : position.currency1Amount.currency.address,
+        fee: position.feeTier?.feeAmount,
+        tickSpacing: position.tickSpacing ? Number(position.tickSpacing) : undefined,
+      },
+      tickLower: position.tickLower !== undefined ? position.tickLower : undefined,
+      tickUpper: position.tickUpper !== undefined ? position.tickUpper : undefined,
+    }
+    const outputPosition = {
+      pool: {
+        token0: getTokenOrZeroAddress(destinationPool.currency0),
+        token1: getTokenOrZeroAddress(destinationPool.currency1),
+        fee: positionState.fee?.feeAmount,
+        hooks: positionState.hook,
+        tickSpacing: destinationPool.tickSpacing,
+      },
+      tickLower: tickLower ?? undefined,
+      tickUpper: tickUpper ?? undefined,
+    }
+
+    return new MigrateV3ToV4LPPositionRequest({
+      simulateTransaction: !approvalsNeeded,
+      tokenId: Number(position.tokenId),
+      walletAddress: address,
+      chainId: position.currency0Amount.currency.chainId,
+      inputPosition: new V3Position(inputPosition),
+      inputPositionLiquidity: position.liquidity,
+      amount0: position.currency0Amount.quotient.toString(),
+      amount1: position.currency1Amount.quotient.toString(),
+      outputPosition: new V4Position(outputPosition),
+      initialPrice: creatingPoolOrPair ? destinationPool.sqrtRatioX96.toString() : undefined,
+      expectedTokenOwed0RawAmount: position.token0UncollectedFees ?? '0',
+      expectedTokenOwed1RawAmount: position.token1UncollectedFees ?? '0',
+    })
+  } else {
+    if (tickLower === undefined || tickUpper === undefined) {
+      return undefined
+    }
+
+    return new MigrateV2ToV3LPPositionRequest({
+      simulateTransaction: !approvalsNeeded,
+      walletAddress: address,
+      chainId: position.currency0Amount.currency.chainId,
+      v3Params: {
+        pool: {
+          token0: getTokenOrZeroAddress(position.currency0Amount.currency),
+          token1: getTokenOrZeroAddress(position.currency1Amount.currency),
+          fee: positionState.fee?.feeAmount,
+          tickSpacing: positionState.fee?.tickSpacing,
+        },
+        tickLower: tickLower ?? 0,
+        tickUpper: tickUpper ?? 0,
+      },
+    })
+  }
+}

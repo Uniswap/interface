@@ -1,12 +1,14 @@
-import { InputProps, StyledInput, localeUsesComma } from 'components/NumericalInput'
-import { NumericalInputFontStyle } from 'pages/Swap/common/shared'
 import React, { forwardRef } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import styled from 'styled-components'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { InputProps, localeUsesComma, StyledInput } from '~/components/NumericalInput'
 
-const PercentInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ value, onUserInput, placeholder, testId, maxDecimals = 2, ...rest }: InputProps, ref) => {
+type PercentInputRef = React.ElementRef<typeof StyledInput>
+
+/** Percent fields do not use currency prepend or swap-specific layout variants. */
+type PercentInputProps = Omit<InputProps, 'prependSymbol' | 'amountLayout'>
+
+const PercentInput = forwardRef<PercentInputRef, PercentInputProps>(
+  ({ value, onUserInput, placeholder, testId, maxDecimals = 2, ...rest }: PercentInputProps, ref) => {
     const inputRegexStr = `^\\d*(\\.\\d{0,${maxDecimals}})?$`
     const noDecimalRegexStr = '^\\d*$'
     const inputRegex = RegExp(inputRegexStr)
@@ -20,6 +22,7 @@ const PercentInput = forwardRef<HTMLInputElement, InputProps>(
       }
     }
 
+    // oxlint-disable-next-line no-shadow
     const formatValueWithLocale = (value: string | number) => {
       const [searchValue, replaceValue] = localeUsesComma(locale) ? [/\./g, ','] : [/,/g, '.']
       return value.toString().replace(searchValue, replaceValue)
@@ -29,24 +32,17 @@ const PercentInput = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledInput
-        minLength={1}
-        maxLength={maxDecimals + 2}
         {...rest}
         ref={ref}
+        maxLength={maxDecimals + 2}
         value={valueFormattedWithLocale}
-        data-testid={testId}
-        onChange={(event) => {
-          enforcer(event.target.value)
-        }}
-        // universal input options
-        inputMode="numeric"
+        testID={testId}
+        onChangeText={enforcer}
+        keyboardType="numeric"
         autoComplete="off"
-        autoCorrect="off"
-        // text-specific options
-        type="text"
-        pattern={maxDecimals <= 0 ? noDecimalRegexStr : inputRegexStr}
+        autoCorrect={false}
         placeholder={placeholder || '0'}
-        spellCheck="false"
+        spellCheck={false}
       />
     )
   },
@@ -56,13 +52,24 @@ PercentInput.displayName = 'Input'
 
 const MemoizedInput = React.memo(PercentInput)
 
-export const StyledPercentInput = styled(MemoizedInput)<{ $width?: number; $fontSize?: number }>`
-  max-height: 84px;
-  max-width: 100%;
-  width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
-  ${NumericalInputFontStyle}
+export type StyledPercentInputProps = PercentInputProps & {
+  fieldWidth?: number
+  numericalFontSize?: number
+}
 
-  ::placeholder {
-    opacity: 1;
-  }
-`
+export const StyledPercentInput = forwardRef<PercentInputRef, StyledPercentInputProps>(
+  ({ fieldWidth, numericalFontSize, ...props }, ref) => (
+    <MemoizedInput
+      ref={ref}
+      {...props}
+      width={fieldWidth ?? 43}
+      fontSize={numericalFontSize ?? 70}
+      maxHeight={84}
+      maxWidth="100%"
+      fontWeight="$book"
+      lineHeight={60}
+      textAlign="left"
+    />
+  ),
+)
+StyledPercentInput.displayName = 'StyledPercentInput'

@@ -1,40 +1,33 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { ThemedText } from 'theme/components'
-import { Switch } from 'ui/src'
-
-const StyledColumn = styled(Column)`
-  width: 100%;
-  margin-right: 10px;
-`
+import { Flex, Switch, Text } from 'ui/src'
 
 interface SettingsToggleProps {
-  title: ReactNode
+  title: string | ReactNode
   description?: string
   dataid?: string
   disabled?: boolean
   isActive: boolean
   toggle: () => void
+  icon?: ReactNode
 }
 
-export function SettingsToggle({ title, description, dataid, isActive, toggle, disabled }: SettingsToggleProps) {
+export function SettingsToggle({ title, description, dataid, isActive, toggle, disabled, icon }: SettingsToggleProps) {
   return (
-    <Row align="center">
-      <StyledColumn>
-        <Row>
-          <ThemedText.SubHeaderSmall color="neutral1">{title}</ThemedText.SubHeaderSmall>
-        </Row>
-        {description && (
-          <Row>
-            <ThemedText.BodySmall color="neutral2" lineHeight="16px">
+    <Flex row alignItems="center" justifyContent="space-between" py="$padding12">
+      <Flex row gap="$gap12" alignItems="center" maxWidth="80%" $xl={{ maxWidth: '70%' }}>
+        {icon}
+        <Flex>
+          <Text variant="subheading2" color="$neutral1">
+            {title}
+          </Text>
+          {description && (
+            <Text variant="body3" color="$neutral2">
               {description}
-            </ThemedText.BodySmall>
-          </Row>
-        )}
-      </StyledColumn>
+            </Text>
+          )}
+        </Flex>
+      </Flex>
       <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} disabled={disabled} />
-    </Row>
+    </Flex>
   )
 }

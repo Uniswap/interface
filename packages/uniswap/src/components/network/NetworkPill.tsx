@@ -27,7 +27,7 @@ export function NetworkPill({
 
   return (
     <Pill
-      customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
+      customBackgroundColor={showBackgroundColor ? colors.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
       icon={showIcon ? <NetworkLogo chainId={chainId} size={iconSize} /> : null}

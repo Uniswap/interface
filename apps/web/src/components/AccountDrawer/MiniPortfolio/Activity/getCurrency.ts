@@ -1,36 +1,48 @@
 import { Currency } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { apolloClient } from 'graphql/data/apollo/client'
-import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { GraphQLApi } from '@universe/api'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import {
-  Token,
-  TokenDocument,
-  TokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isSameAddress } from 'utilities/src/addresses'
+import { CurrencyId } from 'uniswap/src/types/currency'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { apolloClient } from '~/appGraphql/data/apollo/client'
+import { gqlTokenToCurrencyInfo } from '~/appGraphql/data/types'
 
-export async function getCurrency(currencyId: string, chainId: UniverseChainId): Promise<Currency | undefined> {
-  const isNative =
-    currencyId === NATIVE_CHAIN_ID || currencyId?.toLowerCase() === 'native' || currencyId?.toLowerCase() === 'eth'
+export async function getCurrencyFromCurrencyId(currencyId: CurrencyId): Promise<Currency | undefined> {
+  // Split currencyId and confirm validity
+  const chainId = currencyIdToChain(currencyId)
+  const address = currencyIdToAddress(currencyId)
+  if (!chainId) {
+    return undefined
+  }
+
+  // Handle native currency
+  const isNative = isNativeCurrencyAddress(chainId, address)
   if (isNative) {
     return nativeOnChain(chainId)
   }
-  const commonBase = chainId
-    ? COMMON_BASES[chainId]?.find((base) => base.currency.isToken && isSameAddress(base.currency.address, currencyId))
-    : undefined
+
+  // Handle common bases
+  const commonBase = COMMON_BASES[chainId].find(
+    (base) =>
+      base.currency.isToken &&
+      areAddressesEqual({
+        addressInput1: { address: base.currency.address, chainId: base.currency.chainId },
+        addressInput2: { address, chainId },
+      }),
+  )
   if (commonBase) {
     return commonBase.currency
   }
-  const { data } = await apolloClient.query<TokenQuery>({
-    query: TokenDocument,
+
+  // Query for token from graphql
+  const { data } = await apolloClient.query<GraphQLApi.TokenQuery>({
+    query: GraphQLApi.TokenDocument,
     variables: {
-      address: currencyId,
+      address,
       chain: toGraphQLChain(chainId),
     },
   })
-  return gqlTokenToCurrencyInfo(data?.token as Token)?.currency
+  return gqlTokenToCurrencyInfo(data.token as GraphQLApi.Token)?.currency
 }

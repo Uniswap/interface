@@ -1,4 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
+import { useMemo } from 'react'
+// oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 
@@ -9,8 +10,15 @@ export const useAppInsets = (): {
   left: number
 } => {
   const insets = useDeviceInsets()
-
   const testnetBannerInset = useTestnetModeBannerHeight()
 
-  return { ...insets, top: insets.top + testnetBannerInset }
+  return useMemo(
+    () => ({
+      right: insets.right,
+      bottom: insets.bottom,
+      left: insets.left,
+      top: insets.top + testnetBannerInset,
+    }),
+    [insets.top, insets.right, insets.bottom, insets.left, testnetBannerInset],
+  )
 }

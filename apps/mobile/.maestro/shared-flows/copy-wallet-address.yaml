@@ -1,0 +1,42 @@
+appId: com.uniswap.mobile.dev
+---
+# Shared flow to copy the wallet's own address from the Receive QR modal
+# Must run from the home screen
+# After running this flow, use `pasteText` to paste the address into an input field
+# The address is stored in Maestro's internal clipboard via copyTextFrom
+
+# Step 1: Ensure the Receive button is visible and tap it
+- assertVisible:
+    id: ${output.testIds.Receive}
+- tapOn:
+    id: ${output.testIds.Receive}
+- waitForAnimationToEnd
+
+# Wait for either the ReceiveCryptoModal (with WalletReceiveCrypto) or the QR modal (with AddressDisplay)
+# The app may show ReceiveCryptoModal if CEX providers are available, or skip directly to QR modal
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.WalletReceiveCrypto}
+    timeout: 8000
+    optional: true
+
+# Step 2: If ReceiveCryptoModal appeared, tap on the wallet card to open QR modal
+- tapOn:
+    id: ${output.testIds.WalletReceiveCrypto}
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for the QR modal with full address to appear
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.AddressDisplay}
+    timeout: 8000
+
+# Step 3: Copy the full wallet address from the display
+- copyTextFrom:
+    id: ${output.testIds.AddressDisplay}
+
+# Step 4: Swipe down to dismiss the modal
+- swipe:
+    direction: DOWN
+    duration: 300

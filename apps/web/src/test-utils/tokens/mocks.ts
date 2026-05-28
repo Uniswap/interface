@@ -1,12 +1,18 @@
 // Import this file (test-utils/tokens/mock) at the top of a test file to use
 // these predefined token lookup mocks.
 
-jest.mock('hooks/Tokens')
-jest.mock('components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
+vi.mock('~/hooks/Tokens')
+vi.mock('~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
 
 import { Currency, WETH9 } from '@uniswap/sdk-core'
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import { useCurrency, useCurrencyInfo } from '~/hooks/Tokens'
 import {
   DAI_ARBITRUM_INFO,
   DAI_INFO,
@@ -22,88 +28,97 @@ import {
   USDT_INFO,
   WBTC_INFO,
   WETH_INFO,
-} from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
-import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isSameAddress } from 'utilities/src/addresses'
+} from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
+
+function isSameEthAddress(a?: string, b?: string): boolean {
+  return areAddressesEqual({
+    addressInput1: { address: a, platform: Platform.EVM },
+    addressInput2: { address: b, platform: Platform.EVM },
+  })
+}
 
 beforeEach(() => {
   // Global mocks for token lookups. To override in a test, use `mocked().mockImplementation(...)`.
-  mocked(getCurrency).mockImplementation(async (currencyId: string, chainId: UniverseChainId) => {
-    if (currencyId?.toLowerCase() === 'eth') {
-      return NATIVE_INFO?.currency
+  mocked(getCurrencyFromCurrencyId).mockImplementation(async (currencyId: string) => {
+    const chainId = currencyIdToChain(currencyId)
+    const address = currencyIdToAddress(currencyId)
+    if (!chainId) {
+      return undefined
     }
-    if (isSameAddress(currencyId, DAI.address)) {
-      return DAI_INFO?.currency
+
+    if (chainId === UniverseChainId.Mainnet && isNativeCurrencyAddress(chainId, address)) {
+      return NATIVE_INFO.currency
     }
-    if (isSameAddress(currencyId, USDC_MAINNET.address)) {
-      return USDC_INFO?.currency
+    if (isSameEthAddress(address, DAI.address)) {
+      return DAI_INFO.currency
     }
-    if (isSameAddress(currencyId, WETH9[UniverseChainId.Mainnet].address)) {
-      return WETH_INFO?.currency
+    if (isSameEthAddress(address, USDC_MAINNET.address)) {
+      return USDC_INFO.currency
     }
-    if (isSameAddress(currencyId, USDT.address)) {
-      return USDT_INFO?.currency
+    if (isSameEthAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
+      return WETH_INFO.currency
     }
-    if (isSameAddress(currencyId, WBTC.address)) {
-      return WBTC_INFO?.currency
+    if (isSameEthAddress(address, USDT.address)) {
+      return USDT_INFO.currency
     }
-    if (isSameAddress(currencyId, DAI_ARBITRUM_ONE.address)) {
-      return DAI_ARBITRUM_INFO?.currency
+    if (isSameEthAddress(address, WBTC.address)) {
+      return WBTC_INFO.currency
     }
-    if (isSameAddress(currencyId, USDC_ARBITRUM.address)) {
-      return USDC_ARBITRUM_INFO?.currency
+    if (isSameEthAddress(address, DAI_ARBITRUM_ONE.address)) {
+      return DAI_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_1.address)) {
-      return TEST_TOKEN_1_INFO?.currency
+    if (isSameEthAddress(address, USDC_ARBITRUM.address)) {
+      return USDC_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_2.address)) {
-      return TEST_TOKEN_2_INFO?.currency
+    if (isSameEthAddress(address, TEST_TOKEN_1.address)) {
+      return TEST_TOKEN_1_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_3.address)) {
-      return TEST_TOKEN_3_INFO?.currency
+    if (isSameEthAddress(address, TEST_TOKEN_2.address)) {
+      return TEST_TOKEN_2_INFO.currency
     }
-    return COMMON_BASES[chainId ?? UniverseChainId.Mainnet]?.find((base) =>
-      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === currencyId,
+    if (isSameEthAddress(address, TEST_TOKEN_3.address)) {
+      return TEST_TOKEN_3_INFO.currency
+    }
+    return COMMON_BASES[chainId].find((base) =>
+      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === address,
     )?.currency
   })
-  mocked(useCurrency).mockImplementation((address?: string, chainId?: UniverseChainId) => {
-    if (address?.toLowerCase() === 'eth') {
-      return NATIVE_INFO?.currency
+  mocked(useCurrency).mockImplementation(({ address, chainId }: { address?: string; chainId?: UniverseChainId }) => {
+    if (isNativeCurrencyAddress(UniverseChainId.Mainnet, address)) {
+      return NATIVE_INFO.currency
     }
-    if (isSameAddress(address, DAI.address)) {
-      return DAI_INFO?.currency
+    if (isSameEthAddress(address, DAI.address)) {
+      return DAI_INFO.currency
     }
-    if (isSameAddress(address, USDC_MAINNET.address)) {
-      return USDC_INFO?.currency
+    if (isSameEthAddress(address, USDC_MAINNET.address)) {
+      return USDC_INFO.currency
     }
-    if (isSameAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
-      return WETH_INFO?.currency
+    if (isSameEthAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
+      return WETH_INFO.currency
     }
-    if (isSameAddress(address, USDT.address)) {
-      return USDT_INFO?.currency
+    if (isSameEthAddress(address, USDT.address)) {
+      return USDT_INFO.currency
     }
-    if (isSameAddress(address, WBTC.address)) {
-      return WBTC_INFO?.currency
+    if (isSameEthAddress(address, WBTC.address)) {
+      return WBTC_INFO.currency
     }
-    if (isSameAddress(address, DAI_ARBITRUM_ONE.address)) {
-      return DAI_ARBITRUM_INFO?.currency
+    if (isSameEthAddress(address, DAI_ARBITRUM_ONE.address)) {
+      return DAI_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(address, USDC_ARBITRUM.address)) {
-      return USDC_ARBITRUM_INFO?.currency
+    if (isSameEthAddress(address, USDC_ARBITRUM.address)) {
+      return USDC_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(address, TEST_TOKEN_1.address)) {
-      return TEST_TOKEN_1_INFO?.currency
+    if (isSameEthAddress(address, TEST_TOKEN_1.address)) {
+      return TEST_TOKEN_1_INFO.currency
     }
-    if (isSameAddress(address, TEST_TOKEN_2.address)) {
-      return TEST_TOKEN_2_INFO?.currency
+    if (isSameEthAddress(address, TEST_TOKEN_2.address)) {
+      return TEST_TOKEN_2_INFO.currency
     }
-    if (isSameAddress(address, TEST_TOKEN_3.address)) {
-      return TEST_TOKEN_3_INFO?.currency
+    if (isSameEthAddress(address, TEST_TOKEN_3.address)) {
+      return TEST_TOKEN_3_INFO.currency
     }
-    return COMMON_BASES[chainId ?? UniverseChainId.Mainnet]?.find((base) =>
+    return COMMON_BASES[chainId ?? UniverseChainId.Mainnet].find((base) =>
       base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === address,
     )?.currency
   })
@@ -112,34 +127,34 @@ beforeEach(() => {
       return NATIVE_INFO
     }
     const address = typeof currency === 'string' ? currency : currency?.address
-    if (isSameAddress(address, DAI.address)) {
+    if (isSameEthAddress(address, DAI.address)) {
       return DAI_INFO
     }
-    if (isSameAddress(address, USDC_MAINNET.address)) {
+    if (isSameEthAddress(address, USDC_MAINNET.address)) {
       return USDC_INFO
     }
-    if (isSameAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
+    if (isSameEthAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
       return WETH_INFO
     }
-    if (isSameAddress(address, USDT.address)) {
+    if (isSameEthAddress(address, USDT.address)) {
       return USDT_INFO
     }
-    if (isSameAddress(address, WBTC.address)) {
+    if (isSameEthAddress(address, WBTC.address)) {
       return WBTC_INFO
     }
-    if (isSameAddress(address, DAI_ARBITRUM_ONE.address)) {
+    if (isSameEthAddress(address, DAI_ARBITRUM_ONE.address)) {
       return DAI_ARBITRUM_INFO
     }
-    if (isSameAddress(address, USDC_ARBITRUM.address)) {
+    if (isSameEthAddress(address, USDC_ARBITRUM.address)) {
       return USDC_ARBITRUM_INFO
     }
-    if (isSameAddress(address, TEST_TOKEN_1.address)) {
+    if (isSameEthAddress(address, TEST_TOKEN_1.address)) {
       return TEST_TOKEN_1_INFO
     }
-    if (isSameAddress(address, TEST_TOKEN_2.address)) {
+    if (isSameEthAddress(address, TEST_TOKEN_2.address)) {
       return TEST_TOKEN_2_INFO
     }
-    if (isSameAddress(address, TEST_TOKEN_3.address)) {
+    if (isSameEthAddress(address, TEST_TOKEN_3.address)) {
       return TEST_TOKEN_3_INFO
     }
     return undefined

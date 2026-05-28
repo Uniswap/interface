@@ -1,15 +1,15 @@
+import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
+import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { ApproveTxNotification } from 'uniswap/src/features/notifications/types'
+import { NOTIFICATION_ICON_SIZE } from 'uniswap/src/features/notifications/constants'
+import { ApproveTxNotification } from 'uniswap/src/features/notifications/slice/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
-import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formApproveNotificationTitle } from 'wallet/src/features/notifications/utils'
 
 export function ApproveNotification({
-  notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay },
+  notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay, tokenSymbol },
 }: {
   notification: ApproveTxNotification
 }): JSX.Element {
@@ -17,7 +17,13 @@ export function ApproveNotification({
 
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
 
-  const title = formApproveNotificationTitle(txStatus, currencyInfo?.currency, tokenAddress, spender)
+  const title = formApproveNotificationTitle({
+    txStatus,
+    currency: currencyInfo?.currency,
+    tokenAddress,
+    spender,
+    tokenSymbol,
+  })
 
   const icon = (
     <LogoWithTxStatus

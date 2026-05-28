@@ -1,10 +1,12 @@
-import { makeMutable } from 'react-native-reanimated'
+import { UseQueryResult } from '@tanstack/react-query'
+import { GetAddressResponse } from '@universe/api'
 import configureMockStore from 'redux-mock-store'
+import { thunk } from 'redux-thunk'
 import FavoriteWalletCard, { FavoriteWalletCardProps } from 'src/components/explore/FavoriteWalletCard'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
+import * as unitagHooks from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import * as ensHooks from 'uniswap/src/features/ens/api'
-import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -19,18 +21,15 @@ jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native')
   return {
     ...actualNav,
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     useNavigation: () => mockedNavigation,
   }
 })
 
-const mockStore = configureMockStore()
+const mockStore = configureMockStore([thunk])
 
 const defaultProps: FavoriteWalletCardProps = {
   address: SAMPLE_SEED_ADDRESS_1,
-  pressProgress: makeMutable(0),
   isEditing: false,
-  dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
 }
 
@@ -47,12 +46,34 @@ describe('FavoriteWalletCard', () => {
     })
 
     it('renders unitag name if available', () => {
-      jest.spyOn(unitagHooks, 'useUnitagByAddress').mockReturnValue({
-        unitag: { username: 'unitagname' },
-        loading: false,
-        fetching: false,
-        pending: false,
-      })
+      jest.spyOn(unitagHooks, 'useUnitagsAddressQuery').mockReturnValue({
+        data: new GetAddressResponse({ username: 'unitagname' }),
+        isLoading: false,
+        isFetching: false,
+        isPending: false,
+        error: null,
+        isError: false,
+        isLoadingError: false,
+        isRefetchError: false,
+        isSuccess: true,
+        status: 'success',
+        refetch: jest.fn(),
+        dataUpdatedAt: 0,
+        errorUpdatedAt: 0,
+        failureCount: 0,
+        failureReason: null,
+        fetchStatus: 'idle',
+        isPlaceholderData: false,
+        isRefetching: false,
+        isStale: false,
+        isInitialLoading: false,
+        isEnabled: true,
+        errorUpdateCount: 0,
+        isFetched: true,
+        isFetchedAfterMount: true,
+        isPaused: false,
+        promise: Promise.resolve(new GetAddressResponse({ username: 'unitagname' })),
+      } as UseQueryResult<GetAddressResponse>)
 
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 
@@ -89,7 +110,7 @@ describe('FavoriteWalletCard', () => {
     it('renders wallet address in other cases', () => {
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 
-      const displayedAddress = sanitizeAddressText(shortenAddress(defaultProps.address))!
+      const displayedAddress = sanitizeAddressText(shortenAddress({ address: defaultProps.address }))!
 
       expect(queryByText(displayedAddress)).toBeTruthy()
     })
@@ -131,7 +152,7 @@ describe('FavoriteWalletCard', () => {
 
     it('dispatches removeWatchedAddress when remove button is pressed', () => {
       const store = mockStore({
-        favorites: { tokens: [] },
+        favorites: { tokens: [], watchedAddresses: [defaultProps.address] },
         wallet: {
           accounts: {
             [defaultProps.address]: signerMnemonicAccount({ address: defaultProps.address }),
@@ -146,12 +167,10 @@ describe('FavoriteWalletCard', () => {
       const removeButton = getByTestId('explore/remove-button')
       fireEvent.press(removeButton, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(store.getActions()).toEqual([
-        {
-          type: 'favorites/removeWatchedAddress',
-          payload: { address: defaultProps.address },
-        },
-      ])
+      expect(store.getActions()).toContainEqual({
+        type: 'favorites/removeWatchedAddress',
+        payload: { address: defaultProps.address },
+      })
     })
   })
 })

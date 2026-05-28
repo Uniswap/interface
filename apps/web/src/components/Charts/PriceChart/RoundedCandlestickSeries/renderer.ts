@@ -1,10 +1,7 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/renderer.ts
  */
-import { RoundedCandleSeriesOptions } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
-import { positionsLine } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
-import { positionsBox } from 'components/Charts/VolumeChart/utils'
-import { roundRect } from 'components/Charts/utils'
+
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CandlestickData,
@@ -15,6 +12,10 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
+import { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
+import { roundRect } from '~/components/Charts/utils'
+import { positionsLine } from '~/components/Charts/VolumeChart/CrosshairHighlightPrimitive'
+import { positionsBox } from '~/components/Charts/VolumeChart/utils'
 
 interface BarItem {
   openY: number
@@ -25,9 +26,9 @@ interface BarItem {
   isUp: boolean
 }
 
-export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimestamp>>
-  implements ICustomSeriesPaneRenderer
-{
+export class RoundedCandleSeriesRenderer<
+  TData extends CandlestickData<UTCTimestamp>,
+> implements ICustomSeriesPaneRenderer {
   _data: PaneRendererCustomData<Time, TData> | null = null
   _options: RoundedCandleSeriesOptions | null = null
 
@@ -53,7 +54,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
     let lastClose = -Infinity
     const bars: BarItem[] = this._data.bars.map((bar) => {
       const isUp = bar.originalData.close >= lastClose
-      lastClose = bar.originalData.close ?? lastClose
+      lastClose = bar.originalData.close
       const openY = priceToCoordinate(bar.originalData.open as number) ?? 0
       const highY = priceToCoordinate(bar.originalData.high as number) ?? 0
       const lowY = priceToCoordinate(bar.originalData.low as number) ?? 0
@@ -69,15 +70,28 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
     })
 
     const radius = this._options.radius(this._data.barSpacing)
-    this._drawWicks(renderingScope, bars, this._data.visibleRange)
-    this._drawCandles(renderingScope, bars, this._data.visibleRange, radius)
+    this._drawWicks({
+      renderingScope,
+      bars,
+      visibleRange: this._data.visibleRange,
+    })
+    this._drawCandles({
+      renderingScope,
+      bars,
+      visibleRange: this._data.visibleRange,
+      radius,
+    })
   }
 
-  private _drawWicks(
-    renderingScope: BitmapCoordinatesRenderingScope,
-    bars: readonly BarItem[],
-    visibleRange: Range<number>,
-  ): void {
+  private _drawWicks({
+    renderingScope,
+    bars,
+    visibleRange,
+  }: {
+    renderingScope: BitmapCoordinatesRenderingScope
+    bars: readonly BarItem[]
+    visibleRange: Range<number>
+  }): void {
     if (this._data === null || this._options === null) {
       return
     }
@@ -90,18 +104,31 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
       const bar = bars[i]
       ctx.fillStyle = bar.isUp ? this._options.wickUpColor : this._options.wickDownColor
 
-      const verticalPositions = positionsBox(bar.lowY, bar.highY, verticalPixelRatio)
-      const linePositions = positionsLine(bar.x, horizontalPixelRatio, wickWidth)
+      const verticalPositions = positionsBox({
+        position1Media: bar.lowY,
+        position2Media: bar.highY,
+        pixelRatio: verticalPixelRatio,
+      })
+      const linePositions = positionsLine({
+        positionMedia: bar.x,
+        pixelRatio: horizontalPixelRatio,
+        desiredWidthMedia: wickWidth,
+      })
       ctx.fillRect(linePositions.position, verticalPositions.position, linePositions.length, verticalPositions.length)
     }
   }
 
-  private _drawCandles(
-    renderingScope: BitmapCoordinatesRenderingScope,
-    bars: readonly BarItem[],
-    visibleRange: Range<number>,
-    radius: number,
-  ): void {
+  private _drawCandles({
+    renderingScope,
+    bars,
+    visibleRange,
+    radius,
+  }: {
+    renderingScope: BitmapCoordinatesRenderingScope
+    bars: readonly BarItem[]
+    visibleRange: Range<number>
+    radius: number
+  }): void {
     if (this._data === null || this._options === null) {
       return
     }
@@ -115,23 +142,27 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
     for (let i = visibleRange.from; i < visibleRange.to; i++) {
       const bar = bars[i]
 
-      const verticalPositions = positionsBox(
-        Math.min(bar.openY, bar.closeY),
-        Math.max(bar.openY, bar.closeY),
-        verticalPixelRatio,
-      )
-      const linePositions = positionsLine(bar.x, horizontalPixelRatio, candleBodyWidth)
+      const verticalPositions = positionsBox({
+        position1Media: Math.min(bar.openY, bar.closeY),
+        position2Media: Math.max(bar.openY, bar.closeY),
+        pixelRatio: verticalPixelRatio,
+      })
+      const linePositions = positionsLine({
+        positionMedia: bar.x,
+        pixelRatio: horizontalPixelRatio,
+        desiredWidthMedia: candleBodyWidth,
+      })
 
       ctx.fillStyle = bar.isUp ? this._options.upColor : this._options.downColor
 
-      roundRect(
+      roundRect({
         ctx,
-        linePositions.position,
-        verticalPositions.position,
-        linePositions.length,
-        Math.max(verticalPositions.length, 1),
-        radius,
-      )
+        x: linePositions.position,
+        y: verticalPositions.position,
+        w: linePositions.length,
+        h: Math.max(verticalPositions.length, 1),
+        radii: radius,
+      })
     }
   }
 }

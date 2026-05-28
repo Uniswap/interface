@@ -1,13 +1,9 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 describe('isV4UnsupportedChain', () => {
   it('returns true for Zksync', () => {
     expect(isV4UnsupportedChain(UniverseChainId.Zksync)).toBe(true)
-  })
-
-  it('returns true for Celo', () => {
-    expect(isV4UnsupportedChain(UniverseChainId.Celo)).toBe(true)
   })
 
   it.each([
@@ -17,8 +13,11 @@ describe('isV4UnsupportedChain', () => {
     UniverseChainId.Base,
     UniverseChainId.Blast,
     UniverseChainId.Bnb,
+    UniverseChainId.Celo,
     UniverseChainId.Optimism,
     UniverseChainId.Polygon,
+    UniverseChainId.Soneium,
+    UniverseChainId.XLayer,
     UniverseChainId.Unichain,
     UniverseChainId.Zora,
   ])('returns false for other chains', (chainId) => {

@@ -1,0 +1,215 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { base64urlToBase64 } from '@universe/encoding'
+import { connect } from '@wagmi/core'
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { Flex } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
+import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
+import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
+import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
+import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { registerNewPasskey } from 'uniswap/src/features/passkey/embeddedWallet'
+import { executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
+import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
+import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
+import { shortenAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { AddPasskeyStep } from '~/components/Passkey/RecoverWalletSteps'
+import { useRecoveryPrivyAuth } from '~/components/Passkey/useRecoveryPrivyAuth'
+import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
+import { getPrivyConfig } from '~/config'
+import { wagmiConfig } from '~/connection/wagmiConfig'
+import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
+import { useModalState } from '~/hooks/useModalState'
+import type { RecoverWalletModalParams } from '~/state/application/reducer'
+import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { useAppSelector } from '~/state/hooks'
+import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
+
+export function RecoverWalletModal(): JSX.Element {
+  const { t } = useTranslation()
+  const { isOpen, onClose } = useModalState(ModalName.RecoverWallet)
+  const queryClient = useQueryClient()
+  const dispatch = useDispatch()
+  const { setIsConnected, setWalletAddress, setWalletId } = useEmbeddedWalletState()
+  const connector = useWagmiConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
+    shouldThrow: true,
+  })
+
+  const [addPasskeyError, setAddPasskeyError] = useState<string | undefined>()
+  const [oauthError, setOauthError] = useState<string | undefined>()
+
+  const { appId: privyAppId } = getPrivyConfig(false)
+  const handleOAuthError = useCallback((err: string) => setOauthError(err), [])
+  const privy = useRecoveryPrivyAuth({ onOAuthError: handleOAuthError })
+
+  const onPinDecryptSuccess = useEvent(
+    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+      let passkeyUsername: string | undefined
+      if (flow.recoveryWalletAddress) {
+        try {
+          const unitagResponse = await unitagsApiClient.fetchAddress({ address: flow.recoveryWalletAddress })
+          passkeyUsername = unitagResponse.username ?? shortenAddress({ address: flow.recoveryWalletAddress })
+        } catch {
+          passkeyUsername = shortenAddress({ address: flow.recoveryWalletAddress })
+        }
+      }
+
+      const { credential } = await registerNewPasskey({ username: passkeyUsername })
+      const credentialJson = JSON.parse(credential) as { response?: { publicKey?: string } }
+      if (!credentialJson.response?.publicKey) {
+        throw new Error('Credential response missing publicKey')
+      }
+      const newPasskeyPublicKey = base64urlToBase64(credentialJson.response.publicKey)
+
+      const recoveryResult = await executeRecovery({
+        authPrivateKey,
+        authMethodId,
+        newPasskeyCredential: credential,
+        newPasskeyPublicKey,
+        generateAuthorizationSignature: privy.generateAuthorizationSignature,
+      })
+
+      dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: false }))
+      setWalletAddress(recoveryResult.walletAddress)
+      setWalletId(recoveryResult.walletId)
+      setIsConnected(true)
+      Promise.resolve(connect(wagmiConfig, { connector })).catch(() => {})
+      sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
+        result: WalletConnectionResult.Succeeded,
+        wallet_name: connector.name,
+        wallet_type: walletTypeToAmplitudeWalletType(connector.type),
+        wallet_address: recoveryResult.walletAddress,
+      })
+
+      void resetListAuthenticators(queryClient, recoveryResult.walletId)
+      handleClose()
+    },
+  )
+
+  const flow = useRecoveryFlow({
+    privy,
+    privyAppId,
+    onPinDecryptSuccess,
+    setOauthError,
+    showAddPasskeyStep: true,
+  })
+
+  // Safe against re-fire: EmailEntry hides its back arrow, so the user can't return to
+  // Login mid-session.
+  const initialMethod = useAppSelector(
+    (state) => (state.application.openModal as Partial<RecoverWalletModalParams> | null)?.initialState?.initialMethod,
+  )
+  const { step: flowStep, selectEmailLogin: flowSelectEmailLogin } = flow
+  useEffect(() => {
+    if (isOpen && initialMethod === 'email' && flowStep === RecoveryStep.Login) {
+      flowSelectEmailLogin()
+    }
+  }, [isOpen, initialMethod, flowStep, flowSelectEmailLogin])
+
+  const handleClose = useEvent(() => {
+    flow.reset()
+    setAddPasskeyError(undefined)
+    onClose()
+  })
+
+  const handleAddPasskey = useEvent(async () => {
+    setAddPasskeyError(undefined)
+    try {
+      await flow.confirmAddPasskey()
+    } catch (e) {
+      logger.error(e, { tags: { file: 'RecoverWalletModal', function: 'handleAddPasskey' } })
+      setAddPasskeyError(t('common.card.error.description'))
+    }
+  })
+
+  return (
+    <Modal
+      name={ModalName.RecoverWallet}
+      isModalOpen={isOpen}
+      onClose={handleClose}
+      isDismissible={false}
+      maxWidth={420}
+    >
+      <Flex gap="$gap24" alignItems="center" width="100%">
+        {flow.step === RecoveryStep.Login && (
+          <RecoveryLoginStep
+            t={t}
+            handleClose={handleClose}
+            onSelectEmail={flow.selectEmailLogin}
+            onSelectApple={() => flow.initOAuth('apple')}
+            onSelectGoogle={() => flow.initOAuth('google')}
+            oauthLoadingProvider={flow.oauthProvider}
+            isReady={flow.isReady}
+          />
+        )}
+        {flow.step === RecoveryStep.OAuthLoading && (
+          <OAuthLoadingStep oauthError={oauthError} handleClose={handleClose} />
+        )}
+        {flow.step === RecoveryStep.EmailEntry && (
+          <EmailEntryStep
+            email={flow.email}
+            setEmail={flow.setEmail}
+            isValidEmail={flow.isValidEmail}
+            isLoading={flow.isLoading}
+            isReady={flow.isReady}
+            errorMessage={flow.errorMessage}
+            sendCodeMutation={flow.sendCodeMutation}
+            handleBack={handleClose}
+            handleClose={handleClose}
+            hideBack
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.EmailCode && (
+          <EmailCodeStep
+            email={flow.email}
+            otpInput={flow.otpInput}
+            submitCodeMutation={flow.submitCodeMutation}
+            resendCodeMutation={flow.resendCodeMutation}
+            errorMessage={flow.errorMessage}
+            isReady={flow.isReady}
+            handleBack={flow.handleBack}
+            handleClose={handleClose}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.EnterPin && (
+          <EnterPinStep
+            recoveryWalletAddress={flow.recoveryWalletAddress}
+            passcodeInput={flow.passcodeInput}
+            showPasscode={flow.showPasscode}
+            setShowPasscode={flow.setShowPasscode}
+            pinError={flow.pinError}
+            cooldown={flow.cooldown}
+            isDecrypting={flow.isDecrypting}
+            handleBack={flow.handleBack}
+            handleClose={handleClose}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.AddPasskey && (
+          <AddPasskeyStep
+            addPasskeyError={addPasskeyError}
+            handleAddPasskey={handleAddPasskey}
+            handleClose={handleClose}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+      </Flex>
+    </Modal>
+  )
+}
+
+export default RecoverWalletModal

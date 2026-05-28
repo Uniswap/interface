@@ -1,10 +1,14 @@
-import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
-import { ColorTokens, SpaceTokens } from 'tamagui'
-import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
-import { Flex, FlexProps } from 'ui/src/components/layout'
+import { useMemo } from 'react'
+import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
+import type { ColorTokens, SpaceTokens } from 'tamagui'
+import type { CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
+import { Checkbox } from 'ui/src/components/checkbox/Checkbox'
+import type { FlexProps } from 'ui/src/components/layout'
+import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
-import { SporeComponentVariant } from 'ui/src/components/types'
+import type { SporeComponentVariant } from 'ui/src/components/types'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export type LabeledCheckboxProps = {
   size?: CheckboxSizeTokens
@@ -34,21 +38,23 @@ export function LabeledCheckbox({
   containerStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
-  const onPress = (e: GestureResponderEvent): void => {
-    // Prevent event from bubbling up to parent
+  const onPress = useEvent((e: GestureResponderEvent): void => {
     e.preventDefault()
     e.stopPropagation()
     onCheckPressed?.(checked)
-  }
+  })
 
-  const textElement =
-    typeof text === 'string' ? (
-      <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-        {text}
-      </Text>
-    ) : (
-      text
-    )
+  const textElement = useMemo(
+    () =>
+      typeof text === 'string' ? (
+        <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
+          {text}
+        </Text>
+      ) : (
+        text
+      ),
+    [text],
+  )
 
   return (
     <TouchableArea hoverable={!!hoverStyle} hoverStyle={hoverStyle} style={containerStyle} onPress={onPress}>

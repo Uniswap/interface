@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- Keyboard addListener is allowed for this use case
 import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { ColorTokens, Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 interface Props {
   value: string | undefined
@@ -62,7 +62,7 @@ export function GenericImportForm({
     setFocused(true)
     onFocus?.()
     // Need this to allow for focus on click on container.
-    textInputRef?.current?.focus()
+    textInputRef.current?.focus()
   }
 
   const handleSubmit = (): void => {
@@ -79,7 +79,7 @@ export function GenericImportForm({
           return
         }
         isKeyboardVisibleRef.current = false
-        textInputRef?.current?.blur()
+        textInputRef.current?.blur()
       }),
     ]
 

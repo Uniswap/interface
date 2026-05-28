@@ -1,8 +1,11 @@
 import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
-import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
+import { isTestEnv } from '@universe/environment'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
-export function setupWalletCache(): InMemoryCache {
+export function setupSharedApolloCache(): InMemoryCache {
   return new InMemoryCache({
     typePolicies: {
       Query: {
@@ -10,13 +13,14 @@ export function setupWalletCache(): InMemoryCache {
           // relayStylePagination function unfortunately generates a field policy that ignores args
           // Note: all non-pagination related query args should be added for cache to work properly.
           // ^ This ensures that cache doesnt get overwritten by similar queries with different args (e.g. different filter on NFT Items)
-          nftBalances: relayStylePagination(['ownerAddress']),
+          nftBalances: relayStylePagination(['ownerAddress', 'filter']),
           nftAssets: relayStylePagination(['address', 'filter']),
+          nftActivity: relayStylePagination(),
 
           /*
            * CACHE REDIRECTS
            *
-           * when queries require params, Apollo cannot return partial data from cache
+           * When queries require params, Apollo cannot return partial data from cache
            * because it will not know the `id` until data is received.
            * The following redirects set ids to values known ahead of time.
            *
@@ -33,8 +37,8 @@ export function setupWalletCache(): InMemoryCache {
                   read(_, { args, toReference }): Reference | undefined {
                     return toReference({
                       __typename: 'Token',
-                      chain: args?.chain,
-                      address: args?.address?.toLowerCase(),
+                      chain: args?.['chain'],
+                      address: normalizeTokenAddressForCache(args?.['address']),
                     })
                   },
                 },
@@ -49,18 +53,17 @@ export function setupWalletCache(): InMemoryCache {
         },
       },
       Token: {
-        // key by chain, address combination so that Token(chain, address) endpoint can read from cache
         /**
-         * NOTE: In any query for `token` or `tokens`, you must include the `chain` and `address` fields
-         * in order for result to normalize properly in the cache.
+         * Key by `[chain, address]` so that when querying by `Token(chain, address)` we can read from cache.
+         *
+         * NOTE: In every query that returns a `Token` object, you must always request the `chain` and `address` fields
+         *       in order for the result to be normalized properly in the cache.
          */
         keyFields: ['chain', 'address'],
         fields: {
           address: {
             read(address: string | null): string | null {
-              // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
-              // always use lowercased addresses in our app for consistency
-              return address?.toLowerCase() ?? null
+              return normalizeTokenAddressForCache(address)
             },
           },
           feeData: {
@@ -77,9 +80,28 @@ export function setupWalletCache(): InMemoryCache {
           },
         },
       },
-      // Disable normalizaton for these types.
-      // Given that we would never query these objects directly, we want these to be stored by their parent instead of being normalized.
-      Amount: { keyFields: false },
+      TokenProject: {
+        fields: {
+          tokens: {
+            // Cache data may be lost when replacing the tokens array, so we either replace all or keep the existing array..
+            merge: incomingOrExistingArray,
+          },
+        },
+      },
+      TokenProjectMarket: {
+        fields: {
+          priceHistory: {
+            // This is here just to ignore the "cache may be lost" warning, as we do want this array to be overwritten when new data is available.
+            merge: incomingOrExistingArray,
+          },
+        },
+      },
+      // Disable normalization for these types since we want them stored by their parent.
+      Amount: {
+        keyFields: false,
+        // Add merge functions to suppress "Cache data may be lost" warnings
+        merge: true,
+      },
       AmountChange: { keyFields: false },
       Dimensions: { keyFields: false },
       TimestampedAmount: { keyFields: false },
@@ -87,13 +109,59 @@ export function setupWalletCache(): InMemoryCache {
   })
 }
 
+type ReferenceOrStoreObject = Reference | StoreObject
+
+// oxlint-disable-next-line max-params
 function ignoreIncomingNullValue(
-  existing: Reference | StoreObject,
-  incoming: Reference | StoreObject,
-  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
-): Reference | StoreObject {
-  if (existing && !incoming) {
+  existing: ReferenceOrStoreObject | undefined,
+  incoming: ReferenceOrStoreObject | null,
+  { mergeObjects }: FieldFunctionOptions,
+): ReferenceOrStoreObject | null {
+  if (existing === undefined) {
+    return incoming
+  }
+  // TODO(API-482): remove this once the backend bug is fixed.
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
+  if (incoming === null || incoming === undefined) {
     return existing
   }
+
   return mergeObjects(existing, incoming)
+}
+
+function incomingOrExistingArray(
+  existing: unknown[] | undefined,
+  incoming: unknown[] | undefined,
+): unknown[] | undefined {
+  return incoming ?? existing
+}
+
+export function normalizeCurrencyIdForMapLookup(currencyId: string): string
+export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined
+export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined {
+  if (!currencyId) {
+    return undefined
+  }
+
+  const chainId = currencyIdToChain(currencyId)
+  const normalizedAddress = normalizeTokenAddressForCache(currencyIdToAddress(currencyId))
+  return `${chainId}-${normalizedAddress}`
+}
+
+export function normalizeTokenAddressForCache(address: string): string
+export function normalizeTokenAddressForCache(address: null): null
+export function normalizeTokenAddressForCache(address: string | null): string | null
+export function normalizeTokenAddressForCache(address: string | null): string | null {
+  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
+  // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
+  // we use lowercase addresses when accessing the `Token` object from our local cache.
+  // Solana addresses are case sensitive though, so this only applies to EVM addresses.
+
+  if (address === 'NATIVE' || address === 'native') {
+    return 'native' // lowercased native address for lowercase consistency
+  }
+  const normalizedEvmAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: false })
+
+  // if not a valid EVM address, must be SVM address
+  return normalizedEvmAddress ?? address ?? null
 }

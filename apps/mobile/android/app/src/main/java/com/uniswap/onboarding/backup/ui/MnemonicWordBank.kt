@@ -3,12 +3,14 @@ package com.uniswap.onboarding.backup.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -30,7 +32,11 @@ fun MnemonicWordBank(
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
-      .wrapContentHeight(),
+      .wrapContentHeight()
+      .padding(
+        vertical = UniswapTheme.spacing.spacing16,
+        horizontal = UniswapTheme.spacing.spacing8
+      ),
     mainAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     crossAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     mainAxisAlignment = MainAxisAlignment.Center,
@@ -67,7 +73,10 @@ private fun MnemonicWordBankCell(
     Box(modifier = Modifier
       .clip(shape = UniswapTheme.shapes.xlarge)
       .then(Modifier.border(1.dp, UniswapTheme.colors.surface3, UniswapTheme.shapes.xlarge))
-      .clickable { onClick() }
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null
+      ) { onClick() }
       .background(color = UniswapTheme.colors.surface1)
       .padding(vertical = verticalPadding, horizontal = horizontalPadding)) {
       Text(

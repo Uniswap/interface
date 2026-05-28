@@ -1,23 +1,119 @@
-/* eslint-disable no-console */
+/* oxlint-disable max-lines */
 import '@testing-library/jest-dom' // jest custom assertions
-import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
-import 'jest-styled-components' // adds style diffs to snapshot tests
-import 'polyfills' // add polyfills
-import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
-import 'utilities/src/logger/mocks'
+import '~/polyfills' // add polyfills
 
-import type { createPopper } from '@popperjs/core'
+// ResizeObserver is not available in jsdom — provide a minimal stub for tests
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+}
+
+// Deterministic crypto.randomUUID for snapshot stability
+let _testUuidCounter = 0
+crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+// Reset counter between tests so snapshots are stable
+beforeEach(() => {
+  _testUuidCounter = 0
+  crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+})
+// oxlint-disable-next-line
+import './test-utils/mockTamagui' // mock problematic Tamagui components
+import { Readable } from 'stream'
+import { TextDecoder, TextEncoder } from 'util'
+import { type createPopper } from '@popperjs/core'
+import {
+  BaseWalletAdapter,
+  type SupportedTransactionVersions,
+  type WalletName,
+  WalletReadyState,
+} from '@solana/wallet-adapter-base'
+import { useFeatureFlag } from '@universe/gating'
 import { useWeb3React } from '@web3-react/core'
+import { config as loadEnv } from 'dotenv'
 import failOnConsole from 'jest-fail-on-console'
 import { disableNetConnect, restore as restoreNetConnect } from 'nock'
 import React from 'react'
-import { Readable } from 'stream'
-import { toBeVisible } from 'test-utils/matchers'
-import { mocked } from 'test-utils/mocked'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
-import { TextDecoder, TextEncoder } from 'util'
+import { toBeVisible } from '~/test-utils/matchers'
+import { mocked } from '~/test-utils/mocked'
+
+loadEnv()
+
+// Mock @solana/wallet-adapter-coinbase to prevent window access errors
+vi.mock('@solana/wallet-adapter-coinbase', () => ({
+  CoinbaseWalletName: 'Coinbase Wallet',
+  CoinbaseWalletAdapter: class MockCoinbaseWalletAdapter extends BaseWalletAdapter {
+    name = 'Coinbase Wallet' as WalletName
+    url = 'https://www.coinbase.com/wallet'
+    icon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0Ij48L3N2Zz4='
+    supportedTransactionVersions = new Set(['legacy', 0]) as SupportedTransactionVersions
+
+    private _connecting = false
+    private _publicKey = null
+    private _readyState = WalletReadyState.NotDetected // Use string instead of enum to avoid async import
+
+    constructor(_config = {}) {
+      super()
+      // Mock constructor - no actual initialization needed
+    }
+
+    get publicKey() {
+      return this._publicKey
+    }
+    get connecting() {
+      return this._connecting
+    }
+    get readyState() {
+      return this._readyState
+    }
+    get connected() {
+      return !!this._publicKey
+    }
+
+    async connect() {
+      this._connecting = true
+      // Mock connection logic without actual browser APIs
+      this._connecting = false
+    }
+    async disconnect() {
+      this._publicKey = null
+    }
+    async sendTransaction(): Promise<string> {
+      throw new Error('Mock adapter cannot send transactions')
+    }
+    async signTransaction() {
+      throw new Error('Mock adapter cannot sign transactions')
+    }
+    async signAllTransactions() {
+      throw new Error('Mock adapter cannot sign transactions')
+    }
+    async signMessage() {
+      throw new Error('Mock adapter cannot sign messages')
+    }
+  },
+}))
+
+vi.mock('react-native-reanimated', async () => {
+  const mock = await vi.importActual<any>('react-native-reanimated/src/mock')
+  return {
+    ...mock,
+    default: {
+      ...mock.default,
+      createAnimatedComponent: (component: any) => component,
+    },
+    createAnimatedComponent: (component: any) => component,
+  }
+})
+
+// Mock environment variables
+process.env.EXPO_OS = 'web'
+process.env.REACT_APP_ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
+process.env.REACT_APP_ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
 
 setupi18n()
 
@@ -26,17 +122,21 @@ setupi18n()
 globalThis.origin = 'https://app.uniswap.org'
 
 // Polyfill browser APIs (jest is a node.js environment):
+// oxlint-disable-next-line no-lone-blocks -- block used to scope polyfill assignments
 {
-  window.open = jest.fn()
-  window.getComputedStyle = jest.fn()
+  window.open = vi.fn()
+  window.scrollTo = vi.fn()
+  window.getComputedStyle = vi.fn()
 
   if (typeof globalThis.TextEncoder === 'undefined') {
     globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
-    globalThis.TextEncoder = TextEncoder
+    // Cast through unknown due to Node.js TextEncoder vs Web API TextEncoder type compatibility
+    globalThis.TextEncoder = TextEncoder as unknown as typeof globalThis.TextEncoder
     globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder
   }
 
   globalThis.matchMedia =
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
     globalThis.matchMedia ||
     ((query) => {
       const reducedMotion = query.match(/prefers-reduced-motion: ([a-zA-Z0-9-]+)/)
@@ -44,22 +144,213 @@ globalThis.origin = 'https://app.uniswap.org'
       return {
         // Needed for reanimated to disable reduced motion warning in tests
         matches: reducedMotion ? reducedMotion[1] === 'no-preference' : false,
-        addListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
+        addListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
       }
     })
 
-  globalThis.performance.measure = jest.fn()
-  globalThis.performance.mark = jest.fn()
+  globalThis.performance.measure = vi.fn()
+  globalThis.performance.mark = vi.fn()
+
+  // jsdom does not implement Canvas 2D (getContext('2d') logs console.error).
+  // DynamicSizeText and similar code need a minimal context with measureText.
+  const canvasProto = HTMLCanvasElement.prototype
+  const originalGetContext = canvasProto.getContext
+  const patchedGetContext = function (
+    this: HTMLCanvasElement,
+    contextId: string,
+    ...args: unknown[]
+  ): RenderingContext | null {
+    if (contextId === '2d') {
+      let font = ''
+      return {
+        get font(): string {
+          return font
+        },
+        set font(value: string) {
+          font = value
+        },
+        measureText(text: string): TextMetrics {
+          const match = /^(\d+)px/.exec(font)
+          const px = match ? Number.parseInt(match[1], 10) : 16
+          return { width: Math.max(1, text.length * px * 0.52) } as TextMetrics
+        },
+      } as unknown as CanvasRenderingContext2D
+    }
+    return originalGetContext.call(this, contextId, ...args) as RenderingContext | null
+  }
+  canvasProto.getContext = patchedGetContext as typeof originalGetContext
 
   globalThis.React = React
 }
 
-jest.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
+const IntersectionObserverMock = vi.fn(() => ({
+  disconnect: vi.fn(),
+  observe: vi.fn(),
+  takeRecords: vi.fn(),
+  unobserve: vi.fn(),
+}))
 
-jest.mock('@popperjs/core', () => {
-  const core = jest.requireActual('@popperjs/core')
+vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
+
+vi.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
+
+vi.mock('expo-blur', () => ({
+  BlurView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('ui/src/components/touchable/TouchableArea', () => ({
+  TouchableArea: ({ children, ..._props }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('@datadog/browser-logs', () => ({
+  datadogLogs: {
+    // leave it empty as we should avoid it in test mode
+    logger: {},
+  },
+}))
+
+// This package must be mocked because it doesn't support ESM
+vi.mock('@uniswap/analytics-events', () => {
+  return {
+    SharedEventName: {},
+    sendAnalyticsEvent: vi.fn(),
+    trace: vi.fn(),
+  }
+})
+
+vi.mock('@tamagui/animations-moti', () => ({
+  createAnimations: () => ({
+    '100ms': {
+      type: 'timing',
+      duration: 100,
+    },
+    fast: {
+      type: 'timing',
+      duration: 100,
+    },
+    slow: {
+      type: 'timing',
+      duration: 100,
+    },
+  }),
+  MotiView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('@uniswap/analytics', () => ({
+  Trace: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  TraceEvent: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  sendAnalyticsEvent: vi.fn(),
+  trace: vi.fn(),
+  analytics: {
+    track: vi.fn(),
+    identify: vi.fn(),
+    flush: vi.fn(),
+  },
+  __esModule: true,
+}))
+
+vi.mock('utilities/src/telemetry/analytics/constants', () => ({
+  ANALYTICS_FLUSH_TIMEOUT: 5000,
+  ANALYTICS_REQUEST_TIMEOUT: 10000,
+  ANALYTICS_BATCH_SIZE: 100,
+  DEFAULT_ANALYTICS_CONFIG: {},
+  ALLOW_ANALYTICS_ATOM_KEY: 'allow-analytics',
+  __esModule: true,
+}))
+
+vi.mock('@universe/environment', async () => {
+  const actual = await vi.importActual('@universe/environment')
+  return {
+    ...actual,
+    isWebPlatform: true,
+    isWebApp: true,
+    isMobileWeb: false,
+    isExtensionApp: false,
+  }
+})
+
+vi.mock('uniswap/src/features/telemetry/Trace', () => ({
+  default: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  Trace: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useConnectionStatus: vi.fn(() => ({ isConnecting: false })),
+}))
+
+vi.mock('expo-web-browser', () => ({
+  openBrowserAsync: vi.fn().mockResolvedValue({ type: 'opened' }),
+  dismissBrowser: vi.fn().mockResolvedValue(undefined),
+  openAuthSessionAsync: vi.fn().mockResolvedValue({ type: 'success', url: '' }),
+  maybeCompleteAuthSession: vi.fn().mockResolvedValue(undefined),
+  warmUpAsync: vi.fn().mockResolvedValue(undefined),
+  coolDownAsync: vi.fn().mockResolvedValue(undefined),
+  WebBrowserResultType: {
+    CANCEL: 'cancel',
+    DISMISS: 'dismiss',
+    OPENED: 'opened',
+    LOCKED: 'locked',
+  },
+}))
+
+vi.mock('expo-clipboard', () => ({
+  Clipboard: {
+    getStringAsync: vi.fn().mockResolvedValue(''),
+    setStringAsync: vi.fn().mockResolvedValue(undefined),
+    hasStringAsync: vi.fn().mockResolvedValue(false),
+    getImageAsync: vi.fn().mockResolvedValue(null),
+    setImageAsync: vi.fn().mockResolvedValue(undefined),
+    hasImageAsync: vi.fn().mockResolvedValue(false),
+  },
+  ClipboardPasteButton: ({ children, onPress, ...props }: any) => {
+    return React.createElement('button', { onClick: onPress, ...props }, children)
+  },
+}))
+
+vi.mock('moti', () => ({
+  View: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  Text: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  AnimatePresence: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  MotiView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  MotiText: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  useAnimationState: () => ({
+    current: 'initial',
+    transitionTo: vi.fn(),
+  }),
+  useDynamicAnimation: () => ({
+    animate: vi.fn(),
+  }),
+  __esModule: true,
+}))
+
+vi.mock('@popperjs/core', async () => {
+  const core: any = await vi.importActual('@popperjs/core')
   return {
     ...core,
     createPopper: (...args: Parameters<typeof createPopper>) => {
@@ -67,7 +358,7 @@ jest.mock('@popperjs/core', () => {
 
       // Prevent popper from making state updates asynchronously.
       // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
-      options?.modifiers?.push({
+      options.modifiers?.push({
         name: 'synchronousUpdate',
         enabled: true,
         phase: 'beforeMain',
@@ -84,40 +375,23 @@ jest.mock('@popperjs/core', () => {
   }
 })
 
-jest.mock('@datadog/browser-rum', () => ({
-  init: jest.fn(),
-  setUser: jest.fn(),
-  clearUser: jest.fn(),
-  addAction: jest.fn(),
-  addError: jest.fn(),
-}))
+vi.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
-jest.mock('@datadog/browser-logs', () => ({
-  init: jest.fn(),
-  setUser: jest.fn(),
-  setUserProperty: jest.fn(),
-  clearUser: jest.fn(),
-  addAction: jest.fn(),
-  addError: jest.fn(),
-}))
-
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
-
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  const { Empty } = jest.requireActual('@web3-react/empty')
+vi.mock('@web3-react/core', async () => {
+  const web3React: any = await vi.importActual('@web3-react/core')
+  const { Empty }: any = await vi.importActual('@web3-react/empty')
   return {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
         (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions),
       ),
-    useWeb3React: jest.fn(),
+    useWeb3React: vi.fn(),
   }
 })
 
-jest.mock('state/routing/slice', () => {
-  const routingSlice = jest.requireActual('state/routing/slice')
+vi.mock('~/state/routing/slice', async () => {
+  const routingSlice = await vi.importActual('~/state/routing/slice')
   return {
     ...routingSlice,
     // Prevents unit tests from logging errors from failed getQuote queries
@@ -130,25 +404,11 @@ jest.mock('state/routing/slice', () => {
   }
 })
 
-jest.mock('state/routing/quickRouteSlice', () => {
-  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
-  return {
-    ...quickRouteSlice,
-    // Prevents unit tests from logging errors from failed getQuote queries
-    useGetQuickRouteQuery: () => ({
-      isError: false,
-      data: undefined,
-      error: undefined,
-      currentData: undefined,
-    }),
-  }
-})
-
 /**
  * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
  * If something should log to the console, it should be stubbed and asserted:
  * @example
- * beforeEach(() => jest.spyOn(console, 'error').mockReturnsValue())
+ * beforeEach(() => vi.spyOn(console, 'error').mockReturnsValue())
  * it('should log an error', () => {
  *   example()
  *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
@@ -168,19 +428,93 @@ failOnConsole({
       if (message.startsWith('[moti]: Invalid transform value.')) {
         return true
       }
+      // Allow React key warnings from Trans component (react-i18next v14 issue)
+      if (
+        message.includes('Each child in a list should have a unique') &&
+        (message.includes('Trans') ||
+          message.includes('UniswapXDescription') ||
+          message.includes('SwapPreview') ||
+          message.includes('LimitPriceInputLabel'))
+      ) {
+        return true
+      }
+      // Nuances from tamagui causing issues with React 19
+      if (message.includes('React does not recognize the') && message.includes('prop on a DOM element')) {
+        // This is coming from tamagui passing through props to the DOM element
+        return true
+      }
+
+      if (message.includes('Received') && message.includes('for a non-boolean attribute')) {
+        return true
+      }
+
+      if (message.includes('Invalid attribute name')) {
+        return true
+      }
+
+      if (message.includes('Unknown event handler property')) {
+        return true
+      }
+    }
+    if (type === 'warn') {
+      // Allow UniversalImage warnings about not being able to retrieve remote images in test environment
+      if (message.includes('Could not retrieve and format remote image for uri')) {
+        return true
+      }
     }
     return false
   },
 })
 
-jest.mock('uniswap/src/features/gating/hooks')
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    useFeatureFlagWithLoading: vi.fn(),
+    getFeatureFlag: vi.fn(),
+    getFeatureFlagWithExposureLoggingDisabled: vi.fn(),
+    useExperimentGroupNameWithLoading: vi.fn(),
+    useExperimentGroupName: vi.fn(),
+    useExperimentValue: vi.fn(),
+    getExperimentValue: vi.fn(),
+    useExperimentValueWithExposureLoggingDisabled: vi.fn(),
+    useDynamicConfigValue: vi.fn(),
+    getDynamicConfigValue: vi.fn(),
+    getExperimentValueFromLayer: vi.fn(),
+    useExperimentValueFromLayer: vi.fn(),
+    checkTypeGuard: vi.fn(),
+    useStatsigClientStatus: () => ({
+      isStatsigLoading: false,
+      isStatsigReady: true,
+      isStatsigUninitialized: false,
+    }), // Specific custom mock for useStatsigClientStatus
+  }
+})
 
-jest.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
+vi.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
   return {
     useOrderedChainIds: (chainIds: UniverseChainId[]) => chainIds,
   }
 })
 
+function muteStatsigWarnings() {
+  // oxlint-disable-next-line no-console -- strictly for testing
+  const originalWarn = console.warn
+  vi.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+    const isStatsigWarning = args.some((arg) => {
+      return typeof arg === 'string' && arg.includes('Statsig')
+    })
+
+    if (isStatsigWarning) {
+      return
+    } else {
+      // Forward all other warnings to the original console.warn to avoid losing them
+      originalWarn(message, ...args)
+    }
+  })
+}
+
+// oxlint-disable-next-line no-console -- strictly for testing
 const originalConsoleDebug = console.debug
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
@@ -198,12 +532,14 @@ beforeEach(() => {
   mocked(useFeatureFlag).mockReturnValue(false)
 
   // Prevent amplitude debugs from triggering failOnConsole
-  console.debug = jest.fn((...args) => {
+  console.debug = vi.fn((...args) => {
     if (typeof args[0] === 'string' && args[0].includes('[amplitude(Identify)')) {
       return
     }
     originalConsoleDebug(...args)
   })
+  // TODO: can be removed after wrapping the test app in StatsigProvider and mocking flags and configs
+  muteStatsigWarnings()
 })
 
 afterEach(() => {
@@ -215,3 +551,15 @@ afterEach(() => {
 expect.extend({
   toBeVisible,
 })
+
+vi.mock('./components/Table/TableSizeProvider', () => ({
+  useTableSize: vi.fn(() => ({
+    width: 1024,
+    height: 768,
+    top: 0,
+    left: 0,
+  })),
+  TableSizeProvider: ({ children }: { children: JSX.Element }) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))

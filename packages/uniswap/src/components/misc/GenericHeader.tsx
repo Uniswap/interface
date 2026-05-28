@@ -1,5 +1,5 @@
-import { Flex, FlexProps, GeneratedIcon, SpaceTokens, Text, getTokenValue, useMedia } from 'ui/src'
-import { IconSizeTokens, TextVariantTokens, fonts } from 'ui/src/theme'
+import { Flex, FlexProps, GeneratedIcon, getTokenValue, SpaceTokens, Text, useMedia } from 'ui/src'
+import { fonts, IconSizeTokens, TextVariantTokens } from 'ui/src/theme'
 
 type GenericHeaderProps = {
   Icon?: GeneratedIcon

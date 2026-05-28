@@ -1,3 +1,5 @@
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 
-export type ReceiveCryptoModalState = FORServiceProvider[]
+export type ReceiveCryptoModalState = {
+  serviceProviders: FORServiceProvider[]
+}

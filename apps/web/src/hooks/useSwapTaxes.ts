@@ -1,18 +1,18 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
-import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
+import { BIPS_BASE, ZERO_PERCENT } from '~/constants/misc'
+import { getInterfaceProvider } from '~/constants/providers'
+import { useAccount } from '~/hooks/useAccount'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
-function getFeeOnTransferAddress(chainId?: UniverseChainId) {
+function getFeeOnTransferAddress(chainId?: EVMUniverseChainId) {
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return '0x19C97dc2a25845C7f9d1d519c8C2d4809c58b43f'
@@ -36,33 +36,39 @@ function getFeeOnTransferAddress(chainId?: UniverseChainId) {
 }
 
 function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetector | null {
-  const account = useAccount()
-  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(chainId), FOT_DETECTOR_ABI, true, chainId)
-
-  useEffect(() => {
-    if (contract && account.address) {
-      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
-        source: 'useFeeOnTransferDetectorContract',
-        contract: {
-          name: 'FeeOnTransferDetector',
-          address: getFeeOnTransferAddress(chainId),
-        },
-      })
+  return useMemo(() => {
+    if (!chainId || !isEVMChain(chainId)) {
+      return null
     }
-  }, [account.address, chainId, contract])
-  return contract
+    const address = getFeeOnTransferAddress(chainId)
+    const provider = getInterfaceProvider(chainId)
+    if (!address || !provider) {
+      return null
+    }
+    try {
+      return getContract({ address, ABI: FOT_DETECTOR_ABI, provider }) as FeeOnTransferDetector
+    } catch (error) {
+      logger.warn('useSwapTaxes', 'useFeeOnTransferDetectorContract', 'Failed to construct FOT detector', { error })
+      return null
+    }
+  }, [chainId])
 }
 
 const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over bps
 
 const FEE_CACHE: { [address in string]?: { sellTax?: Percent; buyTax?: Percent } } = {}
 
-async function getSwapTaxes(
-  fotDetector: FeeOnTransferDetector,
-  inputTokenAddress: string | undefined,
-  outputTokenAddress: string | undefined,
-  chainId: UniverseChainId,
-) {
+async function getSwapTaxes({
+  fotDetector,
+  inputTokenAddress,
+  outputTokenAddress,
+  chainId,
+}: {
+  fotDetector: FeeOnTransferDetector
+  inputTokenAddress?: string
+  outputTokenAddress?: string
+  chainId: UniverseChainId
+}) {
   const addresses = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
     addresses.push(inputTokenAddress)
@@ -95,7 +101,15 @@ async function getSwapTaxes(
 }
 
 // Use the buyFeeBps/sellFeeBps fields from Token GQL query where possible instead of this hook
-export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: UniverseChainId) {
+export function useSwapTaxes({
+  inputTokenAddress,
+  outputTokenAddress,
+  tokenChainId,
+}: {
+  inputTokenAddress?: string
+  outputTokenAddress?: string
+  tokenChainId?: UniverseChainId
+}) {
   const account = useAccount()
   const chainId = tokenChainId ?? account.chainId
   const fotDetector = useFeeOnTransferDetectorContract(chainId)
@@ -105,7 +119,7 @@ export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: st
     if (!fotDetector || !chainId) {
       return
     }
-    getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress, chainId).then(setTaxes)
+    getSwapTaxes({ fotDetector, inputTokenAddress, outputTokenAddress, chainId }).then(setTaxes)
   }, [fotDetector, inputTokenAddress, outputTokenAddress, chainId])
 
   return { inputTax, outputTax }

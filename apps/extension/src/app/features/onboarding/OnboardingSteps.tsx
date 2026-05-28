@@ -42,7 +42,7 @@ type MaybeOnboardingProps = OnboardingScreenProps | null
 let currentOnboardingScreen: MaybeOnboardingProps = null
 const onboardingScreenListen = new Set<(step: Step, val: MaybeOnboardingProps) => void>()
 
-let clearScreenTimeout: NodeJS.Timeout
+let clearScreenTimeout: ReturnType<typeof setTimeout>
 
 export function OnboardingStepsProvider({
   steps,
@@ -66,7 +66,7 @@ export function OnboardingStepsProvider({
     }
   }, [disableRedirect, isOnboarded, isResetting])
 
-  const initialStep = Object.keys(steps)[0] as Step
+  const initialStep = Object.keys(steps)[0] as Step | undefined
 
   if (!initialStep) {
     throw new Error('`steps` must have at least one `step`')
@@ -81,6 +81,33 @@ export function OnboardingStepsProvider({
     going: 'forward',
   })
 
+  // This is needed to force the onboarding screen to re-render when the belowFrameContent or outsideContent changes
+  useEffect(() => {
+    const handler = (nextStep: Step, next: MaybeOnboardingProps): void => {
+      if (
+        nextStep === step &&
+        (next?.belowFrameContent !== onboardingScreen?.belowFrameContent ||
+          next?.outsideContent !== onboardingScreen?.outsideContent)
+      ) {
+        setState((prev) => {
+          return {
+            ...prev,
+            onboardingScreen: {
+              ...prev.onboardingScreen,
+              belowFrameContent: next?.belowFrameContent,
+              outsideContent: next?.outsideContent,
+            },
+          }
+        })
+      }
+    }
+
+    onboardingScreenListen.add(handler)
+    return () => {
+      onboardingScreenListen.delete(handler)
+    }
+  }, [onboardingScreen?.belowFrameContent, onboardingScreen?.outsideContent, step])
+
   const getCurrentStep = useRef(step)
   getCurrentStep.current = step
 
@@ -94,7 +121,7 @@ export function OnboardingStepsProvider({
       // we are only updating onboardingScreen here once per unique title so
       // the state in this component is accurate, but subsequent updates go
       // through the emitter
-      if (onboardingScreenKey(prev?.onboardingScreen) !== onboardingScreenKey(next)) {
+      if (onboardingScreenKey(prev.onboardingScreen) !== onboardingScreenKey(next)) {
         return {
           ...prev,
           onboardingScreen: next,
@@ -122,12 +149,14 @@ export function OnboardingStepsProvider({
   }, [])
 
   const onboardingScreenKey = (props?: MaybeOnboardingProps): string => {
-    return `${props?.title}${props?.subtitle}${Object.keys(props || {}).join('')}`
+    const keysString = Object.keys(props || {}).join('')
+    const { title, subtitle } = props ?? {}
+    return `${title}${subtitle}${keysString}`
   }
 
   const goToNextStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const nextStep = Object.keys(steps)[stepIndex + 1] as Step
+    const nextStep = Object.keys(steps)[stepIndex + 1] as Step | undefined
 
     if (!nextStep) {
       throw new Error('No next step')
@@ -142,7 +171,7 @@ export function OnboardingStepsProvider({
 
   const goToPreviousStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const previousStep = Object.keys(steps)[stepIndex - 1] as Step
+    const previousStep = Object.keys(steps)[stepIndex - 1] as Step | undefined
 
     if (!previousStep) {
       throw new Error('No previous step')
@@ -197,6 +226,7 @@ export function OnboardingStepsProvider({
         {onboardingScreen && (
           <>
             {/* render actual screen contents "offscreen", we use context and put it on onboardingScreen */}
+            {/* oxlint-disable-next-line react/forbid-elements -- probably we can replace it here */}
             <div style={{ height: 0, opacity: 0, pointerEvents: 'none' }}>{stepContents}</div>
             <Frame
               animation="stiff"
@@ -231,7 +261,7 @@ export function OnboardingStepsProvider({
                   y="$spacing16"
                   onLayout={(e) => setBelowFrameHeight(e.nativeEvent.layout.height)}
                 >
-                  {onboardingScreen?.belowFrameContent}
+                  {onboardingScreen.belowFrameContent}
                 </Flex>
               )}
             </Frame>

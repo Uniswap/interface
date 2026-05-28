@@ -1,0 +1,92 @@
+{
+  "name": "@universe/api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/api/src",
+  "projectType": "library",
+  "tags": ["scope:api", "type:lib"],
+  "targets": {
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "prepare": {
+      "executor": "nx:noop",
+      "dependsOn": ["graphql:generate", "tradingapi:generate"],
+      "cache": true
+    },
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "tradingapi:schema": {
+      "command": "gh auth status >/dev/null 2>&1 || { echo 'Error: gh CLI is not installed or not authenticated. Run `gh auth login` first.' >&2; exit 1; } && SCHEMA=$(gh api repos/Uniswap/backend/contents/packages/services/trading/docs/api-reference/openapi.json --jq '.content') || { echo 'Error: Failed to fetch schema. Ensure you have access to Uniswap/backend.' >&2; exit 1; } && echo \"$SCHEMA\" | base64 -d > ./src/clients/trading/api.json",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "tradingapi:generate:openapi": {
+      "command": "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --useOptions --exportServices true --exportModels true",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/src/clients/trading/api.json"],
+      "outputs": ["{projectRoot}/src/clients/trading/__generated__"]
+    },
+    "tradingapi:generate": {
+      "command": "bun ./scripts/modifyTradingApiTypes.mts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/scripts/modifyTradingApiTypes.mts",
+        "{projectRoot}/src/clients/trading/types.ts",
+        {
+          "runtime": "bun -v"
+        },
+        {
+          "dependentTasksOutputFiles": "**/*.ts"
+        }
+      ],
+      "outputs": ["{projectRoot}/src/clients/trading/__generated__/models"],
+      "dependsOn": ["tradingapi:generate:openapi"]
+    },
+    "graphql:schema": {
+      "command": "gh auth status >/dev/null 2>&1 || { echo 'Error: gh CLI is not installed or not authenticated. Run `gh auth login` first.' >&2; exit 1; } && SCHEMA=$(gh api repos/Uniswap/data-api-graphql/contents/graphql/schema.graphql --jq '.content') || { echo 'Error: Failed to fetch schema. Ensure you have access to Uniswap/data-api-graphql.' >&2; exit 1; } && echo '# To update this file, run `bun api graphql:schema`' > ./src/clients/graphql/schema.graphql && echo \"$SCHEMA\" | base64 -d | grep -v '^#' >> ./src/clients/graphql/schema.graphql",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "graphql:generate": {
+      "command": "bun ./scripts/generate-graphql-types.ts && bun ./scripts/fixGraphQLApiTypes.mts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/clients/graphql/schema.graphql",
+        "{projectRoot}/src/**/*.graphql",
+        "{projectRoot}/src/**/*.gql",
+        "{projectRoot}/scripts/generate-graphql-types.ts",
+        "{projectRoot}/scripts/fixGraphQLApiTypes.mts",
+        "{workspaceRoot}/apps/mobile/src/**/*.graphql",
+        "{workspaceRoot}/apps/extension/src/**/*.graphql",
+        "{workspaceRoot}/packages/wallet/src/**/*.graphql",
+        "{workspaceRoot}/packages/uniswap/src/**/*.graphql"
+      ],
+      "outputs": ["{projectRoot}/src/clients/graphql/__generated__"]
+    }
+  }
+}

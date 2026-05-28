@@ -1,8 +1,8 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
-import { useTheme } from 'lib/styled-components'
 import React, { ReactNode } from 'react'
+import { ColorTokens } from 'ui/src'
 
 interface LineChartProps<T> {
   data: T[]
@@ -10,14 +10,14 @@ interface LineChartProps<T> {
   getY: (t: T) => number
   marginTop?: number
   curve: CurveFactory
-  color?: string
+  color: ColorTokens
   strokeWidth: number
   children?: ReactNode
   width: number
   height: number
 }
 
-function LineChart<T>({
+function LineChartInner<T>({
   data,
   getX,
   getY,
@@ -29,22 +29,14 @@ function LineChart<T>({
   height,
   children,
 }: LineChartProps<T>) {
-  const theme = useTheme()
   return (
     <svg width={width} height={height}>
       <Group top={marginTop}>
-        <LinePath
-          curve={curve}
-          stroke={color ?? theme.accent1}
-          strokeWidth={strokeWidth}
-          data={data}
-          x={getX}
-          y={getY}
-        />
+        <LinePath curve={curve} stroke={color} strokeWidth={strokeWidth} data={data} x={getX} y={getY} />
       </Group>
       {children}
     </svg>
   )
 }
 
-export default React.memo(LineChart) as typeof LineChart
+export const LineChart = React.memo(LineChartInner) as typeof LineChartInner

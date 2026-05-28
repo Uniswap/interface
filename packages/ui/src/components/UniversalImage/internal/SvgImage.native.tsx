@@ -1,9 +1,9 @@
+import { isIOS } from '@universe/environment'
 import WebView from 'react-native-webview'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { SvgImageProps } from 'ui/src/components/UniversalImage/types'
 import { useSvgData } from 'ui/src/components/UniversalImage/utils'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { Loader } from 'ui/src/loading/Loader'
-import { isIOS } from 'utilities/src/platform'
 
 const heightUnits = isIOS ? 'vh' : '%'
 
@@ -39,10 +39,10 @@ const getHTML = (svgContent: string): string => `
 </html>
 `
 
-export function SvgImage({ uri, size, autoplay, fallback }: SvgImageProps): JSX.Element | null {
+export function SvgImage({ uri, size, autoplay, fallback, onError }: SvgImageProps): JSX.Element | null {
   const svgData = useSvgData(uri, autoplay)
 
-  if (!svgData?.content || !svgData?.aspectRatio) {
+  if (!svgData?.content || !svgData.aspectRatio) {
     return fallback ?? <Loader.Image />
   }
 
@@ -70,6 +70,7 @@ export function SvgImage({ uri, size, autoplay, fallback }: SvgImageProps): JSX.
           width: '100%',
         }}
         useWebKit={false}
+        onError={onError}
       />
     </Flex>
   )

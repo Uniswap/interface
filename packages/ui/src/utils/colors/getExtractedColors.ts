@@ -29,22 +29,22 @@ export async function getExtractedColors(
     ...(cache && { cache }),
   })
 
-  if (imageColors.platform === 'android') {
+  if (imageColors['platform'] === 'android') {
     return {
-      primary: imageColors.dominant,
-      base: imageColors.average,
-      detail: imageColors.vibrant,
+      primary: imageColors['dominant'],
+      base: imageColors['average'],
+      detail: imageColors['vibrant'],
     }
   }
 
-  if (imageColors.platform === 'ios') {
+  if (imageColors['platform'] === 'ios') {
     return applyColorStrategy(imageColors, colorStrategy)
   }
 
-  if (imageColors.platform === 'web') {
+  if (imageColors['platform'] === 'web') {
     return {
-      primary: imageColors.dominant,
-      detail: imageColors.vibrant,
+      primary: imageColors['dominant'],
+      detail: imageColors['vibrant'],
     }
   }
 
@@ -55,17 +55,17 @@ function applyColorStrategy(imageColors: Record<string, string | undefined>, str
   switch (strategy) {
     case 'vibrant':
       return {
-        primary: imageColors.primary,
-        secondary: imageColors.secondary,
-        base: imageColors.background,
-        detail: imageColors.detail,
+        primary: imageColors['primary'],
+        secondary: imageColors['secondary'],
+        base: imageColors['background'],
+        detail: imageColors['detail'],
       }
     case 'muted':
       return {
-        primary: imageColors.dominant,
-        secondary: imageColors.secondary,
-        base: imageColors.average,
-        detail: imageColors.detail,
+        primary: imageColors['dominant'],
+        secondary: imageColors['secondary'],
+        base: imageColors['average'],
+        detail: imageColors['detail'],
       }
     default:
       return {}

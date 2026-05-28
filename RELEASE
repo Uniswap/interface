@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g`
-- CIDv1: `bafybeib2ui2plf3zbinsp24o4d5ir66yr4a3qlg55kswt2rmlgkoomvigu`
+- CIDv0: `QmaNk8Fn9wwEmQTFXEAt2oBcnw49jkzp73Zi8QxekEzguc`
+- CIDv1: `bafybeifs2wdw5rw26mmgvuu76g3vyejbi6y7xjljups2npws4hhnqd7ex4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,5 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeib2ui2plf3zbinsp24o4d5ir66yr4a3qlg55kswt2rmlgkoomvigu.ipfs.dweb.link/
-- [ipfs://QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g/](ipfs://QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g/)
-
-## 5.73.0 (2025-02-26)
-
-
-### Features
-
-* **web:** reduce monad testnet quote polling interval (#16719) c99cc6c
-
-
+- https://bafybeifs2wdw5rw26mmgvuu76g3vyejbi6y7xjljups2npws4hhnqd7ex4.ipfs.dweb.link/
+- [ipfs://QmaNk8Fn9wwEmQTFXEAt2oBcnw49jkzp73Zi8QxekEzguc/](ipfs://QmaNk8Fn9wwEmQTFXEAt2oBcnw49jkzp73Zi8QxekEzguc/)

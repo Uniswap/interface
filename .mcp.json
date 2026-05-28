@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "nx-mcp": {
+      "type": "stdio",
+      "command": "bunx",
+      "args": [
+        "nx",
+        "mcp"
+      ]
+    },
+    "playwriter": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "playwriter@latest"
+      ]
+    },
+    "chrome-devtools": {
+      "command": "bunx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--autoConnect",
+        "--channel=beta"
+      ]
+    },
+    "argent": {
+      "type": "stdio",
+      "command": "argent",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "ARGENT_MCP_LOG": "~/.argent/mcp-calls.log"
+      }
+    }
+  }
+}

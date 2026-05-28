@@ -105,7 +105,9 @@ data class CustomTypography(
     letterSpacing = defaultLetterSpacing,
   ),
   val monospace: TextStyle = TextStyle(
-    fontFamily = defaultFontFamily,
+    fontFamily = FontFamily(
+      Font(R.font.inputmono_regular),
+      ),
     fontSize = 14.sp,
     lineHeight = 20.sp,
     letterSpacing = defaultLetterSpacing,

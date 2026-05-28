@@ -31,6 +31,21 @@ export function getNativeAddress(chainId: UniverseChainId): string {
   return getChainInfo(chainId).nativeCurrency.address
 }
 
-export function getWrappedNativeAddress(chainId: UniverseChainId): string {
-  return getChainInfo(chainId).wrappedNativeCurrency.address
+export function getWrappedNativeAddress(chainId: UniverseChainId): string | undefined {
+  return getChainInfo(chainId).wrappedNativeCurrency?.address
 }
+
+export function getWrappedNativeAddressWithThrow(chainId: UniverseChainId): string {
+  const address = getChainInfo(chainId).wrappedNativeCurrency?.address
+  if (!address) {
+    throw new Error(`Wrapped native currency not found for chain ID: ${chainId}`)
+  }
+  return address
+}
+
+// TODO: Load this from config or backend once we have it (WALL-6592)
+export const UNISWAP_DELEGATION_ADDRESS: Address = '0x227380efd3392EC33cf148Ade5e0a89D33121814'
+
+// The ERC20 ETH contract address — this is the spender that wallets grant `nativeAllowance` to.
+// https://github.com/Uniswap/ERC20-eth
+export const ERC20_ETH_ADDRESS = '0x00000000e20E49e6dCeE6e8283A0C090578F0fb9'

@@ -1,51 +1,43 @@
+import { isAndroid } from '@universe/environment'
 import { Linking } from 'react-native'
-import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
+import { getConfig } from 'src/config'
 import { NotificationType } from 'src/features/notifications/constants'
-import { config } from 'uniswap/src/config'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { startSilentPushListener } from 'src/features/notifications/SilentPushListener'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
-import { isIOS } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
 export const initOneSignal = (): void => {
-  OneSignal.setAppId(config.onesignalAppId)
+  // Uncomment for local debugging
+  // OneSignal.Debug.setLogLevel(LogLevel.Verbose)
 
-  OneSignal.setNotificationWillShowInForegroundHandler((event: NotificationReceivedEvent) => {
+  OneSignal.initialize(getConfig().onesignalAppId)
+
+  startSilentPushListener()
+
+  OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
     const notification = event.getNotification()
-    const additionalData = notification.additionalData as { notification_type?: string }
+    const additionalData = notification.additionalData as { notification_type?: string } | undefined
     const notificationType = additionalData?.notification_type
 
     let enabled = false
-    // Some special notif filtering logic is needed for iOS
-    if (isIOS) {
-      switch (notificationType) {
-        case NotificationType.UnfundedWalletReminder:
-          enabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
-          break
-        case NotificationType.PriceAlert:
-          enabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
-          break
-        default:
-          enabled = false
-      }
-    } else {
-      if (
-        notificationType === NotificationType.UnfundedWalletReminder ||
-        notificationType === NotificationType.PriceAlert
-      ) {
+
+    if (isAndroid) {
+      if (notificationType === NotificationType.UnfundedWalletReminder) {
         enabled = true
       }
     }
 
-    // Complete with undefined means don't show OS notifications while app is in foreground
-    event.complete(enabled ? notification : undefined)
+    if (!enabled) {
+      // Prevent default will avoid showing OS notifications while app is in foreground
+      event.preventDefault()
+    }
   })
 
-  OneSignal.setNotificationOpenedHandler((event: OpenedEvent) => {
+  OneSignal.Notifications.addEventListener('click', (event) => {
     logger.debug('Onesignal', 'setNotificationOpenedHandler', `Notification opened: ${event.notification}`)
 
     setTimeout(
@@ -67,7 +59,7 @@ export const initOneSignal = (): void => {
   getUniqueId()
     .then((deviceId) => {
       if (deviceId) {
-        OneSignal.setExternalUserId(deviceId)
+        OneSignal.login(deviceId)
       }
     })
     .catch(() =>
@@ -81,23 +73,26 @@ export const initOneSignal = (): void => {
 }
 
 export const promptPushPermission = async (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-      logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
-      resolve(response)
-    })
-  })
+  const response = await OneSignal.Notifications.requestPermission(true)
+  logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
+
+  // Explicitly opt in to push notifications if permission was granted
+  if (response) {
+    OneSignal.User.pushSubscription.optIn()
+  }
+
+  return response
 }
 
 export const getOneSignalUserIdOrError = async (): Promise<string> => {
-  const onesignalUserId = (await OneSignal.getDeviceState())?.userId
+  const onesignalUserId = await OneSignal.User.getOnesignalId()
   if (!onesignalUserId) {
     throw new Error('Onesignal user ID is not defined')
   }
   return onesignalUserId
 }
 
-export const getOneSignalPushToken = async (): Promise<string | undefined> => {
-  const onesignalPushToken = (await OneSignal.getDeviceState())?.pushToken
+export const getOneSignalPushToken = async (): Promise<string | null> => {
+  const onesignalPushToken = await OneSignal.User.pushSubscription.getTokenAsync()
   return onesignalPushToken
 }

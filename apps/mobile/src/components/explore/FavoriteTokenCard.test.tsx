@@ -1,18 +1,19 @@
-import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
+import { thunk } from 'redux-thunk'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from 'src/components/explore/FavoriteTokenCard'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import {
-  ON_PRESS_EVENT_PAYLOAD,
-  SAMPLE_CURRENCY_ID_1,
   amount,
   ethToken,
+  ON_PRESS_EVENT_PAYLOAD,
+  SAMPLE_CURRENCY_ID_1,
   tokenMarket,
   tokenProject,
   tokenProjectMarket,
 } from 'uniswap/src/test/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
@@ -24,12 +25,11 @@ jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native')
   return {
     ...actualNav,
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     useNavigation: () => mockedNavigation,
   }
 })
 
-const mockStore = configureMockStore()
+const mockStore = configureMockStore([thunk])
 
 const favoriteToken = ethToken({
   project: {
@@ -48,12 +48,10 @@ const favoriteToken = ethToken({
   }),
 })
 
-const touchableId = `token-box-${favoriteToken.symbol}`
+const touchableId = `${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`
 
 const defaultProps: FavoriteTokenCardProps = {
   currencyId: SAMPLE_CURRENCY_ID_1,
-  pressProgress: makeMutable(0),
-  dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
   isEditing: false,
 }
@@ -120,7 +118,7 @@ describe('FavoriteTokenCard', () => {
     it('navigates to the token details screen when pressed', async () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const touchable = await findByTestId(`token-box-${favoriteToken.symbol}`)
+      const touchable = await findByTestId(`${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`)
       act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })
@@ -171,9 +169,10 @@ describe('FavoriteTokenCard', () => {
       })
 
       const actions = store.getActions()
-      expect(actions).toEqual([
-        { type: 'favorites/removeFavoriteToken', payload: { currencyId: SAMPLE_CURRENCY_ID_1 } },
-      ])
+      expect(actions).toContainEqual({
+        type: 'favorites/removeFavoriteToken',
+        payload: { currencyId: SAMPLE_CURRENCY_ID_1 },
+      })
     })
   })
 })

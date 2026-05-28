@@ -13,7 +13,7 @@ export function FlexLoader({
   ...props
 }: FlexLoaderProps): JSX.Element {
   return (
-    <Flex sentry-label="FlexLoader">
+    <Flex className="FlexLoader">
       {new Array(repeat).fill(null).map((_, i) => (
         <React.Fragment key={i}>
           <Flex

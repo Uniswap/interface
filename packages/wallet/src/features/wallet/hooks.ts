@@ -1,12 +1,7 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useENSName } from 'uniswap/src/features/ens/api'
-import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { getValidAddress, sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
-import { trimToLength } from 'utilities/src/primitives/string'
+import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useOnchainDisplayName, WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -15,19 +10,51 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectHasSmartWalletConsent,
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
   selectWalletSwapProtectionSetting,
 } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { WalletState } from 'wallet/src/state/walletReducer'
-
-const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
   return useSelector(selectAccounts)
+}
+
+/**
+ * Hook used to get a list of signer mnemonic accounts sorted by derivation index
+ * @returns list of signer mnemonic accounts sorted by derivation index
+ */
+export function useSignerMnemonicAccountsSorted(): SignerMnemonicAccount[] {
+  const addressToAccount = useAccounts()
+
+  return useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    return accounts
+      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
+      .sort((a, b) => {
+        return a.derivationIndex - b.derivationIndex
+      })
+  }, [addressToAccount])
+}
+
+/**
+ * Hook used to get a list of view-only accounts sorted by time imported
+ * @returns list of view-only accounts sorted by time imported
+ */
+export function useViewOnlyAccountsSorted(): Account[] {
+  const addressToAccount = useAccounts()
+
+  return useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    return accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+  }, [addressToAccount])
 }
 
 /**
@@ -35,22 +62,12 @@ export function useAccounts(): Record<string, Account> {
  * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
  */
 export function useAccountsList(): Account[] {
-  const addressToAccount = useAccounts()
+  const signerMnemonicAccounts = useSignerMnemonicAccountsSorted()
+  const viewOnlyAccounts = useViewOnlyAccountsSorted()
 
   return useMemo(() => {
-    const accounts = Object.values(addressToAccount)
-    const _mnemonicWallets = accounts
-      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
-      .sort((a, b) => {
-        return a.derivationIndex - b.derivationIndex
-      })
-    const _viewOnlyWallets = accounts
-      .filter((a) => a.type === AccountType.Readonly)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
-    return [..._mnemonicWallets, ..._viewOnlyWallets]
-  }, [addressToAccount])
+    return [...signerMnemonicAccounts, ...viewOnlyAccounts]
+  }, [signerMnemonicAccounts, viewOnlyAccounts])
 }
 
 export function useAccount(address: Address): Account {
@@ -137,71 +154,80 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useSelector((state: WalletState) => selectAccountNotificationSetting(state, address))
 }
 
-type DisplayNameOptions = {
-  showShortenedEns?: boolean
-  includeUnitagSuffix?: boolean
-  showLocalName?: boolean
-  overrideDisplayName?: string
-}
-
 /**
- * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
+ * If user has an onchain ENS/Unitag name, display that name.
+ * Otherwise if user is onboarding or has saved a local label, display the local name.
+ * Otherwise display the address.
  *
  * @param address - The address to display
  * @param options.showShortenedEns - Whether to shorten the ENS name to ENS_TRIM_LENGTH characters
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  * @param options.showLocalName - Whether to show the local wallet name
  */
-export function useDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
-  const defaultOptions = {
-    showShortenedEns: false,
-    includeUnitagSuffix: false,
-    showLocalName: true,
-  }
-  const hookOptions = { ...defaultOptions, ...options }
-  const { showShortenedEns, includeUnitagSuffix, showLocalName, overrideDisplayName } = hookOptions
-
-  const validated = getValidAddress(address)
-  const ens = useENSName(validated ?? undefined)
-  const { unitag } = useUnitagByAddress(validated ?? undefined)
-  const { getOnboardingAccount } = useOnboardingContext()
-  const onboardingAccount = getOnboardingAccount()
+export function useDisplayName(address: Maybe<string>, options?: WalletDisplayNameOptions): DisplayName | undefined {
+  const onchainDisplayName = useOnchainDisplayName(address, options)
 
   // Need to account for pending accounts for use within onboarding
-  const maybeLocalName = useAccounts()[address ?? '']?.name
-  const localName = maybeLocalName ?? onboardingAccount?.name
+  const { getOnboardingAccount } = useOnboardingContext()
+  const onboardingAccountName = getOnboardingAccount()?.name
 
-  if (!address) {
+  const { showLocalName = true } = options ?? {}
+  const localLabel = useAccounts()[address ?? '']?.name
+  const localName = localLabel ?? onboardingAccountName
+
+  if (!onchainDisplayName) {
     return undefined
   }
 
-  if (overrideDisplayName) {
-    return {
-      name: showShortenedEns ? trimToLength(overrideDisplayName, ENS_TRIM_LENGTH) : overrideDisplayName,
-      type: DisplayNameType.ENS,
-    }
-  }
-
-  if (unitag?.username) {
-    return {
-      name: includeUnitagSuffix ? unitag.username + UNITAG_SUFFIX : unitag.username,
-      type: DisplayNameType.Unitag,
-    }
-  }
-
-  if (ens.data) {
-    return {
-      name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
-      type: DisplayNameType.ENS,
-    }
-  }
-
-  if (showLocalName && localName) {
+  const isDisplayNameENS =
+    onchainDisplayName.type === DisplayNameType.ENS || onchainDisplayName.type === DisplayNameType.Unitag
+  if (!isDisplayNameENS && showLocalName && localName) {
     return { name: localName, type: DisplayNameType.Local }
   }
 
-  return {
-    name: `${sanitizeAddressText(shortenAddress(address))}`,
-    type: DisplayNameType.Address,
-  }
+  return onchainDisplayName
+}
+
+/**
+ * Hook used to get the active account's consent status for smart wallet functionality
+ * @param overrideAddress - optional address to check consent status for
+ * @returns boolean if a consent status is found for the active account, null otherwise (eg if no account is active)
+ */
+export function useHasSmartWalletConsent(overrideAddress?: string): boolean | null {
+  const activeAddress = useActiveAccount()?.address
+
+  const address = overrideAddress || activeAddress
+
+  const hasSmartWalletConsent = useSelector((state: WalletState) => {
+    if (!address || !selectAccounts(state)[address]) {
+      return null
+    }
+    return selectHasSmartWalletConsent(state, address)
+  })
+
+  return hasSmartWalletConsent
+}
+
+/**
+ * Hook to detect when the number of accounts increases (new account added)
+ * @param onAccountAdded Callback function that is called when a new account is added
+ */
+export function useAccountCountChanged(onAccountAdded: () => void): void {
+  // Get accounts from Redux store
+  const accounts = useAccounts()
+
+  // Track previous account count to detect new accounts
+  const prevAccountCountRef = useRef(Object.keys(accounts).length)
+
+  useEffect(() => {
+    const currentAccountCount = Object.keys(accounts).length
+
+    // If account count has increased, call the callback
+    if (currentAccountCount > prevAccountCountRef.current) {
+      onAccountAdded()
+    }
+
+    // Update the reference for next comparison
+    prevAccountCountRef.current = currentAccountCount
+  }, [accounts, onAccountAdded])
 }

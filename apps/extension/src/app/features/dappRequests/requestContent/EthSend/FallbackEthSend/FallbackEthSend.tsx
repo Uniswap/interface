@@ -1,3 +1,4 @@
+import { GasFeeResult } from '@universe/api'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
@@ -5,20 +6,14 @@ import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestCon
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
-import {
-  SpendingDetails,
-  SpendingEthDetails,
-} from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
-import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
-import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
+import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
+import { SpendingEthDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 
 interface FallbackEthSendRequestProps {
   transactionGasFeeResult: GasFeeResult
@@ -26,6 +21,9 @@ interface FallbackEthSendRequestProps {
   onCancel: () => Promise<void>
   onConfirm: () => Promise<void>
 }
+
+// Minimum valid calldata is '0x' + 4 bytes (8 hex chars) for the function selector
+const MIN_CALLDATA_LENGTH = 10
 
 export function FallbackEthSendRequestContent({
   dappRequest,
@@ -39,9 +37,10 @@ export function FallbackEthSendRequestContent({
 
   const { value: sending, to: toAddress, chainId: transactionChainId } = dappRequest.transaction
   const chainId = transactionChainId || activeChain
-  const recipientLink = chainId && toAddress ? getExplorerLink(chainId, toAddress, ExplorerDataType.ADDRESS) : ''
+  const recipientLink =
+    chainId && toAddress ? getExplorerLink({ chainId, data: toAddress, type: ExplorerDataType.ADDRESS }) : ''
   const contractFunction = dappRequest.transaction.type
-  const calldata = dappRequest.transaction.data
+  const calldata = dappRequest.transaction.data ?? ''
 
   const copyToClipboard = useCopyToClipboard()
 
@@ -53,8 +52,6 @@ export function FallbackEthSendRequestContent({
       }),
     [calldata, copyToClipboard],
   )
-  const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, chainId)
-  const transactionCurrencies = useTransactionCurrencies({ chainId, to: toAddress, parsedTransactionData })
   const showSpendingEthDetails = isNonZeroBigNumber(sending) && chainId
 
   return (
@@ -76,20 +73,12 @@ export function FallbackEthSendRequestContent({
         width="100%"
       >
         {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
-        {transactionCurrencies?.map((currencyInfo, i) => (
-          <SpendingDetails
-            key={currencyInfo.currencyId}
-            currencyInfo={currencyInfo}
-            showLabel={i === 0}
-            tokenCount={transactionCurrencies.length}
-          />
-        ))}
         {toAddress && (
           <ContentRow label={t('common.text.contract')}>
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
               <Flex row alignItems="center" gap="$spacing8">
                 <Text color="$neutral1" variant="body4">
-                  {shortenAddress(toAddress)}
+                  {shortenAddress({ address: toAddress })}
                 </Text>
                 <ExternalLink color="$neutral3" size="$icon.16" />
               </Flex>
@@ -102,13 +91,11 @@ export function FallbackEthSendRequestContent({
             borderRadius="$rounded8"
             borderWidth="$spacing1"
             color="$neutral1"
-            // fontFamily="SF Mono"
             px="$spacing8"
             py="$spacing2"
-            // variant="monospace"
             variant="body4"
           >
-            {parsedTransactionData?.name || contractFunction || t('common.text.unknown')}
+            {contractFunction || t('common.text.unknown')}
           </Text>
         </ContentRow>
         {calldata && (
@@ -122,7 +109,7 @@ export function FallbackEthSendRequestContent({
               onPress={copyCalldata}
             >
               <Text color="$neutral1" variant="body4">
-                {ellipseMiddle(calldata)}
+                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle({ str: calldata }) : calldata}
               </Text>
               <AnimatedCopySheets color="$neutral3" size="$icon.16" />
             </TouchableArea>

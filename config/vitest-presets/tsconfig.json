@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig/app.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vitest/**/*.js"],
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "isolatedModules": true
+  }
+}

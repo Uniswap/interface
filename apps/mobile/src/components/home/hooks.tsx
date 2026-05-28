@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
+import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -28,7 +28,7 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
       }
       // The height of the footer added to the list can be calculated from
       // the following equation (for collapsed tab bar):
-      // maxContentHeight = TAB_BAR_HEIGHT + <real content height> + footerHeight + paddingBottom
+      // maxContentHeight = ESTIMATED_BOTTOM_TABS_HEIGHT + <real content height> + footerHeight + paddingBottom
       //
       // To get the <real content height> we need to subtract padding already
       // added to the content container style and the footer if it's already
@@ -36,17 +36,18 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
       // <real content height> = contentHeight - paddingTop - paddingBottom - footerHeight
       //
       // The resulting equation is:
-      // footerHeight = maxContentHeight - <real content height> - TAB_BAR_HEIGHT - paddingBottom
-      //              = maxContentHeight - (contentHeight - paddingTop - paddingBottom - footerHeight) - TAB_BAR_HEIGHT - paddingBottom
-      //              = maxContentHeight + paddingTop + footerHeight - (contentHeight + TAB_BAR_HEIGHT)
-      const paddingTopProp = (contentContainerStyle as ViewStyle)?.paddingTop
+      // footerHeight = maxContentHeight - <real content height> - ESTIMATED_BOTTOM_TABS_HEIGHT - paddingBottom
+      //              = maxContentHeight - (contentHeight - paddingTop - paddingBottom - footerHeight) - ESTIMATED_BOTTOM_TABS_HEIGHT - paddingBottom
+      //              = maxContentHeight + paddingTop + footerHeight - (contentHeight + ESTIMATED_BOTTOM_TABS_HEIGHT)
+      const paddingTopProp = (contentContainerStyle as ViewStyle).paddingTop
       const paddingTop = typeof paddingTopProp === 'number' ? paddingTopProp : 0
       const calculatedFooterHeight =
-        maxContentHeight + paddingTop + footerHeight.value - (contentHeight + TAB_BAR_HEIGHT)
+        maxContentHeight + paddingTop + footerHeight.value - (contentHeight + ESTIMATED_BOTTOM_TABS_HEIGHT)
 
       footerHeight.value = Math.max(0, calculatedFooterHeight)
     },
-    [footerHeight, contentContainerStyle, maxContentHeight],
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+    [contentContainerStyle, maxContentHeight, ESTIMATED_BOTTOM_TABS_HEIGHT],
   )
 
   useEffect(() => {

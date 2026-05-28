@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { ENCRYPTION_KEY_STORAGE_KEY, PersistedStorage } from 'wallet/src/utils/persistedStorage'
 
@@ -53,7 +52,10 @@ export function useIsWalletUnlocked(): boolean | null {
     }
   }, [checkWalletStatus])
 
-  useAsyncData(checkWalletStatus)
+  useEffect(() => {
+    // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
+    checkWalletStatus()
+  }, [checkWalletStatus])
 
   return isUnlocked
 }

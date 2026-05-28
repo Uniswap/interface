@@ -1,21 +1,19 @@
+/* oxlint-disable eslint-js/no-restricted-syntax */
+import { CommandType } from '@uniswap/universal-router-sdk'
 import { FeeAmount as FeeAmountV3 } from '@uniswap/v3-sdk'
 import { BigNumberSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { z } from 'zod'
-import { CommandType } from '@uniswap/universal-router-sdk'
 
 // SCHEMAS + TYPES
-export const CommandNameSchema = z.enum(
-  Object.keys(CommandType) as [keyof typeof CommandType, ...Array<keyof typeof CommandType>]
+const CommandNameSchema = z.enum(
+  Object.keys(CommandType) as [keyof typeof CommandType, ...Array<keyof typeof CommandType>],
 )
-export type CommandName = z.infer<typeof CommandNameSchema>
 
 // TODO: remove this fallback once params are fully typed or we are able to import them from the universal router sdk
 const FallbackParamSchema = z.object({
   name: z.string(),
-  // eslint-disable-next-line no-restricted-syntax
   value: z.any(),
 })
-export type FallbackParam = z.infer<typeof FallbackParamSchema>
 
 const AmountInParamSchema = z.object({
   name: z.literal('amountIn'),
@@ -41,15 +39,13 @@ const AmountOutParamSchema = z.object({
 })
 export type AmountOutParam = z.infer<typeof AmountOutParamSchema>
 
-
 const AmountMinParamSchema = z.object({
   name: z.literal('amountMin'),
   value: BigNumberSchema,
 })
-export type AmountMinParam = z.infer<typeof AmountMinParamSchema>
+type AmountMinParam = z.infer<typeof AmountMinParamSchema>
 
 const FeeAmountSchema = z.nativeEnum(FeeAmountV3)
-export type FeeAmount = z.infer<typeof FeeAmountSchema>
 
 const V3PathParamSchema = z.object({
   name: z.literal('path'),
@@ -62,11 +58,9 @@ const V3PathParamSchema = z.object({
         message: "tokenOut must start with '0x'",
       }),
       fee: FeeAmountSchema,
-    })
+    }),
   ),
 })
-export type V3Path = z.infer<typeof V3PathParamSchema>
-
 
 // V4 PARAMS
 
@@ -102,7 +96,6 @@ export const V4SwapExactInSingleParamSchema = z.object({
     }),
   ),
 })
-export type V4SwapExactInSingleParam = z.infer<typeof V4SwapExactInSingleParamSchema>
 
 // V4 SWAP_EXACT_OUT_SINGLE
 const SwapExactOutSingleSwapSchema = z.object({
@@ -123,7 +116,6 @@ export const V4SwapExactOutSingleParamSchema = z.object({
     }),
   ),
 })
-export type V4SwapExactOutSingleParam = z.infer<typeof V4SwapExactOutSingleParamSchema>
 
 // Define PathKey which is used for exact swaps with multiple hops
 const PathKeySchema = z.object({
@@ -136,7 +128,7 @@ const PathKeySchema = z.object({
     message: "hooks must start with '0x'",
   }),
   hookData: z.string(),
-});
+})
 
 // V4 SWAP_EXACT_IN
 const V4SwapExactInSchema = z.object({
@@ -146,7 +138,7 @@ const V4SwapExactInSchema = z.object({
   path: z.array(PathKeySchema),
   amountIn: BigNumberSchema,
   amountOutMinimum: BigNumberSchema,
-});
+})
 
 export const V4SwapExactInParamSchema = z.object({
   name: z.literal('SWAP_EXACT_IN'),
@@ -157,7 +149,6 @@ export const V4SwapExactInParamSchema = z.object({
     }),
   ),
 })
-export type V4SwapExactInParam = z.infer<typeof V4SwapExactInParamSchema>
 
 // V4 SWAP_EXACT_OUT
 const V4SwapExactOutSchema = z.object({
@@ -167,7 +158,7 @@ const V4SwapExactOutSchema = z.object({
   path: z.array(PathKeySchema),
   amountOut: BigNumberSchema,
   amountInMaximum: BigNumberSchema,
-});
+})
 
 export const V4SwapExactOutParamSchema = z.object({
   name: z.literal('SWAP_EXACT_OUT'),
@@ -177,20 +168,57 @@ export const V4SwapExactOutParamSchema = z.object({
       value: V4SwapExactOutSchema,
     }),
   ),
-});
-export type V4SwapExactOutParam = z.infer<typeof V4SwapExactOutParamSchema>;
-
+})
 
 // END V4 PARAMS
-
 
 const PayerIsUserParamSchema = z.object({
   name: z.literal('payerIsUser'),
   value: z.boolean(),
 })
-export type PayerIsUserParam = z.infer<typeof PayerIsUserParamSchema>
 
-export const ParamSchema = z.union([
+const SettleParamSchema = z.object({
+  name: z.literal('SETTLE'),
+  value: z.array(
+    z.union([
+      z.object({
+        name: z.literal('currency'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('amount'),
+        value: BigNumberSchema,
+      }),
+      z.object({
+        name: z.literal('payerIsUser'),
+        value: z.boolean(),
+      }),
+    ]),
+  ),
+})
+type SettleParam = z.infer<typeof SettleParamSchema>
+
+const TakeParamSchema = z.object({
+  name: z.literal('TAKE'),
+  value: z.array(
+    z.union([
+      z.object({
+        name: z.literal('currency'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('recipient'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('amount'),
+        value: BigNumberSchema,
+      }),
+    ]),
+  ),
+})
+
+const ParamSchema = z.union([
   AmountInParamSchema,
   AmountInMaxParamSchema,
   AmountOutParamSchema,
@@ -198,80 +226,79 @@ export const ParamSchema = z.union([
   AmountMinParamSchema,
   V3PathParamSchema,
   PayerIsUserParamSchema,
+  SettleParamSchema,
+  TakeParamSchema,
   FallbackParamSchema,
 ])
 export type Param = z.infer<typeof ParamSchema>
 
-export const FallbackCommandSchema = z.object({
+const FallbackCommandSchema = z.object({
   commandName: CommandNameSchema,
   commandType: z.nativeEnum(CommandType),
   params: z.array(ParamSchema),
 })
-export type FallbackCommand = z.infer<typeof FallbackCommandSchema>
 
 const V2SwapExactInCommandSchema = z.object({
   commandName: z.literal('V2_SWAP_EXACT_IN'),
   commandType: z.literal(CommandType.V2_SWAP_EXACT_IN),
   params: z.array(ParamSchema),
 })
-export type V2SwapExactInCommand = z.infer<typeof V2SwapExactInCommandSchema>
 
 const V2SwapExactOutCommandSchema = z.object({
   commandName: z.literal('V2_SWAP_EXACT_OUT'),
   commandType: z.literal(CommandType.V2_SWAP_EXACT_OUT),
   params: z.array(ParamSchema),
 })
-export type V2SwapExactOutCommand = z.infer<typeof V2SwapExactOutCommandSchema>
 
 const V3SwapExactInCommandSchema = z.object({
   commandName: z.literal('V3_SWAP_EXACT_IN'),
   commandType: z.literal(CommandType.V3_SWAP_EXACT_IN),
   params: z.array(ParamSchema),
 })
-export type V3SwapExactInCommand = z.infer<typeof V3SwapExactInCommandSchema>
 
 const V3SwapExactOutCommandSchema = z.object({
   commandName: z.literal('V3_SWAP_EXACT_OUT'),
   commandType: z.literal(CommandType.V3_SWAP_EXACT_OUT),
   params: z.array(ParamSchema),
 })
-export type V3SwapExactOutCommand = z.infer<typeof V3SwapExactOutCommandSchema>
 
 const SweepCommandSchema = z.object({
   commandName: z.literal('SWEEP'),
   commandType: z.literal(CommandType.SWEEP),
   params: z.array(ParamSchema),
 })
-export type SweepCommand = z.infer<typeof SweepCommandSchema>
+type SweepCommand = z.infer<typeof SweepCommandSchema>
 
 const UnwrapWethCommandSchema = z.object({
   commandName: z.literal('UNWRAP_WETH'),
   commandType: z.literal(CommandType.UNWRAP_WETH),
   params: z.array(ParamSchema),
 })
-export type UnwrapWethCommand = z.infer<typeof UnwrapWethCommandSchema>
-
+type UnwrapWethCommand = z.infer<typeof UnwrapWethCommandSchema>
 
 const V4SwapCommandSchema = z.object({
   commandName: z.literal('V4_SWAP'),
   commandType: z.literal(CommandType.V4_SWAP),
-  params: z.array(z.union([
-    V4SwapExactInParamSchema, 
-    V4SwapExactOutParamSchema,
-    V4SwapExactInSingleParamSchema,
-    V4SwapExactOutSingleParamSchema,
-  ])),
+  params: z.array(
+    z.union([
+      V4SwapExactInParamSchema,
+      V4SwapExactOutParamSchema,
+      V4SwapExactInSingleParamSchema,
+      V4SwapExactOutSingleParamSchema,
+      SettleParamSchema,
+      TakeParamSchema,
+    ]),
+  ),
 })
-export type V4SwapCommand = z.infer<typeof V4SwapCommandSchema>
 
-export const UniversalRouterSwapCommandSchema = z.union([
+const UniversalRouterSwapCommandSchema = z.union([
   V2SwapExactInCommandSchema,
   V2SwapExactOutCommandSchema,
   V3SwapExactInCommandSchema,
   V3SwapExactOutCommandSchema,
   V4SwapCommandSchema,
 ])
-export type UniversalRouterSwapCommand = z.infer<typeof UniversalRouterSwapCommandSchema>
+type UniversalRouterSwapCommand = z.infer<typeof UniversalRouterSwapCommandSchema>
 
 const UniversalRouterCommandSchema = z.union([
   FallbackCommandSchema,
@@ -281,7 +308,7 @@ const UniversalRouterCommandSchema = z.union([
   V3SwapExactOutCommandSchema,
   V4SwapCommandSchema,
   SweepCommandSchema,
-  UnwrapWethCommandSchema
+  UnwrapWethCommandSchema,
 ])
 export type UniversalRouterCommand = z.infer<typeof UniversalRouterCommandSchema>
 
@@ -291,9 +318,7 @@ export const UniversalRouterCallSchema = z.object({
 export type UniversalRouterCall = z.infer<typeof UniversalRouterCallSchema>
 
 // VALIDATORS + UTILS
-export function isURCommandASwap(
-  command: UniversalRouterCommand
-): command is UniversalRouterSwapCommand {
+export function isURCommandASwap(command: UniversalRouterCommand): command is UniversalRouterSwapCommand {
   return UniversalRouterSwapCommandSchema.safeParse(command).success
 }
 
@@ -323,4 +348,8 @@ export function isAmountOutParam(param: Param): param is AmountOutParam {
 
 export function isAmountMinParam(param: Param): param is AmountMinParam {
   return AmountMinParamSchema.safeParse(param).success
+}
+
+export function isSettleParam(param: Param): param is SettleParam {
+  return SettleParamSchema.safeParse(param).success
 }

@@ -37,8 +37,9 @@ export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: n
 }
 
 // https://usehooks-typescript.com/react-hook/use-interval
+// oxlint-disable-next-line max-params
 export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean): void {
-  const savedCallback = useRef<() => void | null>()
+  const savedCallback = useRef<() => void | null>(undefined)
 
   // Remember the latest callback.
   useEffect(() => {
@@ -48,7 +49,9 @@ export function useInterval(callback: () => void, delay: number | null, immediat
   // Set up the interval.
   useEffect(() => {
     const tick = (): void => {
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (typeof savedCallback?.current !== 'undefined') {
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         savedCallback?.current()
       }
     }
@@ -73,7 +76,7 @@ export const useTimeout = (
   callback: () => void,
   delay = 0, // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
-  const timeoutIdRef = useRef<Timeout>()
+  const timeoutIdRef = useRef<Timeout>(undefined)
 
   const cancel = useCallback(() => {
     const timeoutId = timeoutIdRef.current
@@ -81,7 +84,7 @@ export const useTimeout = (
       timeoutIdRef.current = undefined
       clearTimeout(timeoutId)
     }
-  }, [timeoutIdRef])
+  }, [])
 
   useEffect(() => {
     if (delay >= 0) {
@@ -96,15 +99,27 @@ export const useTimeout = (
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useDebounce.ts
 // Which is modified from https://usehooks.com/useDebounce/
 export function useDebounce<T>(value: T, delay: number = DEFAULT_DELAY): T {
-  const [debouncedValue] = useDebounceWithStatus(value, delay)
+  const [debouncedValue] = useDebounceWithStatus({ value, delay })
   return debouncedValue
 }
 
-export function useDebounceWithStatus<T>(value: T, delay: number = DEFAULT_DELAY): [T, boolean] {
+export function useDebounceWithStatus<T>({
+  value,
+  delay = DEFAULT_DELAY,
+  skipDebounce = false,
+}: {
+  value: T
+  delay?: number
+  skipDebounce?: boolean
+}): [T, boolean] {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
   const [isDebouncing, setIsDebouncing] = useState(false)
 
   useEffect(() => {
+    if (skipDebounce) {
+      setDebouncedValue(value)
+      return
+    }
     // Update debounced value after delay
     const handler = setTimeout(() => {
       setDebouncedValue(value)
@@ -116,10 +131,15 @@ export function useDebounceWithStatus<T>(value: T, delay: number = DEFAULT_DELAY
     // Cancel the timeout if value changes (also on delay change or unmount)
     // This is how we prevent debounced value from updating if value is changed ...
     // .. within the delay period. Timeout gets cleared and restarted.
+    // oxlint-disable-next-line typescript/consistent-return
     return () => {
       clearTimeout(handler)
     }
-  }, [value, delay])
+  }, [value, delay, skipDebounce])
+
+  if (skipDebounce) {
+    return [value, false]
+  }
 
   return [debouncedValue, isDebouncing]
 }
@@ -128,7 +148,7 @@ export function debounceCallback<T extends (...args: void[]) => void>(
   func: T,
   wait: number,
 ): { triggerDebounce: () => void; cancelDebounce: () => void } {
-  let timeout: NodeJS.Timeout
+  let timeout: NodeJS.Timeout | number
 
   const cancelDebounce = (): void => {
     clearTimeout(timeout)

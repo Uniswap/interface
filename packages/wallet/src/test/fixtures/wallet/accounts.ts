@@ -27,6 +27,7 @@ export const signerMnemonicAccount = createFixture<SignerMnemonicAccount>()(() =
   derivationIndex: faker.datatype.number(),
   mnemonicId: faker.datatype.uuid(),
   backups: [randomEnumValue(BackupType)],
+  smartWalletConsent: false,
 }))
 
 export const readOnlyAccount = createFixture<ReadOnlyAccount>()(() => ({

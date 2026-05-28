@@ -2,25 +2,50 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { isAddress } from 'utilities/src/addresses'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { useReadContract } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
+import { useContract } from '~/hooks/useContract'
+import { useTransactionAdder } from '~/state/transactions/hooks'
+import { calculateGasMargin } from '~/utils/calculateGasMargin'
+import { assume0xAddress } from '~/utils/wagmi'
+
+const claimAbi = [
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'isClaimed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 function useMerkleDistributorContract() {
   const account = useAccount()
-  return useContract(
-    account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
-    MerkleDistributorJSON.abi,
-    true,
-  )
+  return useContract({
+    address: account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
+    ABI: MerkleDistributorJSON.abi,
+  })
 }
 
 interface UserClaimData {
@@ -69,7 +94,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
 const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
-  const formatted = isAddress(account)
+  const formatted = getValidAddress({ address: account, platform: Platform.EVM, withEVMChecksum: true })
   if (!formatted) {
     return Promise.reject(new Error('Invalid address'))
   }
@@ -78,12 +103,14 @@ function fetchClaim(account: string): Promise<UserClaimData> {
     FETCH_CLAIM_PROMISES[account] ??
     (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
-        const sorted = Object.keys(mapping).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
+        const sorted = Object.keys(mapping).sort((a, b) =>
+          normalizeTokenAddressForCache(a) < normalizeTokenAddressForCache(b) ? -1 : 1,
+        )
 
         for (const startingAddress of sorted) {
           const lastAddress = mapping[startingAddress]
-          if (startingAddress.toLowerCase() <= formatted.toLowerCase()) {
-            if (formatted.toLowerCase() <= lastAddress.toLowerCase()) {
+          if (normalizeTokenAddressForCache(startingAddress) <= normalizeTokenAddressForCache(formatted)) {
+            if (normalizeTokenAddressForCache(formatted) <= normalizeTokenAddressForCache(lastAddress)) {
               return startingAddress
             }
           } else {
@@ -94,6 +121,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
       })
       .then(fetchClaimFile)
       .then((result) => {
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         if (result[formatted]) {
           return result[formatted]
         }
@@ -120,6 +148,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
 
     fetchClaim(account)
       .then((accountClaimInfo) =>
+        // oxlint-disable-next-line no-shadow
         setClaimInfo((claimInfo) => {
           return {
             ...claimInfo,
@@ -128,6 +157,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
         }),
       )
       .catch(() => {
+        // oxlint-disable-next-line no-shadow
         setClaimInfo((claimInfo) => {
           return {
             ...claimInfo,
@@ -143,10 +173,18 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
 // check if user is in blob and has not yet claimed UNI
 export function useUserHasAvailableClaim(account: string | null | undefined): boolean {
   const userClaimData = useUserClaimData(account)
-  const distributorContract = useMerkleDistributorContract()
-  const isClaimedResult = useSingleCallResult(distributorContract, 'isClaimed', [userClaimData?.index])
+
+  const { data: isClaimed, isLoading: isClaimedLoading } = useReadContract({
+    address: assume0xAddress(MERKLE_DISTRIBUTOR_ADDRESS[UniverseChainId.Mainnet]),
+    chainId: UniverseChainId.Mainnet,
+    abi: claimAbi,
+    functionName: 'isClaimed',
+    args: userClaimData ? [BigInt(userClaimData.index)] : undefined,
+    query: { enabled: !!userClaimData },
+  })
+
   // user is in blob and contract marks as unclaimed
-  return Boolean(userClaimData && !isClaimedResult.loading && isClaimedResult.result?.[0] === false)
+  return Boolean(userClaimData && !isClaimedLoading && !isClaimed)
 }
 
 export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {
@@ -184,12 +222,14 @@ export function useClaimCallback(address: string | null | undefined): {
 
     const args = [claimData.index, address, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
+    // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
+    return distributorContract.estimateGas.claim(...args, {}).then((estimatedGasLimit) => {
+      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            type: TransactionType.CLAIM,
+            type: TransactionType.ClaimUni,
             recipient: address,
             uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })

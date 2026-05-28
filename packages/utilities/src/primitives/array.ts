@@ -1,7 +1,9 @@
+// oxlint-disable-next-line max-params
 function onlyUnique<T>(value: T, index: number, self: T[]): boolean {
   return self.indexOf(value) === index
 }
 
+// oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
 export function unique<T>(array: T[], isUnique: (value: T, index: number, self: T[]) => boolean = onlyUnique): T[] {
   return array.filter(isUnique)
 }
@@ -16,6 +18,7 @@ export function next<T>(array: T[], current: T): T | undefined {
 
 // get items in `array` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
+// oxlint-disable-next-line max-params
 export function differenceWith<T>(array: T[], without: T[], comparator: (item1: T, item2: T) => boolean): T[] {
   return array.filter((item: T) => {
     const inWithout = Boolean(without.find((otherItem: T) => comparator(item, otherItem)))
@@ -53,4 +56,63 @@ export function bubbleToTop<T>(arr: T[], predicate: (element: T) => boolean): T[
     }
   }
   return result
+}
+
+/**
+ * Utility type to represent a non-empty array (an array with at least one element; destructuring the first element yields a value typed as NonNullable).
+ * Use `getNonEmptyArrayOrThrow` to construct a NonEmptyArray from a primitive array.
+ */
+export type NonEmptyArray<T> = [T, ...T[]]
+
+/**
+ * Checks if an array is non-empty.
+ * @param array - The array to check.
+ * @returns True if the array is non-empty, false otherwise, as a type guard.
+ */
+export function isNonEmptyArray<T>(array: T[]): array is NonEmptyArray<T> {
+  return array.length !== 0
+}
+
+/**
+ * Returns a non-empty array or throws an error if the array is empty.
+ * @param array - The array to check.
+ * @returns A non-empty array.
+ * @throws An error if the array is empty.
+ */
+export function getNonEmptyArrayOrThrow<T>(array: T[]): NonEmptyArray<T> {
+  if (!isNonEmptyArray(array)) {
+    throw new Error('Array is empty')
+  }
+  return array
+}
+
+/**
+ * Pipe a value through a series of functions.
+ * @param value - The value to pipe through the functions.
+ * @param fns - The functions to pipe the value through.
+ * @returns The value after all functions have been applied.
+ */
+export function pipe<T>(value: T, fns: Array<(arg: T) => T>): T {
+  return fns.reduce((acc, fn) => fn(acc), value)
+}
+
+/**
+ * Removes duplicate items from an array of objects based on a given key.
+ * @param array - The array of objects to remove duplicates from.
+ * @param key - The key of each item to use for determining uniqueness.
+ * @returns The array with duplicates removed.
+ */
+export function removeDuplicatesBy<T, K extends keyof T>(array: T[], key: K): T[] {
+  const seen = new Set<T[K]>()
+
+  return array.filter((item) => {
+    const value = item[key]
+
+    if (seen.has(value)) {
+      return false
+    }
+
+    seen.add(value)
+    return true
+  })
 }

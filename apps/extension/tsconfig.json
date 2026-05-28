@@ -1,35 +1,53 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Web App",
-  "extends": "../../config/tsconfig/nextjs.json",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.json",
-    "../../declarations.d.ts",
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "extends": ["../../tsconfig.base.json"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "declarations.d.ts"],
+  "exclude": ["node_modules", ".output", "wxt.config.ts", "oxlint.config.ts"],
   "references": [
     {
+      "path": "../../packages/environment"
+    },
+    {
       "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/sessions"
+    },
+    {
+      "path": "../../packages/notifications"
+    },
+    {
+      "path": "../../packages/gating"
+    },
+    {
+      "path": "../../packages/encoding"
+    },
+    {
+      "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/api"
+    },
+    {
+      "path": "../../packages/wallet"
     },
     {
       "path": "../../packages/uniswap"
     },
     {
       "path": "../../packages/utilities"
-    },
-    {
-      "path": "../../packages/wallet"
     }
   ],
   "compilerOptions": {
-    "baseUrl": "./",
-    "types": [
-      "chrome",
-      "jest"
-    ]
+    "moduleResolution": "Bundler",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "types": ["chrome", "jest", "node"],
+    "paths": {
+      "src/*": ["./src/*"],
+      "e2e/*": ["./e2e/*"]
+    }
   }
 }

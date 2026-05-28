@@ -3,17 +3,15 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
-    "baseUrl": "src",
     "composite": true,
     "declarationMap": false,
-    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -27,17 +25,64 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
-    "types": ["jest", "chrome"],
+    "types": ["chrome", "vitest/globals"],
     "useUnknownInCatchVariables": false,
+    "paths": {
+      "~/*": ["./src/*"],
+      "ui/src/*": ["../../packages/ui/src/*"],
+      "utilities/src/*": ["../../packages/utilities/src/*"],
+      "uniswap/src/*": ["../../packages/uniswap/src/*"]
+    }
   },
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    ".storybook/preview.tsx",
+    ".storybook/main.ts",
+    "vite.config.mts",
+    "scripts/*",
+    "vite/*"
+  ],
+  "exclude": ["scripts/build-vercel.ts"],
   "references": [
+    {
+      "path": "../../packages/environment"
+    },
+    {
+      "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/websocket"
+    },
+    {
+      "path": "../../packages/sessions"
+    },
+    {
+      "path": "../../packages/prices"
+    },
+    {
+      "path": "../../packages/notifications"
+    },
+    {
+      "path": "../../packages/gating"
+    },
+    {
+      "path": "../../packages/encoding"
+    },
+    {
+      "path": "../../packages/chains"
+    },
     {
       "path": "../../packages/ui"
     },
     {
-      "path": "../../packages/utilities"
+      "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/api"
     },
     {
       "path": "../../packages/uniswap"

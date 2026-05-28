@@ -1,16 +1,18 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { useHeaderHeight } from '@react-navigation/elements'
+import { isIOS } from '@universe/environment'
 import React, { PropsWithChildren, useCallback } from 'react'
-import { BackHandler, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { BackHandler, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { HeaderSkipButton, renderHeaderBackButton } from 'src/app/navigation/components'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
-import { SHORT_SCREEN_HEADER_HEIGHT_RATIO, Screen } from 'src/components/layout/Screen'
+import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
+import { useRegionalizedLineHeight } from 'src/components/text/useRegionalizedLineHeight'
 import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = {
   subtitle?: string
@@ -21,6 +23,11 @@ type OnboardingScreenProps = {
   keyboardAvoidingViewEnabled?: boolean
   disableGoBack?: boolean
   onSkip?: () => void
+  /**
+   * Custom node for the header's right slot. Takes precedence over `onSkip` so callers can
+   * render arbitrary actions (e.g., a Help link) alongside the back chevron on the left.
+   */
+  renderHeaderRight?: () => JSX.Element
   ignoreContainerPaddingX?: boolean
   ignoreTextContainerMarginBottom?: boolean
 }
@@ -34,6 +41,7 @@ export function OnboardingScreen({
   keyboardAvoidingViewEnabled = true,
   disableGoBack = false,
   onSkip,
+  renderHeaderRight,
   ignoreContainerPaddingX,
   ignoreTextContainerMarginBottom,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
@@ -48,20 +56,25 @@ export function OnboardingScreen({
 
   useFocusEffect(
     useCallback(() => {
+      const headerRight = renderHeaderRight
+        ? renderHeaderRight
+        : !onSkip
+          ? (): null => null
+          : (_props: unknown): JSX.Element => <HeaderSkipButton onPress={() => onSkip()} />
       navigation.setOptions({
         headerLeft: disableGoBack ? (): null => null : renderHeaderBackButton,
         gestureEnabled: !disableGoBack,
-        headerRight: !onSkip
-          ? (): null => null
-          : (_props): JSX.Element => <HeaderSkipButton onPress={() => onSkip()} />,
+        headerRight,
       })
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
         return disableGoBack
       })
 
       return subscription.remove
-    }, [navigation, disableGoBack, onSkip]),
+    }, [navigation, disableGoBack, onSkip, renderHeaderRight]),
   )
+
+  const titleLineHeight = useRegionalizedLineHeight()
 
   return (
     <Screen
@@ -92,7 +105,13 @@ export function OnboardingScreen({
               </Flex>
             )}
             {title && (
-              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant="subheading1">
+              <Text
+                allowFontScaling={false}
+                pt={paddingTop}
+                textAlign="center"
+                variant="subheading1"
+                lineHeight={titleLineHeight}
+              >
                 {title}
               </Text>
             )}

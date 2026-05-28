@@ -1,36 +1,35 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { skipToken } from '@reduxjs/toolkit/query/react'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { skipToken } from '@tanstack/react-query'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { FiatOnRampStackParamList } from 'src/app/navigation/types'
+import { type FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, UniversalImage, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/hooks'
+import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
+import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import {
   useFiatOnRampAggregatorOffRampWidgetQuery,
   useFiatOnRampAggregatorWidgetQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
-import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
-import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
-import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
+import { type FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -56,14 +55,16 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quoteCurrency,
     fiatAmount,
     tokenAmount,
+    externalTransactionIdSuffix,
   } = useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
-  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
-    activeAccountAddress,
-    quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
-    serviceProvider?.serviceProvider,
-  )
+  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator({
+    ownerAddress: activeAccountAddress,
+    chainId: quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
+    serviceProvider: serviceProvider?.serviceProvider,
+    idSuffix: externalTransactionIdSuffix,
+  })
 
   const onError = useCallback((): void => {
     dispatch(
@@ -123,17 +124,17 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       return
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
-      dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
-      if (serviceProvider && quoteCurrency?.meldCurrencyCode && baseCurrencyInfo && quotesSections?.[0]?.data?.[0]) {
+      if (serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && quotesSections?.[0]?.data[0]) {
         sendAnalyticsEvent(
           isOffRamp ? FiatOffRampEventName.FiatOffRampWidgetOpened : FiatOnRampEventName.FiatOnRampWidgetOpened,
           {
             externalTransactionId,
             serviceProvider: serviceProvider.serviceProvider,
-            preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProviderDetails.serviceProvider,
+            // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
+            preselectedServiceProvider: quotesSections[0]?.data?.[0]?.serviceProviderDetails?.serviceProvider,
             countryCode,
             countryState,
-            fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
+            fiatCurrency: baseCurrencyInfo.code.toLowerCase(),
             cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
             chainId: quoteCurrency.currencyInfo?.currency.chainId,
             currencyAmount: tokenAmount,
@@ -141,9 +142,14 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           },
         )
       }
-      await dispatchAddTransaction({ isOffRamp })
-      await dispatch(forceFetchFiatOnRampTransactions())
-      openUri(widgetUrl).catch(onError)
+      dispatchAddTransaction({ isOffRamp })
+      dispatch(forceFetchFiatOnRampTransactions())
+      await openUri({ uri: widgetUrl, throwOnError: true })
+        .then(() => {
+          // Close the modal only after closing uri link
+          dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
+        })
+        .catch(onError)
     }
 
     if (!isOffRamp && timeoutElapsed && !widgetLoading && widgetData) {
@@ -154,7 +160,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       navigateToWidget(offRampWidgetData.widgetUrl).catch(() => undefined)
     }
   }, [
-    navigation,
     timeoutElapsed,
     widgetData,
     offRampWidgetData,
@@ -183,14 +188,14 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const logoUrl = getOptionalServiceProviderLogo(serviceProvider?.logos, isDarkMode)
 
   return (
-    <Screen>
-      {baseCurrencyInfo && serviceProvider ? (
-        <>
+    <Screen edges={['top', 'bottom']}>
+      {baseCurrencyInfo && serviceProvider && (
+        <Flex fill justifyContent="space-between" alignItems="center">
           <FiatOnRampConnectingView
             amount={addFiatSymbolToNumber({
               value: fiatAmount,
-              currencyCode: baseCurrencyInfo?.code,
-              currencySymbol: baseCurrencyInfo?.symbol,
+              currencyCode: baseCurrencyInfo.code,
+              currencySymbol: baseCurrencyInfo.symbol,
             })}
             isOffRamp={isOffRamp}
             quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
@@ -201,23 +206,23 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
                 justifyContent="center"
                 width={ServiceProviderLogoStyles.icon.width}
               >
-                <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+                <UniversalImage
+                  uri={logoUrl}
+                  size={{
+                    height: ServiceProviderLogoStyles.icon.height,
+                    width: ServiceProviderLogoStyles.icon.width,
+                  }}
+                  style={{ image: { borderRadius: ServiceProviderLogoStyles.icon.borderRadius } }}
+                />
               </Flex>
             }
             serviceProviderName={serviceProvider.name}
           />
-          <Text
-            bottom={spacing.spacing8}
-            color="$neutral3"
-            position="absolute"
-            px="$spacing24"
-            textAlign="center"
-            variant="body3"
-          >
+          <Text bottom={spacing.spacing8} color="$neutral3" px="$spacing24" textAlign="center" variant="body3">
             {t('fiatOnRamp.connection.terms', { serviceProvider: serviceProvider.name })}
           </Text>
-        </>
-      ) : null}
+        </Flex>
+      )}
     </Screen>
   )
 }

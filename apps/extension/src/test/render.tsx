@@ -8,18 +8,19 @@ import {
   RenderOptions,
   RenderResult,
 } from '@testing-library/react'
+import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
@@ -49,11 +50,11 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>
-          <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
-        </SharedWalletProvider>
-      </AutoMockedApolloProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 
@@ -64,7 +65,7 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
@@ -111,9 +112,11 @@ export function renderHookWithProviders<P, R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
-      </AutoMockedApolloProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 

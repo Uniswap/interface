@@ -6,6 +6,7 @@ import com.uniswap.RnEthersRs
 import com.uniswap.onboarding.backup.ui.model.MnemonicInputStatus
 import com.uniswap.onboarding.backup.ui.model.MnemonicWordBankCellUiState
 import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_HD
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,19 +19,17 @@ import kotlinx.coroutines.flow.update
 class MnemonicConfirmationViewModel(
   private val ethersRs: RnEthersRs, // Move to repository layer if app gets more complex
 ) : ViewModel() {
-  private val defaultMnemonicsCount = 12
-
-  private var sourceWords = List(defaultMnemonicsCount) { "" }
+  private var sourceWords = List(MNEMONIC_LENGTH_HD) { "" }
   private var shuffledWords = emptyList<String>()
   private val focusedIndex = MutableStateFlow(0)
   private val selectedWordsIndexes =
-    MutableStateFlow<List<Int?>>(List(defaultMnemonicsCount) { null })
+    MutableStateFlow<List<Int?>>(List(MNEMONIC_LENGTH_HD) { null })
   private val selectedWordPlaceholderFlow = MutableStateFlow("")
 
   val selectedWords: StateFlow<List<MnemonicWordUiState>> =
-    selectedWordsIndexes.combine(selectedWordPlaceholderFlow) { _, placeholder ->
+    combine(selectedWordsIndexes, selectedWordPlaceholderFlow, focusedIndex) { _, placeholder, focusedIndex ->
       List(sourceWords.size) { index ->
-        getMnemonicWordUiState(index, placeholder)
+        getMnemonicWordUiState(index, placeholder, focusedIndex)
       }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -49,23 +48,36 @@ class MnemonicConfirmationViewModel(
   val completed = _completed.asStateFlow()
 
   private var currentMnemonicId = ""
+  // Pagination: when pageSize > 0, the view confirms only words[pageStart..<pageStart+pageSize].
+  // pageSize == 0 means "use the full mnemonic" (single-page mode, default).
+  private var pageStart: Int = 0
+  private var pageSize: Int = 0
 
-  fun setup(mnemonicId: String) {
-    if (mnemonicId.isNotEmpty() && mnemonicId != currentMnemonicId) {
+  fun setup(mnemonicId: String, pageStart: Int = 0, pageSize: Int = 0) {
+    val configChanged = mnemonicId != currentMnemonicId ||
+      pageStart != this.pageStart ||
+      pageSize != this.pageSize
+    if (mnemonicId.isNotEmpty() && configChanged) {
       currentMnemonicId = mnemonicId
+      this.pageStart = pageStart
+      this.pageSize = pageSize
       reset()
 
       ethersRs.retrieveMnemonic(mnemonicId)?.let { mnemonic ->
-        val words = mnemonic.split(" ")
-        sourceWords = words
-        shuffledWords = words.shuffled()
-        selectedWordsIndexes.update { List(words.size) { null } }
+        val allWords = mnemonic.split(" ")
+        val effectiveSize = if (pageSize > 0) pageSize else allWords.size
+        val start = pageStart.coerceAtLeast(0)
+        val end = (start + effectiveSize).coerceAtMost(allWords.size)
+        val slice = if (end > start) allWords.subList(start, end) else emptyList()
+        sourceWords = slice
+        shuffledWords = slice.shuffled()
+        selectedWordsIndexes.update { List(slice.size) { null } }
       }
     }
   }
 
   private fun reset() {
-    sourceWords = List(defaultMnemonicsCount) { "" }
+    sourceWords = emptyList()
     shuffledWords = emptyList()
     focusedIndex.update { 0 }
     selectedWordsIndexes.update { emptyList() }
@@ -77,6 +89,7 @@ class MnemonicConfirmationViewModel(
   }
 
   fun handleWordBankClick(wordBankIndex: Int) {
+    
     selectedWordsIndexes.update { indexes ->
       val updatedIndexes = indexes.toMutableList()
       updatedIndexes[focusedIndex.value] = wordBankIndex
@@ -112,7 +125,8 @@ class MnemonicConfirmationViewModel(
 
   private fun getMnemonicWordUiState(
     displayIndex: Int,
-    placeholderText: String
+    placeholderText: String,
+    focusedIndex: Int,
   ): MnemonicWordUiState {
     val selectedWord = getSelectedWord(displayIndex)
     var status = MnemonicInputStatus.CORRECT_INPUT
@@ -124,9 +138,10 @@ class MnemonicConfirmationViewModel(
     }
 
     return MnemonicWordUiState(
-      num = displayIndex + 1,
+      num = pageStart + displayIndex + 1,
       text = selectedWord.ifEmpty { placeholderText },
       status = status,
+      isActive = displayIndex == focusedIndex,
     )
   }
 }

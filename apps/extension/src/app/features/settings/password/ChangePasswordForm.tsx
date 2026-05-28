@@ -1,18 +1,20 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Button, Flex, Text } from 'ui/src'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { usePasswordForm } from 'wallet/src/utils/password'
+import { PasswordErrors, usePasswordForm } from 'wallet/src/utils/password'
 
-export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Element {
+export function ChangePasswordForm({
+  oldPassword,
+  onNext,
+}: {
+  oldPassword: string | undefined
+  onNext: (password: string) => void
+}): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
 
   const {
     enableNext,
@@ -24,22 +26,49 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
     confirmPassword,
     onChangeConfirmPassword,
     setHideInput,
-    errorText,
+    errorText: baseErrorText,
     checkSubmit,
   } = usePasswordForm()
 
-  const onSubmit = useCallback(async () => {
-    if (checkSubmit()) {
-      await Keyring.changePassword(password)
-      onNext()
-      dispatch(pushNotification({ type: AppNotificationType.PasswordChanged }))
-      sendAnalyticsEvent(ExtensionEventName.PasswordChanged)
+  const [customError, setCustomError] = useState<PasswordErrors | undefined>(undefined)
+
+  // Check if new password is same as old password
+  const isSamePassword = useMemo(
+    () => Boolean(password && oldPassword && password === oldPassword),
+    [password, oldPassword],
+  )
+
+  // Update custom error when password matches old password
+  useEffect(() => {
+    setCustomError(isSamePassword ? PasswordErrors.SamePassword : undefined)
+  }, [isSamePassword])
+
+  // Override error text if custom error exists
+  const errorText = useMemo(() => {
+    if (customError === PasswordErrors.SamePassword) {
+      return t('common.input.password.error.same')
     }
-  }, [checkSubmit, password, onNext, dispatch])
+    return baseErrorText
+  }, [customError, baseErrorText, t])
+
+  const onSubmit = useCallback(async () => {
+    // Check for same password error
+    if (isSamePassword) {
+      setCustomError(PasswordErrors.SamePassword)
+      return
+    }
+
+    if (checkSubmit()) {
+      // Just change the password and pass it to the parent
+      await Keyring.changePassword(password)
+      sendAnalyticsEvent(ExtensionEventName.PasswordChanged)
+      onNext(password)
+    }
+  }, [checkSubmit, password, onNext, isSamePassword])
 
   return (
-    <Flex grow pt="$spacing24">
-      <Flex grow alignItems="center" gap="$spacing16" px="$spacing12">
+    <Flex grow width="100%">
+      <Flex grow alignItems="center" gap="$spacing16" pb="$spacing12">
         <PasswordInput
           autoFocus
           large
@@ -63,13 +92,21 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
           onSubmitEditing={onSubmit}
           onToggleHideInput={setHideInput}
         />
-        <Text color="$statusCritical" opacity={errorText ? 1 : 0} textAlign="center" variant="body2">
-          {errorText || 'Placeholder text'}
+        <Text
+          color="$statusCritical"
+          opacity={errorText ? 1 : 0}
+          textAlign="center"
+          variant="body3"
+          minHeight="$spacing20"
+        >
+          {errorText}
         </Text>
       </Flex>
-      <DeprecatedButton isDisabled={!enableNext} theme="tertiary" onPress={onSubmit}>
-        {t('common.button.save')}
-      </DeprecatedButton>
+      <Flex row width="100%">
+        <Button size="medium" isDisabled={!enableNext || isSamePassword} emphasis="primary" onPress={onSubmit}>
+          {t('common.button.continue')}
+        </Button>
+      </Flex>
     </Flex>
   )
 }

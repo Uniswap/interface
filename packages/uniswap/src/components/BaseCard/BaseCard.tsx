@@ -61,7 +61,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           </Flex>
           {subtitle ? typeof subtitle === 'string' ? <Text variant="subheading1">{subtitle}</Text> : subtitle : null}
         </Flex>
-        <RotatableChevron color="$neutral2" direction="end" height={20} />
+        <RotatableChevron color="$neutral2" direction="end" size="$icon.20" />
       </Flex>
     </TouchableArea>
   )
@@ -71,7 +71,9 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
 type EmptyStateProps = {
   additionalButtonLabel?: string
   buttonLabel?: string
-  description: string
+  buttonDataTestId?: string
+  description: string | null
+  dataTestId?: string
   onPress?: () => void
   onPressAdditional?: () => void
   title?: string
@@ -81,30 +83,34 @@ type EmptyStateProps = {
 function EmptyState({
   additionalButtonLabel,
   buttonLabel,
+  buttonDataTestId,
   description,
+  dataTestId,
   onPress,
   onPressAdditional,
   title,
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="$spacing16" width="100%">
+    <Flex centered gap="$spacing16" width="100%" data-testid={dataTestId}>
       <Flex centered gap="$spacing8">
         {icon}
-        <Flex centered gap="$spacing8">
+        <Flex centered gap="$spacing8" mt="$spacing8">
           {title && (
             <Text textAlign="center" variant="buttonLabel2">
               {title}
             </Text>
           )}
-          <Text color="$neutral2" textAlign="center" variant="body2">
-            {description}
-          </Text>
+          {description && (
+            <Text color="$neutral2" textAlign="center" variant="body2">
+              {description}
+            </Text>
+          )}
         </Flex>
       </Flex>
       <Flex row gap="$spacing16">
         {buttonLabel && (
-          <TouchableArea onPress={onPress}>
+          <TouchableArea data-testid={buttonDataTestId} onPress={onPress}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {buttonLabel}
             </Text>
@@ -129,11 +135,21 @@ type ErrorStateProps = {
   onRetry?: () => void
   retryButtonLabel?: string
   icon?: ReactNode
+  alternativeButtonLabel?: string
+  onAlternativePress?: () => void
 }
 
 function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
-  const { title, description = t('common.card.error.description'), retryButtonLabel, onRetry, icon } = props
+  const {
+    title,
+    description = t('common.card.error.description'),
+    retryButtonLabel,
+    onRetry,
+    icon,
+    alternativeButtonLabel,
+    onAlternativePress,
+  } = props
   return (
     <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered gap="$spacing16">
@@ -149,11 +165,18 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
           </Text>
         </Flex>
       </Flex>
-      <Flex row>
+      <Flex alignItems="center" gap="$spacing16">
         {retryButtonLabel ? (
           <TouchableArea onPress={onRetry}>
             <Text color="$accent1" variant="buttonLabel2">
               {retryButtonLabel}
+            </Text>
+          </TouchableArea>
+        ) : null}
+        {alternativeButtonLabel ? (
+          <TouchableArea onPress={onAlternativePress}>
+            <Text color="$accent1" variant="buttonLabel2">
+              {alternativeButtonLabel}
             </Text>
           </TouchableArea>
         ) : null}

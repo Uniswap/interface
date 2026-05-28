@@ -1,0 +1,262 @@
+import type { WatchQueryFetchPolicy } from '@apollo/client'
+import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import type { PollingInterval } from 'uniswap/src/constants/misc'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import type { GetPortfolioInput } from 'uniswap/src/data/rest/getPortfolio'
+import {
+  shouldTransformToMultichain,
+  transformPortfolioToMultichain,
+} from 'uniswap/src/data/rest/transformPortfolioToMultichain'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { buildPortfolioBalance } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
+import { getPortfolioMultichainBalancesById } from 'uniswap/src/features/dataApi/balances/toPortfolioMultichainBalance'
+import {
+  useRestPortfolioValueModifier,
+  useRestPortfolioValueModifiers,
+} from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
+import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
+import type { BaseResult, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
+import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import {
+  getRestCurrencySafetyInfo,
+  getRestTokenSafetyInfo,
+} from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import type { CurrencyId } from 'uniswap/src/types/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
+import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
+import { useEvent } from 'utilities/src/react/hooks'
+
+export { useRestPortfolioValueModifier, useRestPortfolioValueModifiers }
+
+/** Return type for portfolio data (Record<CurrencyId, PortfolioBalance>). data is undefined while loading. */
+export type PortfolioDataResult = BaseResult<Record<CurrencyId, PortfolioBalance> | undefined>
+/** Return type for portfolio data in multichain format (Record<CurrencyId, PortfolioMultichainBalance>). data is undefined while loading. */
+export type PortfolioDataResultMultichain = BaseResult<Record<CurrencyId, PortfolioMultichainBalance> | undefined>
+
+/**
+ * Pure formatter: converts REST portfolio response to legacy or multichain map.
+ * Exported for testing so we can assert existing behavior without mocking the hook.
+ */
+export function formatPortfolioResponseToMap({
+  portfolioData,
+  ownerAddress,
+  useMultichainFormat,
+}: {
+  portfolioData: GetPortfolioResponse | undefined
+  ownerAddress: string | undefined
+  useMultichainFormat: false
+}): Record<CurrencyId, PortfolioBalance> | undefined
+export function formatPortfolioResponseToMap({
+  portfolioData,
+  ownerAddress,
+  useMultichainFormat,
+  requestedMultichainFromBackend,
+}: {
+  portfolioData: GetPortfolioResponse | undefined
+  ownerAddress: string | undefined
+  useMultichainFormat: true
+  /** When true, only use response.multichainBalances; do not fall back to transforming legacy. */
+  requestedMultichainFromBackend?: boolean
+}): Record<CurrencyId, PortfolioMultichainBalance> | undefined
+export function formatPortfolioResponseToMap({
+  portfolioData,
+  ownerAddress,
+  useMultichainFormat,
+  requestedMultichainFromBackend,
+}: {
+  portfolioData: GetPortfolioResponse | undefined
+  ownerAddress: string | undefined
+  useMultichainFormat: boolean
+  requestedMultichainFromBackend?: boolean
+}): Record<CurrencyId, PortfolioBalance> | Record<CurrencyId, PortfolioMultichainBalance> | undefined {
+  if (!portfolioData?.portfolio) {
+    return undefined
+  }
+
+  if (useMultichainFormat) {
+    const hasMultichainFromBackend = portfolioData.portfolio.multichainBalances.length > 0
+    // When we requested multichain from backend, only use response.multichainBalances — do not fall back to transforming legacy (that would show real data instead of mock).
+    if (requestedMultichainFromBackend === true && !hasMultichainFromBackend) {
+      return {}
+    }
+    const transformed = shouldTransformToMultichain(portfolioData)
+      ? transformPortfolioToMultichain(portfolioData)
+      : portfolioData
+    const multichainMap = getPortfolioMultichainBalancesById(transformed, ownerAddress)
+    const byCurrencyId: Record<CurrencyId, PortfolioMultichainBalance> = {}
+    if (!multichainMap) {
+      return byCurrencyId
+    }
+    for (const multichain of Object.values(multichainMap)) {
+      const token = multichain.tokens[0]
+      if (!token) {
+        continue
+      }
+      byCurrencyId[token.currencyInfo.currencyId] = multichain
+    }
+    return byCurrencyId
+  }
+
+  const balances = portfolioData.portfolio.balances
+  const byId: Record<CurrencyId, PortfolioBalance> = {}
+
+  balances.forEach((balance) => {
+    const portfolioBalance = convertRestBalanceToPortfolioBalance(balance, ownerAddress)
+    if (portfolioBalance) {
+      byId[portfolioBalance.currencyInfo.currencyId] = portfolioBalance
+    }
+  })
+
+  return byId
+}
+
+export type UsePortfolioDataQueryOptions = {
+  skip?: boolean
+  pollInterval?: PollingInterval
+  fetchPolicy?: WatchQueryFetchPolicy
+  /**
+   * When true, request portfolio.multichainBalances from backend (mock/dummy data).
+   * When false or omitted, request legacy portfolio.balances and transform to multichain shape on client.
+   * Default false so we never accidentally fetch multichain data from backend.
+   */
+  requestMultichainFromBackend?: boolean
+} & GetPortfolioInput['input']
+
+/** Internal: runs the portfolio query with a select that determines the result data type. No cast needed. */
+function usePortfolioDataQueryWithSelect<T>(
+  options: UsePortfolioDataQueryOptions & {
+    select: (portfolioData: GetPortfolioResponse | undefined) => T
+  },
+): BaseResult<T> {
+  const { evmAddress, svmAddress, select, requestMultichainFromBackend, ...queryOptions } = options
+  const { chains: defaultChainIds } = useEnabledChains()
+  const chainIds = queryOptions.chainIds || defaultChainIds
+
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
+
+  const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
+    fetchPolicy: queryOptions.fetchPolicy,
+    pollInterval: queryOptions.pollInterval,
+  })
+
+  // Only request multichain from backend when explicitly true; otherwise always false (legacy data)
+  const multichain = requestMultichainFromBackend === true
+
+  const {
+    data: formattedData,
+    isFetching: restLoading,
+    refetch: restRefetch,
+    error: restError,
+    status: restStatus,
+    dataUpdatedAt,
+  } = useGetPortfolioQuery({
+    input: {
+      evmAddress,
+      svmAddress,
+      chainIds,
+      modifier,
+      multichain,
+    },
+    enabled: !!(evmAddress ?? svmAddress) && !queryOptions.skip,
+    refetchInterval: internalPollInterval,
+    select,
+  })
+
+  return {
+    data: formattedData,
+    loading: restLoading,
+    networkStatus: mapRestStatusToNetworkStatus(restStatus),
+    refetch: restRefetch,
+    error: restError || undefined,
+    dataUpdatedAt: dataUpdatedAt || undefined,
+  }
+}
+
+/**
+ * REST implementation for portfolio balances (Record<CurrencyId, PortfolioBalance>).
+ */
+export function usePortfolioData(options: UsePortfolioDataQueryOptions): PortfolioDataResult {
+  const ownerAddress = options.evmAddress ?? options.svmAddress
+  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
+    formatPortfolioResponseToMap({ portfolioData, ownerAddress, useMultichainFormat: false }),
+  )
+  return usePortfolioDataQueryWithSelect({ ...options, select, requestMultichainFromBackend: false })
+}
+
+/**
+ * REST implementation for portfolio balances in multichain format (Record<CurrencyId, PortfolioMultichainBalance>).
+ * When requestMultichainFromBackend is false (default): fetches legacy portfolio.balances and transforms to multichain shape on client.
+ * When requestMultichainFromBackend is true: fetches portfolio.multichainBalances from backend (mock data, already in multichain shape).
+ */
+export function usePortfolioDataMultichain(options: UsePortfolioDataQueryOptions): PortfolioDataResultMultichain {
+  const ownerAddress = options.evmAddress ?? options.svmAddress
+  const requestedMultichainFromBackend = options.requestMultichainFromBackend
+  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
+    formatPortfolioResponseToMap({
+      portfolioData,
+      ownerAddress,
+      useMultichainFormat: true,
+      requestedMultichainFromBackend,
+    }),
+  )
+  return usePortfolioDataQueryWithSelect({ ...options, select })
+}
+
+export function convertRestBalanceToPortfolioBalance(
+  balance: NonNullable<NonNullable<GetPortfolioResponse['portfolio']>['balances'][0]>,
+  address?: Address,
+): PortfolioBalance | undefined {
+  const { token, amount, pricePercentChange1d, valueUsd, isHidden } = balance
+  if (!token || !amount || !(amount.amount > 0)) {
+    return undefined
+  }
+
+  const { chainId, address: unnormalizedTokenAddress, decimals, symbol, name, metadata } = token
+  const tokenAddress = normalizeTokenAddressForCache(unnormalizedTokenAddress)
+  const { logoUrl, protectionInfo } = metadata || {}
+
+  const currency = buildCurrency({
+    chainId,
+    address: tokenAddress,
+    decimals,
+    symbol,
+    name,
+    buyFeeBps: metadata?.feeData?.feeDetector?.buyFeeBps,
+    sellFeeBps: metadata?.feeData?.feeDetector?.sellFeeBps,
+  })
+
+  if (!currency) {
+    return undefined
+  }
+
+  const id = currencyId(currency)
+  const tokenBalanceId = `${chainId}-${tokenAddress}-${address}`
+  const { isSpam, spamCodeValue, mappedSafetyLevel } = getRestTokenSafetyInfo(metadata)
+
+  const currencyInfo = buildCurrencyInfo({
+    currency,
+    currencyId: id,
+    logoUrl,
+    isSpam,
+    safetyInfo: getRestCurrencySafetyInfo(mappedSafetyLevel, protectionInfo),
+    spamCode: spamCodeValue,
+  })
+
+  return buildPortfolioBalance({
+    id: tokenBalanceId,
+    cacheId: `TokenBalance:${tokenBalanceId}`,
+    quantity: amount.amount,
+    balanceUSD: valueUsd,
+    currencyInfo,
+    relativeChange24: pricePercentChange1d,
+    isHidden,
+  })
+}
+
+export {
+  usePortfolioBalanceBreakdown,
+  usePortfolioBalancePart,
+  usePortfolioTotalValue,
+} from './usePortfolioBalancePart'

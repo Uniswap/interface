@@ -1,38 +1,8 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
-import {
-  UnitagAddressRequest,
-  UnitagAddressResponse,
-  UnitagAddressesRequest,
-  UnitagAddressesResponse,
-  UnitagClaimEligibilityRequest,
-  UnitagClaimEligibilityResponse,
-  UnitagUsernameRequest,
-  UnitagUsernameResponse,
-} from 'uniswap/src/features/unitags/types'
+import { createPromiseClient } from '@connectrpc/connect'
+import { createUnitagsServiceApiClient, UnitagService } from '@universe/api'
+import { entryGatewayProdPostTransport } from 'uniswap/src/data/rest/base'
 
-export const UNITAGS_API_CACHE_KEY = 'UnitagsApi'
-
-const UnitagsApiClient = createApiClient({
-  baseUrl: uniswapUrls.unitagsApiUrl,
+export const unitagsApiClient = createUnitagsServiceApiClient({
+  // Always use production calls unless overridden locally to ensure stable name mapping
+  rpcClient: createPromiseClient(UnitagService, entryGatewayProdPostTransport),
 })
-
-export async function fetchUsername(params: UnitagUsernameRequest): Promise<UnitagUsernameResponse> {
-  return await UnitagsApiClient.get<UnitagUsernameResponse>('/username', { params })
-}
-
-export async function fetchAddress(params: UnitagAddressRequest): Promise<UnitagAddressResponse> {
-  return await UnitagsApiClient.get<UnitagAddressResponse>('/address', { params })
-}
-
-export async function fetchAddresses({ addresses }: UnitagAddressesRequest): Promise<UnitagAddressesResponse> {
-  return await UnitagsApiClient.get<UnitagAddressesResponse>(
-    `/addresses?addresses=${encodeURIComponent(addresses.join(','))}`,
-  )
-}
-
-export async function fetchClaimEligibility(
-  params: UnitagClaimEligibilityRequest,
-): Promise<UnitagClaimEligibilityResponse> {
-  return await UnitagsApiClient.get<UnitagClaimEligibilityResponse>('/claim/eligibility', { params })
-}

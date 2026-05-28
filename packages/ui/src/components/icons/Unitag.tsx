@@ -1,36 +1,36 @@
-import { memo } from 'react'
-import { getTokenValue } from 'ui/src'
+import { isMobileApp, isWebApp } from '@universe/environment'
+import { memo, useMemo } from 'react'
+import { getTokenValue } from 'tamagui'
 import { UNITAG_DARK, UNITAG_DARK_SMALL, UNITAG_LIGHT, UNITAG_LIGHT_SMALL } from 'ui/src/assets'
+import { UniversalImageStyleProps } from 'ui/src/components/UniversalImage/types'
 import { UniversalImage } from 'ui/src/components/UniversalImage/UniversalImage'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { IconSizeTokens } from 'ui/src/theme'
-import { isMobileApp } from 'utilities/src/platform'
 
-function _Unitag({ size = '$icon.24' }: { size: IconSizeTokens | number }): JSX.Element {
+const style: UniversalImageStyleProps = {
+  image: {
+    verticalAlign: 'sub',
+  },
+}
+
+function UnitagIcon({ size = '$icon.24' }: { size: IconSizeTokens | number }): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   const sizeNumber = typeof size === 'number' ? size : getTokenValue(size)
-  const universalImageSize = { height: sizeNumber, width: sizeNumber }
+  const universalImageSize = useMemo(() => ({ height: sizeNumber, width: sizeNumber }), [sizeNumber])
 
-  const getUri = () => {
+  const uri = useMemo(() => {
     if (isDarkMode) {
       return isMobileApp ? UNITAG_DARK : UNITAG_DARK_SMALL
     }
     return isMobileApp ? UNITAG_LIGHT : UNITAG_LIGHT_SMALL
-  }
+  }, [isDarkMode])
 
-  return (
-    <UniversalImage
-      style={{
-        image: {
-          verticalAlign: 'bottom',
-        },
-      }}
-      size={universalImageSize}
-      uri={getUri()}
-      allowLocalUri
-    />
-  )
+  if (isWebApp) {
+    return <img src={uri} width={universalImageSize.width} height={universalImageSize.height} style={style.image} />
+  } else {
+    return <UniversalImage allowLocalUri style={style} size={universalImageSize} uri={uri} />
+  }
 }
 
-export const Unitag = memo(_Unitag)
+export const Unitag = memo(UnitagIcon)

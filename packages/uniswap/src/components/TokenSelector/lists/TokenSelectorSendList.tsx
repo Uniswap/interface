@@ -1,37 +1,85 @@
-import { memo, useMemo } from 'react'
+import { GqlResult } from '@universe/api'
+import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { SectionHeader } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
-import {
-  OnSelectCurrency,
-  TokenOptionSection,
-  TokenSection,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
-import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
-import { GqlResult } from 'uniswap/src/data/types'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 
 function useTokenSectionsForSend({
-  activeAccountAddress,
+  addresses,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenOption>[]> {
+  const { t } = useTranslation()
+  const portfolioData = usePortfolioBalancesForAddressById(addresses)
   const {
     data: portfolioTokenOptions,
+    hiddenTokens: hiddenPortfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
+  } = usePortfolioTokenOptions({ chainFilter, includeHidden: true, portfolioData })
+  const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)
+  const expandoElement = useMemo(() => {
+    const hiddenTokensCount = hiddenPortfolioTokenOptions?.length ?? 0
+    if (hiddenTokensCount === 0) {
+      return undefined
+    }
+    return (
+      <Flex backgroundColor="$surface1">
+        <ExpandoRow
+          isExpanded={hiddenTokensExpanded}
+          label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
+          mx="$spacing20"
+          onPress={(): void => {
+            setHiddenTokensExpanded(!hiddenTokensExpanded)
+          }}
+        />
+      </Flex>
+    )
+  }, [hiddenTokensExpanded, hiddenPortfolioTokenOptions?.length, t])
 
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
-  const sections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.YourTokens,
-    tokenOptions: portfolioTokenOptions,
+  const visibleSections = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.YourTokens,
+    options: portfolioTokenOptions,
   })
+
+  const openHiddenSections = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.HiddenTokens,
+    options: hiddenPortfolioTokenOptions,
+    sectionHeader: expandoElement,
+  })
+
+  const closedHiddenSections: OnchainItemSection<TokenOption>[] = useMemo(
+    () => [
+      {
+        sectionKey: OnchainItemSectionName.HiddenTokens,
+        data: [],
+        sectionHeader: expandoElement,
+      },
+    ],
+    [expandoElement],
+  )
+
+  const sections = useMemo(() => {
+    if (!visibleSections) {
+      return undefined
+    }
+    if (openHiddenSections) {
+      return [...visibleSections, ...(hiddenTokensExpanded ? openHiddenSections : closedHiddenSections)]
+    }
+    return visibleSections
+  }, [visibleSections, openHiddenSections, closedHiddenSections, hiddenTokensExpanded])
 
   return useMemo(
     () => ({
@@ -49,7 +97,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 
   return (
     <Flex>
-      <SectionHeader sectionKey={TokenOptionSection.YourTokens} />
+      <SectionHeader sectionKey={OnchainItemSectionName.YourTokens} />
       <Flex pt="$spacing16" px="$spacing16">
         <BaseCard.EmptyState
           buttonLabel={
@@ -64,15 +112,16 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
   )
 }
 
-function _TokenSelectorSendList({
-  activeAccountAddress,
+function TokenSelectorSendListInner({
+  addresses,
   chainFilter,
-  isKeyboardOpen,
   onSelectCurrency,
   onEmptyActionPress,
+  renderedInModal,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
+  renderedInModal: boolean
 }): JSX.Element {
   const {
     data: sections,
@@ -80,7 +129,7 @@ function _TokenSelectorSendList({
     error,
     refetch,
   } = useTokenSectionsForSend({
-    activeAccountAddress,
+    addresses,
     chainFilter,
   })
   const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])
@@ -91,14 +140,14 @@ function _TokenSelectorSendList({
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       hasError={Boolean(error)}
-      isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )
 }
 
-export const TokenSelectorSendList = memo(_TokenSelectorSendList)
+export const TokenSelectorSendList = memo(TokenSelectorSendListInner)

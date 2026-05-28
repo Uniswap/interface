@@ -10,16 +10,18 @@ export function TermsOfService(): JSX.Element {
         components={{
           highlightTerms: (
             <Text
+              key="terms-of-service"
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}
+              onPress={(): Promise<void> => openUri({ uri: uniswapUrls.termsOfServiceUrl })}
             />
           ),
           highlightPrivacy: (
             <Text
+              key="privacy-policy"
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}
+              onPress={(): Promise<void> => openUri({ uri: uniswapUrls.privacyPolicyUrl })}
             />
           ),
         }}

@@ -1,0 +1,18 @@
+import { Path, Svg } from 'react-native-svg'
+// oxlint-disable-next-line universe-custom/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
+
+export const [SendAlt, AnimatedSendAlt] = createIcon({
+  name: 'SendAlt',
+  getIcon: (props) => (
+    <Svg viewBox="0 0 20 20" fill="none" {...props}>
+      <Path
+        d="M1.07129 9.99986C1.07129 5.06861 5.06861 1.07129 9.99986 1.07129C14.9311 1.07129 18.9284 5.06861 18.9284 9.99986C18.9284 14.9311 14.9311 18.9284 9.99986 18.9284C5.06861 18.9284 1.07129 14.9311 1.07129 9.99986ZM9.15168 13.7499C9.15168 14.2183 9.53144 14.5981 9.9999 14.5981C10.4684 14.5981 10.8481 14.2183 10.8481 13.7499V8.29762L13.1501 10.5996C13.4814 10.9309 14.0184 10.9309 14.3497 10.5996C14.6809 10.2684 14.6809 9.73134 14.3497 9.40009L10.5997 5.65008C10.2684 5.31884 9.73137 5.31884 9.40012 5.65008L5.65012 9.40009C5.31887 9.73134 5.31887 10.2684 5.65012 10.5996C5.98137 10.9309 6.51843 10.9309 6.84967 10.5996L9.15168 8.29762V13.7499Z"
+        fill="currentColor"
+        fillRule="evenodd"
+        clipRule="evenodd"
+      />
+    </Svg>
+  ),
+  defaultFill: '#FF5F52',
+})

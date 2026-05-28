@@ -1,0 +1,83 @@
+# Shared flow for deleting a wallet's seed phrase through the settings menu
+
+appId: com.uniswap.mobile.dev
+---
+# Wait for the SettingsIcon button to be visible; without this, e2e test sometimes registers a success but the button is not actually tapped.
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# Start tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/start-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-delete-seed-phrase'
+
+# Navigate to settings
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'SettingsIcon'
+      PHASE: 'start'
+- tapOn:
+    id: 'account-header-settings-icon'
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'SettingsIcon'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Swipe to dev modal
+- scrollUntilVisible:
+    element:
+      id: 'app-settings-dev-modal'
+    direction: DOWN
+- waitForAnimationToEnd
+
+# Open dev modal
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'DevModal'
+      PHASE: 'start'
+- tapOn:
+    id: 'app-settings-dev-modal'
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'DevModal'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Open seed phrase accordion
+- tapOn:
+    id: 'seed-phrase-private-keys-accordion'
+
+# Delete seed phrase
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'DeleteSeedPhrase'
+      PHASE: 'start'
+- tapOn:
+    id: 'delete-seed-phrase-button'
+- tapOn: 'Delete'
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'DeleteSeedPhrase'
+      PHASE: 'end'
+
+# End tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/end-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-delete-seed-phrase'

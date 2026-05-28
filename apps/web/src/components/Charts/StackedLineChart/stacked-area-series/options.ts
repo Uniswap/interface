@@ -3,7 +3,7 @@
  * Modifications are called out with comments.
  */
 
-import { customSeriesDefaultOptions, CustomSeriesOptions, Logical } from 'lightweight-charts'
+import { CustomSeriesOptions, customSeriesDefaultOptions, Logical } from 'lightweight-charts'
 
 export interface StackedAreaSeriesOptions extends CustomSeriesOptions {
   colors: readonly string[]

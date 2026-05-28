@@ -1,0 +1,14 @@
+diff --git a/build/src/run/android/resolveLaunchProps.js b/build/src/run/android/resolveLaunchProps.js
+index 6d35afca5dc45096f0315e45766554387d3bb9ad..b2101c0f6dbb7398ff1dced4ac5ab5e6a6a2b03b 100644
+--- a/build/src/run/android/resolveLaunchProps.js
++++ b/build/src/run/android/resolveLaunchProps.js
+@@ -32,7 +32,8 @@ async function resolveLaunchPropsAsync(projectRoot, options) {
+     const mainActivity = await getMainActivityAsync(projectRoot);
+     const packageName = await new _AndroidAppIdResolver.AndroidAppIdResolver(projectRoot).getAppIdFromNativeAsync();
+     const customAppId = options.appId;
+-    const launchActivity = customAppId && customAppId !== packageName ? `${customAppId}/${packageName}${mainActivity}` : `${packageName}/${mainActivity}`;
++    const launchActivity = process.env.EXPO_ANDROID_LAUNCH_ACTIVITY ||
++        (customAppId && customAppId !== packageName ? `${customAppId}/${packageName}${mainActivity}` : `${packageName}/${mainActivity}`);
+     return {
+         mainActivity,
+         launchActivity,

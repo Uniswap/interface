@@ -1,17 +1,30 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useTokenContract } from 'hooks/useContract'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { erc20Abi } from 'viem'
+import { useReadContract } from 'wagmi'
+import { assume0xAddress } from '~/utils/wagmi'
 
-// returns undefined if input token is undefined, or fails to get token contract,
-// or contract total supply cannot be fetched
-export function useTotalSupply(token?: Currency): CurrencyAmount<Token> | undefined {
-  const contract = useTokenContract(token?.isToken ? token.address : undefined, false)
+interface UseTotalSupplyResult {
+  totalSupply: CurrencyAmount<Token> | undefined
+  isLoading: boolean
+  isError: boolean
+}
 
-  const totalSupplyStr: string | undefined = useSingleCallResult(contract, 'totalSupply')?.result?.[0]?.toString()
+export function useTotalSupply(token?: Currency): UseTotalSupplyResult {
+  const address = token?.isToken ? assume0xAddress(token.address) : undefined
 
-  return useMemo(
-    () => (token?.isToken && totalSupplyStr ? CurrencyAmount.fromRawAmount(token, totalSupplyStr) : undefined),
-    [token, totalSupplyStr],
+  const { data, isLoading, isError } = useReadContract({
+    address,
+    chainId: token?.chainId,
+    abi: erc20Abi,
+    functionName: 'totalSupply',
+    query: { enabled: !!address },
+  })
+
+  const totalSupply = useMemo(
+    () => (token?.isToken && data ? CurrencyAmount.fromRawAmount(token, data.toString()) : undefined),
+    [token, data],
   )
+
+  return { totalSupply, isLoading, isError }
 }

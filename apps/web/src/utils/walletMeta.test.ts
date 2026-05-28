@@ -1,7 +1,7 @@
 import type { ExternalProvider } from '@ethersproject/providers'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
-import { getWalletMeta, WalletMeta, WalletType } from 'utils/walletMeta'
+import { getWalletMeta, WalletMeta, WalletType } from '~/utils/walletMeta'
 
 class MockJsonRpcProvider extends JsonRpcProvider {
   name = 'JsonRpcProvider'
@@ -80,7 +80,7 @@ const testCases: [MockJsonRpcProvider, WalletMeta | undefined][] = [
 
 describe('meta', () => {
   describe.each(testCases)('getWalletMeta/getWalletName returns the project meta/name', (provider, meta) => {
-    it(`${provider?.name} ${provider.arg}`, () => {
+    it(`${provider.name} ${provider.arg}`, () => {
       expect(getWalletMeta(provider)).toEqual(meta)
     })
   })

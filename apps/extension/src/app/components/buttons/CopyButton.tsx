@@ -54,7 +54,7 @@ export function CopyButton({ onCopyPress }: { onCopyPress: () => Promise<void> }
                 // check icon is a bit smaller and to the right
                 <Check color="$statusSuccess" size={iconSizes.icon12 + 2} x={2} />
               ) : (
-                <CopySheets color="$neutral2" size={iconSizes.icon12} />
+                <CopySheets color="$neutral2" size="$icon.12" />
               )}
               <Text
                 color={valueCopied ? '$statusSuccess' : '$neutral2'}

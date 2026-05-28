@@ -25,7 +25,7 @@ describe('Routing', () => {
     })
     it('contains all coins for bsc', () => {
       const symbols = COMMON_BASES[UniverseChainId.Bnb].map((coin) => coin.currency.symbol)
-      expect(symbols).toEqual(['BNB', 'DAI', 'USDC', 'USDT', 'ETH', 'BUSD'])
+      expect(symbols).toEqual(['BNB', 'DAI', 'USDC', 'USDT', 'WETH', 'BUSD'])
     })
   })
 })

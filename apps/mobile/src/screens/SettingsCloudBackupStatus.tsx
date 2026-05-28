@@ -1,32 +1,36 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
-import Checkmark from 'ui/src/assets/icons/check.svg'
+import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { Button, Flex, Text } from 'ui/src'
+import { Check } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { selectAndroidCloudBackupEmail } from 'wallet/src/features/wallet/selectors'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
 
@@ -39,14 +43,32 @@ export function SettingsCloudBackupStatus({
   const { t } = useTranslation()
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
-  const colors = useSporeColors()
   const dispatch = useDispatch()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const accounts = useAccounts()
-  const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
-  const backups = useCloudBackups(mnemonicId)
+  const mnemonicId = (accounts[address] as SignerMnemonicAccount).mnemonicId
+  const androidCloudBackupEmail = useSelector(selectAndroidCloudBackupEmail)
   const associatedAccounts = Object.values(accounts).filter(
     (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId,
   )
+
+  // Fetch balance data for associated accounts
+  const accountAddresses = useMemo(() => associatedAccounts.map((account) => account.address), [associatedAccounts])
+  const { data: accountBalanceData, loading } = useAccountListData({
+    addresses: accountAddresses,
+  })
+
+  // Create balance mapping
+  const balanceRecord: Record<string, number> = useMemo(() => {
+    if (!accountBalanceData?.portfolios) {
+      return {}
+    }
+    return Object.fromEntries(
+      accountBalanceData.portfolios
+        .filter((portfolio): portfolio is NonNullable<typeof portfolio> => Boolean(portfolio))
+        .map((portfolio) => [portfolio.ownerAddress, portfolio.tokensTotalDenominatedValue?.value ?? 0]),
+    )
+  }, [accountBalanceData])
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
   const onConfirmDeleteBackup = async (): Promise<void> => {
@@ -59,6 +81,9 @@ export function SettingsCloudBackupStatus({
 
   const deleteBackup = async (): Promise<void> => {
     try {
+      if (!mnemonicId) {
+        throw new Error('Mnemonic ID is required')
+      }
       await deleteCloudStorageMnemonicBackup(mnemonicId)
       dispatch(
         editAccountActions.trigger({
@@ -68,7 +93,7 @@ export function SettingsCloudBackupStatus({
         }),
       )
       setShowBackupDeleteWarning(false)
-      navigation.navigate(MobileScreens.Settings)
+      navigation.goBack()
     } catch (error) {
       setShowBackupDeleteWarning(false)
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
@@ -85,18 +110,31 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   const onPressBack = (): void => {
-    navigation.navigate(MobileScreens.Settings)
+    navigation.goBack()
   }
 
-  const renderItem = ({ item, index }: { item: Account; index: number }): JSX.Element => (
-    <Flex row alignItems="center" justifyContent="space-between" pt="$spacing8">
-      <AddressDisplay key={`${index}-${item.address}`} address={item.address} size={36} variant="subheading1" />
-    </Flex>
-  )
+  const renderItem = ({ item, index }: { item: Account; index: number }): JSX.Element => {
+    const balance = balanceRecord[item.address] ?? 0
+    const formattedBalance = convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)
 
-  const fullScreenContentHeight = (dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36) / 2
+    return (
+      <Flex row justifyContent="space-between" pt="$spacing8" pb="$spacing4">
+        <AddressDisplay
+          key={`${index}-${item.address}`}
+          address={item.address}
+          size={36}
+          variant="subheading2"
+          captionVariant="body3"
+          alignItems="center"
+        />
+        <Text color="$neutral2" variant="body3" loading={loading}>
+          {formattedBalance}
+        </Text>
+      </Flex>
+    )
+  }
 
-  const googleDriveEmail = backups[0]?.googleDriveEmail
+  const maxListHeight = (dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing16) / 2.5
 
   return (
     <Screen mx="$spacing16" my="$spacing16">
@@ -124,25 +162,29 @@ export function SettingsCloudBackupStatus({
                 </Text>
 
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
-                <Checkmark color={colors.statusSuccess.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+                <Check color="$statusSuccess" size="$icon.24" />
               </Flex>
-              {googleDriveEmail && (
+              {androidCloudBackupEmail && (
                 <Text color="$neutral3" variant="buttonLabel3">
-                  {googleDriveEmail}
+                  {androidCloudBackupEmail}
                 </Text>
               )}
             </Flex>
           </Flex>
         </Flex>
-        <DeprecatedButton
-          testID={TestID.Remove}
-          theme="detrimental"
-          onPress={(): void => {
-            setShowBackupDeleteWarning(true)
-          }}
-        >
-          {t('settings.setting.backup.status.action.delete')}
-        </DeprecatedButton>
+        <Flex row centered>
+          <Button
+            testID={TestID.Remove}
+            size="large"
+            emphasis="secondary"
+            variant="critical"
+            onPress={(): void => {
+              setShowBackupDeleteWarning(true)
+            }}
+          >
+            {t('settings.setting.backup.status.action.delete')}
+          </Button>
+        </Flex>
       </Flex>
 
       <WarningModal
@@ -151,21 +193,24 @@ export function SettingsCloudBackupStatus({
         })}
         rejectText={t('common.button.close')}
         acknowledgeText={t('common.button.delete')}
+        acknowledgeButtonVariant="critical"
         isOpen={showBackupDeleteWarning}
         modalName={ModalName.ViewSeedPhraseWarning}
         title={t('settings.setting.backup.delete.confirm.title')}
+        severity={WarningSeverity.High}
         onClose={(): void => {
           setShowBackupDeleteWarning(false)
         }}
         onAcknowledge={onConfirmDeleteBackup}
       >
         {associatedAccounts.length > 1 && (
-          <Flex shrink gap="$spacing8">
-            <Text textAlign="left" variant="subheading2">
+          <Flex shrink gap="$spacing12">
+            <Text textAlign="center" variant="body3" color="$statusCritical">
               {t('settings.setting.backup.delete.confirm.message')}
             </Text>
-            <Flex maxHeight={fullScreenContentHeight}>
+            <Flex maxHeight={maxListHeight}>
               <FlatList
+                style={{ flexGrow: 0 }}
                 data={associatedAccounts}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${index}-${item.address}`}

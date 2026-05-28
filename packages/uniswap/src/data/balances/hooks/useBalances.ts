@@ -1,20 +1,23 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
 import { useMemo } from 'react'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
 export function useBalances({
-  address,
+  evmAddress,
+  svmAddress,
   currencies,
   fetchPolicy = 'cache-and-network',
 }: {
-  address: Address
+  evmAddress?: Address
+  svmAddress?: Address
   currencies: CurrencyId[] | undefined
   fetchPolicy?: WatchQueryFetchPolicy
 }): PortfolioBalance[] | null {
   const { data: balances } = usePortfolioBalances({
-    address,
+    evmAddress,
+    svmAddress,
     fetchPolicy,
   })
 

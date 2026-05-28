@@ -1,6 +1,16 @@
-import { FilledUniswapXOrderDetails, SignatureDetails, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
-import { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  PlanTransactionDetails,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ConfirmedTransactionDetails, TransactionDetails } from '~/state/transactions/types'
+
+export enum ActivityUpdateTransactionType {
+  BaseTransaction = 'transaction',
+  UniswapXOrder = TransactionType.UniswapXOrder,
+  Plan = TransactionType.Plan,
+}
 
 interface BaseUpdate<T> {
   type: string
@@ -9,17 +19,20 @@ interface BaseUpdate<T> {
   update: Partial<T>
 }
 
-export interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
-  type: 'transaction'
-  update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'info'>>
+interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
+  type: ActivityUpdateTransactionType.BaseTransaction
+  update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'typeInfo'>> & Partial<ConfirmedTransactionDetails>
 }
 
-export interface OrderUpdate extends BaseUpdate<SignatureDetails> {
-  type: 'signature'
-  update:
-    | Pick<UnfilledUniswapXOrderDetails, 'swapInfo' | 'status'>
-    | Pick<FilledUniswapXOrderDetails, 'swapInfo' | 'status' | 'txHash'>
+export interface UniswapXOrderUpdate extends Omit<BaseUpdate<UniswapXOrderDetails>, 'update'> {
+  type: ActivityUpdateTransactionType.UniswapXOrder
+  update: UniswapXOrderDetails
 }
 
-export type ActivityUpdate = TransactionUpdate | OrderUpdate
-export type OnActivityUpdate = (update: ActivityUpdate) => void
+export interface ActivityPlanUpdate extends Omit<BaseUpdate<PlanTransactionDetails>, 'original'> {
+  type: ActivityUpdateTransactionType.Plan
+  update: PlanTransactionDetails
+}
+
+export type ActivityUpdate = TransactionUpdate | UniswapXOrderUpdate | ActivityPlanUpdate
+export type OnActivityUpdate<T extends ActivityUpdate = ActivityUpdate> = (update: T) => void

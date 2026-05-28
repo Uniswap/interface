@@ -66,7 +66,7 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle over-precise float amount', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '0.00000000000000000000001',
@@ -77,7 +77,7 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle incorrect raw amount', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '0.1',
@@ -98,7 +98,7 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle invalid values', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '123as2s',

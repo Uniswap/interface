@@ -3,7 +3,7 @@ import { config, TamaguiGroupNames } from 'ui/src/tamagui.config'
 type Conf = typeof config
 
 declare module 'tamagui' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // oxlint-disable-next-line typescript/no-empty-interface
   interface TamaguiCustomConfig extends Conf {}
 
   interface TypeOverride {

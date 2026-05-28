@@ -1,7 +1,7 @@
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { DependencyList, useEffect, useRef } from 'react'
 import { InteractionManager } from 'react-native'
-import { DDRumAction } from 'utilities/src/logger/datadogEvents'
+import { DDRumAction } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -42,6 +42,7 @@ export function usePerformanceLogger(eventName: string, dependencyList: Dependen
             eventName,
             triggers,
           }
+
           await DdRum.addAction(RumActionType.CUSTOM, DDRumAction.ManualTiming, eventObject)
           isCurrentlyMeasuring.current = false
         })
@@ -54,6 +55,6 @@ export function usePerformanceLogger(eventName: string, dependencyList: Dependen
     }
     // eventName is required and should never change so it's safe to ignore it
     // dependencyList is a DependencyList which is the object a useEffect hook takes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- dependencyList is externally provided
   }, dependencyList)
 }

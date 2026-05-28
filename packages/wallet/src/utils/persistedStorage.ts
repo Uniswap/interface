@@ -1,3 +1,7 @@
+import { getChromeWithThrow } from '@universe/environment'
+
+const chrome = getChromeWithThrow()
+
 type AreaName = keyof Pick<typeof chrome.storage, 'sync' | 'local' | 'managed' | 'session'>
 
 export const prefix = 'com.uniswap.web'
@@ -20,6 +24,7 @@ export class PersistedStorage {
 
   async getAll(): Promise<Record<string, string>> {
     const result = await chrome.storage[this.area].get(null)
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
     return result ?? {}
   }
 

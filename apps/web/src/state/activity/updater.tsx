@@ -1,136 +1,240 @@
-import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+import { SharedQueryClient } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
-import { usePollPendingBridgeTransactions } from 'state/activity/polling/bridge'
-import { usePollPendingOrders } from 'state/activity/polling/orders'
-import { usePollPendingTransactions } from 'state/activity/polling/transactions'
-import { useOnAssetActivity } from 'state/activity/subscription'
-import { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
-import { useAddPopup } from 'state/application/hooks'
-import { PopupType } from 'state/application/reducer'
-import { useAppDispatch } from 'state/hooks'
-import { updateSignature } from 'state/signatures/reducer'
-import { SignatureType } from 'state/signatures/types'
-import { addTransaction, confirmBridgeDeposit, finalizeTransaction } from 'state/transactions/reducer'
-import { TransactionType } from 'state/transactions/types'
-import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+import {
+  finalizeTransaction,
+  interfaceApplyTransactionHashToBatch,
+  interfaceConfirmBridgeDeposit,
+  updateTransaction,
+} from 'uniswap/src/features/transactions/slice'
+import {
+  extractPlanFieldsFromTypeInfo,
+  type InterfaceTransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from '~/constants/misc'
+import { useHandleUniswapXActivityUpdate } from '~/hooks/useHandleUniswapXActivityUpdate'
+import { usePollPendingBatchTransactions } from '~/state/activity/polling/batch'
+import { usePollPendingBridgeTransactions } from '~/state/activity/polling/bridge'
+import { usePollPendingOrders } from '~/state/activity/polling/orders'
+import { useActivePlanTransactions, usePollPendingPlanTransactions } from '~/state/activity/polling/plans'
+import { usePollPendingTransactions } from '~/state/activity/polling/transactions'
+import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
+import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
+import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 export function ActivityStateUpdater() {
   const onActivityUpdate = useOnActivityUpdate()
   return (
     <>
-      <SubscriptionActivityStateUpdater onActivityUpdate={onActivityUpdate} />
       {/* The polling updater is present to update activity states for chains that are not supported by the subscriptions service. */}
       <PollingActivityStateUpdater onActivityUpdate={onActivityUpdate} />
     </>
   )
 }
 
-function SubscriptionActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
-  useOnAssetActivity(onActivityUpdate)
+function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
+  usePollPendingTransactions(onActivityUpdate)
+  usePollPendingBatchTransactions(onActivityUpdate)
+  usePollPendingBridgeTransactions(onActivityUpdate)
+  usePollPendingOrders(onActivityUpdate)
+  useActivePlanTransactions(onActivityUpdate)
+  usePollPendingPlanTransactions(onActivityUpdate)
   return null
 }
 
-function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
-  usePollPendingTransactions(onActivityUpdate)
-  usePollPendingBridgeTransactions(onActivityUpdate)
-  usePollPendingOrders(onActivityUpdate)
-  return null
+function resolveSwapPriceSource({
+  inputCurrencyId,
+  chainId,
+  isCentralizedPricesEnabled,
+}: {
+  inputCurrencyId: string | undefined
+  chainId: number
+  isCentralizedPricesEnabled: boolean
+}) {
+  const address = inputCurrencyId?.includes('-') ? currencyIdToAddress(inputCurrencyId) : undefined
+  if (!address) {
+    return undefined
+  }
+  return getDisplayedPriceSource({
+    isCentralizedPricesEnabled,
+    surface: 'usdc',
+    chainId,
+    address,
+    queryClient: SharedQueryClient,
+  })
 }
 
 function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
-  const addPopup = useAddPopup()
   const analyticsContext = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const handleUniswapXActivityUpdate = useHandleUniswapXActivityUpdate()
 
   return useCallback(
     (activity: ActivityUpdate) => {
       const popupDismissalTime = isL2ChainId(activity.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
-      if (activity.type === 'transaction') {
-        const { chainId, original, update } = activity
-        const hash = original.hash
+      const { chainId } = activity
 
-        // If a bridging deposit transaction is successful, we update `depositConfirmed`but keep activity pending until the cross-chain bridge transaction confirm in bridge.ts
-        if (
-          original.info.type === TransactionType.BRIDGE &&
-          !original.info.depositConfirmed &&
-          update.status === TransactionStatus.Confirmed
-        ) {
-          dispatch(confirmBridgeDeposit({ chainId, hash, ...update }))
-          return
-        }
+      if (activity.type === ActivityUpdateTransactionType.BaseTransaction) {
+        const { original, update } = activity
 
-        dispatch(finalizeTransaction({ chainId, hash, ...update }))
-
-        if (original.info.type === TransactionType.SWAP) {
-          logSwapFinalized(hash, chainId, chainId, analyticsContext, update.status, original.info.type)
-        } else if (original.info.type === TransactionType.BRIDGE) {
-          logSwapFinalized(
-            hash,
-            original.info.inputChainId,
-            original.info.outputChainId,
-            analyticsContext,
-            update.status,
-            original.info.type,
+        // TODO(WEB-7631): Make batch handling explicit
+        if (original.batchInfo && update.hash) {
+          dispatch(
+            interfaceApplyTransactionHashToBatch({
+              batchId: original.batchInfo.batchId,
+              chainId,
+              hash: update.hash,
+              address: original.from,
+            }),
           )
         }
 
-        addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
-      } else if (activity.type === 'signature') {
-        const { chainId, original, update } = activity
+        const hash = update.hash ?? original.hash
 
-        // Return early if the order is already filled
-        if (original.status === UniswapXOrderStatus.FILLED) {
+        // If a bridging deposit transaction is successful, we update `depositConfirmed`but keep activity pending until the cross-chain bridge transaction confirm in bridge.ts
+        if (
+          original.typeInfo.type === TransactionType.Bridge &&
+          !original.typeInfo.depositConfirmed &&
+          update.status === TransactionStatus.Success
+        ) {
+          dispatch(interfaceConfirmBridgeDeposit({ chainId, id: original.id, address: original.from, ...update }))
           return
         }
 
-        const updatedOrder = { ...original, ...update }
-        dispatch(updateSignature(updatedOrder))
+        // Bridge transactions that have been confirmed on the deposit side are finalized differently
+        // They complete cross-chain and don't have traditional receipts when successful
+        const isBridgeWithDepositConfirmed =
+          original.typeInfo.type === TransactionType.Bridge && original.typeInfo.depositConfirmed
 
-        // SignatureDetails.type should not be typed as optional, but this will be fixed when we merge activity for uniswap. The default value appeases the typechecker.
-        const signatureType = updatedOrder.type ?? SignatureType.SIGN_UNISWAPX_V2_ORDER
+        // Batch transactions that are confirmed also don't have traditional receipts
+        const isBatchTransactionConfirmed = Boolean(original.batchInfo && update.hash)
 
-        if (updatedOrder.status === UniswapXOrderStatus.FILLED) {
-          const hash = updatedOrder.txHash
-          const from = original.offerer
-          // Add a transaction in addition to updating signature for filled orders
-          dispatch(addTransaction({ chainId, from, hash, info: updatedOrder.swapInfo }))
-          addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        // For successful bridge transactions with deposit confirmed or confirmed batch transactions, we don't require a receipt
+        // For all other transactions (including failed bridges), we need a receipt to finalize
+        const receipt = update.receipt
+        const canFinalizeWithoutReceipt =
+          (isBridgeWithDepositConfirmed || isBatchTransactionConfirmed) && update.status === TransactionStatus.Success
 
-          // Only track swap success for non-limit orders; limit order fill-time will throw off time tracking analytics
-          if (original.type !== SignatureType.SIGN_LIMIT) {
-            logUniswapXSwapFinalized(
+        if (!receipt && !canFinalizeWithoutReceipt) {
+          // We should not finalize a transaction without a confirmed receipt (except for successful bridge and batch transactions)
+          return
+        }
+
+        const updatedTransaction: InterfaceTransactionDetails = {
+          ...original,
+          typeInfo: update.typeInfo,
+          receipt,
+          networkFee: update.networkFee ?? original.networkFee,
+          status: update.status,
+          hash,
+        }
+
+        if (!isFinalizedTx(updatedTransaction)) {
+          // Log the validation failure instead of throwing an error
+          // This prevents the transaction from being missed completely
+          logger.error('Transaction validation failed - missing required fields for finalization', {
+            tags: { file: 'updater.tsx', function: 'useOnActivityUpdate' },
+            extra: {
+              transactionId: original.id,
               hash,
-              updatedOrder.orderHash,
-              chainId,
-              analyticsContext,
-              signatureType,
-              UniswapXOrderStatus.FILLED,
-            )
-          }
-        } else if (original.status !== updatedOrder.status) {
-          const orderHash = original.orderHash
-          addPopup({ type: PopupType.Order, orderHash }, orderHash, popupDismissalTime)
+              status: update.status,
+              hasReceipt: !!receipt,
+              transaction: updatedTransaction,
+            },
+          })
 
-          if (
-            updatedOrder.status === UniswapXOrderStatus.CANCELLED ||
-            updatedOrder.status === UniswapXOrderStatus.EXPIRED
-          ) {
-            logUniswapXSwapFinalized(
-              undefined,
-              updatedOrder.orderHash,
+          // Update transaction with any relevant changes
+          dispatch(updateTransaction(updatedTransaction))
+
+          // Return early to continue checking for this transaction
+          return
+        }
+
+        dispatch(finalizeTransaction(updatedTransaction))
+
+        const batchId = original.batchInfo?.batchId
+
+        if (original.typeInfo.type === TransactionType.Swap) {
+          logSwapFinalized({
+            id: original.id,
+            hash,
+            batchId,
+            chainInId: chainId,
+            chainOutId: chainId,
+            analyticsContext,
+            status: update.status,
+            type: original.typeInfo.type,
+            swapStartTimestamp: original.typeInfo.swapStartTimestamp,
+            planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
+            transactedUSDValue: original.typeInfo.transactedUSDValue,
+            priceSource: resolveSwapPriceSource({
+              inputCurrencyId: original.typeInfo.inputCurrencyId,
               chainId,
-              analyticsContext,
-              signatureType,
-              updatedOrder.status,
-            )
-          }
+              isCentralizedPricesEnabled,
+            }),
+          })
+        } else if (original.typeInfo.type === TransactionType.Bridge) {
+          const bridgeChainIn = currencyIdToChain(original.typeInfo.inputCurrencyId) ?? chainId
+          logSwapFinalized({
+            id: original.id,
+            hash,
+            batchId,
+            chainInId: bridgeChainIn,
+            chainOutId: currencyIdToChain(original.typeInfo.outputCurrencyId) ?? chainId,
+            analyticsContext,
+            status: update.status,
+            type: original.typeInfo.type,
+            swapStartTimestamp: original.typeInfo.swapStartTimestamp,
+            planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
+            transactedUSDValue: original.typeInfo.transactedUSDValue,
+            priceSource: resolveSwapPriceSource({
+              inputCurrencyId: original.typeInfo.inputCurrencyId,
+              chainId: bridgeChainIn,
+              isCentralizedPricesEnabled,
+            }),
+          })
+        }
+
+        if (hash) {
+          popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        }
+        // TransactionType can only be UniswapXOrder here
+        // This check is in place in case more types get added in the future
+      } else if (activity.type === ActivityUpdateTransactionType.UniswapXOrder) {
+        handleUniswapXActivityUpdate({ activity, popupDismissalTime })
+      } else if (
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
+        activity.type === ActivityUpdateTransactionType.Plan
+      ) {
+        const { update } = activity
+        if (isFinalizedTx(update)) {
+          dispatch(finalizeTransaction(update))
+          popupRegistry.addPopup(
+            {
+              type: PopupType.Plan,
+              planId: update.typeInfo.planId,
+            },
+            update.typeInfo.planId,
+            popupDismissalTime,
+          )
+        } else {
+          dispatch(updateTransaction(update))
         }
       }
     },
-    [addPopup, analyticsContext, dispatch],
+    [analyticsContext, dispatch, handleUniswapXActivityUpdate, isCentralizedPricesEnabled],
   )
 }
+
+export default ActivityStateUpdater

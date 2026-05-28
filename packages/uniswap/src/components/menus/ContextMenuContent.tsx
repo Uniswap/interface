@@ -1,71 +1,132 @@
-import { Fragment } from 'react'
-import { Flex, FlexProps, Separator, Text, TouchableArea } from 'ui/src'
-import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { isWebPlatform } from '@universe/environment'
+import { Fragment, useCallback } from 'react'
+import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, FlexProps, getMenuItemColor, Separator } from 'ui/src'
+import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+const MENU_MIN_WIDTH = 200
+const MENU_MAX_WIDTH = 250
+
+/**
+ * `containerStyles` to apply to {@link MenuContent} when the surrounding `ContextMenu`
+ * adapts to a `WebBottomSheet` on mWeb. Neutralises the default popover frame so the
+ * sheet is the only visual card.
+ */
+export const MENU_CONTENT_SHEET_CONTAINER_STYLES: FlexProps = {
+  p: '$none',
+  pb: '$spacing16',
+  backgroundColor: 'transparent',
+  borderWidth: '$none',
+  gap: '$spacing8',
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  minWidth: undefined,
+  maxWidth: undefined,
+}
 
 type MenuContentProps = {
   items: MenuOptionItem[]
-  onItemClick?: () => void
-} & FlexProps
+  handleCloseMenu?: DropdownMenuSheetItemProps['handleCloseMenu']
+  elementName?: ElementName
+  sectionName?: SectionName
+  trackItemClicks?: boolean
+  containerStyles?: FlexProps
+}
 
-export function MenuContent({ items, onItemClick, ...rest }: MenuContentProps): JSX.Element {
+export function MenuContent({
+  items,
+  handleCloseMenu,
+  elementName,
+  sectionName,
+  trackItemClicks = false,
+  containerStyles,
+}: MenuContentProps): JSX.Element {
+  const trace = useTrace()
+
+  const createMenuItemHandler = useCallback(
+    ({ originalOnPress, label, index }: { originalOnPress: () => void; label: string; index: number }) => {
+      return () => {
+        if (trackItemClicks && elementName && sectionName) {
+          sendAnalyticsEvent(UniswapEventName.ContextMenuItemClicked, {
+            element: elementName,
+            section: sectionName,
+            menu_item: label,
+            menu_item_index: index,
+            ...trace,
+          })
+        }
+        originalOnPress()
+      }
+    },
+    [elementName, sectionName, trace, trackItemClicks],
+  )
+
   return (
-    <Flex
-      asChild
-      flexDirection="column"
-      gap="$spacing4"
-      p="$spacing8"
-      backgroundColor="$surface1"
-      borderRadius="$rounded20"
-      borderWidth="$spacing1"
-      borderColor="$surface3"
-      {...rest}
+    // oxlint-disable-next-line react/forbid-elements -- needed here
+    <div
+      // Prevent any right-click from bubbling up or showing default context menu
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
+      onMouseDown={(e) => {
+        e.stopPropagation()
+      }}
     >
-      <div
-        // Prevent any right-click from bubbling up or showing default context menu
-        onContextMenu={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-        }}
+      <Flex
+        gap="$spacing4"
+        p="$spacing8"
+        backgroundColor="$surface1"
+        borderRadius="$rounded20"
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        minWidth={MENU_MIN_WIDTH}
+        maxWidth={MENU_MAX_WIDTH}
+        {...containerStyles}
       >
         {items.map(
-          ({ label, onPress, Icon, showDivider, disabled, iconProps, closeDelay, ...touchableProps }, index) => (
-            <Fragment key={index}>
-              {showDivider && <Separator my="$spacing6" />}
-              <TouchableArea
-                hoverable
-                disabled={disabled}
-                borderRadius="$rounded12"
-                width="100%"
-                userSelect="none"
-                cursor={disabled ? 'default' : 'pointer'}
-                onPress={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  onPress(e)
+          (
+            { Icon, iconColor, destructive, disabled, showDivider, onPress, label, trailingIcon, ...otherProps },
+            index,
+          ) => {
+            const wrappedOnPress = trackItemClicks
+              ? createMenuItemHandler({ originalOnPress: onPress, label, index })
+              : onPress
 
-                  if (closeDelay) {
-                    setTimeout(() => onItemClick?.(), closeDelay)
-                  } else {
-                    onItemClick?.()
+            return (
+              <Fragment key={index}>
+                {showDivider && <Separator my="$spacing6" />}
+                <DropdownMenuSheetItem
+                  allowMultiline
+                  role="none"
+                  variant={isWebPlatform ? 'small' : 'medium'}
+                  icon={
+                    Icon && (
+                      <Icon
+                        size="$icon.16"
+                        color={getMenuItemColor({ overrideColor: iconColor, destructive, disabled })}
+                      />
+                    )
                   }
-                }}
-                {...touchableProps}
-              >
-                <Flex row alignItems="center" p="$padding8" gap="$gap8" alignContent="center">
-                  {Icon && <Icon size="$icon.16" color="$neutral2" {...iconProps} />}
-                  <Text
-                    variant="buttonLabel3"
-                    color={disabled ? '$neutral2' : '$neutral1'}
-                    hoverStyle={{ opacity: disabled ? 1 : 0.8 }}
-                  >
-                    {label}
-                  </Text>
-                </Flex>
-              </TouchableArea>
-            </Fragment>
-          ),
+                  destructive={destructive}
+                  disabled={disabled}
+                  label={label}
+                  rightElement={trailingIcon}
+                  {...otherProps}
+                  handleCloseMenu={handleCloseMenu}
+                  onPress={wrappedOnPress}
+                />
+              </Fragment>
+            )
+          },
         )}
-      </div>
-    </Flex>
+      </Flex>
+    </div>
   )
 }

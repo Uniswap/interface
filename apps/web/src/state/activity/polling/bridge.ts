@@ -1,36 +1,37 @@
+import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { OnActivityUpdate } from 'state/activity/types'
-import { useMultichainTransactions } from 'state/transactions/hooks'
-import {
-  BridgeTransactionInfo,
-  ConfirmedTransactionDetails,
-  TransactionDetails,
-  TransactionType,
-} from 'state/transactions/types'
-import { isPendingTx } from 'state/transactions/utils'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import type {
+  BridgeTransactionInfo,
+  InterfaceTransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
+import { ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
+import { useMultichainTransactions } from '~/state/transactions/hooks'
+import type { ConfirmedTransactionDetails, TransactionDetails } from '~/state/transactions/types'
+import { isPendingTx } from '~/state/transactions/utils'
 
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
 
-type BridgeTransactionDetails = TransactionDetails & { info: BridgeTransactionInfo }
-function isBridgeTransactionDetails(tx: TransactionDetails): tx is BridgeTransactionDetails {
-  return tx.info.type === TransactionType.BRIDGE
+type BridgeTransactionDetails = TransactionDetails & { typeInfo: BridgeTransactionInfo }
+
+function isBridgeTransactionDetails(tx: InterfaceTransactionDetails): tx is BridgeTransactionDetails {
+  return tx.typeInfo.type === TransactionType.Bridge
 }
 
 type BridgeTransactionDetailsWithChainId = BridgeTransactionDetails & { chainId: UniverseChainId }
+
 function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithChainId[] {
   const multichainTransactions = useMultichainTransactions()
 
   return useMemo(
     () =>
       multichainTransactions.flatMap(([tx, chainId]) => {
-        if (isPendingTx(tx) && isBridgeTransactionDetails(tx) && tx.info.depositConfirmed) {
+        if (isPendingTx(tx) && isBridgeTransactionDetails(tx) && tx.typeInfo.depositConfirmed) {
           return { ...tx, chainId }
         } else {
           return []
@@ -40,10 +41,10 @@ function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithCh
   )
 }
 
-const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, ConfirmedTransactionDetails['status']>> = {
-  [SwapStatus.SUCCESS]: TransactionStatus.Confirmed,
-  [SwapStatus.FAILED]: TransactionStatus.Failed,
-  [SwapStatus.EXPIRED]: TransactionStatus.Failed,
+const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<TradingApi.SwapStatus, ConfirmedTransactionDetails['status']>> = {
+  [TradingApi.SwapStatus.SUCCESS]: TransactionStatus.Success,
+  [TradingApi.SwapStatus.FAILED]: TransactionStatus.Failed,
+  [TradingApi.SwapStatus.EXPIRED]: TransactionStatus.Failed,
 }
 
 export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpdate) {
@@ -55,8 +56,10 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
       const allTxMap: Record<string, BridgeTransactionDetailsWithChainId> = {}
 
       const txHashesByChain = txs.reduce<Map<UniverseChainId, string[]>>((acc, tx) => {
-        allTxMap[tx.hash] = tx
-        acc.set(tx.chainId, [...(acc.get(tx.chainId) ?? []), tx.hash])
+        if (tx.hash) {
+          allTxMap[tx.hash] = tx
+          acc.set(tx.chainId, [...(acc.get(tx.chainId) ?? []), tx.hash])
+        }
         return acc
       }, new Map())
 
@@ -66,15 +69,16 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
           if (!tradingApiChainId) {
             continue
           }
-          const response = await fetchSwaps({ txHashes, chainId: tradingApiChainId })
+          const response = await TradingApiClient.fetchSwaps({ txHashes, chainId: tradingApiChainId })
           for (const swap of response.swaps ?? []) {
             const { txHash, status } = swap
 
             const fullTxDetails = allTxMap[txHash ?? '']
             const updatedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined
+            // oxlint-disable-next-line typescript/no-unnecessary-condition
             if (txHash && updatedStatus && fullTxDetails) {
               onActivityUpdate({
-                type: 'transaction',
+                type: ActivityUpdateTransactionType.BaseTransaction,
                 chainId,
                 update: { ...fullTxDetails, status: updatedStatus },
                 original: fullTxDetails,
@@ -96,10 +100,16 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
     let attempts = 0
     let interval = 500
     let timeoutId: NodeJS.Timeout
+    let isPolling = true
 
     const poll = async () => {
+      if (!isPolling) {
+        return
+      }
+
       // Do not poll if there are no pending bridge transactions
       if (!pendingDepositedBridgeTransactions.length) {
+        isPolling = false
         return
       }
       if (attempts >= 10) {
@@ -109,6 +119,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
             function: 'usePollPendingBridgeTransactions',
           },
         })
+        isPolling = false
         return
       }
 
@@ -122,6 +133,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
     timeoutId = setTimeout(poll, MIN_BRIDGE_WAIT_TIME)
 
     return () => {
+      isPolling = false
       clearTimeout(timeoutId)
     }
   }, [fetchStatuses, pendingDepositedBridgeTransactions])

@@ -1,4 +1,4 @@
-import { css, keyframes } from 'lib/styled-components'
+import { css, keyframes } from '~/lib/deprecated-styled'
 
 export const flexColumnNoWrap = css`
   display: flex;
@@ -16,7 +16,7 @@ export enum TRANSITION_DURATIONS {
   fast = 125,
 }
 
-const transitions = {
+export const transitions = {
   duration: {
     slow: `${TRANSITION_DURATIONS.slow}ms`,
     medium: `${TRANSITION_DURATIONS.medium}ms`,

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { logger } from 'utilities/src/logger/logger'
+import ConfiguredJsonRpcProvider from '~/rpc/ConfiguredJsonRpcProvider'
 
 /**
  * A controller which marks itself disabled on an error, and re-enables itself using exponential backoff.
@@ -71,7 +71,7 @@ export default class AppJsonRpcProvider extends ConfiguredJsonRpcProvider {
     if (providers.length === 0) {
       throw new Error('Missing providers for AppJsonRpcProvider')
     }
-    super(undefined, providers[0].network)
+    super({ networkish: providers[0].network })
     // AppJsonRpcProvider configures its own pollingInterval, so the encapsulated providers do not need to poll.
     // providers.forEach((provider) => (provider.pollingInterval = Infinity))
     this.providers = providers.map((provider) => ({ provider, controller: new Controller(minimumBackoffTime) }))

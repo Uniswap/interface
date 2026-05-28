@@ -1,0 +1,45 @@
+diff --git a/dist/components/toc/index.js b/dist/components/toc/index.js
+index ce1f8859f2162270c646f1c66659dad6dc966b25..646c073d6f7a8253b1dcbdac37d57a0ef68d6043 100644
+--- a/dist/components/toc/index.js
++++ b/dist/components/toc/index.js
+@@ -2,11 +2,18 @@
+ 
+ import { cn } from "../../cn.js";
+ import { mergeRefs } from "../../merge-refs.js";
+-import { createContext, use, useEffect, useEffectEvent, useRef } from "react";
++import { createContext, use, useCallback, useEffect, useRef } from "react";
+ import { jsx } from "react/jsx-runtime";
+ import * as Primitive from "fumadocs-core/toc";
+ import { useOnChange } from "fumadocs-core/utils/use-on-change";
+ 
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
++
+ //#region src/components/toc/index.tsx
+ const TOCContext = createContext([]);
+ function useTOCItems() {
+diff --git a/dist/contexts/search.js b/dist/contexts/search.js
+index 875031d1ce70d663d647e61eda30cc0878271990..79538af6dbf75a791bf9f2a0a9d3e433e16b7bfe 100644
+--- a/dist/contexts/search.js
++++ b/dist/contexts/search.js
+@@ -1,8 +1,15 @@
+ 'use client';
+ 
+-import { Suspense, createContext, use, useEffect, useEffectEvent, useMemo, useState } from "react";
++import { Suspense, createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { jsx, jsxs } from "react/jsx-runtime";
+ 
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
++
+ //#region src/contexts/search.tsx
+ const SearchContext = createContext({
+ 	enabled: false,

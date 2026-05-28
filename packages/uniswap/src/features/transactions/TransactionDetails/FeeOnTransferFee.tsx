@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { FeeOnTransferWarning } from 'uniswap/src/features/transactions/TransactionDetails/modals/FeeOnTransferWarning'
 import {
   FeeOnTransferFeeGroupProps,
   FoTFeeType,
   TokenFeeInfo,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
-import { FeeOnTransferWarning } from 'uniswap/src/features/transactions/swap/modals/FeeOnTransferWarning'
+import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
 
 export function FeeOnTransferFeeGroup({
   inputTokenInfo,
@@ -30,7 +30,7 @@ export function FeeOnTransferFeeGroup({
 function FeeOnTransferFeeRow({ feeType, feeInfo }: { feeType: FoTFeeType; feeInfo: TokenFeeInfo }): JSX.Element {
   const { t } = useTranslation()
   const { severity } = getFeeSeverity(feeInfo.fee)
-  const usdAmountLoading = feeInfo.formattedUsdAmount === '-'
+  const usdAmountLoading = (feeInfo.isLoading ?? false) || feeInfo.formattedUsdAmount === '-'
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">

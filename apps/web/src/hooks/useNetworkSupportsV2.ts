@@ -1,5 +1,5 @@
 import { V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
-import { useAccount } from 'hooks/useAccount'
+import { useAccount } from '~/hooks/useAccount'
 
 /**
  * @deprecated when v2 pools are enabled on chains supported through sdk-core

@@ -61,6 +61,6 @@ type PageProps = {
   onConfirm: () => void
 }
 
-const Page = memo(function _Page({ modalIndex, renderModal, onClose, onConfirm }: PageProps): JSX.Element | null {
+const Page = memo(function PageInner({ modalIndex, renderModal, onClose, onConfirm }: PageProps): JSX.Element | null {
   return renderModal({ onClose: () => onClose(modalIndex), onAcknowledge: onConfirm, key: modalIndex })
 })

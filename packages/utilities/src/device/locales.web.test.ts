@@ -1,10 +1,13 @@
-import { chrome } from 'jest-chrome'
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
 import { getDeviceLocales } from 'utilities/src/device/locales.web'
+import { Mock } from 'vitest'
 
 describe(getDeviceLocales, () => {
   const MOCK_LANGUAGE = 'es-ES'
-  chrome.i18n.getUILanguage.mockImplementation(() => MOCK_LANGUAGE)
+
+  beforeEach(() => {
+    ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => MOCK_LANGUAGE)
+  })
 
   it('should return the device locale', () => {
     expect(getDeviceLocales).not.toThrow()
@@ -12,7 +15,7 @@ describe(getDeviceLocales, () => {
   })
 
   it('should return the default locale if an error occurs', () => {
-    chrome.i18n.getUILanguage.mockImplementation(() => {
+    ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => {
       throw new Error('test error')
     })
 

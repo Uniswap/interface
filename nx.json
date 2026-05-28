@@ -1,0 +1,280 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "extends": "nx/presets/npm.json",
+  "defaultBase": "main",
+  "tui": {
+    "enabled": false
+  },
+  "s3": {
+    "region": "us-east-2",
+    "bucket": "uniswap-nx-remote-cache-prod",
+    "cacheKeyPrefix": "nx-cache/universe/",
+    "localMode": "no-cache",
+    "ciMode": "no-cache"
+  },
+  "targetDefaults": {
+    "prepare": {
+      "inputs": ["dependencies"],
+      "cache": true,
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^prepare", "prepare", "^build"],
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": [
+        "{workspaceRoot}/dist/out-tsc/{projectRoot}",
+        "{projectRoot}/dist",
+        "{projectRoot}/build",
+        "{projectRoot}/.next",
+        "{projectRoot}/types"
+      ],
+      "cache": true
+    },
+    "build:production": {
+      "dependsOn": ["prepare"],
+      "inputs": ["dependencies", "default"],
+      "outputs": ["{projectRoot}/build"],
+      "cache": true
+    },
+    "typecheck": {
+      "command": "if test \"$DISABLE_TSGO\" = \"true\"; then bun run nx typecheck:tsc; else bun run nx typecheck:tsgo; fi",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "typecheck:tsc": {
+      "command": "NODE_OPTIONS=--max_old_space_size=16384 tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/*",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.*.json",
+        "{projectRoot}/**/*.ts",
+        "{projectRoot}/**/*.tsx",
+        "{projectRoot}/**/*.json",
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts"
+        }
+      ],
+      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
+      "cache": true
+    },
+    "typecheck:tsgo": {
+      "command": "tsgo -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/*",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.*.json",
+        "{projectRoot}/**/*.ts",
+        "{projectRoot}/**/*.tsx",
+        "{projectRoot}/**/*.json",
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts"
+        }
+      ],
+      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
+      "cache": true
+    },
+    "format:check": {
+      "command": "oxfmt --check --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "lintConfig", "{workspaceRoot}/.oxfmtrc.json"]
+    },
+    "format": {
+      "command": "oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    },
+    "lint:oxlint": {
+      "command": "oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
+      "dependsOn": ["prepare"],
+      "cache": true,
+      "inputs": ["default", "lintConfig"]
+    },
+    "lint:oxlint:fix": {
+      "command": "oxlint --fix --threads=4 -c oxlint.config.ts {projectRoot}",
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "lint:oxlint:fast": {
+      "command": "ENABLE_FAST_LINT=true oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
+      "dependsOn": ["prepare"],
+      "cache": true,
+      "inputs": ["default", "lintConfig"]
+    },
+    "lint:typeaware-custom": {
+      "dependsOn": ["prepare"],
+      "cache": true,
+      "inputs": ["default", "lintConfig", "{workspaceRoot}/config/oxlint-plugins/typeaware-custom.ts"]
+    },
+    "lint": {
+      "executor": "nx:noop",
+      "dependsOn": ["prepare", "lint:oxlint", "lint:typeaware-custom"],
+      "inputs": ["default"],
+      "cache": true
+    },
+    "lint:fix": {
+      "executor": "nx:noop",
+      "dependsOn": ["prepare", "lint:oxlint:fix"],
+      "cache": false
+    },
+    "check": {
+      "executor": "nx:noop",
+      "dependsOn": ["prepare", "format", "typecheck", "lint", "check:circular", "check:deps:usage"],
+      "cache": true
+    },
+    "check:fast": {
+      "executor": "nx:noop",
+      "dependsOn": ["prepare", "format", "typecheck", "lint:oxlint:fast"],
+      "cache": true
+    },
+    "check:circular": {
+      "inputs": ["sourceFiles"],
+      "cache": true
+    },
+    "check:deps:usage": {
+      "command": "bun --preload ./scripts/silence-deprecation-warnings.js ./node_modules/.bin/knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      },
+      "inputs": [
+        "sourceFiles",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/knip.json",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/bun.lock"
+      ],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
+      "cache": true
+    },
+    "start": {
+      "dependsOn": ["^prepare", "prepare"],
+      "cache": false
+    },
+    "snapshots": {
+      "dependsOn": ["^prepare", "prepare"],
+      "cache": true
+    },
+    "storybook:test:standalone": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "storybook:build": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "graphql:schema": {
+      "inputs": ["{workspaceRoot}/.env.production", "{projectRoot}/graphql.*.ts"],
+      "outputs": ["{projectRoot}/schema.graphql"],
+      "cache": true
+    },
+    "graphql:generate": {
+      "inputs": [
+        "{projectRoot}/codegen.ts",
+        "{projectRoot}/src/**/schema.graphql",
+        "{projectRoot}/src/**/queries.graphql",
+        "{projectRoot}/src/**/fragments.ts",
+        "{projectRoot}/src/**/queries.ts",
+        "{projectRoot}/src/graphql/**",
+        "{projectRoot}/src/data/**/*.graphql"
+      ],
+      "outputs": [
+        "{projectRoot}/src/data/graphql/**/__generated__/**",
+        "{projectRoot}/data/__generated__/**",
+        "{projectRoot}/graphql/__generated__/**"
+      ],
+      "cache": true
+    },
+    "vite:build:production": {
+      "dependsOn": ["prepare"],
+      "inputs": ["dependencies", "sourceFiles"],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  },
+  "namedInputs": {
+    "default": ["sharedGlobals", "{projectRoot}/**/*"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.tsx",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.tsx",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/**/*.stories.tsx",
+      "!{projectRoot}/**/*.stories.ts"
+    ],
+    "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json"],
+    "lintConfig": ["{workspaceRoot}/.oxfmtrc.json", "{workspaceRoot}/oxlint.config.ts"],
+    "mobileGlobals": ["{workspaceRoot}/metro.config.*", "{workspaceRoot}/Gemfile*"],
+    "sourceFiles": [
+      "sharedGlobals",
+      "{projectRoot}/**/*.ts",
+      "{projectRoot}/**/*.tsx",
+      "{projectRoot}/**/*.js",
+      "{projectRoot}/**/*.jsx"
+    ],
+    "dependencies": ["{workspaceRoot}/package.json", "{projectRoot}/package.json"],
+    "tsConfig": ["{projectRoot}/tsconfig*.json"]
+  },
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
+  "sync": {
+    "applyChanges": true
+  },
+  "parallel": 10,
+  "defaultProject": "@universe/web",
+  "generators": {
+    "@nx/js:library": {
+      "buildable": false
+    }
+  },
+  "cacheDirectory": ".nx/cache",
+  "plugins": [
+    {
+      "plugin": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        },
+        "build": {
+          "targetName": "build",
+          "configName": "tsconfig.json"
+        }
+      }
+    }
+  ],
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  }
+}

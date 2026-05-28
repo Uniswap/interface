@@ -1,8 +1,8 @@
 import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 import { parseToRgb } from 'polished'
-import { RgbColor, RgbaColor } from 'polished/lib/types/color'
-import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors'
+import { RgbaColor, RgbColor } from 'polished/lib/types/color'
+import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
 
 const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }
 
@@ -18,13 +18,21 @@ export async function getRGBColor(imageUrl: string | undefined, checkDistance = 
     const buffer = Buffer.from(await data.arrayBuffer())
 
     const type = data.headers.get('content-type') ?? ''
-    return getAverageColor(buffer, type, checkDistance)
-  } catch (e) {
+    return getAverageColor({ arrayBuffer: buffer, type, checkDistance })
+  } catch {
     return DEFAULT_COLOR
   }
 }
 
-function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: boolean) {
+function getAverageColor({
+  arrayBuffer,
+  type,
+  checkDistance,
+}: {
+  arrayBuffer: Uint8Array
+  type: string
+  checkDistance?: boolean
+}) {
   let pixels
   switch (type) {
     case 'image/png': {
@@ -32,7 +40,8 @@ function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: b
       pixels = image.decode()
       break
     }
-    case 'image/jpeg' || 'image/jpg': {
+    case 'image/jpeg':
+    case 'image/jpg': {
       const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
       pixels = jpeg.data
       break

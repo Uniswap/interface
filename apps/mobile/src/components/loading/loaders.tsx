@@ -11,10 +11,11 @@ function Graph(): JSX.Element {
   )
 }
 
-const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number }): JSX.Element {
+const Transaction = memo(function TransactionInner({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Skeleton>
       <Flex>
+        {/* oxlint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TransactionLoader opacity={(length - i) / length} />
@@ -41,7 +42,11 @@ function Image(): JSX.Element {
   )
 }
 
-function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
+function Favorite({
+  height,
+  contrast,
+  ...props
+}: { height?: number; contrast?: boolean } & FlexLoaderProps): JSX.Element {
   return (
     <Skeleton contrast={contrast}>
       {/* surface3 because these only show up on explore modal which has a blurred bg that makes neutral3 look weird */}
@@ -50,6 +55,7 @@ function Favorite({ height, contrast }: { height?: number; contrast?: boolean })
         borderRadius="$rounded16"
         height={height ?? 50}
         testID="loader/favorite"
+        {...props}
       />
     </Skeleton>
   )

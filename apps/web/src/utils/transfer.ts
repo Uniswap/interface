@@ -1,14 +1,14 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Web3Provider } from '@ethersproject/providers'
+import { useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 interface TransferInfo {
   provider?: Web3Provider
@@ -27,19 +27,33 @@ interface TransferCurrencyParams {
   amountInWei: string
 }
 
-export function useCreateTransferTransaction(transferInfo: TransferInfo) {
+export function useCreateTransferTransaction(transferInfo: TransferInfo | undefined): Maybe<TransactionRequest> {
   const transactionFetcher = useCallback(() => {
     return getTransferTransaction(transferInfo)
   }, [transferInfo])
 
-  return useAsyncData(transactionFetcher).data
+  return useQuery({
+    queryFn: transactionFetcher,
+    queryKey: [
+      ReactQueryCacheKey.CreateTransferTransaction,
+      transferInfo?.account,
+      transferInfo?.chainId,
+      transferInfo?.currencyAmount?.toExact(),
+      transferInfo?.currencyAmount?.currency,
+      transferInfo?.toAddress,
+    ],
+  }).data
 }
 
-async function getTransferTransaction(transferInfo: TransferInfo): Promise<TransactionRequest | undefined> {
+async function getTransferTransaction(transferInfo: TransferInfo | undefined): Promise<TransactionRequest | null> {
+  if (!transferInfo) {
+    return null
+  }
+
   const { provider, account, chainId, currencyAmount, toAddress } = transferInfo
 
   if (!provider || !account || !chainId || !currencyAmount || !toAddress) {
-    return undefined
+    return null
   }
 
   const currency = currencyAmount.currency
@@ -66,11 +80,9 @@ function getNativeTransferRequest(params: TransferCurrencyParams): TransactionRe
   }
 }
 
-async function getTokenTransferRequest(
-  transferParams: TransferCurrencyParams,
-): Promise<TransactionRequest | undefined> {
+async function getTokenTransferRequest(transferParams: TransferCurrencyParams): Promise<TransactionRequest | null> {
   const { provider, account, chainId, toAddress, tokenAddress, amountInWei } = transferParams
-  const tokenContract = getContract(tokenAddress, ERC20_ABI, provider, account) as Erc20
+  const tokenContract = getContract({ address: tokenAddress, ABI: ERC20_ABI, provider, account }) as Erc20
 
   try {
     const populatedTransaction = await tokenContract.populateTransaction.transfer(toAddress, amountInWei, {
@@ -88,26 +100,5 @@ async function getTokenTransferRequest(
     })
   }
 
-  return undefined
-}
-
-// TODO: https://linear.app/uniswap/issue/WEB-3495/import-useasyncdata-from-mobile
-export function useIsSmartContractAddress(address?: string): {
-  loading: boolean
-  isSmartContractAddress: boolean
-} {
-  const { provider } = useWeb3React()
-
-  const fetchIsSmartContractAddress = useCallback(async () => {
-    if (!address) {
-      return false
-    }
-    const code = await provider?.getCode(address)
-    // provider.getCode(address) will return a hex string if a smart contract is deployed at that address
-    // returning just 0x means there's no code and it's not a smart contract
-    return code !== '0x'
-  }, [provider, address])
-
-  const { data, isLoading } = useAsyncData(fetchIsSmartContractAddress)
-  return { isSmartContractAddress: !!data, loading: isLoading }
+  return null
 }

@@ -1,0 +1,8 @@
+/* Mycelium Design System for Tailwind v4 */
+/* Usage: @import "@universe/mycelium/tailwind"; */
+/* For fonts: @import "@universe/mycelium/fonts"; */
+
+@import "./css/theme.css";
+@import "./css/variables.css";
+@import "./css/base.css";
+@import "./css/animations.css";

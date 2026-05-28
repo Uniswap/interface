@@ -1,0 +1,8 @@
+export { EmblemA } from './EmblemA'
+export { EmblemB } from './EmblemB'
+export { EmblemC } from './EmblemC'
+export { EmblemD } from './EmblemD'
+export { EmblemE } from './EmblemE'
+export { EmblemF } from './EmblemF'
+export { EmblemG } from './EmblemG'
+export { EmblemH } from './EmblemH'

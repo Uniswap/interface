@@ -1,23 +1,23 @@
 import { call } from 'typed-redux-saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { AuthActionType, AuthSagaError, LockParams, UnlockParams } from 'wallet/src/features/auth/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* auth(params: UnlockParams | LockParams) {
   logger.debug('authSaga', 'auth', `Using monitored auth saga`)
 
   if (params.type === AuthActionType.Unlock) {
     return yield* call(unlock, params)
-  } else if (params.type === AuthActionType.Lock) {
+  } else {
     return yield* call(lock)
   }
-
-  return undefined
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* unlock({ password }: UnlockParams) {
   logger.debug('authSaga', 'unlock', `Unlocking wallet`)
   const success = yield* call(Keyring.unlock, password)
@@ -30,6 +30,7 @@ function* unlock({ password }: UnlockParams) {
   })
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* lock() {
   logger.debug('authSaga', 'lock', `Locking wallet`)
   yield* call(Keyring.lock)
@@ -44,4 +45,8 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga(auth, 'auth', { showErrorNotification: false, doNotLogErrors: [AuthSagaError.InvalidPassword] })
+} = createMonitoredSaga({
+  saga: auth,
+  name: 'auth',
+  options: { showErrorNotification: false, doNotLogErrors: [AuthSagaError.InvalidPassword] },
+})

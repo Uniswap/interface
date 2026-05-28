@@ -2,11 +2,11 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/hooks/getTradeAmounts'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { NumberType } from 'utilities/src/format/types'
 
 export function useFeeOnTransferAmounts(
@@ -16,8 +16,8 @@ export function useFeeOnTransferAmounts(
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
   const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
 
-  const usdAmountIn = useUSDCValue(inputCurrencyAmount)
-  const usdAmountOut = useUSDCValue(outputCurrencyAmount)
+  const { value: usdAmountIn, isLoading: isLoadingIn } = useUSDCValueWithStatus(inputCurrencyAmount)
+  const { value: usdAmountOut, isLoading: isLoadingOut } = useUSDCValueWithStatus(outputCurrencyAmount)
 
   return useMemo(() => {
     if (!acceptedDerivedSwapInfo) {
@@ -52,6 +52,7 @@ export function useFeeOnTransferAmounts(
         tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? t('token.symbol.input.fallback'),
         formattedUsdAmount: formattedUsdTaxAmountIn,
         formattedAmount: formattedAmountIn,
+        isLoading: isLoadingIn,
       },
       outputTokenInfo: {
         currencyInfo: outputCurrencyInfo,
@@ -59,12 +60,15 @@ export function useFeeOnTransferAmounts(
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? t('token.symbol.output.fallback'),
         formattedUsdAmount: formattedUsdTaxAmountOut,
         formattedAmount: formattedAmountOut,
+        isLoading: isLoadingOut,
       },
     }
   }, [
     acceptedDerivedSwapInfo,
     usdAmountIn,
     usdAmountOut,
+    isLoadingIn,
+    isLoadingOut,
     convertFiatAmountFormatted,
     formatCurrencyAmount,
     inputCurrencyAmount,

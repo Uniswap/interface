@@ -1,0 +1,28 @@
+{
+  "name": "@universe/cryptography",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test cryptography",
+    "typecheck": "nx typecheck cryptography",
+    "check": "nx check cryptography",
+    "check:fast": "nx check:fast cryptography",
+    "check:deps:usage": "nx check:deps:usage cryptography",
+    "format": "nx format cryptography",
+    "format:check": "nx format:check cryptography",
+    "lint": "nx lint cryptography",
+    "lint:fix": "nx lint:fix cryptography"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

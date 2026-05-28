@@ -1,0 +1,1116 @@
+{
+  "data": {
+    "v4Pool": {
+      "id": "VjRQb29sOkVUSEVSRVVNXzB4YTJhYTE2YjQ1ODcxYTcxNzJhZmY4Zjc2NWExN2ZlZGRkNzVhOTc3OGRlYWE0Mzk1NWJhODgwM2NkOTFiMTVlZA==",
+      "priceHistory": [
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTAyMzYwMF8xLjA4NzM5MjU0OTgzMTY2NTJfMC45MTk2MzEwOTM4MDc2NjQ4",
+          "token0Price": 1.0873925498316652,
+          "token1Price": 0.9196310938076648,
+          "timestamp": 1771023600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTAzODAwMF8xLjA4NzU0OTY3MjQxODM3MjZfMC45MTk0OTgyMzEwNzk2OTkx",
+          "token0Price": 1.0875496724183726,
+          "token1Price": 0.9194982310796991,
+          "timestamp": 1771038000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTA1MjQwMF8xLjA4NzU0OTY3MjQxODM3MjZfMC45MTk0OTgyMzEwNzk2OTkx",
+          "token0Price": 1.0875496724183726,
+          "token1Price": 0.9194982310796991,
+          "timestamp": 1771052400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTA2NjgwMF8xLjA4NzU0OTY3MjQxODM3MjZfMC45MTk0OTgyMzEwNzk2OTkx",
+          "token0Price": 1.0875496724183726,
+          "token1Price": 0.9194982310796991,
+          "timestamp": 1771066800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTA4MTIwMF8xLjA4NzczNTc4MjQ1MDgzODdfMC45MTkzNDA5MDYyNTEwMDU=",
+          "token0Price": 1.0877357824508387,
+          "token1Price": 0.919340906251005,
+          "timestamp": 1771081200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTA5NTYwMF8xLjA4NzczNTc4MjQ1MDgzODdfMC45MTkzNDA5MDYyNTEwMDU=",
+          "token0Price": 1.0877357824508387,
+          "token1Price": 0.919340906251005,
+          "timestamp": 1771095600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTExMDAwMF8xLjA4NzczNTc4MjQ1MDgzODdfMC45MTkzNDA5MDYyNTEwMDU=",
+          "token0Price": 1.0877357824508387,
+          "token1Price": 0.919340906251005,
+          "timestamp": 1771110000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTEyNDQwMF8xLjA4NzczNTc4MjQ1MDgzODdfMC45MTkzNDA5MDYyNTEwMDU=",
+          "token0Price": 1.0877357824508387,
+          "token1Price": 0.919340906251005,
+          "timestamp": 1771124400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTEzODgwMF8xLjA4NzczNTc4MjQ1MDgzODdfMC45MTkzNDA5MDYyNTEwMDU=",
+          "token0Price": 1.0877357824508387,
+          "token1Price": 0.919340906251005,
+          "timestamp": 1771138800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTE1MzIwMF8xLjA4NzI4NDExNDgyNDYwM18wLjkxOTcyMjgwODc1MzkxNjc=",
+          "token0Price": 1.087284114824603,
+          "token1Price": 0.9197228087539167,
+          "timestamp": 1771153200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTE2NzYwMF8xLjA4NzIzNTQyODgzNTI0NTVfMC45MTk3NjM5OTM1OTE4MDEz",
+          "token0Price": 1.0872354288352455,
+          "token1Price": 0.9197639935918013,
+          "timestamp": 1771167600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTE4MjAwMF8xLjA4NzIzNTQyODgzNTI0NTVfMC45MTk3NjM5OTM1OTE4MDEz",
+          "token0Price": 1.0872354288352455,
+          "token1Price": 0.9197639935918013,
+          "timestamp": 1771182000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTE5NjQwMF8xLjA4NzIzNTQyODgzNTI0NTVfMC45MTk3NjM5OTM1OTE4MDEz",
+          "token0Price": 1.0872354288352455,
+          "token1Price": 0.9197639935918013,
+          "timestamp": 1771196400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTIxMDgwMF8xLjA4NzIzNTQyODgzNTI0NTVfMC45MTk3NjM5OTM1OTE4MDEz",
+          "token0Price": 1.0872354288352455,
+          "token1Price": 0.9197639935918013,
+          "timestamp": 1771210800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTIyNTIwMF8xLjA4NzEyMjMzODMwNjUyNjVfMC45MTk4NTk2NzQyNjQyMjEy",
+          "token0Price": 1.0871223383065265,
+          "token1Price": 0.9198596742642212,
+          "timestamp": 1771225200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTIzOTYwMF8xLjA4NzEyMjMzODMwNjUyNjVfMC45MTk4NTk2NzQyNjQyMjEy",
+          "token0Price": 1.0871223383065265,
+          "token1Price": 0.9198596742642212,
+          "timestamp": 1771239600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTI1NDAwMF8xLjA4NzAyMjU1MzEzMTUzNDNfMC45MTk5NDQxMTQ0MjQ0NTU2",
+          "token0Price": 1.0870225531315343,
+          "token1Price": 0.9199441144244556,
+          "timestamp": 1771254000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTI2ODQwMF8xLjA4NzEyMzg1Mzk4NDQzNTVfMC45MTk4NTgzOTE3ODc1NDQ0",
+          "token0Price": 1.0871238539844355,
+          "token1Price": 0.9198583917875444,
+          "timestamp": 1771268400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTI4MjgwMF8xLjA4NzE3MDIyNTI0NTYxMTdfMC45MTk4MTkxNTY5MDcxNzMy",
+          "token0Price": 1.0871702252456117,
+          "token1Price": 0.9198191569071732,
+          "timestamp": 1771282800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTI5NzIwMF8xLjA4NzE3MDIyNTI0NTYxMTdfMC45MTk4MTkxNTY5MDcxNzMy",
+          "token0Price": 1.0871702252456117,
+          "token1Price": 0.9198191569071732,
+          "timestamp": 1771297200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTMxMTYwMF8xLjA4NzE3MDIyNTI0NTYxMTdfMC45MTk4MTkxNTY5MDcxNzMy",
+          "token0Price": 1.0871702252456117,
+          "token1Price": 0.9198191569071732,
+          "timestamp": 1771311600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTMyNjAwMF8xLjA4NzE3MDIyNTI0NTYxMTdfMC45MTk4MTkxNTY5MDcxNzMy",
+          "token0Price": 1.0871702252456117,
+          "token1Price": 0.9198191569071732,
+          "timestamp": 1771326000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTM0MDQwMF8xLjA4NzA0NzI4ODMxMzQ0NjhfMC45MTk5MjMxODE1ODYyMzkz",
+          "token0Price": 1.0870472883134468,
+          "token1Price": 0.9199231815862393,
+          "timestamp": 1771340400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTM1NDgwMF8xLjA4Njc0NzkzMzA0NjQ2XzAuOTIwMTc2NTgzMzU2MTA0NA==",
+          "token0Price": 1.08674793304646,
+          "token1Price": 0.9201765833561044,
+          "timestamp": 1771354800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTM2OTIwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771369200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTM4MzYwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771383600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTM5ODAwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771398000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQxMjQwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771412400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQyNjgwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771426800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQ0MTIwMF8xLjA4NzE1MTY0ODM3NzU3NzhfMC45MTk4MzQ4NzQ0NTU5Nzkx",
+          "token0Price": 1.0871516483775778,
+          "token1Price": 0.9198348744559791,
+          "timestamp": 1771441200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQ1NTYwMF8xLjA4NjkxMjQ3OTQ2NDUwNl8wLjkyMDAzNzI3ODg5MTc0MTY=",
+          "token0Price": 1.086912479464506,
+          "token1Price": 0.9200372788917416,
+          "timestamp": 1771455600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQ3MDAwMF8xLjA4NjkxMjQ3OTQ2NDUwNl8wLjkyMDAzNzI3ODg5MTc0MTY=",
+          "token0Price": 1.086912479464506,
+          "token1Price": 0.9200372788917416,
+          "timestamp": 1771470000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQ4NDQwMF8xLjA4NjkxMjQ3OTQ2NDUwNl8wLjkyMDAzNzI3ODg5MTc0MTY=",
+          "token0Price": 1.086912479464506,
+          "token1Price": 0.9200372788917416,
+          "timestamp": 1771484400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTQ5ODgwMF8xLjA4NjkxMjQ3OTQ2NDUwNl8wLjkyMDAzNzI3ODg5MTc0MTY=",
+          "token0Price": 1.086912479464506,
+          "token1Price": 0.9200372788917416,
+          "timestamp": 1771498800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTUxMzIwMF8xLjA4NzEzMDEyMDMxMjQxMzVfMC45MTk4NTMwODk2MzA3Mjkz",
+          "token0Price": 1.0871301203124135,
+          "token1Price": 0.9198530896307293,
+          "timestamp": 1771513200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTUyNzYwMF8xLjA4NzEzMDEyMDMxMjQxMzVfMC45MTk4NTMwODk2MzA3Mjkz",
+          "token0Price": 1.0871301203124135,
+          "token1Price": 0.9198530896307293,
+          "timestamp": 1771527600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTU0MjAwMF8xLjA4NzAxNTgwMDgzNTAzNDRfMC45MTk5NDk4Mjg5MDkzOTYx",
+          "token0Price": 1.0870158008350344,
+          "token1Price": 0.9199498289093961,
+          "timestamp": 1771542000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTU1NjQwMF8xLjA4NzAxNTgwMDgzNTAzNDRfMC45MTk5NDk4Mjg5MDkzOTYx",
+          "token0Price": 1.0870158008350344,
+          "token1Price": 0.9199498289093961,
+          "timestamp": 1771556400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTU3MDgwMF8xLjA4NzAxNTgwMDgzNTAzNDRfMC45MTk5NDk4Mjg5MDkzOTYx",
+          "token0Price": 1.0870158008350344,
+          "token1Price": 0.9199498289093961,
+          "timestamp": 1771570800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTU4NTIwMF8xLjA4NzAxNTgwMDgzNTAzNDRfMC45MTk5NDk4Mjg5MDkzOTYx",
+          "token0Price": 1.0870158008350344,
+          "token1Price": 0.9199498289093961,
+          "timestamp": 1771585200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTU5OTYwMF8xLjA4NzAxNTgwMDgzNTAzNDRfMC45MTk5NDk4Mjg5MDkzOTYx",
+          "token0Price": 1.0870158008350344,
+          "token1Price": 0.9199498289093961,
+          "timestamp": 1771599600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTYxNDAwMF8xLjA4Njk3NDQ1ODAxNTg0M18wLjkxOTk4NDgxODk4NTg5ODI=",
+          "token0Price": 1.086974458015843,
+          "token1Price": 0.9199848189858982,
+          "timestamp": 1771614000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTYyODQwMF8xLjA4Njk3NDQ1ODAxNTg0M18wLjkxOTk4NDgxODk4NTg5ODI=",
+          "token0Price": 1.086974458015843,
+          "token1Price": 0.9199848189858982,
+          "timestamp": 1771628400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTY0MjgwMF8xLjA4Njk3NDQ1ODAxNTg0M18wLjkxOTk4NDgxODk4NTg5ODI=",
+          "token0Price": 1.086974458015843,
+          "token1Price": 0.9199848189858982,
+          "timestamp": 1771642800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTY1NzIwMF8xLjA4Njk3NDQ1ODAxNTg0M18wLjkxOTk4NDgxODk4NTg5ODI=",
+          "token0Price": 1.086974458015843,
+          "token1Price": 0.9199848189858982,
+          "timestamp": 1771657200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTY3MTYwMF8xLjA4NzI5NTA1MTAwOTA0NzZfMC45MTk3MTM1NTgwMzc0MTE2",
+          "token0Price": 1.0872950510090476,
+          "token1Price": 0.9197135580374116,
+          "timestamp": 1771671600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTY4NjAwMF8xLjA4NzQ1NDY5MjUxODk3ODVfMC45MTk1Nzg1NDE0MTM2MjA5",
+          "token0Price": 1.0874546925189785,
+          "token1Price": 0.9195785414136209,
+          "timestamp": 1771686000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTcwMDQwMF8xLjA4NzQ1NDY5MjUxODk3ODVfMC45MTk1Nzg1NDE0MTM2MjA5",
+          "token0Price": 1.0874546925189785,
+          "token1Price": 0.9195785414136209,
+          "timestamp": 1771700400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTcxNDgwMF8xLjA4NzQ1NDY5MjUxODk3ODVfMC45MTk1Nzg1NDE0MTM2MjA5",
+          "token0Price": 1.0874546925189785,
+          "token1Price": 0.9195785414136209,
+          "timestamp": 1771714800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTcyOTIwMF8xLjA4NzQ1NDY5MjUxODk3ODVfMC45MTk1Nzg1NDE0MTM2MjA5",
+          "token0Price": 1.0874546925189785,
+          "token1Price": 0.9195785414136209,
+          "timestamp": 1771729200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTc0MzYwMF8xLjA4NzYyMzczMTc5MDM5MzJfMC45MTk0MzU2MTk4NDc5MTI2",
+          "token0Price": 1.0876237317903932,
+          "token1Price": 0.9194356198479126,
+          "timestamp": 1771743600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTc1ODAwMF8xLjA4NzYyMzczMTc5MDM5MzJfMC45MTk0MzU2MTk4NDc5MTI2",
+          "token0Price": 1.0876237317903932,
+          "token1Price": 0.9194356198479126,
+          "timestamp": 1771758000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTc3MjQwMF8xLjA4NzYyMzczMTc5MDM5MzJfMC45MTk0MzU2MTk4NDc5MTI2",
+          "token0Price": 1.0876237317903932,
+          "token1Price": 0.9194356198479126,
+          "timestamp": 1771772400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTc4NjgwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771786800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTgwMTIwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771801200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTgxNTYwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771815600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTgzMDAwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771830000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTg0NDQwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771844400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTg1ODgwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771858800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTg3MzIwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771873200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTg4NzYwMF8xLjA4NzgzNzE4MTYxMzEwMTZfMC45MTkyNTUyMTI5MTQ0NDM2",
+          "token0Price": 1.0878371816131016,
+          "token1Price": 0.9192552129144436,
+          "timestamp": 1771887600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTkwMjAwMF8xLjA4NzUxNDg0MzYxMDYyNjFfMC45MTk1Mjc2Nzg5Nzg1NTAx",
+          "token0Price": 1.0875148436106261,
+          "token1Price": 0.9195276789785501,
+          "timestamp": 1771902000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTkxNjQwMF8xLjA4NzUxNDg0MzYxMDYyNjFfMC45MTk1Mjc2Nzg5Nzg1NTAx",
+          "token0Price": 1.0875148436106261,
+          "token1Price": 0.9195276789785501,
+          "timestamp": 1771916400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTkzMDgwMF8xLjA4NzUxNDg0MzYxMDYyNjFfMC45MTk1Mjc2Nzg5Nzg1NTAx",
+          "token0Price": 1.0875148436106261,
+          "token1Price": 0.9195276789785501,
+          "timestamp": 1771930800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTk0NTIwMF8xLjA4NzUxNDg0MzYxMDYyNjFfMC45MTk1Mjc2Nzg5Nzg1NTAx",
+          "token0Price": 1.0875148436106261,
+          "token1Price": 0.9195276789785501,
+          "timestamp": 1771945200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTk1OTYwMF8xLjA4NzUxNDg0MzYxMDYyNjFfMC45MTk1Mjc2Nzg5Nzg1NTAx",
+          "token0Price": 1.0875148436106261,
+          "token1Price": 0.9195276789785501,
+          "timestamp": 1771959600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTk3NDAwMF8xLjA4NzU3MDM5ODcxNTc5NzlfMC45MTk0ODA3MDc4MDU5NDk=",
+          "token0Price": 1.0875703987157979,
+          "token1Price": 0.919480707805949,
+          "timestamp": 1771974000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MTk4ODQwMF8xLjA4NzU3MDM5ODcxNTc5NzlfMC45MTk0ODA3MDc4MDU5NDk=",
+          "token0Price": 1.0875703987157979,
+          "token1Price": 0.919480707805949,
+          "timestamp": 1771988400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjAwMjgwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772002800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjAxNzIwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772017200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjAzMTYwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772031600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjA0NjAwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772046000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjA2MDQwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772060400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjA3NDgwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772074800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjA4OTIwMF8xLjA4NzU5NTI2NTM4NDY3NTJfMC45MTk0NTk2ODQ4OTE0MjU3",
+          "token0Price": 1.0875952653846752,
+          "token1Price": 0.9194596848914257,
+          "timestamp": 1772089200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjEwMzYwMF8xLjA4ODIxMTA1NDQxMTQ3NjNfMC45MTg5MzkzODc2NzMxMTc5",
+          "token0Price": 1.0882110544114763,
+          "token1Price": 0.9189393876731179,
+          "timestamp": 1772103600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjExODAwMF8xLjA4NzYwNjAwOTUzOTgyNDNfMC45MTk0NTA2MDE4MDY3MjM=",
+          "token0Price": 1.0876060095398243,
+          "token1Price": 0.919450601806723,
+          "timestamp": 1772118000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjEzMjQwMF8xLjA4ODA1NzEyNDgzMjU2OV8wLjkxOTA2OTM5MTgzMzUyMjM=",
+          "token0Price": 1.088057124832569,
+          "token1Price": 0.9190693918335223,
+          "timestamp": 1772132400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjE0NjgwMF8xLjA4ODA1NzEyNDgzMjU2OV8wLjkxOTA2OTM5MTgzMzUyMjM=",
+          "token0Price": 1.088057124832569,
+          "token1Price": 0.9190693918335223,
+          "timestamp": 1772146800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjE2MTIwMF8xLjA4ODA1NzEyNDgzMjU2OV8wLjkxOTA2OTM5MTgzMzUyMjM=",
+          "token0Price": 1.088057124832569,
+          "token1Price": 0.9190693918335223,
+          "timestamp": 1772161200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjE3NTYwMF8xLjA4ODA1NzEyNDgzMjU2OV8wLjkxOTA2OTM5MTgzMzUyMjM=",
+          "token0Price": 1.088057124832569,
+          "token1Price": 0.9190693918335223,
+          "timestamp": 1772175600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjE5MDAwMF8xLjA4ODA1NzEyNDgzMjU2OV8wLjkxOTA2OTM5MTgzMzUyMjM=",
+          "token0Price": 1.088057124832569,
+          "token1Price": 0.9190693918335223,
+          "timestamp": 1772190000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjIwNDQwMF8xLjA4ODAzMzc0MzIzMzEwNDJfMC45MTkwODkxNDI0MjcyMjc1",
+          "token0Price": 1.0880337432331042,
+          "token1Price": 0.9190891424272275,
+          "timestamp": 1772204400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjIxODgwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772218800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjIzMzIwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772233200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjI0NzYwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772247600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjI2MjAwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772262000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjI3NjQwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772276400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjI5MDgwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772290800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjMwNTIwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772305200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjMxOTYwMF8xLjA4Nzk3MDg3NDQyNTc1OTdfMC45MTkxNDIyNTIzMzk5ODg5",
+          "token0Price": 1.0879708744257597,
+          "token1Price": 0.9191422523399889,
+          "timestamp": 1772319600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjMzNDAwMF8xLjA4NzkwMjM1MTQxMjE0NDJfMC45MTkyMDAxNDU3Njg1NTc5",
+          "token0Price": 1.0879023514121442,
+          "token1Price": 0.9192001457685579,
+          "timestamp": 1772334000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjM0ODQwMF8xLjA4NzkyMzM0MjU4NjAzNjJfMC45MTkxODI0MTAwNjExMzYy",
+          "token0Price": 1.0879233425860362,
+          "token1Price": 0.9191824100611362,
+          "timestamp": 1772348400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjM2MjgwMF8xLjA4Nzk1MzcwMzQ5MjMzNjhfMC45MTkxNTY3NTg5NTk0OTk=",
+          "token0Price": 1.0879537034923368,
+          "token1Price": 0.919156758959499,
+          "timestamp": 1772362800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjM3NzIwMF8xLjA4Nzk1MzcwMzQ5MjMzNjhfMC45MTkxNTY3NTg5NTk0OTk=",
+          "token0Price": 1.0879537034923368,
+          "token1Price": 0.919156758959499,
+          "timestamp": 1772377200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjM5MTYwMF8xLjA4Nzk1MzcwMzQ5MjMzNjhfMC45MTkxNTY3NTg5NTk0OTk=",
+          "token0Price": 1.0879537034923368,
+          "token1Price": 0.919156758959499,
+          "timestamp": 1772391600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQwNjAwMF8xLjA4Nzk1MzcwMzQ5MjMzNjhfMC45MTkxNTY3NTg5NTk0OTk=",
+          "token0Price": 1.0879537034923368,
+          "token1Price": 0.919156758959499,
+          "timestamp": 1772406000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQyMDQwMF8xLjA4Nzk4NDk5NDA0MDQyMDVfMC45MTkxMzAzMjM5MjY5MjAx",
+          "token0Price": 1.0879849940404205,
+          "token1Price": 0.9191303239269201,
+          "timestamp": 1772420400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQzNDgwMF8xLjA4Nzk4NDk5NDA0MDQyMDVfMC45MTkxMzAzMjM5MjY5MjAx",
+          "token0Price": 1.0879849940404205,
+          "token1Price": 0.9191303239269201,
+          "timestamp": 1772434800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQ0OTIwMF8xLjA4Nzk4NDk5NDA0MDQyMDVfMC45MTkxMzAzMjM5MjY5MjAx",
+          "token0Price": 1.0879849940404205,
+          "token1Price": 0.9191303239269201,
+          "timestamp": 1772449200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQ2MzYwMF8xLjA4Nzk4NDk5NDA0MDQyMDVfMC45MTkxMzAzMjM5MjY5MjAx",
+          "token0Price": 1.0879849940404205,
+          "token1Price": 0.9191303239269201,
+          "timestamp": 1772463600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQ3ODAwMF8xLjA4NzczMjM1ODg2NjU0OTVfMC45MTkzNDM3OTk4MzE0NTAx",
+          "token0Price": 1.0877323588665495,
+          "token1Price": 0.9193437998314501,
+          "timestamp": 1772478000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjQ5MjQwMF8xLjA4NzczMjM1ODg2NjU0OTVfMC45MTkzNDM3OTk4MzE0NTAx",
+          "token0Price": 1.0877323588665495,
+          "token1Price": 0.9193437998314501,
+          "timestamp": 1772492400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjUwNjgwMF8xLjA4NzczMjUwMzgyMjI1NDVfMC45MTkzNDM2NzczMTU5MTU4",
+          "token0Price": 1.0877325038222545,
+          "token1Price": 0.9193436773159158,
+          "timestamp": 1772506800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjUyMTIwMF8xLjA4NzczMjc5MzczMzY5NF8wLjkxOTM0MzQzMjI4NDkyMDk=",
+          "token0Price": 1.087732793733694,
+          "token1Price": 0.9193434322849209,
+          "timestamp": 1772521200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjUzNTYwMF8xLjA4NzczMjc5MzczMzY5NF8wLjkxOTM0MzQzMjI4NDkyMDk=",
+          "token0Price": 1.087732793733694,
+          "token1Price": 0.9193434322849209,
+          "timestamp": 1772535600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjU1MDAwMF8xLjA4NzczMzAzOTk4MTYwMTZfMC45MTkzNDMyMjQxNTgxMjE=",
+          "token0Price": 1.0877330399816016,
+          "token1Price": 0.919343224158121,
+          "timestamp": 1772550000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjU2NDQwMF8xLjA4NzczMzAzOTk4MTYwMTZfMC45MTkzNDMyMjQxNTgxMjE=",
+          "token0Price": 1.0877330399816016,
+          "token1Price": 0.919343224158121,
+          "timestamp": 1772564400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjU3ODgwMF8xLjA4ODY5MjE0OTIxNTQ4MDJfMC45MTg1MzMzMDY4ODYyNTU4",
+          "token0Price": 1.0886921492154802,
+          "token1Price": 0.9185333068862558,
+          "timestamp": 1772578800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjU5MzIwMF8xLjA4ODI0NjQyNDU4MDQ4NjRfMC45MTg5MDk1MjAzMTg4ODgz",
+          "token0Price": 1.0882464245804864,
+          "token1Price": 0.9189095203188883,
+          "timestamp": 1772593200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjYwNzYwMF8xLjA4ODI0NjQyNDU4MDQ4NjRfMC45MTg5MDk1MjAzMTg4ODgz",
+          "token0Price": 1.0882464245804864,
+          "token1Price": 0.9189095203188883,
+          "timestamp": 1772607600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjYyMjAwMF8xLjA4ODY2OTAyNjM4MTE0MTRfMC45MTg1NTI4MTYxMTUzOTI1",
+          "token0Price": 1.0886690263811414,
+          "token1Price": 0.9185528161153925,
+          "timestamp": 1772622000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjYzNjQwMF8xLjA4ODY4MjAwNTg1OTMzMzRfMC45MTg1NDE4NjQ5NTA0MjM0",
+          "token0Price": 1.0886820058593334,
+          "token1Price": 0.9185418649504234,
+          "timestamp": 1772636400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjY1MDgwMF8xLjA4ODY4MjAwNTg1OTMzMzRfMC45MTg1NDE4NjQ5NTA0MjM0",
+          "token0Price": 1.0886820058593334,
+          "token1Price": 0.9185418649504234,
+          "timestamp": 1772650800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjY2NTIwMF8xLjA4ODY4MjAwNTg1OTMzMzRfMC45MTg1NDE4NjQ5NTA0MjM0",
+          "token0Price": 1.0886820058593334,
+          "token1Price": 0.9185418649504234,
+          "timestamp": 1772665200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjY3OTYwMF8xLjA4ODY4MjAwNTg1OTMzMzRfMC45MTg1NDE4NjQ5NTA0MjM0",
+          "token0Price": 1.0886820058593334,
+          "token1Price": 0.9185418649504234,
+          "timestamp": 1772679600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjY5NDAwMF8xLjA4ODcwNTk0Mzg2OTYwNzhfMC45MTg1MjE2Njg0MzY2NDA4",
+          "token0Price": 1.0887059438696078,
+          "token1Price": 0.9185216684366408,
+          "timestamp": 1772694000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjcwODQwMF8xLjA4OTE4MDYyMDM0NzI1MTRfMC45MTgxMjEzNjY5NDIwNDIy",
+          "token0Price": 1.0891806203472514,
+          "token1Price": 0.9181213669420422,
+          "timestamp": 1772708400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjcyMjgwMF8xLjA4OTE4MDYyMDM0NzI1MTRfMC45MTgxMjEzNjY5NDIwNDIy",
+          "token0Price": 1.0891806203472514,
+          "token1Price": 0.9181213669420422,
+          "timestamp": 1772722800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjczNzIwMF8xLjA4OTE4MDYyMDM0NzI1MTRfMC45MTgxMjEzNjY5NDIwNDIy",
+          "token0Price": 1.0891806203472514,
+          "token1Price": 0.9181213669420422,
+          "timestamp": 1772737200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjc1MTYwMF8xLjA4OTI0NzU2MDM1NzY0MjhfMC45MTgwNjQ5NDM1MzkyNDU0",
+          "token0Price": 1.0892475603576428,
+          "token1Price": 0.9180649435392454,
+          "timestamp": 1772751600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjc2NjAwMF8xLjA4OTI0NzU2MDM1NzY0MjhfMC45MTgwNjQ5NDM1MzkyNDU0",
+          "token0Price": 1.0892475603576428,
+          "token1Price": 0.9180649435392454,
+          "timestamp": 1772766000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjc4MDQwMF8xLjA4OTI0NzU2MDM1NzY0MjhfMC45MTgwNjQ5NDM1MzkyNDU0",
+          "token0Price": 1.0892475603576428,
+          "token1Price": 0.9180649435392454,
+          "timestamp": 1772780400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjc5NDgwMF8xLjA4OTMxMjAzNzU2MDYyMjdfMC45MTgwMTA2MDI1ODEyMTY2",
+          "token0Price": 1.0893120375606227,
+          "token1Price": 0.9180106025812166,
+          "timestamp": 1772794800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjgwOTIwMF8xLjA4OTMxMjAzNzU2MDYyMjdfMC45MTgwMTA2MDI1ODEyMTY2",
+          "token0Price": 1.0893120375606227,
+          "token1Price": 0.9180106025812166,
+          "timestamp": 1772809200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjgyMzYwMF8xLjA4OTM2Njc5NTE1MjIyMTJfMC45MTc5NjQ0NTgyOTgyNDEy",
+          "token0Price": 1.0893667951522212,
+          "token1Price": 0.9179644582982412,
+          "timestamp": 1772823600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjgzODAwMF8xLjA4OTkyNzgzNTgwODM1NzVfMC45MTc0OTE5MzU4Mzg0Mjk3",
+          "token0Price": 1.0899278358083575,
+          "token1Price": 0.9174919358384297,
+          "timestamp": 1772838000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjg1MjQwMF8xLjA4OTkyNzgzNTgwODM1NzVfMC45MTc0OTE5MzU4Mzg0Mjk3",
+          "token0Price": 1.0899278358083575,
+          "token1Price": 0.9174919358384297,
+          "timestamp": 1772852400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjg2NjgwMF8xLjA4OTY5MzE0NjAwODkzMzZfMC45MTc2ODk1MzgyNTQ0NzE=",
+          "token0Price": 1.0896931460089336,
+          "token1Price": 0.917689538254471,
+          "timestamp": 1772866800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjg4MTIwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772881200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjg5NTYwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772895600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjkxMDAwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772910000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjkyNDQwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772924400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MjkzODgwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772938800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjk1MzIwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772953200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjk2NzYwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772967600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjk4MjAwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772982000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3Mjk5NjQwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1772996400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzAxMDgwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1773010800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzAyNTIwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1773025200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzAzOTYwMF8xLjA4OTYzMDkzMjk0NDU2NF8wLjkxNzc0MTkzNDIzMjQwMTQ=",
+          "token0Price": 1.089630932944564,
+          "token1Price": 0.9177419342324014,
+          "timestamp": 1773039600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzA1NDAwMF8xLjA4OTc2NTg3Mjc4MzU5MzdfMC45MTc2MjgyOTUxOTEyMzc1",
+          "token0Price": 1.0897658727835937,
+          "token1Price": 0.9176282951912375,
+          "timestamp": 1773054000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzA2ODQwMF8xLjA4OTc2NTg3Mjc4MzU5MzdfMC45MTc2MjgyOTUxOTEyMzc1",
+          "token0Price": 1.0897658727835937,
+          "token1Price": 0.9176282951912375,
+          "timestamp": 1773068400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzA4MjgwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773082800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzA5NzIwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773097200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzExMTYwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773111600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzEyNjAwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773126000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzE0MDQwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773140400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzE1NDgwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773154800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzE2OTIwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773169200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzE4MzYwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773183600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzE5ODAwMF8xLjA4OTY4OTQzMTY3MDk0NzFfMC45MTc2OTI2NjYzMTAwNTU=",
+          "token0Price": 1.0896894316709471,
+          "token1Price": 0.917692666310055,
+          "timestamp": 1773198000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzIxMjQwMF8xLjA4OTc5NzEwMjk0MjUyMzdfMC45MTc2MDE5OTg4NDkwODMz",
+          "token0Price": 1.0897971029425237,
+          "token1Price": 0.9176019988490833,
+          "timestamp": 1773212400,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzIyNjgwMF8xLjA4OTY4NDE2NjU1OTkyNV8wLjkxNzY5NzEwMDM5NjQ4MTg=",
+          "token0Price": 1.089684166559925,
+          "token1Price": 0.9176971003964818,
+          "timestamp": 1773226800,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzI0MTIwMF8xLjA4OTY4NDE2NjU1OTkyNV8wLjkxNzY5NzEwMDM5NjQ4MTg=",
+          "token0Price": 1.089684166559925,
+          "token1Price": 0.9176971003964818,
+          "timestamp": 1773241200,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzI1NTYwMF8xLjA4OTY4NDE2NjU1OTkyNV8wLjkxNzY5NzEwMDM5NjQ4MTg=",
+          "token0Price": 1.089684166559925,
+          "token1Price": 0.9176971003964818,
+          "timestamp": 1773255600,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzI3MDAwMF8xLjA4OTY4NDE2NjU1OTkyNV8wLjkxNzY5NzEwMDM5NjQ4MTg=",
+          "token0Price": 1.089684166559925,
+          "token1Price": 0.9176971003964818,
+          "timestamp": 1773270000,
+          "__typename": "TimestampedPoolPrice"
+        },
+        {
+          "id": "VGltZXN0YW1wZWRQb29sUHJpY2U6MTc3MzI4NDQwMF8xLjA4OTU1MDAwOTY0NjYzMTVfMC45MTc4MTAwOTY5NjMxNzIy",
+          "token0Price": 1.0895500096466315,
+          "token1Price": 0.9178100969631722,
+          "timestamp": 1773284400,
+          "__typename": "TimestampedPoolPrice"
+        }
+      ],
+      "__typename": "V4Pool"
+    }
+  }
+}

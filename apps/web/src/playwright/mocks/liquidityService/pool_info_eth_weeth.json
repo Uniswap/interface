@@ -1,0 +1,22 @@
+{
+  "requestId": "74ba75bc-35be-433f-af3e-563a4e1e3d45",
+  "pools": [
+    {
+      "poolReferenceIdentifier": "0xa2aa16b45871a7172aff8f765a17feddd75a9778deaa43955ba8803cd91b15ed",
+      "poolProtocol": "V4",
+      "tokenAddressA": "0x0000000000000000000000000000000000000000",
+      "tokenAddressB": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+      "tickSpacing": 1,
+      "fee": 100,
+      "hookAddress": "0x0000000000000000000000000000000000000000",
+      "chainId": 1,
+      "tokenDecimalsA": "18",
+      "tokenDecimalsB": "18",
+      "poolLiquidity": "1938870572656072759",
+      "sqrtRatioX96": "75895241978955680292421653682",
+      "currentTick": -860
+    }
+  ],
+  "currentPage": 1,
+  "pageSize": 1
+}

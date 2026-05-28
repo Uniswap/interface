@@ -1,0 +1,22 @@
+{
+  "name": "@universe/mycelium",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mycelium/src",
+  "projectType": "library",
+  "tags": ["scope:mycelium", "type:lib"],
+  "targets": {
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {}
+  }
+}

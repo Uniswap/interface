@@ -1,0 +1,139 @@
+# this flow is used for flows that test the app with a pre-existing wallet
+# check flows/onboarding for all onboarding specific flows
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+# Start tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/start-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-recover-fast'
+
+# Wait for and tap Import Account
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ImportAccount}
+    timeout: 30000 # Starting the app during local dev loads the JS bundle which can take much longer than a normal build
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ImportAccount'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ImportAccount}
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ImportAccount'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Import seed phrase selection
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'OnboardingImportSeedPhrase'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.OnboardingImportSeedPhrase}
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'OnboardingImportSeedPhrase'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Input recovery phrase
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'RecoveryPhrase'
+      PHASE: 'start'
+- inputText: ${E2E_RECOVERY_PHRASE}
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'RecoveryPhrase'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Continue after seed phrase
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Continue-SeedPhrase'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Continue}
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Continue-SeedPhrase'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Wait for wallet to load - this is a critical performance metric
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'waitFor'
+      TARGET: 'WalletLoad'
+      PHASE: 'start'
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.SelectWalletScreenLoaded}
+    timeout: 60000 # 1 minute (sometimes it takes longer to load in e2e)
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'waitFor'
+      TARGET: 'WalletLoad'
+      PHASE: 'end'
+
+# Continue from wallet selection
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Continue-WalletSelection'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Continue}
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Continue-WalletSelection'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Skip screens
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+
+# Biometrics confirmation
+- runFlow: biometrics-confirm.yaml
+- waitForAnimationToEnd
+
+# End tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/end-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-recover-fast'

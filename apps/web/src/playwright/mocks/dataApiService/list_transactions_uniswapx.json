@@ -1,0 +1,43 @@
+{
+  "transactions": [
+    {
+      "transaction": {
+        "case": "uniswapX",
+        "value": {
+          "chainId": 1,
+          "timestampMillis": "1686339087000",
+          "offerer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+          "orderHash": "0x0000000000000000000000000000000000000000",
+          "inputToken": {
+            "chainId": 1,
+            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            "symbol": "WETH",
+            "decimals": 18,
+            "name": "Wrapped Ether",
+            "type": "ERC20"
+          },
+          "inputTokenAmount": {
+            "raw": "1000000000000000000",
+            "amount": 1.0
+          },
+          "outputToken": {
+            "chainId": 1,
+            "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "symbol": "DAI",
+            "decimals": 18,
+            "name": "Dai Stablecoin",
+            "type": "ERC20"
+          },
+          "outputTokenAmount": {
+            "raw": "3665130000000000000000",
+            "amount": 3665.13
+          },
+          "expiryMillis": "1686425487000",
+          "encodedOrder": "0x00",
+          "orderType": 0,
+          "status": 4
+        }
+      }
+    }
+  ]
+}

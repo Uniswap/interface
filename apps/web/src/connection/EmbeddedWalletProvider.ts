@@ -1,13 +1,22 @@
+import { HexString, isValidHexString } from '@universe/encoding'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { applyGasBuffer } from 'uniswap/src/features/gas/utils'
 import {
-  signMessagesWithPasskey,
+  signMessageWithPasskey,
   signTransactionWithPasskey,
   signTypedDataWithPasskey,
-} from 'uniswap/src/data/rest/embeddedWallet'
-// eslint-disable-next-line no-restricted-imports
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+} from 'uniswap/src/features/passkey/embeddedWallet'
+import {
+  checkEmbeddedWalletDelegation,
+  type EthTransactionParams,
+  sendDelegatedTransaction,
+} from 'uniswap/src/features/passkey/embeddedWalletDelegation'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { Account, Hash, SignableMessage, createPublicClient, fallback, http } from 'viem'
+import type { Account, Hash, PublicClient, SignableMessage } from 'viem'
+import { getEmbeddedWalletState, setChainId } from '~/state/embeddedWallet/store'
 
 export type Listener = (payload: any) => void
 
@@ -20,46 +29,35 @@ type RequestArgs = {
 const safeJSONStringify = (param: any): any => {
   return JSON.stringify(
     param,
+    // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
     (_, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
   )
 }
 
 const NoWalletFoundError = new Error('Attempted embedded wallet function with no embedded wallet connected')
 
+/**
+ * Resolves a viem `PublicClient` for a given chain. Injected at the boundary
+ * (see `embeddedWalletProviderInstance.ts`) — this class never reaches for a
+ * module-scoped singleton, so the dependency is visible at the constructor
+ * signature and trivially stubbable in tests.
+ */
+export type GetViemClient = (chainId: UniverseChainId) => PublicClient
+
+export interface EmbeddedWalletProviderDeps {
+  getViemClient: GetViemClient
+}
+
 export class EmbeddedWalletProvider {
   listeners: Map<string, Set<Listener>>
   chainId: UniverseChainId
-  publicClient?: ReturnType<typeof createPublicClient>
-  static _instance: EmbeddedWalletProvider
+  private readonly getPublicClient: GetViemClient
 
-  private constructor() {
+  constructor(deps: EmbeddedWalletProviderDeps) {
     this.listeners = new Map()
-    // TODO[EW]: move from localstorage to context layer
-    const chainId = localStorage.getItem('embeddedUniswapWallet.chainId')
-    this.chainId = chainId ? parseInt(chainId) : 1
-    this.publicClient = undefined
-  }
-
-  public static getInstance(): EmbeddedWalletProvider {
-    if (!this._instance) {
-      this._instance = new EmbeddedWalletProvider()
-    }
-    return this._instance
-  }
-
-  private getPublicClient(chainId: UniverseChainId) {
-    if (!this.publicClient || this.publicClient.chain !== UNIVERSE_CHAIN_INFO[chainId]) {
-      const fallbackTransports = UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.fallback?.http.map((url) => http(url)) ?? []
-      this.publicClient = createPublicClient({
-        chain: UNIVERSE_CHAIN_INFO[chainId],
-        transport: fallback([
-          http(UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.public?.http?.[0]), // generally quicknode
-          http(UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.default.http?.[0]), // options here and below are usually public endpoints
-          ...fallbackTransports,
-        ]),
-      })
-    }
-    return this.publicClient
+    const { chainId } = getEmbeddedWalletState()
+    this.chainId = chainId ?? 1
+    this.getPublicClient = deps.getViemClient
   }
 
   async request(args: RequestArgs) {
@@ -71,7 +69,7 @@ export class EmbeddedWalletProvider {
       case 'eth_accounts':
         return this.getAccounts()
       case 'eth_sendTransaction':
-        return this.sendTransaction(args.params)
+        return this.sendTransaction(args.params ?? [])
       case 'eth_chainId':
         return this.getChainId()
       case 'eth_getTransactionByHash':
@@ -93,9 +91,6 @@ export class EmbeddedWalletProvider {
       case 'eth_getCode':
         return this.getCode(args)
       default: {
-        logger.error(NoWalletFoundError, {
-          tags: { file: 'EmbeddedWalletProvider.ts', function: 'request' },
-        })
         throw NoWalletFoundError
       }
     }
@@ -128,8 +123,7 @@ export class EmbeddedWalletProvider {
 
   connect(chainId?: number) {
     this.chainId = chainId ?? 1 // TODO[EW]: handle base case and dynamic switching
-    // TODO[EW]: move from localstorage to context layer
-    localStorage.setItem('embeddedUniswapWallet.chainId', `${chainId}`)
+    setChainId(chainId ?? null)
     this.emit('connect', { chainId: this.chainId })
   }
 
@@ -138,19 +132,26 @@ export class EmbeddedWalletProvider {
   }
 
   getAccount() {
-    const address: `0x${string}` | undefined =
-      // TODO[EW]: move from localstorage to context layer
-      (localStorage.getItem('embeddedUniswapWallet.address') as `0x${string}`) ?? undefined
+    const { walletAddress, walletId } = getEmbeddedWalletState()
+    const address =
+      (getValidAddress({
+        address: walletAddress,
+        platform: Platform.EVM,
+        withEVMChecksum: true,
+      }) as Nullable<HexString>) || undefined
 
     if (!address) {
       logger.debug('EmbeddedWalletProvider.ts', 'getAccount', 'No embedded wallet connected')
       return undefined
     }
 
-    const signMessage = async ({ message }: { message: SignableMessage }): Promise<`0x${string}`> => {
+    const signMessage = async ({ message }: { message: SignableMessage }): Promise<HexString> => {
       try {
-        const signedMessages = await signMessagesWithPasskey([message.toString()])
-        return signedMessages?.[0] as `0x${string}`
+        const signedMessage = await signMessageWithPasskey(message.toString(), walletId ?? undefined)
+        if (!signedMessage || !isValidHexString(signedMessage)) {
+          throw new Error(`Invalid signed message: ${signedMessage}`)
+        }
+        return signedMessage
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signMessage' },
@@ -158,10 +159,16 @@ export class EmbeddedWalletProvider {
         throw e
       }
     }
-    const signTransaction = async (transaction: any): Promise<`0x${string}`> => {
+    const signTransaction = async (transaction: any): Promise<HexString> => {
       try {
-        const signedTransaction = await signTransactionWithPasskey([safeJSONStringify(transaction)])
-        return signedTransaction?.[0] as `0x${string}`
+        const signedTransaction = await signTransactionWithPasskey(
+          safeJSONStringify(transaction),
+          walletId ?? undefined,
+        )
+        if (!signedTransaction || !isValidHexString(signedTransaction)) {
+          throw new Error(`Invalid signed transaction: ${signedTransaction}`)
+        }
+        return signedTransaction
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTransaction' },
@@ -169,10 +176,14 @@ export class EmbeddedWalletProvider {
         throw e
       }
     }
-    const signTypedData = async (transaction: any): Promise<`0x${string}`> => {
+    const signTypedData = async (transaction: any): Promise<HexString> => {
       try {
-        const signedTypedData = await signTypedDataWithPasskey([safeJSONStringify(transaction)])
-        return signedTypedData?.[0] as `0x${string}`
+        const signedTypedData = await signTypedDataWithPasskey(safeJSONStringify(transaction), walletId ?? undefined)
+        const signature = signedTypedData
+        if (!signature || !isValidHexString(signature)) {
+          throw new Error(`Invalid signature: ${signature}`)
+        }
+        return signature
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTypedData' },
@@ -195,11 +206,7 @@ export class EmbeddedWalletProvider {
   async estimateGas(params: any) {
     const account = this.getAccount()
     if (!account) {
-      const error = new Error('Attempted embedded wallet function with no embedded wallet connected')
-      logger.error(error, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'estimateGas' },
-      })
-      throw error
+      throw NoWalletFoundError
     }
     const client = this.getPublicClient(this.chainId)
     const data = await client.estimateGas({
@@ -226,37 +233,80 @@ export class EmbeddedWalletProvider {
     return [account?.address]
   }
 
-  async sendTransaction(transactions: any) {
+  async sendTransaction(transactions: unknown[]) {
     try {
       const account = this.getAccount()
       if (!account) {
-        logger.error(NoWalletFoundError, {
-          tags: { file: 'EmbeddedWalletProvider.ts', function: 'sendTransaction' },
-        })
         throw NoWalletFoundError
       }
-      const publicClient = this.getPublicClient(this.chainId)
-      const [currentGasData, nonce] = await Promise.all([
-        publicClient?.estimateFeesPerGas({ chain: UNIVERSE_CHAIN_INFO[this.chainId] }),
-        publicClient?.getTransactionCount({ address: account.address }),
-      ])
-      const tx = {
-        ...transactions[0],
-        gas: (BigInt(Number(transactions[0].gas ?? 0)) * BigInt(12)) / BigInt(10), // add 20% buffer, TODO[EW]: play around with this
-        value: BigInt(transactions[0].value ?? 0),
-        chainId: this.chainId,
-        maxFeePerGas: BigInt(transactions[0].maxFeePerGas ?? currentGasData?.maxFeePerGas),
-        maxPriorityFeePerGas: BigInt(transactions[0].maxPriorityFeePerGas ?? currentGasData?.maxPriorityFeePerGas),
-        nonce: transactions[0].nonce ?? nonce,
+
+      const { walletId } = getEmbeddedWalletState()
+      const originalTx = transactions[0] as EthTransactionParams | undefined
+      const hasCalldata = originalTx?.data && originalTx.data !== '0x' && originalTx.data !== ''
+      const delegationResult = hasCalldata ? await checkEmbeddedWalletDelegation(account.address, this.chainId) : null
+      if (delegationResult && (delegationResult.needsDelegation || delegationResult.isWalletDelegatedToUniswap)) {
+        const { signTransaction } = account
+        // oxlint-disable-next-line typescript/no-unnecessary-condition -- defensive: Account union includes JsonRpcAccount which lacks signTransaction
+        if (!signTransaction) {
+          throw new Error('Account does not support signTransaction')
+        }
+        return sendDelegatedTransaction({
+          transactions: transactions as EthTransactionParams[],
+          account,
+          delegationResult,
+          chainId: this.chainId,
+          publicClient: this.getPublicClient(this.chainId),
+          signTransaction,
+          walletId: walletId ?? undefined,
+        })
       }
-      const signedTx = await account.signTransaction(tx)
-      const txHash = await publicClient.sendRawTransaction({ serializedTransaction: signedTx })
-      return txHash
-    } catch (e: any) {
-      logger.debug('EmbeddedWalletProvider.ts', 'sendTransaction', e, transactions)
+
+      return this.sendStandardTransaction(transactions, account)
+    } catch (e: unknown) {
+      logger.error(e, {
+        tags: { file: 'EmbeddedWalletProvider.ts', function: 'sendTransaction' },
+      })
       return undefined
     }
   }
+
+  private async sendStandardTransaction(transactions: unknown[], account: Account) {
+    const publicClient = this.getPublicClient(this.chainId)
+    const [feePerGasEstimates, nonce] = await Promise.all([
+      publicClient.estimateFeesPerGas({ chain: getChainInfo(this.chainId) }),
+      publicClient.getTransactionCount({ address: account.address }),
+    ])
+    const txData = transactions[0] as Record<string, unknown>
+    const toAddr = String(txData.to ?? '')
+    const txCalldata = String(txData.data ?? '0x')
+    const gas =
+      txData.gas != null
+        ? applyGasBuffer(BigInt(Number(txData.gas)))
+        : applyGasBuffer(
+            await publicClient.estimateGas({
+              account: account.address,
+              to: isValidHexString(toAddr) ? (toAddr as HexString) : undefined,
+              data: isValidHexString(txCalldata) ? (txCalldata as HexString) : undefined,
+              value: BigInt(String(txData.value ?? 0)),
+            }),
+          )
+    const tx = {
+      ...txData,
+      gas,
+      value: BigInt(String(txData.value ?? 0)),
+      chainId: this.chainId,
+      maxFeePerGas: BigInt(String(txData.maxFeePerGas ?? feePerGasEstimates.maxFeePerGas)),
+      maxPriorityFeePerGas: BigInt(String(txData.maxPriorityFeePerGas ?? feePerGasEstimates.maxPriorityFeePerGas)),
+      nonce: txData.nonce != null ? Number(txData.nonce) : nonce,
+    }
+    if (!account.signTransaction) {
+      throw new Error('Account does not support signTransaction')
+    }
+    const signedTx = await account.signTransaction(tx)
+    const txHash = await publicClient.sendRawTransaction({ serializedTransaction: signedTx })
+    return txHash
+  }
+
   updateChainId(chainId: UniverseChainId) {
     this.chainId = chainId
     localStorage.setItem('embeddedUniswapWallet.chainId', `${chainId}`)
@@ -271,7 +321,7 @@ export class EmbeddedWalletProvider {
     const client = this.getPublicClient(this.chainId)
 
     const data = await client.getBytecode({
-      address: args?.params?.[0],
+      address: args.params?.[0],
     })
     return data
   }
@@ -325,9 +375,6 @@ export class EmbeddedWalletProvider {
   async signMessage(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'signMessage' },
-      })
       throw NoWalletFoundError
     }
     return await account.signMessage({ message: args.params?.[0] })
@@ -336,9 +383,6 @@ export class EmbeddedWalletProvider {
   async sign(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'sign' },
-      })
       throw NoWalletFoundError
     }
     return await account.signMessage(args.params?.[0])
@@ -347,9 +391,6 @@ export class EmbeddedWalletProvider {
   async signTypedData(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTypedData' },
-      })
       throw NoWalletFoundError
     }
     if (!args.params) {
@@ -363,5 +404,3 @@ export class EmbeddedWalletProvider {
     return await account.signTypedData(JSON.parse(args.params[1]))
   }
 }
-
-export const embeddedWalletProvider = EmbeddedWalletProvider.getInstance()

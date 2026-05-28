@@ -1,0 +1,254 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize tracking at the very beginning
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start flow tracking (includes setup time)
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'restore-new-device'
+
+# Run prerequisite flows (tracked as sub-flows)
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+
+# Wait for the SettingsIcon button to be visible; without this, e2e test sometimes registers a success but the button is not actually tapped.
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# Track settings navigation
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'settings-icon'
+      PHASE: 'start'
+- tapOn:
+    id: 'account-header-settings-icon'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'settings-icon'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Swipe to dev modal
+- scrollUntilVisible:
+    element:
+      id: 'app-settings-dev-modal'
+    direction: DOWN
+- waitForAnimationToEnd
+
+# Track dev modal tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'dev-modal'
+      PHASE: 'start'
+- tapOn:
+    id: 'app-settings-dev-modal'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'dev-modal'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track seed phrase accordion tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'seed-phrase-accordion'
+      PHASE: 'start'
+- tapOn:
+    id: 'seed-phrase-private-keys-accordion'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'seed-phrase-accordion'
+      PHASE: 'end'
+
+# Track delete seed phrase
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'delete-seed-phrase'
+      PHASE: 'start'
+- tapOn:
+    id: 'delete-seed-phrase-button'
+- tapOn: 'Delete'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'delete-seed-phrase'
+      PHASE: 'end'
+
+# Track delete private keys
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'delete-private-keys'
+      PHASE: 'start'
+- tapOn:
+    id: 'delete-private-keys-button'
+- tapOn: 'Delete'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'delete-private-keys'
+      PHASE: 'end'
+
+# Track app restart
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- killApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- launchApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+- assertVisible:
+    text: 'Recover your wallet'
+- assertVisible:
+    id: 'continue'
+- assertNotVisible:
+    id: 'cancel'
+
+# Track continue tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue'
+      PHASE: 'start'
+- tapOn:
+    id: 'continue'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track back navigation
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'back'
+      TARGET: 'navigation'
+      PHASE: 'start'
+- back
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'back'
+      TARGET: 'navigation'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Wait for cloud backup to fail - handle both possible error states
+# First try waiting for "No backups found"
+- extendedWaitUntil:
+    visible:
+      text: 'No backups found'
+    timeout: 5000
+    optional: true
+
+# If that didn't appear, wait for "Error while importing backups"
+- extendedWaitUntil:
+    visible:
+      text: 'Error while importing backups'
+    timeout: 5000
+    optional: true
+
+# If error while importing backups appeared, tap to enter recovery phrase manually
+- runFlow:
+    when:
+      visible:
+        text: 'Enter recovery phrase'
+    commands:
+      - tapOn:
+          text: 'Enter recovery phrase'
+
+# Track seed phrase input
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'seed-phrase'
+      PHASE: 'start'
+- inputText: ${E2E_RECOVERY_PHRASE}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'seed-phrase'
+      PHASE: 'end'
+
+# Track final continue
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue-final'
+      PHASE: 'start'
+- tapOn:
+    id: 'continue'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue-final'
+      PHASE: 'end'
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'account-header-avatar'
+
+# End flow tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload metrics to Datadog (for Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

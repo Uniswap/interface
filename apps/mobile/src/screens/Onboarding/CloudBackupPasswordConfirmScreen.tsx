@@ -9,12 +9,13 @@ import { Flex } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
-export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordConfirm>
-
-export function CloudBackupPasswordConfirmScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function CloudBackupPasswordConfirmScreen({
+  navigation,
+  route: { params },
+}: NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordConfirm>): JSX.Element {
   const { t } = useTranslation()
 
   const { password, entryPoint } = params

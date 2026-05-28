@@ -14,42 +14,17 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   <View
     style={
       {
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "#131313",
-            "light": "#FFFFFF",
-          },
-        },
-        "borderBottomColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "backgroundColor": "#FFFFFF",
+        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderBottomWidth": 1,
-        "borderLeftColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
         "borderLeftWidth": 1,
-        "borderRightColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderRightColor": "rgba(19, 19, 19, 0.08)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderTopColor": "rgba(19, 19, 19, 0.08)",
         "borderTopLeftRadius": 20,
         "borderTopRightRadius": 20,
         "borderTopWidth": 1,
@@ -87,65 +62,28 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholderTextColor={
-          {
-            "dynamic": {
-              "dark": "#5E5E5E",
-              "light": "#BFBFBF",
-            },
-          }
-        }
+        placeholderTextColor="rgba(19, 19, 19, 0.35)"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#BFBFBF"
+        selectionColor="rgba(19, 19, 19, 0.35)"
         spellCheck={false}
         style={
           {
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
-            "borderBottomColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "backgroundColor": "transparent",
+            "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 12,
             "borderBottomRightRadius": 12,
             "borderBottomWidth": 1,
-            "borderLeftColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "borderLeftColor": "transparent",
             "borderLeftWidth": 1,
-            "borderRightColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "borderRightColor": "transparent",
             "borderRightWidth": 1,
             "borderStyle": "solid",
-            "borderTopColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "borderTopColor": "transparent",
             "borderTopLeftRadius": 12,
             "borderTopRightRadius": 12,
             "borderTopWidth": 1,
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#222222",
-              },
-            },
+            "color": "#131313",
             "flexShrink": 1,
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
@@ -183,12 +121,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         pointerEvents="none"
         style={
           {
-            "color": {
-              "dynamic": {
-                "dark": "#9B9B9B",
-                "light": "#7D7D7D",
-              },
-            },
+            "color": "rgba(19, 19, 19, 0.63)",
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
@@ -223,47 +156,74 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         }
       >
         <View
-          hitSlop={
+          collapsable={false}
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
+          jestAnimatedProps={
             {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
+              "value": {},
             }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "backgroundColor": "rgba(255, 55, 199, 0.08)",
+                "borderBottomLeftRadius": 12,
+                "borderBottomRightRadius": 12,
+                "borderTopLeftRadius": 12,
+                "borderTopRightRadius": 12,
+                "flexDirection": "column",
+                "opacity": 1,
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
           }
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="button"
           style={
-            {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#361A37",
-                  "light": "#FEF4FF",
-                },
+            [
+              {
+                "backgroundColor": "rgba(255, 55, 199, 0.08)",
+                "borderBottomLeftRadius": 12,
+                "borderBottomRightRadius": 12,
+                "borderTopLeftRadius": 12,
+                "borderTopRightRadius": 12,
+                "flexDirection": "column",
+                "opacity": 1,
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               },
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "column",
-              "opacity": 1,
-              "paddingBottom": 8,
-              "paddingLeft": 8,
-              "paddingRight": 8,
-              "paddingTop": 8,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            }
+              {},
+            ]
           }
         >
           <View
@@ -281,12 +241,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               maxFontSizeMultiplier={1.2}
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FC72FF",
-                      "light": "#FC72FF",
-                    },
-                  },
+                  "color": "#FF37C7",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 15,
                   "fontWeight": "500",
@@ -314,7 +269,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#FC72FF",
+                    "color": "#FF37C7",
                     "height": 16,
                     "width": 16,
                   },
@@ -329,7 +284,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               vbWidth={16}
             >
               <RNSVGGroup
-                color="#FC72FF"
+                color="#FF37C7"
                 fill={
                   {
                     "type": 2,

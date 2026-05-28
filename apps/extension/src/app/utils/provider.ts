@@ -39,6 +39,7 @@ export async function setIsDefaultProviderToStorage(isDefault: boolean): Promise
 }
 
 export async function getIsDefaultProviderFromStorage(): Promise<boolean> {
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   const isDefaultProvider = (await chrome.storage.local.get(IS_DEFAULT_PROVIDER_KEY))?.[IS_DEFAULT_PROVIDER_KEY]
 
   if (isDefaultProvider !== undefined) {

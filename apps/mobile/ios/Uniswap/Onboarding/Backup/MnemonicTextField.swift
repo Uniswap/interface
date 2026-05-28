@@ -49,7 +49,8 @@ struct MnemonicTextField: View {
       Text(String(index))
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .foregroundColor(Colors.neutral2)
-        .frame(width: shouldShowSmallText ? 14 : 16, alignment: Alignment.leading)
+        .lineLimit(1)
+        .frame(width: shouldShowSmallText ? 18 : 22, alignment: Alignment.leading)
       
       Text(word)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))

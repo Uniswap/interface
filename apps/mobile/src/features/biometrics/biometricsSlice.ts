@@ -1,4 +1,4 @@
-import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AuthenticationType } from 'expo-local-authentication'
 import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometrics-utils'
 
@@ -11,6 +11,7 @@ export interface BiometricsState {
   deviceSupportsBiometrics: boolean | undefined
   lastAuthenticationTime: number | undefined
   isEnrolled: boolean | undefined
+  isBiometricsDisabledInOSSettings: boolean | undefined
   supportedAuthenticationTypes: AuthenticationType[] | undefined
 }
 
@@ -19,6 +20,7 @@ const initialState: BiometricsState = {
   deviceSupportsBiometrics: undefined,
   lastAuthenticationTime: undefined,
   isEnrolled: undefined,
+  isBiometricsDisabledInOSSettings: undefined,
   supportedAuthenticationTypes: undefined,
 }
 
@@ -26,12 +28,9 @@ export interface TriggerAuthenticationPayload<T = unknown> {
   onSuccess?: (params?: T) => void
   onFailure?: () => void
   params?: T
-  // if true, show an alert when authentication fails
-  // useful for when the user is trying to unlock the app
-  showAlert?: boolean
 }
 
-export const biometricsSlice = createSlice({
+const biometricsSlice = createSlice({
   name: 'biometrics',
   initialState,
   reducers: {
@@ -46,6 +45,9 @@ export const biometricsSlice = createSlice({
     },
     setIsEnrolled: (state, action: PayloadAction<boolean>) => {
       state.isEnrolled = action.payload
+    },
+    setIsBiometricsDisabledInOSSettings: (state, action: PayloadAction<boolean>) => {
+      state.isBiometricsDisabledInOSSettings = action.payload
     },
     setSupportedAuthenticationTypes: (state, action: PayloadAction<AuthenticationType[]>) => {
       state.supportedAuthenticationTypes = action.payload
@@ -63,8 +65,8 @@ export const {
   setAuthenticationStatus,
   setDeviceSupportsBiometrics,
   setIsEnrolled,
+  setIsBiometricsDisabledInOSSettings,
   setSupportedAuthenticationTypes,
-  invalidateAuthentication,
   triggerAuthentication,
 } = biometricsSlice.actions
 
@@ -77,18 +79,16 @@ export const biometricsReducer = biometricsSlice.reducer
 export const selectDeviceSupportsBiometrics = (state: { biometrics: BiometricsState }): boolean | undefined =>
   state.biometrics.deviceSupportsBiometrics
 
-export const selectIsEnrolled = (state: { biometrics: BiometricsState }): boolean | undefined =>
-  state.biometrics.isEnrolled
+const selectIsEnrolled = (state: { biometrics: BiometricsState }): boolean | undefined => state.biometrics.isEnrolled
 
-export const selectSupportedAuthenticationTypes = (state: {
-  biometrics: BiometricsState
-}): AuthenticationType[] | undefined => state.biometrics.supportedAuthenticationTypes
+export const selectIsBiometricsDisabledInOSSettings = (state: { biometrics: BiometricsState }): boolean | undefined =>
+  state.biometrics.isBiometricsDisabledInOSSettings
+
+const selectSupportedAuthenticationTypes = (state: { biometrics: BiometricsState }): AuthenticationType[] | undefined =>
+  state.biometrics.supportedAuthenticationTypes
 
 export const selectAuthenticationStatus = (state: { biometrics: BiometricsState }): BiometricAuthenticationStatus =>
   state.biometrics.authenticationStatus
-
-export const selectLastAuthenticationTime = (state: { biometrics: BiometricsState }): number | undefined =>
-  state.biometrics.lastAuthenticationTime
 
 export const selectAuthenticationStatusIsAuthenticated = (state: { biometrics: BiometricsState }): boolean =>
   selectAuthenticationStatus(state) === BiometricAuthenticationStatus.Authenticated

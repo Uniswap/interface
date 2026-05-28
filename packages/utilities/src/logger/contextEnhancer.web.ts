@@ -1,8 +1,13 @@
-import { addSentryContextBreadcrumb } from 'utilities/src/logger/breadcrumbs'
+import { datadogRum } from '@datadog/browser-rum'
 
-export function logContextUpdate(contextName: string, newState: unknown, _isDatadogEnabled: boolean): void {
+export function logContextUpdate(contextName: string, newState: unknown): void {
   if (__DEV__) {
     return
   }
-  addSentryContextBreadcrumb(contextName, newState)
+
+  datadogRum.addAction(contextName, {
+    data: {
+      newState,
+    },
+  })
 }

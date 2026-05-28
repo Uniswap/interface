@@ -1,9 +1,9 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { cloneElement, useState } from 'react'
-import { AnimatePresence, ColorTokens, SpaceTokens, TabLayout, Tabs, TabsTabProps, styled } from 'tamagui'
+import { AnimatePresence, ColorTokens, SpaceTokens, styled, TabLayout, Tabs, TabsTabProps } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { assert } from 'utilities/src/errors'
-import { isMobileApp } from 'utilities/src/platform'
 
 const TOGGLE_PADDING = 4
 
@@ -33,8 +33,18 @@ const OptionsSelector = styled(Tabs.List, {
       },
     },
     size: {
+      xsmall: {
+        height: 30,
+        gap: '$spacing4',
+        borderRadius: '$roundedFull',
+      },
       small: {
         height: 30,
+        gap: '$spacing6',
+        borderRadius: '$rounded16',
+      },
+      smallThumbnail: {
+        height: 34,
         gap: '$spacing6',
         borderRadius: '$rounded16',
       },
@@ -48,9 +58,16 @@ const OptionsSelector = styled(Tabs.List, {
         gap: '$gap12',
         borderRadius: '$rounded24',
       },
+      largeThumbnail: {
+        height: 42,
+        gap: '$gap12',
+        borderRadius: '$rounded24',
+      },
     },
   } as const,
 })
+
+OptionsSelector.displayName = 'OptionsSelector'
 
 const TabsRovingIndicator = styled(Flex, {
   animation: 'fast',
@@ -80,9 +97,10 @@ const TabsRovingIndicator = styled(Flex, {
   } as const,
 })
 
+TabsRovingIndicator.displayName = 'TabsRovingIndicator'
+
 const OptionButton = styled(Tabs.Tab, {
   unstyled: true,
-  role: 'button',
   tabIndex: 0,
   disableActiveTheme: true,
   flexDirection: 'row',
@@ -101,10 +119,20 @@ const OptionButton = styled(Tabs.Tab, {
       },
     },
     size: {
+      xsmall: {
+        height: '$spacing20',
+        py: '$spacing2',
+        px: 8,
+      },
       small: {
         height: '$spacing20',
         py: '$spacing2',
         px: '$padding6',
+      },
+      smallThumbnail: {
+        height: '$spacing24',
+        py: '$spacing2',
+        px: '$gap4',
       },
       default: {
         height: '$spacing24',
@@ -115,6 +143,11 @@ const OptionButton = styled(Tabs.Tab, {
         height: '$spacing32',
         py: '$padding8',
         px: '$padding12',
+      },
+      largeThumbnail: {
+        height: '$spacing32',
+        py: '$padding8',
+        px: '$padding8',
       },
     },
     disabled: {
@@ -128,21 +161,30 @@ const OptionButton = styled(Tabs.Tab, {
   } as const,
 })
 
+OptionButton.displayName = 'OptionButton'
+
 export interface SegmentedControlOption<T extends string = string> {
   // String value to be selected/stored, used as default display value
   value: T
+  // Optional display text, different from value
+  displayText?: string
   // Optional custom display element
   display?: JSX.Element
   // Optional wrapper around the display element
   wrapper?: JSX.Element
+  // Disable the specific option
+  disabled?: boolean
+  // Optional href to render as an anchor tag for proper link semantics
+  href?: string
 }
 
-type SegmentedControlSize = 'small' | 'default' | 'large'
+type SegmentedControlSize = 'xsmall' | 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
 
 interface SegmentedControlProps<T extends string = string> {
   options: readonly SegmentedControlOption<T>[]
   selectedOption: T
   onSelectOption: (option: T) => void
+  onHoverOption?: (option: T) => void
   size?: SegmentedControlSize
   disabled?: boolean
   fullWidth?: boolean
@@ -161,7 +203,9 @@ interface SegmentedControlProps<T extends string = string> {
  * For reference, the heights of the container are as follows (each with top and bottom padding of 4px):
  * - small: 30px
  * - default: 34px
+ * - defaultThumbnail: 34px
  * - large: 42px
+ * - largeThumbnail: 42px
  *
  * @param selectedOption - The value of the currently selected option.
  * @param onSelectOption - Callback function to be called when an option is selected.
@@ -172,6 +216,7 @@ export function SegmentedControl<T extends string = string>({
   options,
   selectedOption,
   onSelectOption,
+  onHoverOption,
   size = 'default',
   disabled,
   fullWidth,
@@ -225,30 +270,46 @@ export function SegmentedControl<T extends string = string>({
         gap={gap}
       >
         {options.map((option, index) => {
-          const { value, display, wrapper } = option
+          const { value, display, displayText, wrapper, href } = option
 
-          const optionButton = (
+          const itemDisabled = disabled || option.disabled
+
+          const optionElement = (
             <OptionButton
               key={value}
+              href={href}
+              role={href ? 'link' : 'button'}
+              tag={href ? 'a' : 'button'}
+              $platform-web={{ textDecorationLine: 'none' }}
               active={selectedOption === value}
-              disabled={disabled}
+              disabled={itemDisabled}
               fullWidth={fullWidth}
               size={size}
               value={value}
               onInteraction={handleOnInteraction}
-              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseEnter={() => {
+                setHoveredIndex(index)
+                onHoverOption?.(value)
+              }}
               onMouseLeave={() => setHoveredIndex(undefined)}
-              onPress={() => {
+              onPress={(e) => {
+                if (href && 'preventDefault' in e) {
+                  e.preventDefault()
+                }
                 onSelectOption(value)
               }}
             >
               {display ?? (
                 <Text
-                  color={getOptionTextColor(selectedOption === value, hoveredIndex === index, disabled)}
+                  color={getOptionTextColor({
+                    active: selectedOption === value,
+                    hovered: hoveredIndex === index,
+                    disabled: itemDisabled,
+                  })}
                   userSelect="none"
                   variant={size === 'large' ? 'buttonLabel3' : 'buttonLabel4'}
                 >
-                  {value}
+                  {displayText ?? value}
                 </Text>
               )}
             </OptionButton>
@@ -259,10 +320,10 @@ export function SegmentedControl<T extends string = string>({
             // not a functional component. As a result we can't render it with typical JSX and need
             // to clone it here.
             return cloneElement(wrapper, {
-              children: optionButton,
+              children: optionElement,
             })
           }
-          return optionButton
+          return optionElement
         })}
         <AnimatePresence>
           {activeAt && (
@@ -270,7 +331,7 @@ export function SegmentedControl<T extends string = string>({
               height={activeAt.height}
               width={activeAt.width}
               x={activeAt.x - TOGGLE_PADDING + activeIndicatorXAdjustment}
-              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (!outlined ? 1 : 0)}
+              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (isWebPlatform && !outlined ? 1 : 0)}
             />
           )}
         </AnimatePresence>
@@ -279,7 +340,15 @@ export function SegmentedControl<T extends string = string>({
   )
 }
 
-function getOptionTextColor(active: boolean, hovered: boolean, disabled = false): ColorTokens {
+function getOptionTextColor({
+  active,
+  hovered,
+  disabled = false,
+}: {
+  active: boolean
+  hovered: boolean
+  disabled?: boolean
+}): ColorTokens {
   if (disabled) {
     return active ? '$neutral2' : '$neutral3'
   }

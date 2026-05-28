@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- until the web app needs all of tamagui, avoid heavy imports there
 import { SpaceTokens } from '@tamagui/core'
 import { PropsWithChildren } from 'react'
 import { Flex } from 'ui/src/components/layout/Flex'

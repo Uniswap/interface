@@ -1,0 +1,31 @@
+{
+  "name": "@universe/logger",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/privacy": "workspace:*",
+    "source-map-js": "1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck logger",
+    "lint": "nx lint logger",
+    "lint:fix": "nx lint:fix logger",
+    "check": "nx check logger",
+    "check:fast": "nx check:fast logger",
+    "check:deps:usage": "nx check:deps:usage logger"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts"
+  },
+  "private": true,
+  "sideEffects": false
+}

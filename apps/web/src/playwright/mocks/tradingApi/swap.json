@@ -1,0 +1,41 @@
+{
+  "requestId": "mock-request-id",
+  "quote": {
+    "methodParameters": {
+      "calldata": "0x",
+      "value": "0x0",
+      "to": "0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD"
+    },
+    "blockNumber": "12345678",
+    "amount": "1000000",
+    "amountDecimals": "1",
+    "quote": "1000000",
+    "quoteDecimals": "1",
+    "quoteGasAdjusted": "1000000",
+    "quoteGasAdjustedDecimals": "1",
+    "gasUseEstimateQuote": "0.001",
+    "gasUseEstimateQuoteDecimals": "0.001",
+    "gasUseEstimate": "150000",
+    "gasUseEstimateUSD": "5.0",
+    "simulationError": false,
+    "simulationStatus": "SUCCESS",
+    "gasPriceWei": "20000000000",
+    "route": [],
+    "routeString": "MOCK",
+    "quoteId": "mock-quote-id",
+    "tradeType": "EXACT_INPUT",
+    "slippage": "0.5",
+    "portionBips": 10,
+    "portionRecipient": "0x0000000000000000000000000000000000000001",
+    "portionAmount": "100"
+  },
+  "swap": {
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "to": "0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD",
+    "data": "0x",
+    "value": "0x0",
+    "gasLimit": "20000000"
+  },
+  "permitData": {},
+  "approval": null
+}

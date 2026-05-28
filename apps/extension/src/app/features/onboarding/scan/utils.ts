@@ -1,3 +1,4 @@
+import { base64ToUint8 } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 
@@ -27,21 +28,13 @@ export function getScantasticUrl({ uuid, publicKey, vendor, model, browser }: Sc
   return qrURI
 }
 
-function base64ToArrayBuffer(base64Data: string): ArrayBuffer {
-  const binaryString = window.atob(base64Data)
-  const len = binaryString.length
-  const bytes = new Uint8Array(len)
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-  return bytes.buffer
-}
-
 export async function decryptMessage(privateKey: CryptoKey, ciphertext: string): Promise<string> {
-  const cipherTextBuffer = base64ToArrayBuffer(ciphertext)
-
   try {
-    const decryptedArrayBuffer = await window.crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, cipherTextBuffer)
+    const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
+      { name: 'RSA-OAEP' },
+      privateKey,
+      base64ToUint8(ciphertext),
+    )
 
     const textDecoder = new TextDecoder()
     return textDecoder.decode(decryptedArrayBuffer)

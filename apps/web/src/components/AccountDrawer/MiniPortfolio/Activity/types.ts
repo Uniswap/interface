@@ -1,17 +1,20 @@
-import { Currency } from '@uniswap/sdk-core'
-import { UniswapXOrderDetails } from 'state/signatures/types'
-import {
-  TransactionStatus,
-  TransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import type { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
+import type { ReactNode } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  TransactionOptions,
+  TransactionStatus,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
  * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
  */
 
 export type Activity = {
-  hash: string
+  id: string
+  hash?: string
   chainId: UniverseChainId
   outputChainId?: UniverseChainId
   status: TransactionStatus
@@ -20,17 +23,15 @@ export type Activity = {
   timestamp: number
   title: string
   descriptor?: string | JSX.Element
-  logos?: Array<string | undefined>
+  portfolioLogoCustomIcon?: ReactNode
   // TODO(WEB-3839): replace Currency with CurrencyInfo
   currencies?: Array<Currency | undefined>
   otherAccount?: string
   from: string
-  nonce?: number | null
-  prefixIconSrc?: string
-  suffixIconSrc?: string
-  cancelled?: boolean
+  options?: TransactionOptions
+  isUniswapX?: boolean
   isSpam?: boolean
-  type?: TransactionType
+  type?: GraphQLApi.TransactionType
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

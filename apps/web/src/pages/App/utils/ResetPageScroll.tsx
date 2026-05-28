@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { useLocation } from 'react-router'
+import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
   const location = useLocation()
@@ -17,7 +17,7 @@ export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
       window.scrollTo(0, 0)
     }
     // we don't want this to re-run on change of hasChangedOnce! or else it defeats the point of the fix
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [currentPage])
 
   return null

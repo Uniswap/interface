@@ -11,15 +11,15 @@ import {
 } from 'src/features/walletConnect/selectors'
 import {
   WalletConnectPendingSession,
-  WalletConnectRequest,
   WalletConnectSession,
+  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 
 interface WalletConnect {
   sessions: WalletConnectSession[]
-  pendingRequests: WalletConnectRequest[]
+  pendingRequests: WalletConnectSigningRequest[]
   modalState: AppModalState<ScannerModalState>
   pendingSession: WalletConnectPendingSession | null
   hasPendingSessionError: boolean

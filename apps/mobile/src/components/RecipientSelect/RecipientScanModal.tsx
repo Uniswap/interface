@@ -1,19 +1,17 @@
+import 'react-native-reanimated'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import 'react-native-reanimated'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import Scan from 'ui/src/assets/icons/receive.svg'
-import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { QrCode, Scan } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type Props = {
@@ -80,7 +78,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           onScanCode={onScanCode}
         />
       )}
-      {currentScreenState === ScannerModalState.WalletQr && activeAddress && <WalletQRCode address={activeAddress} />}
+      {currentScreenState === ScannerModalState.WalletQr && activeAddress && <ReceiveQRCode address={activeAddress} />}
       <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
         <TouchableArea
           borderColor={isDarkMode ? '$transparent' : '$surface3'}
@@ -94,9 +92,9 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
         >
           <Flex row alignItems="center" gap="$spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
-              <Scan color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+              <QrCode color={colors.neutral1.val} size="$icon.24" />
             ) : (
-              <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+              <Scan color={colors.neutral1.val} size="$icon.24" />
             )}
             <Text color={colors.neutral1.val} variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr

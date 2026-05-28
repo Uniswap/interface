@@ -1,35 +1,45 @@
-import providers from '@ethersproject/providers'
+import { type TransactionRequest } from '@ethersproject/providers'
+import { NFTPermitData, PermitBatchData } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { GasEstimate, TradingApi } from '@universe/api'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { ACROSS_DAPP_INFO, isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  GasFeeEstimates,
   TransactionType,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  PopulatedTransactionRequestArray,
+  ValidatedTransactionRequest,
+} from 'uniswap/src/features/transactions/types/transactionRequests'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
-export function tradeToTransactionInfo(
-  trade: Trade,
-  transactedUSDValue?: number,
-  gasEstimates?: GasFeeEstimates,
-): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
-  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
+export function tradeToTransactionInfo({
+  trade,
+  transactedUSDValue,
+  gasEstimate,
+  swapStartTimestamp,
+  isFinalStep,
+}: {
+  trade: Trade
+  transactedUSDValue?: number
+  gasEstimate?: GasEstimate
+  swapStartTimestamp?: number
+  isFinalStep?: boolean
+}): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
-  // UniswapX trades wrap native input before swapping
-  const inputCurrency = isUniswapX(trade) ? trade.inputAmount.currency.wrapped : trade.inputAmount.currency
+  const inputCurrency = trade.inputAmount.currency
   const outputCurrency = trade.outputAmount.currency
 
   if (isBridge(trade)) {
@@ -43,7 +53,9 @@ export function tradeToTransactionInfo(
       quoteId,
       gasUseEstimate,
       transactedUSDValue,
-      gasEstimates,
+      gasEstimate,
+      swapStartTimestamp,
+      isFinalStep,
     }
   }
 
@@ -56,9 +68,11 @@ export function tradeToTransactionInfo(
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
-    simulationFailureReasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
+    simulationFailureReasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     transactedUSDValue,
-    gasEstimates,
+    gasEstimate,
+    swapStartTimestamp,
+    isFinalStep,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
@@ -67,36 +81,42 @@ export function tradeToTransactionInfo(
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerancePercent).quotient.toString(),
+        minimumOutputCurrencyAmountRaw: trade.minAmountOut.quotient.toString(),
       }
     : {
         ...baseTransactionInfo,
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerancePercent).quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade.maxAmountIn.quotient.toString(),
       }
+}
+
+/** Returns true if the new trade price is outside the threshold for trade prices to be considered auto-acceptable or not.*/
+function isNewTradePriceOutsideThreshold(oldTrade: Trade, newTrade: Trade): boolean {
+  const multiplier = new Fraction(ONE).subtract(ACCEPT_NEW_TRADE_THRESHOLD)
+  const thresholdAmount = multiplier.multiply(oldTrade.executionPrice)
+
+  return newTrade.executionPrice.lessThan(thresholdAmount)
 }
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
+
+/** Returns true if `newTrade` differs from `oldTrade` enough to require explicit user acceptance. */
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
   if (!oldTrade || !newTrade) {
     return false
   }
 
-  const isExecutionPriceWithinThreshold = isBridge(newTrade)
-    ? !newTrade.executionPrice.lessThan(
-        // Bridge trades have no slippage and hence a static execution price, so we calculate the threshold here.
-        new Fraction(ONE).subtract(ACCEPT_NEW_TRADE_THRESHOLD).multiply(oldTrade.executionPrice),
-      )
-    : !newTrade.executionPrice.lessThan(oldTrade.worstExecutionPrice(ACCEPT_NEW_TRADE_THRESHOLD))
+  if (isNewTradePriceOutsideThreshold(oldTrade, newTrade)) {
+    return true
+  }
 
   return (
     oldTrade.tradeType !== newTrade.tradeType ||
     !oldTrade.inputAmount.currency.equals(newTrade.inputAmount.currency) ||
-    !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency) ||
-    !isExecutionPriceWithinThreshold
+    !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency)
   )
 }
 
@@ -115,13 +135,19 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
  * 1 UNI USD Rate = 4,755.47 / 367.351 = 12.94 USD
  * 1 ETH USD Rate = (4,755.47 / 367.351) * 244.9 = 3,170 USD
  */
-export const calculateRateLine = (
-  usdAmountOut: CurrencyAmount<Currency> | null,
-  outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>,
-  trade: Trade | IndicativeTrade | undefined | null,
-  showInverseRate: boolean,
-  formatter: LocalizationContextState,
-): string => {
+export function calculateRateLine({
+  usdAmountOut,
+  outputCurrencyAmount,
+  trade,
+  showInverseRate,
+  formatter,
+}: {
+  usdAmountOut: CurrencyAmount<Currency> | null
+  outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>
+  trade: Trade | IndicativeTrade | undefined | null
+  showInverseRate: boolean
+  formatter: LocalizationContextState
+}): string {
   const isValidAmounts = usdAmountOut && outputCurrencyAmount
 
   const outputRateAmount = isValidAmounts
@@ -138,11 +164,15 @@ export const calculateRateLine = (
   return latestFiatPriceFormatted
 }
 
-export const getRateToDisplay = (
-  formatter: LocalizationContextState,
-  trade: Trade | IndicativeTrade,
-  showInverseRate: boolean,
-): string => {
+export function getRateToDisplay({
+  formatter,
+  trade,
+  showInverseRate,
+}: {
+  formatter: LocalizationContextState
+  trade: Trade | IndicativeTrade
+  showInverseRate: boolean
+}): string {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
 
   let formattedPrice: string
@@ -151,7 +181,7 @@ export const getRateToDisplay = (
       value: price.toSignificant(),
       type: NumberType.SwapPrice,
     })
-  } catch (error) {
+  } catch (_error) {
     // This means the price impact is so high that the rate is basically 0 (an error is thrown because we try to divide by 0)
     formattedPrice = '0'
   }
@@ -177,9 +207,8 @@ export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined 
   return Protocol.MIXED
 }
 
-export type ValidatedTransactionRequest = providers.TransactionRequest & { to: string; chainId: number }
 export function validateTransactionRequest(
-  request?: providers.TransactionRequest | null,
+  request?: TransactionRequest | null,
 ): ValidatedTransactionRequest | undefined {
   if (request?.to && request.chainId) {
     return { ...request, to: request.to, chainId: request.chainId }
@@ -187,15 +216,49 @@ export function validateTransactionRequest(
   return undefined
 }
 
+export function validateTransactionRequests(
+  requests?: TransactionRequest[] | null,
+): PopulatedTransactionRequestArray | undefined {
+  if (!requests?.length) {
+    return undefined
+  }
+
+  const validatedRequests: ValidatedTransactionRequest[] = []
+  for (const request of requests) {
+    const validatedRequest = validateTransactionRequest(request)
+    if (!validatedRequest) {
+      return undefined
+    }
+    validatedRequests.push(validatedRequest)
+  }
+
+  // Satisfy type checker by ensuring array is non-empty
+  const [firstRequest, ...restRequests] = validatedRequests
+  return firstRequest ? [firstRequest, ...restRequests] : undefined
+}
+
 type RemoveUndefined<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined>
 }
 
-export type ValidatedPermit = RemoveUndefined<Permit>
-export function validatePermit(permit: NullablePermit | undefined): ValidatedPermit | undefined {
+export type ValidatedPermit = RemoveUndefined<TradingApi.Permit>
+
+export function validatePermit(
+  permit: TradingApi.NullablePermit | PermitBatchData | NFTPermitData | undefined,
+): ValidatedPermit | undefined {
   const { domain, types, values } = permit ?? {}
   if (domain && types && values) {
     return { domain, types, values }
   }
   return undefined
+}
+
+export function validatePermitTypeGuard(permit: TradingApi.NullablePermit | undefined): permit is ValidatedPermit {
+  return !!permit && !!permit.domain && !!permit.types && !!permit.values
+}
+
+export function hasTradeType(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+  return 'tradeType' in typeInfo && typeInfo.tradeType !== undefined
 }

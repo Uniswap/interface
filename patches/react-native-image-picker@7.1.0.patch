@@ -1,0 +1,70 @@
+diff --git a/node_modules/react-native-image-picker/src/index.web.ts b/src/index.web.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0a9142154795b6a333a8bf7a56be71a38a76d418
+--- /dev/null
++++ b/src/index.web.ts
+@@ -0,0 +1,18 @@
++import {CameraOptions, ImageLibraryOptions, Callback} from 'react-native-image-picker/src/types';
++import {
++imageLibrary as webImageLibrary,
++camera as webCamera,
++} from 'react-native-image-picker/src/platforms/web';
++
++export * from 'react-native-image-picker/src/types';
++
++export function launchCamera(options: CameraOptions, callback?: Callback) {
++return webCamera(options, callback)
++}
++
++export function launchImageLibrary(
++options: ImageLibraryOptions,
++callback?: Callback,
++) {
++return webImageLibrary(options, callback)
++}
+diff --git a/node_modules/react-native-image-picker/src/platforms/NativeImagePicker.native.ts b/src/platforms/NativeImagePicker.native.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..cae8a6fd4d611002f1492dca27486f0a494c4ccf
+--- /dev/null
++++ b/src/platforms/NativeImagePicker.native.ts
+@@ -0,0 +1,10 @@
++import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
++import { TurboModuleRegistry } from 'react-native';
++
++export interface Spec extends TurboModule {
++  launchCamera(options: Object, callback: () => void): void;
++  launchImageLibrary(options: Object, callback: () => void): void;
++}
++export default TurboModuleRegistry.get<Spec>(
++  'ImagePicker'
++);
+diff --git a/src/platforms/NativeImagePicker.ts b/src/platforms/NativeImagePicker.ts
+index cae8a6fd4d611002f1492dca27486f0a494c4ccf..e10e84345caa17fc10cd42d7d5a222d5ca7285f0 100644
+--- a/src/platforms/NativeImagePicker.ts
++++ b/src/platforms/NativeImagePicker.ts
+@@ -1,10 +1 @@
+-import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
+-import { TurboModuleRegistry } from 'react-native';
+-
+-export interface Spec extends TurboModule {
+-  launchCamera(options: Object, callback: () => void): void;
+-  launchImageLibrary(options: Object, callback: () => void): void;
+-}
+-export default TurboModuleRegistry.get<Spec>(
+-  'ImagePicker'
+-);
++export * from './NativeImagePicker'
+diff --git a/node_modules/react-native-image-picker/src/platforms/NativeImagePicker.web.ts b/src/platforms/NativeImagePicker.web.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8645352959b26dc47515672b3e336e8dce70efd8
+--- /dev/null
++++ b/src/platforms/NativeImagePicker.web.ts
+@@ -0,0 +1,8 @@
++import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
++import { NativeModules } from 'react-native';
++
++export interface Spec extends TurboModule {
++launchCamera(options: Object, callback: () => void): void;
++launchImageLibrary(options: Object, callback: () => void): void;
++}
++export default NativeModules.ImagePicker

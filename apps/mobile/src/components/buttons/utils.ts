@@ -1,4 +1,4 @@
-import { withSequence, withSpring, WithSpringConfig } from 'react-native-reanimated'
+import { WithSpringConfig, withSequence, withSpring } from 'react-native-reanimated'
 
 export function pulseAnimation(
   activeScale: number,

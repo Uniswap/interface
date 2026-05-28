@@ -1,23 +1,25 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { removeAllDappConnectionsForAccount, removeDappConnection } from 'src/app/features/dapp/actions'
-import { useAllDappConnectionsForActiveAccount } from 'src/app/features/dapp/hooks'
+import { useAllDappConnectionsForAccount } from 'src/app/features/dapp/hooks'
 import { dappStore } from 'src/app/features/dapp/store'
 import { NoDappConnections } from 'src/app/features/settings/SettingsManageConnectionsScreen/internal/NoDappConnections'
-import { Flex, Text, TouchableArea, UniversalImage, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { MinusCircle } from 'ui/src/components/icons'
 import { borderRadii, breakpoints, fonts, gap, iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { extractUrlHost } from 'utilities/src/format/urls'
-import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { DappEllipsisDropdown } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -32,12 +34,21 @@ const textGap: number = gap.gap4
 const textAreaHeight = fonts[titleVariant].lineHeight + fonts[subtitleVariant].lineHeight + textGap
 
 export function SettingsManageConnectionsScreen(): JSX.Element {
-  const colors = useSporeColors()
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const [searchParams] = useSearchParams()
   const activeAccount = useActiveAccountWithThrow()
 
-  const dappUrls = useAllDappConnectionsForActiveAccount()
+  // Capture address on mount to prevent screen flash when URL clears during navigation exit
+  const [initialAddress] = useState(() => {
+    const param = searchParams.get('address')
+    return param && isEVMAddress(param) ? param : null
+  })
+
+  const targetAddress = initialAddress ?? activeAccount.address
+  const targetAccount = initialAddress ? { ...activeAccount, address: initialAddress } : activeAccount
+
+  const dappUrls = useAllDappConnectionsForAccount(targetAddress)
 
   const getHandleRemoveConnection = useCallback(
     (dappUrl: string) => async () => {
@@ -53,11 +64,12 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
         dappUrl,
         chainId: dappInfo?.lastChainId,
         activeConnectedAddress: dappInfo?.activeConnectedAddress,
-        connectedAddresses: dappInfo?.connectedAccounts?.map((account) => account.address) ?? [],
+        connectedAddresses: dappInfo?.connectedAccounts.map((account) => account.address) ?? [],
       })
-      await removeDappConnection(dappUrl, activeAccount)
+      await removeDappConnection(dappUrl, targetAccount)
     },
-    [dispatch, activeAccount],
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+    [dispatch, targetAccount],
   )
 
   const DappTiles = useMemo(
@@ -71,6 +83,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
 
         const DeleteDappButton = (
           <TouchableArea
+            animation={null}
             $group-hover={{ display: 'flex' }}
             display="none"
             p="$spacing2"
@@ -79,7 +92,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
             top="$padding8"
             onPress={getHandleRemoveConnection(dappUrl)}
           >
-            <MinusCircle size="$icon.20" fill={colors.neutral3.get()} />
+            <MinusCircle size="$icon.24" color="$neutral3" />
           </TouchableArea>
         )
 
@@ -141,10 +154,10 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
           </Flex>
         )
       }),
-    [dappUrls, getHandleRemoveConnection, colors.neutral3],
+    [dappUrls, getHandleRemoveConnection],
   )
 
-  const hasConnections = Boolean(DappTiles?.length)
+  const hasConnections = Boolean(DappTiles.length)
 
   return (
     <Trace logImpression screen={ExtensionScreens.ManageDappConnectionsScreen}>

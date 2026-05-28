@@ -1,5 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { RankingType } from 'uniswap/src/data/types'
+import { RankingType } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Account, ReadOnlyAccount, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -38,6 +38,11 @@ export const selectAllAccountsSorted = createSelector(
   (signerMnemonicAccounts, viewOnlyAccounts) => {
     return [...signerMnemonicAccounts, ...viewOnlyAccounts]
   },
+)
+
+export const selectAllSignerMnemonicAccountAddresses = createSelector(
+  selectSortedSignerMnemonicAccounts,
+  (signerMnemonicAccounts) => signerMnemonicAccounts.map((account) => account.address),
 )
 
 export const selectActiveAccountAddress = (state: WalletState): string | null => state.wallet.activeAccountAddress
@@ -79,3 +84,14 @@ export const appRatingFeedbackProvidedMsSelector = (state: WalletState): number 
 
 export const selectHasBalanceOrActivityForAddress = (state: WalletState, address: Address): boolean | undefined =>
   state.wallet.accounts[address]?.hasBalanceOrActivity
+
+export const selectHasSmartWalletConsent = createSelector(
+  selectAccounts,
+  (_: WalletState, address: Address) => address,
+  (accounts, address) => {
+    const account = accounts[address]
+    return account?.type === AccountType.SignerMnemonic && account.smartWalletConsent === true
+  },
+)
+
+export const selectAndroidCloudBackupEmail = (state: WalletState): string | null => state.wallet.androidCloudBackupEmail

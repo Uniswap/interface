@@ -1,6 +1,8 @@
 import { memo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
+import { TransactionConfirmationTrackerProvider } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { AnimatedPane, DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { DappRequestCards } from 'src/app/features/dappRequests/DappRequestQueueCards'
 import {
@@ -10,39 +12,45 @@ import {
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'
+import { SendCallsRequestHandler } from 'src/app/features/dappRequests/requestContent/SendCalls/SendCallsRequestContent'
 import { SignTypedDataRequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/SignTypedDataRequestContent'
-import { rejectAllRequests } from 'src/app/features/dappRequests/saga'
-import { isDappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
+import {
+  isDappRequestStoreItemForEthSendTxn,
+  isDappRequestStoreItemForSendCallsTxn,
+  selectAllDappRequests,
+} from 'src/app/features/dappRequests/slice'
 import {
   isConnectionRequest,
   isSignMessageRequest,
   isSignTypedDataRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { ExtensionState } from 'src/store/extensionReducer'
 import { AnimatePresence, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ReceiptText, RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const REJECT_MESSAGE_HEIGHT = 48
 
 export function DappRequestQueue(): JSX.Element {
-  const pendingDappRequests = useSelector((state: ExtensionState) => state.dappRequests.pending)
-  const areRequestsPending = pendingDappRequests.length > 0
+  const dappRequests = useSelector(selectAllDappRequests)
+  const requestsExist = dappRequests.length > 0
 
   return (
     <Modal
       alignment="top"
       backgroundColor="$transparent"
-      isModalOpen={areRequestsPending}
+      borderWidth={0}
+      isModalOpen={requestsExist}
       name={ModalName.DappRequest}
       padding="$none"
       zIndex={zIndexes.overlay}
     >
-      <DappRequestQueueProvider>
-        <DappRequestQueueContent />
-      </DappRequestQueueProvider>
+      <TransactionConfirmationTrackerProvider>
+        <DappRequestQueueProvider>
+          <DappRequestQueueContent />
+        </DappRequestQueueProvider>
+      </TransactionConfirmationTrackerProvider>
     </Modal>
   )
 }
@@ -77,7 +85,7 @@ function DappRequestQueueContent(): JSX.Element {
             minHeight={REJECT_MESSAGE_HEIGHT}
             p="$spacing12"
           >
-            <ReceiptText color="$neutral2" size={iconSizes.icon20} />
+            <ReceiptText color="$neutral2" size="$icon.20" />
             <Flex grow>
               <Text color="$neutral2" variant="body4">
                 <Trans
@@ -108,12 +116,11 @@ function DappRequestQueueContent(): JSX.Element {
       <Flex
         animation="200ms"
         backgroundColor="$surface1"
-        borderRadius="$rounded24"
+        borderRadius="$rounded16"
         gap="$spacing12"
-        mb="$spacing12"
-        p="$spacing12"
-        top={totalRequestCount > 1 ? 12 : 0}
+        mt={totalRequestCount > 1 ? '$spacing12' : '$none'}
         width="100%"
+        py="$spacing12"
       >
         {totalRequestCount > 1 && (
           <Flex
@@ -138,12 +145,7 @@ function DappRequestQueueContent(): JSX.Element {
               }}
               onPress={onPressPrevious}
             >
-              <RotatableChevron
-                color={disabledPrevious ? '$neutral3' : '$neutral2'}
-                direction="left"
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
+              <RotatableChevron color={disabledPrevious ? '$neutral3' : '$neutral2'} direction="left" size="$icon.16" />
             </TouchableArea>
             <Text color="$neutral2" variant="buttonLabel4">
               {currentIndex + 1}
@@ -167,12 +169,7 @@ function DappRequestQueueContent(): JSX.Element {
               }}
               onPress={onPressNext}
             >
-              <RotatableChevron
-                color={disabledNext ? '$neutral3' : '$neutral2'}
-                direction="right"
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
+              <RotatableChevron color={disabledNext ? '$neutral3' : '$neutral2'} direction="right" size="$icon.16" />
             </TouchableArea>
           </Flex>
         )}
@@ -183,7 +180,7 @@ function DappRequestQueueContent(): JSX.Element {
   )
 }
 
-const DappRequest = memo(function _DappRequest(): JSX.Element | null {
+const DappRequest = memo(function DappRequestInner(): JSX.Element | null {
   const { t } = useTranslation()
   const { request } = useDappRequestQueueContext()
 
@@ -202,6 +199,9 @@ const DappRequest = memo(function _DappRequest(): JSX.Element | null {
   }
   if (isConnectionRequest(request.dappRequest)) {
     return <ConnectionRequestContent />
+  }
+  if (isDappRequestStoreItemForSendCallsTxn(request)) {
+    return <SendCallsRequestHandler request={request} />
   }
 
   return <DappRequestContent confirmText={t('common.button.confirm')} title={t('dapp.request.base.title')} />

@@ -1,71 +1,131 @@
+/* oxlint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import UniswapXBolt from 'assets/svg/bolt.svg'
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
-import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import {
-  CancelledTransactionTitleTable,
-  LimitOrderTextTable,
-  OrderTextTable,
-  getActivityTitle,
-} from 'components/AccountDrawer/MiniPortfolio/constants'
-import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
-import { SignatureDetails, SignatureType } from 'state/signatures/types'
-import { useMultichainTransactions } from 'state/transactions/hooks'
-import {
-  AddLiquidityV2PoolTransactionInfo,
-  AddLiquidityV3PoolTransactionInfo,
+import type { Currency } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
+import { createElement } from 'react'
+import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
+import type {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
   CollectFeesTransactionInfo,
-  CreateV3PoolTransactionInfo,
-  DecreaseLiquidityTransactionInfo,
+  ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  IncreaseLiquidityTransactionInfo,
+  InterfaceBaseTransactionDetails,
+  InterfaceTransactionDetails,
+  LiquidityDecreaseTransactionInfo,
+  LiquidityIncreaseTransactionInfo,
+  LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
-  RemoveLiquidityV3TransactionInfo,
-  SendTransactionInfo,
-  TransactionDetails,
-  TransactionType,
+  PlanTransactionInfo,
+  SendTokenTransactionInfo,
+  ToucanBidTransactionInfo,
+  ToucanWithdrawBidAndClaimTokensTransactionInfo,
+  UniswapXOrderDetails,
   WrapTransactionInfo,
-} from 'state/transactions/types'
-import { isConfirmedTx } from 'state/transactions/utils'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
-import { isAddress } from 'utilities/src/addresses'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import {
+  getActivityTitle,
+  getCancelledTransactionTitleTable,
+  getLimitOrderTextTable,
+  getOrderTextTable,
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/constants'
+import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import {
+  getBridgeDescriptor,
+  getCrossChainDescriptor,
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import type { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
+import { createActivityMapByHash } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { FiatOnRampTransactionStatus } from '~/state/fiatOnRampTransactions/types'
+import {
+  forTransactionStatusToTransactionStatus,
+  statusToTransactionInfoStatus,
+} from '~/state/fiatOnRampTransactions/utils'
+import { useMultichainTransactions } from '~/state/transactions/hooks'
+import { isConfirmedTx } from '~/state/transactions/utils'
 
-type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
+type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
+type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
 
-function buildCurrencyDescriptor(
-  currencyA: Currency | undefined,
-  amtA: string,
-  currencyB: Currency | undefined,
-  amtB: string,
-  formatNumber: FormatNumberFunctionType,
+// Narrowing helper for when we actually need UniswapX-specific fields
+function isUniswapXDetails(
+  details: InterfaceTransactionDetails,
+): details is UniswapXOrderDetails<InterfaceBaseTransactionDetails> {
+  return 'routing' in details && isUniswapX(details)
+}
+
+/**
+ * Checks if a transaction is a UniswapX order by examining both the routing field (new approach)
+ * and the isUniswapXOrder flag (legacy approach for backward compatibility)
+ */
+function isUniswapXActivity(details: InterfaceTransactionDetails): boolean {
+  const { typeInfo } = details
+
+  // Must be a swap with trade type info
+  if (typeInfo.type !== TransactionType.Swap || !hasTradeType(typeInfo)) {
+    return false
+  }
+
+  // Check new routing-based approach
+  if (isUniswapXDetails(details)) {
+    return true
+  }
+
+  // Fall back to legacy flag for backward compatibility with existing transactions
+  // stored before migration to routing-based structure (see WALL-7143)
+  return 'isUniswapXOrder' in typeInfo && typeInfo.isUniswapXOrder === true
+}
+
+function buildCurrencyDescriptor({
+  currencyA,
+  amtA,
+  currencyB,
+  amtB,
+  formatNumber,
   isSwap = false,
-) {
+}: {
+  currencyA?: Currency
+  amtA: string
+  currencyB?: Currency
+  amtB: string
+  formatNumber: FormatNumberFunctionType
+  isSwap?: boolean
+}) {
   const formattedA = currencyA
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
-  const symbolA = currencyA?.symbol ? ` ${currencyA?.symbol}` : ''
+  const symbolA = currencyA?.symbol ? ` ${currencyA.symbol}` : ''
   const formattedB = currencyB
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
-  const symbolB = currencyB?.symbol ? ` ${currencyB?.symbol}` : ''
+  const symbolB = currencyB?.symbol ? ` ${currencyB.symbol}` : ''
 
   const amountWithSymbolA = `${formattedA}${symbolA}`
   const amountWithSymbolB = `${formattedB}${symbolB}`
@@ -81,14 +141,16 @@ function buildCurrencyDescriptor(
       })
 }
 
-async function parseSwap(
-  swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseSwap({
+  swap,
+  formatNumber,
+}: {
+  swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrency(swap.inputCurrencyId, chainId),
-    getCurrency(swap.outputCurrencyId, chainId),
+    getCurrencyFromCurrencyId(swap.inputCurrencyId),
+    getCurrencyFromCurrencyId(swap.outputCurrencyId),
   ])
   const [inputRaw, outputRaw] =
     swap.tradeType === TradeType.EXACT_INPUT
@@ -96,146 +158,211 @@ async function parseSwap(
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {
-    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, formatNumber, true),
+    descriptor: buildCurrencyDescriptor({
+      currencyA: tokenIn,
+      amtA: inputRaw,
+      currencyB: tokenOut,
+      amtB: outputRaw,
+      formatNumber,
+      isSwap: true,
+    }),
     currencies: [tokenIn, tokenOut],
-    prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
+    ...(swap.isUniswapXOrder ? { isUniswapX: true } : {}),
   }
 }
 
-async function parseBridge(
-  bridge: BridgeTransactionInfo,
-  inputChainId: UniverseChainId,
-  outputChainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseConfirmedSwap({
+  swap,
+  formatNumber,
+}: {
+  swap: ConfirmedSwapTransactionInfo
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrency(bridge.inputCurrencyId, inputChainId),
-    getCurrency(bridge.outputCurrencyId, outputChainId),
+    getCurrencyFromCurrencyId(swap.inputCurrencyId),
+    getCurrencyFromCurrencyId(swap.outputCurrencyId),
+  ])
+
+  // For confirmed swaps, we use the actual settled amounts
+  const inputRaw = swap.inputCurrencyAmountRaw
+  const outputRaw = swap.outputCurrencyAmountRaw
+
+  return {
+    descriptor: buildCurrencyDescriptor({
+      currencyA: tokenIn,
+      amtA: inputRaw,
+      currencyB: tokenOut,
+      amtB: outputRaw,
+      formatNumber,
+      isSwap: true,
+    }),
+    currencies: [tokenIn, tokenOut],
+    ...(swap.isUniswapXOrder ? { isUniswapX: true } : {}),
+  }
+}
+
+async function parseBridge({
+  bridge,
+  formatNumber,
+  chainId,
+}: {
+  bridge: BridgeTransactionInfo
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
+  const [tokenIn, tokenOut] = await Promise.all([
+    getCurrencyFromCurrencyId(bridge.inputCurrencyId),
+    getCurrencyFromCurrencyId(bridge.outputCurrencyId),
   ])
   const inputAmount = tokenIn
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
   const outputAmount = tokenOut
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
   return {
     descriptor: getBridgeDescriptor({ tokenIn, tokenOut, inputAmount, outputAmount }),
-    chainId: inputChainId,
-    outputChainId,
+    chainId: currencyIdToChain(bridge.inputCurrencyId) ?? chainId,
+    outputChainId: currencyIdToChain(bridge.outputCurrencyId) ?? chainId,
     currencies: [tokenIn, tokenOut],
-    prefixIconSrc: undefined,
   }
 }
 
-function parseWrap(
-  wrap: WrapTransactionInfo,
-  chainId: UniverseChainId,
-  status: TransactionStatus,
-  formatNumber: FormatNumberFunctionType,
-): Partial<Activity> {
+function parseWrap({
+  wrap,
+  chainId,
+  status,
+  formatNumber,
+}: {
+  wrap: WrapTransactionInfo
+  chainId: UniverseChainId
+  status: TransactionStatus
+  formatNumber: FormatNumberFunctionType
+}): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
   const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
-  const descriptor = buildCurrencyDescriptor(
-    input,
-    wrap.currencyAmountRaw,
-    output,
-    wrap.currencyAmountRaw,
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: input,
+    amtA: wrap.currencyAmountRaw,
+    currencyB: output,
+    amtB: wrap.currencyAmountRaw,
     formatNumber,
-    true,
-  )
-  const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
+    isSwap: true,
+  })
+  const title = getActivityTitle({
+    type: TransactionType.Wrap,
+    status,
+    alternate: wrap.unwrapped,
+  })
   const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
   return { title, descriptor, currencies }
 }
 
-async function parseApproval(
-  approval: ApproveTransactionInfo,
-  chainId: UniverseChainId,
-  status: TransactionStatus,
-): Promise<Partial<Activity>> {
-  const currency = await getCurrency(approval.tokenAddress, chainId)
+async function parseApproval({
+  approval,
+  chainId,
+  status,
+}: {
+  approval: ApproveTransactionInfo
+  chainId: UniverseChainId
+  status: TransactionStatus
+}): Promise<Partial<Activity>> {
+  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, approval.tokenAddress))
   const descriptor = currency?.symbol ?? currency?.name ?? i18n.t('common.unknown')
   return {
-    title: getActivityTitle(
-      TransactionType.APPROVAL,
+    title: getActivityTitle({
+      type: TransactionType.Approve,
       status,
-      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */,
-    ),
+      alternate: BigNumber.from(approval.approvalAmount).eq(0), // use alternate if it's a revoke
+    }),
     descriptor,
     currencies: [currency],
   }
 }
 
-type GenericLegacyLPInfo = Omit<
-  AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
-  'type'
->
-async function parseLegacyLP(
-  lp: GenericLegacyLPInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
-  const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrency(lp.baseCurrencyId, chainId),
-    getCurrency(lp.quoteCurrencyId, chainId),
+async function parseCurrencyInfoForLP({
+  currencyInfo,
+  formatNumber,
+}: {
+  currencyInfo: {
+    currency0Id: string
+    currency1Id?: string
+    currency0AmountRaw: string
+    currency1AmountRaw?: string
+  }
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
+  const [currency0, currency1] = await Promise.all([
+    getCurrencyFromCurrencyId(currencyInfo.currency0Id),
+    currencyInfo.currency1Id ? getCurrencyFromCurrencyId(currencyInfo.currency1Id) : undefined,
   ])
-  const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
-  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber)
 
-  return { descriptor, currencies: [baseCurrency, quoteCurrency] }
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: currency0,
+    amtA: currencyInfo.currency0AmountRaw,
+    currencyB: currency1,
+    amtB: currencyInfo.currency1AmountRaw ?? '0',
+    formatNumber,
+  })
+
+  return { descriptor, currencies: [currency0, currency1] }
 }
 
-type GenericLiquidityInfo = Omit<IncreaseLiquidityTransactionInfo | DecreaseLiquidityTransactionInfo, 'type'>
-async function parseLiquidity(
-  lp: GenericLiquidityInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+type GenericLiquidityInfo = Omit<LiquidityIncreaseTransactionInfo | LiquidityDecreaseTransactionInfo, 'type'>
+
+async function parseLiquidity({
+  lp,
+  formatNumber,
+}: {
+  lp: GenericLiquidityInfo
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [token0Currency, token1Currency] = await Promise.all([
-    getCurrency(lp.token0CurrencyId, chainId),
-    getCurrency(lp.token1CurrencyId, chainId),
+    getCurrencyFromCurrencyId(lp.currency0Id),
+    getCurrencyFromCurrencyId(lp.currency1Id),
   ])
-  const [token0Raw, token1Raw] = [lp.token0CurrencyAmountRaw, lp.token1CurrencyAmountRaw]
-  const descriptor = buildCurrencyDescriptor(token0Currency, token0Raw, token1Currency, token1Raw, formatNumber)
+  const [token0Raw, token1Raw] = [lp.currency0AmountRaw, lp.currency1AmountRaw]
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: token0Currency,
+    amtA: token0Raw,
+    currencyB: token1Currency,
+    amtB: token1Raw,
+    formatNumber,
+  })
 
   return { descriptor, currencies: [token0Currency, token1Currency] }
 }
 
-async function parseCollectFees(
-  collect: CollectFeesTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseCollectFees({
+  collectInfo,
+  formatNumber,
+}: {
+  collectInfo: CollectFeesTransactionInfo
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
-  const {
-    token0CurrencyId: baseCurrencyId,
-    token1CurrencyId: quoteCurrencyId,
-    token0CurrencyAmountRaw: expectedAmountBaseRaw,
-    token1CurrencyAmountRaw: expectedAmountQuoteRaw,
-  } = collect
-  return parseLegacyLP(
-    { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
-    chainId,
+  return parseCurrencyInfoForLP({
+    currencyInfo: collectInfo,
     formatNumber,
-  )
+  })
 }
 
-async function parseMigrateCreateV3(
-  lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: UniverseChainId,
-): Promise<Partial<Activity>> {
+async function parseMigrateV2ToV3({
+  baseCurrencyId,
+  quoteCurrencyId,
+}: MigrateV2LiquidityToV3TransactionInfo): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrency(lp.baseCurrencyId, chainId),
-    getCurrency(lp.quoteCurrencyId, chainId),
+    getCurrencyFromCurrencyId(baseCurrencyId),
+    getCurrencyFromCurrencyId(quoteCurrencyId),
   ])
   const baseSymbol = baseCurrency?.symbol ?? i18n.t('common.unknown')
   const quoteSymbol = quoteCurrency?.symbol ?? i18n.t('common.unknown')
@@ -247,20 +374,27 @@ async function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-async function parseSend(
-  send: SendTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
-  const { currencyId, amount, recipient } = send
-  const currency = await getCurrency(currencyId, chainId)
-  const formattedAmount = currency
-    ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
-        type: NumberType.TokenNonTx,
-      })
-    : i18n.t('common.unknown')
-  const otherAccount = isAddress(recipient) || undefined
+async function parseSend({
+  send,
+  formatNumber,
+  chainId,
+}: {
+  send: SendTokenTransactionInfo
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
+  const { tokenAddress, currencyAmountRaw, recipient } = send
+  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, tokenAddress))
+  const formattedAmount =
+    currency && currencyAmountRaw
+      ? formatNumber({
+          value: parseFloat(CurrencyAmount.fromRawAmount(currency, currencyAmountRaw).toSignificant()),
+          type: NumberType.TokenNonTx,
+        })
+      : i18n.t('common.unknown')
+  // TODO(SWAP-119): edit to allow SVM platform if Solana send is supported
+  const otherAccount =
+    getValidAddress({ address: recipient, platform: Platform.EVM, withEVMChecksum: true }) || undefined
 
   return {
     descriptor: i18n.t('activity.transaction.send.descriptor', {
@@ -272,65 +406,380 @@ async function parseSend(
   }
 }
 
-export async function transactionToActivity(
-  details: TransactionDetails | undefined,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Activity | undefined> {
+async function parseToucanBid({
+  bid,
+  formatNumber,
+  chainId,
+}: {
+  bid: ToucanBidTransactionInfo
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
+  const currencyId =
+    bid.bidTokenAddress === ZERO_ADDRESS
+      ? buildNativeCurrencyId(chainId)
+      : buildCurrencyId(chainId, bid.bidTokenAddress)
+  const currency = await getCurrencyFromCurrencyId(currencyId)
+
+  const formattedAmount =
+    currency && bid.amountRaw
+      ? formatNumber({
+          value: parseFloat(CurrencyAmount.fromRawAmount(currency, bid.amountRaw).toSignificant()),
+          type: NumberType.TokenNonTx,
+        })
+      : undefined
+
+  return {
+    descriptor:
+      currency && formattedAmount
+        ? i18n.t('activity.transaction.submitBid.descriptor', {
+            amountWithSymbol: `${formattedAmount} ${currency.symbol}`,
+            walletAddress: bid.auctionContractAddress,
+          })
+        : i18n.t('common.unknown'),
+    currencies: [currency],
+  }
+}
+
+async function parseWithdrawBidAndClaimTokens({
+  withdraw,
+  formatNumber,
+  chainId,
+  status,
+}: {
+  withdraw: ToucanWithdrawBidAndClaimTokensTransactionInfo
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+  status: TransactionStatus
+}): Promise<Partial<Activity>> {
+  // Resolve currency objects from addresses
+  const [auctionCurrency, bidCurrency] = await Promise.all([
+    withdraw.auctionTokenAddress
+      ? getCurrencyFromCurrencyId(buildCurrencyId(chainId, withdraw.auctionTokenAddress))
+      : undefined,
+    withdraw.bidTokenAddress
+      ? getCurrencyFromCurrencyId(
+          withdraw.bidTokenAddress === ZERO_ADDRESS
+            ? buildNativeCurrencyId(chainId)
+            : buildCurrencyId(chainId, withdraw.bidTokenAddress),
+        )
+      : undefined,
+  ])
+
+  const hasAuctionTokens = withdraw.auctionTokenAmountRaw && withdraw.auctionTokenAmountRaw !== '0'
+  const hasBidTokens = withdraw.bidTokenAmountRaw && withdraw.bidTokenAmountRaw !== '0'
+
+  // Build descriptor and title based on what's available
+  let descriptor: string
+  let title: string
+
+  if (hasAuctionTokens && hasBidTokens) {
+    // Both tokens - use the default withdraw bid title
+    title = getActivityTitle({ type: TransactionType.ToucanWithdrawBidAndClaimTokens, status })
+    const formattedBid = bidCurrency
+      ? formatNumber({
+          value: parseFloat(CurrencyAmount.fromRawAmount(bidCurrency, withdraw.bidTokenAmountRaw!).toSignificant()),
+          type: NumberType.TokenNonTx,
+        })
+      : i18n.t('common.unknown')
+    const formattedAuction = auctionCurrency
+      ? formatNumber({
+          value: parseFloat(
+            CurrencyAmount.fromRawAmount(auctionCurrency, withdraw.auctionTokenAmountRaw!).toSignificant(),
+          ),
+          type: NumberType.TokenNonTx,
+        })
+      : i18n.t('common.unknown')
+
+    descriptor = i18n.t('activity.transaction.withdrawAndClaim.descriptor', {
+      withdrawnAmount: `${formattedBid} ${bidCurrency?.symbol}`,
+      claimedAmount: `${formattedAuction} ${auctionCurrency?.symbol}`,
+    })
+  } else if (hasBidTokens) {
+    // Refund only - user bid but didn't win any tokens
+    const formattedBid = bidCurrency
+      ? formatNumber({
+          value: parseFloat(CurrencyAmount.fromRawAmount(bidCurrency, withdraw.bidTokenAmountRaw!).toSignificant()),
+          type: NumberType.TokenNonTx,
+        })
+      : i18n.t('common.unknown')
+
+    const refundedLabel = i18n.t('toucan.bid.refunded')
+    title = refundedLabel
+    descriptor = `${refundedLabel} ${formattedBid} ${bidCurrency?.symbol ?? ''}`
+  } else if (hasAuctionTokens) {
+    // Only auction tokens - use claim title
+    title = getActivityTitle({ type: TransactionType.AuctionClaimed, status })
+    const formattedAuction = auctionCurrency
+      ? formatNumber({
+          value: parseFloat(
+            CurrencyAmount.fromRawAmount(auctionCurrency, withdraw.auctionTokenAmountRaw!).toSignificant(),
+          ),
+          type: NumberType.TokenNonTx,
+        })
+      : i18n.t('common.unknown')
+
+    descriptor = i18n.t('activity.transaction.claim.descriptor', {
+      amountWithSymbol: `${formattedAuction} ${auctionCurrency?.symbol}`,
+    })
+  } else {
+    // Fallback for edge case
+    title = getActivityTitle({ type: TransactionType.ToucanWithdrawBidAndClaimTokens, status })
+    descriptor = i18n.t('common.unknown')
+  }
+
+  // Build currencies array with only non-undefined values
+  const currencies = [bidCurrency, auctionCurrency].filter((c): c is Currency => c !== undefined)
+
+  return {
+    title,
+    descriptor,
+    currencies: currencies.length > 0 ? currencies : undefined,
+  }
+}
+
+async function parseLpIncentivesClaim({
+  info,
+  chainId,
+}: {
+  info: LpIncentivesClaimTransactionInfo
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
+  const token = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, info.tokenAddress))
+  const symbol = token?.symbol ?? i18n.t('common.unknown')
+  return {
+    descriptor: i18n.t('activity.transaction.lpRewards.descriptor', { symbol }),
+    currencies: [token],
+  }
+}
+
+async function parseUniswapXOrderLocal({
+  details,
+  formatNumber,
+}: {
+  details: InterfaceTransactionDetails
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
+  const { typeInfo } = details
+  const uniswapXOrderDetails = isUniswapXDetails(details) ? details : undefined
+  const isLimitOrder = uniswapXOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT
+
+  // Get the appropriate order text table
+  const orderTextTable = getOrderTextTable()
+  const limitOrderTextTable = getLimitOrderTextTable()
+  let orderTextTableEntry = (isLimitOrder ? limitOrderTextTable : orderTextTable)[details.status]
+
+  // Fallback for missing status entries
+  if (!orderTextTableEntry) {
+    // Use default swap title/status as fallback
+    orderTextTableEntry = {
+      getTitle: () => getActivityTitle({ type: TransactionType.Swap, status: details.status }),
+      status: details.status,
+    }
+  }
+
+  const title = orderTextTableEntry.getTitle()
+  const statusMessage = orderTextTableEntry.getStatusMessage?.()
+  const swapFields = await parseSwap({
+    swap: typeInfo as ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
+    formatNumber,
+  })
+
+  // Create offchainOrderDetails if we have routing information
+  const offchainOrderDetails = uniswapXOrderDetails
+    ? {
+        ...uniswapXOrderDetails,
+        orderHash: uniswapXOrderDetails.orderHash || uniswapXOrderDetails.hash,
+      }
+    : undefined
+
+  return {
+    ...swapFields,
+    title,
+    status: orderTextTableEntry.status,
+    statusMessage,
+    isUniswapX: true,
+    offchainOrderDetails,
+  }
+}
+
+async function parsePlan({
+  plan,
+  formatNumber,
+  chainId,
+}: {
+  plan: PlanTransactionInfo
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
+  const [tokenIn, tokenOut] = await Promise.all([
+    getCurrencyFromCurrencyId(plan.inputCurrencyId),
+    getCurrencyFromCurrencyId(plan.outputCurrencyId),
+  ])
+
+  const inputAmount = tokenIn
+    ? formatNumber({
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, plan.inputCurrencyAmountRaw).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : i18n.t('common.unknown')
+
+  const outputAmount = tokenOut
+    ? formatNumber({
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, plan.outputCurrencyAmountRaw).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : i18n.t('common.unknown')
+
+  return {
+    descriptor: getCrossChainDescriptor({
+      inputChainId: tokenIn?.chainId ?? null,
+      inputSymbol: tokenIn?.symbol ?? '',
+      outputChainId: tokenOut?.chainId ?? null,
+      outputSymbol: tokenOut?.symbol ?? '',
+      formattedInputTokenAmount: inputAmount,
+      formattedOutputTokenAmount: outputAmount,
+    }),
+    chainId: currencyIdToChain(plan.inputCurrencyId) ?? chainId,
+    outputChainId: plan.tokenOutChainId,
+    currencies: [tokenIn, tokenOut],
+  }
+}
+
+export async function transactionToActivity({
+  details,
+  formatNumber,
+}: {
+  details?: InterfaceTransactionDetails
+  formatNumber: FormatNumberFunctionType
+}): Promise<Activity | undefined> {
   if (!details) {
     return undefined
   }
+  const { chainId } = details
   try {
-    const defaultFields = {
+    // For swaps that might be UniswapX, we'll set the title later
+    const shouldDeferTitle = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
+
+    const defaultFields: Activity = {
+      id: details.id,
       hash: details.hash,
       chainId,
-      title: getActivityTitle(details.info.type, details.status),
+      // Store transaction request in options.request for consistent nonce access
+      options: 'options' in details ? details.options : undefined,
+      title: shouldDeferTitle ? '' : getActivityTitle({ type: details.typeInfo.type, status: details.status }),
       status: details.status,
-      timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
+      timestamp: (isConfirmedTx(details) ? details.receipt.confirmedTime : details.addedTime) / ONE_SECOND_MS,
       from: details.from,
-      nonce: details.nonce,
-      cancelled: details.cancelled,
     }
 
     let additionalFields: Partial<Activity> = {}
-    const info = details.info
-    if (info.type === TransactionType.SWAP) {
-      additionalFields = await parseSwap(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.BRIDGE) {
-      additionalFields = await parseBridge(info, chainId, info.outputChainId ?? chainId, formatNumber)
-    } else if (info.type === TransactionType.APPROVAL) {
-      additionalFields = await parseApproval(info, chainId, details.status)
-    } else if (info.type === TransactionType.WRAP) {
-      additionalFields = parseWrap(info, chainId, details.status, formatNumber)
+    const info = details.typeInfo
+    if (info.type === TransactionType.Swap) {
+      if (isUniswapXActivity(details)) {
+        additionalFields = await parseUniswapXOrderLocal({
+          details,
+          formatNumber,
+        })
+      } else {
+        // Handle as regular swap
+        const confirmedSwap = isConfirmedSwapTypeInfo(info)
+        if (!confirmedSwap) {
+          additionalFields = await parseSwap({
+            swap: info,
+            formatNumber,
+          })
+        } else {
+          additionalFields = await parseConfirmedSwap({
+            swap: info,
+            formatNumber,
+          })
+        }
+      }
+    } else if (info.type === TransactionType.Bridge) {
+      additionalFields = await parseBridge({
+        bridge: info,
+        formatNumber,
+        chainId,
+      })
+    } else if (info.type === TransactionType.Approve) {
+      additionalFields = await parseApproval({
+        approval: info,
+        chainId,
+        status: details.status,
+      })
+    } else if (info.type === TransactionType.Wrap) {
+      additionalFields = parseWrap({
+        wrap: info,
+        chainId,
+        status: details.status,
+        formatNumber,
+      })
     } else if (
-      info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
-      info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
-      info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
+      info.type === TransactionType.LiquidityIncrease ||
+      info.type === TransactionType.LiquidityDecrease ||
+      info.type === TransactionType.CreatePool ||
+      info.type === TransactionType.CreatePair ||
+      info.type === TransactionType.MigrateLiquidityV3ToV4
     ) {
-      additionalFields = await parseLegacyLP(info, chainId, formatNumber)
-    } else if (
-      info.type === TransactionType.INCREASE_LIQUIDITY ||
-      info.type === TransactionType.DECREASE_LIQUIDITY ||
-      info.type === TransactionType.CREATE_POSITION ||
-      info.type === TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
-    ) {
-      additionalFields = await parseLiquidity(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.COLLECT_FEES) {
-      additionalFields = await parseCollectFees(info, chainId, formatNumber)
-    } else if (
-      info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3 ||
-      info.type === TransactionType.CREATE_V3_POOL
-    ) {
-      additionalFields = await parseMigrateCreateV3(info, chainId)
-    } else if (info.type === TransactionType.SEND) {
-      additionalFields = await parseSend(info, chainId, formatNumber)
+      additionalFields = await parseLiquidity({
+        lp: info,
+        formatNumber,
+      })
+    } else if (info.type === TransactionType.CollectFees) {
+      additionalFields = await parseCollectFees({
+        collectInfo: info,
+        formatNumber,
+      })
+    } else if (info.type === TransactionType.MigrateLiquidityV2ToV3) {
+      additionalFields = await parseMigrateV2ToV3(info)
+    } else if (info.type === TransactionType.Send) {
+      additionalFields = await parseSend({
+        send: info,
+        formatNumber,
+        chainId,
+      })
+    } else if (info.type === TransactionType.ToucanBid) {
+      additionalFields = await parseToucanBid({
+        bid: info,
+        formatNumber,
+        chainId,
+      })
+    } else if (info.type === TransactionType.ToucanWithdrawBidAndClaimTokens) {
+      additionalFields = await parseWithdrawBidAndClaimTokens({
+        withdraw: info,
+        formatNumber,
+        chainId,
+        status: details.status,
+      })
+    } else if (info.type === TransactionType.LPIncentivesClaimRewards) {
+      additionalFields = await parseLpIncentivesClaim({
+        info,
+        chainId,
+      })
+    } else if (info.type === TransactionType.Permit2Approve) {
+      additionalFields = {
+        title: i18n.t('common.permit'),
+        descriptor: i18n.t('notification.transaction.unknown.success.short'),
+        portfolioLogoCustomIcon: createElement(SwapDotted, { size: '$icon.24', color: '$neutral2' }),
+      }
+    } else if (info.type === TransactionType.Plan) {
+      additionalFields = await parsePlan({
+        plan: info,
+        formatNumber,
+        chainId,
+      })
     }
 
     const activity = { ...defaultFields, ...additionalFields }
 
-    if (details.cancelled) {
-      activity.title = CancelledTransactionTitleTable[details.info.type]
-      activity.status = TransactionStatus.Confirmed
+    // Skip the canceled transaction override for UniswapX orders since they handle it specially
+    // oxlint-disable-next-line no-shadow
+    const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
+    const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
+    if (details.status === TransactionStatus.Canceled && !isUniswapX) {
+      activity.title = CancelledTransactionTitleTable[details.typeInfo.type]
+      activity.status = TransactionStatus.Success
     }
 
     return activity
@@ -340,25 +789,78 @@ export async function transactionToActivity(
   }
 }
 
-export function getTransactionToActivityQueryOptions(
-  transaction: TransactionDetails | undefined,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-) {
+export function getTransactionToActivityQueryOptions({
+  transaction,
+  formatNumber,
+}: {
+  transaction?: InterfaceTransactionDetails
+  formatNumber: FormatNumberFunctionType
+}) {
   return queryOptions({
-    queryKey: ['transactionToActivity', transaction, chainId],
-    queryFn: async () => transactionToActivity(transaction, chainId, formatNumber),
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
+    queryFn: async () => transactionToActivity({ details: transaction, formatNumber }),
   })
 }
 
-export function getSignatureToActivityQueryOptions(
-  signature: SignatureDetails | undefined,
-  formatNumber: FormatNumberFunctionType,
-) {
+export function getFORTransactionToActivityQueryOptions({
+  transaction,
+  formatNumber,
+  formatFiatPrice,
+}: {
+  transaction?: FORTransaction
+  formatNumber: FormatNumberFunctionType
+  formatFiatPrice: FormatFiatPriceFunctionType
+}) {
   return queryOptions({
-    queryKey: ['signatureToActivity', signature],
-    queryFn: async () => signatureToActivity(signature, formatNumber),
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
+    queryFn: async () => forTransactionToActivity({ transaction, formatNumber, formatFiatPrice }),
   })
+}
+
+async function forTransactionToActivity({
+  transaction,
+  formatNumber,
+  formatFiatPrice,
+}: {
+  transaction?: FORTransaction
+  formatNumber: FormatNumberFunctionType
+  formatFiatPrice: FormatFiatPriceFunctionType
+}): Promise<Activity | undefined> {
+  if (!transaction) {
+    return undefined
+  }
+
+  const chainId = Number(transaction.cryptoDetails?.chainId) as UniverseChainId
+  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, transaction.sourceCurrencyCode))
+  const status = statusToTransactionInfoStatus(transaction.status)
+  const serviceProvider = transaction.serviceProviderDetails?.name ?? ''
+  const tokenAmount = formatNumber({ value: transaction.sourceAmount, type: NumberType.TokenNonTx })
+  const fiatAmount = formatFiatPrice(transaction.destinationAmount, NumberType.FiatTokenPrice)
+
+  let title = ''
+  switch (status) {
+    case FiatOnRampTransactionStatus.PENDING:
+      title = i18n.t('transaction.status.sale.pendingOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.COMPLETE:
+      title = i18n.t('transaction.status.sale.successOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.FAILED:
+      title = i18n.t('transaction.status.sale.failedOn', { serviceProvider })
+      break
+  }
+
+  return {
+    id: transaction.externalSessionId,
+    hash: transaction.externalSessionId,
+    chainId,
+    title,
+    descriptor: `${tokenAmount} ${transaction.sourceCurrencyCode} ${i18n.t('common.for').toLocaleLowerCase()} ${fiatAmount}`,
+    currencies: [currency],
+    status: forTransactionStatusToTransactionStatus(status),
+    timestamp: convertToSecTimestamp(Number(transaction.createdAt)),
+    from: transaction.cryptoDetails?.walletAddress ?? '',
+  }
 }
 
 function convertToSecTimestamp(timestamp: number) {
@@ -371,70 +873,25 @@ function convertToSecTimestamp(timestamp: number) {
   }
 }
 
-export async function signatureToActivity(
-  signature: SignatureDetails | undefined,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Activity | undefined> {
-  if (!signature) {
-    return undefined
-  }
-  switch (signature.type) {
-    case SignatureType.SIGN_UNISWAPX_ORDER:
-    case SignatureType.SIGN_UNISWAPX_V2_ORDER:
-    case SignatureType.SIGN_UNISWAPX_V3_ORDER:
-    case SignatureType.SIGN_PRIORITY_ORDER:
-    case SignatureType.SIGN_LIMIT: {
-      // Only returns Activity items for orders that don't have an on-chain counterpart
-      if (isOnChainOrder(signature.status)) {
-        return undefined
-      }
-
-      const { title, statusMessage, status } =
-        signature.type === SignatureType.SIGN_LIMIT
-          ? LimitOrderTextTable[signature.status]
-          : OrderTextTable[signature.status]
-
-      return {
-        hash: signature.orderHash,
-        chainId: signature.chainId,
-        title,
-        status,
-        offchainOrderDetails: signature,
-        timestamp: convertToSecTimestamp(signature.addedTime),
-        from: signature.offerer,
-        statusMessage,
-        prefixIconSrc: UniswapXBolt,
-        ...(await parseSwap(signature.swapInfo, signature.chainId, formatNumber)),
-      }
-    }
-    default:
-      return undefined
-  }
-}
-
 export function useLocalActivities(account: string): ActivityMap {
-  const allTransactions = useMultichainTransactions()
-  const allSignatures = useAllSignatures()
-  const { formatNumber } = useFormatter()
+  const allTransactions = useMultichainTransactions(account)
+  const { formatNumberOrString } = useLocalizationContext()
   const { chains } = useEnabledChains()
 
   const { data } = useQuery({
-    queryKey: ['localActivities', account, allTransactions, allSignatures],
+    queryKey: [ReactQueryCacheKey.LocalActivities, account, allTransactions],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
-        .filter(([transaction]) => transaction.from === account)
         .filter(([, chainId]) => chains.includes(chainId))
-        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
-      const signatures = Object.values(allSignatures)
-        .filter((signature) => signature.offerer === account)
-        .map((signature) => signatureToActivity(signature, formatNumber))
+        .map(([transaction]) =>
+          transactionToActivity({
+            details: transaction,
+            formatNumber: formatNumberOrString,
+          }),
+        )
 
-      return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
-        if (activity) {
-          acc[activity.hash] = activity
-        }
-        return acc
-      }, {} as ActivityMap)
+      const allActivities = await Promise.all(transactions)
+      return createActivityMapByHash(allActivities)
     },
   })
 
