@@ -30,7 +30,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
         >
           <div
             class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-            data-testid="network-logo"
+            data-testid="network-logo-1"
             style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
           >
             <div
@@ -62,7 +62,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
         >
           <defs>
             <mask
-              id=":r1a:-overlap-mask"
+              id="«r1a»-overlap-mask"
             >
               <rect
                 fill="white"
@@ -84,7 +84,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#:r1a:-overlap-mask)"
+            mask="url(#«r1a»-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"
@@ -97,7 +97,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
               >
                 <div
                   class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-                  data-testid="network-logo"
+                  data-testid="network-logo-137"
                   style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
                 >
                   <div
@@ -146,7 +146,7 @@ exports[`[object Object] > renders single network logo 1`] = `
         >
           <div
             class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-            data-testid="network-logo"
+            data-testid="network-logo-1"
             style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
           >
             <div
@@ -192,7 +192,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
         >
           <div
             class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-            data-testid="network-logo"
+            data-testid="network-logo-1"
             style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
           >
             <div
@@ -224,7 +224,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
         >
           <defs>
             <mask
-              id=":ri:-overlap-mask"
+              id="«ri»-overlap-mask"
             >
               <rect
                 fill="white"
@@ -246,7 +246,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#:ri:-overlap-mask)"
+            mask="url(#«ri»-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"
@@ -259,7 +259,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
               >
                 <div
                   class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-                  data-testid="network-logo"
+                  data-testid="network-logo-42161"
                   style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
                 >
                   <div
@@ -294,7 +294,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
         >
           <defs>
             <mask
-              id=":rq:-overlap-mask"
+              id="«rq»-overlap-mask"
             >
               <rect
                 fill="white"
@@ -316,7 +316,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#:rq:-overlap-mask)"
+            mask="url(#«rq»-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"
@@ -329,7 +329,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
               >
                 <div
                   class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-                  data-testid="network-logo"
+                  data-testid="network-logo-10"
                   style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-style: solid;"
                 >
                   <div

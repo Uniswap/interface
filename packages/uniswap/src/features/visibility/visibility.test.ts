@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/no-explicit-any -- legacy code needs review */
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   selectActivityVisibility,

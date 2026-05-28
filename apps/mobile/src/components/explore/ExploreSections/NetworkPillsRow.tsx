@@ -70,7 +70,6 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
     items: chains,
   })
 
-  // oxlint-disable-next-line react/exhaustive-deps -- need theme dep for foregroundColor to change on theme change
   const renderItemNetworkPills = useCallback(
     ({ item }: { item: UniverseChainId }) => {
       return (

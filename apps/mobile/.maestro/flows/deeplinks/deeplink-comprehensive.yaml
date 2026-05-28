@@ -113,8 +113,9 @@ env:
     timeout: 3000
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
+# Multichain UX: Buy/Sell buttons replaced single Swap button
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:

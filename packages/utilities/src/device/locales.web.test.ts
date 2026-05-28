@@ -1,18 +1,11 @@
-/* oxlint-disable no-restricted-globals -- need to reference chrome for test setup */
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
 import { getDeviceLocales } from 'utilities/src/device/locales.web'
-import { Mock, vi } from 'vitest'
-
-// Mock the chrome utilities to return the global chrome mock from vitest setup
-vi.mock('utilities/src/chrome/chrome', () => ({
-  getChromeWithThrow: (): typeof chrome => global.chrome,
-}))
+import { Mock } from 'vitest'
 
 describe(getDeviceLocales, () => {
   const MOCK_LANGUAGE = 'es-ES'
 
   beforeEach(() => {
-    // oxlint-disable-next-line no-extra-semi
     ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => MOCK_LANGUAGE)
   })
 
@@ -22,7 +15,6 @@ describe(getDeviceLocales, () => {
   })
 
   it('should return the default locale if an error occurs', () => {
-    // oxlint-disable-next-line no-extra-semi
     ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => {
       throw new Error('test error')
     })

@@ -71,6 +71,7 @@ export interface ApproveTxNotification extends TransactionNotificationBase {
   txType: TransactionType.Approve
   tokenAddress: string
   spender: string
+  tokenSymbol?: string
 }
 
 export interface BridgeTxNotification extends TransactionNotificationBase {

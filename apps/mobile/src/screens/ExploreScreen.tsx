@@ -1,7 +1,7 @@
 import type { RouteProp } from '@react-navigation/native'
 import { useIsFocused, useNavigation, useRoute, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { isAndroid } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TextInput } from 'react-native'
@@ -15,7 +15,6 @@ import { ExploreScreenSearchResultsList } from 'src/components/explore/search/Ex
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, useLayoutAnimationOnChange } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
-import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter, type NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -24,7 +23,6 @@ import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 
@@ -38,13 +36,12 @@ const networkFilterStyles: NetworkFilterProps['styles'] = { buttonPaddingY: '$no
 
 export function ExploreScreen(): JSX.Element {
   const { chains } = useEnabledChains()
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
   const navigation = useNavigation()
   const route = useRoute<RouteProp<ExploreStackParamList, MobileScreens.Explore>>()
   // oxlint-disable-next-line typescript/no-unnecessary-condition -- route.params can be null
   const { chainId, orderByMetric, showFavorites } = route.params ?? {}
 
-  const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: isBottomTabsEnabled })
+  const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: true })
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -66,7 +63,7 @@ export function ExploreScreen(): JSX.Element {
 
   // Disable default scroll-to-top behavior when bottom tabs are enabled
   // We'll implement custom behavior that focuses search input if already at top
-  useScrollToTop(isBottomTabsEnabled ? { current: null } : listRef)
+  useScrollToTop({ current: null })
 
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
 
@@ -74,13 +71,8 @@ export function ExploreScreen(): JSX.Element {
     duration: 125,
   })
 
-  // Custom tab press handler for double-tap behavior (only when bottom tabs enabled)
-  // This effect only runs when isBottomTabsEnabled or navigation changes
+  // Custom tab press handler for double-tap behavior on the Explore tab
   useEffect((): (() => void) | undefined => {
-    if (!isBottomTabsEnabled) {
-      return undefined
-    }
-
     const unsubscribe = navigation.addListener('state', (e) => {
       const currentRouteName = e.data.state.routeNames[e.data.state.index] as unknown as string | undefined
       const isOnExploreScreen = currentRouteName === MobileScreens.Explore
@@ -112,7 +104,7 @@ export function ExploreScreen(): JSX.Element {
 
     return unsubscribe
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [isBottomTabsEnabled, navigation])
+  }, [navigation])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
   const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
@@ -147,15 +139,11 @@ export function ExploreScreen(): JSX.Element {
   })
 
   useEffect(() => {
-    // Moved location of this event only in bottom tab mode
-    if (isBottomTabsEnabled) {
-      dispatch(setHasUsedExplore(true))
-    }
-  }, [dispatch, isBottomTabsEnabled])
+    dispatch(setHasUsedExplore(true))
+  }, [dispatch])
 
   return (
     <Screen backgroundColor="$surface1" edges={edges}>
-      {!isBottomTabsEnabled && <HandleBar backgroundColor="none" />}
       <Flex p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
@@ -194,7 +182,7 @@ export function ExploreScreen(): JSX.Element {
       ) : isSheetReady && canRenderList ? (
         <ExploreSections
           listRef={listRef}
-          setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined}
+          setIsAtTopOnScroll={setIsAtTop}
           chainId={chainId}
           orderByMetric={orderByMetric}
           showFavorites={showFavorites}

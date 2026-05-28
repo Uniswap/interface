@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines */
 import { Code, ConnectError } from '@connectrpc/connect'
 import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -5,19 +6,23 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { checkRecoveryAvailability } from 'uniswap/src/features/passkey/checkRecoveryAvailability'
 import {
   authorizeAndCompleteRecovery,
   type EncryptedRecoveryState,
   encryptAndStoreRecovery,
+  RecoveryMethod,
   type RecoveryAuthMethodType,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { validatePin } from 'uniswap/src/features/passkey/pinValidation'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { type AuthenticatorDisplay } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { ConfirmPasscodeExtra, SuccessStep } from '~/components/Passkey/AddBackupLoginFinalSteps'
 import {
+  AlreadyInUseStep,
   EmailCodeStep,
   EmailEntryStep,
   MethodSelectStep,
@@ -27,6 +32,7 @@ import {
 import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
+import { getPrivyConfig } from '~/config'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
@@ -34,10 +40,11 @@ enum Step {
   METHOD_SELECT = 0,
   EMAIL_ENTRY = 1,
   EMAIL_CODE = 2,
-  PASSCODE_INTRO = 3,
-  SET_PASSCODE = 4,
-  CONFIRM_PASSCODE = 5,
-  SUCCESS = 6,
+  ALREADY_IN_USE = 3,
+  PASSCODE_INTRO = 4,
+  SET_PASSCODE = 5,
+  CONFIRM_PASSCODE = 6,
+  SUCCESS = 7,
 }
 
 function isPrivyInvalidCredentials(error: unknown): boolean {
@@ -57,6 +64,7 @@ export function AddBackupLoginModal() {
   const [email, setEmail] = useState('')
   const firstPinRef = useRef('')
   const encryptionIdRef = useRef(0)
+  const verificationIdRef = useRef(0)
   const [showPasscode, setShowPasscode] = useState(false)
   const [isSigningIn, setIsSigningIn] = useState(false)
   const [isEncrypting, setIsEncrypting] = useState(false)
@@ -65,18 +73,48 @@ export function AddBackupLoginModal() {
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
 
-  const { ready: privyReady, getAccessToken, user } = usePrivy()
+  const { ready: privyReady, getAccessToken, user, logout } = usePrivy()
 
   const oauthReturn = useOAuthResult(OAUTH_PENDING_KEY)
 
-  // When OAuth return is detected, advance to PASSCODE_INTRO
-  useEffect(() => {
-    if (oauthReturn.provider && !oauthReturn.pending) {
-      setOauthProvider(oauthReturn.provider)
-      setOauthEmail(oauthReturn.providerEmail)
+  // Probes the server before advancing to the passcode setup step. If the picked
+  // factor is already linked to another wallet, surfaces ALREADY_IN_USE so the
+  // user doesn't burn a passkey ceremony on a known-bad path. The generation
+  // guard prevents a late resolve from clobbering state if the user closed or
+  // navigated away during the ~200-500ms wait.
+  const advanceAfterVerification = useEvent(async (identifier: string): Promise<void> => {
+    const thisId = ++verificationIdRef.current
+    try {
+      const accessToken = await getAccessToken()
+      if (verificationIdRef.current !== thisId) {
+        return
+      }
+      if (!accessToken) {
+        setStep(Step.PASSCODE_INTRO)
+        return
+      }
+      const { available } = await checkRecoveryAvailability({ identifier, accessToken })
+      if (verificationIdRef.current !== thisId) {
+        return
+      }
+      setStep(available ? Step.PASSCODE_INTRO : Step.ALREADY_IN_USE)
+    } catch (error) {
+      if (verificationIdRef.current !== thisId) {
+        return
+      }
+      logger.error(error, { tags: { file: 'AddBackupLoginModal', function: 'advanceAfterVerification' } })
       setStep(Step.PASSCODE_INTRO)
     }
-  }, [oauthReturn.provider, oauthReturn.pending, oauthReturn.providerEmail])
+  })
+
+  // When OAuth return is detected, check availability then advance.
+  useEffect(() => {
+    if (oauthReturn.provider && !oauthReturn.pending && oauthReturn.providerEmail) {
+      setOauthProvider(oauthReturn.provider)
+      setOauthEmail(oauthReturn.providerEmail)
+      void advanceAfterVerification(oauthReturn.providerEmail)
+    }
+  }, [oauthReturn.provider, oauthReturn.pending, oauthReturn.providerEmail, advanceAfterVerification])
 
   const { sendCode, loginWithCode } = useLoginWithEmail()
 
@@ -91,11 +129,20 @@ export function AddBackupLoginModal() {
     },
   })
 
+  // Privy's `sendCode` / `initOAuth` throw "Already logged in" if an authenticated
+  // session exists. Drop the existing session before starting a backup-login flow.
+  const ensureLoggedOut = useEvent(async (): Promise<void> => {
+    if (user) {
+      await logout()
+    }
+  })
+
   const sendCodeMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!privyReady) {
         throw new Error('Privy is not ready')
       }
+      await ensureLoggedOut()
       return sendCode({ email })
     },
     onSuccess: () => setStep(Step.EMAIL_CODE),
@@ -103,10 +150,11 @@ export function AddBackupLoginModal() {
   })
 
   const resendCodeMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!privyReady) {
         throw new Error('Privy is not ready')
       }
+      await ensureLoggedOut()
       return sendCode({ email })
     },
     onError: (e) => handleSendCodeError(e, 'handleResendCode'),
@@ -119,7 +167,9 @@ export function AddBackupLoginModal() {
       }
       return loginWithCode({ code })
     },
-    onSuccess: () => setStep(Step.PASSCODE_INTRO),
+    onSuccess: () => {
+      void advanceAfterVerification(email)
+    },
     onError: (e) => {
       logger.error(e, { tags: { file: 'AddBackupLoginModal', function: 'handleSubmitCode' } })
       if (isPrivyInvalidCredentials(e)) {
@@ -137,13 +187,14 @@ export function AddBackupLoginModal() {
       ? t('common.card.error.description')
       : undefined
 
-  const handleInitOAuth = useEvent((provider: 'google' | 'apple') => {
+  const handleInitOAuth = useEvent(async (provider: 'google' | 'apple'): Promise<void> => {
     if (!privyReady) {
       return
     }
+    await ensureLoggedOut()
     setOauthProvider(provider)
     sessionStorage.setItem(OAUTH_PENDING_KEY, provider)
-    initOAuth({ provider })
+    await initOAuth({ provider })
   })
 
   const handleSubmitCode = useEvent((code: string) => {
@@ -187,7 +238,7 @@ export function AddBackupLoginModal() {
         pin: firstPinRef.current,
         email: effectiveEmail,
         accessToken,
-        privyAppId: process.env.PRIVY_APP_ID ?? '',
+        privyAppId: getPrivyConfig().appId,
       })
       // Guard against stale result if user navigated away during async work
       if (encryptionIdRef.current !== thisId) {
@@ -229,6 +280,23 @@ export function AddBackupLoginModal() {
         privyUserId: user.id,
         authMethodType,
       })
+
+      // Append rather than invalidate: a refetch after an OAuth redirect would re-prompt
+      // for the passkey to derive a fresh NECK. Synthesize the RecoveryMethod locally
+      // since SetupRecoveryResponse omits it; the next refetch overwrites this.
+      const newRecoveryMethod = new RecoveryMethod({
+        type: authMethodType,
+        identifier: effectiveEmail,
+        createdAt: BigInt(Date.now()),
+        status: 'ACTIVE',
+      })
+      queryClient.setQueryData<{
+        authenticators: AuthenticatorDisplay[]
+        recoveryMethods: RecoveryMethod[]
+      }>([ReactQueryCacheKey.ListAuthenticators, walletId], (old) =>
+        old ? { ...old, recoveryMethods: [...old.recoveryMethods, newRecoveryMethod] } : old,
+      )
+
       setStep(Step.SUCCESS)
     } catch (signInError) {
       logger.error(signInError, { tags: { file: 'AddBackupLoginModal', function: 'handleSignInWithPasskey' } })
@@ -253,6 +321,7 @@ export function AddBackupLoginModal() {
     setStep(Step.METHOD_SELECT)
     setEmail('')
     encryptionIdRef.current++
+    verificationIdRef.current++
     firstPinRef.current = ''
     setCryptoResult(null)
     setIsSigningIn(false)
@@ -271,8 +340,7 @@ export function AddBackupLoginModal() {
     onClose()
   })
 
-  const handleDone = useEvent(async () => {
-    await queryClient.invalidateQueries({ queryKey: [LIST_AUTHENTICATORS_QUERY_KEY] })
+  const handleDone = useEvent(() => {
     handleClose()
   })
 
@@ -283,6 +351,7 @@ export function AddBackupLoginModal() {
     if (step === Step.EMAIL_ENTRY) {
       setStep(Step.METHOD_SELECT)
     } else if (step === Step.EMAIL_CODE) {
+      verificationIdRef.current++
       otpInput.reset()
       setStep(Step.EMAIL_ENTRY)
     } else if (step === Step.SET_PASSCODE) {
@@ -311,6 +380,29 @@ export function AddBackupLoginModal() {
   const handleResendCode = useEvent(() => {
     otpInput.reset()
     resendCodeMutation.mutate()
+  })
+
+  const handleAlreadyInUseSignOut = useEvent(async () => {
+    try {
+      await logout()
+    } catch (e) {
+      logger.error(e, { tags: { file: 'AddBackupLoginModal', function: 'handleAlreadyInUseSignOut' } })
+    } finally {
+      handleClose()
+    }
+  })
+
+  const handleAlreadyInUseTryAgain = useEvent(() => {
+    verificationIdRef.current++
+    setOauthProvider(null)
+    setOauthEmail(undefined)
+    setEmail('')
+    sessionStorage.removeItem(OAUTH_PENDING_KEY)
+    sendCodeMutation.reset()
+    resendCodeMutation.reset()
+    submitCodeMutation.reset()
+    otpInput.reset()
+    setStep(Step.METHOD_SELECT)
   })
 
   const isValidEmail = EMAIL_REGEX.test(email)
@@ -362,6 +454,16 @@ export function AddBackupLoginModal() {
           />
         )}
 
+        {step === Step.ALREADY_IN_USE && (
+          <AlreadyInUseStep
+            handleClose={handleClose}
+            handleSignOut={handleAlreadyInUseSignOut}
+            handleTryAgain={handleAlreadyInUseTryAgain}
+            oauthProvider={oauthProvider}
+            t={t}
+          />
+        )}
+
         {step === Step.PASSCODE_INTRO && (
           <PasscodeIntroStep
             email={email}
@@ -394,6 +496,7 @@ export function AddBackupLoginModal() {
             digitInput={confirmPasscodeInput}
             handleBack={handleBack}
             handleClose={handleClose}
+            inputsLocked={cryptoResult !== null}
             isEncrypting={isEncrypting}
             passcodeError={passcodeError}
             setShowPasscode={setShowPasscode}
@@ -404,6 +507,7 @@ export function AddBackupLoginModal() {
             <ConfirmPasscodeExtra
               cryptoResult={cryptoResult}
               handleSignInWithPasskey={handleSignInWithPasskey}
+              isEncrypting={isEncrypting}
               isSigningIn={isSigningIn}
               t={t}
             />
@@ -424,3 +528,5 @@ export function AddBackupLoginModal() {
     </Modal>
   )
 }
+
+export default AddBackupLoginModal

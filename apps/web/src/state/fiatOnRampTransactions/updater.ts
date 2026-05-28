@@ -7,9 +7,7 @@ import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import useInterval from '~/lib/hooks/useInterval'
+import { useInterval } from '~/lib/hooks/useInterval'
 import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
 import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/reducer'
 import {
@@ -19,6 +17,8 @@ import {
 } from '~/state/fiatOnRampTransactions/types'
 import { statusToTransactionInfoStatus } from '~/state/fiatOnRampTransactions/utils'
 import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 export default function Updater(): null {
   const transactions = useFiatOnRampTransactions()

@@ -1346,7 +1346,7 @@ type TokenMarket {
   totalValueLocked: Amount
   fullyDilutedValuation: Amount
   historicalVolume(duration: HistoryDuration!, multichain: Boolean = false): [TimestampedAmount]
-  historicalTvl(duration: HistoryDuration!): [TimestampedAmount]
+  historicalTvl(duration: HistoryDuration!, multichain: Boolean = false): [TimestampedAmount]
   priceHistory(duration: HistoryDuration!, maxLength: Int): [TimestampedAmount]
   ohlc(duration: HistoryDuration!): [TimestampedOhlc]
   # this volume is cumulative volume over the specified duration

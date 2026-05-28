@@ -1,12 +1,14 @@
 import { queryOptions } from '@tanstack/react-query'
 import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import {
+  ContentStyle,
   createFetchClient,
   createNotificationsApiClient,
   getEntryGatewayUrl,
   provideSessionService,
   SharedQueryClient,
 } from '@universe/api'
+import { isDevEnv, REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
   createApiNotificationTracker,
@@ -35,8 +37,6 @@ import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
-import { isDevEnv } from 'utilities/src/environment/env'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -110,7 +110,12 @@ function provideMobileNotificationService(ctx: { getIsApiDataSourceEnabled: () =
     },
   })
 
-  const processor = createBaseNotificationProcessor(tracker)
+  // Mobile emits up to 5 LOWER_LEFT_BANNER notifications from the legacy source
+  // (NoAppFees, FundWallet, RecoveryBackup, UnitagClaim, PushNotifications). Raise the
+  // per-style cap so lower-priority banners like UnitagClaim aren't silently dropped.
+  const processor = createBaseNotificationProcessor(tracker, {
+    notificationTypeLimits: { [ContentStyle.LOWER_LEFT_BANNER]: 5 },
+  })
 
   const renderer = createMobileNotificationRenderer({
     store: mobileNotificationStore,

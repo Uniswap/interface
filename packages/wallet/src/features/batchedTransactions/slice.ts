@@ -1,35 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-
-export interface BatchedTransaction {
-  txHashes: string[]
+export type WalletCallTransaction = {
   chainId: UniverseChainId
   requestId: string
-}
+} & ({ txHashes: string[]; userOpHash?: never } | { userOpHash: string; txHashes?: never })
 
-export type BatchedTransactionsState = Record<string, BatchedTransaction>
+type WalletCallTransactionsState = Record<string, WalletCallTransaction>
 
-export const initialBatchedTransactionsState: BatchedTransactionsState = {}
+export const initialWalletCallTransactionsState: WalletCallTransactionsState = {}
 
 const slice = createSlice({
   name: 'batchedTransactions',
-  initialState: initialBatchedTransactionsState,
+  initialState: initialWalletCallTransactionsState,
   reducers: {
-    addBatchedTransaction: (
+    addWalletCallTransaction: (
       state,
-      action: PayloadAction<{ batchId: string; txHashes: string[]; requestId: string; chainId: UniverseChainId }>,
+      action: PayloadAction<
+        {
+          batchId: string
+          requestId: string
+          chainId: UniverseChainId
+        } & ({ txHashes: string[]; userOpHash?: never } | { userOpHash: string; txHashes?: never })
+      >,
     ) => {
-      const { batchId, txHashes, requestId, chainId } = action.payload
-      state[batchId] = { txHashes, requestId, chainId }
+      const { userOpHash, txHashes, batchId, requestId, chainId } = action.payload
+      state[batchId] = userOpHash !== undefined ? { userOpHash, requestId, chainId } : { txHashes, requestId, chainId }
     },
     removeBatchedTransaction: (state, action: PayloadAction<string>) => {
       const batchId = action.payload
       delete state[batchId]
     },
-    clearBatchedTransactions: () => initialBatchedTransactionsState,
+    clearBatchedTransactions: () => initialWalletCallTransactionsState,
   },
 })
 
-export const { addBatchedTransaction, removeBatchedTransaction, clearBatchedTransactions } = slice.actions
+export const { addWalletCallTransaction, removeBatchedTransaction, clearBatchedTransactions } = slice.actions
 
-export const batchedTransactionsReducer = slice.reducer
+export const walletCallTransactionsReducer = slice.reducer

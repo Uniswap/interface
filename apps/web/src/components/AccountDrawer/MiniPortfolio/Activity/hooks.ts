@@ -16,6 +16,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitOrder, isUniswapXOrderPending } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
+import { zeroAddress } from '~/chains'
 import { usePendingTransactions, usePendingUniswapXOrders } from '~/state/transactions/hooks'
 import { isExistingTransaction } from '~/state/transactions/utils'
 
@@ -82,7 +83,7 @@ export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): Can
     return {
       id: 'placeholder',
       chainId: UniverseChainId.Mainnet,
-      from: '0x0000000000000000000000000000000000000000',
+      from: zeroAddress,
       typeInfo: {
         type: TransactionType.Unknown,
       },

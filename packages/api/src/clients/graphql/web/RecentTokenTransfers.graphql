@@ -20,6 +20,9 @@ query RecentTokenTransfers($address: String!, $chains: [Chain!]) {
           hash
           from
           status
+          application {
+            name
+          }
           assetChanges {
             __typename
             ... on TokenTransfer {

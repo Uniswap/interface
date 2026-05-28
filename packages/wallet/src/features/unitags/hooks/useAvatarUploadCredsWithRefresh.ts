@@ -1,6 +1,6 @@
 import { AvatarUploadResponse } from '@universe/api'
 import { useEffect, useState } from 'react'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS } from 'uniswap/src/features/unitags/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -20,7 +20,6 @@ export const useAvatarUploadCredsWithRefresh = ({
   avatarUploadUrlLoading: boolean
   avatarUploadUrlResponse?: AvatarUploadResponse
 } => {
-  const unitagsApiClient = useUnitagsApiClient()
   const [avatarUploadUrlLoading, setAvatarUploadUrlLoading] = useState(false)
   const [avatarUploadUrlResponse, setAvatarUploadUrlResponse] = useState<AvatarUploadResponse>()
 
@@ -56,7 +55,7 @@ export const useAvatarUploadCredsWithRefresh = ({
 
     // Clear the interval on component unmount
     return () => clearInterval(intervalId)
-  }, [unitag, account, signerManager, unitagsApiClient])
+  }, [unitag, account, signerManager])
 
   return { avatarUploadUrlLoading, avatarUploadUrlResponse }
 }

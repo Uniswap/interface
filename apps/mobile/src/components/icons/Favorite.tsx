@@ -22,7 +22,6 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
 
   const [color, setColor] = useState(getColor())
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we want to recalculate this when isFavorited changes
   useEffect(() => {
     const timer = setTimeout(() => {
       setColor(getColor())

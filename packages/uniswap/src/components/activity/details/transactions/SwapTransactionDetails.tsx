@@ -93,6 +93,7 @@ export function SwapTransactionContent({
       isLoadingB={isLoadingOutput}
       separatorElement={<Arrow color={colors.neutral3.val} direction="s" size={iconSizes.icon20} />}
       disableClick={disableClick}
+      hideNetworkLogos={false}
       onClose={onClose}
     />
   )

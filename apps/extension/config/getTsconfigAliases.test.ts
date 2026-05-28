@@ -1,4 +1,3 @@
-/* oxlint-disable universe-custom/no-relative-import-paths */
 import path from 'path'
 import { getTsconfigAliases } from './getTsconfigAliases'
 

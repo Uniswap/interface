@@ -1,16 +1,15 @@
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Snowflake } from 'ui/src/components/icons/Snowflake'
-import { zIndexes } from 'ui/src/theme'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 
 const snowflakeHoverKeyframes = `
@@ -66,7 +65,7 @@ export function UniswapWrappedEntry() {
               </Text>
             </Trace>
           </Tooltip.Trigger>
-          <Tooltip.Content zIndex={zIndexes.overlay} display={isMobileWeb ? 'none' : 'flex'}>
+          <Tooltip.Content display={isMobileWeb ? 'none' : 'flex'}>
             <Tooltip.Arrow />
             <Flex centered>
               <Text variant="buttonLabel4" color="$accent1">

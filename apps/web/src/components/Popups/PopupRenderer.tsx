@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
 import { spacing } from 'ui/src/theme'
 import { PopupItem } from '~/components/Popups/PopupItem'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupContent } from '~/components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupContent } from '~/state/popups/types'
 
 export function PopupRenderer() {
   useEffect(() => {

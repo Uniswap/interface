@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, Text, TouchableArea } from 'ui/src'
@@ -10,7 +11,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWebApp } from 'utilities/src/platform'
 
 export type SupportedNetworkLogosModalProps = {
   chains: UniverseChainId[]

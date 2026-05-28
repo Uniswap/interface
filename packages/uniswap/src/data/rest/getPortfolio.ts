@@ -20,7 +20,7 @@ import {
   getPortfolioQueryReduxStore,
 } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
 import { removeExpiredBalanceOverrides } from 'uniswap/src/features/portfolio/slice/slice'
@@ -92,6 +92,9 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 }: GetPortfolioInput<TSelectData>): GetPortfolioQuery<TSelectData> => {
   const baseOptions = getGetPortfolioQueryOptions(dataApiClient, { input })
 
+  // NOTE: `meta.persist: true` propagates from `baseOptions` (which comes from
+  // `getGetPortfolioQueryOptions` built via `persistableQueryOptions`) through
+  // the spread below. Covered by a test in `persistenceMigration.integration.test.ts`.
   return queryOptions({
     ...baseOptions,
     enabled,

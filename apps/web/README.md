@@ -63,6 +63,12 @@ bun web i18n:download
 
 Which will download the translations to `./apps/web/src/i18n/locales/translations`.
 
+## Console Debugging
+
+Log messages show `logger.ts` as the source instead of the actual calling file. To see actual calling locations, add these files to Chrome's ignore list (DevTools → Sources → right-click file → "Add script to ignore list"):
+- `packages/utilities/src/logger/logger.ts`
+- `packages/utilities/src/telemetry/analytics/logging.ts`
+
 ## Further Documentation
 
 See [CLAUDE.md](./CLAUDE.md) for detailed development guidance, architecture patterns, and workflows.

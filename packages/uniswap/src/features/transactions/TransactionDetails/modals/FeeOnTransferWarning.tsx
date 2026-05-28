@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { PropsWithChildren, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { capitalize } from 'tsafe'
@@ -10,7 +11,6 @@ import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarning
 import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/warnings/WarningInfoModalContainer'
 import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
-import { isWebApp } from 'utilities/src/platform'
 
 export function FeeOnTransferWarning({
   children,

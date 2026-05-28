@@ -23,7 +23,6 @@
 		<string>ja</string>
 		<string>pt</string>
 		<string>vi</string>
-    <!-- Spanish locales that use `,` as the decimal separator -->
 		<string>es-419</string>
 		<string>es-BZ</string>
 		<string>es-CU</string>
@@ -36,15 +35,14 @@
 		<string>es-PE</string>
 		<string>es-PR</string>
 		<string>es-SV</string>
-    <string>es-US</string>
-    <!-- Spanish locales that use `.` as the decimal separator -->
+		<string>es-US</string>
 		<string>es-AR</string>
 		<string>es-BO</string>
 		<string>es-CL</string>
 		<string>es-CO</string>
 		<string>es-CR</string>
 		<string>es-EC</string>
-    <string>es-ES</string>
+		<string>es-ES</string>
 		<string>es-PY</string>
 		<string>es-UY</string>
 		<string>es-VE</string>
@@ -91,10 +89,10 @@
 		<string>itms-apps</string>
 		<string>itms-beta</string>
 	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-  <key>LSMinimumSystemVersion</key>
-  <string>15.1</string>
 	<key>NSAdvertisingAttributionReportEndpoint</key>
 	<string>https://appsflyer-skadnetwork.com/</string>
 	<key>NSAppTransportSecurity</key>
@@ -140,6 +138,8 @@
 	<string>group.com.uniswap.mobile.onesignal</string>
 	<key>OneSignal_suppress_launch_urls</key>
 	<true/>
+	<key>RCTNewArchEnabled</key>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>InputMono-Regular.ttf</string>

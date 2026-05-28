@@ -1,7 +1,7 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom, useAtom } from 'jotai'
 import { forwardRef, RefObject, useCallback, useEffect, useRef } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { breakpoints } from 'ui/src/theme'
@@ -11,11 +11,11 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import PortfolioDrawer from '~/components/AccountDrawer'
+import { AccountDrawer as PortfolioDrawer } from '~/components/AccountDrawer'
 import { usePendingActivity } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { Portal } from '~/components/Popups/Portal'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { RecentlyConnectedModal } from '~/components/Web3Status/RecentlyConnectedModal'
 import { useAccountIdentifier } from '~/components/Web3Status/useAccountIdentifier'
 import { useShowPendingAfterDelay } from '~/components/Web3Status/useShowPendingAfterDelay'
@@ -96,6 +96,7 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
 export const Web3StatusRef = atom<RefObject<HTMLElement | null> | undefined>(undefined)
 
 function Web3StatusInner() {
+  const { t } = useTranslation()
   const activeAddresses = useActiveAddresses()
   const { isConnecting } = useConnectionStatus()
   const ref = useRef<HTMLDivElement>(null)
@@ -151,9 +152,7 @@ function Web3StatusInner() {
                 ref={ref}
                 icon={undefined}
               >
-                <TextStyled>
-                  <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
-                </TextStyled>
+                <TextStyled>{t('activity.pending', { pendingActivityCount })}</TextStyled>
               </Web3StatusGeneric>
             </Flex>
           ) : (
@@ -193,7 +192,7 @@ function Web3StatusInner() {
   )
 }
 
-export default function Web3Status() {
+export function Web3Status() {
   const { isOpen: recentlyConnectedModalIsOpen } = useModalState(ModalName.RecentlyConnectedModal)
   return (
     <PrefetchBalancesWrapper>

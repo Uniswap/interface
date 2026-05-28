@@ -1,11 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { CheckApprovalLPRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import { type LPApprovalRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import {
   type NormalizedApprovalData,
   normalizeApprovalResponse,
-  type TokenAddresses,
 } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -14,7 +12,7 @@ export function useCheckLPApprovalQuery({
   isQueryEnabled,
   positionTokenAddress,
 }: {
-  approvalQueryParams: CheckApprovalLPRequest | LPApprovalRequest | undefined
+  approvalQueryParams: LPApprovalRequest | undefined
   isQueryEnabled: boolean
   positionTokenAddress?: string
 }): {
@@ -23,51 +21,28 @@ export function useCheckLPApprovalQuery({
   approvalError: Error | null
   approvalRefetch: () => void
 } {
-  const isV1 = approvalQueryParams instanceof CheckApprovalLPRequest
-
   const {
-    data: approvalV1Data,
-    isLoading: approvalV1Loading,
-    error: approvalV1Error,
-    refetch: approvalV1Refetch,
-  } = useQuery(
-    liquidityQueries.checkApprovalDeprecated({
-      params: isV1 ? approvalQueryParams : undefined,
-      staleTime: 5 * ONE_SECOND_MS,
-      enabled: isV1 && isQueryEnabled,
-      retry: false,
-    }),
-  )
-
-  const {
-    data: approvalV2Data,
-    isLoading: approvalV2Loading,
-    error: approvalV2Error,
-    refetch: approvalV2Refetch,
+    data: approvalData,
+    isLoading: approvalLoading,
+    error: approvalError,
+    refetch: approvalRefetch,
   } = useQuery(
     liquidityQueries.checkApproval({
-      params: !isV1 ? approvalQueryParams : undefined,
+      params: approvalQueryParams,
       staleTime: 5 * ONE_SECOND_MS,
-      enabled: !isV1 && isQueryEnabled,
+      enabled: isQueryEnabled,
       retry: false,
     }),
   )
 
-  const rawData = isV1 ? approvalV1Data : approvalV2Data
-  const approvalLoading = isV1 ? approvalV1Loading : approvalV2Loading
-  const approvalError = isV1 ? approvalV1Error : approvalV2Error
-  const approvalRefetch = isV1 ? approvalV1Refetch : approvalV2Refetch
-
-  const tokenAddresses: TokenAddresses | undefined = !isV1
-    ? {
-        token0Address: approvalQueryParams?.lpTokens[0]?.tokenAddress,
-        token1Address: approvalQueryParams?.lpTokens[1]?.tokenAddress,
-        positionTokenAddress,
-      }
-    : undefined
+  const tokenAddresses = {
+    token0Address: approvalQueryParams?.lpTokens[0]?.tokenAddress,
+    token1Address: approvalQueryParams?.lpTokens[1]?.tokenAddress,
+    positionTokenAddress,
+  }
 
   return {
-    approvalData: normalizeApprovalResponse(rawData, tokenAddresses),
+    approvalData: approvalData ? normalizeApprovalResponse(approvalData, tokenAddresses) : undefined,
     approvalLoading,
     approvalError,
     approvalRefetch,

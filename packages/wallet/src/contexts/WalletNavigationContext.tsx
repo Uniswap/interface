@@ -4,6 +4,7 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
@@ -116,6 +117,11 @@ export type ShareTokenArgs = {
   currencyId: string
 }
 
+export type NavigateToEarnVaultArgs = {
+  vault: EarnVaultInfo
+  position?: EarnPositionInfo
+}
+
 export type WalletNavigationContextState = {
   navigateToAccountActivityList: () => void
   navigateToAccountTokenList: () => void
@@ -131,6 +137,7 @@ export type WalletNavigationContextState = {
   navigateToSend: (args: NavigateToSendFlowArgs) => void
   handleShareToken: (args: ShareTokenArgs) => void
   navigateToAdvancedSettings: () => void
+  navigateToEarnVault: (args: NavigateToEarnVaultArgs) => void
 }
 
 export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(undefined)

@@ -13,12 +13,7 @@ import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/t
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
-import {
-  SpendingDetails,
-  SpendingEthDetails,
-} from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
-import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
-import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
+import { SpendingEthDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 
 interface FallbackEthSendRequestProps {
   transactionGasFeeResult: GasFeeResult
@@ -57,8 +52,6 @@ export function FallbackEthSendRequestContent({
       }),
     [calldata, copyToClipboard],
   )
-  const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, chainId)
-  const transactionCurrencies = useTransactionCurrencies({ chainId, to: toAddress, parsedTransactionData })
   const showSpendingEthDetails = isNonZeroBigNumber(sending) && chainId
 
   return (
@@ -80,14 +73,6 @@ export function FallbackEthSendRequestContent({
         width="100%"
       >
         {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
-        {transactionCurrencies.map((currencyInfo, i) => (
-          <SpendingDetails
-            key={currencyInfo.currencyId}
-            currencyInfo={currencyInfo}
-            showLabel={i === 0}
-            tokenCount={transactionCurrencies.length}
-          />
-        ))}
         {toAddress && (
           <ContentRow label={t('common.text.contract')}>
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
@@ -110,7 +95,7 @@ export function FallbackEthSendRequestContent({
             py="$spacing2"
             variant="body4"
           >
-            {parsedTransactionData?.name || contractFunction || t('common.text.unknown')}
+            {contractFunction || t('common.text.unknown')}
           </Text>
         </ContentRow>
         {calldata && (

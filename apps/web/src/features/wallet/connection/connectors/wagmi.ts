@@ -1,8 +1,8 @@
+import { isE2eTestEnv } from '@universe/environment'
 import { connect, getConnectors } from '@wagmi/core'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { sleep } from 'utilities/src/time/timing'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { ExternalConnector } from '~/features/accounts/store/types'
 import { createConnectionService, GetConnectorFn } from '~/features/wallet/connection/services/createConnectionService'
 import { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
@@ -16,7 +16,7 @@ export async function activateWagmiConnector(connector: ExternalConnector<Platfo
 
   // This is a hack to ensure the connection runs in playwright
   // TODO(WEB-4173): Look into removing setTimeout connection.connect({ connector })
-  if (isPlaywrightEnv()) {
+  if (isE2eTestEnv()) {
     await sleep(1)
   }
 

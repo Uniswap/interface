@@ -1,7 +1,14 @@
 import { utils, wordlists } from 'ethers'
 import { type AppTFunction } from 'ui/src/i18n/types'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'wallet/src/constants/accounts'
+import {
+  MNEMONIC_LENGTH_EW,
+  MNEMONIC_LENGTH_HD,
+  MNEMONIC_LENGTH_MAX,
+  MNEMONIC_LENGTH_MIN,
+} from 'wallet/src/constants/accounts'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import type { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export enum MnemonicValidationError {
   InvalidWord = 'InvalidWord',
@@ -100,4 +107,14 @@ export function userFinishedTypingWord(mnemonic: string | undefined): boolean {
   }
   const lastChar = mnemonic[mnemonic.length - 1]
   return lastChar === ' '
+}
+
+// True for embedded-wallet (passkey-backed) accounts, which use a 24-word mnemonic.
+export function isEmbeddedWalletAccount(account: Pick<Account, 'backups'> | undefined): boolean {
+  return account?.backups?.includes(BackupType.Passkey) ?? false
+}
+
+// Returns 24 for embedded wallets and 12 for standard HD wallets.
+export function getExpectedMnemonicLength(account: Pick<Account, 'backups'> | undefined): number {
+  return isEmbeddedWalletAccount(account) ? MNEMONIC_LENGTH_EW : MNEMONIC_LENGTH_HD
 }

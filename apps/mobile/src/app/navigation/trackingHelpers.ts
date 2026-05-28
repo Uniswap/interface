@@ -1,8 +1,8 @@
 import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import { NavigationContainerRefWithCurrent } from '@react-navigation/core'
 import { NavigationState } from '@react-navigation/native'
+import { isDatadogEnabled } from '@universe/environment'
 import { navigationRef, navRefs } from 'src/app/navigation/navigationRef'
-import { datadogEnabledBuild } from 'utilities/src/environment/constants'
 
 /**
  * Since we are using multiple navigation containers, we need to start and stop tracking views
@@ -13,7 +13,7 @@ import { datadogEnabledBuild } from 'utilities/src/environment/constants'
 export const startTracking = (
   navRefToStartTracking: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>,
 ): void => {
-  if (!datadogEnabledBuild) {
+  if (!isDatadogEnabled()) {
     return
   }
   navRefs.forEach((navRef) => {
@@ -29,7 +29,7 @@ export const startTracking = (
  * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
  */
 export const stopTracking = (state: NavigationState | undefined): void => {
-  if (!datadogEnabledBuild) {
+  if (!isDatadogEnabled()) {
     return
   }
   const navContainerIsClosing = !state || state.routes.length === 0

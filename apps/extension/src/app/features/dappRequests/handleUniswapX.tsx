@@ -93,6 +93,7 @@ export function createExternallySubmittedUniswapXOrder(ctx: {
 export const handleExternallySubmittedUniswapXOrder = (address: string, dispatch: Dispatch): Promise<void> =>
   createExternallySubmittedUniswapXOrder({
     addTxToWatcher: (txDetails) => dispatch(transactionActions.addTransaction(txDetails)),
+    // oxlint-disable-next-line no-shadow
     fetchLatestOpenOrder: (address) =>
       TradingApiClient.fetchOrdersWithoutIds({ swapper: address, limit: 1, orderStatus: TradingApi.OrderStatus.OPEN }),
     waitForOrder: async (ms: number = ONE_SECOND_MS * 2): Promise<void> => {

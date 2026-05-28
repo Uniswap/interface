@@ -11,6 +11,7 @@ export type SwapData = {
   gasFee?: string
   gasEstimate?: GasEstimate
   includesDelegation?: boolean
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }
 export interface EVMSwapRepository {
   fetchSwapData: (params: TradingApi.CreateSwapRequest) => Promise<SwapData>
@@ -67,6 +68,7 @@ export function convertSwap5792ResponseToSwapData(response: TradingApi.CreateSwa
     requestId: response.requestId,
     transactions: response.calls.map((c) => ({ ...c, chainId: response.chainId })),
     gasFee: response.gasFee,
+    paymasterService: response.paymasterService,
   }
 }
 

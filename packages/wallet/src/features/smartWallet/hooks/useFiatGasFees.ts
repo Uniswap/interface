@@ -24,7 +24,6 @@ export function useFiatGasFees(gasFees: GasFeeData[]): UseFiatGasFeesReturnType 
     setHasError(false)
   }, [])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- -gasFees
   useEffect(() => {
     resetState()
   }, [gasFees, resetState])

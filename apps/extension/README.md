@@ -61,11 +61,39 @@ export default defineWebExtConfig({
 ##### Running WXT with absolute paths (for Scantastic testing)
 
 ```bash
-# Mac
+# Auto-detect current OS (Mac / Linux / Windows)
 bun extension start:absolute
 
 # Windows
 bun extension start:absolute:windows
+```
+
+Absolute output directories by platform:
+- Mac: `/Users/Shared/stretch`
+- Linux: `/var/tmp/stretch`
+- Windows: `C:/ProgramData/stretch`
+
+### Reusing an already-onboarded extension state
+
+Use a persistent Chrome user-data directory for the extension browser profile.
+
+For absolute mode, set `WXT_CHROME_USER_DATA_DIR` to a stable path and keep reusing it:
+
+```bash
+WXT_CHROME_USER_DATA_DIR=/var/tmp/uniswap-extension-chrome-data bun extension start:absolute
+```
+
+To avoid onboarding on every run:
+1. Start with a stable `WXT_CHROME_USER_DATA_DIR`.
+2. Complete onboarding once.
+3. Reuse the same directory on subsequent runs (or copy it from a known onboarded machine).
+
+This preserves extension local storage and persisted Redux state, including onboarding status.
+
+To keep extension dev running without WXT auto-opening a browser window, set:
+
+```bash
+WXT_NO_OPEN_BROWSER=true bun extension start:absolute
 ```
 
 ---

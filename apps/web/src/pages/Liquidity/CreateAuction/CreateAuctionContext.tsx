@@ -1,4 +1,3 @@
-/* oxlint-disable import/no-unused-modules -- exports used in upstack PR */
 import { useState } from 'react'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'

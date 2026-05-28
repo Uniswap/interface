@@ -11,7 +11,7 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, Bank, MinusCircle, PlusCircle, SendAction, SwapDotted } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
+import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
@@ -59,7 +59,6 @@ export function HomeScreenQuickActions(): JSX.Element {
   const openReceiveModal = useOpenReceiveModal()
   const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isPortfolioZero = useIsPortfolioZero()
 
@@ -134,16 +133,12 @@ export function HomeScreenQuickActions(): JSX.Element {
   const sellLabel = t('common.sell.label')
   const actions = useMemo(
     () => [
-      ...(isBottomTabsEnabled
-        ? [
-            {
-              Icon: SwapDotted,
-              label: 'Swap',
-              name: ElementName.Swap,
-              onPress: onPressSwap,
-            },
-          ]
-        : []),
+      {
+        Icon: SwapDotted,
+        label: 'Swap',
+        name: ElementName.Swap,
+        onPress: onPressSwap,
+      },
       {
         Icon: multichainTokenUxEnabled ? PlusCircle : Bank,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
@@ -176,7 +171,6 @@ export function HomeScreenQuickActions(): JSX.Element {
         : []),
     ],
     [
-      isBottomTabsEnabled,
       onPressSwap,
       multichainTokenUxEnabled,
       buyLabel,
@@ -190,7 +184,6 @@ export function HomeScreenQuickActions(): JSX.Element {
     ],
   )
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +activeScale
   const renderItem = useCallback(
     ({ item: { eventName, name, label, Icon, onPress } }: ListRenderItemInfo<ActionItem>) => (
       <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
@@ -222,33 +215,6 @@ export function HomeScreenQuickActions(): JSX.Element {
     ),
     [activeScale, contentColor, iconSize],
   )
-
-  if (!isBottomTabsEnabled) {
-    return (
-      <Flex centered row gap="$spacing8" px="$spacing12">
-        {actions.map(({ eventName, name, label, Icon, onPress }) => (
-          <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
-            <TouchableArea flex={1} dd-action-name={name} testID={name} scaleTo={activeScale} onPress={onPress}>
-              <Flex
-                fill
-                backgroundColor="$accent2"
-                borderRadius="$rounded20"
-                py="$spacing16"
-                px="$spacing12"
-                gap="$spacing12"
-                justifyContent="space-between"
-              >
-                <Icon color={contentColor} size={iconSize} strokeWidth={2} />
-                <Text color={contentColor} variant="buttonLabel2">
-                  {label}
-                </Text>
-              </Flex>
-            </TouchableArea>
-          </Trace>
-        ))}
-      </Flex>
-    )
-  }
 
   return (
     <Flex>

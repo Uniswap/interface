@@ -1,8 +1,8 @@
 import { PlanResponse } from '@universe/api/src/clients/trading/__generated__'
+import { isDevEnv } from '@universe/environment'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { devtools } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
 

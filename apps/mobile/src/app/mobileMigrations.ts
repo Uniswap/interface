@@ -1,7 +1,4 @@
 // Type information currently gets lost after a migration
-/* oxlint-disable typescript/no-explicit-any -- Migration logic requires flexible typing */
-/* oxlint-disable typescript/explicit-function-return-type */
-/* oxlint-disable typescript/no-unsafe-return */
 /* oxlint-disable max-lines */
 
 import dayjs from 'dayjs'
@@ -638,7 +635,6 @@ export const convertHiddenNftsToNftsData = createSafeMigration({
 
     const nftsData: AccountToNftData = {}
     for (const accountAddress of accountAddresses) {
-      // oxlint-disable-next-line typescript/no-unnecessary-condition
       nftsData[accountAddress] ??= {}
       const hiddenNftKeys = Object.keys(state.favorites.hiddenNfts[accountAddress])
 
@@ -1001,7 +997,6 @@ export const addPushNotifications = createSafeMigration({
 
 export const migrateDappRequestInfoTypes = createSafeMigration({
   name: 'migrateDappRequestInfoTypes',
-  // oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
   migrate: (state: any) => {
     const newState = { ...state }
 

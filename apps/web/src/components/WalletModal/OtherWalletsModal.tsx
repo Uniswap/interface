@@ -1,20 +1,21 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useShowMoonpayText } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import ConnectionErrorView from '~/components/WalletModal/ConnectionErrorView'
-import PrivacyPolicyNotice from '~/components/WalletModal/PrivacyPolicyNotice'
+import { ConnectionErrorView } from '~/components/WalletModal/ConnectionErrorView'
+import { PrivacyPolicyNotice } from '~/components/WalletModal/PrivacyPolicyNotice'
 import { UniswapMobileWalletConnectorOption } from '~/components/WalletModal/UniswapMobileWalletConnectorOption'
 import { WalletConnectorOption } from '~/components/WalletModal/WalletConnectorOption'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useRecentConnectorId } from '~/connection/constants'
 import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { transitions } from '~/theme/styles'
 
 export function OtherWalletsModal() {
+  const { t } = useTranslation()
   const showMoonpayText = useShowMoonpayText()
   const setMenu = useSetMenu()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
@@ -37,7 +38,7 @@ export function OtherWalletsModal() {
           <BackArrow color="$neutral2" size={20} />
         </TouchableArea>
         <Text variant="subheading2" mr="auto" ml={-20}>
-          <Trans i18nKey="common.connectAWallet.button" />
+          {t('common.connectAWallet.button')}
         </Text>
       </Flex>
 
@@ -75,7 +76,7 @@ export function OtherWalletsModal() {
           {showMoonpayText && (
             <Flex borderTopWidth={1} pt="$spacing8" borderColor="$surface3" px="$spacing4">
               <Text variant="body4" color="$neutral3">
-                <Trans i18nKey="moonpay.poweredBy" />
+                {t('moonpay.poweredBy')}
               </Text>
             </Flex>
           )}

@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useState } from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text } from 'ui/src'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -38,6 +38,7 @@ function BackgroundImage({ backgroundImage, isHovered }: BackgroundImageProps) {
 }
 
 export const DownloadWalletOption = () => {
+  const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
@@ -74,10 +75,10 @@ export const DownloadWalletOption = () => {
           <Flex row gap={4}>
             <Flex>
               <Text variant="buttonLabel2" color="$white" whiteSpace="nowrap">
-                <Trans i18nKey="common.getUniswapWallet" />
+                {t('common.getUniswapWallet')}
               </Text>
               <Text variant="body4" color="$white" whiteSpace="nowrap">
-                <Trans i18nKey="common.availableOnIOSAndroidChrome" />
+                {t('common.availableOnIOSAndroidChrome')}
               </Text>
             </Flex>
           </Flex>

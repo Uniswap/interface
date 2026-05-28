@@ -11,11 +11,13 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import {
   getCapabilitiesForDelegationStatus,
   transformCallsToTransactionRequests,
+  transformTradingApiUserOpToRpcUserOp,
 } from 'wallet/src/features/batchedTransactions/utils'
 import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
@@ -119,26 +121,84 @@ export function* handleSendCalls({
   }
 
   try {
-    const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(
-      TradingApiClient.fetchWalletEncoding7702,
-      {
+    const paymasterCapability = request.capabilities['paymasterService']
+    const paymasterUrl = paymasterCapability?.['url']
+    const shouldUse4337 =
+      paymasterCapability && typeof paymasterUrl === 'string' && getFeatureFlag(FeatureFlags.Support7677GasSponsorship)
+
+    if (shouldUse4337) {
+      // TODO(SWAP-2460): should handle signing&attaching eip7702 auth BEFORE the encode4337
+      const rawPaymasterContext: unknown = paymasterCapability['context']
+      if (
+        rawPaymasterContext !== undefined &&
+        (typeof rawPaymasterContext !== 'object' || rawPaymasterContext === null || Array.isArray(rawPaymasterContext))
+      ) {
+        yield* respondWithError({
+          topic,
+          requestId,
+          error: getInternalError('MISSING_OR_INVALID', 'paymasterCapability.context must be a record or undefined'),
+        })
+        return
+      }
+      const paymasterServiceContext = rawPaymasterContext as Record<string, unknown> | undefined
+      const chainId = toTradingApiSupportedChainId(request.chainId)
+      if (!chainId) {
+        yield* respondWithError({
+          topic,
+          requestId,
+          error: getInternalError('MISSING_OR_INVALID', 'chainId is missing or unsupported'),
+        })
+        return
+      }
+
+      const {
+        requestId: encode4337RequestId,
+        userOperation,
+        gasSponsored,
+        sponsorMetadata,
+      } = yield* call(TradingApiClient.fetchWalletEncoding4337, {
         calls: transformCallsToTransactionRequests({
           calls: request.calls,
           chainId: request.chainId,
           accountAddress: request.account,
         }),
-        smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
-        walletAddress: request.account,
-      },
-    )
+        sender: request.account,
+        chainId,
+        paymasterUrl,
+        paymasterServiceContext,
+      })
 
-    const requestWithEncodedTransaction = {
-      ...request,
-      encodedRequestId,
-      encodedTransaction,
+      const requestWithEncodedUserOp = {
+        ...request,
+        unsignedUserOperation: transformTradingApiUserOpToRpcUserOp(userOperation),
+        requestId: encode4337RequestId,
+        gasSponsored,
+        sponsorMetadata,
+        paymasterServiceUrl: paymasterUrl,
+        paymasterServiceContext,
+      }
+      yield* put(addRequest(requestWithEncodedUserOp))
+    } else {
+      const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(
+        TradingApiClient.fetchWalletEncoding7702,
+        {
+          calls: transformCallsToTransactionRequests({
+            calls: request.calls,
+            chainId: request.chainId,
+            accountAddress: request.account,
+          }),
+          smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
+          walletAddress: request.account,
+        },
+      )
+
+      const requestWithEncodedTransaction = {
+        ...request,
+        encodedRequestId,
+        encodedTransaction,
+      }
+      yield* put(addRequest(requestWithEncodedTransaction))
     }
-
-    yield* put(addRequest(requestWithEncodedTransaction))
   } catch (error) {
     logger.error(error, {
       tags: { file: 'batchTransactionSaga', function: 'handleSendCalls' },
@@ -177,7 +237,6 @@ export function* handleGetCapabilities({
   dappIconUrl?: string
 }) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
-
   if (!eip5792MethodsEnabled) {
     yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
     return

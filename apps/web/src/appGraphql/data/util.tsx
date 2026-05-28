@@ -16,11 +16,10 @@ import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/features/params/chainParams'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
-import { ExploreTab } from '~/pages/Explore/constants'
-import { TokenStat } from '~/state/explore/types'
+import { ExploreTab, TokenStat } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 export enum TimePeriod {
   HOUR = 'H',
@@ -31,7 +30,7 @@ export enum TimePeriod {
   MAX = 'MAX',
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 export function toHistoryDuration(timePeriod: TimePeriod): GraphQLApi.HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:

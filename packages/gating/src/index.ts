@@ -25,6 +25,8 @@ export {
   ExternallyConnectableExtensionConfigKey,
   ForceUpgradeConfigKey,
   HomeScreenExploreTokensConfigKey,
+  LiquidityApprovalSimulationConfigKey,
+  LiquidityGasPreEstimationConfigKey,
   LPConfigKey,
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
@@ -81,6 +83,7 @@ export {
 export { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
 export type { StatsigOptions, StatsigUser, StorageProvider } from '@universe/gating/src/sdk/statsig'
 export {
+  bootstrapStatsigClient,
   getOverrideAdapter,
   getStatsigClient,
   StatsigClient,
@@ -92,4 +95,4 @@ export {
   useGateValue,
   useLayer,
 } from '@universe/gating/src/sdk/statsig'
-export { getOverrides, waitForStatsigReady } from '@universe/gating/src/utils'
+export { getOverrides, isStatsigClientRegistered, waitForStatsigReady } from '@universe/gating/src/utils'

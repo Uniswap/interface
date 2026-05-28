@@ -45,7 +45,7 @@ export function useSendTransactionRequest(
   )
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 async function getSendTransaction({
   provider,
   contractManager,
@@ -77,7 +77,7 @@ async function getSendTransaction({
   }
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 function getSendParams(
   account: SignerMnemonicAccountMeta,
   derivedSendInfo: DerivedSendInfo,

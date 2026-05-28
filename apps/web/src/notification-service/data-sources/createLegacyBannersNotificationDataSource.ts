@@ -1,8 +1,5 @@
 import {
   Background,
-  Body,
-  BodyItem,
-  Button,
   Content,
   Notification,
   NotificationVersion,
@@ -19,21 +16,14 @@ import {
   NO_FEES_ICON,
   NO_UNISWAP_INTERFACE_FEES_BANNER_DARK,
   NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
-  SOLANA_BANNER_DARK,
-  SOLANA_BANNER_LIGHT,
-  SOLANA_LOGO,
 } from 'ui/src/assets'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import store from '~/state/index'
 
-// Legacy storage keys from the old banner implementation
-const LEGACY_SOLANA_PROMO_STORAGE_KEY = 'solanaPromoHidden'
 // Using 'local:' prefix to indicate these are client-only notifications
 // This prevents the API tracker from sending AckNotification calls to the backend
-const SOLANA_BANNER_ID = 'local:solana_promo_banner'
-const SOLANA_MODAL_ID = 'local:solana_promo_modal'
 const BRIDGING_BANNER_ID = 'local:bridging_popular_tokens_banner'
 const NO_UNISWAP_INTERFACE_FEES_BANNER_ID = 'local:no_uniswap_interface_fees_banner'
 
@@ -78,19 +68,6 @@ export function createLegacyBannersNotificationDataSource(
     hasMigratedLegacyState = true
 
     try {
-      // Migrate SolanaPromo dismissal from localStorage
-      const solanaWasDismissed = localStorage.getItem(LEGACY_SOLANA_PROMO_STORAGE_KEY) === 'true'
-      if (solanaWasDismissed) {
-        logger.info(
-          'createLegacyBannersNotificationDataSource',
-          'migrateLegacyDismissalState',
-          'Migrating Solana banner dismissal from legacy localStorage',
-        )
-        await tracker.track(SOLANA_BANNER_ID, { timestamp: Date.now() })
-        // Clean up legacy storage
-        localStorage.removeItem(LEGACY_SOLANA_PROMO_STORAGE_KEY)
-      }
-
       // Migrate BridgingBanner dismissal from Redux
       const state = store.getState()
       const bridgingWasDismissed = state.uniswapBehaviorHistory.hasDismissedBridgedAssetsBannerV2
@@ -169,15 +146,10 @@ export function createLegacyBannersNotificationDataSource(
 async function fetchNotifications(isDarkMode: boolean): Promise<InAppNotification[]> {
   const notifications: InAppNotification[] = []
 
-  // Priority 1: No Uniswap interface fees banner
   const noUniswapInterfaceFeesBanner = await checkNoUniswapInterfaceFeesBanner(isDarkMode)
   if (noUniswapInterfaceFeesBanner) {
     notifications.push(noUniswapInterfaceFeesBanner)
   }
-
-  // Priority 2: SolanaPromoBanner + Modal (chained)
-  const solanaNotifications = await checkSolanaPromo(isDarkMode)
-  notifications.push(...solanaNotifications)
 
   return notifications
 }
@@ -194,101 +166,6 @@ async function checkNoUniswapInterfaceFeesBanner(isDarkMode: boolean): Promise<I
   }
 
   return createNoUniswapInterfaceFeesBanner(isDarkMode)
-}
-
-/**
- * Check if SolanaPromo banner should be shown based on feature flag.
- * Returns both banner and modal (modal is chained).
- * The processor will filter based on tracked state.
- */
-async function checkSolanaPromo(isDarkMode: boolean): Promise<InAppNotification[]> {
-  const isEnabled = getFeatureFlag(FeatureFlags.SolanaPromo)
-
-  if (!isEnabled) {
-    return []
-  }
-
-  // Processor will identify modal as chained due to POPUP action
-  return [createSolanaPromoBanner(isDarkMode), createSolanaPromoModal()]
-}
-
-/**
- * Create SolanaPromoBanner notification
- */
-function createSolanaPromoBanner(isDarkMode: boolean): InAppNotification {
-  const bannerImage = isDarkMode ? SOLANA_BANNER_DARK : SOLANA_BANNER_LIGHT
-
-  return new Notification({
-    id: SOLANA_BANNER_ID,
-    content: new Content({
-      version: NotificationVersion.V0,
-      style: ContentStyle.LOWER_LEFT_BANNER,
-      title: i18n.t('solanaPromo.banner.title'),
-      subtitle: i18n.t('solanaPromo.banner.description'),
-      background: new Background({
-        backgroundType: BackgroundType.IMAGE,
-        link: bannerImage,
-        backgroundOnClick: new OnClick({
-          onClick: [OnClickAction.POPUP, OnClickAction.DISMISS, OnClickAction.ACK],
-          onClickLink: SOLANA_MODAL_ID, // Links to chained modal
-        }),
-      }),
-      onDismissClick: new OnClick({
-        onClick: [OnClickAction.DISMISS, OnClickAction.ACK],
-      }),
-      buttons: [],
-      iconLink: SOLANA_LOGO,
-    }),
-  })
-}
-
-/**
- * Create SolanaPromoModal notification (chained)
- */
-function createSolanaPromoModal(): InAppNotification {
-  return new Notification({
-    id: SOLANA_MODAL_ID,
-    content: new Content({
-      version: NotificationVersion.V0,
-      style: ContentStyle.MODAL,
-      title: i18n.t('solanaPromo.banner.title'),
-      subtitle: i18n.t('solanaPromo.banner.description'),
-      background: new Background({
-        backgroundType: BackgroundType.IMAGE,
-        link: SOLANA_BANNER_LIGHT,
-      }),
-      iconLink: SOLANA_LOGO,
-      body: new Body({
-        items: [
-          new BodyItem({
-            text: i18n.t('solanaPromo.modal.swapInstantly'),
-            iconUrl: 'custom:lightning-$accent1',
-          }),
-          new BodyItem({
-            text: i18n.t('solanaPromo.modal.connectWallet'),
-            iconUrl: 'custom:wallet-$accent1',
-          }),
-          new BodyItem({
-            text: i18n.t('solanaPromo.modal.viewTokenData'),
-            iconUrl: 'custom:chart-$accent1',
-          }),
-        ],
-      }),
-      onDismissClick: new OnClick({
-        onClick: [OnClickAction.DISMISS, OnClickAction.ACK],
-      }),
-      buttons: [
-        new Button({
-          text: i18n.t('solanaPromo.modal.startSwapping.button'),
-          isPrimary: true,
-          onClick: new OnClick({
-            onClick: [OnClickAction.EXTERNAL_LINK, OnClickAction.ACK, OnClickAction.DISMISS],
-            onClickLink: '/swap?chain=solana',
-          }),
-        }),
-      ],
-    }),
-  })
 }
 
 /**

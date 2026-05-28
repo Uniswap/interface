@@ -1,3 +1,4 @@
+import { generateRandomBytes } from '@universe/cryptography'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
 import {
@@ -50,16 +51,19 @@ export async function encryptAndStoreRecovery({
     const authMethodId = hashAuthMethodId(email)
 
     // 2. Generate random salts
-    const salt1 = crypto.getRandomValues(new Uint8Array(SALT_LENGTH))
-    const salt2 = crypto.getRandomValues(new Uint8Array(SALT_LENGTH))
+    const salt1 = generateRandomBytes(SALT_LENGTH)
+    const salt2 = generateRandomBytes(SALT_LENGTH)
 
     // 3. OPRF: blind → evaluate → finalize
     onProgress?.('oprf')
     const { blindedElement, blindState } = await blindPin(pin)
-    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate({
-      blindedElement,
-      isRecovery: false,
-    })
+    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
+      {
+        blindedElement,
+        authMethodId,
+      },
+      accessToken,
+    )
     if (!oprfResponse.evaluatedElement) {
       throw new Error(oprfResponse.errorMessage ?? 'OPRF evaluation failed')
     }

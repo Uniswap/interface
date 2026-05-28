@@ -123,7 +123,7 @@ export function ScanToOnboard(): JSX.Element {
   }, [sessionUUID, setExpirationTimestamp, goToNextStep, resetScantastic])
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | undefined
+    let interval: ReturnType<typeof setInterval> | undefined
 
     if (isWindowVisible) {
       interval = setInterval(checkOTPState, ONE_SECOND_MS)

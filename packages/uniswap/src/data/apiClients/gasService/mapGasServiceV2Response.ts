@@ -56,7 +56,7 @@ export function mapGasServiceV2Response({
 
   return {
     value: gasEstimate.gasFee,
-    displayValue: convertGasFeeToDisplayValue(gasEstimate.gasFee, strategy),
+    displayValue: convertGasFeeToDisplayValue({ gasFee: gasEstimate.gasFee, gasStrategy: strategy }),
     params: extractGasFeeParams(gasEstimate),
     gasEstimate,
   }

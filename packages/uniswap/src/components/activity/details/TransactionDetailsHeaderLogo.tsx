@@ -78,7 +78,6 @@ const getLogoWithTxStatus = ({
   />
 )
 
-// oxlint-disable-next-line complexity
 export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element | null {
   const { typeInfo } = transactionDetails
 

@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
@@ -19,7 +20,6 @@ interface Props {
   size: number
   chainId: UniverseChainId | null
   customIcon?: ReactNode
-  showMainnetNetworkLogo?: boolean
 }
 
 /*
@@ -36,11 +36,11 @@ export function SplitLogo({
   outputFallbackSymbol,
   chainId,
   customIcon,
-  showMainnetNetworkLogo = false,
 }: Props): JSX.Element {
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const iconSize = size / 2
   const networkLogo =
-    chainId && (chainId !== UniverseChainId.Mainnet || showMainnetNetworkLogo) ? (
+    chainId && (chainId !== UniverseChainId.Mainnet || multichainTokenUxEnabled) ? (
       <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
     ) : undefined
 

@@ -4,7 +4,7 @@ import { addWindowMessageListener, removeWindowMessageListener } from 'src/backg
 import { ExtensionResponse, isValidExtensionResponse } from 'src/contentScript/types'
 import { BaseEthereumRequest, BaseEthereumRequestSchema } from 'src/contentScript/WindowEthereumRequestTypes'
 import { logger } from 'utilities/src/logger/logger'
-import { v4 as uuidv4 } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { ZodError } from 'zod'
 
 type EthersSendCallback = (error: unknown, response: unknown) => void
@@ -94,7 +94,7 @@ export class WindowEthereumProxy extends EventEmitter {
         const ethereumRequest = BaseEthereumRequestSchema.parse(args)
 
         // Generate a unique ID for this request and store the promise callbacks
-        const requestId = uuidv4()
+        const requestId = uuid()
         this.pendingRequests[requestId] = { resolve, reject }
         const responseListener = addWindowMessageListener<ExtensionResponse>({
           validator: isValidExtensionResponse,

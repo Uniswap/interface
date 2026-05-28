@@ -1,4 +1,6 @@
 import { GraphQLApi, isNonPollingRequestInFlight } from '@universe/api'
+import { isIOS } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useMemo } from 'react'
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
@@ -22,7 +24,6 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isIOS } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 
@@ -35,19 +36,21 @@ const contextMenuStyle: StyleProp<ViewStyle> = {
 export type FavoriteTokenCardProps = {
   currencyId: string
   isEditing?: boolean
+  networkCount?: number
   setIsEditing: (update: boolean) => void
   showLoading?: boolean
 } & ViewProps
 
-// oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
 function FavoriteTokenCard({
   currencyId,
   isEditing,
+  networkCount,
   setIsEditing,
   showLoading,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
   const dispatch = useDispatch()
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { defaultChainId } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -146,6 +149,7 @@ function FavoriteTokenCard({
               <TokenLogo
                 loading={loading}
                 chainId={chainId}
+                hideNetworkLogo={multichainTokenUxEnabled && (networkCount ?? 0) > 1}
                 name={token?.name ?? undefined}
                 size={imageSizes.image20}
                 symbol={token?.symbol ?? undefined}

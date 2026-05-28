@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import {
   authenticateAsync,
   hasHardwareAsync,
@@ -8,7 +9,6 @@ import DeviceInfo from 'react-native-device-info'
 import { openSecuritySettings } from 'src/utils/linking'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 
 /**
  * Biometric authentication statuses

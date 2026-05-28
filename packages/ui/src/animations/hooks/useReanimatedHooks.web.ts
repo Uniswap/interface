@@ -69,7 +69,6 @@ export function useAnimatedStyle<T extends ViewStyle>(updater: () => T, deps?: D
 
   // Subscribe to shared value updates
   // Users must pass shared values in deps array for reactivity
-  // oxlint-disable-next-line react/exhaustive-deps -- deps is the user-provided dependency array containing shared values
   useEffect(() => {
     const cleanups: (() => void)[] = []
 
@@ -90,7 +89,6 @@ export function useAnimatedStyle<T extends ViewStyle>(updater: () => T, deps?: D
   }, [triggerUpdate, ...(deps || [])])
 
   // Run the updater and return the style
-  // oxlint-disable-next-line react/exhaustive-deps -- deps is the user-provided dependency array
   const style = useMemo(() => {
     try {
       return updaterRef.current()

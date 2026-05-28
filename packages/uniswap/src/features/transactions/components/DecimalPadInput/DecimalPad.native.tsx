@@ -130,7 +130,6 @@ export const DecimalPad = memo(function DecimalPad({
     setCurrentHeight(event.nativeEvent.layout.height)
   }, [])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +sizeMultiplier, onReady
   useEffect(() => {
     // skip resize if the layout is still the same height as before
     if (currentHeightRef.current === currentHeight) {

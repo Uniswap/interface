@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { useState } from 'react'
 import { PlanDetailsView } from 'uniswap/src/components/activity/details/plan/PlanDetailsView'
 import { TransactionDetailsOverview } from 'uniswap/src/components/activity/details/TransactionDetailsOverview'
@@ -8,7 +9,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type TransactionDetailsModalProps = {

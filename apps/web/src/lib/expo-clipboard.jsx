@@ -71,8 +71,5 @@ const hasStringAsync = async () => {
   return false
 }
 
-// Export the mock components and functions
-export default Clipboard
-
 // Named exports
 export { Clipboard, createPasteButton as ClipboardPasteButton, hasStringAsync }

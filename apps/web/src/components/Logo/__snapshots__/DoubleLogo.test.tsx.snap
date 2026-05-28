@@ -18,7 +18,7 @@ exports[`DoubleLogo > renders with custom icon 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -27,7 +27,7 @@ exports[`DoubleLogo > renders with custom icon 1`] = `
             <img
               height="32"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-              style="object-fit: contain; border-radius: 16px; z-index: 1;"
+              style="object-fit: contain; border-radius: 32px; z-index: 1;"
               width="32"
             />
           </div>
@@ -42,7 +42,7 @@ exports[`DoubleLogo > renders with custom icon 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -51,7 +51,7 @@ exports[`DoubleLogo > renders with custom icon 1`] = `
             <img
               height="32"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png"
-              style="object-fit: contain; border-radius: 16px; z-index: 1;"
+              style="object-fit: contain; border-radius: 32px; z-index: 1;"
               width="32"
             />
           </div>
@@ -93,7 +93,7 @@ exports[`DoubleLogo > renders with custom size 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-24px _borderTopRightRadius-24px _borderBottomRightRadius-24px _borderBottomLeftRadius-24px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -102,7 +102,7 @@ exports[`DoubleLogo > renders with custom size 1`] = `
             <img
               height="48"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-              style="object-fit: contain; border-radius: 24px; z-index: 1;"
+              style="object-fit: contain; border-radius: 48px; z-index: 1;"
               width="48"
             />
           </div>
@@ -117,7 +117,7 @@ exports[`DoubleLogo > renders with custom size 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-24px _borderTopRightRadius-24px _borderBottomRightRadius-24px _borderBottomLeftRadius-24px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -126,7 +126,7 @@ exports[`DoubleLogo > renders with custom size 1`] = `
             <img
               height="48"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png"
-              style="object-fit: contain; border-radius: 24px; z-index: 1;"
+              style="object-fit: contain; border-radius: 48px; z-index: 1;"
               width="48"
             />
           </div>
@@ -151,7 +151,7 @@ exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
       data-testid="token-logo"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -160,7 +160,7 @@ exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
         <img
           height="32"
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-          style="object-fit: contain; border-radius: 16px; z-index: 1;"
+          style="object-fit: contain; border-radius: 32px; z-index: 1;"
           width="32"
         />
       </div>
@@ -174,29 +174,12 @@ exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
 
 exports[`DoubleLogo > renders with two undefined currencies 1`] = `
 <DocumentFragment>
-  .c0 {
-  --size: 32px;
-  border-radius: 100px;
-  color: #FC74FE;
-  background-color: #FEF4FF;
-  font-size: calc(var(--size) / 3);
-  font-weight: 535;
-  height: 32px;
-  line-height: 32px;
-  text-align: center;
-  width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="c0"
+      class="sc-bRKDuR ihHhtk"
     />
     <div
       style="display: contents;"
@@ -223,7 +206,7 @@ exports[`DoubleLogo > renders with two valid currencies 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -232,7 +215,7 @@ exports[`DoubleLogo > renders with two valid currencies 1`] = `
             <img
               height="32"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-              style="object-fit: contain; border-radius: 16px; z-index: 1;"
+              style="object-fit: contain; border-radius: 32px; z-index: 1;"
               width="32"
             />
           </div>
@@ -247,7 +230,7 @@ exports[`DoubleLogo > renders with two valid currencies 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -256,7 +239,7 @@ exports[`DoubleLogo > renders with two valid currencies 1`] = `
             <img
               height="32"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png"
-              style="object-fit: contain; border-radius: 16px; z-index: 1;"
+              style="object-fit: contain; border-radius: 32px; z-index: 1;"
               width="32"
             />
           </div>

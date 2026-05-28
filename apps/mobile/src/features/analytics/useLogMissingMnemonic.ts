@@ -11,7 +11,6 @@ export function useLogMissingMnemonic(): void {
   const signerMnemonicAccounts = useSignerAccounts()
   const mnemonicId = signerMnemonicAccounts[0]?.mnemonicId
 
-  // oxlint-disable-next-line react/exhaustive-deps -- only re-run when account count changes, not full array content
   useEffect(() => {
     const logMissingMnemonic = async (): Promise<void> => {
       if (!mnemonicId) {

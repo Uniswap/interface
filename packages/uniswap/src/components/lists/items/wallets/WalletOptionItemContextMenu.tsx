@@ -5,8 +5,8 @@ import { Heart } from 'ui/src/components/icons/Heart'
 import { HeartSlash } from 'ui/src/components/icons/HeartSlash'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { useToggleWatchedWalletCallback } from 'uniswap/src/features/favorites/hooks/useToggleWatchedWalletCallback'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
-import { useToggleWatchedWalletCallback } from 'uniswap/src/features/favorites/useToggleWatchedWalletCallback'
 
 interface WalletOptionItemContextMenuProps {
   children: ReactNode

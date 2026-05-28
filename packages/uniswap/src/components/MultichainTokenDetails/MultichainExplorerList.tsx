@@ -6,13 +6,14 @@ import { MultichainOptionRow } from 'uniswap/src/components/MultichainTokenDetai
 import { MultichainScrollableList } from 'uniswap/src/components/MultichainTokenDetails/MultichainScrollableList'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 interface MultichainExplorerListProps {
   chains: MultichainTokenEntry[]
   isNativeToken?: boolean
-  onExplorerPress?: (url: string) => void
+  onExplorerPress?: (url: string, chainId: UniverseChainId) => void
   /** Pass true when rendered inside a Modal to enable BottomSheetScrollView on native. */
   renderedInModal?: boolean
 }
@@ -52,7 +53,7 @@ export function MultichainExplorerList({
               <ExternalLink color="$neutral2" size={iconSizes.icon16} />
             </Flex>
           }
-          onPress={onExplorerPress ? (): void => onExplorerPress(explorerUrl) : undefined}
+          onPress={onExplorerPress ? (): void => onExplorerPress(explorerUrl, entry.chainId) : undefined}
         />
       )
     },

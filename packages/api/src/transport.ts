@@ -3,7 +3,7 @@ import { type ConnectTransportOptions, createConnectTransport } from '@connectrp
 export type Interceptors = NonNullable<ConnectTransportOptions['interceptors']>
 import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
 import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
-import { isWebApp } from 'utilities/src/platform'
+import { isWebApp } from '@universe/environment'
 
 interface SessionTransportOptions {
   getSessionId?: () => Promise<string | null>

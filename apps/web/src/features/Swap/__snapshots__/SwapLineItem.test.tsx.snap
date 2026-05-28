@@ -1,0 +1,938 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        data-testid="gas-estimate-uniswapx-icon"
+                        fill="none"
+                        height="14"
+                        viewBox="0 0 10 14"
+                        width="10"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <defs>
+                          <lineargradient
+                            gradientUnits="userSpaceOnUse"
+                            id="AutoRouterIconGradienttest-uuid-0"
+                            x1="-10.1807"
+                            x2="10.6573"
+                            y1="-12.0006"
+                            y2="-11.6017"
+                          >
+                            <stop
+                              stop-color="#4673FA"
+                            />
+                            <stop
+                              offset="1"
+                              stop-color="#9646FA"
+                            />
+                          </lineargradient>
+                        </defs>
+                        <path
+                          d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
+                          fill="url(#AutoRouterIconGradienttest-uuid-0)"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <div
+                          class="sc-hwkwBN kGDnsr"
+                        >
+                          $0
+                        </div>
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textDecorationLine-line-throug104"
+                          data-disable-theme="true"
+                        >
+                          $7.87
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        data-testid="gas-estimate-uniswapx-icon"
+                        fill="none"
+                        height="14"
+                        viewBox="0 0 10 14"
+                        width="10"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <defs>
+                          <lineargradient
+                            gradientUnits="userSpaceOnUse"
+                            id="AutoRouterIconGradienttest-uuid-0"
+                            x1="-10.1807"
+                            x2="10.6573"
+                            y1="-12.0006"
+                            y2="-11.6017"
+                          >
+                            <stop
+                              stop-color="#4673FA"
+                            />
+                            <stop
+                              offset="1"
+                              stop-color="#9646FA"
+                            />
+                          </lineargradient>
+                        </defs>
+                        <path
+                          d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
+                          fill="url(#AutoRouterIconGradienttest-uuid-0)"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <div
+                          class="sc-hwkwBN kGDnsr"
+                        >
+                          $0
+                        </div>
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textDecorationLine-line-throug104"
+                          data-disable-theme="true"
+                        >
+                          $7.87
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > exact input 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                        viewBox="0 0 17 16"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.7052 0.185606C10.971 -0.0692459 11.393 -0.0604243 11.6478 0.205309L14.4793 3.15764C14.6618 3.31659 14.8153 3.50812 14.9306 3.72319C15.0654 3.95457 15.1667 4.23222 15.1667 4.55141V11.4675C15.1667 12.499 14.3304 13.3334 13.3 13.3334C12.2691 13.3334 11.4333 12.4977 11.4333 11.4668V9.93337C11.4333 9.56518 11.1349 9.2667 10.7667 9.2667H10.5V14.0001C10.5 14.0461 10.4977 14.0916 10.4931 14.1364C10.4677 14.3868 10.373 14.6167 10.2285 14.8066C9.98494 15.1268 9.59994 15.3334 9.16667 15.3334H3.83333C3.37309 15.3334 2.96732 15.1002 2.72771 14.7456C2.58395 14.5328 2.5 14.2762 2.5 14.0001V2.66669C2.5 1.56212 3.39543 0.666694 4.5 0.666694H8.5C9.60457 0.666694 10.5 1.56212 10.5 2.66669V7.93337H10.7667C11.8712 7.93337 12.7667 8.8288 12.7667 9.93337V11.4668C12.7667 11.7613 13.0054 12.0001 13.3 12.0001C13.5951 12.0001 13.8333 11.7615 13.8333 11.4675V6.55289C13.6248 6.62659 13.4004 6.66669 13.1667 6.66669C12.0621 6.66669 11.1667 5.77126 11.1667 4.66669C11.1667 3.8591 11.6453 3.1633 12.3344 2.84754L10.6855 1.12821C10.4307 0.862475 10.4395 0.440457 10.7052 0.185606ZM13.5732 4.1383C13.4607 4.05159 13.3197 4.00003 13.1667 4.00003C12.7985 4.00003 12.5 4.2985 12.5 4.66669C12.5 5.03488 12.7985 5.33336 13.1667 5.33336C13.5349 5.33336 13.8333 5.03488 13.8333 4.66669C13.8333 4.56065 13.8086 4.46039 13.7645 4.37138C13.7202 4.30119 13.6566 4.22382 13.5732 4.1383ZM4.5 9.33334C4.13181 9.33334 3.83333 9.63182 3.83333 10C3.83333 10.3682 4.13181 10.6667 4.5 10.6667H8.5C8.86819 10.6667 9.16667 10.3682 9.16667 10C9.16667 9.63182 8.86819 9.33334 8.5 9.33334H4.5ZM4.5 12C4.13181 12 3.83333 12.2985 3.83333 12.6667C3.83333 13.0349 4.13181 13.3333 4.5 13.3333H8.5C8.86819 13.3333 9.16667 13.0349 9.16667 12.6667C9.16667 12.2985 8.86819 12 8.5 12H4.5Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                          data-disable-theme="true"
+                        >
+                          $1.00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > exact input api 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                        viewBox="0 0 17 16"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.7052 0.185606C10.971 -0.0692459 11.393 -0.0604243 11.6478 0.205309L14.4793 3.15764C14.6618 3.31659 14.8153 3.50812 14.9306 3.72319C15.0654 3.95457 15.1667 4.23222 15.1667 4.55141V11.4675C15.1667 12.499 14.3304 13.3334 13.3 13.3334C12.2691 13.3334 11.4333 12.4977 11.4333 11.4668V9.93337C11.4333 9.56518 11.1349 9.2667 10.7667 9.2667H10.5V14.0001C10.5 14.0461 10.4977 14.0916 10.4931 14.1364C10.4677 14.3868 10.373 14.6167 10.2285 14.8066C9.98494 15.1268 9.59994 15.3334 9.16667 15.3334H3.83333C3.37309 15.3334 2.96732 15.1002 2.72771 14.7456C2.58395 14.5328 2.5 14.2762 2.5 14.0001V2.66669C2.5 1.56212 3.39543 0.666694 4.5 0.666694H8.5C9.60457 0.666694 10.5 1.56212 10.5 2.66669V7.93337H10.7667C11.8712 7.93337 12.7667 8.8288 12.7667 9.93337V11.4668C12.7667 11.7613 13.0054 12.0001 13.3 12.0001C13.5951 12.0001 13.8333 11.7615 13.8333 11.4675V6.55289C13.6248 6.62659 13.4004 6.66669 13.1667 6.66669C12.0621 6.66669 11.1667 5.77126 11.1667 4.66669C11.1667 3.8591 11.6453 3.1633 12.3344 2.84754L10.6855 1.12821C10.4307 0.862475 10.4395 0.440457 10.7052 0.185606ZM13.5732 4.1383C13.4607 4.05159 13.3197 4.00003 13.1667 4.00003C12.7985 4.00003 12.5 4.2985 12.5 4.66669C12.5 5.03488 12.7985 5.33336 13.1667 5.33336C13.5349 5.33336 13.8333 5.03488 13.8333 4.66669C13.8333 4.56065 13.8086 4.46039 13.7645 4.37138C13.7202 4.30119 13.6566 4.22382 13.5732 4.1383ZM4.5 9.33334C4.13181 9.33334 3.83333 9.63182 3.83333 10C3.83333 10.3682 4.13181 10.6667 4.5 10.6667H8.5C8.86819 10.6667 9.16667 10.3682 9.16667 10C9.16667 9.63182 8.86819 9.33334 8.5 9.33334H4.5ZM4.5 12C4.13181 12 3.83333 12.2985 3.83333 12.6667C3.83333 13.0349 4.13181 13.3333 4.5 13.3333H8.5C8.86819 13.3333 9.16667 13.0349 9.16667 12.6667C9.16667 12.2985 8.86819 12 8.5 12H4.5Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                          data-disable-theme="true"
+                        >
+                          $1.00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > exact output 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                        viewBox="0 0 17 16"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.7052 0.185606C10.971 -0.0692459 11.393 -0.0604243 11.6478 0.205309L14.4793 3.15764C14.6618 3.31659 14.8153 3.50812 14.9306 3.72319C15.0654 3.95457 15.1667 4.23222 15.1667 4.55141V11.4675C15.1667 12.499 14.3304 13.3334 13.3 13.3334C12.2691 13.3334 11.4333 12.4977 11.4333 11.4668V9.93337C11.4333 9.56518 11.1349 9.2667 10.7667 9.2667H10.5V14.0001C10.5 14.0461 10.4977 14.0916 10.4931 14.1364C10.4677 14.3868 10.373 14.6167 10.2285 14.8066C9.98494 15.1268 9.59994 15.3334 9.16667 15.3334H3.83333C3.37309 15.3334 2.96732 15.1002 2.72771 14.7456C2.58395 14.5328 2.5 14.2762 2.5 14.0001V2.66669C2.5 1.56212 3.39543 0.666694 4.5 0.666694H8.5C9.60457 0.666694 10.5 1.56212 10.5 2.66669V7.93337H10.7667C11.8712 7.93337 12.7667 8.8288 12.7667 9.93337V11.4668C12.7667 11.7613 13.0054 12.0001 13.3 12.0001C13.5951 12.0001 13.8333 11.7615 13.8333 11.4675V6.55289C13.6248 6.62659 13.4004 6.66669 13.1667 6.66669C12.0621 6.66669 11.1667 5.77126 11.1667 4.66669C11.1667 3.8591 11.6453 3.1633 12.3344 2.84754L10.6855 1.12821C10.4307 0.862475 10.4395 0.440457 10.7052 0.185606ZM13.5732 4.1383C13.4607 4.05159 13.3197 4.00003 13.1667 4.00003C12.7985 4.00003 12.5 4.2985 12.5 4.66669C12.5 5.03488 12.7985 5.33336 13.1667 5.33336C13.5349 5.33336 13.8333 5.03488 13.8333 4.66669C13.8333 4.56065 13.8086 4.46039 13.7645 4.37138C13.7202 4.30119 13.6566 4.22382 13.5732 4.1383ZM4.5 9.33334C4.13181 9.33334 3.83333 9.63182 3.83333 10C3.83333 10.3682 4.13181 10.6667 4.5 10.6667H8.5C8.86819 10.6667 9.16667 10.3682 9.16667 10C9.16667 9.63182 8.86819 9.33334 8.5 9.33334H4.5ZM4.5 12C4.13181 12 3.83333 12.2985 3.83333 12.6667C3.83333 13.0349 4.13181 13.3333 4.5 13.3333H8.5C8.86819 13.3333 9.16667 13.0349 9.16667 12.6667C9.16667 12.2985 8.86819 12 8.5 12H4.5Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                          data-disable-theme="true"
+                        >
+                          -
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 GHI
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > fee on buy 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                        viewBox="0 0 17 16"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.7052 0.185606C10.971 -0.0692459 11.393 -0.0604243 11.6478 0.205309L14.4793 3.15764C14.6618 3.31659 14.8153 3.50812 14.9306 3.72319C15.0654 3.95457 15.1667 4.23222 15.1667 4.55141V11.4675C15.1667 12.499 14.3304 13.3334 13.3 13.3334C12.2691 13.3334 11.4333 12.4977 11.4333 11.4668V9.93337C11.4333 9.56518 11.1349 9.2667 10.7667 9.2667H10.5V14.0001C10.5 14.0461 10.4977 14.0916 10.4931 14.1364C10.4677 14.3868 10.373 14.6167 10.2285 14.8066C9.98494 15.1268 9.59994 15.3334 9.16667 15.3334H3.83333C3.37309 15.3334 2.96732 15.1002 2.72771 14.7456C2.58395 14.5328 2.5 14.2762 2.5 14.0001V2.66669C2.5 1.56212 3.39543 0.666694 4.5 0.666694H8.5C9.60457 0.666694 10.5 1.56212 10.5 2.66669V7.93337H10.7667C11.8712 7.93337 12.7667 8.8288 12.7667 9.93337V11.4668C12.7667 11.7613 13.0054 12.0001 13.3 12.0001C13.5951 12.0001 13.8333 11.7615 13.8333 11.4675V6.55289C13.6248 6.62659 13.4004 6.66669 13.1667 6.66669C12.0621 6.66669 11.1667 5.77126 11.1667 4.66669C11.1667 3.8591 11.6453 3.1633 12.3344 2.84754L10.6855 1.12821C10.4307 0.862475 10.4395 0.440457 10.7052 0.185606ZM13.5732 4.1383C13.4607 4.05159 13.3197 4.00003 13.1667 4.00003C12.7985 4.00003 12.5 4.2985 12.5 4.66669C12.5 5.03488 12.7985 5.33336 13.1667 5.33336C13.5349 5.33336 13.8333 5.03488 13.8333 4.66669C13.8333 4.56065 13.8086 4.46039 13.7645 4.37138C13.7202 4.30119 13.6566 4.22382 13.5732 4.1383ZM4.5 9.33334C4.13181 9.33334 3.83333 9.63182 3.83333 10C3.83333 10.3682 4.13181 10.6667 4.5 10.6667H8.5C8.86819 10.6667 9.16667 10.3682 9.16667 10C9.16667 9.63182 8.86819 9.33334 8.5 9.33334H4.5ZM4.5 12C4.13181 12 3.83333 12.2985 3.83333 12.6667C3.83333 13.0349 4.13181 13.3333 4.5 13.3333H8.5C8.86819 13.3333 9.16667 13.0349 9.16667 12.6667C9.16667 12.2985 8.86819 12 8.5 12H4.5Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                          data-disable-theme="true"
+                        >
+                          $1.00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > fee on sell 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-jwTyAe fkchcS"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+                >
+                  <div
+                    class="sc-fhHczv dxMJEb"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                        viewBox="0 0 17 16"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M10.7052 0.185606C10.971 -0.0692459 11.393 -0.0604243 11.6478 0.205309L14.4793 3.15764C14.6618 3.31659 14.8153 3.50812 14.9306 3.72319C15.0654 3.95457 15.1667 4.23222 15.1667 4.55141V11.4675C15.1667 12.499 14.3304 13.3334 13.3 13.3334C12.2691 13.3334 11.4333 12.4977 11.4333 11.4668V9.93337C11.4333 9.56518 11.1349 9.2667 10.7667 9.2667H10.5V14.0001C10.5 14.0461 10.4977 14.0916 10.4931 14.1364C10.4677 14.3868 10.373 14.6167 10.2285 14.8066C9.98494 15.1268 9.59994 15.3334 9.16667 15.3334H3.83333C3.37309 15.3334 2.96732 15.1002 2.72771 14.7456C2.58395 14.5328 2.5 14.2762 2.5 14.0001V2.66669C2.5 1.56212 3.39543 0.666694 4.5 0.666694H8.5C9.60457 0.666694 10.5 1.56212 10.5 2.66669V7.93337H10.7667C11.8712 7.93337 12.7667 8.8288 12.7667 9.93337V11.4668C12.7667 11.7613 13.0054 12.0001 13.3 12.0001C13.5951 12.0001 13.8333 11.7615 13.8333 11.4675V6.55289C13.6248 6.62659 13.4004 6.66669 13.1667 6.66669C12.0621 6.66669 11.1667 5.77126 11.1667 4.66669C11.1667 3.8591 11.6453 3.1633 12.3344 2.84754L10.6855 1.12821C10.4307 0.862475 10.4395 0.440457 10.7052 0.185606ZM13.5732 4.1383C13.4607 4.05159 13.3197 4.00003 13.1667 4.00003C12.7985 4.00003 12.5 4.2985 12.5 4.66669C12.5 5.03488 12.7985 5.33336 13.1667 5.33336C13.5349 5.33336 13.8333 5.03488 13.8333 4.66669C13.8333 4.56065 13.8086 4.46039 13.7645 4.37138C13.7202 4.30119 13.6566 4.22382 13.5732 4.1383ZM4.5 9.33334C4.13181 9.33334 3.83333 9.63182 3.83333 10C3.83333 10.3682 4.13181 10.6667 4.5 10.6667H8.5C8.86819 10.6667 9.16667 10.3682 9.16667 10C9.16667 9.63182 8.86819 9.33334 8.5 9.33334H4.5ZM4.5 12C4.13181 12 3.83333 12.2985 3.83333 12.6667C3.83333 13.0349 4.13181 13.3333 4.5 13.3333H8.5C8.86819 13.3333 9.16667 13.0349 9.16667 12.6667C9.16667 12.2985 8.86819 12 8.5 12H4.5Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                          data-disable-theme="true"
+                        >
+                          $1.00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              0 DEF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > preview exact in 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-jwTyAe fkchcS"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+              data-disable-theme="true"
+            >
+              <div
+                class="sc-hvigdm hHPnuf"
+                data-testid="loading-row"
+                height="15"
+                width="50"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-auto"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+          data-disable-theme="true"
+        >
+          <div
+            class="sc-hvigdm hHPnuf"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx > syncing 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </span>
+        <div
+          class="sc-hvigdm hHPnuf"
+          data-testid="loading-row"
+          height="15"
+          width="50"
+        />
+      </div>
+    </div>
+    <div
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-help"
+          data-disable-theme="true"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </span>
+        <div
+          class="sc-hvigdm hHPnuf"
+          data-testid="loading-row"
+          height="15"
+          width="50"
+        />
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

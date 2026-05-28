@@ -6,6 +6,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { isEmbeddedWalletAccount } from 'wallet/src/utils/mnemonics'
 
 export enum RemoveWalletStep {
   Warning = 'warning',
@@ -75,6 +76,7 @@ export const useModalContent = ({
 
     // 2nd and final speed bump when removing or replacing recovery phrase
     if (isRemovingRecoveryPhrase && currentStep === RemoveWalletStep.Final) {
+      const highlight = <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />
       return {
         title: (
           <Text color="$neutral1" variant="body1">
@@ -84,11 +86,11 @@ export const useModalContent = ({
             />
           </Text>
         ),
-        description: (
+        description: isEmbeddedWalletAccount(account) ? (
+          <Trans components={{ highlight }} i18nKey="account.recoveryPhrase.remove.embeddedWallet.description" />
+        ) : (
           <Trans
-            components={{
-              highlight: <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />,
-            }}
+            components={{ highlight }}
             i18nKey="account.recoveryPhrase.remove.final.description"
             values={{ cloudProviderName: getCloudProviderName() }}
           />

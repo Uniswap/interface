@@ -5,7 +5,7 @@ import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-function NotFoundModal({
+export function NotFoundModal({
   title,
   description,
   isOpen,
@@ -48,5 +48,3 @@ function NotFoundModal({
     </Modal>
   )
 }
-
-export default NotFoundModal

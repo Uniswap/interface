@@ -13,16 +13,19 @@ import {
   SOLANA_ONCHAIN_BALANCE_COMMITMENT,
 } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
 import { getSolanaConnection } from 'uniswap/src/features/providers/getSolanaConnection'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+
+const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
 
 export type BalanceLookupParams = {
   currencyAddress: Address
@@ -80,7 +83,7 @@ async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<
     return getOnChainBalancesFetchWithPending(params)
   }
 
-  const provider = createEthersProvider({ chainId })
+  const provider = createProvider({ chainId, rpcType: RPCType.Public })
   if (!provider) {
     return { balance: undefined }
   }
@@ -110,7 +113,7 @@ export async function getOnChainBalancesFetchWithPending(
     return { balance: undefined }
   }
 
-  const provider = createEthersProvider({ chainId })
+  const provider = createProvider({ chainId, rpcType: RPCType.Public })
   if (!provider) {
     return { balance: undefined }
   }

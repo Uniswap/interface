@@ -20,7 +20,6 @@ export function useFormattedTimeForActivity(time: number): string {
   const unixTime = useForceUpdateEveryMinute()
   const localizedDayjs = useLocalizedDayjs()
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +unixTime (needed to update every minute)
   return useMemo(() => {
     const wrappedAddedTime = localizedDayjs(time)
     return localizedDayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')

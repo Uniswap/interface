@@ -1,5 +1,8 @@
+import { isWebPlatform } from '@universe/environment'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
+import { Envelope } from 'ui/src/components/icons/Envelope'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -7,7 +10,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type PasskeyManagementModalProps = {
   isOpen: boolean
@@ -16,6 +18,56 @@ type PasskeyManagementModalProps = {
 }
 
 export type PasskeyManagementModalState = Omit<PasskeyManagementModalProps, 'onClose' | 'isOpen'>
+
+function IconCard({
+  rotate,
+  zIndex,
+  children,
+}: {
+  rotate?: string
+  zIndex?: number
+  children: React.ReactNode
+}): JSX.Element {
+  return (
+    <Flex
+      centered
+      width={48}
+      height={48}
+      backgroundColor="$surface1"
+      borderColor="$surface3"
+      borderRadius="$rounded12"
+      borderWidth={1}
+      rotate={rotate}
+      shadowColor="$shadowColor"
+      shadowOffset={{ width: 0, height: 6 }}
+      shadowOpacity={0.08}
+      shadowRadius={12}
+      zIndex={zIndex}
+    >
+      {children}
+    </Flex>
+  )
+}
+
+function IconTrio(): JSX.Element {
+  return (
+    <Flex row alignItems="center" justifyContent="center" mb="$spacing4">
+      <Flex mr={-10}>
+        <IconCard rotate="-8.92deg">
+          <Envelope size="$icon.24" />
+        </IconCard>
+      </Flex>
+      <IconCard zIndex={1}>
+        <Passkey color="$accent1" size="$icon.24" />
+      </IconCard>
+      <Flex ml={-10}>
+        <IconCard rotate="12.41deg">
+          <AppleLogo color="$neutral1" size="$icon.24" />
+        </IconCard>
+      </Flex>
+    </Flex>
+  )
+}
 
 export function PasskeyManagementModal({ isOpen, onClose, address }: PasskeyManagementModalProps): JSX.Element {
   const colors = useSporeColors()
@@ -42,9 +94,7 @@ export function PasskeyManagementModal({ isOpen, onClose, address }: PasskeyMana
         pt={isWebPlatform ? '$spacing20' : '$spacing12'}
         px={isWebPlatform ? '$none' : '$spacing24'}
       >
-        <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$surface3">
-          <Passkey color="$neutral1" size="$icon.24" />
-        </Flex>
+        <IconTrio />
 
         <Flex gap="$spacing8">
           <Text textAlign="center" variant="subheading1">

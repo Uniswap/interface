@@ -5,7 +5,7 @@ import { opacify } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CardContents } from '~/pages/Landing/components/cards/CardContents'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
-import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
+import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
 
 const primary = '#F50DB4'
 

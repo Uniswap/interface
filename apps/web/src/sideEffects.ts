@@ -1,4 +1,3 @@
-import '@reach/dialog/styles.css'
 import '~/global.css'
 import '~/polyfills'
 import '~/tracing'
@@ -13,7 +12,6 @@ import { setupTurnstileCSPErrorFilter } from '~/utils/setupTurnstileCSPErrorFilt
 import { setupVitePreloadErrorHandler } from '~/utils/setupVitePreloadErrorHandler'
 
 if (WalletConnect) {
-  // oxlint-disable-next-line no-console -- Side effects module needs console for initialization logging
   console.debug('WalletConnect is defined')
 }
 

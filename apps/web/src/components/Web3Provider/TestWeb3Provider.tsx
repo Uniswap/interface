@@ -1,5 +1,5 @@
 import { createWeb3Provider } from '~/components/Web3Provider/createWeb3Provider'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 
 /**
  * Web3Provider variant for Vitest/Playwright.
@@ -8,9 +8,7 @@ import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
  * Tests should import this component instead of the default production provider.
  */
 
-const TestWeb3Provider = createWeb3Provider({
+export const TestWeb3Provider = createWeb3Provider({
   wagmiConfig,
   reconnectOnMount: false,
 })
-
-export default TestWeb3Provider

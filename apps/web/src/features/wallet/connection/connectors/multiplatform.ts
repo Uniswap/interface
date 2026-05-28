@@ -9,6 +9,7 @@ const NORMALIZATION_RULES = [
 ]
 
 export function normalizeWalletName(name: string) {
+  // oxlint-disable-next-line no-shadow
   return NORMALIZATION_RULES.reduce((name, rule) => rule(name), name)
 }
 

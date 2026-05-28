@@ -1,3 +1,4 @@
+import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { X } from 'ui/src/components/icons/X'
 import { TouchableArea } from 'ui/src/components/touchable'
 import { IconSizeTokens } from 'ui/src/theme'
@@ -5,6 +6,8 @@ import { IconSizeTokens } from 'ui/src/theme'
 export type CloseIconProps = {
   onClose: () => void
   size?: IconSizeTokens
+  color?: IconProps['color']
+  hoverColor?: IconProps['color']
   testId?: string
   role?: 'button' | 'none'
 }
@@ -13,12 +16,14 @@ export type CloseIconProps = {
 export function CloseIconWithHover({
   onClose,
   size = '$icon.24',
+  color = '$neutral2',
+  hoverColor = '$neutral2Hovered',
   testId,
   role = 'button',
 }: CloseIconProps): JSX.Element {
   return (
     <TouchableArea role={role} data-testid={testId} onPress={onClose}>
-      <X size={size} color="$neutral2" hoverColor="$neutral2Hovered" />
+      <X size={size} color={color} hoverColor={hoverColor} />
     </TouchableArea>
   )
 }

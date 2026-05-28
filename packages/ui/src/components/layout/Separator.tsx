@@ -1,5 +1,5 @@
+import { isWebPlatform } from '@universe/environment'
 import { Stack, styled } from 'tamagui'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export const Separator = styled(Stack, {
   name: 'Separator',

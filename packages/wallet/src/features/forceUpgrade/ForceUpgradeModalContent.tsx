@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -6,7 +7,6 @@ import { Button, Flex, Image, Text, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface ForceUpgradeModalContentProps {
   title: string

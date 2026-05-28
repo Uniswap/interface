@@ -11,4 +11,5 @@ export type TokenItemData = {
   pricePercentChange24h?: number
   volume24h?: number
   totalValueLocked?: number
+  networkCount?: number
 }

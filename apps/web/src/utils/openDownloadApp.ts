@@ -1,7 +1,7 @@
+import { isWebAndroid, isWebIOS } from '@universe/environment'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { AppDownloadPlatform } from 'uniswap/src/features/telemetry/types'
-import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 // OneLink will direct to App/Play Store or microsite depending on user agent
 const APP_DOWNLOAD_LINKS: Partial<{ [key in ElementName]: string }> = {

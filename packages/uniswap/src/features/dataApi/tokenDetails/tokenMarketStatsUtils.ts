@@ -38,6 +38,7 @@ export function clamp52wWithCurrentPrice(params: {
   return { high52w, low52w }
 }
 
+// oxlint-disable-next-line complexity
 export function computeTokenMarketStats(params: {
   market?: MarketDataInput
   projectMarket?: ProjectMarketDataInput

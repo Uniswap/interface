@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useMedia } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
-import { zIndexes } from 'ui/src/theme'
 import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -11,7 +10,7 @@ import {
   AuctionVerificationFilter as AuctionVerificationFilterEnum,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/pages/Explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
 
 export function AuctionVerificationFilter() {
   const { t } = useTranslation()
@@ -61,7 +60,7 @@ export function AuctionVerificationFilter() {
         return (
           <Tooltip key={`AuctionVerificationFilter-${option}`} placement="right">
             <Tooltip.Trigger>{menuItem}</Tooltip.Trigger>
-            <Tooltip.Content zIndex={zIndexes.overlay}>
+            <Tooltip.Content>
               <Tooltip.Arrow />
               <Text variant="body4">{t('toucan.filter.verifiedLaunch.tooltip')}</Text>
             </Tooltip.Content>

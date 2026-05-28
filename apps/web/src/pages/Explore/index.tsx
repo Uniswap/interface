@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -6,20 +7,21 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { Button, Flex, styled, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo, TOUCAN_AUCTION_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenExploreURL } from '~/appGraphql/data/util'
-import { VolumeTimeFrameSelector } from '~/components/Explore/VolumeTimeFrameSelector'
-import PoolNotFoundModal from '~/components/NotFoundModal/PoolNotFoundModal'
-import TokenNotFoundModal from '~/components/NotFoundModal/TokenNotFoundModal'
+import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
+import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { getChainUrlParam, useChainIdFromUrlParam } from '~/features/params/chainParams'
+import { EarnVaultsSection } from '~/features/earn/EarnVaultsSection'
+import { ExploreContextProvider } from '~/features/Explore/state'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { AuctionVerificationFilter as AuctionVerificationFilterComponent } from '~/pages/Explore/AuctionVerificationFilter'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
-import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { ProtocolFilter } from '~/pages/Explore/ProtocolFilter'
 import { useExploreParams } from '~/pages/Explore/redirects'
@@ -30,9 +32,10 @@ import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { RecentTransactionsTable } from '~/pages/Explore/tables/RecentTransactions/RecentTransactions'
 import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
 import { setOpenModal } from '~/state/application/reducer'
-import { ExploreContextProvider } from '~/state/explore'
 import { useManualChainOutageStore } from '~/state/outage/store'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { ExploreTab } from '~/types/explore'
+import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 interface Page {
   title: React.ReactNode
@@ -113,6 +116,7 @@ const HeaderTab = styled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
   const media = useMedia()
+  const isAddLiquidityRevampEnabled = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const tabNavRef = useRef<HTMLDivElement>(null)
   const Pages = usePages()
   const [params] = useSearchParams()
@@ -129,7 +133,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [initialTab, Pages])
 
   // scroll to tab navbar on initial page mount only
-  // oxlint-disable-next-line react/exhaustive-deps -- Intentionally only runs once on mount
   useEffect(() => {
     if (tabNavRef.current && initialTab) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
@@ -170,6 +173,9 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [urlChainId])
 
   const isSolanaChain = chainInfo && isSVMChain(chainInfo.id)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const showEarnSection = isEarnEnabled && !isTestnetModeEnabled
 
   useEffect(() => {
     // We only support the Tokens tab on Solana; redirect if the current tab is not the Tokens tab on Solana.
@@ -205,11 +211,16 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
         <ExploreTablesFilterStoreContextProvider>
           <Flex width="100%" minWidth={320} pt="$spacing24" pb="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
             <ExploreStatsSection shouldHideStats={isSolanaChain} />
+            {showEarnSection && (
+              <Flex mt="$spacing32">
+                <EarnVaultsSection />
+              </Flex>
+            )}
             <Flex
               ref={tabNavRef}
               row
               maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-              mt={isSolanaChain ? 36 : 80}
+              mt={isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
               mx="auto"
               mb="$spacing4"
               alignItems="center"
@@ -272,8 +283,16 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
                 {currentKey === ExploreTab.Pools && (
                   <Flex row>
-                    <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>
-                      {media.sm ? t('common.add.label') : t('common.addLiquidity')}
+                    <Button
+                      size="small"
+                      icon={<Plus />}
+                      onPress={() =>
+                        navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
+                          state: { entryPoint: '/explore/pools' },
+                        })
+                      }
+                    >
+                      {media.sm ? t('common.new') : t('pool.newPosition.title')}
                     </Button>
                   </Flex>
                 )}

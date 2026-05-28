@@ -39,6 +39,7 @@ export interface EVMSwapInstructionsService {
 interface EVMSwapInstructionsServiceContext {
   v4SwapEnabled: boolean
   gasStrategy: GasStrategy
+  gasOverrides: TradingApi.UrgencyOverrides | undefined
   /** A function that should be provided in wallet environments that support signing permits without prompting the user. Allows fetching swap instructions earlier for some flows.*/
   presignPermit?: PresignPermitFn
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
@@ -48,10 +49,11 @@ interface EVMSwapInstructionsServiceContext {
 function createLegacyEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'swapDelegationAddress'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
+    gasOverrides,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -81,13 +83,14 @@ function createLegacyEVMSwapInstructionsService(
   return service
 }
 
-function createBatchedEVMSwapInstructionsService(
+function createWalletCallEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
+    gasOverrides,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -97,7 +100,7 @@ function createBatchedEVMSwapInstructionsService(
         signature: undefined,
         transactionSettings,
         alreadyApproved: approvalAction === ApprovalAction.None,
-        overrideSimulation: true, // always simulate for batched transactions
+        overrideSimulation: true, // always simulate for wallet_sendCalls transactions
       })
 
       const response = await swapRepository.fetchSwapData(swapRequestParams)
@@ -111,13 +114,13 @@ function createBatchedEVMSwapInstructionsService(
 export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsServiceContext): EVMSwapInstructionsService {
   const { getSwapDelegationInfo } = ctx
   const smartContractWalletInstructionService = getSwapDelegationInfo
-    ? createBatchedEVMSwapInstructionsService({
+    ? createWalletCallEVMSwapInstructionsService({
         ...ctx,
         swapRepository: create7702EVMSwapRepository({ getSwapDelegationInfo }),
       })
     : undefined
 
-  const batchedInstructionsService = createBatchedEVMSwapInstructionsService({
+  const walletCallInstructionService = createWalletCallEVMSwapInstructionsService({
     ...ctx,
     swapRepository: create5792EVMSwapRepository(),
   })
@@ -135,8 +138,8 @@ export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsService
         return smartContractWalletInstructionService.getSwapInstructions(params)
       }
 
-      if (ctx.getCanBatchTransactions?.(chainId)) {
-        return batchedInstructionsService.getSwapInstructions(params)
+      if (ctx.getCanBatchTransactions?.(chainId) || params.swapQuoteResponse.sponsorshipInfo?.sponsored) {
+        return walletCallInstructionService.getSwapInstructions(params)
       }
 
       return legacyInstructionsService.getSwapInstructions(params)

@@ -61,7 +61,7 @@ describe('useActivityData', () => {
     mockUseFormattedTransactionDataForActivity.mockReturnValue({
       isLoading: false,
       isFetching: false,
-      isError: undefined,
+      error: undefined,
       hasData: true,
       onRetry: mockOnRetry,
       sectionData: [mockTransaction],
@@ -120,7 +120,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: true,
         isFetching: true,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -143,7 +143,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: true,
-        isError: undefined,
+        error: undefined,
         hasData: true,
         onRetry: mockOnRetry,
         sectionData: [mockTransaction],
@@ -168,7 +168,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: mockError,
+        error: mockError,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -192,7 +192,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: mockError,
+        error: mockError,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -218,7 +218,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -241,7 +241,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: [],
@@ -282,7 +282,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -388,7 +388,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -436,7 +436,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: false,
         onRetry: mockOnRetry,
         sectionData: undefined,
@@ -494,7 +494,7 @@ describe('useActivityData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,
-        isError: undefined,
+        error: undefined,
         hasData: true,
         onRetry: mockOnRetry,
         sectionData: [mockTransaction],

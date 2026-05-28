@@ -16,9 +16,9 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n'
 import { getLogger } from 'utilities/src/logger/logger'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
 import { useManualChainOutageStore } from '~/state/outage/store'
 import { ChainOutageData } from '~/state/outage/types'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 /**

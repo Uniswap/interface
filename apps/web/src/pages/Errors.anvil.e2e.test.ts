@@ -1,5 +1,5 @@
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { rejectNextTransaction } from '~/components/Web3Provider/rejectableConnector'
+import { rejectNextTransaction } from '~/connection/rejectableConnector'
 import { expect, getTest } from '~/playwright/fixtures'
 import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 

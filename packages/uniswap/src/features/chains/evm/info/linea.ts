@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, LINEA_LOGO } from 'ui/src/assets'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -45,7 +45,6 @@ export const LINEA_CHAIN_INFO = {
   explorer: {
     name: 'Lineascan',
     url: 'https://lineascan.build/',
-    apiURL: 'https://api.lineascan.build/api',
   },
   interfaceName: 'linea',
   label: 'Linea',
@@ -69,6 +68,7 @@ export const LINEA_CHAIN_INFO = {
   },
   tokens,
   statusPage: 'https://linea.statuspage.io/',
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   urlParam: 'linea',

@@ -2,10 +2,10 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
-import { CHAIN_SEARCH_PARAM, withChainSearchParam } from '~/features/params/chainQueryParam'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { CHAIN_SEARCH_PARAM, withChainSearchParam } from '~/utils/params/chainQueryParam'
 
 /**
  * Syncs `?chain=` ↔ `selectedMultichainChainId` for multi-deployment TDP.
@@ -17,6 +17,7 @@ export function TDPChainSearchParamSync(): null {
   const [searchParams, setSearchParams] = useSearchParams()
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multiChainMap = useTDPStore((s) => s.multiChainMap)
+  const selectedMultichainChainId = useTDPStore((s) => s.selectedMultichainChainId)
   const setSelectedMultichainChainId = useTDPStore((s) => s.actions.setSelectedMultichainChainId)
 
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
@@ -55,7 +56,9 @@ export function TDPChainSearchParamSync(): null {
       if (chainQueryValue !== null) {
         setSearchParams((prev) => withChainSearchParam(prev, undefined), { replace: true })
       }
-      setSelectedMultichainChainId(undefined)
+      if (selectedMultichainChainId !== undefined) {
+        setSelectedMultichainChainId(undefined)
+      }
       return
     }
 
@@ -63,7 +66,9 @@ export function TDPChainSearchParamSync(): null {
 
     if (chainFromUrl !== undefined) {
       if (allowed.has(chainFromUrl)) {
-        setSelectedMultichainChainId(chainFromUrl)
+        if (selectedMultichainChainId !== chainFromUrl) {
+          setSelectedMultichainChainId(chainFromUrl)
+        }
       } else {
         setSearchParams((prev) => withChainSearchParam(prev, undefined), { replace: true })
       }
@@ -72,7 +77,9 @@ export function TDPChainSearchParamSync(): null {
       if (chainQueryValue !== null) {
         setSearchParams((prev) => withChainSearchParam(prev, undefined), { replace: true })
       }
-      setSelectedMultichainChainId(undefined)
+      if (selectedMultichainChainId !== undefined) {
+        setSelectedMultichainChainId(undefined)
+      }
     }
   }, [
     chainQueryValue,
@@ -81,6 +88,7 @@ export function TDPChainSearchParamSync(): null {
     isMultiChainAsset,
     multichainEntries.length,
     multichainChainIds,
+    selectedMultichainChainId,
     setSearchParams,
     setSelectedMultichainChainId,
   ])

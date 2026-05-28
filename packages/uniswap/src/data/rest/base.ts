@@ -1,10 +1,9 @@
 import { Transport } from '@connectrpc/connect'
 import { ConnectTransportOptions } from '@connectrpc/connect-web'
 import { getEntryGatewayUrl, getTransport } from '@universe/api'
+import { isWebApp, Environment } from '@universe/environment'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
-import { Environment } from 'utilities/src/environment/getCurrentEnv'
-import { isWebApp } from 'utilities/src/platform'
 
 export function createConnectTransportWithDefaults({
   options = {},
@@ -61,10 +60,12 @@ export const entryGatewayPostTransport = createConnectTransportWithDefaults({
 })
 
 /**
- * The same as entryGatewayPostTransport, but always uses the prod entry gateway URL
+ * Same as entryGatewayPostTransport, but always pins to the prod entry gateway
+ * regardless of deployment. When the proxy is enabled, the env is encoded in
+ * the proxy path (`/entry-gateway/prod`) so the BFF can forward to prod.
  */
 export const entryGatewayProdPostTransport = createConnectTransportWithDefaults({
   // Web uses cookies (credentials: 'include'), while mobile/extension use session headers (via getTransport interceptor).
   options: isWebApp ? { credentials: 'include' } : undefined,
-  getBaseUrlOverride: () => getEntryGatewayUrl(Environment.PROD),
+  getBaseUrlOverride: () => getEntryGatewayUrl({ env: Environment.Production }),
 })

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
@@ -13,12 +13,23 @@ import { NumberType } from 'utilities/src/format/types'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { isEmbeddedWalletAccount } from 'wallet/src/utils/mnemonics'
 
 export function RemoveRecoveryPhraseWallets(): JSX.Element {
   const { t } = useTranslation()
   const { navigateTo } = useExtensionNavigation()
 
   const accounts = useSignerAccounts()
+  const isEmbeddedWallet = accounts.some(isEmbeddedWalletAccount)
+
+  const subtitle = isEmbeddedWallet ? (
+    <Trans
+      components={{ highlight: <Text color="$statusCritical" variant="body3" /> }}
+      i18nKey="account.recoveryPhrase.remove.embeddedWallet.description"
+    />
+  ) : (
+    t('setting.recoveryPhrase.remove.initial.subtitle')
+  )
 
   return (
     <Flex grow backgroundColor="$surface1">
@@ -28,7 +39,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
         nextButtonEnabled={true}
         nextButtonText={t('common.button.continue')}
         nextButtonEmphasis="secondary"
-        subtitle={t('setting.recoveryPhrase.remove.initial.subtitle')}
+        subtitle={subtitle}
         title={t('setting.recoveryPhrase.remove.initial.title')}
         onNextPressed={(): void => {
           navigateTo(

@@ -10,6 +10,5 @@ import { Address } from 'viem'
 export function assume0xAddress(address: string): Address
 export function assume0xAddress(address: string | undefined): Address | undefined
 export function assume0xAddress(address: string | undefined): Address | undefined {
-  // oxlint-disable-next-line no-restricted-syntax
   return address as Address | undefined
 }

@@ -1,7 +1,8 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom, useAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
-import { AnimatedPager, Flex } from 'ui/src'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatedPager, Flex, useMedia, WebBottomSheet } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -9,7 +10,9 @@ import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseU
 import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
+import { useIOSBodyScrollLock } from '~/hooks/useIOSBodyScrollLock'
 import { useModalState } from '~/hooks/useModalState'
+import { useAppSelector } from '~/state/hooks'
 
 export enum Page {
   DownloadApp = 0,
@@ -22,50 +25,90 @@ export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 
 export function GetTheAppModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const initialPage = isEmbeddedWalletEnabled ? Page.ChooseUnitag : Page.DownloadApp
+  const initialInnerPage = useAppSelector((state) => {
+    const modal = state.application.openModal
+    return modal?.name === ModalName.GetTheApp ? modal.initialState?.initialInnerPage : undefined
+  })
+  const showMobileDownload = initialInnerPage === 'mobile'
+  const initialPage = showMobileDownload || !isEmbeddedWalletEnabled ? Page.DownloadApp : Page.ChooseUnitag
 
   const [page, setPage] = useAtom(downloadAppModalPageAtom)
   const { isOpen, closeModal } = useModalState(ModalName.GetTheApp)
+
+  // Read `initialPage` through a ref inside the 500ms timeout so the post-close reset uses
+  // the recomputed value (after Redux clears `openModal` and `showMobileDownload` flips
+  // false) instead of the stale closure captured when `close` was created.
+  const initialPageRef = useRef(initialPage)
+  useEffect(() => {
+    initialPageRef.current = initialPage
+  }, [initialPage])
+
   const close = useCallback(() => {
     closeModal()
-    setTimeout(() => setPage(initialPage), 500)
-  }, [closeModal, setPage, initialPage])
+    setTimeout(() => setPage(initialPageRef.current), 500)
+  }, [closeModal, setPage])
 
   const [unitag, setUnitag] = useState('')
   useEffect(() => {
     setPage(initialPage)
   }, [initialPage, setPage])
 
+  const media = useMedia()
+  const isSheet = media.md
+  const isDismissible = !isEmbeddedWalletEnabled || showMobileDownload
+
+  const keyboardHeight = useIOSBodyScrollLock(isOpen)
+
+  const content = (
+    <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none" width="100%">
+      {/* The Page enum value corresponds to the modal page's index */}
+      <AnimatedPager currentIndex={page}>
+        <DownloadAppsModal onClose={close} initialInnerPage={showMobileDownload ? 'mobile' : undefined} />
+        <ChooseUnitagModal
+          setUnitag={setUnitag}
+          goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
+          onClose={close}
+          setPage={setPage}
+        />
+        <KeyManagementModal goBack={() => setPage(Page.ChooseUnitag)} onClose={close} setPage={setPage} />
+        <PasskeyGenerationModal
+          unitag={unitag}
+          goBack={() => setPage(Page.KeyManagement)}
+          onClose={close}
+          setPage={setPage}
+        />
+      </AnimatedPager>
+    </Flex>
+  )
+
+  // Render WebBottomSheet directly on mobile: <Modal>'s outer Dialog focus trap
+  // fights the inner Sheet's on iOS Safari and breaks keyboard handling.
+  if (isSheet) {
+    return (
+      <WebBottomSheet
+        isOpen={isOpen}
+        onClose={isDismissible ? close : undefined}
+        maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
+        p={0}
+      >
+        <Flex pb={keyboardHeight ? `${keyboardHeight}px` : undefined}>{content}</Flex>
+      </WebBottomSheet>
+    )
+  }
+
   return (
     <Modal
       skipLogImpression
       name={ModalName.DownloadApp}
       isModalOpen={isOpen}
-      isDismissible={!isEmbeddedWalletEnabled}
-      maxWidth="fit-content"
-      mx="auto"
+      isDismissible={isDismissible}
+      maxWidth={480}
       onClose={close}
-      padding={0}
+      padding="$spacing32"
     >
-      <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none">
-        {/* The Page enum value corresponds to the modal page's index */}
-        <AnimatedPager currentIndex={page}>
-          <DownloadAppsModal onClose={close} />
-          <ChooseUnitagModal
-            setUnitag={setUnitag}
-            goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
-            onClose={close}
-            setPage={setPage}
-          />
-          <KeyManagementModal goBack={() => setPage(Page.ChooseUnitag)} onClose={close} setPage={setPage} />
-          <PasskeyGenerationModal
-            unitag={unitag}
-            goBack={() => setPage(Page.KeyManagement)}
-            onClose={close}
-            setPage={setPage}
-          />
-        </AnimatedPager>
-      </Flex>
+      {content}
     </Modal>
   )
 }
+
+export default GetTheAppModal

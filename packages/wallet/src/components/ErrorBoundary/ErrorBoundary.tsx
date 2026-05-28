@@ -1,3 +1,4 @@
+import { isProdEnv } from '@universe/environment'
 import React, { type ErrorInfo, type PropsWithChildren, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -9,7 +10,6 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/slice/ty
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { type AppStateResetter } from 'uniswap/src/state/createAppStateResetter'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'

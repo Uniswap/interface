@@ -181,6 +181,7 @@ function ActivityTableInner({ data, loading = false, error = false, rowWrapper }
       defaultPinnedColumns={['addedTime']}
       maxWidth={1200}
       headerTestId={TestID.PortfolioActivityTableHeader}
+      virtualized={true}
     />
   )
 }

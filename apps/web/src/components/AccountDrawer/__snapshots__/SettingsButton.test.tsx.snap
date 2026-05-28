@@ -9,7 +9,7 @@ exports[`SettingsButton > renders with icon and current state 1`] = `
     <div
       class="is_TouchableArea  t_group_true"
       role="button"
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
       tabindex="0"
     >
       <div
@@ -77,7 +77,7 @@ exports[`SettingsButton > renders without arrow 1`] = `
     <div
       class="is_TouchableArea  t_group_true"
       role="button"
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
       tabindex="0"
     >
       <div
@@ -110,7 +110,7 @@ exports[`SettingsButton > renders without icon 1`] = `
     <div
       class="is_TouchableArea  t_group_true"
       role="button"
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
       tabindex="0"
     >
       <div

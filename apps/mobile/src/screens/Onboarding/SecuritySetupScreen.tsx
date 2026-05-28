@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { isIOS } from '@universe/environment'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Image, Platform, StyleSheet } from 'react-native'
@@ -20,7 +21,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'utilities/src/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 

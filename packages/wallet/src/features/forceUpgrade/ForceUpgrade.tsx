@@ -1,3 +1,4 @@
+import { isExtensionApp, isIOS, isMobileApp } from '@universe/environment'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
@@ -7,7 +8,6 @@ import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/h
 import { useLocalizedStatsigLanguage } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtensionApp, isIOS, isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { EXTENSION_FORCED_UPGRADE_HELP_LINK, MOBILE_APP_STORE_LINK } from 'wallet/src/constants/urls'
 import { ForceUpgradeModalContent } from 'wallet/src/features/forceUpgrade/ForceUpgradeModalContent'

@@ -2,32 +2,15 @@
 
 exports[`KeyManagementModal > renders correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad1331704925"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _mt-t-space-spa94665591 _mb-t-space-spa94665591 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _width-10037"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
       >
         <div
           class="is_TouchableArea  t_group_true"
@@ -82,10 +65,10 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334018 _maxWidth-480px"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334076 _width-10037"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334047"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929 _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453"
@@ -103,7 +86,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
             </svg>
           </div>
           <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
           >
             <h3
               class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
@@ -120,7 +103,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334018 _pl-t-space-spa1360334018 _mb-t-space-spa1360334018 _width-10037"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
@@ -143,7 +126,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-spa94665593 _pb-t-space-spa1360334047"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-spa1360334047"
     >
       <span
         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
@@ -152,7 +135,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         Secured by
       </span>
       <a
-        class="c0"
+        class="sc-bRKDuR dvTvpU"
         href="https://www.privy.io/user-help-center"
         rel="noopener noreferrer"
         style="stroke: none;"

@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { isAndroid } from '@universe/environment'
 import { FeatureFlags, getFeatureFlagName, getOverrideAdapter, getStatsigClient } from '@universe/gating'
 import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
@@ -9,6 +10,7 @@ import {
   isAllowedUwuLinkRequest,
   parseUwuLinkDataFromDeeplink,
 } from 'src/components/Requests/Uwulink/utils'
+import { getConfig } from 'src/config'
 import { getUwuLinkAllowlist } from 'src/features/deepLinking/configUtils'
 import {
   DeepLinkAction,
@@ -28,7 +30,6 @@ import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
-import { config } from 'uniswap/src/config'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -37,7 +38,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { getContractManager, getProviderManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
@@ -56,7 +56,6 @@ export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-// oxlint-disable-next-line complexity
 export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   try {
     const { coldStart } = action.payload
@@ -335,7 +334,7 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
 }
 
 function handleE2EOverrideGates({ enable }: { enable: string[] }): void {
-  if (!config.isE2ETest) {
+  if (!getConfig().isE2ETest) {
     return
   }
 

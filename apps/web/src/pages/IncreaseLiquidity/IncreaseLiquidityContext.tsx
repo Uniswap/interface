@@ -1,11 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { DepositInfo } from '~/components/Liquidity/types'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { useDerivedIncreaseLiquidityInfo } from '~/pages/IncreaseLiquidity/hooks/useDerivedIncreaseLiquidityInfo'
+import { usePreEstimatedIncreaseLiquidityGas } from '~/pages/IncreaseLiquidity/hooks/usePreEstimatedIncreaseLiquidityGas'
 import { LiquidityModalInitialState } from '~/state/application/reducer'
+import { DepositInfo } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 export enum IncreaseLiquidityStep {
@@ -39,6 +42,7 @@ interface IncreaseLiquidityContextType {
   setUnwrapNativeCurrency: Dispatch<SetStateAction<boolean>>
   currentTransactionStep?: { step: TransactionStep; accepted: boolean }
   setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
+  preEstimatedGasFee?: string
 }
 
 const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
@@ -51,6 +55,7 @@ const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
   setUnwrapNativeCurrency: () => undefined,
   currentTransactionStep: undefined,
   setCurrentTransactionStep: () => undefined,
+  preEstimatedGasFee: undefined,
 })
 
 export function useIncreaseLiquidityContext() {
@@ -70,9 +75,13 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
     { step: TransactionStep; accepted: boolean } | undefined
   >()
 
+  const accountAddress = useActiveAddress(Platform.EVM)
+  const { gasFee: preEstimatedGasFee } = usePreEstimatedIncreaseLiquidityGas({ positionInfo, accountAddress })
+
   const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo({
     state: increaseLiquidityState,
     unwrapNativeCurrency,
+    actualGasFee: preEstimatedGasFee,
   })
 
   const value = useMemo(
@@ -86,8 +95,16 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
       setUnwrapNativeCurrency,
       currentTransactionStep,
       setCurrentTransactionStep,
+      preEstimatedGasFee,
     }),
-    [increaseLiquidityState, derivedIncreaseLiquidityInfo, step, unwrapNativeCurrency, currentTransactionStep],
+    [
+      increaseLiquidityState,
+      derivedIncreaseLiquidityInfo,
+      step,
+      unwrapNativeCurrency,
+      currentTransactionStep,
+      preEstimatedGasFee,
+    ],
   )
 
   return <IncreaseLiquidityContext.Provider value={value}>{children}</IncreaseLiquidityContext.Provider>

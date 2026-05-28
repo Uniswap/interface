@@ -2,16 +2,18 @@
 set -euo pipefail
 
 # Restore the monorepo as close to a freshly cloned state as possible
-# Usage: bun clean [--git] [--node] [--bun]
+# Usage: bun clean [--git] [--node] [--bun] [--ios]
 #   --git   Remove git untracked files (except for .env files, node_modules, and .claude directories)
 #   --node  Remove all node_modules (instead of just local packages)
 #   --bun   Clear the global bun cache
+#   --ios   Remove iOS build files and CocoaPods
 #   --quick Quick, basic clean that only removes temporary files
 
 # Parse CLI arguments
 GIT_CLEAN=false
 NODE_MODULES=false
 BUN_CACHE=false
+IOS_CLEAN=false
 HAS_CLI_ARGS=false
 
 while [[ $# -gt 0 ]]; do
@@ -32,9 +34,13 @@ while [[ $# -gt 0 ]]; do
       BUN_CACHE=true
       shift
       ;;
+    --ios)
+      IOS_CLEAN=true
+      shift
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: $0 [--git] [--node] [--bun]"
+      echo "Usage: $0 [--git] [--node] [--bun] [--ios]"
       exit 1
       ;;
   esac
@@ -59,6 +65,11 @@ if [ "$HAS_CLI_ARGS" = false ]; then
   prompt_yes_no "⚠️  UNTRACKED FILES: Do you want to remove all files untracked by git (except .env files)?" "GIT_CLEAN"
   prompt_yes_no "📦 NODE MODULES: Local packages will be cleaned. Should ALL other node_modules be removed (slower but more thorough)?" "NODE_MODULES"
   prompt_yes_no "🗑️  BUN CACHE: Do you want to clear the global bun cache (force re-download of dependencies)?" "BUN_CACHE"
+  if [ "$GIT_CLEAN" = false ]; then
+    prompt_yes_no "📱 iOS BUILD: Do you want to delete iOS build files and Pods (forces full rebuild + pod install)?" "IOS_CLEAN"
+  else
+    echo "📱 iOS BUILD: skipped (git clean will remove iOS build files and Pods)"
+  fi
 fi
 
 # Stop NX daemon and reset the cache
@@ -87,6 +98,16 @@ fi
 if [ "$BUN_CACHE" = true ]; then
   echo "Clearing global bun cache..."
   bun pm cache rm
+fi
+
+# Remove iOS build files and Pods (skipped if git clean already wiped them)
+if [ "$IOS_CLEAN" = true ] && [ "$GIT_CLEAN" = false ]; then
+  echo "Removing iOS build files and Pods..."
+  rm -rf apps/mobile/ios/build
+  rm -rf apps/mobile/.expo
+  rm -rf apps/mobile/ios/Uniswap.xcodeproj/xcuserdata
+  rm -rf apps/mobile/ios/Uniswap.xcworkspace/xcuserdata
+  rm -rf apps/mobile/ios/Pods
 fi
 
 # Execute node_modules cleanup

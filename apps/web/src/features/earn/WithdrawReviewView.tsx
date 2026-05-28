@@ -1,0 +1,236 @@
+import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
+import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import { MessageQuestion } from 'ui/src/components/icons/MessageQuestion'
+import { iconSizes } from 'ui/src/theme'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { Pill } from 'uniswap/src/components/pill/Pill'
+import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
+import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
+
+interface WithdrawReviewViewProps {
+  vault: EarnVaultInfo
+  position: EarnPositionInfo
+  amount: string
+  chainId: UniverseChainId
+  onBack: () => void
+  onClose: () => void
+}
+
+export function WithdrawReviewView({
+  vault,
+  position,
+  amount,
+  chainId,
+  onBack,
+  onClose,
+}: WithdrawReviewViewProps): JSX.Element {
+  const { t } = useTranslation()
+  const colors = useSporeColors()
+  const { formatNumberOrString } = useLocalizationContext()
+  const currencyInfo = useCurrencyInfo(vault.currencyId)
+  const currency = currencyInfo?.currency
+  const symbol = currency?.symbol ?? 'USDC'
+
+  const [expanded, setExpanded] = useState(true)
+  const toggleExpanded = useCallback(() => setExpanded((prev) => !prev), [])
+
+  const parsedAmount = Number(amount) || 0
+  const tokenAmountLabel = formatNumberOrString({ value: parsedAmount, type: NumberType.TokenNonTx })
+
+  const formatFiat = useCallback(
+    (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard }),
+    [formatNumberOrString],
+  )
+
+  const chainLabel = getChainInfo(chainId).label
+
+  const balanceAfter = Math.max(position.depositedUsd - parsedAmount, 0)
+  const vaultExplorerUrl = getExplorerLink({
+    chainId: vault.chainId,
+    data: vault.vaultAddress,
+    type: ExplorerDataType.ADDRESS,
+  })
+  const onOpenVaultExplorer = useCallback(() => {
+    openUri({ uri: vaultExplorerUrl }).catch(() => undefined)
+  }, [vaultExplorerUrl])
+
+  return (
+    <Flex gap="$spacing16">
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Flex row alignItems="center" gap="$spacing8">
+          <TouchableArea onPress={onBack}>
+            <BackArrow color="$neutral2" size="$icon.24" />
+          </TouchableArea>
+          <Text variant="subheading2" color="$neutral2">
+            {t('explore.earn.withdraw.youreWithdrawing')}
+          </Text>
+        </Flex>
+        <Flex row alignItems="center" gap="$spacing12">
+          <TouchableArea
+            onPress={() => {
+              // TODO(CONS-1787): wire "Get help" to the help center destination.
+            }}
+          >
+            <Pill
+              backgroundColor="$surface1"
+              customBorderColor={colors.surface3.val}
+              foregroundColor={colors.neutral1.val}
+              icon={<MessageQuestion color="$neutral1" size="$icon.16" />}
+              label={t('explore.earn.deposit.getHelp')}
+              px="$spacing12"
+              py="$spacing4"
+              textVariant="buttonLabel4"
+            />
+          </TouchableArea>
+          <ModalCloseIcon onClose={onClose} />
+        </Flex>
+      </Flex>
+
+      <Flex alignItems="center" gap="$spacing12" py="$spacing32">
+        <Text variant="heading1" color="$neutral1">
+          {formatFiat(parsedAmount)}
+        </Text>
+        <Flex row alignItems="center" gap="$spacing8">
+          <TokenLogo
+            url={currencyInfo?.logoUrl}
+            size={iconSizes.icon24}
+            chainId={currency?.chainId}
+            symbol={symbol}
+            name={currency?.name}
+          />
+          <Text variant="body2" color="$neutral2">
+            {`${tokenAmountLabel} ${symbol}`}
+          </Text>
+        </Flex>
+      </Flex>
+
+      <ExpandoRow
+        isExpanded={expanded}
+        label={expanded ? t('explore.earn.deposit.showLess') : t('explore.earn.deposit.showMore')}
+        onPress={toggleExpanded}
+      />
+
+      {expanded && (
+        <Flex gap="$spacing12">
+          <SummaryRow
+            label={t('explore.earn.withdraw.vault')}
+            value={
+              <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
+                <Text variant="body3" color="$neutral1">
+                  {shortenAddress({ address: vault.vaultAddress })}
+                </Text>
+                <ExternalLink color="$neutral2" size="$icon.16" />
+              </TouchableArea>
+            }
+          />
+          <SummaryRow
+            label={t('explore.earn.withdraw.yourBalance')}
+            value={
+              <Flex row alignItems="center" gap="$spacing6">
+                <Text variant="body3" color="$neutral2">
+                  {formatFiat(position.depositedUsd)}
+                </Text>
+                <Text variant="body3" color="$neutral2">
+                  →
+                </Text>
+                <Text variant="body3" color="$neutral1">
+                  {formatFiat(balanceAfter)}
+                </Text>
+              </Flex>
+            }
+          />
+          <SummaryRow
+            label={
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body3" color="$neutral2">
+                  {t('explore.earn.withdraw.network')}
+                </Text>
+                <InfoTooltip
+                  placement="top"
+                  trigger={
+                    <TouchableArea>
+                      <InfoCircleFilled color="$neutral3" size="$icon.16" />
+                    </TouchableArea>
+                  }
+                  text={
+                    <Text variant="body4" color="$neutral1">
+                      {t('explore.earn.withdraw.network.tooltip')}
+                    </Text>
+                  }
+                />
+              </Flex>
+            }
+            value={
+              <Flex row alignItems="center" gap="$spacing6">
+                <ChainLogo chainId={chainId} size={iconSizes.icon16} />
+                <Text variant="body3" color="$neutral1">
+                  {chainLabel}
+                </Text>
+              </Flex>
+            }
+          />
+          <SummaryRow
+            label={
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body3" color="$neutral2">
+                  {t('common.networkCost')}
+                </Text>
+                <InfoTooltip
+                  placement="top"
+                  trigger={
+                    <TouchableArea>
+                      <InfoCircleFilled color="$neutral3" size="$icon.16" />
+                    </TouchableArea>
+                  }
+                  text={
+                    <Text variant="body4" color="$neutral1">
+                      {t('transaction.networkCost.description')}
+                    </Text>
+                  }
+                />
+              </Flex>
+            }
+            value={
+              <Text variant="body3" color="$neutral1">
+                —
+              </Text>
+            }
+          />
+        </Flex>
+      )}
+
+      {/* TODO(CONS-1998): re-enable once earn chained actions are rebuilt on the new plan interface. */}
+      <Button variant="branded" size="large" py="$spacing24" isDisabled onPress={() => undefined}>
+        {t('explore.earn.withdraw.cta', { symbol })}
+      </Button>
+    </Flex>
+  )
+}
+
+function SummaryRow({ label, value }: { label: React.ReactNode; value: React.ReactNode }): JSX.Element {
+  return (
+    <Flex row alignItems="center" justifyContent="space-between">
+      {typeof label === 'string' ? (
+        <Text variant="body3" color="$neutral2">
+          {label}
+        </Text>
+      ) : (
+        label
+      )}
+      {value}
+    </Flex>
+  )
+}

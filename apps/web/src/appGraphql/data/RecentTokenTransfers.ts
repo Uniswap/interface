@@ -25,6 +25,7 @@ export function useRecentTokenTransfers(address?: string) {
         (activity) =>
           activity &&
           (activity.details as GraphQLApi.TransactionDetails).type === GraphQLApi.TransactionType.Send &&
+          !(activity.details as GraphQLApi.TransactionDetails).application &&
           (activity.details as GraphQLApi.TransactionDetails).assetChanges.length === 1 &&
           (activity.details as GraphQLApi.TransactionDetails).assetChanges[0]?.__typename === 'TokenTransfer' &&
           ((activity.details as GraphQLApi.TransactionDetails).assetChanges as GraphQLApi.TokenTransfer[])[0].asset

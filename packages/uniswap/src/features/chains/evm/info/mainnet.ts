@@ -1,5 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
+import { isWebApp, isE2eTestEnv } from '@universe/environment'
 import { SwapConfigKey } from '@universe/gating'
 import { ETH_LOGO, ETHEREUM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
@@ -21,8 +22,6 @@ import {
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isWebApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { mainnet, sepolia } from 'wagmi/chains'
 
@@ -54,7 +53,6 @@ export const MAINNET_CHAIN_INFO = {
   explorer: {
     name: 'Etherscan',
     url: 'https://etherscan.io/',
-    apiURL: 'https://api.etherscan.io',
   },
   openseaName: 'ethereum',
   interfaceName: 'mainnet',
@@ -71,7 +69,7 @@ export const MAINNET_CHAIN_INFO = {
   networkLayer: NetworkLayer.L1,
   blockTimeMs: 12000,
   pendingTransactionsRetryOptions: undefined,
-  rpcUrls: isPlaywrightEnv()
+  rpcUrls: isE2eTestEnv()
     ? getPlaywrightRpcUrls(LOCAL_MAINNET_PLAYWRIGHT_RPC_URL)
     : {
         [RPCType.Private]: {
@@ -94,6 +92,7 @@ export const MAINNET_CHAIN_INFO = {
   statusPage: undefined,
   spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(tokens.USDC, 100_000e6),
   tokens,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   wrappedNativeCurrency: {
@@ -140,7 +139,6 @@ export const SEPOLIA_CHAIN_INFO = {
   explorer: {
     name: 'Etherscan',
     url: 'https://sepolia.etherscan.io/',
-    apiURL: 'https://api-sepolia.etherscan.io',
   },
   interfaceName: 'sepolia',
   label: 'Sepolia',
@@ -181,6 +179,7 @@ export const SEPOLIA_CHAIN_INFO = {
   spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(testnetTokens.USDC, 100e6),
   tokens: testnetTokens,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: false,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Sepolia],

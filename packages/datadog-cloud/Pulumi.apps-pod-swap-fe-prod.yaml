@@ -1,0 +1,10 @@
+# Production stack for swap-pod (Swap FE) monitors.
+# ESC key `swap-pod` exists in shared-infra/incident with EP + @slack-apps-alerts-swap.
+environment:
+  - datadog-cloud-universe/apps-pod-swap-fe
+config:
+  datadog-cloud-universe:environment: prod
+  datadog-cloud-universe:tagFilter: "(unienv:prod OR env:prod)"
+  datadog-cloud-universe:incidentWebhook: "@webhook-Incident-io"
+  datadog-cloud-universe:disablePaging: "false"
+  datadog-cloud-universe:disableSlack: "false"

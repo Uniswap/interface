@@ -49,7 +49,6 @@ function mapRestStatusToLocal(status: OnChainTransactionStatus, isCancel: boolea
  * Extract transaction details from an onChain transaction in the REST format
  * Returns an array to support batched transactions (e.g., EXECUTE label with swap + approve)
  */
-// oxlint-disable-next-line complexity
 export default function extractRestOnChainTransactionDetails(transaction: OnChainTransaction): TransactionDetails[] {
   const { chainId, transactionHash, timestampMillis, from, label, status, fee } = transaction
 

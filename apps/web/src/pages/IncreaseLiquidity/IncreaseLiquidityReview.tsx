@@ -1,7 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -21,20 +22,21 @@ import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/type
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { getLPBaseAnalyticsProperties } from '~/components/Liquidity/analytics'
-import { useUpdatedAmountsFromDependentAmount } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { useGetPoolTokenPercentage } from '~/components/Liquidity/hooks/useGetPoolTokenPercentage'
-import { TokenInfo } from '~/components/Liquidity/TokenInfo'
-import { DetailLineItem } from '~/components/swap/DetailLineItem'
+import { DetailLineItem } from '~/components/DetailLineItem'
+import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { TokenInfo } from '~/features/Liquidity/TokenInfo'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { ExternalLink } from '~/theme/components/Links'
 
+// oxlint-disable-next-line complexity
 export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -43,6 +45,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const startChainId = connectedAccount.chainId
   const account = useWallet().evmAccount
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
   const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
 
@@ -181,6 +184,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             currency1: currencyAmounts.TOKEN1.currency,
             currency0AmountUsd: updatedUSDAmounts?.TOKEN0,
             currency1AmountUsd: updatedUSDAmounts?.TOKEN1,
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: updatedCurrencyAmounts?.TOKEN0?.quotient.toString(),
           expectedAmountQuoteRaw: updatedCurrencyAmounts?.TOKEN1?.quotient.toString(),
@@ -284,10 +288,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans
-                      i18nKey="pool.newSpecificPosition"
-                      values={{ symbol: currencyAmounts?.TOKEN0?.currency.symbol }}
-                    />
+                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN0?.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (
@@ -307,10 +308,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans
-                      i18nKey="pool.newSpecificPosition"
-                      values={{ symbol: currencyAmounts?.TOKEN1?.currency.symbol }}
-                    />
+                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN1?.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (
@@ -334,7 +332,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
                       {t('addLiquidity.shareOfPool')}
                     </Text>
                   ),
-                  Value: () => <Text>{formatPercent(poolTokenPercentage.toFixed())}</Text>,
+                  Value: () => <Text variant="body3">{formatPercent(poolTokenPercentage.toFixed())}</Text>,
                 }}
               />
             ) : null}

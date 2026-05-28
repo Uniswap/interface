@@ -4,8 +4,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ToucanBidTransactionStep } from 'uniswap/src/features/transactions/toucan/steps/submitBid'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { SubmitToucanBidParams } from '~/state/sagas/toucan/types'
 import {
   handleApprovalTransactionStep,
@@ -68,6 +68,7 @@ function* submitToucanBid(params: SubmitToucanBidParams) {
           // Run post-permit2 simulation if we had pre-bid steps and callback is provided
           if (!didRunPostPermitSimulation && preBidSteps && preBidSteps.length > 0 && onPreBidStepsComplete) {
             const shouldContinue = yield* call(onPreBidStepsComplete)
+            // oxlint-disable-next-line max-depth
             if (!shouldContinue) {
               onFailure(new Error('Bid simulation failed after permit steps'))
               return

@@ -10,6 +10,16 @@ export interface TokenIdentifier {
 }
 
 /**
+ * Which pipeline produced the cached price. Surfaced in analytics so we can
+ * segment user behavior by data source without joining on the Statsig experiment.
+ *
+ *   aurora_ws            — pushed over the live WebSocket
+ *   aurora_rest_fallback — fetched via GetTokenPrices with preferQuotePrices=false
+ *   tapi_quote           — fetched via GetTokenPrices with preferQuotePrices=true
+ */
+export type PriceSource = 'aurora_ws' | 'aurora_rest_fallback' | 'tapi_quote'
+
+/**
  * Token price data with timestamp.
  */
 export interface TokenPrice {
@@ -23,6 +33,7 @@ export interface TokenPrice {
 export interface TokenPriceData {
   price: number
   timestamp: number
+  source: PriceSource
 }
 
 /**

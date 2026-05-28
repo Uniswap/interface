@@ -10,16 +10,19 @@ vi.mock('uniswap/src/features/accounts/store/hooks', () => {
   }
 })
 
+import { useDynamicConfigValue } from '@universe/gating'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
+import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
 import { useCurrencyInfo } from '~/hooks/Tokens'
-import SendCurrencyInputForm from '~/pages/Swap/Send/SendCurrencyInputForm'
+import { SendCurrencyInputForm } from '~/pages/Swap/Send/SendCurrencyInputForm'
 import { MultichainContext } from '~/state/multichain/types'
-import { SendContext, SendContextType } from '~/state/send/SendContext'
-import { SwapAndLimitContext } from '~/state/swap/types'
 import { DAI_INFO } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
 import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
+
+const useDynamicConfigValueMock = vi.mocked(useDynamicConfigValue)
 
 const mockMultichainContextValue = {
   reset: vi.fn(),
@@ -82,6 +85,12 @@ const mockedSendContextTokenInput: SendContextType = {
 
 describe('SendCurrencyInputform', () => {
   beforeEach(() => {
+    useDynamicConfigValueMock.mockImplementation((opts: { defaultValue?: unknown }) => {
+      if (opts.defaultValue !== undefined && opts.defaultValue !== null) {
+        return opts.defaultValue
+      }
+      return 100
+    })
     mocked(useCurrencyInfo).mockImplementation(() => {
       return DAI_INFO
     })

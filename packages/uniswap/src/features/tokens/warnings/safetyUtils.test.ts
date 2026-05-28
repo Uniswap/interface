@@ -198,7 +198,6 @@ describe('getFeeColor', () => {
     [18, '$statusCritical', 'high fee'],
     [85, '$statusCritical', 'very high fee'],
     [100, '$statusCritical', 'honeypot fee'],
-    // oxlint-disable-next-line max-params
   ])('should return %s for %s', (fee, expectedColor, _) => {
     expect(getFeeColor(fee)).toBe(expectedColor)
   })
@@ -399,7 +398,6 @@ describe('getTokenProtectionWarning', () => {
       TokenProtectionWarning.FotVeryHigh,
       'malicious high fees attack -> FotVeryHigh',
     ],
-    // oxlint-disable-next-line max-params
   ])('%s', (currencyInfo, expectedWarning, _) => {
     expect(getTokenProtectionWarning(currencyInfo)).toBe(expectedWarning)
   })
@@ -426,7 +424,6 @@ describe('getFeeWarning', () => {
     // Honeypot (100%)
     [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
     [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
-    // oxlint-disable-next-line max-params
   ])('%s', (fee, expectedWarning, _) => {
     expect(getFeeWarning(fee)).toBe(expectedWarning)
   })

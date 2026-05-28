@@ -1,31 +1,33 @@
 # @universe/config
 
-Configuration management package for the Uniswap Universe monorepo.
+Shared configuration management for the Uniswap monorepo.
 
 ## Overview
 
-This package provides centralized configuration management for all Uniswap applications (web, mobile, and extension). It handles environment variables and provides a platform-specific implementation for accessing configuration values.
+This package provides:
 
-## Usage
+- **`BaseConfigValues`** / **`BaseConfigSchema`** — shared config fields (API keys, feature flags, URL overrides) used by all apps
+- **`parseConfig()`** — validates values against a zod schema, auto-extending the base config
+- **Common zod schemas** — `boolFromString`, `boolIfDefined`, `boolFromOne`, `optionalString`
 
-```typescript
-import { getConfig } from '@universe/config'
+Each app (web, mobile, extension) has its own `config.ts` that defines app-specific fields and calls `parseConfig()`.
 
-const config = getConfig()
-console.log(config.infuraKey)
-```
+## How env vars work
 
-## Platform Support
+All platforms use `process.env.X` references directly. Each build tool replaces these at build time:
 
-- **Web/Extension**: Uses `process.env` directly
-- **Mobile**: Uses `react-native-dotenv` for environment variable management
+- **Vite** (web) — `define` block in `vite.config.mts` statically replaces `process.env.X`
+- **Metro + Babel** (mobile) — `transform-inline-environment-variables` plugin inlines values from the shell; `.env` files are loaded via `dotenv` in `babel.config.js`
+- **WXT/Webpack** (extension) — `DefinePlugin` / WXT config handles replacements
 
-## Configuration Values
+No `REACT_APP_` prefix is required. The base config uses `??` fallbacks (e.g. `process.env.ALCHEMY_API_KEY ?? process.env.REACT_APP_ALCHEMY_API_KEY`) for backward compatibility with env vars that still use the legacy prefix.
 
-See `src/config-types.ts` for the complete list of configuration options.
+## Key files
 
-## Environment Variable Naming
-
-- **Web**: Variables must be prefixed with `REACT_APP_`
-- **Extension**: Variables use standard naming without prefix
-- **Mobile**: Variables use standard naming without prefix, but also require `react-native-dotenv` setup
+| File | Purpose |
+|---|---|
+| `src/BaseConfig.ts` | `BaseConfigValues`, `BaseConfigSchema`, `BaseConfig` type |
+| `src/parseConfig.ts` | `parseConfig()` function |
+| `src/getConfig.ts` | Deprecated `getConfig()` for shared packages |
+| `src/commonSchemas.ts` | Reusable zod schemas |
+| `src/types.ts` | `ConfigValues`, `ConfigSchema` types |

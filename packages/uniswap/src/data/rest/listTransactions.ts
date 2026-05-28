@@ -1,12 +1,6 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
-import {
-  InfiniteData,
-  infiniteQueryOptions,
-  queryOptions,
-  UseInfiniteQueryResult,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { InfiniteData, UseInfiniteQueryResult, useInfiniteQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
@@ -17,6 +11,10 @@ import {
   buildAccountAddressesByPlatform,
 } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import {
+  persistableInfiniteQueryOptions,
+  persistableQueryOptions,
+} from 'utilities/src/reactQuery/persistableQueryOptions'
 import type { InfiniteQueryOptionsResult, QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 type GetListTransactionsInput<TSelectData = ListTransactionsResponse> = {
@@ -89,7 +87,7 @@ export const getListTransactionsInfiniteQuery = ({
   const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
   const address = walletAccount?.platformAddresses[0]?.address
 
-  return infiniteQueryOptions({
+  return persistableInfiniteQueryOptions({
     queryKey: [
       ReactQueryCacheKey.ListTransactions,
       address,
@@ -132,7 +130,7 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
 
   const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
 
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.ListTransactions, accountAddressesByPlatform, inputWithoutWalletAccount],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),

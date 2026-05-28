@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { isAndroid } from '@universe/environment'
 import React, { memo, PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
@@ -26,7 +27,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 
 const DEFAULT_Y_PADDING = 20
 const LOW_VARIANCE_Y_PADDING = 100

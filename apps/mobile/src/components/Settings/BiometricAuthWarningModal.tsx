@@ -1,10 +1,10 @@
+import { isAndroid } from '@universe/environment'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometricsSettings/hooks'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isAndroid } from 'utilities/src/platform'
 
 type Props = {
   isOpen: boolean

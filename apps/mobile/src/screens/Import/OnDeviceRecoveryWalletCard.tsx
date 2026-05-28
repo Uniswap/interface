@@ -41,7 +41,6 @@ export function OnDeviceRecoveryWalletCard({
   const firstWalletInfo = targetWalletInfos[0]
   const remainingWalletCount = targetWalletInfos.length - 1
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we want to recalculate this only when loading, screenLoading changes
   useEffect(() => {
     if (!loading && screenLoading) {
       onLoadComplete(significantRecoveryWalletInfos.length)

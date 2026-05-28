@@ -19,7 +19,14 @@ import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
-const PREFETCH_ITEMS_THRESHOLD = 0.5
+// Trigger fetchMore when the user is 30% from the end of the list. Higher values stack
+// up multiple in-flight pages plus their image decodes during fast scroll; 0.3 still
+// leaves ~9 cells of headroom on a 60-per-page fetch before the user reaches the bottom.
+const PREFETCH_ITEMS_THRESHOLD = 0.3
+// FlashList off-screen buffer (dp) above and below the viewport. Lower than the default
+// (250) to bound the number of mounted cells — fewer hydrated images means lower peak
+// memory at the cost of more visible blanks during very fast scrolls.
+const DRAW_DISTANCE = 150
 const LOADING_ITEM = 'loading'
 
 const keyExtractor = (item: NFTItem | string): string =>
@@ -181,6 +188,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function N
         </>
       }
       data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}
+      drawDistance={DRAW_DISTANCE}
       estimatedItemSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
       keyExtractor={keyExtractor}
       numColumns={numColumns}

@@ -5,7 +5,7 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { USDC_LINEA, USDT_LINEA, USDT0_XLAYER } from 'uniswap/src/constants/tokens'
+import { USDC_BASE, USDC_LINEA, USDT_LINEA, USDT0_XLAYER } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -26,6 +26,15 @@ const LINEA_CURRENCY_IDS = [
   buildCurrencyId(UniverseChainId.Linea, USDT_LINEA.address), // USDT
   buildCurrencyId(UniverseChainId.Linea, '0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f'), // WETH
   buildCurrencyId(UniverseChainId.Linea, '0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4'), // WBTC
+]
+
+// Base quick-select tokens
+const BASE_CURRENCY_IDS = [
+  buildNativeCurrencyId(UniverseChainId.Base), // ETH
+  buildCurrencyId(UniverseChainId.Base, USDC_BASE.address), // USDC
+  buildCurrencyId(UniverseChainId.Base, '0xfde4c96c8593536e31f229ea8f37b2ada2699bb2'), // USDT
+  buildCurrencyId(UniverseChainId.Base, '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf'), // cbBTC
+  buildCurrencyId(UniverseChainId.Base, '0x4200000000000000000000000000000000000006'), // WETH
 ]
 
 export function useCommonTokensOptions({
@@ -63,17 +72,18 @@ export function useCommonTokensOptions({
     loading: loadingLineaCurrencies,
   } = useCurrencyInfosWithLoading(LINEA_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Linea })
 
+  const {
+    data: baseCurrencies,
+    error: baseCurrenciesError,
+    refetch: refetchBaseCurrencies,
+    loading: loadingBaseCurrencies,
+  } = useCurrencyInfosWithLoading(BASE_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Base })
+
   // this is a one-off filter for USDT on Unichain which at time of launch does not have enough liquidity for swapping so we are filtering it out of quick select
   // TODO(WEB-6284): Replace useAllCommonBaseCurrencies static filter with a dynamic filter
   const USDT_UNICHAIN_ADDRESS = '0x588ce4f028d8e7b53b687865d6a67b3a54c75518'
   const filteredCommonBaseCurrencies = useMemo(() => {
     const filtered = commonBaseCurrencies?.filter((currency) => {
-      // Use our custom X Layer tokens list instead of the commonBaseCurrencies list
-      const isXLayerToken = currency.currency.chainId === UniverseChainId.XLayer
-
-      // Use our custom Linea tokens list instead of the commonBaseCurrencies list
-      const isLineaToken = currency.currency.chainId === UniverseChainId.Linea
-
       const isUSDTUnichain =
         currency.currency.chainId === UniverseChainId.Unichain &&
         !currency.currency.isNative &&
@@ -82,7 +92,7 @@ export function useCommonTokensOptions({
           addressInput2: { address: currency.currency.address, chainId: currency.currency.chainId },
         })
 
-      return !isXLayerToken && !isLineaToken && !isUSDTUnichain
+      return !isUSDTUnichain
     })
 
     if (chainFilter === UniverseChainId.XLayer) {
@@ -91,8 +101,11 @@ export function useCommonTokensOptions({
     if (chainFilter === UniverseChainId.Linea) {
       return lineaCurrencies
     }
+    if (chainFilter === UniverseChainId.Base) {
+      return baseCurrencies
+    }
     return filtered
-  }, [chainFilter, commonBaseCurrencies, lineaCurrencies, xLayerCurrencies])
+  }, [chainFilter, commonBaseCurrencies, lineaCurrencies, xLayerCurrencies, baseCurrencies])
 
   const commonBaseTokenOptions = useCurrencyInfosToTokenOptions({
     currencyInfos: filteredCommonBaseCurrencies,
@@ -104,13 +117,21 @@ export function useCommonTokensOptions({
     refetchCommonBaseCurrencies?.()
     refetchXLayerCurrencies?.()
     refetchLineaCurrencies?.()
-  }, [portfolioBalancesByIdRefetch, refetchCommonBaseCurrencies, refetchXLayerCurrencies, refetchLineaCurrencies])
+    refetchBaseCurrencies?.()
+  }, [
+    portfolioBalancesByIdRefetch,
+    refetchCommonBaseCurrencies,
+    refetchXLayerCurrencies,
+    refetchLineaCurrencies,
+    refetchBaseCurrencies,
+  ])
 
   const error =
     (!portfolioBalancesById && portfolioBalancesByIdError) ||
     (!commonBaseCurrencies && commonBaseCurrenciesError) ||
     (!xLayerCurrencies?.length && xLayerCurrenciesError) ||
-    (!lineaCurrencies?.length && lineaCurrenciesError)
+    (!lineaCurrencies?.length && lineaCurrenciesError) ||
+    (!baseCurrencies?.length && baseCurrenciesError)
 
   const filteredCommonBaseTokenOptions = useMemo(
     () => commonBaseTokenOptions && filter({ tokenOptions: commonBaseTokenOptions, chainFilter }),
@@ -123,13 +144,18 @@ export function useCommonTokensOptions({
       refetch,
       error: error || undefined,
       loading:
-        loadingPorfolioBalancesById || loadingCommonBaseCurrencies || loadingXLayerCurrencies || loadingLineaCurrencies,
+        loadingPorfolioBalancesById ||
+        loadingCommonBaseCurrencies ||
+        loadingXLayerCurrencies ||
+        loadingLineaCurrencies ||
+        loadingBaseCurrencies,
     }),
     [
       error,
       loadingCommonBaseCurrencies,
       loadingLineaCurrencies,
       loadingXLayerCurrencies,
+      loadingBaseCurrencies,
       loadingPorfolioBalancesById,
       filteredCommonBaseTokenOptions,
       refetch,

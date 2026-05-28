@@ -19,7 +19,7 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
   const { t } = useTranslation()
   const [checked, setChecked] = useState(false)
 
-  // oxlint-disable-next-line consistent-return
+  // oxlint-disable-next-line typescript/consistent-return
   const { preview, title, description, disclaimer } = useMemo(() => {
     switch (backupType) {
       case BackupType.Cloud:

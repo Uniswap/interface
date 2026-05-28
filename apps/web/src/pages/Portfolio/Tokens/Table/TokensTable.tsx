@@ -1,17 +1,22 @@
 import { NetworkStatus } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollSync } from 'react-scroll-sync'
 import { Flex } from 'ui/src'
+import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpandoRow'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { PortfolioExpandoRow } from '~/pages/Portfolio/components/PortfolioExpandoRow'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
+import {
+  PortfolioTokenTableSortStoreContextProvider,
+  usePortfolioTokenTableSortStore,
+} from '~/pages/Portfolio/Tokens/Table/portfolioTokenTableSortStore'
+import { sortPortfolioTokenData } from '~/pages/Portfolio/Tokens/Table/sortPortfolioTokenData'
 import { TokensTableInner } from '~/pages/Portfolio/Tokens/Table/TokensTableInner'
 import { flattenTokenDataToSingleChainRows } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
 
@@ -26,12 +31,33 @@ interface TokensTableProps {
   error?: Error | undefined
 }
 
-export function TokensTable({ visible, hidden, loading, refetching, error }: TokensTableProps) {
+function TokensTableContent({ visible, hidden, loading, refetching, error }: TokensTableProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const tableLoading = loading && !refetching
   const trace = useTrace()
   const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
+
+  const { sortMethod, sortAscending } = usePortfolioTokenTableSortStore((s) => ({
+    sortMethod: s.sortMethod,
+    sortAscending: s.sortAscending,
+  }))
+
+  // Collapse hidden tokens when sort changes so we don't re-render 100+ hidden rows.
+  // We detect the change during render (not in an effect) so React restarts the
+  // render with isOpen=false before the hidden table ever mounts.
+  const prevSortRef = useRef({ sortMethod, sortAscending })
+  if (prevSortRef.current.sortMethod !== sortMethod || prevSortRef.current.sortAscending !== sortAscending) {
+    prevSortRef.current = { sortMethod, sortAscending }
+    if (isOpen) {
+      setIsOpen(false)
+    }
+  }
+
+  const sortedVisible = useMemo(
+    () => sortPortfolioTokenData(visible, { sortMethod, sortAscending }),
+    [visible, sortMethod, sortAscending],
+  )
 
   const hiddenColumns = useMemo(() => {
     if (isProfitLossEnabled) {
@@ -41,6 +67,11 @@ export function TokensTable({ visible, hidden, loading, refetching, error }: Tok
   }, [isProfitLossEnabled])
 
   const flattenedHiddenTokens = useMemo(() => flattenTokenDataToSingleChainRows(hidden), [hidden])
+
+  const sortedHiddenTokens = useMemo(
+    () => sortPortfolioTokenData(flattenedHiddenTokens, { sortMethod, sortAscending }),
+    [flattenedHiddenTokens, sortMethod, sortAscending],
+  )
 
   const handleToggleHiddenTokens = useCallback(() => {
     const newIsOpen = !isOpen
@@ -61,34 +92,44 @@ export function TokensTable({ visible, hidden, loading, refetching, error }: Tok
     <ScrollSync horizontal vertical={false}>
       <Flex gap="$spacing16">
         <TokensTableInner
-          tokenData={visible}
+          tokenData={sortedVisible}
           loading={tableLoading}
           error={error}
           hiddenColumns={hiddenColumns}
           maxHeight={TOKENS_TABLE_MAX_HEIGHT}
+          showUnrealizedPnlPercent
         />
-        {flattenedHiddenTokens.length > 0 && (
+        {sortedHiddenTokens.length > 0 && (
           <>
-            <PortfolioExpandoRow
+            <InlineExpandoRow
               isExpanded={isOpen}
-              label={t('hidden.tokens.info.text.button', { numHidden: flattenedHiddenTokens.length })}
+              label={t('hidden.tokens.info.text.button', { numHidden: hidden.length })}
               onPress={handleToggleHiddenTokens}
-              dataTestId={TestID.ShowHiddenTokens}
+              testID={TestID.ShowHiddenTokens}
             />
             {isOpen && (
               <TokensTableInner
                 showHiddenTokensBanner
-                tokenData={flattenedHiddenTokens}
+                tokenData={sortedHiddenTokens}
                 hideHeader
                 loading={tableLoading}
                 error={error}
                 hiddenColumns={hiddenColumns}
                 maxHeight={TOKENS_TABLE_MAX_HEIGHT}
+                showUnrealizedPnlPercent
               />
             )}
           </>
         )}
       </Flex>
     </ScrollSync>
+  )
+}
+
+export function TokensTable(props: TokensTableProps) {
+  return (
+    <PortfolioTokenTableSortStoreContextProvider>
+      <TokensTableContent {...props} />
+    </PortfolioTokenTableSortStoreContextProvider>
   )
 }

@@ -1,3 +1,4 @@
+/* oxlint-disable eslint-js/no-restricted-syntax */
 import { CommandType } from '@uniswap/universal-router-sdk'
 import { FeeAmount as FeeAmountV3 } from '@uniswap/v3-sdk'
 import { BigNumberSchema } from 'src/app/features/dappRequests/types/EthersTypes'
@@ -11,7 +12,6 @@ const CommandNameSchema = z.enum(
 // TODO: remove this fallback once params are fully typed or we are able to import them from the universal router sdk
 const FallbackParamSchema = z.object({
   name: z.string(),
-  // oxlint-disable-next-line no-restricted-syntax
   value: z.any(),
 })
 

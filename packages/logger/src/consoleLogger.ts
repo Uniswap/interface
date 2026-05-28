@@ -56,7 +56,6 @@ export function createConsoleLogger(
       if (!shouldLog('trace', minLevel)) {
         return
       }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.debug(`${formatTimestamp()} TRACE ${prefix} ${message}${formatContext(mergeContext(context))}`)
     },
 
@@ -64,7 +63,6 @@ export function createConsoleLogger(
       if (!shouldLog('debug', minLevel)) {
         return
       }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.debug(`${formatTimestamp()} DEBUG ${prefix} ${message}${formatContext(mergeContext(context))}`)
     },
 
@@ -72,7 +70,6 @@ export function createConsoleLogger(
       if (!shouldLog('info', minLevel)) {
         return
       }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.info(`${formatTimestamp()} INFO ${prefix} ${message}${formatContext(mergeContext(context))}`)
     },
 
@@ -80,7 +77,6 @@ export function createConsoleLogger(
       if (!shouldLog('warn', minLevel)) {
         return
       }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.warn(`${formatTimestamp()} WARN ${prefix} ${message}${formatContext(mergeContext(context))}`)
     },
 
@@ -89,7 +85,6 @@ export function createConsoleLogger(
         return
       }
       const errorDetails = error instanceof Error ? { name: error.name, message: error.message } : { error }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.error(`${formatTimestamp()} ERROR ${prefix} ${message}`, errorDetails, mergeContext(context) ?? {})
     },
 
@@ -98,7 +93,6 @@ export function createConsoleLogger(
         return
       }
       const errorDetails = error instanceof Error ? { name: error.name, message: error.message } : { error }
-      // oxlint-disable-next-line no-console -- Logger implementation
       console.error(`${formatTimestamp()} FATAL ${prefix} ${message}`, errorDetails, mergeContext(context) ?? {})
     },
 

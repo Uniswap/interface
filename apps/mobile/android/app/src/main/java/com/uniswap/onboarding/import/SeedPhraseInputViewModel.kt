@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uniswap.EthersRs
 import com.uniswap.RnEthersRs
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_EW
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_HD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -180,8 +182,8 @@ class SeedPhraseInputViewModel(
   }
 
   companion object {
-    private const val MIN_LENGTH = 12
-    private const val MAX_LENGTH = 24
+    private const val MIN_LENGTH = MNEMONIC_LENGTH_HD
+    private const val MAX_LENGTH = MNEMONIC_LENGTH_EW
   }
 
 }

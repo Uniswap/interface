@@ -1,8 +1,6 @@
-import { IncreaseLPPositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import {
-  IncreasePositionRequest,
-  IncreasePositionResponse,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import { useQuery } from '@tanstack/react-query'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { IncreasePositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { LPAction, LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
@@ -18,8 +16,8 @@ import {
 } from 'react'
 import { useSelector } from 'react-redux'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { useCheckLPApprovalQuery } from 'uniswap/src/data/apiClients/liquidityService/useCheckLPApprovalQuery'
-import { useIncreasePositionQuery } from 'uniswap/src/data/apiClients/liquidityService/useIncreasePositionQuery'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -42,12 +40,14 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { useIncreasePositionDependentAmountFallback } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { getTokenOrZeroAddress } from '~/components/Liquidity/utils/currency'
-import { generateLiquidityServiceIncreaseCalldataParams } from '~/components/Liquidity/utils/generateLiquidityServiceIncreaseCalldata.ts'
-import { getCheckLPApprovalRequestParams } from '~/components/Liquidity/utils/getCheckLPApprovalRequestParams'
-import { hasLPFoTTransferError } from '~/components/Liquidity/utils/hasLPFoTTransferError'
-import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useDynamicNativeSlippage } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
+import { useIncreasePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
+import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
+import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { PositionField } from '~/types/position'
@@ -64,22 +64,23 @@ interface IncreasePositionContextType {
 
 const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | undefined>(undefined)
 
+// oxlint-disable-next-line complexity
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const positionInfo = useModalInitialState(ModalName.AddLiquidity)
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, preEstimatedGasFee } =
+    useIncreaseLiquidityContext()
+  const { customDeadline, customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
+    isSlippageDirty: s.isSlippageDirty,
   }))
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
-  const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
+  const { currencyAmounts, currencyMaxAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
 
   const accountAddress = useActiveAddress(Platform.EVM)
-  const isIncreasePositionV2 = useFeatureFlag(FeatureFlags.IncreasePositionV2)
-  const isCheckApprovalV2 = useFeatureFlag(FeatureFlags.CheckApprovalV2)
   const isLiquidityBatchedTransactionsEnabled = useFeatureFlag(FeatureFlags.LiquidityBatchedTransactions)
   const canBatchTransactions =
     useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(positionInfo?.chainId)) &&
@@ -101,9 +102,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       currencyAmounts,
       canBatchTransactions,
       action: LPAction.INCREASE,
-      isCheckApprovalV2,
     })
-  }, [positionInfo, accountAddress, currencyAmounts, canBatchTransactions, isCheckApprovalV2])
+  }, [positionInfo, accountAddress, currencyAmounts, canBatchTransactions])
 
   const {
     approvalData: increaseLiquidityTokenApprovals,
@@ -153,7 +153,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeeToken1Approval,
   )
   const gasFeeLiquidityTokenUSD = useUSDCurrencyAmountOfGasFee(
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     positionInfo?.liquidityToken?.chainId,
     gasFeePositionTokenApproval,
   )
@@ -177,49 +176,48 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       token1PermitTransaction,
     )
 
+  const isApprovalSimEnabled = useIsLiquidityApprovalSimulationEnabled(positionInfo?.currency0Amount.currency.chainId)
+
   const token0 = currencyAmounts?.TOKEN0?.currency
   const token1 = currencyAmounts?.TOKEN1?.currency
 
   const token0Amount = currencyAmounts?.TOKEN0?.quotient.toString()
   const token1Amount = currencyAmounts?.TOKEN1?.quotient.toString()
 
-  const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | IncreasePositionRequest | undefined => {
+  const nativeTokenBalance = useMemo(() => {
+    if (positionInfo?.version !== ProtocolVersion.V4) {
+      return undefined
+    }
+    if (currencyMaxAmounts?.TOKEN0?.currency.isNative) {
+      return currencyMaxAmounts.TOKEN0.quotient.toString()
+    }
+    return undefined
+  }, [positionInfo?.version, currencyMaxAmounts])
+
+  const increaseCalldataQueryParams = useMemo((): IncreasePositionRequest | undefined => {
     if (!positionInfo || !accountAddress || !token0 || !token1 || !token0Amount || !token1Amount) {
       return undefined
     }
 
-    if (isIncreasePositionV2) {
-      const independentToken = exactField === PositionField.TOKEN0 ? token0 : token1
-      const independentAmount = exactField === PositionField.TOKEN0 ? token0Amount : token1Amount
+    const independentToken = exactField === PositionField.TOKEN0 ? token0 : token1
+    const independentAmount = exactField === PositionField.TOKEN0 ? token0Amount : token1Amount
 
-      return new IncreasePositionRequest({
-        walletAddress: accountAddress,
-        chainId: positionInfo.currency0Amount.currency.chainId,
-        protocol: getProtocols(positionInfo.version),
-        token0Address: getTokenOrZeroAddress(token0),
-        token1Address: getTokenOrZeroAddress(token1),
-        nftTokenId: positionInfo.tokenId ?? undefined,
-        independentToken: new LPToken({
-          tokenAddress: getTokenOrZeroAddress(independentToken),
-          amount: independentAmount,
-        }),
-        slippageTolerance: customSlippageTolerance,
-        deadline: getTradeSettingsDeadline(customDeadline),
-        simulateTransaction: !approvalsNeeded,
-      })
-    }
-
-    return generateLiquidityServiceIncreaseCalldataParams({
-      token0,
-      token1,
-      exactField,
-      token0Amount,
-      token1Amount,
-      approvalsNeeded,
-      positionInfo,
-      accountAddress,
-      customSlippageTolerance,
-      customDeadline,
+    return new IncreasePositionRequest({
+      walletAddress: accountAddress,
+      chainId: positionInfo.currency0Amount.currency.chainId,
+      protocol: getProtocols(positionInfo.version),
+      token0Address: getTokenOrZeroAddress(token0),
+      token1Address: getTokenOrZeroAddress(token1),
+      nftTokenId: positionInfo.tokenId ?? undefined,
+      independentToken: new LPToken({
+        tokenAddress: getTokenOrZeroAddress(independentToken),
+        amount: independentAmount,
+      }),
+      slippageTolerance: nativeTokenBalance && !isSlippageDirty ? undefined : customSlippageTolerance,
+      deadline: getTradeSettingsDeadline(customDeadline),
+      simulateTransaction: !approvalsNeeded || isApprovalSimEnabled,
+      includeApprovalSimulation: approvalsNeeded && isApprovalSimEnabled,
+      nativeTokenBalance,
     })
   }, [
     accountAddress,
@@ -230,9 +228,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     token1Amount,
     approvalsNeeded,
     customSlippageTolerance,
+    isSlippageDirty,
     exactField,
     customDeadline,
-    isIncreasePositionV2,
+    isApprovalSimEnabled,
+    nativeTokenBalance,
   ])
 
   const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
@@ -253,14 +253,29 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     Boolean(increaseCalldataQueryParams) &&
     !fotErrorToken
 
-  const { increaseCalldata, isCalldataLoading, calldataError, calldataRefetch } = useIncreasePositionQuery({
-    increaseCalldataQueryParams,
-    transactionError: Boolean(transactionError),
-    isQueryEnabled: isQueryEnabled && Boolean(increaseCalldataQueryParams),
-  })
+  const {
+    data: increaseCalldata,
+    isLoading: isCalldataLoading,
+    error: calldataError,
+    refetch: calldataRefetch,
+  } = useQuery(
+    liquidityQueries.increasePosition({
+      params: increaseCalldataQueryParams,
+      staleTime: 5 * ONE_SECOND_MS,
+      enabled: isQueryEnabled && Boolean(increaseCalldataQueryParams),
+      refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
+      retry: false,
+    }),
+  )
 
   const increase = increaseCalldata?.increase
   const actualGasFee = increaseCalldata?.gasFee
+
+  useDynamicNativeSlippage({
+    nativeTokenBalance,
+    slippage: increaseCalldata?.slippage,
+    isSlippageDirty,
+  })
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
@@ -294,17 +309,17 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     if (calldataError && fallbackDependentAmount) {
       return fallbackDependentAmount
     }
-    if (increaseCalldata instanceof IncreasePositionResponse) {
-      const dependentToken = exactField === PositionField.TOKEN0 ? increaseCalldata.token1 : increaseCalldata.token0
-      return dependentToken?.amount
-    }
-    return increaseCalldata?.dependentAmount
+    const dependentToken = exactField === PositionField.TOKEN0 ? increaseCalldata?.token1 : increaseCalldata?.token0
+    return dependentToken?.amount
   }, [increaseCalldata, calldataError, fallbackDependentAmount, exactField])
 
-  const { value: calculatedGasFee } = useTransactionGasFee({ tx: increase, skip: !!actualGasFee })
+  // Use pre-estimated gas fee as fallback until real estimate is available
+  const effectiveGasFee = actualGasFee ?? preEstimatedGasFee
+
+  const { displayValue: calculatedGasFee } = useTransactionGasFee({ tx: increase, skip: !!effectiveGasFee })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(increaseCalldata?.increase?.chainId) ?? undefined,
-    actualGasFee || calculatedGasFee,
+    effectiveGasFee || calculatedGasFee,
   )
 
   useEffect(() => {
@@ -316,7 +331,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     )
   }, [approvalError, calldataError])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +token0Amount, +token1Amount
   useEffect(() => {
     setTransactionError(false)
   }, [token0Amount, token1Amount])
@@ -347,31 +361,13 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     const validatedToken0PermitTx = validateTransactionRequest(token0PermitTransaction)
     const validatedToken1PermitTx = validateTransactionRequest(token1PermitTransaction)
 
-    let updatedIncreaseCalldataQueryParams: IncreaseLPPositionRequest | IncreasePositionRequest | undefined
-    if (increaseCalldataQueryParams instanceof IncreasePositionRequest) {
-      updatedIncreaseCalldataQueryParams = validatedPermit
-        ? new IncreasePositionRequest({
-            // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-            ...increaseCalldataQueryParams,
-            v4BatchPermitData: validatedPermit,
-          })
-        : increaseCalldataQueryParams
-    } else if (increaseCalldataQueryParams?.increaseLpPosition.case === 'v4IncreaseLpPosition') {
-      updatedIncreaseCalldataQueryParams = new IncreaseLPPositionRequest({
-        // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-        ...increaseCalldataQueryParams,
-        increaseLpPosition: {
-          case: 'v4IncreaseLpPosition',
-          value: {
-            // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-            ...increaseCalldataQueryParams.increaseLpPosition.value,
-            batchPermitData: validatedPermit,
-          },
-        },
-      })
-    } else {
-      updatedIncreaseCalldataQueryParams = increaseCalldataQueryParams
-    }
+    const updatedIncreaseCalldataQueryParams = validatedPermit
+      ? new IncreasePositionRequest({
+          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
+          ...increaseCalldataQueryParams,
+          v4BatchPermitData: validatedPermit,
+        })
+      : increaseCalldataQueryParams
 
     return {
       type: LiquidityTransactionType.Increase,

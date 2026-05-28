@@ -4,6 +4,8 @@ import { argon2id } from '@noble/hashes/argon2.js'
 import { hkdf } from '@noble/hashes/hkdf.js'
 import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
+import { generateRandomBytes } from '@universe/cryptography'
+import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 
 // OPRF types (lazy-loaded to code-split @cloudflare/voprf-ts)
 type OprfClient = InstanceType<typeof import('@cloudflare/voprf-ts').OPRFClient>
@@ -89,7 +91,7 @@ export function encryptAuthKey(params: {
   salt2: Uint8Array
 }): string {
   const { finalKey, authPrivateKey, salt1, salt2 } = params
-  const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH))
+  const iv = generateRandomBytes(IV_LENGTH)
   const cipher = gcm(finalKey, iv)
   const ciphertextWithTag = cipher.encrypt(authPrivateKey)
 
@@ -142,7 +144,7 @@ export async function generateAuthKeyPair(): Promise<{ publicKey: string; privat
     ['verify'],
   )
   const spkiDer = await crypto.subtle.exportKey('spki', cryptoKey)
-  const publicKey = btoa(String.fromCharCode(...new Uint8Array(spkiDer)))
+  const publicKey = uint8ToBase64(new Uint8Array(spkiDer))
 
   return { publicKey, privateKey }
 }
@@ -167,23 +169,4 @@ export function zeroBuffers(...buffers: (Uint8Array | undefined)[]): void {
   for (const buf of buffers) {
     buf?.fill(0)
   }
-}
-
-// --- Base64 Helpers ---
-
-function uint8ToBase64(bytes: Uint8Array): string {
-  let binary = ''
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte)
-  }
-  return btoa(binary)
-}
-
-function base64ToUint8(b64: string): Uint8Array {
-  const binary = atob(b64)
-  const bytes = new Uint8Array(binary.length)
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i)
-  }
-  return bytes
 }

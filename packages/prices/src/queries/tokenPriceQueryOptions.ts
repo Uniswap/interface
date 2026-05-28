@@ -1,8 +1,9 @@
-import { type QueryClient, queryOptions, skipToken } from '@tanstack/react-query'
+import { type QueryClient, skipToken } from '@tanstack/react-query'
 import { priceKeys } from '@universe/prices/src/queries/priceKeys'
 import { REST_POLL_INTERVAL_MS, STALE_PRICE_THRESHOLD_MS } from '@universe/prices/src/sources/rest/constants'
 import type { RestPriceBatcher } from '@universe/prices/src/sources/rest/RestPriceBatcher'
 import type { TokenPriceData } from '@universe/prices/src/types'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
 export interface TokenPriceQueryOptionsParams {
   chainId: number
@@ -27,7 +28,7 @@ export function tokenPriceQueryOptions({
   getIsWsConnected,
 }: TokenPriceQueryOptionsParams) {
   const key = priceKeys.token(chainId, address)
-  return queryOptions<TokenPriceData | null>({
+  return persistableQueryOptions<TokenPriceData | null>({
     queryKey: key,
     queryFn: restBatcher
       ? async (): Promise<TokenPriceData | null> => {

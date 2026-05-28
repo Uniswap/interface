@@ -1,5 +1,5 @@
 import i18n from 'uniswap/src/i18n'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
 // The benefit is that you can distinguish this error from other errors using didUserReject().

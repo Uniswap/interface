@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -20,7 +21,6 @@ import { ContentRow } from 'uniswap/src/components/transactions/requests/Content
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
 import { AddressButton } from 'wallet/src/components/buttons/AddressButton'

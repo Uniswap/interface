@@ -356,13 +356,12 @@ export function useSnowflakeAnimation({
     animationFrameId = requestAnimationFrame(updatePhysics)
 
     // return a cleanup function to correctly cancel the animation frame on a mouse movement
-    // oxlint-disable-next-line consistent-return
+    // oxlint-disable-next-line typescript/consistent-return
     return () => {
       cancelAnimationFrame(animationFrameId)
     }
   }, [snowflakes, mousePosition, mouseVelocity, mouseInteraction, calculateSnowflakeY])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we don't want to add nextId to the dependencies which get constantly updated when snowflakes are spawned/removed causing poor performance
   const spawnSnowflakes = useCallback(() => {
     // Calculate spawn amount to maintain high density with continuous spawning
     // Strategy: Spawn small groups frequently instead of large batches infrequently
@@ -433,7 +432,6 @@ export function useSnowflakeAnimation({
   }, [fullWidth, speedFactor])
 
   // Set up continuous spawning with random intervals
-  // oxlint-disable-next-line react/exhaustive-deps -- we only want to start continuous spawning once
   useEffect(() => {
     let isActive = true
     let timeoutId: NodeJS.Timeout

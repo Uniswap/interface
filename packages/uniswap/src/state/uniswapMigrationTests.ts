@@ -6,7 +6,6 @@
  *
  * For unit tests of individual migrations, see uniswapMigrations.test.ts.
  */
-/* oxlint-disable typescript/no-explicit-any -- legacy code needs review */
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
@@ -70,4 +69,12 @@ export function testMigrateDismissedTokenWarnings(migration: (state: any) => any
       ])
     }
   }
+}
+
+// Mobile: 98
+// Extension: 32
+// Web: 62
+export function testAddEnableCustomGasFeeEntry(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.userSettings.enableCustomGasFeeEntry).toBe(false)
 }

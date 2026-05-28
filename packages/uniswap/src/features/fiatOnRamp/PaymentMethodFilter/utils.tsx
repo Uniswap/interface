@@ -1,3 +1,4 @@
+import { isAndroid, isIOS, isWebAndroid, isWebIOS } from '@universe/environment'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, GeneratedIcon, Text, TouchableArea } from 'ui/src'
@@ -9,7 +10,6 @@ import { PaypalLogo } from 'ui/src/components/icons/PaypalLogo'
 import { VenmoLogo } from 'ui/src/components/icons/VenmoLogo'
 import { iconSizes } from 'ui/src/theme'
 import { FORFilters, FORFiltersMap, FORQuote } from 'uniswap/src/features/fiatOnRamp/types'
-import { isAndroid, isIOS, isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 export type PaymentMethodFilterProps = FlexProps & {
   quotes?: Maybe<FORQuote[]>

@@ -5,7 +5,7 @@ import { iconSizes } from 'ui/src/theme'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const SelectTokenPanel = ({

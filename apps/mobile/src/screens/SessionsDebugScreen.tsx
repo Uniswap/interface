@@ -35,7 +35,6 @@ function truncateId(id: string | null, length = 16): string {
  * Sessions Debug Screen for testing session initialization flow.
  * Access via Dev menu in development builds.
  */
-// oxlint-disable-next-line import/no-unused-modules -- dynamically loaded in navigation.tsx via require()
 export function SessionsDebugScreen(): JSX.Element {
   // Individual selectors for minimal re-renders
   const session = useSessionsDebugStore(

@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
@@ -45,7 +45,6 @@ export const BLAST_CHAIN_INFO = {
   explorer: {
     name: 'Blastscan',
     url: 'https://blastscan.io/',
-    apiURL: 'https://api.blastscan.io',
   },
   openseaName: 'blast',
   interfaceName: 'blast',
@@ -56,6 +55,7 @@ export const BLAST_CHAIN_INFO = {
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   tokens,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Blast],

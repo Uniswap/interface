@@ -1,7 +1,7 @@
+import { ensure0xHex, hexToNumber, numberToHex } from '@universe/encoding'
 import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experimental'
-import { ensure0xHex, numberToHex } from 'utilities/src/addresses/hex'
 import { getLogger } from 'utilities/src/logger/logger'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { ensureValidatedCapabilities } from '~/state/walletCapabilities/lib/ensureValidatedCapabilities'
 import { ChainCapabilities, GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
@@ -82,5 +82,5 @@ export function getAtomicSupportedChainIds(chainCapabilitiesResult: GetCapabilit
 
   return Object.entries(chainCapabilitiesResult)
     .filter(([_, capabilities]) => isAtomicBatchingSupported(capabilities))
-    .map(([chainIdHex]) => parseInt(chainIdHex, 16))
+    .map(([chainIdHex]) => hexToNumber(chainIdHex))
 }

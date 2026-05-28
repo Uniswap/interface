@@ -10,15 +10,18 @@ exports[`PortfolioPageInner > connected user view > should render correctly with
       class="_pt-_sm_t-space-spa94665593 _pr-_sm_t-space-spa94665593 _pb-_sm_t-space-spa94665593 _pl-_sm_t-space-spa94665593 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360333989 _width-10037 _pt-t-space-non101 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _position-relative"
     >
       <div
-        data-scroll-y="200"
-        data-testid="portfolio-header"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334047"
       >
-        Portfolio Header Mock
-      </div>
-      <div
-        data-testid="portfolio-content"
-      >
-        Portfolio Content Mock
+        <div
+          data-testid="portfolio-header"
+        >
+          Portfolio Header Mock
+        </div>
+        <div
+          data-testid="portfolio-content"
+        >
+          Portfolio Content Mock
+        </div>
       </div>
     </div>
     <div
@@ -38,15 +41,18 @@ exports[`PortfolioPageInner > connected user view > should render correctly with
       class="_pt-_sm_t-space-spa94665593 _pr-_sm_t-space-spa94665593 _pb-_sm_t-space-spa94665593 _pl-_sm_t-space-spa94665593 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360333989 _width-10037 _pt-t-space-non101 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _position-relative"
     >
       <div
-        data-scroll-y="0"
-        data-testid="portfolio-header"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334047"
       >
-        Portfolio Header Mock
-      </div>
-      <div
-        data-testid="portfolio-content"
-      >
-        Portfolio Content Mock
+        <div
+          data-testid="portfolio-header"
+        >
+          Portfolio Header Mock
+        </div>
+        <div
+          data-testid="portfolio-content"
+        >
+          Portfolio Content Mock
+        </div>
       </div>
     </div>
     <div
@@ -71,24 +77,28 @@ exports[`PortfolioPageInner > demo view (disconnected) > should render demo view
         Connect Wallet Banner Mock
       </div>
       <div
-        data-should-show="true"
+        data-should-show="false"
         data-testid="connect-wallet-button"
       >
         Connect Wallet Button Mock
       </div>
       <div
-        data-testid="portfolio-header"
-      >
-        Portfolio Header Mock
-      </div>
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-not-allowed"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334047"
       >
         <div
-          data-disabled="true"
-          data-testid="portfolio-content"
+          data-testid="portfolio-header"
         >
-          Portfolio Content Mock
+          Portfolio Header Mock
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-not-allowed"
+        >
+          <div
+            data-disabled="true"
+            data-testid="portfolio-content"
+          >
+            Portfolio Content Mock
+          </div>
         </div>
       </div>
     </div>
@@ -120,18 +130,22 @@ exports[`PortfolioPageInner > demo view (disconnected) > should render demo view
         Connect Wallet Button Mock
       </div>
       <div
-        data-testid="portfolio-header"
-      >
-        Portfolio Header Mock
-      </div>
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-not-allowed"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334047"
       >
         <div
-          data-disabled="true"
-          data-testid="portfolio-content"
+          data-testid="portfolio-header"
         >
-          Portfolio Content Mock
+          Portfolio Header Mock
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-not-allowed"
+        >
+          <div
+            data-disabled="true"
+            data-testid="portfolio-content"
+          >
+            Portfolio Content Mock
+          </div>
         </div>
       </div>
     </div>

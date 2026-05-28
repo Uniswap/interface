@@ -1,19 +1,9 @@
-import { lazy, PropsWithChildren, ReactNode, Suspense, useState } from 'react'
+import { lazy, PropsWithChildren, ReactNode, Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import {
-  AnimatedPager,
-  Flex,
-  FlexProps,
-  Image,
-  Loader,
-  ModalCloseIcon,
-  styled,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedPager, Flex, FlexProps, Image, Loader, ModalCloseIcon, styled, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
+import { AndroidLogo } from 'ui/src/components/icons/AndroidLogo'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
@@ -26,12 +16,8 @@ import ExtensionIllustration from '~/assets/images/extensionIllustration.png'
 import PlayStoreBadge from '~/assets/images/play-store-badge.png'
 import WalletIllustration from '~/assets/images/walletIllustration.png'
 import { Wiggle } from '~/components/animations/Wiggle'
-import Column from '~/components/deprecated/Column'
-import { AndroidLogo } from '~/components/Icons/AndroidLogo'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { useAccount } from '~/hooks/useAccount'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { updateDownloadGraduatedWalletCardsDismissed } from '~/state/application/reducer'
 import { ExternalLink } from '~/theme/components/Links'
 
 const LazyWalletOneLinkQR = lazy(async () => {
@@ -65,7 +51,9 @@ const Illustration = deprecatedStyled.img`
   width: 100%;
   transition: ${({ theme }) => `transform ${theme.transition.timing.inOut} ${theme.transition.duration.medium}`};
 `
-const Card = deprecatedStyled(Column)`
+const Card = deprecatedStyled.div`
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
   &:hover {
     ${Illustration} {
@@ -81,16 +69,22 @@ function ModalContent({
   children,
   logo,
   ...rest
-}: PropsWithChildren<{ title: string; subtext?: string; logo?: ReactNode; header?: ReactNode }> & FlexProps) {
+}: PropsWithChildren<{
+  title: string
+  subtext?: string
+  logo?: ReactNode
+  header?: ReactNode
+}> &
+  FlexProps) {
   return (
-    <Flex p={24} alignItems="center" gap="$spacing32" {...rest}>
+    <Flex alignItems="center" gap="$spacing32" {...rest}>
       <Flex alignItems="center" gap="$spacing12">
         {header}
         <Flex alignItems="center" gap="$spacing8">
           <Text variant="heading3" color="$neutral1">
             {title}
           </Text>
-          <Text variant="body2" color="$neutral2" textAlign="center" maxWidth="65%" $md={{ maxWidth: '80%' }}>
+          <Text variant="body2" color="$neutral2" textAlign="center">
             {subtext}
           </Text>
         </Flex>
@@ -104,7 +98,7 @@ function CardInfo({ title, details, children }: PropsWithChildren<{ title: strin
   return (
     <Flex row p="$spacing8" justifyContent="space-between" alignItems="center" width="100%">
       <Flex alignItems="flex-start">
-        <Text variant="body2" fontWeight="535">
+        <Text variant="body2" fontWeight="$medium">
           {title}
         </Text>
         <Text variant="body4" color="$neutral2">
@@ -124,7 +118,6 @@ function DownloadMobile() {
       title={t('common.downloadUniswapApp')}
       subtext={t('common.scanQRDownload')}
       maxWidth="620px"
-      px="60px"
       my="$spacing24"
     >
       <BadgeLink href="https://uniswapwallet.onelink.me/8q3y/m4i9qsez?af_qr=true">
@@ -151,21 +144,15 @@ function DownloadMobile() {
 }
 
 enum Page {
+  // oxlint-disable-next-line no-shadow
   DownloadApps = 0,
+  // oxlint-disable-next-line no-shadow
   DownloadMobile = 1,
 }
 
 function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const account = useAccount()
-  const dispatch = useDispatch()
-
-  const onPressCard = useEvent(() => {
-    if (account.address) {
-      dispatch(updateDownloadGraduatedWalletCardsDismissed({ walletAddress: account.address }))
-    }
-  })
 
   return (
     <Trace logImpression modal={ModalName.DownloadApp} properties={{ connector_id: account.connector?.id }}>
@@ -176,13 +163,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
         maxWidth="620px"
       >
         <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
-          <Card
-            flex="1 1 auto"
-            onClick={() => {
-              setPage(Page.DownloadMobile)
-              onPressCard()
-            }}
-          >
+          <Card style={{ flex: '1 1 auto' }} onClick={() => setPage(Page.DownloadMobile)}>
             <IllustrationContainer>
               <Illustration src={WalletIllustration} alt="Wallet example page" />
             </IllustrationContainer>
@@ -194,22 +175,17 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
               >
                 <Flex row gap="$spacing8" alignItems="center">
                   <WiggleIcon>
-                    <AppleLogo fill={colors.neutral1.val} />
+                    <AppleLogo color="$neutral1" size="$icon.24" />
                   </WiggleIcon>
                   <WiggleIcon>
-                    <AndroidLogo fill={colors.neutral1.val} />
+                    <AndroidLogo color="$neutral1" size="$icon.24" />
                   </WiggleIcon>
                 </Flex>
               </Trace>
             </CardInfo>
           </Card>
           <Trace logPress element={ElementName.ExtensionDownloadButton}>
-            <Card
-              onClick={() => {
-                window.open(uniswapUrls.chromeExtension)
-                onPressCard()
-              }}
-            >
+            <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
               <IllustrationContainer>
                 <Illustration src={ExtensionIllustration} alt="Extension example page" />
               </IllustrationContainer>
@@ -228,9 +204,22 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   )
 }
 
-export function DownloadAppsModal({ goBack, onClose }: { goBack?: () => void; onClose: () => void }) {
-  const [page, setPage] = useState<Page>(Page.DownloadApps)
-  const showBackButton = goBack || page !== Page.DownloadApps
+export function DownloadAppsModal({
+  goBack,
+  onClose,
+  initialInnerPage,
+}: {
+  goBack?: () => void
+  onClose: () => void
+  initialInnerPage?: 'mobile'
+}) {
+  const [page, setPage] = useState<Page>(initialInnerPage === 'mobile' ? Page.DownloadMobile : Page.DownloadApps)
+
+  useEffect(() => {
+    setPage(initialInnerPage === 'mobile' ? Page.DownloadMobile : Page.DownloadApps)
+  }, [initialInnerPage])
+
+  const showBackButton = !initialInnerPage && (goBack || page !== Page.DownloadApps)
 
   const onPressBack = useEvent(() => {
     if (page === Page.DownloadMobile) {
@@ -245,12 +234,9 @@ export function DownloadAppsModal({ goBack, onClose }: { goBack?: () => void; on
       <Flex
         row
         position="absolute"
-        top="$spacing24"
         width="100%"
         justifyContent={showBackButton ? 'space-between' : 'flex-end'}
         zIndex={zIndexes.modal}
-        pl="$spacing24"
-        pr="$spacing24"
       >
         {showBackButton && (
           <TouchableArea onPress={onPressBack}>

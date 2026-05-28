@@ -1,4 +1,4 @@
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 
 export enum DatadogEnvironment {
   DEV = 'dev',

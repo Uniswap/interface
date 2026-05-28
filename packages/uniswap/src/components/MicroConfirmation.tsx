@@ -1,5 +1,5 @@
+import { isWebApp } from '@universe/environment'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { isWebApp } from 'utilities/src/platform'
 
 type MicroConfirmationProps = {
   /** Intended to be a micro toast/tooltip, text should not be more than 4 words */

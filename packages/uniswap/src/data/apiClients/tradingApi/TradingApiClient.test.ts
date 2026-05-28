@@ -8,15 +8,6 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-vi.mock('@universe/config', async () => {
-  const { getConfig } = await vi.importActual<typeof import('@universe/config/src/getConfig.web')>(
-    '@universe/config/src/getConfig.web',
-  )
-  return {
-    getConfig,
-  }
-})
-
 const mockFetch = vi.fn()
 global.fetch = mockFetch
 
@@ -34,6 +25,8 @@ import {
   getFeatureFlaggedHeaders,
   TradingApiHeaders,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import type { MockedFunction } from 'vitest'
 
 // Helper function to create a mock Response
@@ -516,6 +509,18 @@ describe('getFeatureFlaggedHeaders', () => {
       }
       const headers = await getFeatureFlaggedHeaders(path)
       expect(headers).toEqual(expectedHeaders)
+    })
+
+    it(`Endpoint: ${path} should use UniversalRouterVersion 2.1.1 when UseUniversalRouterVersion211 flag is enabled`, async () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
+      const headers = await getFeatureFlaggedHeaders(path, toTradingApiSupportedChainId(UniverseChainId.Mainnet))
+      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_1_1)
+    })
+
+    it(`Endpoint: ${path} should fall back to UniversalRouterVersion 2.0 on ZkSync even when flag is enabled`, async () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
+      const headers = await getFeatureFlaggedHeaders(path, toTradingApiSupportedChainId(UniverseChainId.Zksync))
+      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_0)
     })
 
     it(`Endpoint: ${path} should/should not UnirouteEnabled header when feature flag is enabled`, async () => {

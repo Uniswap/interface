@@ -20,7 +20,6 @@ export function useDappStateUpdated(): boolean {
 export function useDappInfo(dappUrl: string | undefined): DappInfo | undefined {
   const [info, setInfo] = useState<DappInfo>()
   const dappStateUpdated = useDappStateUpdated()
-  // oxlint-disable-next-line react/exhaustive-deps -- dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
     setInfo(dappStore.getDappInfo(dappUrl))
   }, [dappUrl, dappStateUpdated])
@@ -48,7 +47,6 @@ export function useAllDappConnectionsForAccount(address?: Address): string[] {
 
   const accountAddress = address ?? activeAccount
 
-  // oxlint-disable-next-line react/exhaustive-deps -- dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
     setDappUrls(accountAddress ? dappStore.getConnectedDapps(accountAddress) : [])
   }, [accountAddress, dappStateUpdated])

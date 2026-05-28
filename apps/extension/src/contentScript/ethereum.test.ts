@@ -54,7 +54,6 @@ describe('ethereum.content', () => {
   describe('normal frame', () => {
     beforeEach(() => {
       mockIsSandboxed = false
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       definition = require('../entrypoints/ethereum.content').default
     })
 
@@ -84,7 +83,6 @@ describe('ethereum.content', () => {
   describe('sandboxed frame', () => {
     beforeEach(() => {
       mockIsSandboxed = true
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       definition = require('../entrypoints/ethereum.content').default
     })
 

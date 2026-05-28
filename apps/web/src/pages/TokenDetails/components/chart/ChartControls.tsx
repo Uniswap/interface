@@ -2,14 +2,14 @@ import { useAtomValue } from 'jotai/utils'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
 import { refitChartContentAtom } from '~/components/Charts/ChartModel'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
-import { ChartActionsContainer } from '~/components/Explore/chart/ChartActionsContainer'
-import { ChartTypeToggle } from '~/components/Explore/chart/ChartTypeToggle'
+import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
+import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
 import {
   DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
   DISPLAYS,
   getTimePeriodFromDisplay,
   TimePeriodDisplay,
-} from '~/components/Explore/constants'
+} from '~/features/Explore/constants'
 import { AdvancedPriceChartToggle } from '~/pages/TokenDetails/components/chart/AdvancedPriceChartToggle'
 import {
   getDisplayPriceChartType,

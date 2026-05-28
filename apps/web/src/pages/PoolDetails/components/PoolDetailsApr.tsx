@@ -2,8 +2,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
-import { calculateTotalApr } from '~/components/LpIncentives/utils'
+import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { calculateTotalApr } from '~/features/Liquidity/LPIncentives/utils'
 
 export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewardsApr?: number }) => {
   const { t } = useTranslation()
@@ -23,8 +23,7 @@ export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewa
       width="100%"
       flexDirection="column"
       mt={-24}
-      mb={24}
-      $xl={{ my: 0 }}
+      $xl={{ mt: 0 }}
     >
       <Flex>
         <Text variant="body2" color="$neutral2">

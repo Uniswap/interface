@@ -49,7 +49,6 @@ jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
 const mockUseActiveReduxAccount = useActiveReduxAccount as jest.MockedFunction<typeof useActiveReduxAccount>
 const mockSelectFinishedOnboarding = selectFinishedOnboarding as jest.MockedFunction<typeof selectFinishedOnboarding>
 
-// oxlint-disable-next-line typescript/explicit-function-return-type
 const createTestStore = (walletState: Partial<WalletState['wallet']> = {}) => {
   return configureStore({
     reducer: {

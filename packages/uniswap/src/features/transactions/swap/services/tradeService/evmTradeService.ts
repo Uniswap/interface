@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
 import type {
@@ -132,7 +133,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
       }
 
       // Step 2: build indicative quote request
-      const indicativeRequest = validatedIndicativeQuoteRequest(validatedInput)
+      const indicativeRequest = validatedIndicativeQuoteRequest(validatedInput, input.customSlippageTolerance)
 
       try {
         // Step 3: Fetch indicative quote from API
@@ -201,10 +202,14 @@ function prepareIndicativeTradeInput(input?: UseTradeArgs): ValidatedTradeInput 
 /**
  * Validates the input and returns a minimal indicative quote request
  * @param validatedInput - ValidatedTradeInput: the validated input to build the indicative quote request for
+ * @param customSlippageTolerance - The custom slippage tolerance to use for the indicative quote request
  * @returns A minimal indicative quote request
  */
-function validatedIndicativeQuoteRequest(validatedInput: ValidatedTradeInput): IndicativeQuoteRequest {
-  const indicativeRequest: IndicativeQuoteRequest = {
+function validatedIndicativeQuoteRequest(
+  validatedInput: ValidatedTradeInput,
+  customSlippageTolerance?: number,
+): IndicativeQuoteRequest {
+  const base = {
     type: validatedInput.requestTradeType,
     amount: validatedInput.amount.quotient.toString(),
     tokenInChainId: validatedInput.tokenInChainId,
@@ -212,7 +217,11 @@ function validatedIndicativeQuoteRequest(validatedInput: ValidatedTradeInput): I
     tokenIn: validatedInput.tokenInAddress,
     tokenOut: validatedInput.tokenOutAddress,
     swapper: validatedInput.activeAccountAddress || UNCONNECTED_ADDRESS,
+  } as const
+
+  if (customSlippageTolerance) {
+    return { ...base, slippageTolerance: customSlippageTolerance }
   }
 
-  return indicativeRequest
+  return { ...base, autoSlippage: TradingApi.AutoSlippage.DEFAULT }
 }

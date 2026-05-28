@@ -1,5 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
-
 import { PropsWithChildren, useEffect, useState } from 'react'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
@@ -72,9 +70,7 @@ function UniswapAccountsStoreDevToolLogger() {
       fontWeightStrings.push('font-weight: bold;', '')
     }
 
-    // oxlint-disable-next-line no-console -- console logging required for devtools functionality
     console.clear()
-    // oxlint-disable-next-line no-console -- console logging required for devtools functionality
     console.log(
       `
       %cAccountsStore 🦄%c

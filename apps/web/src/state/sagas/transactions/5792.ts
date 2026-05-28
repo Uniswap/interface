@@ -1,18 +1,23 @@
 import { JsonRpcSigner } from '@ethersproject/providers'
+import { TradingApi } from '@universe/api'
+import { numberToHex } from '@universe/encoding'
 import { getAccount } from '@wagmi/core'
 import { call, put } from 'typed-redux-saga'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
-import { HandleOnChainStepParams, OnChainTransactionStepBatched } from 'uniswap/src/features/transactions/steps/types'
+import {
+  HandleOnChainStepParams,
+  OnChainTransactionStepWalletCall,
+} from 'uniswap/src/features/transactions/steps/types'
 import {
   InterfaceTransactionDetails,
   TransactionOriginType,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { getRoutingForTransaction } from '~/state/activity/utils'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { getSigner, watchForInterruption } from '~/state/sagas/transactions/utils'
 import { handleGetCapabilities } from '~/state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain } from '~/state/walletCapabilities/reducer'
@@ -21,17 +26,21 @@ import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 const CURRENT_SEND_CALLS_VERSION = '2.0.0'
 async function sendCalls(params: {
   signer: JsonRpcSigner
-  batchedTxRequests: ValidatedTransactionRequest[]
+  walletCallTxRequests: ValidatedTransactionRequest[]
   from: string
   chainId: number
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }): Promise<string> {
-  const { signer, batchedTxRequests, from } = params
-  const chainId = `0x${params.chainId.toString(16)}`
+  const { signer, walletCallTxRequests, from, paymasterService } = params
+  const chainId = numberToHex(params.chainId)
 
   // the `calls` array passed to sendCalls expects entries to only define `to`, `data`, and `value`
-  const calls = batchedTxRequests.map(({ to, data, value }) => ({ to, data, value }))
+  const calls = walletCallTxRequests.map(({ to, data, value }) => ({ to, data, value }))
+  const capabilities = paymasterService
+    ? { paymasterService: { url: paymasterService.url, context: paymasterService.context } }
+    : undefined
   const result = await signer.provider.send('wallet_sendCalls', [
-    { version: CURRENT_SEND_CALLS_VERSION, calls, from, chainId, atomicRequired: true },
+    { version: CURRENT_SEND_CALLS_VERSION, calls, from, chainId, atomicRequired: true, capabilities },
   ])
 
   return result.id as string
@@ -39,22 +48,23 @@ async function sendCalls(params: {
 
 export function* handleAtomicSendCalls(
   params: Omit<HandleOnChainStepParams, 'step'> & {
-    step: OnChainTransactionStepBatched
+    step: OnChainTransactionStepWalletCall
     disableOneClickSwap?: () => void
   },
 ) {
   const { step, info, address, ignoreInterrupt, disableOneClickSwap } = params
-  const { batchedTxRequests } = step
-  const chainId = batchedTxRequests[0].chainId
+  const { walletCallTxRequests, paymasterService } = step
+  const chainId = walletCallTxRequests[0].chainId
 
   try {
     // Add a watcher to check if the transaction flow during user input
     const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
     const signer = yield* call(getSigner, address)
-    const batchId = yield* call(() => sendCalls({ signer, batchedTxRequests, from: address, chainId }))
+    const batchId = yield* call(() =>
+      sendCalls({ signer, walletCallTxRequests, from: address, chainId, paymasterService }),
+    )
 
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     const connectorId = getAccount(wagmiConfig).connector?.id
     const batchInfo = { connectorId, batchId, chainId }
 
@@ -73,14 +83,14 @@ export function* handleAtomicSendCalls(
         addedTime: Date.now(),
         options: {
           request: {
-            to: batchedTxRequests[0].to,
+            to: walletCallTxRequests[0].to,
             from: address,
-            data: batchedTxRequests[0].data,
-            value: batchedTxRequests[0].value,
-            gasLimit: batchedTxRequests[0].gasLimit,
-            gasPrice: batchedTxRequests[0].gasPrice,
-            nonce: batchedTxRequests[0].nonce,
-            chainId: batchedTxRequests[0].chainId,
+            data: walletCallTxRequests[0].data,
+            value: walletCallTxRequests[0].value,
+            gasLimit: walletCallTxRequests[0].gasLimit,
+            gasPrice: walletCallTxRequests[0].gasPrice,
+            nonce: walletCallTxRequests[0].nonce,
+            chainId: walletCallTxRequests[0].chainId,
           },
         },
       } satisfies InterfaceTransactionDetails),

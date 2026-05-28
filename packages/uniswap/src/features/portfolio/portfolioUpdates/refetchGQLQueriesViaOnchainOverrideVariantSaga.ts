@@ -60,6 +60,7 @@ export function* refetchGQLQueriesViaOnchainOverrideVariant({
   // and will continue to override the apollo cache balance until backend balance matches the onchain balance.
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* modifyLocalCache({
   apolloClient,
   ownerAddress,

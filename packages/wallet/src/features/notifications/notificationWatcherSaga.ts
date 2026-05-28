@@ -16,10 +16,12 @@ import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
   const activeAddress = yield* select(selectActiveAccountAddress)
   const existingNotifications = yield* select((state: UniswapState) =>
@@ -46,6 +48,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         txType: TransactionType.Approve,
         tokenAddress: typeInfo.tokenAddress,
         spender: typeInfo.spender,
+        tokenSymbol: typeInfo.tokenSymbol,
       }),
     )
   } else if (typeInfo.type === TransactionType.Bridge) {
@@ -156,6 +159,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
   }
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function shouldSuppressNotification({
   tx,
   existingNotifications,

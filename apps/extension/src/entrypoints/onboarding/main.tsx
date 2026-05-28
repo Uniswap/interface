@@ -6,6 +6,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import OnboardingApp from 'src/app/core/OnboardingApp'
+import { prefetchExtensionStatsigUserId } from 'src/app/core/StatsigProvider'
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
 // oxlint-disable-next-line typescript/no-explicit-any -- Global polyfill cleanup requires any type for runtime modification
 ;(globalThis as any).regeneratorRuntime = undefined
@@ -23,6 +24,7 @@ function makeOnboarding(): void {
     )
   }
 
+  prefetchExtensionStatsigUserId()
   StoreSynchronization.init(ExtensionAppLocation.Tab)
   initOnboarding()
 }

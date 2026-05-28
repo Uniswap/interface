@@ -1,13 +1,12 @@
 import { ReactNode } from 'react'
-import { Trans } from 'react-i18next'
-import { Button, Flex, useIsDarkMode } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import darkImage from '~/assets/images/404-page-dark.png'
 import lightImage from '~/assets/images/404-page-light.png'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
 
 const Image = deprecatedStyled.img`
   max-width: 510px;
@@ -42,23 +41,21 @@ interface NotFoundProps {
   actionButton?: ReactNode
 }
 
-export default function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
+export function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
+  const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const isMobile = useIsMobile()
-
-  const Title = isMobile ? ThemedText.LargeHeader : ThemedText.Hero
-  const Paragraph = isMobile ? ThemedText.HeadlineMedium : ThemedText.HeadlineLarge
 
   return (
     <PageWrapper>
       <Trace logImpression page={InterfacePageName.NotFound}>
         <Header>
           <Container>
-            {title ?? <Title>404</Title>}
+            {title ?? <Text variant={isMobile ? 'heading2' : 'heading1'}>404</Text>}
             {subtitle ?? (
-              <Paragraph color="neutral2">
-                <Trans i18nKey="common.pageNotFound" />
-              </Paragraph>
+              <Text variant={isMobile ? 'heading3' : 'heading2'} color="$neutral2">
+                {t('common.pageNotFound')}
+              </Text>
             )}
           </Container>
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
@@ -66,7 +63,7 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
         {actionButton ?? (
           <Flex row alignSelf="stretch">
             <Button href="/" tag="a" variant="branded" $platform-web={{ textDecoration: 'none' }}>
-              <Trans i18nKey="notFound.oops" />
+              {t('notFound.oops')}
             </Button>
           </Flex>
         )}
@@ -74,3 +71,5 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
     </PageWrapper>
   )
 }
+
+export default NotFound

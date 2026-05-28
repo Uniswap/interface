@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { ChartQueryResult, ChartType, checkDataQuality, withUTCTimestamp } from '~/components/Charts/utils'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
-import { PDPChartQueryVars } from '~/hooks/usePoolPriceChartData'
+import { PDPChartQueryVars } from '~/features/Liquidity/charts/usePoolPriceChartData'
 
 export function usePDPVolumeChartData({
   variables,

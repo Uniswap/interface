@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/explicit-function-return-type */
 import { providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'

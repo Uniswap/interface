@@ -1,5 +1,10 @@
 const preset = require('../../config/jest-presets/jest/jest-preset')
 
+// Set APP_ID at jest config-load time so it's inherited by all forked workers
+// before @universe/config is evaluated. Overrides the default in
+// config/jest-presets/jest/globals.js.
+process.env.APP_ID = 'extension'
+
 const fileExtensions = ['eot', 'gif', 'jpeg', 'jpg', 'otf', 'png', 'ttf', 'woff', 'woff2', 'mp4']
 
 module.exports = {

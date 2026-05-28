@@ -17,7 +17,6 @@ import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
-import { useOpenTransactionDetailsModal } from '~/components/TopLevelModals/TransactionDetailsModalDispatcher'
 import { ActivityAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
 import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { filterTransactionDetailsFromActivityItems } from '~/pages/Portfolio/Activity/Filters/utils'
@@ -28,6 +27,7 @@ import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeade
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 
 interface MiniActivityTableProps {
   maxActivities?: number
@@ -149,6 +149,8 @@ export const MiniActivityTable = memo(function MiniActivityTable({
   // Only show loading state if we don't have data yet
   const tableLoading = loading && !transactionData.length
 
+  const hasData = transactionData.length > 0
+
   const subtitle = useMemo(() => {
     if (showingPastWeek) {
       return t('portfolio.overview.activity.table.subtitle', { count: transactionData.length })
@@ -160,15 +162,16 @@ export const MiniActivityTable = memo(function MiniActivityTable({
     <Flex gap="$gap12">
       <TableSectionHeader
         title={
-          transactionData.length > 0
+          hasData
             ? t('portfolio.overview.activity.table.title')
             : t('portfolio.overview.activity.table.title.noRecentActivity')
         }
         subtitle={subtitle}
         loading={loading}
         testId={TestID.PortfolioOverviewActivitySection}
+        contentGap={hasData ? '$gap4' : '$gap16'}
       >
-        {transactionData.length > 0 ? (
+        {hasData ? (
           <Table
             hideHeader
             columns={columns}

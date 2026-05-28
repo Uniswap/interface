@@ -27,10 +27,16 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
   instructionService: EVMSwapInstructionsService
   gasStrategy: GasStrategy
   transactionSettings: TransactionSettings
+  /**
+   * Set true when the upstream quote was built with per-tx gas overrides;
+   * forwarded through `createProcessSwapResponse` so the displayed value
+   * matches what the user explicitly set.
+   */
+  hasOverrides?: boolean
 }): GetEVMSwapTransactionRequestInfoFn {
-  const { gasStrategy, transactionSettings, instructionService } = ctx
+  const { gasStrategy, transactionSettings, instructionService, hasOverrides } = ctx
 
-  const processSwapResponse = createProcessSwapResponse({ gasStrategy })
+  const processSwapResponse = createProcessSwapResponse({ gasStrategy, hasOverrides })
 
   const getEVMSwapTransactionRequestInfo: GetEVMSwapTransactionRequestInfoFn = async ({
     trade,

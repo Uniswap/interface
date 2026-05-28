@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { WithdrawBidAndClaimTokensToucanBidParams } from '~/state/sagas/toucan/types'
 import { withdrawBidAndClaimTokensToucanBidSaga } from '~/state/sagas/toucan/withdrawBidAndClaimTokensSaga'
 

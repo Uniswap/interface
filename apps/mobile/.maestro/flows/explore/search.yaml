@@ -75,16 +75,21 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Verify swap button is visible for the token
+# Verify the action buttons are visible (multichain UX: Buy/Sell instead of single Swap)
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 
 # Go back to main page
 - tapOn:
     id: ${output.testIds.Back}
 - waitForAnimationToEnd
 
-# --- Test Case: Search for a wallet ---
+# --- Test Case: Search for a wallet (by unitag) ---
+# Note: ENS-by-name search is intentionally not covered here. The wallet-profile UI
+# flow is exercised by the unitag case below, and ENS resolution itself depends on
+# mainnet RPC which is hardcoded to a Playwright-only localhost Anvil in e2e builds
+# (packages/uniswap/src/features/chains/evm/info/mainnet.ts) — see the vitest tests
+# in useWalletSearchResults.test.tsx for ENS code-path coverage.
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
@@ -107,68 +112,6 @@ env:
 - tapOn:
     id: "Wallets"
     optional: true
-
-# Enter a wallet address or ENS name
-- eraseText: 30
-
-- extendedWaitUntil:
-    visible: 'noop'
-    timeout: 2000
-    optional: true
-
-- inputText: "hayden.eth"
-
-# Wait for search results to load
-- waitForAnimationToEnd
-- extendedWaitUntil:
-    visible:
-      text: "hayden.eth"
-    timeout: 7000
-
-# Tap on the wallet result
-- runScript:
-    file: ../../scripts/performance/dist/actions/track-action.js
-    env:
-      ACTION: 'tap'
-      TARGET: 'hayden_eth_Wallet'
-      PHASE: 'start'
-
-# Tap on the second occurrence (search result, not search bar)
-# or alternatively tap on the partial address which should be unique
-- tapOn:
-    text: "hayden.eth"
-    index: 1
-
-- runScript:
-    file: ../../scripts/performance/dist/actions/track-action.js
-    env:
-      ACTION: 'tap'
-      TARGET: 'hayden_eth_Wallet'
-      PHASE: 'end'
-
-- waitForAnimationToEnd
-
-# Assert navigation to wallet/profile details page
-# Check for some wallet-specific UI elements
-- extendedWaitUntil:
-    visible:
-      text: ".*hayden.*"
-    timeout: 3000
-
-# Verify the send action button is visible (confirms we're on a wallet details page)
-- assertVisible:
-    id: ${output.testIds.Send}
-
-# Go back to explore
-- tapOn:
-    id: ${output.testIds.Back}
-- waitForAnimationToEnd
-
-# --- Test Case: Search for a unitag ---
-
-# Tap on the search input field again
-- tapOn:
-    id: ${output.testIds.ExploreSearchInput}
 
 # Enter a unitag
 - eraseText: 30

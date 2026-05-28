@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -11,7 +12,6 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

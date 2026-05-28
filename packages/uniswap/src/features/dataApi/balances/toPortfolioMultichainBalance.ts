@@ -20,7 +20,8 @@ export function toPortfolioMultichainBalance(
   multichainBalance: MultichainBalance,
   ownerAddress?: string,
 ): PortfolioMultichainBalance | undefined {
-  const chainBalances = multichainBalance.chainBalances
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- chainBalances can be undefined at runtime despite protobuf typing
+  const chainBalances = multichainBalance.chainBalances ?? []
   if (chainBalances.length === 0) {
     return undefined
   }
@@ -39,6 +40,8 @@ export function toPortfolioMultichainBalance(
       spamCodeValue,
       mappedSafetyLevel,
       protectionInfo,
+      // oxlint-disable-next-line typescript/no-unnecessary-condition -- cb.isHidden/multichainBalance.isHidden can be undefined or null but isHidden expects a boolean
+      isHidden: (cb.isHidden || multichainBalance.isHidden) ?? false,
     })
     if (chainToken) {
       tokens.push(chainToken)
@@ -102,6 +105,7 @@ function chainBalanceToPortfolioChainBalance(
     spamCodeValue: SpamCode
     mappedSafetyLevel: GraphQLApi.SafetyLevel | undefined
     protectionInfo?: ProtectionInfo
+    isHidden: boolean
   },
 ): PortfolioChainBalance | undefined {
   const { chainId, address: unnormalizedAddress, decimals, amount, valueUsd } = chainBalance
@@ -137,6 +141,7 @@ function chainBalanceToPortfolioChainBalance(
     decimals,
     quantity,
     valueUsd,
+    isHidden: shared.isHidden,
     currencyInfo,
   }
 }

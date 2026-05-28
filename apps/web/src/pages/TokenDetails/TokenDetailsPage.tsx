@@ -5,9 +5,7 @@ import { useNavigate } from 'react-router'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
-import { useScroll } from '~/hooks/useScroll'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { TokenDetailsPageSkeleton } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
@@ -15,9 +13,10 @@ import { TDPStoreContextProvider } from '~/pages/TokenDetails/context/TDPStoreCo
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { getTokenPageDescription, getTokenPageTitle, getTokenStructuredData } from '~/pages/TokenDetails/pageMetadata'
 import { formatTokenMetatagTitleName } from '~/shared-cloud/metatags'
+import { ExploreTab } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
-export default function TokenDetailsPage() {
+export function TokenDetailsPage() {
   return (
     <TDPStoreContextProvider>
       <TDPPageContent />
@@ -30,8 +29,7 @@ function TDPPageContent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const { height: scrollY } = useScroll()
-  const isCompact = useScrollCompact({ scrollY, thresholdCompact: 100, thresholdExpanded: 60 })
+  const isCompact = useScrollCompact({ thresholdCompact: 100, thresholdExpanded: 60 })
 
   const { address, currency, currencyChain, currencyChainId, tokenQuery } = useTDPStore((s) => ({
     address: s.address,
@@ -90,3 +88,5 @@ function TDPPageContent() {
     </>
   )
 }
+
+export default TokenDetailsPage

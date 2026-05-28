@@ -1,9 +1,9 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
-import { queryOptions } from '@tanstack/react-query'
 import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import type { InAppNotification, NotificationsApiClient } from '@universe/api'
 import { getLogger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
@@ -41,7 +41,7 @@ export function getNotificationQueryOptions(
 ): QueryOptionsResult<InAppNotification[], Error, InAppNotification[], [ReactQueryCacheKey.Notifications]> {
   const { apiClient, getPlatformType, pollIntervalMs = DEFAULT_POLL_INTERVAL_MS, getIsSessionInitialized } = ctx
 
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.Notifications],
     queryFn: async (): Promise<InAppNotification[]> => {
       const isSessionInitialized = getIsSessionInitialized?.() ?? true

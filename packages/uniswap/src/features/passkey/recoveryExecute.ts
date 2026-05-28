@@ -1,8 +1,8 @@
 import { hkdf } from '@noble/hashes/hkdf.js'
 import { sha256 } from '@noble/hashes/sha2.js'
+import { base64urlToBase64 } from '@universe/encoding'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
-import { base64urlToBase64 } from 'uniswap/src/features/passkey/deviceSession'
 import {
   AES_KEY_LENGTH,
   blindPin,
@@ -14,26 +14,25 @@ import {
   signWithAuthKey,
   zeroBuffers,
 } from 'uniswap/src/features/passkey/pinCrypto'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { logger } from 'utilities/src/logger/logger'
 
+// Privy rate-limits `GET /encrypted_authorization_keys/:keyId`; callers fetch the
+// blob once and pass it in so PIN retries don't burn against the limit.
 export async function attemptPinDecryption({
   pin,
   email,
   accessToken,
-  encryptedKeyId,
-  privyAppId,
+  encryptedBlob,
 }: {
   pin: string
   email: string
   accessToken: string
-  encryptedKeyId: string
-  privyAppId: string
+  encryptedBlob: string
 }): Promise<
   | { success: true; authPrivateKey: Uint8Array }
   | {
       success: false
-      error: 'wrong_pin' | 'rate_limited' | 'no_blobs'
+      error: 'wrong_pin' | 'rate_limited'
       cooldownSeconds?: number
       errorMessage?: string
     }
@@ -41,21 +40,15 @@ export async function attemptPinDecryption({
   try {
     const authMethodId = hashAuthMethodId(email)
 
-    // 1. Fetch encrypted blob from Privy
-    let blob: string
-    try {
-      blob = await fetchEncryptedBlob({ accessToken, keyId: encryptedKeyId, privyAppId })
-    } catch {
-      return { success: false, error: 'no_blobs', errorMessage: 'No recovery data found for this account.' }
-    }
-
-    // 2. OPRF: blind → evaluate → finalize
+    // 1. OPRF: blind → evaluate → finalize
     const { blindedElement, blindState } = await blindPin(pin)
-    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate({
-      blindedElement,
-      isRecovery: true,
-      authMethodId,
-    })
+    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
+      {
+        blindedElement,
+        authMethodId,
+      },
+      accessToken,
+    )
 
     if (oprfResponse.errorMessage || !oprfResponse.evaluatedElement) {
       return { success: false, error: 'rate_limited', errorMessage: oprfResponse.errorMessage }
@@ -63,12 +56,12 @@ export async function attemptPinDecryption({
 
     const oprfOutput = await finalizeOprf(blindState, oprfResponse.evaluatedElement)
 
-    // 3. Attempt decryption
+    // 2. Attempt decryption
     let pinKey: Uint8Array | undefined
     let ikm: Uint8Array | undefined
     let finalKey: Uint8Array | undefined
     try {
-      const { salt1, salt2, iv, ciphertextWithTag } = parseBlob(blob)
+      const { salt1, salt2, iv, ciphertextWithTag } = parseBlob(encryptedBlob)
 
       // Argon2id in worker + HKDF (errors here should propagate, not be treated as wrong PIN)
       pinKey = await deriveArgon2InWorker(pin, salt1)
@@ -108,6 +101,21 @@ export async function attemptPinDecryption({
   }
 }
 
+// Server sends a base64url-encoded canonical JSON string. Fails loudly on malformed input
+// rather than falling back to raw UTF-8 — a decode failure here means the server response
+// is unexpectedly shaped and we want to surface that, not silently continue.
+function decodeSigningPayload(payload: string): { payloadBytes: Uint8Array; payloadObject: object } {
+  const payloadJson = atob(base64urlToBase64(payload))
+  const parsed: unknown = JSON.parse(payloadJson)
+  if (!parsed || typeof parsed !== 'object') {
+    throw new Error('Decoded signing payload is not a JSON object')
+  }
+  return {
+    payloadBytes: new TextEncoder().encode(payloadJson),
+    payloadObject: parsed,
+  }
+}
+
 export async function executeRecovery({
   authPrivateKey,
   authMethodId,
@@ -133,17 +141,7 @@ export async function executeRecovery({
       throw new Error('Server did not return a signing payload')
     }
 
-    // 2. Decode signing payload → canonical JSON string + bytes
-    // Server sends base64url-encoded canonical JSON; fall back to raw UTF-8 if not valid base64
-    let payloadJson: string
-    try {
-      payloadJson = atob(base64urlToBase64(reportResponse.signingPayload))
-    } catch {
-      // Payload is not base64url — treat as raw JSON string
-      payloadJson = reportResponse.signingPayload
-    }
-    const payloadBytes = new TextEncoder().encode(payloadJson)
-    const payloadObject = JSON.parse(payloadJson)
+    const { payloadBytes, payloadObject } = decodeSigningPayload(reportResponse.signingPayload)
 
     const authKeySignature = signWithAuthKey(authPrivateKey, payloadBytes) // sig2
     const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject) // sig1
@@ -164,6 +162,61 @@ export async function executeRecovery({
   } catch (error) {
     logger.error(error, {
       tags: { file: 'recoveryExecute.ts', function: 'executeRecovery' },
+    })
+    throw error
+  } finally {
+    zeroBuffers(authPrivateKey)
+  }
+}
+
+/**
+ * Graduation export: use the recovered PIN-derived auth key (from `attemptPinDecryption` —
+ * same `authPrivateKey` concept as `executeRecovery`) to export the seed phrase
+ * HPKE-encrypted to a caller-provided ephemeral public key. Caller is responsible for HPKE
+ * decryption. Used by mobile/extension graduation flows where the user doesn't have a
+ * passkey on the current device.
+ *
+ * Mirrors `executeRecovery`'s dual-signature pattern: PIN-derived authKey ECDSA (sig2) +
+ * Privy authorization (sig1). Zeros `authPrivateKey` on exit.
+ */
+export async function executeRecoveryExport({
+  authPrivateKey,
+  authMethodId,
+  encryptionKey,
+  generateAuthorizationSignature,
+}: {
+  authPrivateKey: Uint8Array
+  authMethodId: string
+  encryptionKey: string
+  generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
+}): Promise<{ ciphertext: string; encapsulatedKey: string }> {
+  try {
+    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult({
+      success: true,
+      authMethodId,
+      encryptionKey,
+    })
+
+    const { exportSigningPayload } = reportResponse
+
+    if (!exportSigningPayload) {
+      throw new Error('Server did not return an export signing payload')
+    }
+
+    const { payloadBytes, payloadObject } = decodeSigningPayload(exportSigningPayload)
+
+    const authKeySignature = signWithAuthKey(authPrivateKey, payloadBytes)
+    const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject)
+
+    return await EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery({
+      authMethodId,
+      encryptionKey,
+      authKeySignature,
+      recoveryAuthSignature,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'recoveryExecute.ts', function: 'executeRecoveryExport' },
     })
     throw error
   } finally {

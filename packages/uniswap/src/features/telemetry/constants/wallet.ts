@@ -9,6 +9,7 @@ export enum WalletEventName {
   AppRating = 'App Rating',
   BackupMethodAdded = 'Backup Method Added',
   BackupMethodRemoved = 'Backup Method Removed',
+  CustomGasOverridesApplied = 'Custom Gas Overrides Applied',
   DappRequestCardClosed = 'DappRequestCardClosed',
   DappRequestCardPressed = 'DappRequestCardPressed',
   ExploreSearchCancel = 'Explore Search Cancel',

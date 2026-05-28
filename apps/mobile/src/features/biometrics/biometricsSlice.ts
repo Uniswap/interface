@@ -6,7 +6,6 @@ import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometric
 // Biometrics State
 //------------------------------------------------------------------------------------------------
 
-// oxlint-disable-next-line import/no-unused-modules
 export interface BiometricsState {
   authenticationStatus: BiometricAuthenticationStatus
   deviceSupportsBiometrics: boolean | undefined

@@ -7,11 +7,11 @@ import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
-import { ExternalArrowLink } from '~/components/Liquidity/ExternalArrowLink'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useTopPoolsLegacy } from '~/features/Explore/state/topPools'
+import { ExternalArrowLink } from '~/features/Liquidity/ExternalArrowLink'
 import { useAccount } from '~/hooks/useAccount'
-import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
 import { TopPoolsSection } from '~/pages/Positions/TopPoolsSection'
-import { useTopPoolsLegacy } from '~/state/explore/topPools'
 
 const MAX_BOOSTED_POOLS = 3
 

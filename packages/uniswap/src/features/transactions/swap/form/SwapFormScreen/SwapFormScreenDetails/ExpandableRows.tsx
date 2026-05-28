@@ -1,6 +1,9 @@
 import { TradingApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
+import { useIsCustomGasFlowAvailable } from 'uniswap/src/features/gas/hooks/useIsCustomGasFlowAvailable'
 import {
   useTransactionSettingsAutoSlippageToleranceStore,
   useTransactionSettingsStore,
@@ -8,6 +11,7 @@ import {
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
+import { FormNetworkCostRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/FormNetworkCostRow'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -19,17 +23,19 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function ExpandableRows(): JSX.Element | null {
   const { t } = useTranslation()
-  const { gasFee, gasFeeBreakdown } = useSwapTxStore((s) => {
+  const { gasFee, gasFeeBreakdown, txRequests } = useSwapTxStore((s) => {
     if (isUniswapX(s)) {
       return {
         gasFee: s.gasFee,
         gasFeeBreakdown: s.gasFeeBreakdown,
+        txRequests: undefined,
       }
     }
 
     return {
       gasFee: s.gasFee,
       gasFeeBreakdown: undefined,
+      txRequests: 'txRequests' in s ? s.txRequests : undefined,
     }
   })
 
@@ -46,9 +52,26 @@ export function ExpandableRows(): JSX.Element | null {
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
   const feeOnTransferProps = useFeeOnTransferAmounts(derivedSwapInfo)
 
+  const isGasFeeOverridesEnabled = useFeatureFlag(FeatureFlags.GasFeeOverrides)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
+  const isCustomGasFlowAvailable = useIsCustomGasFlowAvailable()
+
   if (!trade.trade) {
     return null
   }
+
+  const inputCurrencyChainId = trade.trade.inputAmount.currency.chainId
+  const isUniswapXTrade = isUniswapX({ routing: trade.trade.routing })
+
+  // Only render the tappable row when the user has opted into custom entry
+  // AND the trade is EVM. UniswapX has no editable EVM tx (txRequests is
+  // forced to undefined above), so the editor would open without a recommended
+  // baseline and saved overrides would carry into the next EVM swap. Falling
+  // through to the default <NetworkFee /> keeps the UniswapX display unchanged.
+  const NetworkCostRowSlot =
+    isGasFeeOverridesEnabled && isCustomGasFlowAvailable && enableCustomGasFeeEntry && !isUniswapXTrade ? (
+      <FormNetworkCostRow gasFee={gasFee} tx={txRequests?.[0]} chainId={inputCurrencyChainId} />
+    ) : undefined
 
   return (
     <Accordion.HeightAnimator animation="fast" mt="$spacing8">
@@ -56,8 +79,9 @@ export function ExpandableRows(): JSX.Element | null {
         <TransactionDetails
           showExpandedChildren
           routingType={trade.trade.routing}
-          chainId={trade.trade.inputAmount.currency.chainId}
+          chainId={inputCurrencyChainId}
           gasFee={gasFee}
+          NetworkCostRowSlot={NetworkCostRowSlot}
           swapFee={trade.trade.swapFee}
           swapFeeUsd={swapFeeUsd}
           indicative={trade.trade.indicative}

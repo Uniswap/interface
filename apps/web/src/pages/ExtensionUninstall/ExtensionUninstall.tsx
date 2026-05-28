@@ -10,7 +10,7 @@ import MobileAppLogo from '~/assets/svg/uniswap_app_logo.svg'
 const LOGO_SIZE = 60
 const MAX_WIDTH = 500
 
-export default function ExtensionUninstall() {
+export function ExtensionUninstall() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -86,3 +86,5 @@ export default function ExtensionUninstall() {
     </Trace>
   )
 }
+
+export default ExtensionUninstall

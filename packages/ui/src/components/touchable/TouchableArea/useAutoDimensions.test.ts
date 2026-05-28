@@ -8,7 +8,7 @@ import {
 import { describe, expect, it, vi } from 'vitest'
 
 // We're testing the mobile version of this hook
-vi.mock('utilities/src/platform', () => ({
+vi.mock('@universe/environment', () => ({
   isMobileApp: true,
 }))
 

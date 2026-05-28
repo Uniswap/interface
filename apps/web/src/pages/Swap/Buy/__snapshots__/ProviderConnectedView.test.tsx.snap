@@ -1,28 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`ProviderConnectedView > should render the component and call callbacks 1`] = `
-.c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-.c1 {
-  font-weight: 535;
-  color: rgba(19, 19, 19, 0.35);
-}
-
 <span
   class=""
   style="display: contents;"
@@ -101,20 +79,20 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
         >
           By continuing, you acknowledge that you’ll be subject to the 
           <a
-            class="c0 c1"
-            color="rgba(19, 19, 19, 0.35)"
-            href="https://uniswap.org/terms-of-service/"
-            rel="noopener noreferrer"
+            class="font_button _color-0focus-neutral3Hov3121676 _textDecorationColor-0focus-neutral3Hov3121676 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_neutral3Hov3121676 _textDecorationColor-_groupitem-focusVisible_neutral3Hov3121676 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-0hover-neutral3Hov3121676 _textUnderlinePosition-_platformweb_from-font _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _display-inline _textDecorationLine-none _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315 _outlineStyle-none"
+            data-disable-theme="true"
+            href="https://uniswap.org/terms-of-service"
+            role="link"
             target="_blank"
           >
             Terms of Service
           </a>
            and 
           <a
-            class="c0 c1"
-            color="rgba(19, 19, 19, 0.35)"
+            class="font_button _color-0focus-neutral3Hov3121676 _textDecorationColor-0focus-neutral3Hov3121676 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_neutral3Hov3121676 _textDecorationColor-_groupitem-focusVisible_neutral3Hov3121676 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-0hover-neutral3Hov3121676 _textUnderlinePosition-_platformweb_from-font _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _display-inline _textDecorationLine-none _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315 _outlineStyle-none"
+            data-disable-theme="true"
             href="https://uniswap.org/privacy-policy"
-            rel="noopener noreferrer"
+            role="link"
             target="_blank"
           >
             Privacy Policy

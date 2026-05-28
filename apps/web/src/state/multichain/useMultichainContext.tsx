@@ -5,10 +5,9 @@ import { MultichainContext } from '~/state/multichain/types'
 export function useMultichainContext() {
   const account = useAccount()
   const context = useContext(MultichainContext)
-  // Certain components are used both inside the swap and limit context, and outside of it.
-  // One example is the CurrencySearch component, which is used in the swap context, but also in
-  // the add/remove liquidity flows, nft flows, etc. In these cases, we want to use the chainId
-  // from the provider account (hooks/useAccount), instead of the swap context chainId.
+  // Certain components are used both inside the swap/limit/send surfaces and outside of them
+  // (e.g. add/remove liquidity, pool finder). In those cases we want the chainId from the
+  // connected account (hooks/useAccount), not the multichain swap UI chainId.
   return {
     ...context,
     chainId: context.isMultichainContext ? context.chainId : account.chainId,

@@ -8,6 +8,7 @@ import {
   UploadFrequency,
 } from '@datadog/mobile-react-native'
 import { type ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
+import { isUnitTestEnv, isDatadogEnabled, localDevDatadogEnabled } from '@universe/environment'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
@@ -15,9 +16,8 @@ import {
   getDynamicConfigValue,
 } from '@universe/gating'
 import { PropsWithChildren, default as React, useEffect, useState } from 'react'
+import { getConfig } from 'src/config'
 import { DatadogContext } from 'src/features/datadog/DatadogContext'
-import { config } from 'uniswap/src/config'
-import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -31,17 +31,18 @@ export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 // - Resource tracking: Traces network requests and API calls
 // Note: Can buffer up to 100 RUM events before SDK initialization
 // https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
+const isEnabled = isDatadogEnabled()
 const datadogAutoInstrumentation = {
-  trackErrors: datadogEnabledBuild,
-  trackInteractions: datadogEnabledBuild,
-  trackResources: datadogEnabledBuild,
+  trackErrors: isEnabled,
+  trackInteractions: isEnabled,
+  trackResources: isEnabled,
 }
 
 async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
   const datadogConfig: DatadogProviderConfiguration = {
-    clientToken: config.datadogClientToken,
+    clientToken: getConfig().datadogClientToken,
     env: getDatadogEnvironment(),
-    applicationId: config.datadogProjectId,
+    applicationId: getConfig().datadogProjectId,
     // @ts-expect-error - Favored getting types from DatadogProviderConfiguration over fixing ths type
     trackingConsent: undefined,
     site: 'US1',
@@ -80,7 +81,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     })
   }
 
-  if (config.isE2ETest) {
+  if (getConfig().isE2ETest) {
     Object.assign(datadogConfig, {
       sessionSamplingRate: 100,
       trackingConsent: TrackingConsent.GRANTED,
@@ -91,7 +92,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
   await DatadogProvider.initialize(datadogConfig)
 
   setAttributesToDatadog({
-    isE2ETest: config.isE2ETest,
+    isE2ETest: getConfig().isE2ETest,
   }).catch(() => undefined)
 }
 
@@ -106,12 +107,12 @@ export function DatadogProviderWrapper({
   const [isInitialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    if ((datadogEnabledBuild || config.isE2ETest) && sessionSampleRate !== undefined) {
+    if ((isDatadogEnabled() || getConfig().isE2ETest) && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
     }
   }, [sessionSampleRate])
 
-  if (isTestRun) {
+  if (isUnitTestEnv()) {
     return <>{children}</>
   }
   logger.setDatadogEnabled(true)

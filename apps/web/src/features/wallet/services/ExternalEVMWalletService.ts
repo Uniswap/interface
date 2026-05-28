@@ -3,7 +3,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { createEVMWalletService } from 'uniswap/src/features/wallet/services/createEVMWalletService'
 import type { WalletService } from 'uniswap/src/features/wallet/services/IWalletService'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 
 export function getExternalEVMWalletService(): WalletService {
   return createEVMWalletService({ getWalletMeta: getWagmiWalletMeta, getAccountType: () => AccountType.SignerMnemonic })

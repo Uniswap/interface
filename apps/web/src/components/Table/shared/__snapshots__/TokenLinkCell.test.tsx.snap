@@ -8,7 +8,7 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
   >
     <a
       data-discover="true"
-      href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48?chain=polygon"
       style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
@@ -25,7 +25,7 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-11px _borderTopRightRadius-11px _borderBottomRightRadius-11px _borderBottomLeftRadius-11px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -34,7 +34,7 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
             <img
               height="22"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-              style="object-fit: contain; border-radius: 11px; z-index: 1;"
+              style="object-fit: contain; border-radius: 22px; z-index: 1;"
               width="22"
             />
           </div>
@@ -43,7 +43,7 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
           >
             <div
               class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-              data-testid="network-logo"
+              data-testid="network-logo-137"
               style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 1.5px; border-style: solid;"
             >
               <div
@@ -81,7 +81,7 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
   >
     <a
       data-discover="true"
-      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48?chain=ethereum"
       style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
@@ -98,7 +98,7 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-11px _borderTopRightRadius-11px _borderBottomRightRadius-11px _borderBottomLeftRadius-11px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -107,7 +107,7 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
             <img
               height="22"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-              style="object-fit: contain; border-radius: 11px; z-index: 1;"
+              style="object-fit: contain; border-radius: 22px; z-index: 1;"
               width="22"
             />
           </div>
@@ -129,7 +129,7 @@ exports[`TokenLinkCell > renders unknown token 1`] = `
   >
     <a
       data-discover="true"
-      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48?chain=ethereum"
       style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
@@ -146,7 +146,7 @@ exports[`TokenLinkCell > renders unknown token 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-11px _borderTopRightRadius-11px _borderBottomRightRadius-11px _borderBottomLeftRadius-11px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -155,7 +155,7 @@ exports[`TokenLinkCell > renders unknown token 1`] = `
             <img
               height="22"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-              style="object-fit: contain; border-radius: 11px; z-index: 1;"
+              style="object-fit: contain; border-radius: 22px; z-index: 1;"
               width="22"
             />
           </div>

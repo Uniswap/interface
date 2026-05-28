@@ -24,6 +24,7 @@ type Params = {
   txRequest: providers.TransactionRequest
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* sendToken(params: Params) {
   try {
     const { sendTokenParams, txRequest } = params
@@ -68,6 +69,7 @@ function validateSendAmount(amountInWei: string, currentBalance: BigNumberish): 
   }
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* validateSend(sendTokenParams: SendTokenParams) {
   const { type, chainId, tokenAddress, account } = sendTokenParams
   const contractManager = yield* call(getContractManager)

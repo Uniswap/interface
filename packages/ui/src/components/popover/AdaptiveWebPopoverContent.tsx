@@ -1,9 +1,13 @@
+import { isWebApp } from '@universe/environment'
 import { ComponentProps, ReactNode, useContext, useMemo } from 'react'
 import { GetProps, Popover, useMedia } from 'tamagui'
 // oxlint-disable-next-line no-restricted-imports -- needed here
-import { EffectiveModalOrSheetZIndexContext, WebBottomSheet } from 'ui/src/components/modal/AdaptiveWebModal'
+import {
+  EffectiveModalOrSheetZIndexContext,
+  stackingLayerAbove,
+  WebBottomSheet,
+} from 'ui/src/components/modal/AdaptiveWebModal'
 import { zIndexes } from 'ui/src/theme'
-import { isWebApp } from 'utilities/src/platform'
 
 const ANIMATION_OFFSET = 10
 
@@ -64,7 +68,7 @@ export function AdaptiveWebPopoverContent({
   const media = useMedia()
   const useSheetOnWeb = adaptWhen ?? media.sm
   const effectiveModalZ = useContext(EffectiveModalOrSheetZIndexContext)
-  const stackingLayerNumber = Math.max((effectiveModalZ ?? 0) + 1, zIndexes.popover)
+  const stackingLayerNumber = stackingLayerAbove(effectiveModalZ, zIndexes.popover)
 
   const enterExitStyle = useMemo(() => getEnterExitStyle(placement), [placement])
 

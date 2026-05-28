@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, type FlexProps, Loader, ModalCloseIcon, Text, useMedia } from 'ui/src'
@@ -19,7 +20,6 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebPlatform } from 'utilities/src/platform'
 
 const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-var-requires
 /* oxlint-disable typescript/no-explicit-any -- Third-party types not available */
 import { DdLogs, DdRum, DdSdkReactNative, ErrorSource, RumActionType } from '@datadog/mobile-react-native'
 import dayjs from 'dayjs'
@@ -100,7 +101,6 @@ export function attachUnhandledRejectionHandler(): void {
     allRejections: true,
     onUnhandled: (id: string, rejection: unknown) => {
       if (__DEV__) {
-        // oxlint-disable-next-line no-console -- Console logging needed for debugging
         console.warn(`Possible Unhandled Promise Rejection (id: ${id}):\n${rejection}`)
       } else {
         const error = rejection instanceof Error ? rejection : new Error(`${rejection}`)
@@ -112,7 +112,6 @@ export function attachUnhandledRejectionHandler(): void {
     },
     onHandled: (id: string) => {
       if (__DEV__) {
-        // oxlint-disable-next-line no-console -- Console logging needed for debugging
         console.warn(
           `Promise Rejection Handled (id: ${id})\n` +
             'This means you can ignore any previous messages of the form ' +

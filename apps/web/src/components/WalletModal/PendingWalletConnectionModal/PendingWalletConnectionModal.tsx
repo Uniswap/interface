@@ -53,7 +53,6 @@ function useSolanaWalletToPrompt(applicablePendingWallet: ExternalWallet | undef
 
   const [solanaWalletToPrompt, setSolanaWalletToPrompt] = useState<ExternalWallet>()
 
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
   const isMultiPlatformConnection = !useConnectWallet().variables?.individualPlatform
 
   // Set a flag to keep the modal open if the solana prompt should be shown
@@ -71,7 +70,7 @@ function useSolanaWalletToPrompt(applicablePendingWallet: ExternalWallet | undef
 }
 
 /** Modal for dual-VM wallets (MetaMask) that shows connection status and prompts for Solana opt-in. */
-export default function PendingWalletConnectionModal() {
+export function PendingWalletConnectionModal() {
   const applicablePendingWallet = useApplicablePendingWallet()
   const { reset: resetConnectionQuery } = useConnectWallet()
 
@@ -207,3 +206,5 @@ function UserInput(props: { solanaWalletToPrompt: ExternalWallet | undefined; re
     </AnimatePresence>
   )
 }
+
+export default PendingWalletConnectionModal

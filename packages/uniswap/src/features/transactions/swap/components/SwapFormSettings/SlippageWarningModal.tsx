@@ -1,10 +1,10 @@
+import { isMobileApp, isMobileWeb } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SlippageWarningModalProps {
   isOpen: boolean

@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import type { GasStrategy } from '@universe/api'
+import type { GasFeeResult, GasStrategy } from '@universe/api'
 import { DynamicConfigs, type GasStrategies, getStatsigClient } from '@universe/gating'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -7,6 +7,7 @@ import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import {
   applyNativeTokenPercentageBuffer,
   getActiveGasStrategy,
+  hasGasEstimationFailed,
   hasSufficientFundsIncludingGas,
   hasSufficientGasBalance,
 } from 'uniswap/src/features/gas/utils'
@@ -247,5 +248,39 @@ describe(getActiveGasStrategy, () => {
       minPriorityFeeGwei: 0,
       maxPriorityFeeGwei: 0,
     })
+  })
+})
+
+describe(hasGasEstimationFailed, () => {
+  const idleSkippedResult: GasFeeResult = { isLoading: false, error: null }
+  const loadingResult: GasFeeResult = { isLoading: true, error: null }
+  const successResult: GasFeeResult = { value: '21000', displayValue: '21000', isLoading: false, error: null }
+  const erroredResult: GasFeeResult = { isLoading: false, error: new Error('estimation failed') }
+
+  it('returns false when the request is not a transaction type', () => {
+    expect(hasGasEstimationFailed(false, erroredResult)).toBe(false)
+  })
+
+  it('returns false when the gas fee result is undefined', () => {
+    expect(hasGasEstimationFailed(true, undefined)).toBe(false)
+  })
+
+  it('returns false while the query is loading', () => {
+    expect(hasGasEstimationFailed(true, loadingResult)).toBe(false)
+  })
+
+  // Regression test: prevents the transient error flash while the query is still
+  // waiting for async inputs (e.g. chainId) and React Query is reporting the
+  // skipped state as `{ isLoading: false, error: null, value: undefined }`.
+  it('returns false when the query is skipped or has not started yet', () => {
+    expect(hasGasEstimationFailed(true, idleSkippedResult)).toBe(false)
+  })
+
+  it('returns false when estimation succeeded', () => {
+    expect(hasGasEstimationFailed(true, successResult)).toBe(false)
+  })
+
+  it('returns true when the query settled with an error', () => {
+    expect(hasGasEstimationFailed(true, erroredResult)).toBe(true)
   })
 })

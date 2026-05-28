@@ -146,7 +146,7 @@ export function AccountList({ accounts, onPress, isVisible, onClose }: AccountLi
   }, [hasSignerAccounts, hasViewOnlyAccounts, signerAccounts, viewOnlyAccounts])
 
   const renderItem = useCallback(
-    // oxlint-disable-next-line consistent-return
+    // oxlint-disable-next-line typescript/consistent-return
     ({ item }: { item: AccountListItem }) => {
       switch (item.type) {
         case AccountListItemType.ViewOnlyHeader:

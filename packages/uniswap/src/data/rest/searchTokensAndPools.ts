@@ -2,30 +2,29 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { createQueryOptions, useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
-import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
+import { searchTokens } from '@uniswap/client-data-api/dist/data/v1/search-SearchService_connectquery'
+import { SearchTokensRequest, SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
 import {
-  type ChainToken,
-  type MultichainToken,
   Pool,
-  type Token as SearchToken,
-  SearchTokensRequest,
-  SearchTokensResponse,
   SearchType,
-} from '@uniswap/client-search/dist/search/v1/api_pb'
+  Token as SearchToken,
+  ChainToken,
+  MultichainToken,
+} from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel, SharedQueryClient } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
-import { createLogger } from 'utilities/src/logger/logger'
-
-const FILE_NAME = 'searchTokensAndPools.ts'
-
+import { entryGatewayProdPostTransport } from 'uniswap/src/data/rest/base'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { PoolSearchHistoryResult, SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
+import type { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId, currencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { createLogger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_HOUR_MS } from 'utilities/src/time/time'
+
+const FILE_NAME = 'searchTokensAndPools.ts'
 
 /**
  * Wrapper around Tanstack useQuery for the Uniswap REST BE service SearchTokens
@@ -43,7 +42,7 @@ export function useSearchTokensAndPoolsQuery<TSelectType>({
   select?: ((data: SearchTokensResponse) => TSelectType) | undefined
 }): UseQueryResult<TSelectType, ConnectError> {
   return useQuery(searchTokens, input, {
-    transport: uniswapPostTransport,
+    transport: entryGatewayProdPostTransport,
     enabled: !!input && enabled,
     select,
   })
@@ -75,7 +74,7 @@ export async function fetchTokenByAddress({
           size: 1,
           page: 1,
         },
-        { transport: uniswapPostTransport },
+        { transport: entryGatewayProdPostTransport },
       ),
       // Token data does not change often, so we can use stale data here.
       // This data will be refreshed when fetching the portfolio balances anyway.
@@ -166,9 +165,21 @@ export function chainTokenToCurrencyInfo(
  * Flattens a MultichainToken into one CurrencyInfo per chain.
  */
 export function multichainTokenToCurrencyInfos(multichainToken: MultichainToken): CurrencyInfo[] {
-  return multichainToken.chainTokens
+  const infos = multichainToken.chainTokens
     .map((chainToken) => chainTokenToCurrencyInfo(chainToken, multichainToken))
     .filter((c): c is CurrencyInfo => c !== null)
+
+  if (!infos.length) {
+    return []
+  }
+
+  const tokenCurrencyIds = infos.map((i) => i.currencyId) as CurrencyId[]
+  const searchMultichainParent = { id: multichainToken.multichainId, tokenCurrencyIds }
+
+  return infos.map((info) => ({
+    ...info,
+    searchMultichainParent,
+  }))
 }
 
 export function searchPoolToPoolSearchResult(pool: Pool): PoolSearchHistoryResult | undefined {

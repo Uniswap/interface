@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import React, { useEffect } from 'react'
 import Animated, {
   cancelAnimation,
@@ -19,7 +20,6 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isAndroid } from 'utilities/src/platform'
 
 export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number }): JSX.Element {
   const price = useLineChartPrice()

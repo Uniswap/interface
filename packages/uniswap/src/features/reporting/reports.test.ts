@@ -6,6 +6,7 @@ import {
   submitPortfolioDataReport,
   submitTokenDataReport,
   submitTokenIssueReport,
+  submitTokenWarningDataReport,
   TokenDataReportOption,
   TokenReportOption,
 } from 'uniswap/src/features/reporting/reports'
@@ -40,6 +41,7 @@ describe('report submission analytics', () => {
           spam_token: true,
           something_else: true,
           text: 'this token is suspicious',
+          is_multichain_asset: false,
         }),
       )
     })
@@ -59,6 +61,25 @@ describe('report submission analytics', () => {
           spam_token: true,
           something_else: false,
           text: undefined,
+          is_multichain_asset: false,
+        }),
+      )
+    })
+
+    it('sends is_multichain_asset when true', () => {
+      submitTokenIssueReport({
+        source: 'token-details',
+        chainId: UniverseChainId.Mainnet,
+        tokenAddress: '0x123',
+        reportOptions: [TokenReportOption.Spam],
+        reportTexts: new Map(),
+        isMultichainAsset: true,
+      })
+
+      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+        UniswapEventName.SpamReportSubmitted,
+        expect.objectContaining({
+          is_multichain_asset: true,
         }),
       )
     })
@@ -81,6 +102,7 @@ describe('report submission analytics', () => {
           type: 'data',
           something_else: true,
           text: 'chart looks off',
+          report_multichain_asset: false,
         }),
       )
     })
@@ -105,6 +127,7 @@ describe('report submission analytics', () => {
           performance_text: 'avg cost is wrong',
           something_else: false,
           text: undefined,
+          report_multichain_asset: false,
         }),
       )
     })
@@ -130,6 +153,7 @@ describe('report submission analytics', () => {
           performance_text: 'PnL is wrong',
           something_else: true,
           text: 'chart looks off',
+          report_multichain_asset: false,
         }),
       )
     })
@@ -148,6 +172,62 @@ describe('report submission analytics', () => {
           price: true,
           performance_text: undefined,
           text: undefined,
+          report_multichain_asset: false,
+        }),
+      )
+    })
+
+    it('sends report_multichain_asset when true', () => {
+      submitTokenDataReport({
+        chainId: UniverseChainId.Mainnet,
+        tokenAddress: '0x456',
+        reportOptions: [TokenDataReportOption.Price],
+        reportTexts: new Map(),
+        reportMultichainAsset: true,
+      })
+
+      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+        UniswapEventName.DataReportSubmitted,
+        expect.objectContaining({
+          type: 'data',
+          report_multichain_asset: true,
+        }),
+      )
+    })
+  })
+
+  describe('submitTokenWarningDataReport', () => {
+    it('sends report_multichain_asset false by default', () => {
+      submitTokenWarningDataReport({
+        chainId: UniverseChainId.Mainnet,
+        tokenAddress: '0x789',
+        tokenName: 'Test',
+        reportText: 'warning seems wrong',
+      })
+
+      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+        UniswapEventName.DataReportSubmitted,
+        expect.objectContaining({
+          type: 'token_warning',
+          text: 'warning seems wrong',
+          report_multichain_asset: false,
+        }),
+      )
+    })
+
+    it('sends report_multichain_asset when true', () => {
+      submitTokenWarningDataReport({
+        chainId: UniverseChainId.Mainnet,
+        tokenAddress: '0x789',
+        reportText: 'warning seems wrong',
+        reportMultichainAsset: true,
+      })
+
+      expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+        UniswapEventName.DataReportSubmitted,
+        expect.objectContaining({
+          type: 'token_warning',
+          report_multichain_asset: true,
         }),
       )
     })

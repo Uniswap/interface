@@ -1,13 +1,13 @@
+import { isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ReportInput } from 'uniswap/src/components/reporting/input'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isMobileWeb, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type ReportOption<T extends string> = {
@@ -44,7 +44,6 @@ export function ReportModal<T extends string>({
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
   // Clear form whenever a new currency is selected
-  // oxlint-disable-next-line react/exhaustive-deps -- we intentionally retrigger on open/close
   useEffect(() => {
     setCheckedItems(new Set())
     setReportTexts(new Map())

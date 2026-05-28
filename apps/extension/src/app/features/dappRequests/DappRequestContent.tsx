@@ -140,7 +140,6 @@ export function DappRequestContent({
 
 const WINDOW_CLOSE_DELAY = 10
 
-// oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
 function DappRequestFooter({
   chainId,
   connectedAccountAddress,

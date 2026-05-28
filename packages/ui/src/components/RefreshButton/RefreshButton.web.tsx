@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src/components/layout'
@@ -5,8 +6,6 @@ import type { RefreshButtonProps } from 'ui/src/components/RefreshButton/Refresh
 import { RefreshButtonIcon } from 'ui/src/components/RefreshButton/RefreshButtonIcon'
 import { Text } from 'ui/src/components/text'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
-import { zIndexes } from 'ui/src/theme'
-import { isWebPlatform } from 'utilities/src/platform'
 
 /**
  * A button component that allows users to refresh their balance with a visual indicator
@@ -53,7 +52,7 @@ export function RefreshButton({ onPress, isLoading }: RefreshButtonProps): JSX.E
       <Tooltip.Trigger>
         <RefreshButtonIcon isLoading={isLoading} onPress={onPress} />
       </Tooltip.Trigger>
-      <Tooltip.Content zIndex={zIndexes.overlay}>
+      <Tooltip.Content>
         <Tooltip.Arrow />
         <Flex row gap="$gap8">
           <Text variant="body4">{t('common.refresh')}</Text>
