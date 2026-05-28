@@ -1,19 +1,20 @@
-import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
-import { Trans } from 'react-i18next'
-import { DeprecatedButton, Flex, Image, Text, useIsDarkMode } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
 
 interface ProviderConnectionErrorProps {
   onBack: () => void
-  closeModal: () => void
+  closeModal?: () => void
   selectedServiceProvider: FORServiceProvider
 }
 
 export function ProviderConnectionError({ onBack, closeModal, selectedServiceProvider }: ProviderConnectionErrorProps) {
+  const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
   return (
@@ -26,33 +27,23 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
           <img
             style={ServiceProviderLogoStyles.uniswapLogoWrapper}
             height={120}
-            src={getOptionalServiceProviderLogo(selectedServiceProvider?.logos, isDarkMode)}
+            src={getOptionalServiceProviderLogo(selectedServiceProvider.logos, isDarkMode)}
             width={120}
           />
         </Flex>
         <Flex centered gap="$spacing8">
           <Text variant="subheading1" color="$statusCritical">
-            <Trans i18nKey="fiatOnRamp.connection.error" />
+            {t('fiatOnRamp.connection.error')}
           </Text>
           <Text color="$neutral2" variant="body2" textAlign="center">
-            <Trans
-              i18nKey="fiatOnRamp.connection.errorDescription"
-              values={{ serviceProvider: selectedServiceProvider.name }}
-            />
+            {t('fiatOnRamp.connection.errorDescription', { serviceProvider: selectedServiceProvider.name })}
           </Text>
         </Flex>
-        <DeprecatedButton
-          size="medium"
-          backgroundColor="$accent3"
-          color="$primary"
-          hoverStyle={{
-            backgroundColor: '$accent3Hovered',
-          }}
-          width="100%"
-          onPress={onBack}
-        >
-          <Trans i18nKey="common.tryAgain.error" />
-        </DeprecatedButton>
+        <Flex row width="100%">
+          <Button size="small" emphasis="primary" fill onPress={onBack}>
+            {t('common.tryAgain.error')}
+          </Button>
+        </Flex>
       </Flex>
     </ConnectingViewWrapper>
   )

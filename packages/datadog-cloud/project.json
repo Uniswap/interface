@@ -1,0 +1,17 @@
+{
+  "tags": ["scope:infra", "type:lib"],
+  "targets": {
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint": {},
+    "lint:fix": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "check": {},
+    "check:fast": {}
+  }
+}

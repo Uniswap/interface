@@ -4,45 +4,69 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
 <View
   collapsable={false}
   forwardedRef={[Function]}
-  handlerTag={1}
-  handlerType="FlingGestureHandler"
-  onGestureHandlerEvent={[Function]}
-  pointerEvents="box-none"
-  style={
+  jestAnimatedProps={
     {
-      "alignItems": "center",
-      "borderBottomLeftRadius": 24,
-      "borderBottomRightRadius": 24,
-      "borderTopLeftRadius": 24,
-      "borderTopRightRadius": 24,
-      "flexDirection": "column",
-      "justifyContent": "center",
-      "position": "absolute",
-      "top": 0,
-      "transform": [
-        {
-          "translateY": -150,
-        },
-      ],
-      "width": "100%",
-      "zIndex": 1060,
+      "value": {},
     }
+  }
+  jestAnimatedStyle={
+    {
+      "value": {
+        "left": 12,
+        "opacity": 0,
+        "right": 12,
+        "top": 12,
+        "transform": [
+          {
+            "translateY": -150,
+          },
+        ],
+      },
+    }
+  }
+  jestInlineStyle={
+    [
+      {
+        "flexDirection": "column",
+        "zIndex": 100020,
+      },
+    ]
+  }
+  pointerEvents="none"
+  style={
+    [
+      {
+        "flexDirection": "column",
+        "zIndex": 100020,
+      },
+      {
+        "left": 12,
+        "opacity": 0,
+        "right": 12,
+        "top": 12,
+        "transform": [
+          {
+            "translateY": -150,
+          },
+        ],
+      },
+    ]
   }
 >
   <View
     pointerEvents="auto"
     style={
       {
-        "borderBottomColor": "rgba(34,34,34,0.05)",
+        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
         "borderBottomLeftRadius": 999999,
         "borderBottomRightRadius": 999999,
         "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(34,34,34,0.05)",
+        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
         "borderLeftWidth": 1,
-        "borderRightColor": "rgba(34,34,34,0.05)",
+        "borderRightColor": "rgba(19, 19, 19, 0.08)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "rgba(34,34,34,0.05)",
+        "borderTopColor": "rgba(19, 19, 19, 0.08)",
         "borderTopLeftRadius": 999999,
         "borderTopRightRadius": 999999,
         "borderTopWidth": 1,
@@ -67,41 +91,81 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           "flexDirection": "row",
           "flexShrink": 1,
           "justifyContent": "center",
+          "maxWidth": 420,
         }
       }
     >
       <View
-        cancelable={true}
-        disabled={false}
-        focusable={true}
-        hitSlop={[Function]}
-        minPressDuration={0}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
-        style={
+        collapsable={false}
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedProps={
           {
-            "backgroundColor": "#FFFFFF",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "opacity": 1,
-            "paddingBottom": 12,
-            "paddingLeft": 12,
-            "paddingRight": 12,
-            "paddingTop": 12,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
+            "value": {},
           }
+        }
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        jestInlineStyle={
+          [
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "maxWidth": "100%",
+              "opacity": 1,
+              "paddingBottom": 12,
+              "paddingLeft": 12,
+              "paddingRight": 12,
+              "paddingTop": 12,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
+        }
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onLayout={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        role="button"
+        style={
+          [
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "maxWidth": "100%",
+              "opacity": 1,
+              "paddingBottom": 12,
+              "paddingLeft": 12,
+              "paddingRight": 12,
+              "paddingTop": 12,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ]
         }
       >
         <View
@@ -139,7 +203,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#7D7D7D",
+                    "color": "rgba(19, 19, 19, 0.63)",
                     "height": 20,
                     "width": 20,
                   },
@@ -154,7 +218,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
               vbWidth={24}
             >
               <RNSVGGroup
-                color="#7D7D7D"
+                color="rgba(19, 19, 19, 0.63)"
                 fill={
                   {
                     "type": 2,
@@ -185,17 +249,17 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
             </RNSVGSvgView>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
               {
-                "color": "#222222",
+                "color": "#131313",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 16,
                 "fontWeight": "400",
-                "lineHeight": 24,
+                "lineHeight": 20.8,
               }
             }
             suppressHighlighting={true}

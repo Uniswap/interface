@@ -1,20 +1,51 @@
+import { isAndroid } from '@universe/environment'
 import { BlurView } from 'expo-blur'
 import React, { memo } from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { Image } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import { SplashScreen } from 'src/features/appLoading/SplashScreen'
-import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { useLockScreenState } from 'src/features/lockScreen/useLockScreenState'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
+import { SPLASH_SCREEN_IMAGE_SIZE } from 'src/features/appLoading/SplashScreen'
+import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
+import { useBiometricName, useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
+import { useLockScreenState } from 'src/features/lockScreen/hooks/useLockScreenState'
+import { Button, Flex, flexStyles, TouchableArea, useIsDarkMode } from 'ui/src'
+import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { zIndexes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { isAndroid } from 'utilities/src/platform'
+import { spacing, zIndexes } from 'ui/src/theme'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { useEvent } from 'utilities/src/react/hooks'
+
+const fadeIn = FadeIn.duration(250)
+const fadeOut = FadeOut.duration(250)
+
+const useBiometricAuth = (): (() => Promise<void>) => {
+  const { t } = useTranslation()
+  const { trigger } = useBiometricPrompt()
+  const { touchId } = useDeviceSupportsBiometricAuth()
+  const biometricsMethod = useBiometricName(touchId)
+  const { showBiometricsAlert } = useBiometricsAlert({ t })
+  const isBiometricsEnabled = useOsBiometricAuthEnabled()
+
+  const onPress = useEvent(async (): Promise<void> => {
+    await trigger({
+      failureCallback: () => {
+        if (!isBiometricsEnabled) {
+          showBiometricsAlert(biometricsMethod)
+        }
+      },
+    })
+  })
+
+  return onPress
+}
 
 export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | null {
-  const { isLockScreenVisible, setIsLockScreenVisible } = useLockScreenState()
-  const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
+  const { isLockScreenVisible } = useLockScreenState()
+  const onPress = useBiometricAuth()
 
   if (!isLockScreenVisible) {
     return null
@@ -24,37 +55,65 @@ export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | nu
   // the lock screen on error, hence we fallback to the global error boundary
   return (
     <FullScreenFader>
-      <TouchableWithoutFeedback style={flexStyles.fill} onPress={(): Promise<void> => trigger()}>
-        <LockScreenModalContent />
-      </TouchableWithoutFeedback>
+      <TouchableArea activeOpacity={1} style={flexStyles.fill} onPress={onPress}>
+        <BlurredLockScreen />
+      </TouchableArea>
     </FullScreenFader>
   )
 })
 
-const LockScreenModalContent = memo(function LockScreenModalContent(): JSX.Element {
-  const isBlurredLockScreenEnabled = useFeatureFlag(FeatureFlags.BlurredLockScreen)
-
+const BlurredLockScreen = memo(function BlurredLockScreen(): JSX.Element {
+  const { manualRetryRequired } = useLockScreenState()
   const isDarkMode = useIsDarkMode()
-  if (isBlurredLockScreenEnabled) {
-    return (
-      <BlurView
-        experimentalBlurMethod={isAndroid ? 'dimezisBlurView' : undefined}
-        intensity={60}
-        tint={isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight'}
-        style={flexStyles.fill}
+  const bottomInset = useBottomInset()
+  const dimensions = useDeviceDimensions()
+
+  return (
+    <BlurView
+      experimentalBlurMethod={isAndroid ? 'dimezisBlurView' : undefined}
+      intensity={60}
+      tint={isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight'}
+      style={flexStyles.fill}
+    >
+      <Image
+        source={UNISWAP_MONO_LOGO_LARGE}
+        style={{
+          position: 'absolute',
+          top: (dimensions.fullHeight - SPLASH_SCREEN_IMAGE_SIZE) / 2,
+          left: (dimensions.fullWidth - SPLASH_SCREEN_IMAGE_SIZE) / 2,
+          height: SPLASH_SCREEN_IMAGE_SIZE,
+          width: SPLASH_SCREEN_IMAGE_SIZE,
+        }}
       />
-    )
-  }
-  // fallback to splash screen if blurred lock screen is not enabled
-  return <SplashScreen />
+      {manualRetryRequired && (
+        <Flex fill justifyContent="flex-end" pb={bottomInset}>
+          <UnlockButton />
+        </Flex>
+      )}
+    </BlurView>
+  )
+})
+
+const UnlockButton = memo(function UnlockButton(): JSX.Element {
+  const { t } = useTranslation()
+  const renderBiometricsIcon = useBiometricsIcon()
+  const onPress = useBiometricAuth()
+
+  return (
+    <AnimatedFlex centered row px="$spacing24" entering={fadeIn} exiting={fadeOut}>
+      <Button icon={renderBiometricsIcon?.({})} size="large" emphasis="primary" variant="branded" onPress={onPress}>
+        {t('common.button.unlock')}
+      </Button>
+    </AnimatedFlex>
+  )
 })
 
 const FullScreenFader = memo(function FullScreenFader({ children }: { children: React.ReactNode }): JSX.Element {
   const dimensions = useDeviceDimensions()
   return (
     <Animated.View
-      entering={FadeIn}
-      exiting={FadeOut}
+      entering={fadeIn}
+      exiting={fadeOut}
       style={{
         position: 'absolute',
         top: 0,
@@ -70,3 +129,9 @@ const FullScreenFader = memo(function FullScreenFader({ children }: { children: 
     </Animated.View>
   )
 })
+
+const useBottomInset = (): number => {
+  const insets = useAppInsets()
+  const additional = isAndroid ? spacing.spacing24 : 0
+  return insets.bottom + additional
+}

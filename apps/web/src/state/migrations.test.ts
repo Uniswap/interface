@@ -1,16 +1,15 @@
 import { Store } from '@reduxjs/toolkit'
 import { persistStore } from 'redux-persist'
-import { createDefaultStore } from 'state'
-import { initialState as initialListsState } from 'state/lists/reducer'
-import { PERSIST_VERSION } from 'state/migrations'
-import { RouterPreference } from 'state/routing/types'
-import { initialState as initialSignaturesState } from 'state/signatures/reducer'
-import { initialState as initialTransactionsState } from 'state/transactions/reducer'
-import { initialState as initialUserState } from 'state/user/reducer'
+import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
+import { createDefaultStore } from '~/state'
+import { initialState as initialListsState } from '~/state/lists/reducer'
+import { PERSIST_VERSION } from '~/state/migrations'
+import { RouterPreference } from '~/state/routing/types'
+import { initialState as initialUserState } from '~/state/user/reducer'
 
 const defaultState = {
   lists: {},
-  localWebTransactions: {},
+  transactions: {},
   user: {},
   _persist: {
     rehydrated: true,
@@ -19,40 +18,10 @@ const defaultState = {
   application: {
     chainId: null,
     openModal: null,
-    popupList: [],
-  },
-  burn: {
-    independentField: 'LIQUIDITY_PERCENT',
-    typedValue: '0',
-  },
-  burnV3: {
-    percent: 0,
   },
   logs: {},
-  mint: {
-    independentField: 'CURRENCY_A',
-    leftRangeTypedValue: '',
-    otherTypedValue: '',
-    rightRangeTypedValue: '',
-    startPriceTypedValue: '',
-    typedValue: '',
-  },
-  mintV3: {
-    independentField: 'CURRENCY_A',
-    leftRangeTypedValue: '',
-    rightRangeTypedValue: '',
-    startPriceTypedValue: '',
-    typedValue: '',
-  },
-  multicall: {
-    callResults: {},
-  },
   searchHistory: {
     results: [],
-  },
-  wallets: {
-    connectedWallets: [],
-    switchingChain: false,
   },
   userSettings: {
     currentLanguage: 'en',
@@ -90,7 +59,6 @@ describe('redux migrations', () => {
     expect(localStorage.getItem('redux_localstorage_simple_transactions')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_user')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_lists')).toBeNull()
-    expect(localStorage.getItem('redux_localstorage_simple_signatures')).toBeNull()
 
     const state = store.getState()
     expect(state).toMatchObject({
@@ -103,10 +71,30 @@ describe('redux migrations', () => {
         test: 'user',
         userRouterPreference: RouterPreference.X,
       },
-      signatures: {
-        test: 'signatures',
-      },
     })
+  })
+
+  it('clears localWebTransactions during migration', async () => {
+    // Set up legacy state with localWebTransactions
+    localStorage.setItem(
+      'persist:interface',
+      JSON.stringify({
+        user: { ...initialUserState, test: 'user' },
+        localWebTransactions: { test: 'localWebTransactions' },
+        transactions: initialTransactionsState,
+        lists: initialListsState,
+        _persist: { version: -1 },
+      }),
+    )
+
+    persistStore(store)
+    // wait for the migration to complete
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    const state = store.getState()
+    expect(state).toMatchObject(defaultState)
+    // Verify localWebTransactions is not present in the final state
+    expect(state.localWebTransactions).toBeUndefined()
   })
 
   it('initial state with no previous persisted state', async () => {
@@ -125,7 +113,6 @@ describe('redux migrations', () => {
         user: { ...initialUserState, test: 'user' },
         transactions: initialTransactionsState,
         lists: initialListsState,
-        signatures: initialSignaturesState,
         _persist: { version: -1 },
       }),
     )

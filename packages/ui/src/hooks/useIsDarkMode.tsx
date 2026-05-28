@@ -1,5 +1,5 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- until the web app needs all of tamagui, avoid heavy imports there
 import { useThemeName } from '@tamagui/core'
 
 export function useIsDarkMode(): boolean {

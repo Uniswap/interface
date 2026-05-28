@@ -6,6 +6,17 @@ html {
   font-variant-ligatures: no-contextual;
 }
 
+/* Theme-aware background colors using Tamagui theme classes */
+.t_light body,
+.t_light html {
+  background-color: #fff;
+}
+
+.t_dark body,
+.t_dark html {
+  background-color: #131313;
+}
+
 #root {
   height: 100vh;
   display: flex;
@@ -29,5 +40,17 @@ html {
   }
   to {
     -webkit-mask-position: -50%;
+  }
+}
+
+@keyframes cloud-float-animation {
+  0% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(-8px);
   }
 }

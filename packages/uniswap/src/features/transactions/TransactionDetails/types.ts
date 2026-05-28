@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 
 export type FoTFeeType = 'buy' | 'sell'
 
@@ -16,6 +16,7 @@ export type TokenFeeInfo = {
   fee: Percent
   formattedUsdAmount: string
   formattedAmount: string
+  isLoading?: boolean
 }
 
 export type TokenWarningProps = {

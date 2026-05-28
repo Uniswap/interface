@@ -1,0 +1,31 @@
+diff --git a/src/providers/shared/hooks/useItemLayoutStyles.ts b/src/providers/shared/hooks/useItemLayoutStyles.ts
+index a1a77b0d6a096e7881e71827b49825e62de9bdc4..ab4a43340b55458505786cd2b1e1f2b08de790dd 100644
+--- a/src/providers/shared/hooks/useItemLayoutStyles.ts
++++ b/src/providers/shared/hooks/useItemLayoutStyles.ts
+@@ -12,7 +12,7 @@ import { useCommonValuesContext } from '../CommonValuesProvider';
+ import useItemZIndex from './useItemZIndex';
+ 
+ const RELATIVE_STYLE: ViewStyle = {
+-  opacity: 1,
++  left: -9999,
+   position: 'relative',
+   transform: [],
+   zIndex: 0
+@@ -20,7 +20,7 @@ const RELATIVE_STYLE: ViewStyle = {
+ 
+ const NO_TRANSLATION_STYLE: ViewStyle = {
+   ...RELATIVE_STYLE,
+-  opacity: 0,
++  left: -9999,
+   position: 'absolute',
+   zIndex: -1
+ };
+@@ -103,7 +103,7 @@ export default function useItemLayoutStyles(
+     }
+ 
+     return {
+-      opacity: 1,
++      left: 0,
+       position: 'absolute',
+       transform: [
+         { translateX: translateX.value },

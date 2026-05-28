@@ -1,0 +1,205 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`KeyManagementModal > renders correctly 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
+      >
+        <div
+          class="is_TouchableArea  t_group_true"
+          data-testid="back"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+          tabindex="0"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M20 12C20 12.5523 19.5523 13 19 13L7.41421 13L12.7071 18.2929C13.0976 18.6834 13.0976 19.3166 12.7071 19.7071C12.3166 20.0976 11.6834 20.0976 11.2929 19.7071L4.29289 12.7071C3.90237 12.3166 3.90237 11.6834 4.29289 11.2929L11.2929 4.29289C11.6834 3.90237 12.3166 3.90237 12.7071 4.29289C13.0976 4.68342 13.0976 5.31658 12.7071 5.70711L7.41421 11H19C19.5523 11 20 11.4477 20 12Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-auto"
+        >
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334076 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334047"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929 _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M15 3C11.69 3 9 5.69 9 9C9 9.61 9.09001 10.19 9.26001 10.74L3 17V21H7V18H10L13.26 14.74C13.81 14.91 14.39 15 15 15C18.31 15 21 12.31 21 9C21 5.69 18.31 3 15 3ZM16.02 9.25C15.331 9.25 14.7649 8.69 14.7649 8C14.7649 7.31 15.32 6.75 16.01 6.75H16.02C16.71 6.75 17.27 7.31 17.27 8C17.27 8.69 16.71 9.25 16.02 9.25Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
+          >
+            <h3
+              class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+              data-disable-theme="true"
+            >
+              Your wallet. Your crypto.
+            </h3>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _textAlign-center"
+              data-disable-theme="true"
+            >
+              Uniswap uses advanced encryption so only you can access your funds. You can export your wallet any time.
+            </span>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+          >
+            <button
+              class="is_Button  t_group_item"
+              data-testid="continue"
+              dd-action-name="Continue"
+              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
+              <span
+                class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                line-height-disabled="false"
+              >
+                Continue
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-spa1360334047"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+        data-disable-theme="true"
+      >
+        Secured by
+      </span>
+      <a
+        class="sc-bRKDuR dvTvpU"
+        href="https://www.privy.io/user-help-center"
+        rel="noopener noreferrer"
+        style="stroke: none;"
+        target="_blank"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-14px _overflowX-hidden _overflowY-hidden _justifyContent-center _mt-t-space-spa94665589"
+        >
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 63px; height: 63px; color: rgb(19, 19, 19);"
+            viewBox="0 0 63 14"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M45.7768 7.44028H45.587L43.1178 0.279785H40.2256V0.575835L43.7088 10.5754H47.5498L51.0341 0.575835V0.279785H48.2677L45.7757 7.44028H45.7768Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M39.456 0.279785H36.5801V10.5743H39.456V0.279785Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M59.5772 0.278916H59.5794L57.0873 7.44158H56.8976L54.4283 0.280001H51.5361V0.578219L55.3197 11.442H51.7368V13.8267H55.2384C56.7338 13.8267 57.8985 13.3224 58.4635 11.7132C58.5394 11.4984 62.3436 0.57605 62.3436 0.57605V0.277832H59.5772V0.278916Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M21.9234 0C20.6156 0 19.3934 0.66584 18.6311 1.91727H18.4543V0.290627H15.7129V13.8232H18.6257V9.26429H18.8046C18.8241 9.2914 18.8436 9.3196 18.8632 9.34237C19.3544 9.93989 20.5017 10.8508 21.9288 10.8508C24.5261 10.8508 26.3024 8.60604 26.3024 5.42649C26.3024 2.24694 24.4382 0 21.9234 0ZM21.0537 8.61905C19.6982 8.61905 18.7623 7.56282 18.7623 5.42758C18.7623 3.29233 19.6982 2.2361 21.0537 2.2361C22.4092 2.2361 23.3907 3.3151 23.3907 5.42758C23.3907 7.54005 22.432 8.61905 21.0537 8.61905Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M33.5271 0.278809C32.177 0.278809 31.3105 0.50437 30.8041 1.91738H30.6306V0.279893H26.4609V2.64395H27.3914C27.6983 2.64395 27.849 2.75239 27.8881 3.00398V4.96897H27.8989V10.5755H30.8117V5.11428C30.8117 3.70019 31.1956 2.83373 32.6097 2.83373H35.6612V0.278809H33.5282H33.5271Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M5.42215 10.8477C8.41627 10.8477 10.8443 8.41968 10.8443 5.42557C10.8443 2.43146 8.41627 0.00341797 5.42215 0.00341797C2.42804 0.00341797 0 2.43146 0 5.42557C0 8.41968 2.42804 10.8477 5.42215 10.8477Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+            />
+            <path
+              d="M5.4223 13.9999C7.46862 13.9999 9.12779 13.6507 9.12779 13.2224C9.12779 12.794 7.4697 12.4448 5.4223 12.4448C3.37489 12.4448 1.7168 12.794 1.7168 13.2224C1.7168 13.6507 3.37489 13.9999 5.4223 13.9999Z"
+              fill="currentColor"
+              fill-opacity="0.35"
+            />
+          </svg>
+        </div>
+      </a>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

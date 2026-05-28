@@ -1,27 +1,17 @@
-import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
+import { CustomRankingType, RankingType } from '@universe/api'
 
-export enum NFTViewType {
-  Grid,
-  Collection,
+export type ExploreOrderBy = RankingType | Exclude<CustomRankingType, CustomRankingType.Trending>
+
+export const isSupportedExploreOrderBy = (orderBy: string): orderBy is ExploreOrderBy => {
+  return (
+    Object.values(RankingType).includes(orderBy as RankingType) ||
+    (Object.values(CustomRankingType).includes(orderBy as CustomRankingType) && orderBy !== CustomRankingType.Trending)
+  )
 }
-
-export type ExploreOrderBy = RankingType | CustomRankingType
 
 export enum TokenMetadataDisplayType {
-  MarketCap,
-  Volume,
-  TVL,
-  Symbol,
-}
-
-export type DisplayName = {
-  name: string
-  type: DisplayNameType
-}
-
-export enum DisplayNameType {
-  Address,
-  ENS,
-  Local,
-  Unitag,
+  MarketCap = 0,
+  Volume = 1,
+  TVL = 2,
+  Symbol = 3,
 }

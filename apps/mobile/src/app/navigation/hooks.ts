@@ -1,63 +1,40 @@
 import { NavigationContainerRefContext, NavigationContext, useFocusEffect } from '@react-navigation/core'
+import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useContext } from 'react'
 import { BackHandler } from 'react-native'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
-import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
+import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
-import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { useEvent } from 'utilities/src/react/hooks'
 
-/**
- * Utility hook to simplify navigating to Activity screen.
- * Preloads query needed to render transaction list.
- */
-export function useEagerActivityNavigation(): {
+interface EagerExternalProfileNavigationResult {
   preload: (address: string) => Promise<void>
-  navigate: () => void
-} {
-  const navigation = useAppStackNavigation()
-  const [load] = useTransactionListLazyQuery()
-  const { gqlChains } = useEnabledChains()
+  navigate: (address: string) => void
+}
 
-  const preload = useCallback(
-    async (address: string) => {
-      await load({
-        variables: {
-          address,
-          chains: gqlChains,
-        },
-      })
-    },
-    [gqlChains, load],
-  )
-
-  const navigate = useCallback(
-    () => navigation.navigate(MobileScreens.Home, { tab: HomeScreenTabIndex.Activity }),
-    [navigation],
-  )
-
-  return { preload, navigate }
+interface EagerExternalProfileRootNavigationResult {
+  preload: (address: string) => Promise<void>
+  navigate: (address: string, callback?: () => void) => Promise<void>
 }
 
 /**
+ * Hook that returns external profile navigation utilities using REST API
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
-export function useEagerExternalProfileNavigation(): {
-  preload: (address: string) => Promise<void>
-  navigate: (address: string) => void
-} {
+export function useEagerExternalProfileNavigation(): EagerExternalProfileNavigationResult {
   const navigation = useExploreStackNavigation()
-
-  const [load] = useTransactionListLazyQuery()
-  const { gqlChains } = useEnabledChains()
+  const queryClient = useQueryClient()
+  const { chains: chainIds } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
-      await load({ variables: { address, chains: gqlChains } })
+      await queryClient.prefetchQuery(getListTransactionsQuery({ input: { evmAddress: address, chainIds } }))
     },
-    [gqlChains, load],
+    [chainIds, queryClient],
   )
 
   const navigate = useCallback(
@@ -70,29 +47,25 @@ export function useEagerExternalProfileNavigation(): {
   return { preload, navigate }
 }
 
-export function useEagerExternalProfileRootNavigation(): {
-  preload: (address: string) => Promise<void>
-  navigate: (address: string, callback: () => void) => Promise<void>
-} {
-  const [load] = useTransactionListLazyQuery()
-  const { gqlChains } = useEnabledChains()
+/**
+ * Hook that returns external profile root navigation utilities using REST API
+ */
+export function useEagerExternalProfileRootNavigation(): EagerExternalProfileRootNavigationResult {
+  const queryClient = useQueryClient()
+  const { chains: chainIds } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
-      await load({
-        variables: {
-          address,
-          chains: gqlChains,
-        },
-      })
+      await queryClient.prefetchQuery(getListTransactionsQuery({ input: { evmAddress: address, chainIds } }))
     },
-    [gqlChains, load],
+    [chainIds, queryClient],
   )
 
-  const navigate = useCallback(async (address: string, callback?: () => void) => {
+  const navigate = useEvent(async (address: string, callback?: () => void) => {
+    // oxlint-disable-next-line typescript/await-thenable -- biome-parity: oxlint is stricter here
     await rootNavigate(MobileScreens.ExternalProfile, { address })
     callback?.()
-  }, [])
+  })
 
   return { preload, navigate }
 }

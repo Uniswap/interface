@@ -1,26 +1,9 @@
-// List of eth methods that the extension will handle
-/* eslint-disable @typescript-eslint/naming-convention */
-export enum ExtensionEthMethods {
-  eth_chainId = 'eth_chainId',
-  eth_requestAccounts = 'eth_requestAccounts',
-  eth_accounts = 'eth_accounts',
-  eth_sendTransaction = 'eth_sendTransaction',
-  personal_sign = 'personal_sign',
-  wallet_switchEthereumChain = 'wallet_switchEthereumChain',
-  wallet_getPermissions = 'wallet_getPermissions',
-  wallet_requestPermissions = 'wallet_requestPermissions',
-  wallet_revokePermissions = 'wallet_revokePermissions',
-  eth_signTypedData_v4 = 'eth_signTypedData_v4',
-}
-
 // Custom Uniswap methods that the extension will handle
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum UniswapMethods {
   uniswap_openSidebar = 'uniswap_openSidebar',
 }
 
 // Methods that are not supported by the extension because they are deprecated
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum DeprecatedEthMethods {
   eth_sign = 'eth_sign', // Security risk
   eth_signTypedData_v3 = 'eth_signTypedData_v3',
@@ -34,7 +17,6 @@ export enum DeprecatedEthMethods {
 // Depending on the frequency with which we see these methods we could show an error
 // in the sidebar for users.
 // The methods come from: https://docs.metamask.io/wallet/reference/json-rpc-api/
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum UnsupportedEthMethods {
   wallet_addEthereumChain = 'wallet_addEthereumChain',
   wallet_registerOnboarding = 'wallet_registerOnboarding',

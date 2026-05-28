@@ -1,7 +1,6 @@
-/* eslint-env node */
-
 const { minify } = require('terser')
 
+// oxlint-disable-next-line max-params
 module.exports = async function terserLoader(source, map, meta) {
   const callback = this.async()
   const options = this.getOptions()

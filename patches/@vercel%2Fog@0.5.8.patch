@@ -1,0 +1,49 @@
+diff --git a/dist/index.edge.js b/dist/index.edge.js
+index 5187f88ab3375622199e7628cf15c00ffef65584..eda01d0726e91ef6d4c9983a901cf764c086c40e 100644
+--- a/dist/index.edge.js
++++ b/dist/index.edge.js
+@@ -18673,8 +18673,8 @@ var Resvg2 = class extends Resvg {
+ };
+ 
+ // src/index.edge.ts
+-import resvg_wasm from "./resvg.wasm?module";
+-import yoga_wasm from "./yoga.wasm?module";
++import resvg_wasm from "./resvg.wasm";
++import yoga_wasm from "./yoga.wasm";
+ 
+ // src/emoji/index.ts
+ var U200D = String.fromCharCode(8205);
+@@ -18809,18 +18809,15 @@ async function render(satori, resvg, opts, defaultFonts, element) {
+ // src/index.edge.ts
+ var initializedResvg = initWasm(resvg_wasm);
+ var initializedYoga = initYoga(yoga_wasm).then((yoga2) => Ll(yoga2));
+-var fallbackFont = fetch(new URL("./noto-sans-v27-latin-regular.ttf", import.meta.url)).then((res) => res.arrayBuffer());
+ var ImageResponse = class {
+   constructor(element, options = {}) {
+     const result = new ReadableStream({
+       async start(controller) {
+         await initializedYoga;
+         await initializedResvg;
+-        const fontData = await fallbackFont;
+         const fonts = [
+           {
+             name: "sans serif",
+-            data: fontData,
+             weight: 700,
+             style: "normal"
+           }
+diff --git a/dist/types.d.ts b/dist/types.d.ts
+index dde26cc6bbee29507d79bd0a9ec6c27719420038..d075e99d4ac094f35379c8a9014e6ca0b3c8be0f 100644
+--- a/dist/types.d.ts
++++ b/dist/types.d.ts
+@@ -28,9 +28,8 @@ declare type ImageOptions = {
+      * A list of fonts to use.
+      *
+      * @type {{ data: ArrayBuffer; name: string; weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900; style?: 'normal' | 'italic' }[]}
+-     * @default Noto Sans Latin Regular.
+      */
+-    fonts?: SatoriOptions['fonts'];
++    fonts: SatoriOptions['fonts'];
+     /**
+      * Using a specific Emoji style. Defaults to `twemoji`.
+      *

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    ".storybook/preview.tsx",
+    ".storybook/main.ts",
+    "functions/**/*",
+    "*.ts",
+    "vite/**/*",
+    "*.mts"
+  ],
+  "references": []
+}

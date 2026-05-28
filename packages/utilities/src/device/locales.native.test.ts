@@ -1,18 +1,18 @@
-// eslint-disable-next-line no-restricted-imports
 import { Locale } from 'expo-localization'
 import { getDeviceLocales } from 'utilities/src/device/locales.native'
 
 const MOCK_LANGUAGE_CODE = 'es'
 const MOCK_LANGUAGE_TAG = 'es-ES'
 
-jest.mock('expo-localization', () => ({
+vi.mock('expo-localization', () => ({
   getLocales: (): Locale[] => [
     {
       languageCode: MOCK_LANGUAGE_CODE,
       languageTag: MOCK_LANGUAGE_TAG,
       languageRegionCode: null,
-      langageCurrencyCode: null,
-      langageCurrencySymbol: null,
+      languageCurrencyCode: null,
+      languageCurrencySymbol: null,
+      languageScriptCode: null,
       regionCode: null,
       currencyCode: null,
       currencySymbol: null,

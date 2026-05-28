@@ -7,8 +7,8 @@ import { Flex, Square } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ClaimUnitagContent, ClaimUnitagContentProps } from 'uniswap/src/features/unitags/ClaimUnitagContent'
 import { ExtensionScreens, ExtensionUnitagClaimScreens } from 'uniswap/src/types/screens/extension'
-import { ClaimUnitagContent, ClaimUnitagContentProps } from 'wallet/src/features/unitags/ClaimUnitagContent'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type onNavigateContinueType = Exclude<ClaimUnitagContentProps['onNavigateContinue'], undefined>
@@ -39,7 +39,7 @@ export function UnitagCreateUsernameScreen(): JSX.Element {
             height={iconSizes.icon48}
             width={iconSizes.icon48}
           >
-            <Person color="$neutral1" size={iconSizes.icon24} />
+            <Person color="$neutral1" size="$icon.24" />
           </Square>
         }
         title={t('unitags.onboarding.claim.title.choose')}

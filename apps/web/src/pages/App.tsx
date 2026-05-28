@@ -1,45 +1,45 @@
-import ErrorBoundary from 'components/ErrorBoundary'
-import { useFeatureFlagUrlOverrides } from 'featureFlags/useFeatureFlagUrlOverrides'
-import { useAtom } from 'jotai'
-import { AppLayout } from 'pages/App/Layout'
-import { ResetPageScrollEffect } from 'pages/App/utils/ResetPageScroll'
-import { UserPropertyUpdater } from 'pages/App/utils/UserPropertyUpdater'
-import { findRouteByPath } from 'pages/RouteDefinitions'
-import { useDynamicMetatags } from 'pages/metatags'
 import { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
+import { Navigate, useLocation } from 'react-router'
+import { useSporeColors } from 'ui/src'
+import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
+import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isPathBlocked } from 'utils/blockedPaths'
-import { MICROSITE_LINK } from 'utils/openDownloadApp'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { ErrorBoundary } from '~/components/ErrorBoundary'
+import { useFeatureFlagUrlOverrides } from '~/featureFlags/useFeatureFlagUrlOverrides'
+import { Body } from '~/pages/App/Body'
+import { AppLayout } from '~/pages/App/Layout'
+import { ResetPageScrollEffect } from '~/pages/App/utils/ResetPageScroll'
+import { ResetPortfolioChainOnEntryEffect } from '~/pages/App/utils/ResetPortfolioChainOnEntry'
+import { UserPropertyUpdater } from '~/pages/App/utils/UserPropertyUpdater'
+import { useDynamicMetatags } from '~/pages/metatags'
+import { findRouteByPath } from '~/pages/RouteDefinitions'
+import { DarkModeQueryParamReader } from '~/theme/components/DarkModeQueryParamReader'
+import { isPathBlocked } from '~/utils/blockedPaths'
+import { MICROSITE_LINK } from '~/utils/openDownloadApp'
+import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
-export default function App() {
-  const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
+
+export function App() {
+  const colors = useSporeColors()
 
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
 
-  const [searchParams] = useSearchParams()
-  useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
-    }
-  }, [searchParams, setShouldDisableNFTRoutes])
-
   useFeatureFlagUrlOverrides()
+
+  useEffect(() => {
+    initializeScrollWatcher()
+  }, [])
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
   const staticDescription = findRouteByPath(pathname)?.getDescription(pathname)
 
   // redirect address to landing pages until implemented
-  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  const shouldRedirectToAppInstall = pathname.startsWith('/address/')
   useLayoutEffect(() => {
     if (shouldRedirectToAppInstall) {
       window.location.href = MICROSITE_LINK
@@ -54,6 +54,9 @@ export default function App() {
   if (shouldBlockPath && pathname !== '/swap') {
     return <Navigate to="/swap" replace />
   }
+
+  const shouldOverridePageLayout = OVERRIDE_PAGE_LAYOUT.includes(pathname)
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
@@ -70,10 +73,19 @@ export default function App() {
           {metaTags.map((tag, index) => (
             <meta key={index} {...tag} />
           ))}
+          <style>{`
+            html {
+              ::-webkit-scrollbar-thumb {
+                background-color: ${colors.surface3.val};
+              }
+              scrollbar-color: ${colors.surface3.val} ${colors.surface1.val};
+            }
+          `}</style>
         </Helmet>
         <UserPropertyUpdater />
         <ResetPageScrollEffect />
-        <AppLayout />
+        <ResetPortfolioChainOnEntryEffect />
+        {shouldOverridePageLayout ? <Body shouldRenderAppChrome={false} /> : <AppLayout />}
       </Trace>
     </ErrorBoundary>
   )

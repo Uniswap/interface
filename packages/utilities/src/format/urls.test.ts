@@ -5,7 +5,9 @@ import {
   extractUrlHost,
   formatDappURL,
   isGifUri,
+  isHttpUri,
   isSVGUri,
+  sanitizeAvatarUrl,
   uriToHttpUrls,
 } from 'utilities/src/format/urls'
 
@@ -39,6 +41,18 @@ describe(uriToHttpUrls, () => {
   })
   it('returns empty array for invalid scheme', () => {
     expect(uriToHttpUrls('blah:test')).toEqual([])
+  })
+  it('returns empty array for bare path without allowLocalUri', () => {
+    expect(uriToHttpUrls('eth-logo.png')).toEqual([])
+  })
+  it('returns bare path when allowLocalUri is true', () => {
+    expect(uriToHttpUrls('eth-logo.png', { allowLocalUri: true })).toEqual(['eth-logo.png'])
+  })
+  it('returns file:// URI when allowLocalUri is true', () => {
+    expect(uriToHttpUrls('file:///path/to/file.png', { allowLocalUri: true })).toEqual(['file:///path/to/file.png'])
+  })
+  it('returns empty array for file:// URI without allowLocalUri', () => {
+    expect(uriToHttpUrls('file:///path/to/file.png')).toEqual([])
   })
 })
 
@@ -163,7 +177,6 @@ describe(formatDappURL, () => {
     ${'https://example.com/'}                      | ${'example.com'}
     ${'https://www.example.com/'}                  | ${'www.example.com'}
     ${'https://example.com?test=true&test2=false'} | ${'example.com'}
-    ${undefined}                                   | ${undefined}
     ${'not a url'}                                 | ${'not a url'}
     ${'should return only part of this'}           | ${'should return only p'}
   `('input=$input should be expected=$expected', async ({ input, expected }) => {
@@ -198,5 +211,143 @@ describe(extractBaseUrl, () => {
     ${'not a url'}                                 | ${undefined}
   `('input=$input should be expected=$expected', async ({ input, expected }) => {
     expect(extractBaseUrl(input)).toEqual(expected)
+  })
+})
+
+describe(isHttpUri, () => {
+  describe('valid HTTP/HTTPS URIs', () => {
+    it('returns true for https URI', () => {
+      expect(isHttpUri('https://example.com')).toBe(true)
+    })
+
+    it('returns true for http URI', () => {
+      expect(isHttpUri('http://example.com')).toBe(true)
+    })
+
+    it('returns true for https URI with path', () => {
+      expect(isHttpUri('https://example.com/path/to/resource')).toBe(true)
+    })
+
+    it('returns true for https URI with query parameters', () => {
+      expect(isHttpUri('https://example.com?query=value')).toBe(true)
+    })
+
+    it('returns true for https URI with fragment', () => {
+      expect(isHttpUri('https://example.com#section')).toBe(true)
+    })
+
+    it('returns true for https URI with port', () => {
+      expect(isHttpUri('https://example.com:8080')).toBe(true)
+    })
+
+    it('returns true for localhost', () => {
+      expect(isHttpUri('http://localhost:3000')).toBe(true)
+    })
+  })
+
+  describe('invalid URIs', () => {
+    it('returns false for ipfs URI', () => {
+      expect(isHttpUri('ipfs://QmHash')).toBe(false)
+    })
+
+    it('returns false for ipns URI', () => {
+      expect(isHttpUri('ipns://example.eth')).toBe(false)
+    })
+
+    it('returns false for data URI', () => {
+      expect(isHttpUri('data:text/plain;base64,SGVsbG8=')).toBe(false)
+    })
+
+    it('returns false for file URI', () => {
+      expect(isHttpUri('file:///path/to/file')).toBe(false)
+    })
+
+    it('returns false for ftp URI', () => {
+      expect(isHttpUri('ftp://example.com')).toBe(false)
+    })
+
+    it('returns false for ar (arweave) URI', () => {
+      expect(isHttpUri('ar://txid')).toBe(false)
+    })
+
+    it('returns false for javascript URI', () => {
+      // oxlint-disable-next-line no-script-url
+      expect(isHttpUri('javascript:alert(1)')).toBe(false)
+    })
+
+    it('returns false for malformed URI', () => {
+      expect(isHttpUri('not a valid uri')).toBe(false)
+    })
+
+    it('returns false for URI without protocol', () => {
+      expect(isHttpUri('example.com')).toBe(false)
+    })
+  })
+
+  describe('null and undefined handling', () => {
+    it('returns false for null', () => {
+      expect(isHttpUri(null)).toBe(false)
+    })
+
+    it('returns false for undefined', () => {
+      expect(isHttpUri(undefined)).toBe(false)
+    })
+
+    it('returns false for empty string', () => {
+      expect(isHttpUri('')).toBe(false)
+    })
+
+    it('returns false for whitespace-only string', () => {
+      expect(isHttpUri('   ')).toBe(false)
+    })
+
+    it('returns false for string with only tabs and newlines', () => {
+      expect(isHttpUri('\t\n')).toBe(false)
+    })
+  })
+
+  describe('edge cases', () => {
+    it('returns true for uppercase HTTPS', () => {
+      expect(isHttpUri('HTTPS://example.com')).toBe(true)
+    })
+
+    it('returns true for mixed case protocol', () => {
+      expect(isHttpUri('HtTpS://example.com')).toBe(true)
+    })
+
+    it('handles http with single slash (relative URL style)', () => {
+      // URL constructor treats 'http:example.com' as relative URL with scheme
+      expect(isHttpUri('http:example.com')).toBe(true)
+    })
+  })
+})
+
+describe(sanitizeAvatarUrl, () => {
+  it('returns the original URL for https', () => {
+    const url = 'https://example.com/avatar.png'
+    expect(sanitizeAvatarUrl(url)).toBe(url)
+  })
+
+  it('returns the original URL for http', () => {
+    const url = 'http://example.com/avatar.png'
+    expect(sanitizeAvatarUrl(url)).toBe(url)
+  })
+
+  it('returns null for non-HTTP URLs', () => {
+    expect(sanitizeAvatarUrl('ipfs://QmHash123')).toBeNull()
+    expect(sanitizeAvatarUrl('data:image/png;base64,iVBORw0KGgo=')).toBeNull()
+    // oxlint-disable-next-line no-script-url
+    expect(sanitizeAvatarUrl('javascript:alert(1)')).toBeNull()
+    expect(sanitizeAvatarUrl('eip155:1/erc721:0xabc/123')).toBeNull()
+  })
+
+  it('returns null for null or empty input', () => {
+    expect(sanitizeAvatarUrl(null)).toBeNull()
+    expect(sanitizeAvatarUrl('')).toBeNull()
+  })
+
+  it('accepts IPFS gateway URLs (already converted to HTTPS)', () => {
+    const url = 'https://cloudflare-ipfs.com/ipfs/QmHash123'
+    expect(sanitizeAvatarUrl(url)).toBe(url)
   })
 })

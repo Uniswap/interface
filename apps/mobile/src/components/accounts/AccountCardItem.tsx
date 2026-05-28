@@ -1,29 +1,37 @@
+import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useMemo } from 'react'
+import { GraphQLApi } from '@universe/api'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
+import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { usePortfolioValueModifiers } from 'uniswap/src/features/portfolio/balances/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { NumberType } from 'utilities/src/format/types'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
+import { noop } from 'utilities/src/react/noop'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type AccountCardItemProps = {
   address: Address
   isViewOnly: boolean
   onPress: (address: Address) => void
+  onClose: () => void
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
@@ -39,17 +47,28 @@ function PortfolioValue({
 }: PortfolioValueProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const apolloClient = useApolloClient()
+  const { gqlChains } = useEnabledChains()
+  const valueModifiers = usePortfolioValueModifiers(address)
 
-  // When we add a new wallet, we'll make a new network request to fetch all accounts as a single request.
-  // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
-  // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
-
-  const { data } = useAccountListData({
-    fetchPolicy: 'cache-first',
-    addresses: [address],
-  })
-
-  const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  // When a new wallet is added, the parent's combined query is keyed on a new addresses tuple
+  // and `data` is briefly undefined. Read this address's value synchronously from the Apollo
+  // cache as a fallback so previously-known wallets don't flash "loading". This is a one-shot
+  // read with no subscription — re-renders are driven purely by the parent prop changing.
+  const cachedPortfolioValue = useMemo<number | undefined>(() => {
+    if (providedPortfolioValue !== undefined) {
+      return undefined
+    }
+    try {
+      const cached = apolloClient.readQuery<GraphQLApi.AccountListQuery, GraphQLApi.AccountListQueryVariables>({
+        query: GraphQLApi.AccountListDocument,
+        variables: { addresses: [address], valueModifiers, chains: gqlChains },
+      })
+      return cached?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined
+    } catch {
+      return undefined
+    }
+  }, [apolloClient, providedPortfolioValue, address, valueModifiers, gqlChains])
 
   const portfolioValue = providedPortfolioValue ?? cachedPortfolioValue
 
@@ -64,17 +83,28 @@ function PortfolioValue({
   )
 }
 
-export function AccountCardItem({
+function AccountCardItemInner({
   address,
   isViewOnly,
   isPortfolioValueLoading,
   portfolioValue,
   onPress,
+  onClose,
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { defaultChainId } = useEnabledChains()
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
 
-  const onPressCopyAddress = async (): Promise<void> => {
+  const addressToAccount = useAccounts()
+  const selectedAccount = addressToAccount[address]
+
+  const onlyLabeledWallet = ensName === null && unitag?.username === undefined
+
+  const onPressCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -86,53 +116,115 @@ export function AccountCardItem({
       element: ElementName.CopyAddress,
       modal: ModalName.AccountSwitcher,
     })
-  }
+  }, [address, dispatch])
 
-  const onPressWalletSettings = (): void => {
-    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
-      params: { address },
-    })
-  }
+  const onPressEditWalletSettings = useCallback(() => {
+    onClose()
 
-  const onPressRemoveWallet = (): void => {
-    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    dispatch(openModal({ name: ModalName.RemoveWallet, initialState: { address } }))
-  }
+    if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
+      navigate(ModalName.EditProfileSettingsModal, {
+        address,
+        accessPoint: UnitagScreens.UnitagConfirmation,
+      })
+    } else {
+      navigate(ModalName.EditLabelSettingsModal, {
+        address,
+        accessPoint: UnitagScreens.UnitagConfirmation,
+      })
+    }
+  }, [selectedAccount?.type, onlyLabeledWallet, address, onClose])
 
-  const menuActions = useMemo(() => {
-    return [
-      { title: t('account.wallet.action.copy'), systemIcon: 'doc.on.doc' },
-      { title: t('account.wallet.action.settings'), systemIcon: 'gearshape' },
-      { title: t('account.wallet.button.remove'), systemIcon: 'trash', destructive: true },
-    ]
-  }, [t])
+  const onPressConnectionSettings = useCallback(() => {
+    onClose()
+
+    //Wait 300ms to open the the connection Modal and avoid overlapping animation
+    setTimeout(() => {
+      navigate(ModalName.ConnectionsDappListModal, {
+        address,
+      })
+    }, MODAL_OPEN_WAIT_TIME)
+  }, [address, onClose])
+
+  const onPressRemoveWallet = useCallback(() => {
+    onClose()
+    navigate(ModalName.RemoveWallet, { address })
+  }, [address, onClose])
+
+  const menuActions = useMemo(
+    () => [
+      {
+        title: t('account.wallet.action.copy'),
+        systemIcon: 'doc.on.doc',
+        onPress: onPressCopyAddress,
+      },
+      ...(selectedAccount?.type === AccountType.Readonly
+        ? [
+            {
+              title: t('settings.setting.wallet.action.editLabel'),
+              systemIcon: 'square.and.pencil',
+              onPress: onPressEditWalletSettings,
+            },
+          ]
+        : []),
+
+      ...(selectedAccount?.type === AccountType.Readonly
+        ? [
+            {
+              title: t('account.wallet.button.remove'),
+              systemIcon: 'trash',
+              destructive: true,
+              onPress: onPressRemoveWallet,
+            },
+          ]
+        : []),
+
+      ...(selectedAccount?.type === AccountType.SignerMnemonic
+        ? [
+            {
+              title: onlyLabeledWallet
+                ? t('settings.setting.wallet.action.editLabel')
+                : t('settings.setting.wallet.action.editProfile'),
+              systemIcon: 'square.and.pencil',
+              onPress: onPressEditWalletSettings,
+            },
+            {
+              title: t('account.wallet.action.manageConnections'),
+              systemIcon: 'globe',
+              onPress: onPressConnectionSettings,
+            },
+            {
+              title: t('account.wallet.button.remove'),
+              systemIcon: 'trash',
+              destructive: true,
+              onPress: onPressRemoveWallet,
+            },
+          ]
+        : []),
+    ],
+    [
+      t,
+      selectedAccount,
+      onlyLabeledWallet,
+      onPressCopyAddress,
+      onPressEditWalletSettings,
+      onPressConnectionSettings,
+      onPressRemoveWallet,
+    ],
+  )
 
   return (
     <ContextMenu
       actions={menuActions}
       onPress={async (e): Promise<void> => {
-        // Emitted index based on order of menu action array
-        // Copy address
-        if (e.nativeEvent.index === 0) {
-          await onPressCopyAddress()
-        }
-        // Navigate to settings
-        if (e.nativeEvent.index === 1) {
-          onPressWalletSettings()
-        }
-        // Remove wallet
-        if (e.nativeEvent.index === 2) {
-          onPressRemoveWallet()
-        }
+        // oxlint-disable-next-line typescript/await-thenable, typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
+        await menuActions[e.nativeEvent.index]?.onPress?.()
       }}
     >
       <TouchableArea
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
-        onLongPress={disableOnPress}
+        onLongPress={noop}
         onPress={(): void => onPress(address)}
       >
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
@@ -143,7 +235,7 @@ export function AccountCardItem({
               gapBetweenLines="$spacing2"
               notificationsBadgeContainer={NotificationsBadgeContainer}
               showViewOnlyBadge={isViewOnly}
-              size={iconSizes.icon36}
+              size={iconSizes.icon32}
             />
           </Flex>
           <PortfolioValue
@@ -164,3 +256,8 @@ const NotificationsBadgeContainer = ({
   children: React.ReactNode
   address: string
 }): JSX.Element => <NotificationBadge address={address}>{children}</NotificationBadge>
+
+// Memoized so that polling-driven re-renders of the parent AccountList only re-render rows
+// whose primitive props (address, portfolioValue, loading, isViewOnly) actually changed.
+// onPress/onClose are useCallback-stabilized in AccountSwitcherModal.
+export const AccountCardItem = React.memo(AccountCardItemInner)

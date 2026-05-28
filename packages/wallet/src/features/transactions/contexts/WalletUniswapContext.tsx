@@ -1,13 +1,34 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ethers } from 'ethers'
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
+import { getDelegationService } from 'uniswap/src/domains/services'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delegation/hooks/useUpdateDelegateState'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
+import type {
+  HasMismatchInput,
+  HasMismatchResult,
+  HasMismatchUtil,
+} from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
-import { logger } from 'utilities/src/logger/logger'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { getLogger, logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { useAccountsStoreContext } from 'wallet/src/features/accounts/store/provider'
+import {
+  useGetSwapDelegationInfoForActiveAccount,
+  WalletDelegationProvider,
+} from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
-import { useActiveAccount, useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccount, useActiveSignerAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 // Adapts useProvider to fit uniswap context requirement of returning undefined instead of null
 function useWalletProvider(chainId: number): ethers.providers.JsonRpcProvider | undefined {
@@ -15,10 +36,10 @@ function useWalletProvider(chainId: number): ethers.providers.JsonRpcProvider | 
 }
 
 // Gets the signer for the active account
-function useWalletSigner(): ethers.Signer | undefined {
+function useWalletSigner(): NativeSigner | undefined {
   const account = useActiveSignerAccount()
   const signerManager = useWalletSigners()
-  const [signer, setSigner] = useState<ethers.Signer | undefined>(undefined)
+  const [signer, setSigner] = useState<NativeSigner | undefined>(undefined)
   useEffect(() => {
     setSigner(undefined) // clear signer if account changes
 
@@ -34,37 +55,143 @@ function useWalletSigner(): ethers.Signer | undefined {
 
   return signer
 }
+export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
+  return (
+    <MismatchContextWrapper>
+      <WalletDelegationProvider>
+        <WalletUniswapProviderInner>{children}</WalletUniswapProviderInner>
+      </WalletDelegationProvider>
+    </MismatchContextWrapper>
+  )
+}
 
 // Abstracts wallet-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
-export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
-  const account = useActiveAccount() ?? undefined
+function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Element {
   const signer = useWalletSigner()
-  const { navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp, navigateToSwapFlow } = useWalletNavigation()
+  const {
+    navigateToTokenDetails,
+    navigateToNftDetails,
+    navigateToBuyOrReceiveWithEmptyWallet,
+    navigateToFiatOnRamp,
+    navigateToSwapFlow,
+    navigateToSend,
+    navigateToReceive,
+    navigateToExternalProfile,
+    navigateToPoolDetails,
+    handleShareToken,
+    navigateToAdvancedSettings,
+  } = useWalletNavigation()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   const navigateToSwapFromCurrencyIds = useCallback(
-    ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
+    ({
+      inputCurrencyId,
+      outputCurrencyId,
+      exactCurrencyField,
+      exactAmountToken,
+    }: {
+      inputCurrencyId?: string
+      outputCurrencyId?: string
+      exactCurrencyField?: CurrencyField
+      exactAmountToken?: string
+    }) => {
       const initialState = prepareSwapFormState({
         inputCurrencyId,
         outputCurrencyId,
         defaultChainId: UniverseChainId.Mainnet,
+        exactCurrencyField,
+        exactAmountToken,
       })
       navigateToSwapFlow({ initialState })
     },
     [navigateToSwapFlow],
   )
 
+  const getHasMismatch = useHasAccountMismatchCallback()
+  const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
+  const getIsUniswapXSupported = useEvent((innerChainId?: UniverseChainId) => {
+    if (isPermitMismatchUxEnabled) {
+      return !getHasMismatch(innerChainId)
+    }
+    return true
+  })
+
+  const getCanSignPermits = useGetCanSignPermits()
+  const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
+
   return (
     <UniswapProvider
-      account={account}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFromCurrencyIds}
+      navigateToSendFlow={navigateToSend}
+      navigateToReceive={navigateToReceive}
+      navigateToTokenDetails={navigateToTokenDetails}
+      navigateToExternalProfile={navigateToExternalProfile}
+      navigateToNftDetails={navigateToNftDetails}
+      navigateToPoolDetails={navigateToPoolDetails}
+      handleShareToken={handleShareToken}
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
       signer={signer}
       useProviderHook={useWalletProvider}
+      useWalletDisplayName={useDisplayName}
+      getIsUniswapXSupported={getIsUniswapXSupported}
+      getCanSignPermits={getCanSignPermits}
+      getSwapDelegationInfo={getSwapDelegationInfo}
+      useAccountsStoreContextHook={useAccountsStoreContext}
       onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}
     </UniswapProvider>
+  )
+}
+
+/**
+ * MismatchContextWrapper -- wraps the MismatchContextProvider with the active account and default chain id
+ * @param children - the children to render
+ * @returns the MismatchContextProvider with the active account and default chain id
+ */
+const MismatchContextWrapper = React.memo(function MismatchContextWrapper({
+  children,
+}: PropsWithChildren): JSX.Element {
+  const account = useActiveAccount() ?? undefined
+  const { defaultChainId, chains, isTestnetModeEnabled } = useEnabledChains()
+  const mismatchCallback = useMismatchCallback()
+  return (
+    <MismatchContextProvider
+      address={account?.address}
+      chainId={defaultChainId}
+      mismatchCallback={mismatchCallback}
+      chains={chains}
+      defaultChainId={defaultChainId}
+      isTestnetModeEnabled={isTestnetModeEnabled}
+      onHasAnyMismatch={() => {
+        // todo: implement
+      }}
+    >
+      {children}
+    </MismatchContextProvider>
+  )
+})
+
+MismatchContextWrapper.displayName = 'MismatchContextWrapper'
+
+function useMismatchCallback(): HasMismatchUtil {
+  const updateDelegatedState = useUpdateDelegatedState()
+  return useEvent(
+    async (input: HasMismatchInput): HasMismatchResult =>
+      createHasMismatchUtil({
+        logger: getLogger(),
+        delegationService: getDelegationService({
+          onDelegationDetected: (payload) => {
+            // update redux state
+            updateDelegatedState({ chainId: String(payload.chainId), address: payload.address })
+          },
+        }),
+        getIsAtomicBatchingSupported: async () => {
+          // hardcoded to false for now
+          return false
+        },
+      })(input),
   )
 }

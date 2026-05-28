@@ -1,5 +1,5 @@
 import { Language, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
-import { navigatorLocale } from 'uniswap/src/features/language/hooks'
+import { navigatorLocale } from 'uniswap/src/features/language/navigatorLocale'
 
 // Determines the current language based on the user's locale settings, falling back to English if no mapping exists.
 export function getCurrentLanguageFromNavigator(): Language {

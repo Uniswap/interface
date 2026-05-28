@@ -1,0 +1,9 @@
+{
+  "publicKeys": [
+    {
+      "id": "1",
+      "alg": "ECDSA",
+      "publicKey": "0x3056301006072a8648ce3d020106052b8104000a034200043442f9c947c1aa4d187375f0400f26ddcc8beff986221c15891574b6fa70c3b02b92dde51ee024f5eff4435ed196349a06ccb1de2e6c2445ab68ebe88df61344"
+    }
+  ]
+}

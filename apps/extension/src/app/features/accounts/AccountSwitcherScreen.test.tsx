@@ -16,7 +16,7 @@ jest.mock('src/app/features/dapp/hooks', () => {
   return { useDappConnectedAccounts: jest.fn(() => [ACCOUNT, ACCOUNT3]) }
 })
 
-describe(AccountSwitcherScreen, () => {
+describe('AccountSwitcherScreen', () => {
   it('renders correctly', async () => {
     const tree = render(<AccountSwitcherScreen />, { preloadedState })
 

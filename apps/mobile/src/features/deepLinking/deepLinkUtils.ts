@@ -2,11 +2,13 @@ import { getScantasticQueryParams } from 'src/components/Requests/ScanSheet/util
 import { UNISWAP_URL_SCHEME_UWU_LINK } from 'src/components/Requests/Uwulink/utils'
 import {
   UNISWAP_URL_SCHEME,
+  UNISWAP_URL_SCHEME_E2E_OVERRIDE_GATES,
   UNISWAP_URL_SCHEME_SCANTASTIC,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { isCurrencyIdValid } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
@@ -14,6 +16,7 @@ const WALLETCONNECT_URI_SCHEME = 'wc:' // https://eips.ethereum.org/EIPS/eip-132
 
 export enum DeepLinkAction {
   UniswapWebLink = 'uniswapWebLink',
+  UniswapExternalBrowserLink = 'uniswapExternalBrowserLink',
   UniswapWalletConnect = 'uniswapWalletConnect',
   WalletConnectAsParam = 'walletConnectAsParam',
   UniswapWidget = 'uniswapWidget',
@@ -26,6 +29,7 @@ export enum DeepLinkAction {
   SkipNonWalletConnect = 'skipNonWalletConnect',
   UniversalWalletConnectLink = 'universalWalletConnectLink',
   WalletConnect = 'walletConnect',
+  E2EOverrideGates = 'e2eOverrideGates',
   Error = 'error',
   Unknown = 'unknown',
   TokenDetails = 'tokenDetails',
@@ -64,8 +68,24 @@ type PayloadWithUserAddress = BasePayload & { userAddress: string }
  */
 type PayloadWithScantasticParams = BasePayload & { scantasticQueryParams: string }
 
+/**
+ * Payload for all deep link actions that include fiat onramp params.
+ *
+ * @param userAddress - The user address (optional when moonpayOnly is true).
+ * @param moonpayOnly - Show the moonpay only mode.
+ * @param moonpayCurrencyCode - The moonpay currency code (eth, usdc, etc).
+ * @param amount - The input amount to prefill
+ */
+export type PayloadWithFiatOnRampParams = BasePayload & {
+  userAddress?: string
+  moonpayOnly?: boolean
+  moonpayCurrencyCode?: string
+  amount?: string
+}
+
 export type DeepLinkActionResult =
   | { action: DeepLinkAction.UniswapWebLink; data: BasePayload & { urlPath: string } }
+  | { action: DeepLinkAction.UniswapExternalBrowserLink; data: BasePayload & { urlPath: string } }
   | { action: DeepLinkAction.WalletConnectAsParam; data: PayloadWithWcUri }
   | { action: DeepLinkAction.UniswapWalletConnect; data: PayloadWithWcUri }
   | { action: DeepLinkAction.UniswapWidget; data: BasePayload }
@@ -79,7 +99,11 @@ export type DeepLinkActionResult =
   | { action: DeepLinkAction.UniversalWalletConnectLink; data: PayloadWithWcUri }
   | { action: DeepLinkAction.WalletConnect; data: BasePayload & { wcUri: string } }
   | { action: DeepLinkAction.TokenDetails; data: BasePayload & { currencyId: string } }
-  | { action: DeepLinkAction.FiatOnRampScreen; data: BasePayload & { userAddress: string } }
+  | { action: DeepLinkAction.FiatOnRampScreen; data: PayloadWithFiatOnRampParams }
+  | {
+      action: DeepLinkAction.E2EOverrideGates
+      data: BasePayload & { enable: string[] }
+    }
   | { action: DeepLinkAction.Error; data: BasePayload }
   | { action: DeepLinkAction.Unknown; data: BasePayload }
 
@@ -91,7 +115,6 @@ type DeepLinkHandler = (url: URL, data: BasePayload) => DeepLinkActionResult
  *
  * @param urlString - The URL to parse.
  */
-// eslint-disable-next-line complexity
 export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
   const url = new URL(urlString)
   const screen = url.searchParams.get('screen') ?? 'other'
@@ -100,66 +123,104 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
 
   for (const [prefix, handler] of Object.entries(handlers)) {
     if (urlString.startsWith(prefix) || url.hostname === prefix) {
-      const result = handler(url, data)
-      if (result) {
-        return result
-      }
+      return handler(url, data)
     }
   }
 
+  if (isValidUniswapExternalWebLink(urlString)) {
+    return { action: DeepLinkAction.UniswapExternalBrowserLink, data: { ...data, urlPath: url.pathname } }
+  }
+
   const urlPath = url.pathname
-  const userAddress = url.searchParams.get('userAddress')
+  const userAddress = url.searchParams.get('userAddress') ?? undefined
   const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
   const fiatOffRamp = url.searchParams.get('fiatOffRamp') === 'true'
-  const currencyId = url.searchParams.get('currencyId')
 
   switch (urlPath) {
-    case '/tokendetails':
+    case '/tokendetails': {
+      const currencyId = url.searchParams.get('currencyId')
       if (!currencyId) {
-        return logAndReturnError('No currencyId found', DeepLinkAction.TokenDetails, urlString, data)
+        return logAndReturnError({
+          errorMsg: 'No currencyId found',
+          action: DeepLinkAction.TokenDetails,
+          urlString,
+          data,
+        })
+      }
+      if (!isCurrencyIdValid(currencyId)) {
+        return logAndReturnError({
+          errorMsg: 'Invalid currencyId found',
+          action: DeepLinkAction.TokenDetails,
+          urlString,
+          data,
+        })
       }
       return {
         action: DeepLinkAction.TokenDetails,
         data: { ...data, currencyId },
       }
-    case '/fiatonramp':
-      if (!userAddress) {
-        return logAndReturnError('No userAddress found', DeepLinkAction.FiatOnRampScreen, urlString, data)
+    }
+    case '/fiatonramp': {
+      const moonpayOnly = url.searchParams.get('moonpayOnly') === 'true'
+      const moonpayCurrencyCode = url.searchParams.get('moonpayCurrencyCode') ?? undefined
+      const amount = url.searchParams.get('amount') ?? undefined
+
+      if (!moonpayOnly && !userAddress) {
+        return logAndReturnError({
+          errorMsg: `No userAddress or moonpayOnly param found`,
+          action: DeepLinkAction.FiatOnRampScreen,
+          urlString,
+          data,
+        })
       }
-      return { action: DeepLinkAction.FiatOnRampScreen, data: { ...data, userAddress } }
+      return {
+        action: DeepLinkAction.FiatOnRampScreen,
+        data: { ...data, userAddress, moonpayOnly, moonpayCurrencyCode, amount },
+      }
+    }
   }
 
   switch (screen.toLowerCase()) {
     case 'transaction':
       if (fiatOnRamp) {
         if (!userAddress) {
-          return logAndReturnError(
-            'No userAddress found',
-            DeepLinkAction.ShowTransactionAfterFiatOnRamp,
+          return logAndReturnError({
+            errorMsg: 'No userAddress found',
+            action: DeepLinkAction.ShowTransactionAfterFiatOnRamp,
             urlString,
             data,
-          )
+          })
         }
         return { action: DeepLinkAction.ShowTransactionAfterFiatOnRamp, data: { ...data, userAddress } }
       }
       if (fiatOffRamp) {
         if (!userAddress) {
-          return logAndReturnError(
-            'No userAddress found',
-            DeepLinkAction.ShowTransactionAfterFiatOffRampScreen,
+          return logAndReturnError({
+            errorMsg: 'No userAddress found',
+            action: DeepLinkAction.ShowTransactionAfterFiatOffRampScreen,
             urlString,
             data,
-          )
+          })
         }
         return { action: DeepLinkAction.ShowTransactionAfterFiatOffRampScreen, data: { ...data, userAddress } }
       }
       if (!userAddress) {
-        return logAndReturnError('No userAddress found', DeepLinkAction.TransactionScreen, urlString, data)
+        return logAndReturnError({
+          errorMsg: 'No userAddress found',
+          action: DeepLinkAction.TransactionScreen,
+          urlString,
+          data,
+        })
       }
       return { action: DeepLinkAction.TransactionScreen, data: { ...data, userAddress } }
     case 'swap':
       if (!userAddress) {
-        return logAndReturnError('No userAddress found', DeepLinkAction.SwapScreen, urlString, data)
+        return logAndReturnError({
+          errorMsg: 'No userAddress found',
+          action: DeepLinkAction.SwapScreen,
+          urlString,
+          data,
+        })
       }
       return { action: DeepLinkAction.SwapScreen, data: { ...data, userAddress } }
   }
@@ -173,7 +234,12 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
     const wcUri = urlString.split(UNISWAP_WALLETCONNECT_URL).pop()
     return wcUri
       ? { action: DeepLinkAction.UniversalWalletConnectLink, data: { ...data, wcUri } }
-      : logAndReturnError('No WC URI found', DeepLinkAction.UniversalWalletConnectLink, urlString, data)
+      : logAndReturnError({
+          errorMsg: 'No WC URI found',
+          action: DeepLinkAction.UniversalWalletConnectLink,
+          urlString,
+          data,
+        })
   }
 
   if (urlString.startsWith(WALLETCONNECT_URI_SCHEME)) {
@@ -181,12 +247,8 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
     return { action: DeepLinkAction.WalletConnect, data: { ...data, wcUri } }
   }
 
-  logger.error(`Unknown deep link action for url=${urlString}`, {
-    tags: { file: 'deepLinkUtils', function: 'parseDeepLinkUrl' },
-  })
   return { action: DeepLinkAction.Unknown, data }
 }
-
 const handlers: Record<string, DeepLinkHandler> = {
   [UNISWAP_WEB_HOSTNAME]: (url, data) => {
     const urlParts = url.href.split(`${UNISWAP_WEB_HOSTNAME}/`)
@@ -197,13 +259,23 @@ const handlers: Record<string, DeepLinkHandler> = {
     const wcUri = extractWalletConnectUri(url.href, UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)
     return wcUri
       ? { action: DeepLinkAction.WalletConnectAsParam, data: { ...data, wcUri } }
-      : logAndReturnError('No WC URI found', DeepLinkAction.WalletConnectAsParam, url.href, data)
+      : logAndReturnError({
+          errorMsg: 'No WC URI found',
+          action: DeepLinkAction.WalletConnectAsParam,
+          urlString: url.href,
+          data,
+        })
   },
   [UNISWAP_URL_SCHEME + WALLETCONNECT_URI_SCHEME]: (url, data) => {
     const wcUri = extractWalletConnectUri(url.href, UNISWAP_URL_SCHEME)
     return wcUri
       ? { action: DeepLinkAction.UniswapWalletConnect, data: { ...data, wcUri } }
-      : logAndReturnError('No WC URI found', DeepLinkAction.UniswapWalletConnect, url.href, data)
+      : logAndReturnError({
+          errorMsg: 'No WC URI found',
+          action: DeepLinkAction.UniswapWalletConnect,
+          urlString: url.href,
+          data,
+        })
   },
   [UNISWAP_URL_SCHEME_WIDGET]: (_, data) => ({
     action: DeepLinkAction.UniswapWidget,
@@ -213,12 +285,33 @@ const handlers: Record<string, DeepLinkHandler> = {
     const scantasticQueryParams = getScantasticQueryParams(url.href)
     return scantasticQueryParams
       ? { action: DeepLinkAction.Scantastic, data: { ...data, scantasticQueryParams } }
-      : logAndReturnError('No Scantastic query params found', DeepLinkAction.Scantastic, url.href, data)
+      : logAndReturnError({
+          errorMsg: 'No Scantastic query params found',
+          action: DeepLinkAction.Scantastic,
+          urlString: url.href,
+          data,
+        })
   },
   [UNISWAP_URL_SCHEME_UWU_LINK]: (_, data) => ({
     action: DeepLinkAction.UwuLink,
     data,
   }),
+  [UNISWAP_URL_SCHEME_E2E_OVERRIDE_GATES]: (url, data) => {
+    const enableParam = url.searchParams.get('enable') ?? url.searchParams.get('gates')
+    const enable = enableParam ? enableParam.split(',').filter(Boolean) : []
+    return { action: DeepLinkAction.E2EOverrideGates, data: { ...data, enable } }
+  },
+}
+
+const UNISWAP_EXTERNAL_WEB_LINK_VALID_REGEXES = [
+  // oxlint-disable-next-line security/detect-unsafe-regex
+  /^https:\/\/([a-zA-Z0-9-]+)\.uniswap\.org(\/.*)?$/,
+  // oxlint-disable-next-line security/detect-unsafe-regex
+  /^https:\/\/cryptothegame\.com(\/.*)?$/,
+]
+
+function isValidUniswapExternalWebLink(urlString: string): boolean {
+  return UNISWAP_EXTERNAL_WEB_LINK_VALID_REGEXES.some((regex) => regex.test(urlString))
 }
 
 /**
@@ -244,12 +337,17 @@ function extractWalletConnectUri(urlString: string, prefix: string): string | nu
  * @param data - The data associated with the deep link.
  * @returns The error action result.
  */
-function logAndReturnError(
-  errorMsg: string,
-  action: DeepLinkAction,
-  urlString: string,
-  data: DeepLinkActionResult['data'],
-): DeepLinkActionResult {
+function logAndReturnError({
+  errorMsg,
+  action,
+  urlString,
+  data,
+}: {
+  errorMsg: string
+  action: DeepLinkAction
+  urlString: string
+  data: DeepLinkActionResult['data']
+}): DeepLinkActionResult {
   logger.error(`${errorMsg} for action=${action} in deep link url=${urlString}`, {
     tags: {
       file: 'deepLinkUtils',

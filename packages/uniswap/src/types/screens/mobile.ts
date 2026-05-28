@@ -1,34 +1,40 @@
-import { ExtensionOnboardingFlow, ExtensionScreens } from "uniswap/src/types/screens/extension";
+import type { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/types/screens/extension'
 
 export enum MobileScreens {
+  Activity = 'Activity',
+  DebugScreens = 'DebugScreens',
   Dev = 'Dev',
+  HashcashBenchmark = 'HashcashBenchmark',
+  SessionsDebug = 'SessionsDebug',
   Storybook = 'Storybook',
   Education = 'Education',
+  ConnectionsDappListModal = 'connections-dapp-list-modal',
   Explore = 'Explore',
   Home = 'Home',
-  NFTItem = 'NFTItem',
-  NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
+  PortfolioChartDetails = 'PortfolioChartDetails',
   UnitagStack = 'UnitagStack',
   Settings = 'Settings',
   SettingsCloudBackupPasswordCreate = 'SettingsCloudBackupPasswordCreate',
   SettingsCloudBackupPasswordConfirm = 'SettingsCloudBackupPasswordConfirm',
   SettingsCloudBackupProcessing = 'SettingsCloudBackupProcessing',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
+  SettingsDisclosures = 'SettingsDisclosures',
   SettingsLanguage = 'SettingsLanguage',
   SettingsNotifications = 'SettingsNotifications',
   SettingsPrivacy = 'SettingsPrivacy',
+  SettingsSmartWallet = 'SettingsSmartWallet',
+  SettingsStorage = 'SettingsStorage',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',
   SettingsHelpCenter = 'SettingsHelpCenter',
   SettingsStack = 'SettingsStack',
-  SettingsBiometricAuth = 'SettingsBiometricAuth',
-  SettingsAppearance = 'SettingsAppearance',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
   TokenDetails = 'TokenDetails',
   ExternalProfile = 'ExternalProfile',
   WebView = 'WebView',
+  ViewPrivateKeys = 'ViewPrivateKeys',
 }
 
 export enum OnboardingScreens {
@@ -41,6 +47,10 @@ export enum OnboardingScreens {
   Landing = 'OnboardingLanding',
   Notifications = 'OnboardingNotifications',
   WelcomeWallet = 'WelcomeWallet',
+  PasskeyImport = 'PasskeyImport',
+  // Recovery-based graduation (email/OAuth + PIN). Shown when the user lacks a passkey
+  // on this device; rejoins the standard import flow after decrypting the seed phrase.
+  RecoveryFlow = 'OnboardingRecoveryFlow',
   Security = 'OnboardingSecurity',
 
   // import
@@ -49,6 +59,7 @@ export enum OnboardingScreens {
   RestoreCloudBackupLoading = 'RestoreCloudBackupLoading',
   RestoreCloudBackup = 'RestoreCloudBackup',
   RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
+  RestoreMethod = 'RestoreMethod',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
 
@@ -65,18 +76,18 @@ export enum UnitagScreens {
 }
 
 export type UnitagEntryPoint =
-  OnboardingScreens.Landing |
-  MobileScreens.Home |
-  MobileScreens.Settings |
-  ExtensionOnboardingFlow.New |
-  ExtensionScreens.Home
+  | OnboardingScreens.Landing
+  | MobileScreens.Home
+  | MobileScreens.Settings
+  | ExtensionOnboardingFlow.New
+  | ExtensionScreens.Home
 
 export type UnitagStackParamList = SharedUnitagScreenParams & {
   [UnitagScreens.UnitagConfirmation]: {
     unitag: string
     address: Address
     profilePictureUri?: string
-  };
+  }
   [UnitagScreens.EditProfile]: {
     address: Address
     unitag: string
@@ -88,7 +99,7 @@ export type SharedUnitagScreenParams = {
   [UnitagScreens.ClaimUnitag]: {
     entryPoint: UnitagEntryPoint
     address?: Address
-  };
+  }
   [UnitagScreens.ChooseProfilePicture]: {
     entryPoint: UnitagEntryPoint
     unitag: string

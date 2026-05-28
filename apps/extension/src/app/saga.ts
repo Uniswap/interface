@@ -1,19 +1,39 @@
 import { initDappStore } from 'src/app/features/dapp/saga'
+import {
+  prepareAndSignDappTransactionActions,
+  prepareAndSignDappTransactionReducer,
+  prepareAndSignDappTransactionSaga,
+  prepareAndSignDappTransactionSagaName,
+} from 'src/app/features/dappRequests/configuredSagas'
 import { dappRequestApprovalWatcher } from 'src/app/features/dappRequests/dappRequestApprovalWatcherSaga'
 import { dappRequestWatcher } from 'src/app/features/dappRequests/saga'
 import { call, spawn } from 'typed-redux-saga'
-import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
+import { getMonitoredSagaReducers, type MonitoredSaga } from 'uniswap/src/utils/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { initProviders } from 'wallet/src/features/providers/saga'
-import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
-  tokenWrapActions,
-  tokenWrapReducer,
-  tokenWrapSaga,
-  tokenWrapSagaName,
-} from 'wallet/src/features/transactions/swap/wrapSaga'
-import { transactionWatcher, watchTransactionEvents } from 'wallet/src/features/transactions/transactionWatcherSaga'
+  removeDelegationActions,
+  removeDelegationReducer,
+  removeDelegationSaga,
+  removeDelegationSagaName,
+} from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
+import {
+  executePlanActions,
+  executePlanReducer,
+  executePlanSaga,
+  executePlanSagaName,
+  executeSwapActions,
+  executeSwapReducer,
+  executeSwapSaga,
+  executeSwapSagaName,
+  prepareAndSignSwapActions,
+  prepareAndSignSwapReducer,
+  prepareAndSignSwapSaga,
+  prepareAndSignSwapSagaName,
+} from 'wallet/src/features/transactions/swap/configuredSagas'
+import { watchTransactionEvents } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
+import { transactionWatcher } from 'wallet/src/features/transactions/watcher/transactionWatcherSaga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -26,10 +46,9 @@ import {
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 // Stateful sagas that are registered with the store on startup
-export const monitoredSagas: Record<string, MonitoredSaga> = {
+const monitoredSagas: Record<string, MonitoredSaga> = {
   [authSagaName]: {
     name: authSagaName,
     wrappedSaga: authSaga,
@@ -48,22 +67,39 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: editAccountReducer,
     actions: editAccountActions,
   },
-  [swapSagaName]: {
-    name: swapSagaName,
-    wrappedSaga: swapSaga,
-    reducer: swapReducer,
-    actions: swapActions,
+  [prepareAndSignSwapSagaName]: {
+    name: prepareAndSignSwapSagaName,
+    wrappedSaga: prepareAndSignSwapSaga,
+    reducer: prepareAndSignSwapReducer,
+    actions: prepareAndSignSwapActions,
   },
-  [tokenWrapSagaName]: {
-    name: tokenWrapSagaName,
-    wrappedSaga: tokenWrapSaga,
-    reducer: tokenWrapReducer,
-    actions: tokenWrapActions,
+  [executeSwapSagaName]: {
+    name: executeSwapSagaName,
+    wrappedSaga: executeSwapSaga,
+    reducer: executeSwapReducer,
+    actions: executeSwapActions,
+  },
+  [executePlanSagaName]: {
+    name: executePlanSagaName,
+    wrappedSaga: executePlanSaga,
+    reducer: executePlanReducer,
+    actions: executePlanActions,
+  },
+  [removeDelegationSagaName]: {
+    name: removeDelegationSagaName,
+    wrappedSaga: removeDelegationSaga,
+    reducer: removeDelegationReducer,
+    actions: removeDelegationActions,
+  },
+  [prepareAndSignDappTransactionSagaName]: {
+    name: prepareAndSignDappTransactionSagaName,
+    wrappedSaga: prepareAndSignDappTransactionSaga,
+    reducer: prepareAndSignDappTransactionReducer,
+    actions: prepareAndSignDappTransactionActions,
   },
 } as const
 
 const sagasInitializedOnStartup = [
-  appLanguageWatcherSaga,
   initDappStore,
   dappRequestApprovalWatcher,
   dappRequestWatcher,
@@ -82,6 +118,6 @@ export function* rootExtensionSaga() {
   yield* spawn(transactionWatcher, { apolloClient })
 
   for (const m of Object.values(monitoredSagas)) {
-    yield* spawn(m.wrappedSaga)
+    yield* spawn(m['wrappedSaga'])
   }
 }

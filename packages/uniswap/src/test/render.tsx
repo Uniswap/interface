@@ -1,26 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'uniswap/src/i18n'
 import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  render as RNRender,
-  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
+  render as RNRender,
+  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
 import { ParsedQs } from 'qs'
 import { PropsWithChildren } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
 import { config } from 'ui/src/tamagui.config'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import 'uniswap/src/i18n'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
+import { createMockFn } from 'uniswap/src/test/mockFn'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+
+export const mockUniswapContext = {
+  navigateToBuyOrReceiveWithEmptyWallet: createMockFn(),
+  navigateToFiatOnRamp: createMockFn(),
+  navigateToSwapFlow: createMockFn(),
+  navigateToSendFlow: createMockFn(),
+  navigateToReceive: createMockFn(),
+  navigateToTokenDetails: createMockFn(),
+  navigateToExternalProfile: createMockFn(),
+  navigateToNftDetails: createMockFn(),
+  navigateToPoolDetails: createMockFn(),
+  handleShareToken: createMockFn(),
+  navigateToAdvancedSettings: createMockFn(),
+  onSwapChainsChanged: createMockFn(),
+  isSwapTokenSelectorOpen: false,
+  setSwapOutputChainId: createMockFn(),
+  setIsSwapTokenSelectorOpen: createMockFn(),
+  signer: undefined,
+  useProviderHook: createMockFn(),
+  useWalletDisplayName: createMockFn(),
+  onConnectWallet: createMockFn(),
+  useAccountsStoreContextHook: createMockFn(),
+}
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -137,6 +160,7 @@ export function renderHookWithProviders<P extends any[], R>(
     ...(renderOptions as RenderHookOptions<P>),
   }
 
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(...(args ?? [])), options)
 
   // Return an object with the store and all of RTL's query functions
@@ -149,14 +173,14 @@ export function renderHookWithProviders<P extends any[], R>(
 
 function SharedUniswapProvider({ children }: Pick<TamaguiProviderProps, 'children'>): JSX.Element {
   return (
-    <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
-      <SharedPersistQueryClientProvider>
-        <UnitagUpdaterContextProvider>
+    <UniswapProvider {...mockUniswapContext}>
+      <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
+        <SharedPersistQueryClientProvider>
           <OGTamaguiProvider config={config} defaultTheme="dark">
             {children}
           </OGTamaguiProvider>
-        </UnitagUpdaterContextProvider>
-      </SharedPersistQueryClientProvider>
-    </UrlContext.Provider>
+        </SharedPersistQueryClientProvider>
+      </UrlContext.Provider>
+    </UniswapProvider>
   )
 }

@@ -1,57 +1,53 @@
-import com.android.build.OutputFile
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.google.gms.google-services"
+apply plugin: "maven-publish"
+apply plugin: "kotlin-android"
+apply plugin: "org.jetbrains.kotlin.plugin.compose"
+apply plugin: "com.facebook.react"
 
-plugins {
-  id 'com.android.application'
-  id 'com.facebook.react'
-  id 'com.google.gms.google-services'
-  id 'maven-publish'
-  id 'kotlin-android'
-}
+def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
 def nodeModulesPath = "../../../../node_modules"
-def rnRoot = "../.."
-
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
 
 react {
-    root = file("$rnRoot/")
+    // From expo docs: https://docs.expo.dev/brownfield/get-started
+    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", rootDir.getAbsoluteFile().getParentFile().getAbsolutePath(), "android", "absolute"].execute(null, rootDir).text.trim())
+
     reactNativeDir = file("$nodeModulesPath/react-native")
-    codegenDir = file("$nodeModulesPath/react-native-codegen")
-    cliFile = file("$nodeModulesPath/react-native/cli.js")
+
+    hermesCommand = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/sdks/hermesc/%OS-BIN%/hermesc"
+
+    codegenDir = new File(["node", "--print", "require.resolve('@react-native/codegen/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
+
+    enableBundleCompression = (findProperty('android.enableBundleCompression') ?: false).toBoolean()
+
+    cliFile = new File(["node", "--print", "require.resolve('@expo/cli')"].execute(null, rootDir).text.trim())
+    bundleCommand = "export:embed"
+
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
-    hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
+
     /* Autolinking */
     autolinkLibrariesWithApp()
 }
-/**
- * Set this to true to create four separate APKs instead of one,
- * one for each native architecture. This is useful if you don't
- * use App Bundles (https://developer.android.com/guide/app-bundle/)
- * and want to have separate APKs to upload to the Play Store.
- */
-def enableSeparateBuildPerCPUArchitecture = false
 
 /**
- * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ * Set this to true in release builds to optimize the app using [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization).
  */
-def enableProguardInReleaseBuilds = false
+def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBuilds') ?: false).toBoolean()
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
  *
  * For example, to use the international variant, you can use:
- * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ * `def jscFlavor = io.github.react-native-community:jsc-android-intl:2026004.+`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
  * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc-intl:+'
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 /**
  * Private function to get the list of Native Architectures you want to build.
@@ -64,17 +60,16 @@ def reactNativeArchitectures() {
 }
 
 boolean isCI = System.getenv('CI') != null
-boolean isE2E = System.getenv('E2E_MODE') != null
 
 boolean datadogPropertiesAvailable = System.getenv('DATADOG_API_KEY') != null
 
-if (isCI && datadogPropertiesAvailable && !isE2E) {
+if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.46"
-def betaVersionName = "1.46"
-def prodVersionName = "1.46"
+def devVersionName = "1.74"
+def betaVersionName = "1.74"
+def prodVersionName = "1.74"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -87,11 +82,13 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
     splits {
         abi {
             reset()
-            enable enableSeparateBuildPerCPUArchitecture
+            enable false
             universalApk false  // If true, also generate a universal APK
             include (*reactNativeArchitectures())
         }
@@ -107,10 +104,18 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
-            storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
+            def useDebugKeystore = System.getenv("ANDROID_USE_DEBUG_KEYSTORE") == "true"
+            if (useDebugKeystore) {
+                storeFile file('debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            } else {
+                storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
+                storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: ""
+                keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: ""
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: ""
+            }
         }
     }
 
@@ -119,12 +124,12 @@ android {
     productFlavors {
       dev {
         isDefault(true)
-        applicationIdSuffix ".dev"
+        applicationId "com.uniswap.mobile.dev"
         versionName devVersionName
         dimension "variant"
       }
       beta {
-        applicationIdSuffix ".beta"
+        applicationId "com.uniswap.mobile.beta"
         versionName betaVersionName
         dimension "variant"
       }
@@ -140,24 +145,40 @@ android {
         }
         release {
             signingConfig signingConfigs.release
-            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
+            minifyEnabled enableMinifyInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 
     // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
+        // Prevent using debug keystore for production builds
+        if (variant.flavorName == "prod" && variant.buildType.name == "release") {
+            def useDebugKeystore = System.getenv("ANDROID_USE_DEBUG_KEYSTORE") == "true"
+            if (useDebugKeystore) {
+                def blockTask = tasks.register("blockDebugKeystoreFor${variant.name.capitalize()}") {
+                    doLast {
+                        throw new GradleException(
+                            "ANDROID_USE_DEBUG_KEYSTORE cannot be used for production builds.\n" +
+                            "This prevents accidentally publishing an improperly signed APK."
+                        )
+                    }
+                }
+                variant.assembleProvider.configure { dependsOn blockTask }
+            }
+        }
+
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
             // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
             def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
-            def abi = output.getFilter(OutputFile.ABI)
+            def abi = output.getFilter(com.android.build.VariantOutput.FilterType.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
             }
-
         }
     }
 
@@ -176,15 +197,15 @@ android {
     buildFeatures {
         compose true
     }
-    
+
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     sourceSets {
         main {
           jniLibs {
-            srcDir '../../../../node_modules/@uniswap/ethers-rs-mobile/android/jniLibs'
+            srcDir '../jniLibs'
           }
         }
     }
@@ -193,6 +214,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation "com.facebook.react:react-android"
+    implementation("com.facebook.react:hermes-android")
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -228,9 +250,11 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.material:material:$compose"
     implementation "androidx.compose.ui:ui:$compose"
+    debugImplementation("androidx.compose.ui:ui-tooling:$compose")
+    implementation("androidx.compose.ui:ui-tooling-preview:$compose")
 
     implementation "androidx.security:security-crypto:1.0.0"
-    implementation 'com.lambdapioneer.argon2kt:argon2kt:1.3.0'
+    implementation 'com.lambdapioneer.argon2kt:argon2kt:1.6.0'
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
@@ -238,15 +262,11 @@ dependencies {
     implementation("androidx.core:core-performance:$corePerf")
     implementation("androidx.core:core-performance-play-services:$corePerf")
 
-    implementation 'com.onesignal:OneSignal:4.8.9'
     implementation 'com.github.statsig-io:android-sdk:4.36.0'
 
     // For animated GIF support
     implementation 'com.facebook.fresco:animated-gif:3.6.0'
+    implementation 'androidx.compose.ui:ui-tooling-preview-android:1.8.1'
 
-    if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android")
-    } else {
-        implementation jscFlavor
-    }
+    implementation project(':react-native-video')
 }

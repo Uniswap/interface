@@ -1,46 +1,53 @@
-import { SwapEventName } from '@uniswap/analytics-events'
-import { SignatureType } from 'state/signatures/types'
-import { TransactionType } from 'state/transactions/types'
-import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TradingApi } from '@universe/api'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { logSwapFinalized, logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker', () => ({
-  ...jest.requireActual('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'),
-  timestampTracker: {
-    hasTimestamp: () => false,
-    setElapsedTime: () => 100,
-    getElapsedTime: () => 100,
-  },
-}))
+vi.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker', async () => {
+  const actual = await vi.importActual('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker')
+  return {
+    ...actual,
+    timestampTracker: {
+      hasTimestamp: () => false,
+      setElapsedTime: () => 100,
+      getElapsedTime: () => 100,
+    },
+  }
+})
 
 describe('swapFlowLoggers', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('logSwapSuccess calls sendAnalyticsEvent with correct parameters', () => {
     const mockHash = 'mockHash'
+    const mockBatchId = undefined
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
-    logSwapFinalized(
-      mockHash,
-      mockChainId,
-      mockChainId,
-      mockAnalyticsContext,
-      TransactionStatus.Confirmed,
-      TransactionType.SWAP,
-    )
+    logSwapFinalized({
+      id: mockHash,
+      hash: mockHash,
+      batchId: mockBatchId,
+      chainInId: mockChainId,
+      chainOutId: mockChainId,
+      analyticsContext: mockAnalyticsContext,
+      status: TransactionStatus.Success,
+      type: TransactionType.Swap,
+    })
 
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapTransactionCompleted, {
       transactionOriginType: TransactionOriginType.Internal,
       routing: 'classic',
       time_to_swap: 100,
@@ -49,6 +56,16 @@ describe('swapFlowLoggers', () => {
       chain_id: mockChainId,
       chain_id_in: mockChainId,
       chain_id_out: mockChainId,
+      id: mockHash,
+      batch_id: mockBatchId,
+      swap_start_timestamp: undefined,
+      transactedUSDValue: undefined,
+      plan_id: undefined,
+      step_index: undefined,
+      total_steps: undefined,
+      total_non_error_steps: undefined,
+      step_type: undefined,
+      is_final_step: undefined,
       ...mockAnalyticsContext,
     })
   })
@@ -59,16 +76,17 @@ describe('swapFlowLoggers', () => {
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
-    logUniswapXSwapFinalized(
-      mockHash,
-      mockOrderHash,
-      mockChainId,
-      mockAnalyticsContext,
-      SignatureType.SIGN_UNISWAPX_V2_ORDER,
-      UniswapXOrderStatus.FILLED,
-    )
+    logUniswapXSwapFinalized({
+      id: 'mockId',
+      hash: mockHash,
+      orderHash: mockOrderHash,
+      chainId: mockChainId,
+      analyticsContext: mockAnalyticsContext,
+      routing: TradingApi.Routing.DUTCH_V2,
+      status: TransactionStatus.Success,
+    })
 
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapTransactionCompleted, {
       transactionOriginType: TransactionOriginType.Internal,
       routing: 'uniswap_x_v2',
       time_to_swap: 100,
@@ -76,6 +94,15 @@ describe('swapFlowLoggers', () => {
       hash: mockHash,
       order_hash: mockOrderHash,
       chain_id: mockChainId,
+      id: 'mockId',
+      swap_start_timestamp: undefined,
+      transactedUSDValue: undefined,
+      plan_id: undefined,
+      step_index: undefined,
+      total_steps: undefined,
+      total_non_error_steps: undefined,
+      step_type: undefined,
+      is_final_step: undefined,
       ...mockAnalyticsContext,
     })
   })
@@ -84,8 +111,7 @@ describe('swapFlowLoggers', () => {
     const mockAnalyticsContext = { page: 'mockContext' }
 
     maybeLogFirstSwapAction(mockAnalyticsContext)
-
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_FIRST_ACTION, {
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapFirstAction, {
       time_to_first_swap_action: 100,
       ...mockAnalyticsContext,
     })

@@ -1,0 +1,49 @@
+# Generated files that shouldn't trigger rebuilds
+ios/WidgetsCore/MobileSchema/**/*.swift
+ios/WidgetsCore/Env.swift
+ios/OneSignalNotificationServiceExtension/Env.swift
+.maestro/scripts/dist/**/*
+.maestro/scripts/performance/dist/**/*
+
+# Cache/temporary files
+.expo/**/*
+coverage/**/*
+.tamagui/**/*
+storybook-static/**/*
+dist/**/*
+build/**/*
+
+# Environment files
+.env*
+!.env.example
+
+# All node_modules - native deps are tracked via lock files
+node_modules/**/*
+../../node_modules/**/*
+
+# Build configuration that doesn't affect native
+.gitignore
+
+# Autolinking outputs (redundant with lock files)
+# These are derived from node_modules and package.json
+expoAutolinkingConfig:android
+expoAutolinkingConfig:ios
+rncoreAutolinkingConfig:android
+rncoreAutolinkingConfig:ios
+
+# Android build artifacts (if not already in native .gitignore)
+android/app/build/**/*
+android/.gradle/**/*
+android/build/**/*
+android/.cxx/**/*
+
+# iOS build artifacts (if not already in native .gitignore)  
+ios/build/**/*
+ios/Pods/**/*
+!ios/Podfile
+!ios/Podfile.lock
+ios/*.xcworkspace/**/*
+!ios/*.xcworkspace/contents.xcworkspacedata
+
+# ensure patches are tracked
+!../../patches/**/*

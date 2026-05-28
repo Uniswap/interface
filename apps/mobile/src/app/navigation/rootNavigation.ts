@@ -3,7 +3,7 @@ import { navigationRef } from 'src/app/navigation/navigationRef'
 import { RootParamList } from 'src/app/navigation/types'
 import { logger } from 'utilities/src/logger/logger'
 
-export type RootNavigationArgs<RouteName extends keyof RootParamList> = undefined extends RootParamList[RouteName]
+type RootNavigationArgs<RouteName extends keyof RootParamList> = undefined extends RootParamList[RouteName]
   ? [RouteName] | [RouteName, RootParamList[RouteName]]
   : [RouteName, RootParamList[RouteName]]
 
@@ -23,19 +23,10 @@ export function navigate<RouteName extends keyof RootParamList>(...args: RootNav
     return
   }
 
-  // Type assignment to `never` is a workaround until we figure out how to
+  // Type assignment to `any` is a workaround until we figure out how to
   // type `createNavigationContainerRef` in a way that's compatible
-  navigationRef.navigate(routeName as never, params as never)
-}
-
-export function goBack(): void {
-  if (!isNavigationRefReady()) {
-    return
-  }
-
-  if (navigationRef.canGoBack()) {
-    navigationRef.goBack()
-  }
+  // oxlint-disable-next-line typescript/no-explicit-any -- Navigation refs need flexible typing
+  navigationRef.navigate(routeName as any, params as never)
 }
 
 export function dispatchNavigationAction(

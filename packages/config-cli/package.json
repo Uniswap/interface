@@ -1,0 +1,42 @@
+{
+  "name": "@universe/config-cli",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/api": "workspace:^",
+    "@universe/config": "workspace:^",
+    "@universe/encoding": "workspace:^",
+    "@universe/environment": "workspace:^",
+    "better-result": "2.8.2",
+    "dotenv": "16.0.3",
+    "fflate": "0.8.2",
+    "incur": "0.4.5",
+    "utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.11",
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
+  },
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "dev": "CONFIG_SERVICE_URL=http://localhost:3000 CONFIG_SERVICE_TOKEN=e2eTest1Token bun run src/main.ts",
+    "typecheck": "nx typecheck config-cli",
+    "check": "nx check config-cli",
+    "check:fast": "nx check:fast config-cli",
+    "check:deps:usage": "nx check:deps:usage config-cli",
+    "format": "nx format config-cli",
+    "format:check": "nx format:check config-cli",
+    "lint": "nx lint config-cli",
+    "lint:fix": "nx lint:fix config-cli",
+    "test": "nx test config-cli"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

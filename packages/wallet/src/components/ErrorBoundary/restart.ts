@@ -1,5 +1,5 @@
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
-export const restartApp = (): void => {
-  throw new PlatformSplitStubError('restartApp')
+export const restart = (): void => {
+  throw new PlatformSplitStubError('restart')
 }

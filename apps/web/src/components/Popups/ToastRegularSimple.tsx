@@ -1,20 +1,22 @@
-import { Flex, Text, TouchableArea, useMedia, useShadowPropsMedium } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-
-const MAX_WIDTH = 348
+import { spacing } from 'ui/src/theme'
+import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 
 // Temporary Spore-ish implementation for mweb until Spore project makes toasts consistent across all platforms
 export function ToastRegularSimple({
   icon,
   text,
   onDismiss,
+  width,
 }: {
-  icon: JSX.Element
-  text?: string
+  icon?: JSX.Element
+  text?: string | JSX.Element
   onDismiss?: () => void
+  width?: FlexProps['width']
 }): JSX.Element {
-  const media = useMedia()
   const shadowProps = useShadowPropsMedium()
+  const isToastOneLine = typeof text === 'string'
 
   return (
     <Flex
@@ -23,37 +25,28 @@ export function ToastRegularSimple({
       animation="300ms"
       backgroundColor="$surface1"
       borderColor="$surface3"
-      borderRadius="$rounded16"
+      borderRadius="$rounded12"
       borderWidth="$spacing1"
-      enterStyle={media.sm ? { top: -58 } : { left: MAX_WIDTH + 20 }}
-      exitStyle={media.sm ? { top: -58, opacity: 0 } : { left: MAX_WIDTH + 20 }} // TODO(WEB-4712): small-screen animations defined here bc they don't work in $sm right now
       justifyContent="space-between"
-      top={media.sm ? '$spacing16' : '$none'}
-      left={0}
-      mx={0}
-      $platform-web={{
-        ...shadowProps,
-        ...(media.sm
-          ? {
-              position: 'fixed',
-              left: '50%',
-              width: 'max-content',
-              transform: [{ translateX: '-50%' }] as any, // TODO(WEB-4733): Tamagui transform needs array to work but type expects string
-            }
-          : {}),
-      }}
-      p="$spacing16"
+      right={0}
+      ml="auto"
+      {...shadowProps}
+      p="$spacing12"
       position="relative"
-      width={MAX_WIDTH}
+      width={width ?? POPUP_MAX_WIDTH}
       opacity={1}
+      $sm={{
+        maxWidth: '100%',
+        mx: 'auto',
+      }}
     >
-      <Flex row alignItems="center" gap={12}>
-        {icon}
-        {text ? <Text variant="body2">{text}</Text> : null}
+      <Flex row alignItems={isToastOneLine ? 'center' : 'flex-start'} gap={spacing.spacing6} flex={1}>
+        {icon && <Flex>{icon}</Flex>}
+        {text ? isToastOneLine ? <Text variant="body3">{text}</Text> : text : null}
       </Flex>
       {onDismiss ? (
-        <TouchableArea onPress={onDismiss}>
-          <X color="$neutral2" size={16} ml="$spacing8" />
+        <TouchableArea onPress={onDismiss} ml="$spacing8">
+          <X color="$neutral2" size="$icon.16" />
         </TouchableArea>
       ) : null}
     </Flex>

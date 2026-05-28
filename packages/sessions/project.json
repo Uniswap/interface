@@ -1,0 +1,40 @@
+{
+  "name": "@universe/sessions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/sessions/src",
+  "projectType": "library",
+  "tags": ["scope:sessions", "type:lib"],
+  "targets": {
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:watch": {
+      "command": "vitest dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:integration:backend": {
+      "command": "vitest run --config vitest.integration.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -1,11 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
-import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useRoutingAPIArguments } from '~/lib/hooks/routing/useRoutingAPIArguments'
+import { useGetQuoteQuery, useGetQuoteQueryState } from '~/state/routing/slice'
 import {
   ClassicTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
@@ -14,12 +16,12 @@ import {
   RouterPreference,
   SubmittableTrade,
   TradeState,
-} from 'state/routing/types'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
+} from '~/state/routing/types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined, currentData: undefined } as const
 
+// oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   skipFetch: boolean,
   tradeType: TTradeType,
@@ -37,6 +39,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   swapQuoteLatency?: number
 }
 
+// oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   skipFetch: boolean,
   tradeType: TTradeType,
@@ -60,6 +63,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
+// oxlint-disable-next-line max-params
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   skipFetch = false,
   tradeType: TTradeType,
@@ -106,12 +110,18 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
-    if (amountSpecified && otherCurrency && queryArgs === skipToken) {
+    if (currencyIn?.chainId === UniverseChainId.Solana || currencyOut?.chainId === UniverseChainId.Solana) {
+      // Routing API does not support Solana; we should not show any trade (nor a stale EVM trade, because we skip the query if Solana)
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
+        currentTrade: undefined,
+      }
+    } else if (amountSpecified && otherCurrency && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
         currentTrade: currentData?.trade,
-        swapQuoteLatency: tradeResult?.latencyMs,
       }
     } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
@@ -127,21 +137,20 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else {
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
-        trade: tradeResult?.trade,
+        trade: tradeResult.trade,
         currentTrade: currentData?.trade,
-        swapQuoteLatency: tradeResult?.latencyMs,
       }
     }
   }, [
+    currencyIn,
+    currencyOut,
     amountSpecified,
+    otherCurrency,
     error,
     isError,
     isFetching,
     queryArgs,
-    tradeResult?.latencyMs,
-    tradeResult?.state,
-    tradeResult?.trade,
-    currentData?.trade,
-    otherCurrency,
+    tradeResult,
+    currentData,
   ])
 }

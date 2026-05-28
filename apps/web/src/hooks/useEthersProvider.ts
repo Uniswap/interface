@@ -1,24 +1,23 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/features/chains/types'
-import type { Client, Transport } from 'viem'
+import type { Chain, Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
 
 const providers = new WeakMap<Client, Web3Provider>()
 
-export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId?: number) {
+export function clientToProvider(client?: Client<Transport, Chain>, chainId?: number) {
   if (!client) {
     return undefined
   }
   const { chain, transport } = client
 
-  const ensAddress = chain?.contracts?.ensRegistry?.address
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   const network = chain
     ? {
         chainId: chain.id,
         name: chain.name,
-        ensAddress,
+        ensAddress: chain.contracts?.ensRegistry?.address,
       }
     : chainId
       ? { chainId, name: 'Unsupported' }
@@ -27,7 +26,7 @@ export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, 
     return undefined
   }
 
-  if (providers?.has(client)) {
+  if (providers.has(client)) {
     return providers.get(client)
   } else {
     const provider = new Web3Provider(transport, network)
@@ -42,7 +41,7 @@ export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
   const { data: client } = useConnectorClient({ chainId })
   const disconnectedClient = useClient({ chainId })
   return useMemo(
-    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : client ?? disconnectedClient, chainId),
+    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : (client ?? disconnectedClient), chainId),
     [account.chainId, chainId, client, disconnectedClient],
   )
 }

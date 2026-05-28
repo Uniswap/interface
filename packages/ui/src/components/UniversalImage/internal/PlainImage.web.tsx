@@ -1,9 +1,18 @@
+import { isTestEnv } from '@universe/environment'
 import { useState } from 'react'
-import { PlainImageProps, UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { type PlainImageProps, UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 
-export function PlainImage({ uri, size, fallback, resizeMode, style, testID, onLoad }: PlainImageProps): JSX.Element {
+export function PlainImage({
+  uri,
+  size,
+  fallback,
+  resizeMode,
+  style,
+  testID,
+  onLoad,
+  onError,
+}: PlainImageProps): JSX.Element {
   const [hasError, setHasError] = useState(false)
 
   // TODO cover all cases better
@@ -20,6 +29,7 @@ export function PlainImage({ uri, size, fallback, resizeMode, style, testID, onL
       width={size.width}
       onError={() => {
         setHasError(true)
+        onError?.()
       }}
       onLoad={onLoad}
     />

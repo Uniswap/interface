@@ -1,34 +1,44 @@
-import { Dialog } from 'components/Dialog/Dialog'
-import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import styled from 'lib/styled-components'
-import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-
-const StyledAlertIcon = styled(AlertTriangleFilled)`
-  path {
-    fill: ${({ theme }) => theme.neutral2};
-  }
-`
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
 
 export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
   const { t } = useTranslation()
+
+  const primaryButton = useMemo(
+    () => ({
+      text: t('common.button.cancel'),
+      onPress: onDismiss,
+      variant: 'default' as const,
+      emphasis: 'secondary' as const,
+    }),
+    [t, onDismiss],
+  )
+
+  const secondaryButton = useMemo(
+    () => ({
+      text: t('common.button.continue'),
+      onPress: onConfirm,
+      variant: 'branded' as const,
+    }),
+    [t, onConfirm],
+  )
+
   return (
     <Dialog
-      isVisible={isOpen}
-      icon={<StyledAlertIcon size="28px" />}
+      isOpen={isOpen}
+      onClose={onDismiss}
+      icon={<AlertTriangleFilled color="$neutral2" size="$icon.28" />}
+      iconBackgroundColor="$surface3"
       title={t('speedBump.smartContractAddress.warning.title')}
-      description={t('speedBump.smartContractAddress.warning.description')}
-      onCancel={onDismiss}
-      buttonsConfig={{
-        left: {
-          title: t('common.button.cancel'),
-          onClick: onDismiss,
-        },
-        right: {
-          title: t('common.button.continue'),
-          onClick: onConfirm,
-        },
-      }}
+      subtext={t('speedBump.smartContractAddress.warning.description')}
+      modalName={ModalName.SmartContractSpeedBump}
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
+      displayHelpCTA
     />
   )
 }

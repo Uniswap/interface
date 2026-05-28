@@ -1,38 +1,41 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/src/components/icons'
+import { Button, Flex, flexStyles, Text, useMedia, useSporeColors } from 'ui/src'
+import { EyeSlash, FileListLock, GraduationCap, Key, Lock, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { ManualPageViewScreen, MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
 enum View {
-  SeedPhrase,
-  SeedPhraseConfirm,
+  SeedPhrase = 0,
+  SeedPhraseConfirm = 1,
 }
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {
@@ -56,8 +59,15 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }
 
   const mnemonicId = account.mnemonicId
+  const recoveryPhraseWordCount = getExpectedMnemonicLength(account)
 
-  const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
+  // Split the verification step into pages of MNEMONIC_LENGTH_HD words for longer
+  // (24-word embedded-wallet) phrases. 12-word phrases stay single-page.
+  const totalConfirmPages = Math.max(1, Math.ceil(recoveryPhraseWordCount / MNEMONIC_LENGTH_HD))
+  const isMultiPage = totalConfirmPages > 1
+  const [confirmPage, setConfirmPage] = useState(0)
+  const isLastConfirmPage = confirmPage === totalConfirmPages - 1
+
   const [showSpeedBumpModal, setShowSpeedBumpModal] = useState(false)
 
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.SeedPhrase)
@@ -88,24 +98,29 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     navigate(MobileScreens.Home)
   }
 
-  useEffect(() => {
-    if (view !== View.SeedPhrase) {
-      return undefined
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (view !== View.SeedPhrase) {
+        return undefined
+      }
 
-    const listener = addScreenshotListener(() => setShowScreenShotWarningModal(true))
-    return () => listener?.remove()
-  }, [view])
+      const listener = addScreenshotListener(() => {
+        navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.ok') })
+      })
+      return () => listener.remove()
+    }, [view, t]),
+  )
 
   useEffect(() => {
-    if (confirmContinueButtonPressed && account?.backups?.includes(BackupType.Manual)) {
+    if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {
+      setShowSpeedBumpModal(false)
       if (params.entryPoint === OnboardingEntryPoint.BackupCard) {
         navigate(MobileScreens.Home)
       } else {
         navigation.replace(OnboardingScreens.Notifications, params)
       }
     }
-  }, [confirmContinueButtonPressed, navigation, params, account?.backups])
+  }, [confirmContinueButtonPressed, navigation, params, account])
 
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {
@@ -128,23 +143,19 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
         <OnboardingScreen
           disableGoBack={fromCloudBackup}
           Icon={PapersText}
-          subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
+          subtitle={t('onboarding.recoveryPhrase.view.subtitle', { count: recoveryPhraseWordCount })}
           title={
             fromCloudBackup
               ? t('onboarding.recoveryPhrase.view.title.hasPassword')
               : t('onboarding.recoveryPhrase.view.title')
           }
         >
-          <WarningModal
-            caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
-            acknowledgeText={t('common.button.ok')}
-            isOpen={showScreenShotWarningModal}
-            modalName={ModalName.ScreenshotWarning}
-            title={t('onboarding.recoveryPhrase.warning.screenshot.title')}
-            onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
-          />
-          <Flex grow justifyContent="space-between">
-            <Flex grow>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+            showsVerticalScrollIndicator={false}
+            style={flexStyles.fill}
+          >
+            <Flex grow justifyContent="space-between">
               <MnemonicDisplay
                 enableRevealButton={onboardingExperimentEnabled}
                 mnemonicId={mnemonicId}
@@ -153,18 +164,19 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                   setDisplayContinueButtonEnabled(true)
                 }}
               />
+              <Flex row mt="$spacing16">
+                <Button
+                  size="large"
+                  variant="branded"
+                  isDisabled={!displayContinueButtonEnabled}
+                  testID={TestID.Next}
+                  onPress={fromCloudBackup ? finishCloudBackup : nextView}
+                >
+                  {fromCloudBackup ? t('common.button.finish') : t('common.button.continue')}
+                </Button>
+              </Flex>
             </Flex>
-            <Flex justifyContent="flex-end">
-              <DeprecatedButton
-                size="large"
-                isDisabled={!displayContinueButtonEnabled}
-                testID={TestID.Next}
-                onPress={fromCloudBackup ? finishCloudBackup : nextView}
-              >
-                {fromCloudBackup ? t('common.button.finish') : t('common.button.continue')}
-              </DeprecatedButton>
-            </Flex>
-          </Flex>
+          </ScrollView>
           {!seedWarningAcknowledged &&
             (onboardingExperimentEnabled ? (
               <ManualBackWarningModal onBack={navigation.goBack} onContinue={() => setSeedWarningAcknowledged(true)} />
@@ -188,19 +200,36 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             <Flex grow pointerEvents={confirmContinueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
               <MnemonicConfirmation
                 mnemonicId={mnemonicId}
-                onConfirmComplete={(): void => setConfirmContinueButtonEnabled(true)}
+                pageStart={isMultiPage ? confirmPage * MNEMONIC_LENGTH_HD : undefined}
+                pageSize={isMultiPage ? MNEMONIC_LENGTH_HD : undefined}
+                currentPage={isMultiPage ? confirmPage : undefined}
+                totalPages={isMultiPage ? totalConfirmPages : undefined}
+                onConfirmComplete={(): void => {
+                  if (isMultiPage && !isLastConfirmPage) {
+                    setConfirmPage((p) => p + 1)
+                    return
+                  }
+                  setConfirmContinueButtonEnabled(true)
+                }}
               />
             </Flex>
-            <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
-              <DeprecatedButton
-                isDisabled={!confirmContinueButtonEnabled}
-                size="large"
-                testID={TestID.Continue}
-                onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
-              >
-                {t('common.button.continue')}
-              </DeprecatedButton>
-            </Trace>
+            {(!isMultiPage || isLastConfirmPage) && (
+              <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
+                <Flex row>
+                  <Button
+                    isDisabled={!confirmContinueButtonEnabled}
+                    size="large"
+                    variant="branded"
+                    testID={TestID.Continue}
+                    onPress={() =>
+                      onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful()
+                    }
+                  >
+                    {t('common.button.continue')}
+                  </Button>
+                </Flex>
+              </Trace>
+            )}
           </Flex>
 
           {showSpeedBumpModal && (
@@ -229,7 +258,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
     >
       <Flex centered gap="$spacing16" pb="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <LockIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <Lock color="$neutral1" size="$icon.24" />
         </Flex>
         <Text color="$neutral1" variant="body1">
           {t('onboarding.recoveryPhrase.warning.final.title')}
@@ -237,17 +266,11 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('onboarding.recoveryPhrase.warning.final.message')}
         </Text>
-        <DeprecatedButton
-          flexGrow={1}
-          mt="$spacing16"
-          size="large"
-          testID={TestID.Confirm}
-          theme="primary"
-          width="100%"
-          onPress={onPress}
-        >
-          {t('onboarding.recoveryPhrase.warning.final.button')}
-        </DeprecatedButton>
+        <Flex row mt="$spacing16">
+          <Button size="large" testID={TestID.Confirm} variant="branded" onPress={onPress}>
+            {t('onboarding.recoveryPhrase.warning.final.button')}
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )
@@ -312,14 +335,14 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
 
         <Flex row gap="$spacing8">
           <Trace logPress element={ElementName.BackButton} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="large" theme="secondary" onPress={() => onBack()}>
+            <Button size="large" emphasis="secondary" onPress={() => onBack()}>
               {t('common.button.back')}
-            </DeprecatedButton>
+            </Button>
           </Trace>
           <Trace logPress element={ElementName.Continue} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="large" theme="primary" onPress={() => onContinue()}>
+            <Button size="large" variant="branded" emphasis="primary" onPress={() => onContinue()}>
               {t('common.button.continue')}
-            </DeprecatedButton>
+            </Button>
           </Trace>
         </Flex>
       </Flex>

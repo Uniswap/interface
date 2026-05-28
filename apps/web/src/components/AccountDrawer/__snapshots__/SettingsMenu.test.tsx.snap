@@ -1,0 +1,1118 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log out visible) 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Preferences
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _justifyContent-space-betwe3241"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 18.08C12 18.4 11.73 18.67 11.42 18.64C8.01001 18.35 5.32999 15.48 5.32999 12C5.32999 8.52 8.01001 5.64999 11.42 5.35999C11.73 5.32999 12 5.60001 12 5.92001V18.08Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Theme
+              </span>
+            </div>
+            <div
+              class="is_Tabs _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _direction-ltr _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              data-disable-theme="true"
+              data-orientation="horizontal"
+            >
+              <div
+                aria-orientation="horizontal"
+                class="is_GroupFrame _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _flexDirection-row"
+                data-disable-theme="true"
+                data-orientation="horizontal"
+                role="tablist"
+                style="outline: none; display: flex; flex-direction: row; align-items: center; outline-width: 0px; overflow-x: hidden; overflow-y: hidden; padding: 4px 4px 4px 4px; background-color: transparent; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; height: 34px; gap: var(--t-space-gap8); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20);"
+                tabindex="0"
+              >
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r29»-content-system"
+                      aria-selected="true"
+                      class="is_TabsTrigger  is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="active"
+                      id="«r29»-trigger-system"
+                      role="button"
+                      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); cursor: pointer; border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; outline-color: transparent; text-decoration-line: none;"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <span
+                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
+                        data-disable-theme="true"
+                      >
+                        Auto
+                      </span>
+                    </button>
+                  </span>
+                </span>
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r29»-content-light"
+                      aria-selected="false"
+                      class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="inactive"
+                      id="«r29»-trigger-light"
+                      role="button"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="theme-light"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M16.5 12C16.5 14.481 14.481 16.5 12 16.5C9.519 16.5 7.5 14.481 7.5 12C7.5 9.519 9.519 7.5 12 7.5C14.481 7.5 16.5 9.519 16.5 12ZM12.75 5V3C12.75 2.586 12.414 2.25 12 2.25C11.586 2.25 11.25 2.586 11.25 3V5C11.25 5.414 11.586 5.75 12 5.75C12.414 5.75 12.75 5.414 12.75 5ZM12.75 21V19C12.75 18.586 12.414 18.25 12 18.25C11.586 18.25 11.25 18.586 11.25 19V21C11.25 21.414 11.586 21.75 12 21.75C12.414 21.75 12.75 21.414 12.75 21ZM5.75 12C5.75 11.586 5.414 11.25 5 11.25H3C2.586 11.25 2.25 11.586 2.25 12C2.25 12.414 2.586 12.75 3 12.75H5C5.414 12.75 5.75 12.414 5.75 12ZM21.75 12C21.75 11.586 21.414 11.25 21 11.25H19C18.586 11.25 18.25 11.586 18.25 12C18.25 12.414 18.586 12.75 19 12.75H21C21.414 12.75 21.75 12.414 21.75 12ZM7.58099 7.58099C7.87399 7.28799 7.87399 6.81299 7.58099 6.51999L6.16699 5.10599C5.87399 4.81299 5.39899 4.81299 5.10599 5.10599C4.81299 5.39899 4.81299 5.87399 5.10599 6.16699L6.51999 7.58099C6.66599 7.72699 6.85799 7.80099 7.04999 7.80099C7.24199 7.80099 7.43399 7.72699 7.58099 7.58099ZM18.894 18.894C19.187 18.601 19.187 18.126 18.894 17.833L17.48 16.419C17.187 16.126 16.712 16.126 16.419 16.419C16.126 16.712 16.126 17.187 16.419 17.48L17.833 18.894C17.979 19.04 18.171 19.114 18.363 19.114C18.555 19.114 18.748 19.041 18.894 18.894ZM6.16699 18.894L7.58099 17.48C7.87399 17.187 7.87399 16.712 7.58099 16.419C7.28799 16.126 6.81299 16.126 6.51999 16.419L5.10599 17.833C4.81299 18.126 4.81299 18.601 5.10599 18.894C5.25199 19.04 5.44399 19.114 5.63599 19.114C5.82799 19.114 6.01999 19.041 6.16699 18.894ZM17.48 7.58099L18.894 6.16699C19.187 5.87399 19.187 5.39899 18.894 5.10599C18.601 4.81299 18.126 4.81299 17.833 5.10599L16.419 6.51999C16.126 6.81299 16.126 7.28799 16.419 7.58099C16.565 7.72699 16.757 7.80099 16.949 7.80099C17.141 7.80099 17.333 7.72699 17.48 7.58099Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  </span>
+                </span>
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r29»-content-dark"
+                      aria-selected="false"
+                      class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="inactive"
+                      id="«r29»-trigger-dark"
+                      role="button"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="theme-dark"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.75503 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73101 20.326 3.54402 17.087 3.06602 13.095C2.81602 11.013 3.289 9.05101 4.27 7.42001C5.86 4.77401 8.78601 3 12.133 3Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  </span>
+                </span>
+                <div
+                  class="t_unmounted  t_unmounted"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); position: absolute; cursor: pointer; z-index: var(--t-zIndex-mask); opacity: 0; height: 0px; width: 0px; transform: translateY(-4px) translateX(-4px); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="local-currency-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Local currency
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                USD
+              </span>
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="language-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 40 40"
+              >
+                <path
+                  d="M29.0163 16.2065L31.125 22H26.9077L29.0163 16.2065Z"
+                  fill="currentColor"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M19 14C19 10.2288 19 8.34315 20.1716 7.17157C21.3431 6 23.2288 6 27 6H31.7092C35.6054 6 37.5534 6 38.7331 7.2225C39.9127 8.445 39.8432 10.3918 39.7041 14.2855L39.2756 26.2855C39.1454 29.9331 39.0802 31.7569 37.9179 32.8785C36.7556 34 34.9306 34 31.2807 34H27C23.2288 34 21.3431 34 20.1716 32.8284C19 31.6569 19 29.7712 19 26V14ZM24.7238 28H21.5313L27.3813 11.9272L30.3604 11.1284L36.5012 28H33.3087L32.2168 25.0001H25.8157L24.7238 28Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  d="M0.5 12H7V9.99995L10 9.19995V12H16V15H13.9909C13.8759 18.1602 12.6746 21.0432 10.7493 23.2868C12.2709 24.2846 14.0673 24.8979 16.0005 24.9883L15.9999 25L15.216 27.9397C12.7163 27.704 10.415 26.7866 8.49982 25.3755C6.57251 26.7955 4.25411 27.7156 1.73604 27.9442L1 25L0.999469 24.9883C2.93248 24.8978 4.72882 24.2846 6.25034 23.2868C5.02453 21.8583 4.09221 20.1706 3.54687 18.3172L6.44643 17.54C6.86904 18.9394 7.57588 20.2156 8.49982 21.3013C9.95832 19.5874 10.8758 17.399 10.9883 15H1.25L0.5 12Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Language
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                English
+              </span>
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="portfolio-balance-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
+              >
+                <svg
+                  fill="currentColor"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    transform="translate(2 2) scale(1.6667)"
+                  >
+                    <path
+                      d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                      fill="currentColor"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Balances and activity
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Privacy and security
+          </span>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="passkey-settings"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  transform="translate(2.5 2)"
+                >
+                  <path
+                    d="M9.51807 0C7.27807 1.111 5.5 2 0.5 3C0.5 4.137 0.5 7.70192 0.5 8.88892C0.5 15.5559 6.167 18.889 9.5 20C12.833 18.889 18.5 15.5559 18.5 8.88892C18.5 7.66392 18.5 4.194 18.5 3C13.5 2 11.7221 1.111 9.51807 0ZM13.042 8.53003L9.04199 12.53C8.89599 12.676 8.70396 12.75 8.51196 12.75C8.31996 12.75 8.12793 12.677 7.98193 12.53L5.98193 10.53C5.68893 10.237 5.68893 9.76199 5.98193 9.46899C6.27493 9.17599 6.74997 9.17599 7.04297 9.46899L8.51294 10.939L11.9829 7.46899C12.2759 7.17599 12.7509 7.17599 13.0439 7.46899C13.3369 7.76199 13.335 8.23703 13.042 8.53003Z"
+                    fill="currentColor"
+                  />
+                </g>
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Login methods
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="wallet-settings-recovery-phrase"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12.75 6V3.75L17.25 8.25H15C13.42 8.25 12.75 7.58 12.75 6ZM14.75 16.6V17C14.26 17.5 14 18.2 14 19.05V20.7C14 20.87 13.87 21 13.7 21H6C4 21 3 20 3 18V6C3 4 4 3 6 3H11.25V6C11.25 8.42 12.58 9.75 15 9.75H18V12.64C18 12.79 17.9 12.9 17.75 12.93C16.04 13.27 14.75 14.79 14.75 16.6ZM7.75 16C7.75 15.586 7.414 15.25 7 15.25C6.586 15.25 6.25 15.586 6.25 16C6.25 16.414 6.586 16.75 7 16.75C7.414 16.75 7.75 16.414 7.75 16ZM7.75 12C7.75 11.586 7.414 11.25 7 11.25C6.586 11.25 6.25 11.586 6.25 12C6.25 12.414 6.586 12.75 7 12.75C7.414 12.75 7.75 12.414 7.75 12ZM11.75 16C11.75 15.586 11.414 15.25 11 15.25H9.5C9.086 15.25 8.75 15.586 8.75 16C8.75 16.414 9.086 16.75 9.5 16.75H11C11.414 16.75 11.75 16.414 11.75 16ZM14.75 12C14.75 11.586 14.414 11.25 14 11.25H9.5C9.086 11.25 8.75 11.586 8.75 12C8.75 12.414 9.086 12.75 9.5 12.75H14C14.414 12.75 14.75 12.414 14.75 12ZM21.5 19.05V21.15C21.5 22.05 21.0499 22.5 20.1499 22.5H16.8501C15.9501 22.5 15.5 22.05 15.5 21.15V19.05C15.5 18.38 15.751 17.961 16.25 17.79V16.6C16.25 15.359 17.26 14.35 18.5 14.35C19.74 14.35 20.75 15.359 20.75 16.6V17.79C21.249 17.961 21.5 18.38 21.5 19.05ZM19.25 16.6C19.25 16.186 18.913 15.85 18.5 15.85C18.087 15.85 17.75 16.186 17.75 16.6V17.7H19.25V16.6Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Recovery phrase
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Advanced
+          </span>
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 29 28"
+              >
+                <path
+                  d="M25 13.4167V21.2917C25 22.0967 24.3467 22.75 23.5417 22.75C22.7367 22.75 22.0833 22.0967 22.0833 21.2917V11.6667H23.25C24.216 11.6667 25 12.4507 25 13.4167ZM20.3333 22.1667V7C20.3333 4.66667 19.1667 3.5 16.8333 3.5H7.5C5.16667 3.5 4 4.66667 4 7V21C4 23.3333 5.16667 24.5 7.5 24.5H22.6667C21.3787 24.5 20.3333 23.4558 20.3333 22.1667ZM8.08333 19.5417C7.60033 19.5417 7.20833 19.1497 7.20833 18.6667C7.20833 18.1837 7.60033 17.7917 8.08333 17.7917C8.56633 17.7917 8.95833 18.1837 8.95833 18.6667C8.95833 19.1497 8.56633 19.5417 8.08333 19.5417ZM8.08333 14.875C7.60033 14.875 7.20833 14.483 7.20833 14C7.20833 13.517 7.60033 13.125 8.08333 13.125C8.56633 13.125 8.95833 13.517 8.95833 14C8.95833 14.483 8.56633 14.875 8.08333 14.875ZM8.08333 10.2083C7.60033 10.2083 7.20833 9.81633 7.20833 9.33333C7.20833 8.85033 7.60033 8.45833 8.08333 8.45833C8.56633 8.45833 8.95833 8.85033 8.95833 9.33333C8.95833 9.81633 8.56633 10.2083 8.08333 10.2083ZM16.25 19.5417H11C10.517 19.5417 10.125 19.1497 10.125 18.6667C10.125 18.1837 10.517 17.7917 11 17.7917H16.25C16.733 17.7917 17.125 18.1837 17.125 18.6667C17.125 19.1497 16.733 19.5417 16.25 19.5417ZM16.25 14.875H11C10.517 14.875 10.125 14.483 10.125 14C10.125 13.517 10.517 13.125 11 13.125H16.25C16.733 13.125 17.125 13.517 17.125 14C17.125 14.483 16.733 14.875 16.25 14.875ZM16.25 10.2083H11C10.517 10.2083 10.125 9.81633 10.125 9.33333C10.125 8.85033 10.517 8.45833 11 8.45833H16.25C16.733 8.45833 17.125 8.85033 17.125 9.33333C17.125 9.81633 16.733 10.2083 16.25 10.2083Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                App data
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _pt-t-space-pad1331704929 _pb-t-space-pad1331704929"
+          >
+            <div
+              class="_maxWidth-_xl_7037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _maxWidth-8037"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 19 18"
+                >
+                  <path
+                    d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Testnet mode
+                </span>
+              </div>
+            </div>
+            <span
+              class=""
+              style="display: contents;"
+            >
+              <span
+                class=" is_Theme"
+                style="display: contents;"
+              >
+                <button
+                  aria-checked="false"
+                  aria-selected="false"
+                  class="is_Switch  t_group_item"
+                  data-state="unchecked"
+                  data-testid="testnets-toggle"
+                  role="switch"
+                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; flex-shrink: 0; flex-direction: column; height: 9px; min-height: 32px; width: 14px; border-top-left-radius: 1000px; border-top-right-radius: 1000px; border-bottom-right-radius: 1000px; border-bottom-left-radius: 1000px; outline-color: rgba(0, 0, 0, 0); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; align-items: center; justify-content: center; min-width: 60px; pointer-events: auto; transition: all 80ms ease-in-out;"
+                  tabindex="0"
+                  type="button"
+                >
+                  <div
+                    class="css-view-175oi2r"
+                    style="align-self: stretch; flex: 1;"
+                  />
+                </button>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _mb-t-space-pad95589114"
+        >
+          <button
+            class="is_Button  t_group_item"
+            dd-action-name="Log out"
+            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 20.7px; height: 20.7px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 7.3335C7.63133 7.3335 7.33333 7.03483 7.33333 6.66683V2.00016C7.33333 1.63216 7.63133 1.3335 8 1.3335C8.36867 1.3335 8.66667 1.63216 8.66667 2.00016V6.66683C8.66667 7.03483 8.36867 7.3335 8 7.3335ZM14 8.66683C14 6.5375 12.8506 4.5462 11.002 3.47087C10.6833 3.28553 10.2753 3.39343 10.0907 3.71143C9.90532 4.03009 10.0134 4.43822 10.3314 4.62288C11.772 5.46088 12.6667 7.01083 12.6667 8.66683C12.6667 11.2402 10.5727 13.3335 8 13.3335C5.42733 13.3335 3.33333 11.2402 3.33333 8.66683C3.33333 7.01083 4.22795 5.46088 5.66862 4.62288C5.98729 4.43822 6.09534 4.02943 5.90934 3.71143C5.72334 3.39343 5.31538 3.2842 4.99805 3.47087C3.14938 4.54687 2 6.5375 2 8.66683C2 11.9748 4.69133 14.6668 8 14.6668C11.3087 14.6668 14 11.9748 14 8.66683Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+              line-height-disabled="false"
+            >
+              Log out
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;
+
+exports[`SettingsMenu > renders for standard wallet user 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Preferences
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _justifyContent-space-betwe3241"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 18.08C12 18.4 11.73 18.67 11.42 18.64C8.01001 18.35 5.32999 15.48 5.32999 12C5.32999 8.52 8.01001 5.64999 11.42 5.35999C11.73 5.32999 12 5.60001 12 5.92001V18.08Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Theme
+              </span>
+            </div>
+            <div
+              class="is_Tabs _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _direction-ltr _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              data-disable-theme="true"
+              data-orientation="horizontal"
+            >
+              <div
+                aria-orientation="horizontal"
+                class="is_GroupFrame _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _flexDirection-row"
+                data-disable-theme="true"
+                data-orientation="horizontal"
+                role="tablist"
+                style="outline: none; display: flex; flex-direction: row; align-items: center; outline-width: 0px; overflow-x: hidden; overflow-y: hidden; padding: 4px 4px 4px 4px; background-color: transparent; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; height: 34px; gap: var(--t-space-gap8); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20);"
+                tabindex="0"
+              >
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r8»-content-system"
+                      aria-selected="true"
+                      class="is_TabsTrigger  is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="active"
+                      id="«r8»-trigger-system"
+                      role="button"
+                      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); cursor: pointer; border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; outline-color: transparent; text-decoration-line: none;"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <span
+                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
+                        data-disable-theme="true"
+                      >
+                        Auto
+                      </span>
+                    </button>
+                  </span>
+                </span>
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r8»-content-light"
+                      aria-selected="false"
+                      class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="inactive"
+                      id="«r8»-trigger-light"
+                      role="button"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="theme-light"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M16.5 12C16.5 14.481 14.481 16.5 12 16.5C9.519 16.5 7.5 14.481 7.5 12C7.5 9.519 9.519 7.5 12 7.5C14.481 7.5 16.5 9.519 16.5 12ZM12.75 5V3C12.75 2.586 12.414 2.25 12 2.25C11.586 2.25 11.25 2.586 11.25 3V5C11.25 5.414 11.586 5.75 12 5.75C12.414 5.75 12.75 5.414 12.75 5ZM12.75 21V19C12.75 18.586 12.414 18.25 12 18.25C11.586 18.25 11.25 18.586 11.25 19V21C11.25 21.414 11.586 21.75 12 21.75C12.414 21.75 12.75 21.414 12.75 21ZM5.75 12C5.75 11.586 5.414 11.25 5 11.25H3C2.586 11.25 2.25 11.586 2.25 12C2.25 12.414 2.586 12.75 3 12.75H5C5.414 12.75 5.75 12.414 5.75 12ZM21.75 12C21.75 11.586 21.414 11.25 21 11.25H19C18.586 11.25 18.25 11.586 18.25 12C18.25 12.414 18.586 12.75 19 12.75H21C21.414 12.75 21.75 12.414 21.75 12ZM7.58099 7.58099C7.87399 7.28799 7.87399 6.81299 7.58099 6.51999L6.16699 5.10599C5.87399 4.81299 5.39899 4.81299 5.10599 5.10599C4.81299 5.39899 4.81299 5.87399 5.10599 6.16699L6.51999 7.58099C6.66599 7.72699 6.85799 7.80099 7.04999 7.80099C7.24199 7.80099 7.43399 7.72699 7.58099 7.58099ZM18.894 18.894C19.187 18.601 19.187 18.126 18.894 17.833L17.48 16.419C17.187 16.126 16.712 16.126 16.419 16.419C16.126 16.712 16.126 17.187 16.419 17.48L17.833 18.894C17.979 19.04 18.171 19.114 18.363 19.114C18.555 19.114 18.748 19.041 18.894 18.894ZM6.16699 18.894L7.58099 17.48C7.87399 17.187 7.87399 16.712 7.58099 16.419C7.28799 16.126 6.81299 16.126 6.51999 16.419L5.10599 17.833C4.81299 18.126 4.81299 18.601 5.10599 18.894C5.25199 19.04 5.44399 19.114 5.63599 19.114C5.82799 19.114 6.01999 19.041 6.16699 18.894ZM17.48 7.58099L18.894 6.16699C19.187 5.87399 19.187 5.39899 18.894 5.10599C18.601 4.81299 18.126 4.81299 17.833 5.10599L16.419 6.51999C16.126 6.81299 16.126 7.28799 16.419 7.58099C16.565 7.72699 16.757 7.80099 16.949 7.80099C17.141 7.80099 17.333 7.72699 17.48 7.58099Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  </span>
+                </span>
+                <span
+                  class=""
+                  style="display: contents;"
+                >
+                  <span
+                    class=" is_Theme"
+                    style="display: contents;"
+                  >
+                    <button
+                      aria-controls="«r8»-content-dark"
+                      aria-selected="false"
+                      class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
+                      data-collection-item=""
+                      data-disable-theme="true"
+                      data-orientation="horizontal"
+                      data-state="inactive"
+                      id="«r8»-trigger-dark"
+                      role="button"
+                      tabindex="0"
+                      type="button"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="theme-dark"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 20px; height: 20px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.75503 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73101 20.326 3.54402 17.087 3.06602 13.095C2.81602 11.013 3.289 9.05101 4.27 7.42001C5.86 4.77401 8.78601 3 12.133 3Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  </span>
+                </span>
+                <div
+                  class="t_unmounted  t_unmounted"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); position: absolute; cursor: pointer; z-index: var(--t-zIndex-mask); opacity: 0; height: 0px; width: 0px; transform: translateY(-4px) translateX(-4px); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="local-currency-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Local currency
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                USD
+              </span>
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="language-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 40 40"
+              >
+                <path
+                  d="M29.0163 16.2065L31.125 22H26.9077L29.0163 16.2065Z"
+                  fill="currentColor"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M19 14C19 10.2288 19 8.34315 20.1716 7.17157C21.3431 6 23.2288 6 27 6H31.7092C35.6054 6 37.5534 6 38.7331 7.2225C39.9127 8.445 39.8432 10.3918 39.7041 14.2855L39.2756 26.2855C39.1454 29.9331 39.0802 31.7569 37.9179 32.8785C36.7556 34 34.9306 34 31.2807 34H27C23.2288 34 21.3431 34 20.1716 32.8284C19 31.6569 19 29.7712 19 26V14ZM24.7238 28H21.5313L27.3813 11.9272L30.3604 11.1284L36.5012 28H33.3087L32.2168 25.0001H25.8157L24.7238 28Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  d="M0.5 12H7V9.99995L10 9.19995V12H16V15H13.9909C13.8759 18.1602 12.6746 21.0432 10.7493 23.2868C12.2709 24.2846 14.0673 24.8979 16.0005 24.9883L15.9999 25L15.216 27.9397C12.7163 27.704 10.415 26.7866 8.49982 25.3755C6.57251 26.7955 4.25411 27.7156 1.73604 27.9442L1 25L0.999469 24.9883C2.93248 24.8978 4.72882 24.2846 6.25034 23.2868C5.02453 21.8583 4.09221 20.1706 3.54687 18.3172L6.44643 17.54C6.86904 18.9394 7.57588 20.2156 8.49982 21.3013C9.95832 19.5874 10.8758 17.399 10.9883 15H1.25L0.5 12Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Language
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                English
+              </span>
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="portfolio-balance-settings-button"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
+              >
+                <svg
+                  fill="currentColor"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    transform="translate(2 2) scale(1.6667)"
+                  >
+                    <path
+                      d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                      fill="currentColor"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Balances and activity
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Privacy and security
+          </span>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Advanced
+          </span>
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 29 28"
+              >
+                <path
+                  d="M25 13.4167V21.2917C25 22.0967 24.3467 22.75 23.5417 22.75C22.7367 22.75 22.0833 22.0967 22.0833 21.2917V11.6667H23.25C24.216 11.6667 25 12.4507 25 13.4167ZM20.3333 22.1667V7C20.3333 4.66667 19.1667 3.5 16.8333 3.5H7.5C5.16667 3.5 4 4.66667 4 7V21C4 23.3333 5.16667 24.5 7.5 24.5H22.6667C21.3787 24.5 20.3333 23.4558 20.3333 22.1667ZM8.08333 19.5417C7.60033 19.5417 7.20833 19.1497 7.20833 18.6667C7.20833 18.1837 7.60033 17.7917 8.08333 17.7917C8.56633 17.7917 8.95833 18.1837 8.95833 18.6667C8.95833 19.1497 8.56633 19.5417 8.08333 19.5417ZM8.08333 14.875C7.60033 14.875 7.20833 14.483 7.20833 14C7.20833 13.517 7.60033 13.125 8.08333 13.125C8.56633 13.125 8.95833 13.517 8.95833 14C8.95833 14.483 8.56633 14.875 8.08333 14.875ZM8.08333 10.2083C7.60033 10.2083 7.20833 9.81633 7.20833 9.33333C7.20833 8.85033 7.60033 8.45833 8.08333 8.45833C8.56633 8.45833 8.95833 8.85033 8.95833 9.33333C8.95833 9.81633 8.56633 10.2083 8.08333 10.2083ZM16.25 19.5417H11C10.517 19.5417 10.125 19.1497 10.125 18.6667C10.125 18.1837 10.517 17.7917 11 17.7917H16.25C16.733 17.7917 17.125 18.1837 17.125 18.6667C17.125 19.1497 16.733 19.5417 16.25 19.5417ZM16.25 14.875H11C10.517 14.875 10.125 14.483 10.125 14C10.125 13.517 10.517 13.125 11 13.125H16.25C16.733 13.125 17.125 13.517 17.125 14C17.125 14.483 16.733 14.875 16.25 14.875ZM16.25 10.2083H11C10.517 10.2083 10.125 9.81633 10.125 9.33333C10.125 8.85033 10.517 8.45833 11 8.45833H16.25C16.733 8.45833 17.125 8.85033 17.125 9.33333C17.125 9.81633 16.733 10.2083 16.25 10.2083Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                App data
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _pt-t-space-pad1331704929 _pb-t-space-pad1331704929"
+          >
+            <div
+              class="_maxWidth-_xl_7037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _maxWidth-8037"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 19 18"
+                >
+                  <path
+                    d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Testnet mode
+                </span>
+              </div>
+            </div>
+            <span
+              class=""
+              style="display: contents;"
+            >
+              <span
+                class=" is_Theme"
+                style="display: contents;"
+              >
+                <button
+                  aria-checked="false"
+                  aria-selected="false"
+                  class="is_Switch  t_group_item"
+                  data-state="unchecked"
+                  data-testid="testnets-toggle"
+                  role="switch"
+                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; flex-shrink: 0; flex-direction: column; height: 9px; min-height: 32px; width: 14px; border-top-left-radius: 1000px; border-top-right-radius: 1000px; border-bottom-right-radius: 1000px; border-bottom-left-radius: 1000px; outline-color: rgba(0, 0, 0, 0); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; align-items: center; justify-content: center; min-width: 60px; pointer-events: auto; transition: all 80ms ease-in-out;"
+                  tabindex="0"
+                  type="button"
+                >
+                  <div
+                    class="css-view-175oi2r"
+                    style="align-self: stretch; flex: 1;"
+                  />
+                </button>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;

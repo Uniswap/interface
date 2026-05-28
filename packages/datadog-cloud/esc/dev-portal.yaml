@@ -1,0 +1,13 @@
+imports:
+  - shared-infra/datadog-2026
+  - shared-infra/incident
+
+values:
+  pulumiConfig:
+    datadog:apiKey: ${pulumiConfig["env:DD_API_KEY"]}
+    datadog:appKey: ${pulumiConfig["env:DD_APP_KEY"]}
+    datadog-cloud-universe:teams: ${teams}
+    datadog-cloud-universe:tagFilterExtra: "service:dev-portal*"
+    datadog-cloud-universe:defaultTeam: dev-portal
+    datadog-cloud-universe:disablePaging: 'true'
+    datadog-cloud-universe:disableSlack: 'true'

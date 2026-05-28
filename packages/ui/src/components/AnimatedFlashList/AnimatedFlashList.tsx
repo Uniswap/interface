@@ -1,21 +1,16 @@
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { FlashList, FlashListProps } from '@shopify/flash-list'
-import { forwardRef } from 'react'
+import type { FlashListProps } from '@shopify/flash-list'
 import type { FlatListProps } from 'react-native'
-import Animated from 'react-native-reanimated'
 
-// TODO(WALL-5764): update @gorhom/bottom-sheet to latest version so we can use their BottomSheetFlashList
+/**
+ * Platform-specific implementations:
+ * - Web: Uses regular FlashList (AnimatedFlashList.web.tsx)
+ * - Native: Uses Reanimated animated FlashList (AnimatedFlashList.native.tsx)
+ */
 
-// difficult to properly type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ReanimatedFlashList = Animated.createAnimatedComponent(FlashList as any) as any
-
-// We use `any` to make list work with forwardRef, but lose correct typing.
-// Need to extend manually Pick props from FlashListProps (if not included in FlatListProps)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnimatedFlashListProps = FlatListProps<any> &
+// oxlint-disable-next-line typescript/no-explicit-any -- Generic FlashList props require any for flexibility
+export type AnimatedFlashListProps = FlatListProps<any> &
   Pick<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any -- Generic FlashList props require any for flexibility
     FlashListProps<any>,
     | 'disableAutoLayout'
     | 'estimatedItemSize'
@@ -25,22 +20,12 @@ type AnimatedFlashListProps = FlatListProps<any> &
     | 'drawDistance'
   >
 
-// difficult to properly type
-export const AnimatedFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(
-  function _AnimatedFlashList(props, ref) {
-    return <ReanimatedFlashList ref={ref} sentry-label="ReanimatedFlashList" {...props} />
-  },
-)
+export const AnimatedFlashList = (() => {
+  throw new Error('AnimatedFlashList: Implemented in .native.tsx and .web.tsx')
+  // oxlint-disable-next-line typescript/no-explicit-any -- Stub component type
+}) as any
 
-export const AnimatedBottomSheetFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(
-  function _AnimatedBottomSheetFlashList(props, ref) {
-    return (
-      <ReanimatedFlashList
-        ref={ref}
-        {...props}
-        renderScrollComponent={BottomSheetScrollView}
-        sentry-label="AnimatedBottomSheetFlashList"
-      />
-    )
-  },
-)
+export const AnimatedBottomSheetFlashList = (() => {
+  throw new Error('AnimatedBottomSheetFlashList: Implemented in .native.tsx and .web.tsx')
+  // oxlint-disable-next-line typescript/no-explicit-any -- Stub component type
+}) as any

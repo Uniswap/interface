@@ -1,39 +1,52 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useRef, useSyncExternalStore } from 'react'
+import { getScrollY, subscribe } from '~/state/scroll/scrollStore'
 
 export enum ScrollDirection {
   UP = 'up',
   DOWN = 'down',
 }
-export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
-  const [direction, setDirection] = useState<ScrollDirection | undefined>()
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const [height, setHeight] = useState(window.scrollY)
 
-  useEffect(() => {
-    let previousScrollPosition = 0
-    let currentScrollPosition = 0
+interface ScrollState {
+  direction: ScrollDirection | undefined
+  isScrolledDown: boolean
+}
 
-    const scrollListener = () => {
-      if (!enabled) {
-        return
-      }
-      setIsScrolledDown(window.scrollY > 0)
-      if (window.scrollY >= 0) {
-        setHeight(window.scrollY)
-        currentScrollPosition = window.scrollY
-      }
+const SERVER_SNAPSHOT: ScrollState = { direction: undefined, isScrolledDown: false }
 
-      if (previousScrollPosition < currentScrollPosition) {
-        setDirection(ScrollDirection.DOWN)
-      } else if (previousScrollPosition > currentScrollPosition) {
-        setDirection(ScrollDirection.UP)
-      }
+export function useScroll(): ScrollState {
+  const stateRef = useRef<ScrollState>({
+    direction: undefined,
+    isScrolledDown: getScrollY() > 0,
+  })
 
-      // Update the previous value
-      previousScrollPosition = currentScrollPosition
+  const subscribeToStore = useCallback((onStoreChange: () => void) => {
+    let prevY = getScrollY()
+
+    stateRef.current = {
+      direction: stateRef.current.direction,
+      isScrolledDown: prevY > 0,
     }
-    window.addEventListener('scroll', scrollListener)
-    return () => window.removeEventListener('scroll', scrollListener)
-  }, [enabled])
-  return { direction, isScrolledDown, height }
+
+    return subscribe(() => {
+      const y = getScrollY()
+      const isScrolledDown = y > 0
+
+      let { direction } = stateRef.current
+      if (prevY < y) {
+        direction = ScrollDirection.DOWN
+      } else if (prevY > y) {
+        direction = ScrollDirection.UP
+      }
+      prevY = y
+
+      if (isScrolledDown !== stateRef.current.isScrolledDown || direction !== stateRef.current.direction) {
+        stateRef.current = { direction, isScrolledDown }
+        onStoreChange()
+      }
+    })
+  }, [])
+
+  const getSnapshot = useCallback(() => stateRef.current, [])
+
+  return useSyncExternalStore(subscribeToStore, getSnapshot, () => SERVER_SNAPSHOT)
 }

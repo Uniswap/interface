@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sandbox Child Frame</title>
+  <style>
+    body { font-family: monospace; padding: 8px; margin: 0; background: #1a1a2e; color: #e0e0e0; font-size: 11px; }
+    .status { padding: 4px 8px; border-radius: 4px; margin: 2px 0; }
+    .pass { background: #0f5132; color: #75b798; }
+    .fail { background: #842029; color: #ea868f; }
+    .neutral { background: #333; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div id="info">Detecting providers...</div>
+  <script>
+    const origin = window.origin;
+    const hasEthereum = typeof window.ethereum !== 'undefined' && window.ethereum !== null;
+
+    // Listen for Uniswap's EIP-6963 announceProvider event
+    let hasUniswapProvider = false;
+    const UNISWAP_RDNS = 'org.uniswap.app';
+
+    window.addEventListener('eip6963:announceProvider', (event) => {
+      if (event.detail && event.detail.info && event.detail.info.rdns === UNISWAP_RDNS) {
+        hasUniswapProvider = true;
+        updateDisplay();
+      }
+    });
+
+    // Request providers via EIP-6963
+    window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+    // Give providers time to respond, then report
+    setTimeout(() => {
+      updateDisplay();
+      report();
+    }, 500);
+
+    function updateDisplay() {
+      const otherWallet = hasEthereum && !hasUniswapProvider;
+      document.getElementById('info').innerHTML = `
+        <div class="status">origin: <strong>${origin}</strong></div>
+        <div class="status ${hasUniswapProvider ? 'pass' : 'fail'}">
+          Uniswap provider (EIP-6963): <strong>${hasUniswapProvider ? 'PRESENT' : 'ABSENT'}</strong>
+        </div>
+        ${otherWallet ? '<div class="status neutral">window.ethereum present from another wallet (ignored)</div>' : ''}
+      `;
+    }
+
+    function report() {
+      try {
+        window.parent.postMessage({
+          type: 'sandbox-test-report',
+          origin: origin,
+          hasUniswapProvider: hasUniswapProvider,
+        }, '*');
+      } catch (e) {
+        // postMessage may fail in some sandbox configurations
+      }
+    }
+  </script>
+</body>
+</html>

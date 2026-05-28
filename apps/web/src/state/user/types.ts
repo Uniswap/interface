@@ -1,4 +1,4 @@
-import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
+import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 
 export interface SerializedPair {
   token0: SerializedToken

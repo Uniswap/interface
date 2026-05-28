@@ -3,8 +3,8 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NotificationState, pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { NotificationState, pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -25,6 +25,7 @@ const account = signerMnemonicAccount()
 
 const txId = 'uuid-4'
 
+// oxlint-disable-next-line jest/no-export -- suppressed
 export const createFinalizedTxAction = (typeInfo: TransactionTypeInfo): ReturnType<typeof finalizeTransaction> => ({
   payload: {
     ...finalizedTxAction.payload,
@@ -75,6 +76,7 @@ describe(pushTransactionNotification, () => {
           txType: TransactionType.Approve,
           tokenAddress: approveTypeInfo.tokenAddress,
           spender: approveTypeInfo.spender,
+          tokenSymbol: approveTypeInfo.tokenSymbol,
           txId,
         }),
       )

@@ -1,8 +1,8 @@
+import { isIOS } from '@universe/environment'
 import { useEffect, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { EmitterSubscription, Keyboard } from 'react-native'
 import { KeyboardInfo } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
-import { isIOS } from 'utilities/src/platform'
 
 /**
  *  Hook to substitute KeyboardAvoidingView for a bottom sheet modal

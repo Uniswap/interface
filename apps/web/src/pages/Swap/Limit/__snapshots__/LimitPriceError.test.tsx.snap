@@ -1,871 +1,276 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LimitPriceError renders the limit price error correctly when there is a calculation error 1`] = `
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c0 {
-  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
-  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
-  animation: gyvpAI 125ms ease-in-out forwards;
-  -webkit-animation-delay: 125ms;
-  animation-delay: 125ms;
-  opacity: 0;
-  -webkit-translate: translateY(10px);
-  translate: translateY(10px);
-}
-
-.c0.exiting {
-  -webkit-animation: dnSqss 125ms ease-in-out;
-  animation: dnSqss 125ms ease-in-out;
-}
-
-.c3 {
-  padding: 12px;
-  border: 1px solid #22222212;
-  border-radius: 16px;
-  margin-top: 4px;
-}
-
-.c4 {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #FFF2F1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
+exports[`LimitPriceError > renders the limit price error correctly when there is a calculation error 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    animationtype="translate"
+    class="sc-bRKDuR ggdtYX"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _mt-t-space-spa94665589 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0"
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _justifyContent-center _width-40px _height-40px _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-statusCriti3045924 _flexShrink-0"
       >
-        <div
-          class="c1 c2 c3"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
+          viewBox="0 0 24 24"
         >
-          <div
-            class="c4"
-          >
-            <svg
-              fill="none"
-              height="20px"
-              stroke="#FF5F52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="9"
-                y2="13"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="17"
-                y2="17"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5"
-          >
-            <div
-              class="c6 css-n8z49y"
-            >
-              Market price not available
-            </div>
-            <div
-              class="c7 css-142zc9n"
-            >
-              We are unable to calculate the current market price. To avoid submitting an order below market price, please check your network connection and try again.
-            </div>
-          </div>
-        </div>
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
       </div>
       <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-gap56"
+      >
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Market price not available
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          We are unable to calculate the current market price. To avoid submitting an order below market price, please check your network connection and try again.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted false change -10 1`] = `
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c0 {
-  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
-  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
-  animation: gyvpAI 125ms ease-in-out forwards;
-  -webkit-animation-delay: 125ms;
-  animation-delay: 125ms;
-  opacity: 0;
-  -webkit-translate: translateY(10px);
-  translate: translateY(10px);
-}
-
-.c0.exiting {
-  -webkit-animation: dnSqss 125ms ease-in-out;
-  animation: dnSqss 125ms ease-in-out;
-}
-
-.c3 {
-  padding: 12px;
-  border: 1px solid #22222212;
-  border-radius: 16px;
-  margin-top: 4px;
-}
-
-.c4 {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #FFF2F1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false -10 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    animationtype="translate"
+    class="sc-bRKDuR ggdtYX"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _mt-t-space-spa94665589 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0"
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _justifyContent-center _width-40px _height-40px _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-statusCriti3045924 _flexShrink-0"
       >
-        <div
-          class="c1 c2 c3"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
+          viewBox="0 0 24 24"
         >
-          <div
-            class="c4"
-          >
-            <svg
-              fill="none"
-              height="20px"
-              stroke="#FF5F52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="9"
-                y2="13"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="17"
-                y2="17"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5"
-          >
-            <div
-              class="c6 css-n8z49y"
-            >
-              Selling DAI below market price
-            </div>
-            <div
-              class="c7 css-142zc9n"
-            >
-              Your limit price is 10% lower than market. Adjust your limit price to proceed.
-            </div>
-          </div>
-        </div>
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
       </div>
       <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-gap56"
+      >
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Selling DAI below market price
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Your limit price is 10% lower than market. Adjust your limit price to proceed.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted false change 10 1`] = `
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c0 {
-  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
-  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
-  animation: gyvpAI 125ms ease-in-out forwards;
-  -webkit-animation-delay: 125ms;
-  animation-delay: 125ms;
-  opacity: 0;
-  -webkit-translate: translateY(10px);
-  translate: translateY(10px);
-}
-
-.c0.exiting {
-  -webkit-animation: dnSqss 125ms ease-in-out;
-  animation: dnSqss 125ms ease-in-out;
-}
-
-.c3 {
-  padding: 12px;
-  border: 1px solid #22222212;
-  border-radius: 16px;
-  margin-top: 4px;
-}
-
-.c4 {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #FFF2F1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false 10 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    animationtype="translate"
+    class="sc-bRKDuR ggdtYX"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _mt-t-space-spa94665589 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0"
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _justifyContent-center _width-40px _height-40px _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-statusCriti3045924 _flexShrink-0"
       >
-        <div
-          class="c1 c2 c3"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
+          viewBox="0 0 24 24"
         >
-          <div
-            class="c4"
-          >
-            <svg
-              fill="none"
-              height="20px"
-              stroke="#FF5F52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="9"
-                y2="13"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="17"
-                y2="17"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5"
-          >
-            <div
-              class="c6 css-n8z49y"
-            >
-              Selling DAI below market price
-            </div>
-            <div
-              class="c7 css-142zc9n"
-            >
-              Your limit price is 10% lower than market. Adjust your limit price to proceed.
-            </div>
-          </div>
-        </div>
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
       </div>
       <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-gap56"
+      >
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Selling DAI below market price
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Your limit price is 10% lower than market. Adjust your limit price to proceed.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted true change -10 1`] = `
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c0 {
-  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
-  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
-  animation: gyvpAI 125ms ease-in-out forwards;
-  -webkit-animation-delay: 125ms;
-  animation-delay: 125ms;
-  opacity: 0;
-  -webkit-translate: translateY(10px);
-  translate: translateY(10px);
-}
-
-.c0.exiting {
-  -webkit-animation: dnSqss 125ms ease-in-out;
-  animation: dnSqss 125ms ease-in-out;
-}
-
-.c3 {
-  padding: 12px;
-  border: 1px solid #22222212;
-  border-radius: 16px;
-  margin-top: 4px;
-}
-
-.c4 {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #FFF2F1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true -10 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    animationtype="translate"
+    class="sc-bRKDuR ggdtYX"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _mt-t-space-spa94665589 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0"
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _justifyContent-center _width-40px _height-40px _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-statusCriti3045924 _flexShrink-0"
       >
-        <div
-          class="c1 c2 c3"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
+          viewBox="0 0 24 24"
         >
-          <div
-            class="c4"
-          >
-            <svg
-              fill="none"
-              height="20px"
-              stroke="#FF5F52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="9"
-                y2="13"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="17"
-                y2="17"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5"
-          >
-            <div
-              class="c6 css-n8z49y"
-            >
-              Buying USDC above market price
-            </div>
-            <div
-              class="c7 css-142zc9n"
-            >
-              Your limit price is 10% higher than market. Adjust your limit price to proceed.
-            </div>
-          </div>
-        </div>
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
       </div>
       <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-gap56"
+      >
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Buying USDC above market price
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Your limit price is 10% higher than market. Adjust your limit price to proceed.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted true change 10 1`] = `
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c0 {
-  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
-  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
-  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
-  animation: gyvpAI 125ms ease-in-out forwards;
-  -webkit-animation-delay: 125ms;
-  animation-delay: 125ms;
-  opacity: 0;
-  -webkit-translate: translateY(10px);
-  translate: translateY(10px);
-}
-
-.c0.exiting {
-  -webkit-animation: dnSqss 125ms ease-in-out;
-  animation: dnSqss 125ms ease-in-out;
-}
-
-.c3 {
-  padding: 12px;
-  border: 1px solid #22222212;
-  border-radius: 16px;
-  margin-top: 4px;
-}
-
-.c4 {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #FFF2F1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true 10 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    animationtype="translate"
+    class="sc-bRKDuR ggdtYX"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _mt-t-space-spa94665589 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0"
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _justifyContent-center _width-40px _height-40px _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-statusCriti3045924 _flexShrink-0"
       >
-        <div
-          class="c1 c2 c3"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
+          viewBox="0 0 24 24"
         >
-          <div
-            class="c4"
-          >
-            <svg
-              fill="none"
-              height="20px"
-              stroke="#FF5F52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="9"
-                y2="13"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="17"
-                y2="17"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5"
-          >
-            <div
-              class="c6 css-n8z49y"
-            >
-              Buying USDC above market price
-            </div>
-            <div
-              class="c7 css-142zc9n"
-            >
-              Your limit price is 10% higher than market. Adjust your limit price to proceed.
-            </div>
-          </div>
-        </div>
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
       </div>
       <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-gap56"
+      >
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Buying USDC above market price
+        </span>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Your limit price is 10% higher than market. Adjust your limit price to proceed.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;

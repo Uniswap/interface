@@ -1,19 +1,17 @@
-import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
-import { ScrollBarStyles } from 'components/Common/styles'
-import { SearchInput } from 'components/SearchModal/styled'
-import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
-import { ContentWrapper } from 'pages/Swap/Buy/shared'
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Flex, ModalCloseIcon, styled, useMedia, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, styled, useMedia, useScrollbarStyles } from 'ui/src'
+import { Search } from 'ui/src/components/icons/Search'
 import { Text } from 'ui/src/components/text/Text'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
+import { SearchInput } from '~/components/SearchModal/styled'
+import { CountryListRow } from '~/pages/Swap/Buy/CountryListRow'
+import { ContentWrapper } from '~/pages/Swap/Buy/shared'
 
 const ROW_ITEM_SIZE = 56
 export const HeaderContent = styled(Flex, {
@@ -40,22 +38,21 @@ export function CountryListModal({
 }: CountryListModalProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const media = useMedia()
+  const scrollbarStyles = useScrollbarStyles()
 
   const filteredData: FORCountry[] = useMemo(() => {
     const sorted = bubbleToTop(countryList, (c) => c.countryCode === selectedCountry?.countryCode)
     if (searchQuery) {
-      return sorted.filter((item) => item?.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()))
+      return sorted.filter((item) => item.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()))
     } else {
       return sorted
     }
   }, [countryList, searchQuery, selectedCountry?.countryCode])
 
-  const fixedList = useRef<FixedSizeList>()
-  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value
-    setSearchQuery(input)
+  const fixedList = useRef<FixedSizeList>(undefined)
+  const handleInput = useCallback((text: string) => {
+    setSearchQuery(text)
     fixedList.current?.scrollTo(0)
   }, [])
 
@@ -80,29 +77,29 @@ export function CountryListModal({
             <Text variant="body2">{t('common.selectRegion.label')}</Text>
             <ModalCloseIcon testId="CountryListModal-close" onClose={closeModal} />
           </Flex>
-          <Flex position="relative" height="100%" flex={1}>
-            <SearchIcon
-              fill={colors.neutral3.val}
-              style={{ position: 'absolute', left: '12px', top: '10px' }}
-              width={iconSizes.icon20}
-              height={iconSizes.icon20}
+          <Flex position="relative" width="100%" height="$spacing40">
+            <Flex
+              position="absolute"
+              left="$spacing12"
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
               pointerEvents="none"
-            />
+            >
+              <Search size="$icon.20" color="$neutral3" />
+            </Flex>
             <SearchInput
-              type="text"
-              id="for-country-search-input"
-              data-testid="for-country-search-input"
               placeholder={t`swap.buy.countryModal.placeholder`}
-              autoComplete="off"
               value={searchQuery}
-              onChange={handleInput}
+              onChangeText={handleInput}
             />
           </Flex>
         </HeaderContent>
         <Flex grow>
           <AutoSizer disableWidth>
             {({ height }: { height: number }) => (
-              <div data-testid="country-list-wrapper">
+              <Flex data-testid="country-list-wrapper">
                 <FixedSizeList
                   height={height}
                   ref={fixedList as any}
@@ -111,7 +108,7 @@ export function CountryListModal({
                   itemCount={filteredData.length}
                   itemSize={ROW_ITEM_SIZE}
                   itemKey={(index: number, data: typeof countryList) => data[index]?.countryCode}
-                  {...ScrollBarStyles}
+                  style={scrollbarStyles}
                 >
                   {({ style, data, index }) => (
                     <CountryListRow
@@ -125,7 +122,7 @@ export function CountryListModal({
                     />
                   )}
                 </FixedSizeList>
-              </div>
+              </Flex>
             )}
           </AutoSizer>
         </Flex>

@@ -1,11 +1,10 @@
+import { GasFeeResult } from '@universe/api'
 import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
-import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
+import { hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 export function useHasSufficientFunds({
   account,
@@ -19,23 +18,28 @@ export function useHasSufficientFunds({
   value?: string
 }): boolean {
   const { defaultChainId } = useEnabledChains()
-  const nativeCurrency = NativeCurrency.onChain(chainId || defaultChainId)
-  const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(chainId ?? defaultChainId, account)
+  const effectiveChainId = chainId ?? defaultChainId
+  const { gasToken, gasBalance } = useChainGasToken({ chainId: effectiveChainId, accountAddress: account })
 
   const hasSufficientFunds = useMemo(() => {
+    // The `value` represents the transaction's native value field. On standard chains this
+    // is the native currency; on Tempo this maps to pathUSD (the gas token). We always
+    // include it as gasTokenTransactionAmount so the sufficiency check accounts for both
+    // the send amount and the gas fee drawing from the same balance.
     const transactionAmount =
       getCurrencyAmount({
         value,
         valueType: ValueType.Raw,
-        currency: nativeCurrency,
+        currency: gasToken,
       }) ?? undefined
 
-    return hasSufficientFundsIncludingGas({
-      transactionAmount,
+    return hasSufficientGasBalance({
+      chainId: effectiveChainId,
+      gasBalance,
       gasFee: gasFee.value,
-      nativeCurrencyBalance: nativeBalance,
+      gasTokenTransactionAmount: transactionAmount,
     })
-  }, [value, nativeCurrency, gasFee.value, nativeBalance])
+  }, [value, gasToken, gasFee.value, gasBalance, effectiveChainId])
 
   return hasSufficientFunds
 }

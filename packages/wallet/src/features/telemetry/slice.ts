@@ -1,11 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- Wallet package needs direct access for internal usage
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-
-const balanceReportFrequency = ONE_MINUTE_MS * 5
 
 export interface TelemetryState {
   // if the user has opted in/out of analytics
@@ -68,20 +65,6 @@ export const slice = createSlice({
     },
   },
 })
-
-export function shouldReportBalances(
-  lastBalancesReport: number | undefined,
-  lastBalancesReportValue: number | undefined,
-  signerAccountAddresses: string[],
-  signerAccountValues: number[],
-  signerAccountsTotalBalance: number,
-): boolean {
-  const didWalletGetFunded = signerAccountsTotalBalance > 0 && lastBalancesReportValue === 0
-  const balanceReportDue = (lastBalancesReport ?? 0) + balanceReportFrequency < Date.now()
-  const validAccountInfo = signerAccountAddresses.length === signerAccountValues.length
-
-  return validAccountInfo && (didWalletGetFunded || balanceReportDue)
-}
 
 export const { recordHeartbeat, recordBalancesReport, recordWalletFunded, setAllowAnalytics } = slice.actions
 export const { reducer: telemetryReducer } = slice

@@ -1,14 +1,25 @@
-import { useEffect } from 'react'
-import { AppStateStatus } from 'react-native'
+import { useEffect, useMemo } from 'react'
+import type { AppStateStatus } from 'react-native'
 import { useSelector } from 'react-redux'
-import { AppStateState, selectCurrentAppState, selectPreviousAppState } from 'src/features/appState/appStateSlice'
+import type { AppStateState } from 'src/features/appState/appStateSlice'
+import { selectCurrentAppState, selectPreviousAppState } from 'src/features/appState/appStateSlice'
 import { useEvent } from 'utilities/src/react/hooks'
 
 type AppStateTransition = { from: AppStateStatus; to: AppStateStatus }
 
 /** Invokes `callback` when app state goes from `from` to `to`. */
-export function useAppStateTrigger(from: AppStateStatus, to: AppStateStatus, callback: () => void): void {
-  useAppStateTransitionTrigger([{ from, to }], callback)
+export function useAppStateTrigger({
+  from,
+  to,
+  callback,
+}: {
+  from: AppStateStatus
+  to: AppStateStatus
+  callback: () => void
+}): void {
+  const transitions = useMemo(() => [{ from, to }], [from, to])
+
+  useAppStateTransitionTrigger(transitions, callback)
 }
 
 /**

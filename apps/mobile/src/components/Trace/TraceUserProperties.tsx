@@ -1,9 +1,14 @@
+import { useQuery } from '@tanstack/react-query'
+import { provideUniswapIdentifierService } from '@universe/api'
+import { isAndroid } from '@universe/environment'
+import { uniswapIdentifierQuery } from '@universe/sessions'
 import { useEffect, useMemo } from 'react'
-import { NativeModules } from 'react-native'
-import OneSignal from 'react-native-onesignal'
+import { NativeModules, useWindowDimensions } from 'react-native'
+import { OneSignal } from 'react-native-onesignal'
 import { useSelector } from 'react-redux'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
@@ -13,24 +18,27 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { isAndroid } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+import { logger } from 'utilities/src/logger/logger'
+// oxlint-disable-next-line no-restricted-imports -- Required for analytics user properties
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import {
   useActiveAccount,
   useSignerAccounts,
   useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
   const isDarkMode = useIsDarkMode()
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()
   const signerAccounts = useSignerAccounts()
@@ -42,6 +50,7 @@ export function TraceUserProperties(): null {
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const finishedOnboarding = useSelector(selectFinishedOnboarding)
 
   const signerAccountAddresses = useMemo(() => signerAccounts.map((account) => account.address), [signerAccounts])
   const { totalBalance: signerAccountsTotalBalance } = useAccountBalances({
@@ -52,17 +61,14 @@ export function TraceUserProperties(): null {
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
   const allowAnalytics = useSelector(selectAllowAnalytics)
 
+  const { data: uniswapIdentifier } = useQuery(uniswapIdentifierQuery(provideUniswapIdentifierService))
+
   useGatingUserPropertyUsernames()
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.AppVersion, getFullAppVersion())
-    Keyring.getMnemonicIds() // Temporary to prepare for fix, should be removed in 1.28
-      .then((mnemonicIds) => {
-        setUserProperty(MobileUserPropertyName.MnemonicCount, mnemonicIds.length)
-      })
-      .catch(() => {})
     if (isAndroid) {
-      NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
+      NativeModules['AndroidDeviceModule'].getPerformanceClass().then((perfClass: number) => {
         setUserProperty(MobileUserPropertyName.AndroidPerfClass, perfClass)
       })
     }
@@ -72,12 +78,39 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics])
 
   useEffect(() => {
+    const fetchKeyringData = async (): Promise<void> => {
+      const mnemonicIds = await Keyring.getMnemonicIds()
+      setUserProperty(MobileUserPropertyName.MnemonicCount, mnemonicIds.length)
+      const privateKeyAddresses = await Keyring.getAddressesForStoredPrivateKeys()
+      setUserProperty(MobileUserPropertyName.PrivateKeyCount, privateKeyAddresses.length)
+    }
+    fetchKeyringData().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'TraceUserProperties.tsx', function: 'fetchKeyringData' },
+      })
+    })
+  }, [finishedOnboarding])
+
+  // Set user properties for datadog
+
+  useEffect(() => {
+    setDatadogUserWithUniqueId(activeAccount?.address, uniswapIdentifier)
+  }, [activeAccount?.address, uniswapIdentifier])
+
+  // Set user properties for amplitude
+
+  useEffect(() => {
     setUserProperty(MobileUserPropertyName.WalletSwapProtectionSetting, swapProtectionSetting)
   }, [allowAnalytics, swapProtectionSetting])
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.DarkMode, isDarkMode)
   }, [allowAnalytics, isDarkMode])
+
+  useEffect(() => {
+    setUserProperty(MobileUserPropertyName.WindowHeight, windowHeight)
+    setUserProperty(MobileUserPropertyName.WindowWidth, windowWidth)
+  }, [windowWidth, windowHeight])
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccountAddresses.length)
@@ -92,11 +125,13 @@ export function TraceUserProperties(): null {
     if (!activeAccount) {
       return
     }
+    if (activeAccount.backups) {
+      setUserProperty(MobileUserPropertyName.BackupTypes, activeAccount.backups)
+    }
     setUserProperty(MobileUserPropertyName.ActiveWalletAddress, activeAccount.address)
     setUserProperty(MobileUserPropertyName.ActiveWalletType, activeAccount.type)
-    setUserProperty(MobileUserPropertyName.IsCloudBackedUp, Boolean(activeAccount.backups?.includes(BackupType.Cloud)))
+    setUserProperty(MobileUserPropertyName.IsCloudBackedUp, hasBackup(BackupType.Cloud, activeAccount))
     setUserProperty(MobileUserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
-
     setUserProperty(MobileUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)
     setUserProperty(MobileUserPropertyName.IsHideSpamTokensEnabled, hideSpamTokens)
   }, [allowAnalytics, activeAccount, hideSmallBalances, hideSpamTokens])
@@ -104,11 +139,19 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(
       MobileUserPropertyName.AppOpenAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForAppAccess, touchId, faceId),
+      getAuthMethod({
+        isSettingEnabled: biometricsAppSettingsState.requiredForAppAccess,
+        isTouchIdSupported: touchId,
+        isFaceIdSupported: faceId,
+      }),
     )
     setUserProperty(
       MobileUserPropertyName.TransactionAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForTransactions, touchId, faceId),
+      getAuthMethod({
+        isSettingEnabled: biometricsAppSettingsState.requiredForTransactions,
+        isTouchIdSupported: touchId,
+        isFaceIdSupported: faceId,
+      }),
     )
   }, [allowAnalytics, biometricsAppSettingsState, touchId, faceId])
 
@@ -125,7 +168,7 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics, isTestnetModeEnabled])
 
   useEffect(() => {
-    OneSignal.sendTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
+    OneSignal.User.addTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
   }, [signerAccountsTotalBalance])
 
   return null

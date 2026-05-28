@@ -1,0 +1,14 @@
+# Staging stack for privy-embedded-wallet monitors.
+# Staging covers both dev and staging environments (backend pattern).
+#
+# Note: disablePaging/disableSlack are also set in the ESC environment
+# (esc/privy-embedded-wallet.yaml). The ESC value applies by default; this
+# stack value is an explicit per-environment override.
+environment:
+  - datadog-cloud-universe/privy-embedded-wallet
+config:
+  datadog-cloud-universe:environment: staging
+  datadog-cloud-universe:tagFilter: "(unienv:dev OR unienv:staging OR env:dev OR env:staging)"
+  datadog-cloud-universe:incidentWebhook: "@webhook-Incident-io"
+  datadog-cloud-universe:disablePaging: "true"
+  datadog-cloud-universe:disableSlack: "true"

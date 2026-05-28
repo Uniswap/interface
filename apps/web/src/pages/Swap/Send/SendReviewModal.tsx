@@ -1,43 +1,36 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonPrimary } from 'components/Button/buttons'
-import Identicon from 'components/Identicon'
-import { ChainLogo } from 'components/Logo/ChainLogo'
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import Column, { ColumnCenter } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { useSendContext } from 'state/send/SendContext'
-import { Separator, ThemedText } from 'theme/components'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { capitalize } from 'tsafe'
+import { Button, Flex, Separator, styled, Text } from 'ui/src'
+import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Unitag } from 'ui/src/components/icons/Unitag'
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import { DynamicSizeText } from 'ui/src/components/text/DynamicSizeText/DynamicSizeText'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { shortenAddress } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
+import { useSendContext } from '~/features/Swap/state/send/SendContext'
+import { useAccount } from '~/hooks/useAccount'
 
-const ModalWrapper = styled(ColumnCenter)`
-  background-color: ${({ theme }) => theme.surface1};
-  border-radius: 16px;
-  width: 100%;
-  padding: 8px;
-`
-
-const ModalHeader = styled(GetHelpHeader)`
-  padding: 8px 12px 4px;
-`
-
-const ReviewContentContainer = styled(Column)`
-  width: 100%;
-  padding: 12px 16px;
-  gap: 16px;
-`
+const ReviewContentContainer = styled(Flex, {
+  width: '100%',
+  gap: '$gap16',
+})
 
 const SendModalHeader = ({
   label,
@@ -45,56 +38,77 @@ const SendModalHeader = ({
   subheader,
   image,
 }: {
-  label: ReactNode
+  label?: ReactNode
   header: ReactNode
   subheader: ReactNode
   image: ReactNode
 }) => {
   return (
-    <Row justify="space-between" align="center">
-      <Column gap="xs">
-        <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-          {label}
-        </ThemedText.BodySmall>
-        <ThemedText.HeadlineLarge lineHeight="44px">{header}</ThemedText.HeadlineLarge>
-        <ThemedText.BodySmall lineHeight="20px" color="neutral2">
+    <Flex row justifyContent="space-between" alignItems="center">
+      <Flex gap="$gap4" grow>
+        {label && (
+          <Text variant="body3" color="$neutral2">
+            {label}
+          </Text>
+        )}
+        <Text variant="heading2">{header}</Text>
+        <Text variant="body3" color="$neutral2">
           {subheader}
-        </ThemedText.BodySmall>
-      </Column>
-      <div style={{ height: '36px' }}>{image}</div>
-    </Row>
+        </Text>
+      </Flex>
+      <Flex height={36}>{image}</Flex>
+    </Flex>
   )
 }
 
-export type SendModalProps = {
-  isOpen: boolean
+type SendModalInnerProps = {
   onConfirm: () => void
   onDismiss: () => void
+  isConfirming?: boolean
 }
 
-export function SendReviewModal({ isOpen, onConfirm, onDismiss }: SendModalProps) {
+export type SendModalProps = SendModalInnerProps & {
+  isOpen: boolean
+}
+
+export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInnerProps) {
   const { t } = useTranslation()
-  const { chainId } = useMultichainContext()
+  const account = useAccount()
+
+  const {
+    value: showMaxTransferModal,
+    setTrue: handleShowMaxTransferModal,
+    setFalse: handleHideMaxTransferModal,
+  } = useBooleanState(false)
+
+  const { needsPasskeySignin } = useGetPasskeyAuthStatus(account.connector?.id)
+
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
-    derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
+    derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData, currencyBalance },
   } = useSendContext()
+  const chainId = inputCurrency?.chainId
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalance,
+    txType: TransactionType.Send,
+  })
+  const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
 
-  const { formatConvertedFiatNumberOrString, formatCurrencyAmount } = useFormatter()
+  const activeCurrency = useAppFiatCurrency()
+  const { formatNumberOrString, formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
+
   const formattedInputAmount = formatCurrencyAmount({
-    amount: parsedTokenAmount,
+    value: parsedTokenAmount,
     type: NumberType.TokenNonTx,
   })
-  const formattedFiatInputAmount = formatConvertedFiatNumberOrString({
-    input: (inputInFiat ? exactAmountFiat : exactAmountOut) || '0',
+  const formattedFiatInputAmount = formatNumberOrString({
+    value: inputInFiat ? exactAmountFiat : exactAmountOut,
     type: NumberType.PortfolioBalance,
+    currencyCode: activeCurrency,
   })
 
   const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
-  const gasFeeFormatted = formatCurrencyAmount({
-    amount: gasFeeUSD,
-    type: NumberType.PortfolioBalance,
-  })
+  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD?.toExact(), NumberType.PortfolioBalance)
 
   const currencySymbolAmount = `${formattedInputAmount} ${inputCurrency?.symbol ?? inputCurrency?.name}`
 
@@ -102,53 +116,95 @@ export function SendReviewModal({ isOpen, onConfirm, onDismiss }: SendModalProps
     ? [formattedFiatInputAmount, currencySymbolAmount]
     : [currencySymbolAmount, formattedFiatInputAmount]
 
+  const isMax =
+    maxInputAmount && (parsedTokenAmount?.equalTo(maxInputAmount) || parsedTokenAmount?.greaterThan(maxInputAmount))
+
+  const handleConfirm = () => {
+    if (!hasDismissedLowNetworkTokenWarning && isMax && inputCurrency?.isNative) {
+      sendAnalyticsEvent(UniswapEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
+      handleShowMaxTransferModal()
+      return
+    }
+    onConfirm()
+  }
+
   return (
-    <Modal name={ModalName.SendReview} isModalOpen={isOpen} onClose={onDismiss} padding={0}>
-      <ModalWrapper data-testid="send-review-modal" gap="md">
-        <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
-        <ReviewContentContainer>
-          <Column gap="lg">
-            <SendModalHeader
-              label={<Trans i18nKey="common.youreSending" />}
-              header={primaryInputView}
-              subheader={secondaryInputView}
-              image={
-                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
-              }
-            />
-            <SendModalHeader
-              label={capitalize(t('common.to'))}
-              header={
-                recipientData?.unitag || recipientData?.ensName ? (
-                  <Row gap="xs">
-                    <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                    {recipientData?.unitag && <Unitag size={18} />}
-                  </Row>
-                ) : (
-                  shortenAddress(recipientData?.address)
-                )
-              }
-              subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
-              image={<Identicon account={recipientData?.address} size={36} />}
-            />
-          </Column>
-          <Separator />
-          <Row width="100%" justify="space-between">
-            <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-              <Trans i18nKey="common.networkCost" />
-            </ThemedText.BodySmall>
-            <Row width="min-content" gap="xs">
-              <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
-              <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
-            </Row>
-          </Row>
-        </ReviewContentContainer>
-        <Trace logPress element={InterfaceElementName.SEND_REVIEW_BUTTON}>
-          <ButtonPrimary onClick={onConfirm}>
-            <Trans i18nKey="common.confirmSend.button" />
-          </ButtonPrimary>
+    <>
+      <ReviewContentContainer data-testid="send-review-modal">
+        <Flex gap="$gap24" px="$spacing12">
+          <SendModalHeader
+            header={primaryInputView}
+            subheader={secondaryInputView}
+            image={
+              <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
+            }
+          />
+          <SendModalHeader
+            label={capitalize(t('common.to'))}
+            header={
+              recipientData?.unitag || recipientData?.ensName ? (
+                <Flex row gap="$gap4" alignItems="center">
+                  <DynamicSizeText
+                    maxWebFontSize={36}
+                    minWebFontSize={24}
+                    lineHeight="44px"
+                    color="neutral1"
+                    gap="$gap4"
+                    floatingSuffix={
+                      recipientData.unitag && (
+                        <Flex pt="$spacing8">
+                          <Unitag size={36} />
+                        </Flex>
+                      )
+                    }
+                  >
+                    {recipientData.unitag ?? recipientData.ensName}
+                  </DynamicSizeText>
+                </Flex>
+              ) : (
+                shortenAddress({ address: recipientData?.address })
+              )
+            }
+            subheader={
+              (recipientData?.unitag || recipientData?.ensName) && shortenAddress({ address: recipientData.address })
+            }
+            image={<AccountIcon address={recipientData?.address} size={36} />}
+          />
+        </Flex>
+        <Separator />
+        <Flex row alignItems="center" width="100%" justifyContent="space-between" px="$spacing12">
+          <Text variant="body3" color="$neutral2">
+            {t('common.networkCost')}
+          </Text>
+          <Flex row width="min-content" gap="$gap4" alignItems="center">
+            <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
+            <Text variant="body3">{gasFeeFormatted}</Text>
+          </Flex>
+        </Flex>
+        <Trace logPress element={ElementName.SendReviewButton}>
+          <Flex alignSelf="stretch" row>
+            <Button
+              emphasis="primary"
+              variant="branded"
+              size="large"
+              loading={isConfirming}
+              isDisabled={isConfirming}
+              icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
+              onPress={handleConfirm}
+            >
+              {t('common.confirmSend.button')}
+            </Button>
+          </Flex>
         </Trace>
-      </ModalWrapper>
-    </Modal>
+      </ReviewContentContainer>
+      <LowNativeBalanceModal
+        isOpen={showMaxTransferModal}
+        onClose={handleHideMaxTransferModal}
+        onAcknowledge={() => {
+          handleHideMaxTransferModal()
+          onConfirm()
+        }}
+      />
+    </>
   )
 }

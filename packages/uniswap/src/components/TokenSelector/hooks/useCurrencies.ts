@@ -1,10 +1,10 @@
 import { ApolloError } from '@apollo/client'
+import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { GqlResult } from 'uniswap/src/data/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
@@ -19,8 +19,13 @@ export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> 
         return true
       }
 
-      const { address } = currencyInfo.currency
-      const bridgedAsset = BRIDGED_BASE_ADDRESSES.find((bridgedAddress) => areAddressesEqual(bridgedAddress, address))
+      const { address, chainId } = currencyInfo.currency
+      const bridgedAsset = BRIDGED_BASE_ADDRESSES.find((bridgedAddress) =>
+        areAddressesEqual({
+          addressInput1: { address: bridgedAddress, chainId },
+          addressInput2: { address, chainId },
+        }),
+      )
 
       if (!bridgedAsset) {
         return true

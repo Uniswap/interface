@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectPositionsVisibility } from 'uniswap/src/features/visibility/selectors'
@@ -14,18 +15,20 @@ type VisibilityCheckParams = {
 export function usePositionVisibilityCheck(): (params: VisibilityCheckParams) => boolean {
   const positionVisibilities = useSelector((state: UniswapRootState) => selectPositionsVisibility(state))
 
-  const isPositionVisible = ({ poolId, tokenId, chainId, isFlaggedSpam = false }: VisibilityCheckParams): boolean => {
-    const positionId = getUniquePositionId(poolId, tokenId, chainId)
-    const positionState = positionVisibilities[positionId]
+  const isPositionVisible = useCallback(
+    ({ poolId, tokenId, chainId, isFlaggedSpam = false }: VisibilityCheckParams): boolean => {
+      const positionId = getUniquePositionId({ poolId, tokenId, chainId })
+      const positionState = positionVisibilities[positionId]
 
-    if (positionState === undefined) {
-      // If undefined, default to visible unless flagged as spam by the API (i.e. the isHidden property on Position)
-      return !isFlaggedSpam
-    }
+      if (positionState === undefined) {
+        // If undefined, default to visible unless flagged as spam by the API (i.e. the isHidden property on Position)
+        return !isFlaggedSpam
+      }
 
-    // Return the explicitly set visibility
-    return positionState.isVisible
-  }
+      return positionState.isVisible
+    },
+    [positionVisibilities],
+  )
 
   return isPositionVisible
 }

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { DeviceEventEmitter, Dimensions } from 'react-native'
 import { act } from 'react-test-renderer'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
@@ -28,15 +28,16 @@ const hideKeyboard = async (): Promise<void> => {
 }
 
 // Use native useKeyboardLayout implementation
-jest.mock('uniswap/src/utils/useKeyboardLayout', () => {
-  return jest.requireActual('uniswap/src/utils/useKeyboardLayout.native.ts')
+vi.mock('uniswap/src/utils/useKeyboardLayout', async (importOriginal) => {
+  return await vi.importActual('uniswap/src/utils/useKeyboardLayout.native.ts')
 })
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
+vi.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'android',
 }))
 
 // TODO: debug and re-enable this test. It started failing when we moved it to the shared `wallet` package.
+// oxlint-disable-next-line jest/no-disabled-tests -- suppressed
 describe.skip(useKeyboardLayout, () => {
   it('returns isVisible as false if keyboard is not visible', () => {
     const { result } = renderHook(() => useKeyboardLayout())

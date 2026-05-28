@@ -1,38 +1,29 @@
-import { parseEther } from 'ethers/lib/utils'
-import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { AssetType } from 'uniswap/src/entities/assets'
-import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import {
-  EthMethod,
+  DynamicConfigs,
+  UwULinkAllowlist,
+  UwULinkAllowlistItem,
+  UwuLinkConfigKey,
+  useDynamicConfigValue,
+} from '@universe/gating'
+import { parseEther } from 'ethers/lib/utils'
+import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
+import {
+  DappRequestType,
   EthTransaction,
   UwULinkErc20SendRequest,
   UwULinkMethod,
   UwULinkRequest,
+  UwULinkRequestInfo,
 } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getTokenSendRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { SendCurrencyParams } from 'wallet/src/features/transactions/send/types'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
-
-// This type must match the format in statsig dynamic config for uwulink
-// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-export type UwULinkAllowlistItem = {
-  chainId: number
-  address: string
-  name: string
-  logo?: {
-    dark?: string
-    light?: string
-  }
-}
-
-export type UwULinkAllowlist = {
-  contracts: UwULinkAllowlistItem[]
-  tokenRecipients: UwULinkAllowlistItem[]
-}
 
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
@@ -58,29 +49,18 @@ export function parseUwuLinkDataFromDeeplink(uri: string): string {
 // Gets the UWULink contract allow list from statsig dynamic config.
 // We can safely cast as long as the statsig config format matches our `UwuLinkAllowlist` type.
 export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
-  return useDynamicConfigValue(
-    DynamicConfigs.UwuLink,
-    UwuLinkConfigKey.Allowlist,
-    {
+  return useDynamicConfigValue({
+    config: DynamicConfigs.UwuLink,
+    key: UwuLinkConfigKey.Allowlist,
+    defaultValue: {
       contracts: [],
       tokenRecipients: [],
     },
-    (x: unknown) => {
-      const hasFields =
-        x !== null && typeof x === 'object' && Object.hasOwn(x, 'contracts') && Object.hasOwn(x, 'tokenRecipients')
-
-      if (!hasFields) {
-        return false
-      }
-
-      const castedObj = x as { contracts: unknown; tokenRecipients: unknown }
-
-      return Array.isArray(castedObj.contracts) && Array.isArray(castedObj.tokenRecipients)
-    },
-  )
+    customTypeGuard: isUwULinkAllowlistType,
+  })
 }
 
-export function findAllowedTokenRecipientForUwuLink(
+function findAllowedTokenRecipientForUwuLink(
   request: UwULinkRequest,
   allowlist: UwULinkAllowlist,
 ): UwULinkAllowlistItem | undefined {
@@ -90,7 +70,12 @@ export function findAllowedTokenRecipientForUwuLink(
 
   const { chainId, recipient } = request
   return allowlist.tokenRecipients.find(
-    (item) => item.chainId === chainId && areAddressesEqual(item.address, recipient),
+    (item) =>
+      item.chainId === chainId &&
+      areAddressesEqual({
+        addressInput1: { address: item.address, chainId: item.chainId },
+        addressInput2: { address: recipient, chainId },
+      }),
   )
 }
 /**
@@ -118,7 +103,14 @@ export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwUL
   // generic transactions
   const { to, value } = request.value
   const belowMaximumValue = !value || parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress = to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
+  const isAllowedContractAddress =
+    to &&
+    allowlist.contracts.some((item) =>
+      areAddressesEqual({
+        addressInput1: { address: item.address, chainId: item.chainId },
+        addressInput2: { address: to, chainId: request.chainId },
+      }),
+    )
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false
@@ -127,9 +119,9 @@ export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwUL
   return true
 }
 
-export type HandleUwuLinkRequestParams = {
+type HandleUwuLinkRequestParams = {
   request: UwULinkRequest
-  activeAccount: Account
+  activeAccount: SignerMnemonicAccountMeta
   allowList: UwULinkAllowlist
   providerManager: ProviderManager
   contractManager: ContractManager
@@ -141,16 +133,23 @@ export async function getFormattedUwuLinkTxnRequest({
   allowList,
   providerManager,
   contractManager,
-}: HandleUwuLinkRequestParams): Promise<{ request: WalletConnectRequest; account: string }> {
-  const newRequest = {
+}: HandleUwuLinkRequestParams): Promise<{ request: WalletConnectSigningRequest; account: string }> {
+  const newRequest: {
+    sessionId: string
+    internalId: string
+    account: string
+    dappRequestInfo: UwULinkRequestInfo
+    chainId: number
+  } = {
     sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
     internalId: UWULINK_PREFIX,
-    account: activeAccount?.address,
-    dapp: {
+    account: activeAccount.address,
+    dappRequestInfo: {
       name: '',
       url: '',
+      icon: null,
       ...request.dapp,
-      source: UWULINK_PREFIX,
+      requestType: DappRequestType.UwULink,
       chain_id: request.chainId,
       webhook: request.webhook,
     },
@@ -170,7 +169,12 @@ export async function getFormattedUwuLinkTxnRequest({
       },
     }
   } else if (request.method === UwULinkMethod.Erc20Send) {
-    const preparedTransaction = await toTokenTransferRequest(request, activeAccount, providerManager, contractManager)
+    const preparedTransaction = await toTokenTransferRequest({
+      request,
+      account: activeAccount,
+      providerManager,
+      contractManager,
+    })
     const tokenRecipient = findAllowedTokenRecipientForUwuLink(request, allowList)
     return {
       account: activeAccount.address,
@@ -206,12 +210,17 @@ export async function getFormattedUwuLinkTxnRequest({
   }
 }
 
-async function toTokenTransferRequest(
-  request: UwULinkErc20SendRequest,
-  account: Account,
-  providerManager: ProviderManager,
-  contractManager: ContractManager,
-): Promise<EthTransaction> {
+async function toTokenTransferRequest({
+  request,
+  account,
+  providerManager,
+  contractManager,
+}: {
+  request: UwULinkErc20SendRequest
+  account: SignerMnemonicAccountMeta
+  providerManager: ProviderManager
+  contractManager: ContractManager
+}): Promise<EthTransaction> {
   const provider = providerManager.getProvider(request.chainId)
   const params: SendCurrencyParams = {
     type: AssetType.Currency,
@@ -221,6 +230,6 @@ async function toTokenTransferRequest(
     tokenAddress: request.tokenAddress,
     amountInWei: request.amount.toString(),
   }
-  const transaction = await getTokenSendRequest(params, provider, contractManager)
+  const transaction = await getTokenSendRequest({ params, provider, contractManager })
   return transaction as EthTransaction
 }

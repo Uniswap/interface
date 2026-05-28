@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "node16",
+    "lib": ["ES2020"],
+    "moduleResolution": "node16",
+    "outDir": "./bin",
+    "rootDir": ".",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "bin", "dashboards", "oxlint.config.ts"]
+}

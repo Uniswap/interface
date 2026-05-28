@@ -1,6 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers/lib/ethers'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -8,8 +8,8 @@ import { logger } from 'utilities/src/logger/logger'
 const ALL_NUMBERS_OR_SEPARATOR_REGEX = /^\d*\.?,?\d*$/
 
 export enum ValueType {
-  'Raw' = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
-  'Exact' = 'float', // float format (the "exact" human readable number) - the typical way to display token amounts to users
+  Raw = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
+  Exact = 'float', // float format (the "exact" human readable number) - the typical way to display token amounts to users
 }
 
 /**

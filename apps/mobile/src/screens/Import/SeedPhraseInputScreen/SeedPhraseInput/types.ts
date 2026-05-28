@@ -1,5 +1,4 @@
 import { NativeSyntheticEvent, StyleProp, ViewStyle } from 'react-native'
-
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export enum StringKey {
@@ -9,17 +8,18 @@ export enum StringKey {
   ErrorPhraseLength = 'errorPhraseLength',
   ErrorWrongPhrase = 'errorWrongPhrase',
   ErrorInvalidPhrase = 'errorInvalidPhrase',
+  ErrorWordIsAddress = 'errorWordIsAddress',
 }
 
-export type MnemonicStoredEvent = {
+type MnemonicStoredEvent = {
   mnemonicId: string
 }
 
-export type InputValidatedEvent = {
+type InputValidatedEvent = {
   canSubmit: boolean
 }
 
-export type HeightMeasuredEvent = {
+type HeightMeasuredEvent = {
   height: number
 }
 
@@ -33,6 +33,7 @@ export type NativeSeedPhraseInputProps = {
   // And we need to prevent splash screen from appearing
   onPasteStart: () => void
   onPasteEnd: () => void
+  onSubmitError: () => void
 }
 
 export type NativeSeedPhraseInputInternalProps = NativeSeedPhraseInputProps & {

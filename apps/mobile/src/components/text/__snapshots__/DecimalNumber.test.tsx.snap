@@ -6,16 +6,11 @@ exports[`renders a DecimalNumber 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
-      "lineHeight": 24,
+      "lineHeight": 24.7,
     }
   }
   suppressHighlighting={true}
@@ -26,16 +21,11 @@ exports[`renders a DecimalNumber 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.35)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -52,16 +42,11 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
-      "lineHeight": 24,
+      "lineHeight": 24.7,
     }
   }
   suppressHighlighting={true}
@@ -72,16 +57,11 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.35)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -98,16 +78,11 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
-      "lineHeight": 24,
+      "lineHeight": 24.7,
     }
   }
   suppressHighlighting={true}

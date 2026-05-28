@@ -13,6 +13,9 @@ export function getWrapType(
 
   const inputChainId = inputCurrency.chainId as UniverseChainId
   const wrappedCurrencyId = buildWrappedNativeCurrencyId(inputChainId)
+  if (!wrappedCurrencyId) {
+    return WrapType.NotApplicable
+  }
 
   if (inputCurrency.isNative && areCurrencyIdsEqual(currencyId(outputCurrency), wrappedCurrencyId)) {
     return WrapType.Wrap

@@ -69,7 +69,7 @@ export function SelectTokenButton({
             <Trans i18nKey="common.selectToken.label" />
           </Text>
         )}
-        <RotatableChevron color={textColor} direction={chevronDirection} height={iconSizes.icon16} />
+        <RotatableChevron color={textColor} direction={chevronDirection} size="$icon.16" />
       </Flex>
     </TouchableArea>
   )

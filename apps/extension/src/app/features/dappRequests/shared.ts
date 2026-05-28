@@ -1,0 +1,32 @@
+import type { DappInfo } from 'src/app/features/dapp/store'
+import type { DappRequest, ErrorResponse } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import type { DappRequestMessageSchema } from 'src/background/messagePassing/types/requests'
+import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import type { z } from 'zod'
+
+export type SenderTabInfo = z.infer<typeof DappRequestMessageSchema>['senderTabInfo']
+
+export enum DappRequestStatus {
+  Pending = 'pending',
+  Confirming = 'confirming',
+}
+
+export interface DappRequestStoreItem {
+  dappRequest: DappRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo?: DappInfo
+  isSidebarClosed: boolean | undefined
+}
+
+type OptionalTransactionFields = {
+  transactionTypeInfo?: TransactionTypeInfo
+  preSignedTransaction?: SignedTransactionRequest
+}
+
+export type DappRequestNoDappInfo = Omit<DappRequestStoreItem, 'dappInfo'> & OptionalTransactionFields
+export type DappRequestWithDappInfo = Required<DappRequestStoreItem> & OptionalTransactionFields
+export interface DappRequestRejectParams {
+  errorResponse: ErrorResponse
+  senderTabInfo: SenderTabInfo
+}

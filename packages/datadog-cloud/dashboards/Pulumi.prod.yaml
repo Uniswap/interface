@@ -1,0 +1,6 @@
+environment:
+  - datadog-dashboards-universe/shared
+config:
+  datadog-dashboards-universe:environment: prod
+  datadog-dashboards-universe:tagFilter: "(unienv:prod OR env:prod)"
+  datadog-dashboards-universe:defaultTeam: dev-portal

@@ -7,15 +7,15 @@ const KEY_SHORT_TEXT_FONT_SIZE = 41
 
 // export for tests
 export enum State {
-  KeyUp,
-  KeyDown,
-  Highlighted,
+  KeyUp = 0,
+  KeyDown = 1,
+  Highlighted = 2,
 }
 
 type ReducerAction = { type: 'keyUp' | 'keyDown' | 'highlight'; key: string } | { type: 'highlight' }
 
 export const useOpeningKeyboardShortCut = (shortCutPressed: boolean): KeyboardKeyProps[] => {
-  // eslint-disable-next-line consistent-return
+  // oxlint-disable-next-line typescript/consistent-return
   const reducer = (state: KeyboardKeyProps[], action: ReducerAction): KeyboardKeyProps[] => {
     switch (action.type) {
       case 'keyDown':
@@ -51,7 +51,7 @@ export const useOpeningKeyboardShortCut = (shortCutPressed: boolean): KeyboardKe
       : {
           fontSize: KEY_LONG_TEXT_FONT_SIZE,
           px: '$spacing12',
-          title: 'Crtl',
+          title: 'Ctrl',
           state: State.KeyUp,
         },
     { fontSize: KEY_SHORT_TEXT_FONT_SIZE, px: '$spacing24', title: 'U', state: State.KeyUp },

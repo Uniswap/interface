@@ -1,62 +1,56 @@
 import { Currency } from '@uniswap/sdk-core'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import Row from 'components/deprecated/Row'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import styled, { useTheme } from 'lib/styled-components'
-import { useCallback, useState } from 'react'
-import { Copy } from 'react-feather'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { ClickableStyle } from 'theme/components'
-import { useMedia } from 'ui/src'
+import { Link } from 'react-router'
+import { Flex, styled, Text, TextProps, useMedia } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
+import { CopyHelper } from '~/theme/components/CopyHelper'
 
-export const BreadcrumbNavContainer = styled.nav`
-  display: flex;
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 16px;
-  line-height: 24px;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 20px;
-  width: fit-content;
-`
+export const BreadcrumbNavContainer = styled(Flex, {
+  row: true,
+  alignItems: 'center',
+  gap: '$gap4',
+  mb: 20,
+  width: 'fit-content',
+})
 
-export const BreadcrumbNavLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.neutral2};
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  text-decoration: none;
+export const BreadcrumbNavLink = ({ to, children, ...rest }: { to: string; children: React.ReactNode } & TextProps) => {
+  return (
+    <Link to={to} style={{ textDecoration: 'none' }}>
+      <Text
+        display="flex"
+        alignItems="center"
+        animation="fast"
+        color="$neutral2"
+        $platform-web={{
+          textDecoration: 'none',
+        }}
+        hoverStyle={{ color: '$neutral2Hovered' }}
+        {...rest}
+      >
+        {children}
+      </Text>
+    </Link>
+  )
+}
 
-  &:hover {
-    color: ${({ theme }) => theme.neutral3};
-  }
-`
-
-const CurrentPageBreadcrumbContainer = styled(Row)`
-  gap: 6px;
-`
+const CurrentPageBreadcrumbContainer = styled(Flex, {
+  row: true,
+  gap: 6,
+})
 
 // This must be an h1 to match the SEO title, and must be the first heading tag in code.
-const PageTitleText = styled.h1`
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: ${({ theme }) => theme.neutral1};
-  white-space: nowrap;
-  margin: 0;
-`
-
-const TokenAddressHoverContainer = styled(Row)<{ isDisabled?: boolean }>`
-  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
-  gap: 10px;
-  white-space: nowrap;
-`
-
-const CopyIcon = styled(Copy)`
-  ${ClickableStyle}
-`
+const PageTitleText = styled(Text, {
+  tag: 'h1',
+  fontWeight: 'inherit',
+  fontSize: 'inherit',
+  lineHeight: 'inherit',
+  color: '$neutral1',
+  whiteSpace: 'nowrap',
+  margin: 0,
+})
 
 // Used in both TDP & PDP.
 // On TDP, currency is defined & poolName is undefined. On PDP, currency is undefined & poolName is defined.
@@ -65,53 +59,41 @@ export const CurrentPageBreadcrumb = ({
   currency,
   poolName,
 }: {
-  address: string
+  address?: string
   currency?: Currency
   poolName?: string
 }) => {
   const { t } = useTranslation()
-  const { neutral2 } = useTheme()
-  const [hover, setHover] = useState(false)
-
-  const [isCopied, setCopied] = useCopyClipboard()
-  const copy = useCallback(() => {
-    setCopied(address)
-  }, [address, setCopied])
-
   const isNative = currency?.isNative
   const tokenSymbolName = currency?.symbol ?? t('tdp.symbolNotFound')
 
   const media = useMedia()
   const shouldEnableCopy = !media.md
-  const shouldShowActions = shouldEnableCopy && hover && !isCopied
+  const [isBreadcrumbHover, setIsBreadcrumbHover] = useState(false)
 
   return (
     <CurrentPageBreadcrumbContainer
       aria-current="page"
       data-testid="current-breadcrumb"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={() => setIsBreadcrumbHover(true)}
+      onMouseLeave={() => setIsBreadcrumbHover(false)}
     >
-      <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>{' '}
-      {(!currency || (currency && !isNative)) && (
-        <TokenAddressHoverContainer
-          data-testid="breadcrumb-token-address"
-          isDisabled={!shouldEnableCopy}
-          onClick={shouldEnableCopy ? copy : undefined}
+      <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>
+      {(!currency || !isNative) && address && (
+        <CopyHelper
+          toCopy={address}
+          iconPosition="right"
+          iconSize={iconSizes.icon16}
+          iconColor="$neutral2"
+          color="$neutral2"
+          disabled={!shouldEnableCopy}
+          externalHover={isBreadcrumbHover}
+          dataTestId={TestID.BreadcrumbHoverCopy}
         >
-          <MouseoverTooltip
-            placement="bottom"
-            size={TooltipSize.Max}
-            forceShow={isCopied}
-            text={t('common.copied')}
-            disabled
-          >
-            {shortenAddress(address)}
-          </MouseoverTooltip>
-          {shouldShowActions && (
-            <CopyIcon data-testid="breadcrumb-hover-copy" width={16} height={16} color={neutral2} />
-          )}
-        </TokenAddressHoverContainer>
+          <Text color="$neutral2" $platform-web={{ whiteSpace: 'nowrap' }}>
+            {shortenAddress({ address })}
+          </Text>
+        </CopyHelper>
       )}
     </CurrentPageBreadcrumbContainer>
   )

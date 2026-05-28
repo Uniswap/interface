@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -11,7 +9,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 
 const IMAGE_ASPECT_RATIO = 0.42
@@ -22,16 +20,17 @@ export function UnitagBanner({
   address,
   compact,
   entryPoint,
+  onPressClaim,
 }: {
   address: Address
   compact?: boolean
   entryPoint: MobileScreens.Home | MobileScreens.Settings
+  onPressClaim?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
   const isShortDevice = useIsShortMobileDevice()
-  const dispatch = useDispatch()
 
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -50,13 +49,11 @@ export function UnitagBanner({
   }, [address])
 
   const navigateToIntro = useCallback(() => {
-    dispatch(
-      openModal({
-        name: ModalName.UnitagsIntro,
-        initialState: { address, entryPoint: MobileScreens.Home },
-      }),
-    )
-  }, [dispatch, address])
+    navigate(ModalName.UnitagsIntro, {
+      address,
+      entryPoint: MobileScreens.Home,
+    })
+  }, [address])
 
   const { handleClaim, handleDismiss } = useUnitagClaimHandler({
     analyticsEntryPoint,
@@ -65,6 +62,9 @@ export function UnitagBanner({
   })
 
   const onPressClaimNow = (): void => {
+    if (onPressClaim) {
+      onPressClaim()
+    }
     dismissNativeKeyboard()
     handleClaim()
   }

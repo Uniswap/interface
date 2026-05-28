@@ -191,7 +191,7 @@ class RnEthersRs(applicationContext: Context) {
    * @param address The address to retrieve the private key for.
    * @return The private key, or null if it doesn't exist.
    */
-  private fun retrievePrivateKey(address: String): String? {
+  fun retrievePrivateKey(address: String): String? {
     return keychain.getString(keychainKeyForPrivateKey(address), null)
   }
   /**

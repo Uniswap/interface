@@ -1,0 +1,32 @@
+{
+  "name": "@universe/websocket",
+  "version": "0.0.0",
+  "dependencies": {
+    "partysocket": "1.1.10",
+    "zustand": "5.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "@vitest/coverage-v8": "3.2.1",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test websocket",
+    "typecheck": "nx typecheck websocket",
+    "check": "nx check websocket",
+    "check:fast": "nx check:fast websocket",
+    "check:deps:usage": "nx check:deps:usage websocket",
+    "format": "nx format websocket",
+    "format:check": "nx format:check websocket",
+    "lint": "nx lint websocket",
+    "lint:fix": "nx lint:fix websocket"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

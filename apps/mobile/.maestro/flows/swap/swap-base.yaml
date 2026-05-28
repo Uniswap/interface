@@ -1,0 +1,213 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+tags:
+  - performance-tracking
+  - language-agnostic
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize tracking at the very beginning
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start flow tracking (includes setup time)
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'swap'
+
+# Run prerequisite flows (tracked as sub-flows)
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+
+# Wait for home screen to be ready; without it, tapping Swap succeeds but the modal doesn't actually appear. Maybe there's a better way?
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# Start of swap flow with action tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Swap'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Swap}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'Swap'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ChooseOutputToken'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ChooseOutputToken}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ChooseOutputToken'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ExploreSearchInput'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ExploreSearchInput'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'cbbtc'
+      PHASE: 'start'
+- inputText: cbbtc
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'cbbtc'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'token-option-8453-cbBTC'
+      PHASE: 'start'
+- tapOn:
+    id: 'token-option-8453-cbBTC' # TODO: Replace with id for token
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'token-option-8453-cbBTC'
+      PHASE: 'end'
+
+# Amount input tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'AmountInputOut'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.AmountInputOut}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'AmountInputOut'
+      PHASE: 'end'
+
+# Number pad input tracking (consolidated for brevity)
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputAmount'
+      TARGET: '0.000001'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadDecimal}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber1}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputAmount'
+      TARGET: '0.000001'
+      PHASE: 'end'
+
+# Wait for the ReviewSwap button to be visible; without this, e2e test sometimes registers a success but the button is not actually tapped.
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# Review swap tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ReviewSwap'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ReviewSwap}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ReviewSwap'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ListSeparatorToggle'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ListSeparatorToggle}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ListSeparatorToggle'
+      PHASE: 'end'
+
+# Execute swap tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ConfirmSwap'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Swap}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ConfirmSwap'
+      PHASE: 'end'
+
+# End flow tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload metrics to Datadog (for Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

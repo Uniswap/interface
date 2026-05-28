@@ -1,22 +1,24 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/rounded-candle-series.ts
  */
-import { RoundedCandleSeriesRenderer } from 'components/Charts/PriceChart/RoundedCandlestickSeries/renderer'
+
 import {
   CandlestickData,
   CandlestickSeriesOptions,
   CustomSeriesOptions,
   CustomSeriesPricePlotValues,
+  customSeriesDefaultOptions,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   UTCTimestamp,
   WhitespaceData,
-  customSeriesDefaultOptions,
 } from 'lightweight-charts'
+import { RoundedCandleSeriesRenderer } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/renderer'
 
 export interface RoundedCandleSeriesOptions
-  extends CustomSeriesOptions,
+  extends
+    CustomSeriesOptions,
     Exclude<CandlestickSeriesOptions, 'borderVisible' | 'borderColor' | 'borderUpColor' | 'borderDownColor'> {
   radius: (barSpacing: number) => number
   neutralColor: string
@@ -43,9 +45,11 @@ const defaultOptions: RoundedCandleSeriesOptions = {
   },
 } as const
 
-export class RoundedCandleSeries<TData extends CandlestickData<UTCTimestamp>>
-  implements ICustomSeriesPaneView<Time, TData, RoundedCandleSeriesOptions>
-{
+export class RoundedCandleSeries<TData extends CandlestickData<UTCTimestamp>> implements ICustomSeriesPaneView<
+  Time,
+  TData,
+  RoundedCandleSeriesOptions
+> {
   _renderer: RoundedCandleSeriesRenderer<TData>
 
   constructor() {

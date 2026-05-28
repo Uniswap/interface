@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { GraphQLApi } from '@universe/api'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   chainIdToHexadecimalString,
   fromGraphQLChain,
@@ -33,11 +34,11 @@ describe(fromGraphQLChain, () => {
   })
 
   it('handles supported chain', () => {
-    expect(fromGraphQLChain(Chain.Arbitrum)).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromGraphQLChain(GraphQLApi.Chain.Arbitrum)).toEqual(UniverseChainId.ArbitrumOne)
   })
 
   it('handles unsupported chain', () => {
-    expect(fromGraphQLChain(Chain.UnknownChain)).toEqual(null)
+    expect(fromGraphQLChain(GraphQLApi.Chain.UnknownChain)).toEqual(null)
   })
 })
 
@@ -53,11 +54,11 @@ describe(getPollingIntervalByBlocktime, () => {
 
 describe(fromUniswapWebAppLink, () => {
   it('handles supported chain', () => {
-    expect(fromUniswapWebAppLink(Chain.Ethereum.toLowerCase())).toEqual(UniverseChainId.Mainnet)
-    expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
-    expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
-    expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
-    // TODO: add Base test once Chain includes Base (GQL reliant)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Ethereum.toLowerCase())).toEqual(UniverseChainId.Mainnet)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
+    // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
   it('handle unsupported chain', () => {
@@ -67,11 +68,11 @@ describe(fromUniswapWebAppLink, () => {
 
 describe(toUniswapWebAppLink, () => {
   it('handles supported chain', () => {
-    expect(toUniswapWebAppLink(UniverseChainId.Mainnet)).toEqual(Chain.Ethereum.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.ArbitrumOne)).toEqual(Chain.Arbitrum.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.Optimism)).toEqual(Chain.Optimism.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.Polygon)).toEqual(Chain.Polygon.toLowerCase())
-    // TODO: add Base test once Chain includes Base (GQL reliant)
+    expect(toUniswapWebAppLink(UniverseChainId.Mainnet)).toEqual(GraphQLApi.Chain.Ethereum.toLowerCase())
+    expect(toUniswapWebAppLink(UniverseChainId.ArbitrumOne)).toEqual(GraphQLApi.Chain.Arbitrum.toLowerCase())
+    expect(toUniswapWebAppLink(UniverseChainId.Optimism)).toEqual(GraphQLApi.Chain.Optimism.toLowerCase())
+    expect(toUniswapWebAppLink(UniverseChainId.Polygon)).toEqual(GraphQLApi.Chain.Polygon.toLowerCase())
+    // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
   it('handle unsupported chain', () => {
@@ -116,10 +117,12 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: SUPPORTED_CHAIN_IDS })).toEqual({
+    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS })).toEqual({
       chains: [
         UniverseChainId.Mainnet,
         UniverseChainId.Unichain,
+        UniverseChainId.Monad,
+        UniverseChainId.Solana,
         UniverseChainId.Polygon,
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Optimism,
@@ -129,28 +132,39 @@ describe('getEnabledChains', () => {
         UniverseChainId.Avalanche,
         UniverseChainId.Celo,
         UniverseChainId.WorldChain,
+        UniverseChainId.Linea,
+        UniverseChainId.Soneium,
+        UniverseChainId.Tempo,
+        UniverseChainId.XLayer,
         UniverseChainId.Zora,
         UniverseChainId.Zksync,
       ],
       gqlChains: [
-        Chain.Ethereum,
-        Chain.Optimism,
-        Chain.Bnb,
-        Chain.Unichain,
-        Chain.Polygon,
-        Chain.Zksync,
-        Chain.Worldchain,
-        Chain.Base,
-        Chain.Arbitrum,
-        Chain.Celo,
-        Chain.Avalanche,
-        Chain.Blast,
-        Chain.Zora,
+        GraphQLApi.Chain.Ethereum,
+        GraphQLApi.Chain.Unichain,
+        GraphQLApi.Chain.Monad,
+        GraphQLApi.Chain.Solana,
+        GraphQLApi.Chain.Polygon,
+        GraphQLApi.Chain.Arbitrum,
+        GraphQLApi.Chain.Optimism,
+        GraphQLApi.Chain.Base,
+        GraphQLApi.Chain.Bnb,
+        GraphQLApi.Chain.Blast,
+        GraphQLApi.Chain.Avalanche,
+        GraphQLApi.Chain.Celo,
+        GraphQLApi.Chain.Worldchain,
+        GraphQLApi.Chain.Linea,
+        GraphQLApi.Chain.Soneium,
+        GraphQLApi.Chain.Tempo,
+        GraphQLApi.Chain.Xlayer,
+        GraphQLApi.Chain.Zora,
+        GraphQLApi.Chain.Zksync,
       ],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,
     })
   })
+
   it('returns feature flagged chains', () => {
     expect(
       getEnabledChains({
@@ -159,22 +173,56 @@ describe('getEnabledChains', () => {
       }),
     ).toEqual({
       chains: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
-      gqlChains: [Chain.Ethereum, Chain.Polygon],
+      gqlChains: [GraphQLApi.Chain.Ethereum, GraphQLApi.Chain.Polygon],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,
     })
   })
+
   it('returns testnet chains', () => {
     expect(
       getEnabledChains({
         isTestnetModeEnabled: true,
-        featureFlaggedChainIds: SUPPORTED_TESTNET_CHAIN_IDS,
+        featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
     ).toEqual({
-      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia, UniverseChainId.MonadTestnet],
-      gqlChains: [Chain.AstrochainSepolia, Chain.MonadTestnet, Chain.EthereumSepolia],
+      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia],
+      gqlChains: [GraphQLApi.Chain.EthereumSepolia, GraphQLApi.Chain.AstrochainSepolia],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
+    })
+  })
+
+  it('returns both mainnet and testnet chains when includeTestnets is true', () => {
+    expect(
+      getEnabledChains({
+        includeTestnets: true,
+        isTestnetModeEnabled: false,
+        featureFlaggedChainIds: [
+          UniverseChainId.Mainnet,
+          UniverseChainId.Unichain,
+          UniverseChainId.Base,
+          UniverseChainId.Sepolia,
+          UniverseChainId.UnichainSepolia,
+        ],
+      }),
+    ).toEqual({
+      chains: [
+        UniverseChainId.Mainnet,
+        UniverseChainId.Unichain,
+        UniverseChainId.Base,
+        UniverseChainId.Sepolia,
+        UniverseChainId.UnichainSepolia,
+      ],
+      gqlChains: [
+        GraphQLApi.Chain.Ethereum,
+        GraphQLApi.Chain.Unichain,
+        GraphQLApi.Chain.Base,
+        GraphQLApi.Chain.EthereumSepolia,
+        GraphQLApi.Chain.AstrochainSepolia,
+      ],
+      defaultChainId: UniverseChainId.Mainnet,
+      isTestnetModeEnabled: false,
     })
   })
 })

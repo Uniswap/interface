@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
  * Non-primitives *must* wrap the value in useMemo, or the value will be updated due to referential inequality.
  */
 // modified from https://usehooks.com/useDebounce/
-export default function useDebounce<T>(value: T, delay: number): T {
+export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {

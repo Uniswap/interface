@@ -1,87 +1,153 @@
-import { useScrollToTop } from '@react-navigation/native'
+import type { RouteProp } from '@react-navigation/native'
+import { useIsFocused, useNavigation, useRoute, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { isAndroid } from '@universe/environment'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
-import { useSelector } from 'react-redux'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
-import { ExploreSections } from 'src/components/explore/ExploreSections'
-import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
-import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
+import { type TextInput } from 'react-native'
+import type { FlatList } from 'react-native-gesture-handler'
+import { useAnimatedRef } from 'react-native-reanimated'
+import type { Edge } from 'react-native-safe-area-context'
+import { useDispatch } from 'react-redux'
+import type { ExploreStackParamList } from 'src/app/navigation/types'
+import { ExploreSections } from 'src/components/explore/ExploreSections/ExploreSections'
+import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
-import { selectModalState } from 'src/features/modals/selectModalState'
-import { Flex, flexStyles } from 'ui/src'
+import { Flex, useLayoutAnimationOnChange } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
-import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { NetworkFilter, type NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { useDebounce } from 'utilities/src/time/timing'
+import { useEvent } from 'utilities/src/react/hooks'
+import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 
 // From design to avoid layout thrash as icons show and hide
 const MIN_SEARCH_INPUT_HEIGHT = 52
 
+const androidBottomInset: Edge[] = isAndroid ? ['bottom'] : []
+const edges: Edge[] = ['top', ...androidBottomInset]
+
+const networkFilterStyles: NetworkFilterProps['styles'] = { buttonPaddingY: '$none' }
+
 export function ExploreScreen(): JSX.Element {
-  const modalInitialState = useSelector(selectModalState(ModalName.Explore)).initialState
-  const navigation = useExploreStackNavigation()
   const { chains } = useEnabledChains()
+  const navigation = useNavigation()
+  const route = useRoute<RouteProp<ExploreStackParamList, MobileScreens.Explore>>()
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- route.params can be null
+  const { chainId, orderByMetric, showFavorites } = route.params ?? {}
 
-  const { isSheetReady } = useBottomSheetContext()
+  const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: true })
 
-  // The ExploreStack is not directly accessible from outside
-  // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within Modal.
-  // To bypass this limitation, we use an initialState to define a specific screen within ExploreStack.
-  useEffect(() => {
-    if (modalInitialState) {
-      navigation.navigate(modalInitialState.screen, modalInitialState.params)
-    }
-  }, [modalInitialState, navigation])
-
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const listRef = useRef(null)
-  useScrollToTop(listRef)
-
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedSearchQuery = useDebounce(searchQuery).trim()
-  const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
-  const [selectedChain, setSelectedChain] = useState<UniverseChainId | null>(null)
+  const listRef = useAnimatedRef<FlatList<unknown>>()
+  const isFocused = useIsFocused()
+
+  const [isAtTop, setIsAtTop] = useState<boolean>(true)
+
+  // Use refs to avoid stale closures in the event listener
+  const isAtTopRef = useRef(isAtTop)
+  const isFocusedRef = useRef(isFocused)
+  // Track the previous route name to detect true double-tap behavior
+  const prevRouteNameRef = useRef<string | null>(null)
+
+  isAtTopRef.current = isAtTop
+  isFocusedRef.current = isFocused
+
+  // Disable default scroll-to-top behavior when bottom tabs are enabled
+  // We'll implement custom behavior that focuses search input if already at top
+  useScrollToTop({ current: null })
+
+  const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
+
+  useLayoutAnimationOnChange(isSearchMode, {
+    duration: 125,
+  })
+
+  // Custom tab press handler for double-tap behavior on the Explore tab
+  useEffect((): (() => void) | undefined => {
+    const unsubscribe = navigation.addListener('state', (e) => {
+      const currentRouteName = e.data.state.routeNames[e.data.state.index] as unknown as string | undefined
+      const isOnExploreScreen = currentRouteName === MobileScreens.Explore
+
+      // Double-tap detection: Only trigger focus when user taps Explore tab while already on Explore
+      // This distinguishes between:
+      // - Initial navigation to Explore (prevRoute !== Explore) → No auto-focus
+      // - Tab double-tap (prevRoute === Explore && currentRoute === Explore) → Focus search
+      const isDoubleTap = prevRouteNameRef.current === MobileScreens.Explore && isOnExploreScreen
+
+      // Update the previous route for next navigation event
+      prevRouteNameRef.current = currentRouteName ?? null
+
+      // Only handle double-tap behavior when:
+      // 1. This is a true double-tap (was on Explore, tapped Explore again)
+      // 2. The screen is currently focused
+      if (!isDoubleTap || !isFocusedRef.current) {
+        return
+      }
+
+      // Double-tap behavior: Focus search if at top, scroll to top otherwise
+      if (isAtTopRef.current) {
+        textInputRef.current?.focus()
+      } else {
+        // If not at top, scroll to top
+        listRef.current?.scrollToOffset({ offset: 0, animated: true })
+      }
+    })
+
+    return unsubscribe
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+  }, [navigation])
+
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
-  const canRenderList = useRenderNextFrame(!isSearchMode)
+  const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
 
-  const onSearchChangeText = (newSearchFilter: string): void => {
-    setSearchQuery(newSearchFilter)
-  }
+  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
+    useFilterCallbacks(chainId ?? null, ModalName.Search)
 
-  const onSearchFocus = (): void => {
+  const onSearchChangeText = useEvent((newSearchFilter: string): void => {
+    onChangeText(newSearchFilter)
+    // Keep the state of the search input after changing theme
+    textInputRef.current?.setNativeProps({ text: newSearchFilter })
+  })
+
+  const onSearchFocus = useEvent((): void => {
     setIsSearchMode(true)
     sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       section: SectionName.ExploreSearch,
       screen: MobileScreens.Explore,
     })
-  }
+  })
 
-  const onSearchCancel = (): void => {
+  const onSearchCancel = useEvent((): void => {
     setIsSearchMode(false)
-  }
+  })
 
-  const onScroll = useCallback(() => {
-    textInputRef.current?.blur()
-  }, [])
+  const onPressChain = useEvent((newChainId: UniverseChainId | null): void => {
+    sendAnalyticsEvent(MobileEventName.ExploreSearchNetworkSelected, {
+      networkChainId: newChainId ?? 'all',
+    })
+
+    onChangeChainFilter(newChainId)
+  })
+
+  useEffect(() => {
+    dispatch(setHasUsedExplore(true))
+  }, [dispatch])
 
   return (
-    <Screen backgroundColor="$surface1" edges={['top']}>
-      <HandleBar backgroundColor="none" />
+    <Screen backgroundColor="$surface1" edges={edges}>
       <Flex p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
+          autoFocus={false}
           cancelBehaviorType={CancelBehaviorType.BackChevron}
           endAdornment={
             isSearchMode ? (
@@ -89,16 +155,9 @@ export function ExploreScreen(): JSX.Element {
                 <NetworkFilter
                   includeAllNetworks
                   chainIds={chains}
-                  selectedChain={selectedChain}
-                  styles={{ buttonPaddingY: '$none' }}
-                  onDismiss={dismissNativeKeyboard}
-                  onPressChain={(newChainId) => {
-                    sendAnalyticsEvent(MobileEventName.ExploreSearchNetworkSelected, {
-                      networkChainId: newChainId ?? 'all',
-                    })
-
-                    setSelectedChain(newChainId)
-                  }}
+                  selectedChain={chainFilter}
+                  styles={networkFilterStyles}
+                  onPressChain={onPressChain}
                 />
               </Flex>
             ) : null
@@ -106,35 +165,29 @@ export function ExploreScreen(): JSX.Element {
           hideIcon={isSearchMode}
           minHeight={MIN_SEARCH_INPUT_HEIGHT}
           placeholder={t('explore.search.placeholder')}
+          borderColor="$transparent"
+          borderWidth="$none"
           onCancel={onSearchCancel}
           onChangeText={onSearchChangeText}
           onFocus={onSearchFocus}
         />
       </Flex>
       {isSearchMode ? (
-        <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
-          <Flex p="$spacing4" />
-          {debouncedSearchQuery.length === 0 ? (
-            // Mimic ScrollView behavior with FlatList
-            // Needs to be from gesture handler to work on android within BottomSheelModal
-            <FlatList
-              ListHeaderComponent={<SearchEmptySection selectedChain={selectedChain} />}
-              data={[]}
-              keyExtractor={(): string => 'search-empty-section-container'}
-              keyboardShouldPersistTaps="always"
-              renderItem={null}
-              scrollEventThrottle={16}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-              onScroll={onScroll}
-            />
-          ) : (
-            <SearchResultsSection searchQuery={debouncedSearchQuery} selectedChain={selectedChain} />
-          )}
-        </KeyboardAvoidingView>
-      ) : (
-        isSheetReady && canRenderList && <ExploreSections listRef={listRef} />
-      )}
+        <ExploreScreenSearchResultsList
+          searchQuery={searchFilter ?? ''}
+          parsedSearchQuery={parsedSearchFilter}
+          chainFilter={chainFilter}
+          parsedChainFilter={parsedChainFilter}
+        />
+      ) : isSheetReady && canRenderList ? (
+        <ExploreSections
+          listRef={listRef}
+          setIsAtTopOnScroll={setIsAtTop}
+          chainId={chainId}
+          orderByMetric={orderByMetric}
+          showFavorites={showFavorites}
+        />
+      ) : null}
     </Screen>
   )
 }
@@ -146,7 +199,7 @@ export function ExploreScreen(): JSX.Element {
  */
 const useRenderNextFrame = (condition: boolean): boolean => {
   const [canRender, setCanRender] = useState<boolean>(false)
-  const rafRef = useRef<number>()
+  const rafRef = useRef<number>(undefined)
   const mountedRef = useRef<boolean>(true)
 
   const conditionRef = useRef<boolean>(condition)

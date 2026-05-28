@@ -1,15 +1,9 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import {
-  startFetchingCloudStorageBackups,
-  stopFetchingCloudStorageBackups,
-} from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { clearCloudBackups } from 'src/features/CloudBackup/cloudBackupSlice'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
+import { useCloudBackups } from 'src/features/CloudBackup/useCloudBackups'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex, Loader } from 'ui/src'
@@ -19,79 +13,21 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupLoading>
 
-const MIN_LOADING_UI_MS = ONE_SECOND_MS
-// 10s timeout time for query for backups, since we don't know when the query completes
-const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
-
 export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType
 
   const isRestoringMnemonic = importType === ImportType.RestoreMnemonic
-  // inits with null before fetchCloudStorageBackups starts fetching
-  const [isLoading, setIsLoading] = useState<boolean | null>(null)
-  const [isError, setIsError] = useState(false)
 
-  // when we are restoring after phone migration
-  const signerAccounts = useSignerAccounts()
-  const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
-
-  const backups = useCloudBackups(mnemonicId)
+  const { backups, isLoading, isError, triggerCloudStorageBackupsFetch } = useCloudBackups()
+  const { addAndroidBackupEmail } = useOnboardingContext()
 
   useNavigationHeader(navigation)
-
-  // Starts query for cloud backup files, backup files found are streamed into Redux
-  const fetchCloudStorageBackups = useCallback(() => {
-    setIsError(false)
-    setIsLoading(true)
-    // delays native oauth consent screen to avoid UI freezes
-    setTimeout(async () => {
-      try {
-        await startFetchingCloudStorageBackups()
-      } catch (e) {
-        setIsError(true)
-      }
-    }, 0)
-  }, [])
-
-  /**
-   * Monitors the fetching process and uses two different timeouts:
-   * - MAX_LOADING_TIMEOUT_MS for initial backup fetch
-   * - MIN_LOADING_UI_MS if subsequent backups are being fetched.
-   * Stops the backup fetching process and sets the loading state to false once the timeout is reached.
-   */
-  useEffect(() => {
-    if (!isLoading) {
-      return undefined
-    }
-    const timer = setTimeout(
-      () => {
-        if (backups.length === 0) {
-          logger.debug(
-            'RestoreCloudBackupLoadingScreen',
-            'fetchCloudStorageBackups',
-            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`,
-          )
-        }
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        stopFetchingCloudStorageBackups()
-        setIsLoading(false)
-      },
-      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS,
-    )
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [backups.length, isLoading])
 
   /**
    * Initiates the backup fetching process when the screen comes into focus, helping avoid potential issues with Android's consent screens.
@@ -102,10 +38,9 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   useFocusEffect(
     useCallback(() => {
       return navigation.addListener('transitionEnd', () => {
-        dispatch(clearCloudBackups())
-        fetchCloudStorageBackups()
+        triggerCloudStorageBackupsFetch()
       })
-    }, [dispatch, fetchCloudStorageBackups, navigation]),
+    }, [triggerCloudStorageBackupsFetch, navigation]),
   )
 
   /**
@@ -118,29 +53,40 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     if (isLoading !== false || backups.length === 0) {
       return
     }
+    const androidBackupEmail = backups[0]?.googleDriveEmail
+    if (androidBackupEmail) {
+      addAndroidBackupEmail(androidBackupEmail)
+    }
     if (backups.length === 1 && backups[0]) {
       navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
-        importType,
-        entryPoint,
+        ...params,
         mnemonicId: backups[0].mnemonicId,
       })
     } else {
       navigation.replace(OnboardingScreens.RestoreCloudBackup, {
         importType,
         entryPoint,
+        backups,
       })
     }
-  }, [backups, entryPoint, importType, isLoading, navigation])
+  }, [backups, isLoading, navigation, params, entryPoint, importType, addAndroidBackupEmail])
 
   if (isError) {
     return (
-      <Flex alignSelf="center" px="$spacing16">
+      <Flex alignSelf="center" px="$spacing16" gap="$spacing16">
         <BaseCard.ErrorState
           description={t('account.cloud.error.backup.message')}
           icon={<OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
           retryButtonLabel={t('common.button.retry')}
           title={t('account.cloud.error.backup.title')}
-          onRetry={fetchCloudStorageBackups}
+          alternativeButtonLabel={t('onboarding.import.method.restoreSeedPhrase.wallet.title')}
+          onRetry={triggerCloudStorageBackupsFetch}
+          onAlternativePress={() => {
+            navigation.replace(OnboardingScreens.SeedPhraseInput, {
+              ...params,
+              showAsCloudBackupFallback: true,
+            })
+          }}
         />
       </Flex>
     )
@@ -150,8 +96,8 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   if (isLoading === false && backups.length === 0) {
     if (isRestoringMnemonic) {
       navigation.replace(OnboardingScreens.SeedPhraseInput, {
-        importType,
-        entryPoint,
+        ...params,
+        showAsCloudBackupFallback: true,
       })
     } else {
       return (
@@ -163,7 +109,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
             icon={<OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
             retryButtonLabel={t('common.button.retry')}
             title={t('account.cloud.empty.title')}
-            onRetry={fetchCloudStorageBackups}
+            onRetry={triggerCloudStorageBackupsFetch}
           />
         </Flex>
       )

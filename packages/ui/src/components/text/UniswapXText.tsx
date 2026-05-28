@@ -18,7 +18,8 @@ export function UniswapXText({ children, ...props }: GetProps<typeof Text>): JSX
   return (
     <>
       <style>{gradientStyle}</style>
-      <Text {...props} className="uniswapx-gradient">
+      {/* Do not use gradient color if a color prop override is defined */}
+      <Text {...props} className={!props.color ? 'uniswapx-gradient' : ''}>
         {children}
       </Text>
     </>

@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { PreV16UserState } from '~/state/migrations/oldTypes'
 
 type PersistAppStateV11 = {
   _persist: PersistState

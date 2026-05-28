@@ -1,25 +1,18 @@
-import styled, { useTheme } from 'lib/styled-components'
-import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableTextLink, useIsDarkMode } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-
-const StyledLink = styled(ExternalLink)`
-  font-weight: 535;
-  color: ${({ theme }) => theme.neutral3};
-`
+import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
 
 interface ProviderConnectedViewProps {
-  closeModal: () => void
+  closeModal?: () => void
   selectedServiceProvider: FORServiceProvider
 }
 
 export function ProviderConnectedView({ closeModal, selectedServiceProvider }: ProviderConnectedViewProps) {
   const isDarkMode = useIsDarkMode()
-  const theme = useTheme()
   const { t } = useTranslation()
 
   return (
@@ -29,18 +22,15 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
           <img
             style={ServiceProviderLogoStyles.uniswapLogoWrapper}
             height={120}
-            src={getOptionalServiceProviderLogo(selectedServiceProvider?.logos, isDarkMode)}
+            src={getOptionalServiceProviderLogo(selectedServiceProvider.logos, isDarkMode)}
             width={120}
           />
           <Flex alignItems="center" gap="$spacing8">
             <Text variant="subheading1">
-              <Trans
-                i18nKey="fiatOnRamp.completeTransactionHeader"
-                values={{ serviceProvider: selectedServiceProvider.name }}
-              />
+              {t('fiatOnRamp.completeTransactionHeader', { serviceProvider: selectedServiceProvider.name })}
             </Text>
             <Text variant="body2" textAlign="center" color="$neutral2">
-              <Trans i18nKey="fiatOnRamp.continueInTab" values={{ serviceProvider: selectedServiceProvider.name }} />
+              {t('fiatOnRamp.continueInTab', { serviceProvider: selectedServiceProvider.name })}
             </Text>
           </Flex>
         </Flex>
@@ -52,14 +42,28 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
             }}
             components={{
               tosLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/terms-of-service/">
+                <TouchableTextLink
+                  onlyUseText
+                  variant="buttonLabel4"
+                  link={uniswapUrls.termsOfServiceUrl}
+                  target="_blank"
+                  display="inline"
+                  color="$neutral3"
+                >
                   {t('common.termsOfService')}
-                </StyledLink>
+                </TouchableTextLink>
               ),
               privacyLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/privacy-policy">
+                <TouchableTextLink
+                  onlyUseText
+                  variant="buttonLabel4"
+                  link={uniswapUrls.privacyPolicyUrl}
+                  target="_blank"
+                  display="inline"
+                  color="$neutral3"
+                >
                   {t('common.privacyPolicy')}
-                </StyledLink>
+                </TouchableTextLink>
               ),
             }}
           />

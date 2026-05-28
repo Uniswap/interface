@@ -1,80 +1,29 @@
-/* eslint-disable complexity */
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
-import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
-import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
-import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
-import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { fonts, spacing } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
-import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
-import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
+//! tamagui-ignore
+// tamagui-ignore
+/* oxlint-disable complexity */
+import { forwardRef, memo, useCallback } from 'react'
+import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
+import {
+  AmountInputPresets,
+  PRESET_BUTTON_PROPS,
+} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
+import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
+import { CurrencyInputPanelBalance } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelBalance'
+import { CurrencyInputPanelHeader } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelHeader'
+import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelInput'
+import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
+import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
+import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { isE2EMode } from 'utilities/src/environment/constants'
-import { NumberType } from 'utilities/src/format/types'
-import { usePrevious } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-type CurrencyInputPanelProps = {
-  autoFocus?: boolean
-  currencyAmount: Maybe<CurrencyAmount<Currency>>
-  currencyBalance: Maybe<CurrencyAmount<Currency>>
-  currencyField: CurrencyField
-  currencyInfo: Maybe<CurrencyInfo>
-  isLoading?: boolean
-  isIndicativeLoading?: boolean
-  focus?: boolean
-  isFiatMode?: boolean
-  onPressIn?: () => void
-  onSelectionChange?: (start: number, end: number) => void
-  onSetExactAmount: (amount: string) => void
-  onSetMax?: (amount: string, currencyField: CurrencyField) => void
-  onShowTokenSelector?: () => void
-  onToggleIsFiatMode: (currencyField: CurrencyField) => void
-  selection?: TextInputProps['selection']
-  showSoftInputOnFocus?: boolean
-  transactionType?: TransactionType
-  usdValue: Maybe<CurrencyAmount<Currency>>
-  value?: string
-  valueIsIndicative?: boolean
-  headerLabel?: string
-  disabled?: boolean
-  onPressDisabled?: () => void
-  enableInputOnly?: boolean // only allow the input field to be changed. Clicking elsewhere has no effect
-  resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
-  tokenColor?: string
-} & FlexProps
-
-const MAX_INPUT_FONT_SIZE = 36
-const MIN_INPUT_FONT_SIZE = 24
-
-// if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
-// changes from 36 then width value must be adjusted
-const MAX_CHAR_PIXEL_WIDTH = 23
-
-export type CurrencyInputPanelRef = {
-  textInputRef: RefObject<TextInput>
-  triggerShakeAnimation: () => void
-}
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
-    function _CurrencyInputPanel(props, forwardedRef): JSX.Element {
+    function CurrencyInputPanelInner(props, forwardedRef): JSX.Element {
       const {
         autoFocus,
         currencyAmount,
@@ -83,403 +32,232 @@ export const CurrencyInputPanel = memo(
         currencyInfo,
         focus,
         isFiatMode = false,
+        showMaxButtonOnly = false,
+        showSoftInputOnFocus = false,
+        tokenColor,
         onPressIn,
+        isLoading,
+        valueIsIndicative,
+        isIndicativeLoading,
         onSelectionChange: selectionChange,
         onSetExactAmount,
-        onSetMax,
+        onSetPresetValue,
         onShowTokenSelector,
         onToggleIsFiatMode,
-        showSoftInputOnFocus = false,
         resetSelection,
         disabled = false,
         onPressDisabled,
-        enableInputOnly,
         headerLabel,
         transactionType,
-        tokenColor,
-        ...rest
+        customPanelStyle,
+        hidePresets,
+        onBlur,
+        panelAccessory,
+        disablePressAnimation,
+        fontSizeOptions,
+        fiatValueVariant,
+        inputRowPaddingVertical,
+        panelAccessoryPaddingTop = '$spacing24',
+        inputRowMinHeight,
+        inputSuffix,
+        allowOverflow,
+        balanceVariant,
+        actualGasFee,
       } = props
 
-      const colors = useSporeColors()
-      const account = useAccountMeta()
       const isShortMobileDevice = useIsShortMobileDevice()
-      const { formatCurrencyAmount } = useLocalizationContext()
 
-      const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
-      const indicativeDisplay = useIndicativeTextDisplay(props)
-      const legacyDisplay = useLegacyTextDisplay(props)
-
-      const { isTestnetModeEnabled } = useEnabledChains()
-      const display = indicativeQuotesEnabled ? indicativeDisplay : legacyDisplay
-      const { value, color, usdValue } = display
-
-      const inputRef = useRef<TextInput>(null)
-
-      const shakeValue = useSharedValue(0)
-
-      const shakeStyle = useAnimatedStyle(
-        () => ({
-          transform: [{ translateX: shakeValue.value }],
-        }),
-        [shakeValue.value],
-      )
-
-      const triggerShakeAnimation = useCallback(() => {
-        shakeValue.value = errorShakeAnimation(shakeValue)
-      }, [shakeValue])
-
-      useImperativeHandle(forwardedRef, () => ({
-        textInputRef: inputRef,
-        triggerShakeAnimation,
-      }))
+      const display = useIndicativeQuoteTextDisplay(props)
+      const { value, usdValue } = display
 
       const isOutput = currencyField === CurrencyField.OUTPUT
+
+      const showDefaultTokenOptions = isOutput && !currencyInfo
 
       const showInsufficientBalanceWarning =
         !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-      const _onToggleIsFiatMode = useCallback(() => {
-        onToggleIsFiatMode(currencyField)
-      }, [currencyField, onToggleIsFiatMode])
+      const showMaxButton = showMaxButtonOnly && !isOutput && !hidePresets
+      const showPercentagePresetOptions = !showMaxButtonOnly && !hidePresets && currencyField === CurrencyField.INPUT
 
-      // For native mobile, given that we're using a custom `DecimalPad`,
-      // the input's focus state can sometimes be out of sync with the controlled `focus` prop.
-      // When this happens, we want to sync the input's focus state by either auto-focusing or blurring it.
-      const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
-      useEffect(() => {
-        if (isWeb) {
-          // We do not want to force-focus the `input` on web.
-          // This is only needed when using native mobile's custom `DecimalPad`.
-          return
-        }
+      const isDesktop = isWebAppDesktop || isExtensionApp
 
-        if (focus === undefined) {
-          // Ignore this effect unless `focus` is explicitly set to a boolean.
-          return
-        }
+      const showPercentagePresetsOnBottom = showPercentagePresetOptions && (isMobileWeb || (isDesktop && !headerLabel))
 
-        if (focus && !isTextInputRefActuallyFocused) {
-          resetSelection?.({
-            start: value?.length ?? 0,
-            end: value?.length ?? 0,
-            currencyField,
-          })
-          setTimeout(() => {
-            // We need to wait for the token selector sheet to fully close before triggering this or else it won't work.
-            inputRef.current?.focus()
-          }, ONE_SECOND_MS / 2)
-        } else if (!focus && isTextInputRefActuallyFocused) {
-          inputRef.current?.blur()
-        }
-      }, [currencyField, focus, isTextInputRefActuallyFocused, resetSelection, value?.length])
-
-      const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
-        MAX_CHAR_PIXEL_WIDTH,
-        MAX_INPUT_FONT_SIZE,
-        MIN_INPUT_FONT_SIZE,
-      )
-
-      const lineHeight = fontSize * 1.2
-
-      // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
-      useEffect(() => {
-        if (value) {
-          onSetFontSize(value)
-          // Always set font size if focused to format placeholder size, we need to pass in a non-empty string to avoid formatting crash
-        } else if (focus) {
-          onSetFontSize('0')
-        }
-      }, [focus, onSetFontSize, value])
-
-      const onSelectionChange = useCallback(
-        ({
-          nativeEvent: {
-            selection: { start, end },
-          },
-        }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-        [selectionChange],
-      )
-
-      // Hide balance if panel is output, and no balance
-      const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || !account
-
-      const showMaxButton = !isOutput && account
-
-      // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
-      const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
-        value,
-        currencyInfo,
-        currencyAmount,
-        usdValue,
-        isFiatMode,
-      })
+      const shakeAnimation = useShakeAnimation()
+      const { triggerShakeAnimation } = shakeAnimation
 
       const onPressDisabledWithShakeAnimation = useCallback((): void => {
         onPressDisabled?.()
         triggerShakeAnimation()
       }, [onPressDisabled, triggerShakeAnimation])
 
-      const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
-
-      const handleSetMax = useCallback(
-        (amount: string) => {
-          onSetMax?.(amount, currencyField)
+      const handleSetPresetValue = useCallback(
+        (amount: string, percentage: PresetPercentage) => {
+          onSetPresetValue?.(amount, percentage)
         },
-        [currencyField, onSetMax],
+        [onSetPresetValue],
       )
 
-      const refetchAnimationStyle = useRefetchAnimationStyle(props)
+      const maxInputAmount = useMaxAmountSpend({
+        currencyAmount: currencyBalance,
+        txType: transactionType,
+      })
+
+      const handlePressBalance = useCallback(() => {
+        if (isOutput) {
+          // For the output (Buy) panel, set the exact output amount to the balance
+          if (currencyBalance && currencyBalance.greaterThan(0)) {
+            onSetExactAmount(currencyBalance.toExact())
+          }
+        } else {
+          // For the input (Sell) panel, use max amount which accounts for gas reserves
+          if (maxInputAmount && maxInputAmount.greaterThan(0)) {
+            handleSetPresetValue(maxInputAmount.toExact(), 'max')
+          }
+        }
+      }, [isOutput, currencyBalance, maxInputAmount, onSetExactAmount, handleSetPresetValue])
+
+      const renderPreset = useCallback(
+        (preset: PresetPercentage) => (
+          <PresetAmountButton
+            percentage={preset}
+            currencyAmount={currencyAmount}
+            currencyBalance={currencyBalance}
+            currencyField={currencyField}
+            transactionType={transactionType}
+            elementName={ElementName.PresetPercentage}
+            buttonProps={PRESET_BUTTON_PROPS}
+            actualGasFee={actualGasFee}
+            onSetPresetValue={handleSetPresetValue}
+          />
+        ),
+        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType, actualGasFee],
+      )
 
       return (
         <TouchableArea
-          disabled={enableInputOnly}
+          group
+          scaleTo={disablePressAnimation ? 1 : undefined}
           disabledStyle={{
             cursor: 'default',
           }}
           onPress={disabled ? onPressDisabledWithShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}
         >
-          <Flex {...rest} overflow="hidden" px="$spacing16" py={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-            {headerLabel && (
-              <Text color="$neutral2" variant="subheading2" fontSize="$micro">
-                {headerLabel}
-              </Text>
-            )}
-            <AnimatedFlex
+          <Flex
+            {...customPanelStyle}
+            overflow={allowOverflow ? 'visible' : 'hidden'}
+            px="$spacing16"
+            py={isShortMobileDevice ? '$spacing8' : '$spacing16'}
+          >
+            <CurrencyInputPanelHeader
+              headerLabel={headerLabel}
+              currencyField={currencyField}
+              currencyBalance={currencyBalance}
+              currencyAmount={currencyAmount}
+              currencyInfo={currencyInfo}
+              showDefaultTokenOptions={showDefaultTokenOptions}
+              hidePresets={hidePresets}
+              actualGasFee={actualGasFee}
+              onSetPresetValue={handleSetPresetValue}
+            />
+            <CurrencyInputPanelInput
+              ref={forwardedRef}
+              autoFocus={autoFocus}
+              currencyAmount={currencyAmount}
+              currencyBalance={currencyBalance}
+              currencyField={currencyField}
+              currencyInfo={currencyInfo}
+              shakeAnimation={shakeAnimation}
+              focus={focus}
+              isLoading={isLoading}
+              isFiatMode={isFiatMode}
+              isIndicativeLoading={isIndicativeLoading}
+              valueIsIndicative={valueIsIndicative}
+              showSoftInputOnFocus={showSoftInputOnFocus}
+              resetSelection={resetSelection}
+              disabled={disabled}
+              tokenColor={tokenColor}
+              indicativeQuoteTextDisplay={display}
+              showInsufficientBalanceWarning={showInsufficientBalanceWarning}
+              showDefaultTokenOptions={showDefaultTokenOptions}
+              fontSizeOptions={fontSizeOptions}
+              inputRowPaddingVertical={inputRowPaddingVertical}
+              minHeight={inputRowMinHeight}
+              inputSuffix={inputSuffix}
+              hidePresets={hidePresets}
+              onPressIn={onPressIn}
+              onSelectionChange={selectionChange}
+              onSetExactAmount={onSetExactAmount}
+              onShowTokenSelector={onShowTokenSelector}
+              onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
+              onBlur={onBlur}
+            />
+            <Flex
               row
               alignItems="center"
-              justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-              py="$spacing8"
-              minHeight={MAX_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
-              style={shakeStyle}
+              mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
+              // maintain layout when balance is hidden
+              opacity={currencyInfo ? 1 : 0}
+              pointerEvents={currencyInfo ? 'auto' : 'none'}
             >
-              {isFiatMode && (
-                <Text
-                  allowFontScaling
-                  color={showInsufficientBalanceWarning ? '$statusCritical' : color}
-                  fontSize={fontSize}
-                  lineHeight={lineHeight}
-                  mr={isWeb ? '$spacing2' : undefined}
-                >
-                  {fiatCurrencySymbol}
-                </Text>
+              {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
+                <Flex position="absolute">
+                  <AmountInputPresets hoverLtr presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
+                </Flex>
+              ) : (
+                <Flex row flex={1} justifyContent="space-between" alignItems="center">
+                  <CurrencyInputPanelValue
+                    disabled={disabled}
+                    value={value}
+                    usdValue={usdValue}
+                    isFiatMode={isFiatMode}
+                    currencyInfo={currencyInfo}
+                    currencyAmount={currencyAmount}
+                    currencyField={currencyField}
+                    fiatValueVariant={fiatValueVariant}
+                    onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
+                    onToggleIsFiatMode={onToggleIsFiatMode}
+                  />
+                </Flex>
               )}
-              <AnimatedFlex
-                fill
-                grow
-                row
-                alignItems="center"
-                height={MAX_INPUT_FONT_SIZE}
-                mr="$spacing8"
-                overflow="hidden"
-                style={refetchAnimationStyle}
-                onLayout={onLayout}
-              >
-                {currencyInfo ? (
-                  <Flex grow flexShrink={isWeb ? 1 : 0}>
-                    {disabled && (
-                      // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
-                      <TouchableArea
-                        style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}
-                        onPress={onPressDisabledWithShakeAnimation}
-                      />
-                    )}
-                    <AmountInput
-                      ref={inputRef}
-                      autoFocus={autoFocus ?? focus}
-                      backgroundColor="$transparent"
-                      borderWidth="$none"
-                      color={showInsufficientBalanceWarning ? '$statusCritical' : color}
-                      disabled={disabled || !currencyInfo}
-                      flex={1}
-                      focusable={!disabled && Boolean(currencyInfo)}
-                      fontFamily="$heading"
-                      // This is a hacky workaround for Android to prevent text from being cut off
-                      // (the text input height is greater than the font size and the input is
-                      // centered vertically, so the caret is cut off but the text is not)
-                      fontSize={fontSize}
-                      lineHeight={lineHeight}
-                      fontWeight="$book"
-                      maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
-                      maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-                      minHeight={lineHeight}
-                      overflow="visible"
-                      placeholder="0"
-                      placeholderTextColor={colors.neutral3.val}
-                      borderRadius={0}
-                      px="$none"
-                      py="$none"
-                      returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                      showSoftInputOnFocus={showSoftInputOnFocus}
-                      testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
-                      value={value}
-                      onChangeText={onSetExactAmount}
-                      onPressIn={onPressIn}
-                      onSelectionChange={onSelectionChange}
-                    />
-                  </Flex>
-                ) : (
-                  <TouchableArea onPress={onShowTokenSelector}>
-                    <Text color="$neutral3" fontSize={fontSize} variant="heading2" style={{ lineHeight: fontSize }}>
-                      0
-                    </Text>
-                  </TouchableArea>
-                )}
-              </AnimatedFlex>
-              <Flex row alignItems="center">
-                <SelectTokenButton
-                  selectedCurrencyInfo={currencyInfo}
-                  testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
-                  tokenColor={tokenColor}
-                  onPress={onShowTokenSelector}
-                />
-              </Flex>
-            </AnimatedFlex>
-            {currencyInfo && (
-              <Flex row gap="$spacing8" justifyContent="space-between">
-                <TouchableArea
-                  flexShrink={1}
-                  onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
-                >
-                  {!isTestnetModeEnabled && (
-                    <Flex centered row shrink gap="$spacing4">
-                      <Text color="$neutral2" numberOfLines={1} variant="body3">
-                        {inputPanelFormattedValue}
-                      </Text>
-                    </Flex>
-                  )}
-                </TouchableArea>
-                <Flex row centered gap="$spacing4" justifyContent="flex-end">
-                  {!hideCurrencyBalance && (
-                    <Text color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral2'} variant="body3">
-                      {formatCurrencyAmount({
-                        value: currencyBalance,
-                        type: NumberType.TokenNonTx,
-                      })}{' '}
-                      {getSymbolDisplayText(currencyInfo.currency.symbol)}
-                    </Text>
-                  )}
-                  {showMaxButton && onSetMax && (
-                    <MaxAmountButton
+              {currencyInfo && (
+                <Flex row centered ml="auto" gap="$spacing4" justifyContent="flex-end">
+                  <CurrencyInputPanelBalance
+                    currencyField={currencyField}
+                    currencyBalance={currencyBalance}
+                    currencyInfo={currencyInfo}
+                    showInsufficientBalanceWarning={showInsufficientBalanceWarning}
+                    hideBalance={!!hidePresets}
+                    variant={balanceVariant}
+                    onPressBalance={
+                      !disabled && (isOutput || onSetPresetValue) && currencyBalance?.greaterThan(0)
+                        ? handlePressBalance
+                        : undefined
+                    }
+                  />
+                  {/* Max button */}
+                  {showMaxButton && onSetPresetValue && (
+                    <PresetAmountButton
+                      percentage="max"
                       currencyAmount={currencyAmount}
                       currencyBalance={currencyBalance}
                       currencyField={currencyField}
                       transactionType={transactionType}
-                      onSetMax={handleSetMax}
+                      buttonProps={{
+                        borderWidth: 0,
+                      }}
+                      actualGasFee={actualGasFee}
+                      onSetPresetValue={handleSetPresetValue}
                     />
                   )}
                 </Flex>
-              </Flex>
-            )}
+              )}
+            </Flex>
+            {panelAccessory ? <Flex mt={panelAccessoryPaddingTop}>{panelAccessory}</Flex> : null}
           </Flex>
         </TouchableArea>
       )
     },
   ),
 )
-
-type PanelTextDisplay = {
-  value: string | undefined
-  color: '$neutral1' | '$neutral2' | '$neutral3'
-  usdValue?: CurrencyAmount<Currency> | null
-}
-
-/**
- * Controls the display value and color upon indicative vs full quote input.
- *
- * Rules:
- * * If the value goes from indicative to full, show the indicative value for another 200ms in neutral2 before changing.
- * * If the value is undefined, but there is input, continue to show the previous value until it gets replaced by a new quote.
- */
-function useIndicativeTextDisplay({
-  currencyAmount,
-  focus,
-  isLoading,
-  usdValue,
-  value,
-  valueIsIndicative,
-}: CurrencyInputPanelProps): PanelTextDisplay {
-  const lastDisplayRef = useRef<PanelTextDisplay>({ value, color: '$neutral3', usdValue })
-  const hasInput = Boolean(isLoading || currencyAmount)
-
-  // Clear the lastDisplayRef if input is cleared, so that it is not used upon subsequent input
-  useEffect(() => {
-    if (!hasInput) {
-      lastDisplayRef.current = { value: undefined, color: '$neutral3' }
-    }
-  }, [hasInput])
-
-  return useMemo(() => {
-    // Ignore all indicative treatment when the field is focused
-    if (focus) {
-      return { value, color: '$neutral1', usdValue }
-    }
-
-    if (!value) {
-      return hasInput ? lastDisplayRef.current : { value, color: '$neutral3' }
-    }
-
-    const color = valueIsIndicative ? '$neutral3' : '$neutral1'
-
-    const display = { value, color, usdValue } as const
-    lastDisplayRef.current = display
-
-    return display
-  }, [focus, value, usdValue, hasInput, valueIsIndicative])
-}
-
-// TODO(WEB-4805): Remove once legacy hook once indicative quotes are fully rolled out and tested
-/** Controls the display value and color according to legacy, pre-indicative-quotes logic. */
-function useLegacyTextDisplay({ isLoading, value, usdValue }: CurrencyInputPanelProps): PanelTextDisplay {
-  // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
-  const previousValue = usePrevious(value)
-
-  return useMemo(() => {
-    // when there is no input value, the color should be lighter to account for $ sign when in fiat input mode
-    const color = !value ? '$neutral3' : '$neutral1'
-    const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
-
-    return { value: isLoading ? loadingTextValue : value, usdValue, color }
-  }, [isLoading, previousValue, value, usdValue])
-}
-
-/** Returns an animated opacity based on current indicative and full quote state  */
-function useRefetchAnimationStyle({
-  currencyAmount,
-  isLoading,
-  isIndicativeLoading,
-  valueIsIndicative,
-}: CurrencyInputPanelProps): { opacity: number } {
-  const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
-
-  const loadingFlexProgress = useSharedValue(1)
-
-  // disables looping animation during e2e tests which was preventing js thread from idle
-  if (!isE2EMode) {
-    loadingFlexProgress.value = withRepeat(
-      withSequence(
-        withTiming(0.4, { duration: 400, easing: Easing.ease }),
-        withTiming(1, { duration: 400, easing: Easing.ease }),
-      ),
-      -1,
-      true,
-    )
-  }
-
-  const previousAmount = usePrevious(currencyAmount)
-
-  const amountIsTheSame = currencyAmount && previousAmount?.equalTo(currencyAmount)
-  const noIndicativeUI = !isIndicativeLoading && !valueIsIndicative
-
-  // The component is 'refetching' the full quote when the amount hasn't changed, and there is no indicative UI being displayed.
-  const isRefetching = isLoading && amountIsTheSame && noIndicativeUI
-
-  // If Indicative quotes are disabled, we should animate the loading flex whenever the quote is loading.
-  const shouldAnimate = isRefetching || (!indicativeQuotesEnabled && isLoading)
-
-  return useAnimatedStyle(
-    () => ({
-      opacity: shouldAnimate ? loadingFlexProgress.value : 1,
-    }),
-    [shouldAnimate, loadingFlexProgress],
-  )
-}

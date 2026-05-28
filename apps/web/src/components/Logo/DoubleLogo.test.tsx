@@ -1,14 +1,16 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { mocked } from 'test-utils/mocked'
-import { render } from 'test-utils/render'
+import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
+import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { mocked } from '~/test-utils/mocked'
+import { render } from '~/test-utils/render'
 
-jest.mock('hooks/Tokens', () => ({
-  useCurrencyInfo: jest.fn(),
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
+  useCurrencyInfo: vi.fn(),
 }))
 
 describe('DoubleLogo', () => {
@@ -20,6 +22,7 @@ describe('DoubleLogo', () => {
     name: UNI[UniverseChainId.Mainnet].name,
     decimals: UNI[UniverseChainId.Mainnet].decimals,
   } as Token
+  const mockCurrency1Id = `${mockCurrency1.chainId}-${mockCurrency1.address}`
 
   const mockCurrency2: Token = {
     isToken: true,
@@ -29,30 +32,31 @@ describe('DoubleLogo', () => {
     name: WBTC.name,
     decimals: WBTC.decimals,
   } as Token
+  const mockCurrency2Id = `${mockCurrency2.chainId}-${mockCurrency2.address}`
 
   beforeEach(() => {
-    mocked(useCurrencyInfo).mockImplementation((currency: Currency | string | undefined) => {
-      if (typeof currency === 'string' || currency?.isNative) {
+    mocked(useCurrencyInfo).mockImplementation((currencyId: string | undefined) => {
+      if (!currencyId) {
         return undefined
       }
 
-      if (currency?.address === mockCurrency1.address) {
+      if (currencyId === mockCurrency1Id) {
         return {
           currency: mockCurrency1,
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
           currencyId: UNI[UniverseChainId.Mainnet].address,
-          safetyLevel: SafetyLevel.Verified,
+          safetyInfo: getCurrencySafetyInfo(GraphQLApi.SafetyLevel.Verified, undefined),
         }
       }
 
-      if (currency?.address === mockCurrency2.address) {
+      if (currencyId === mockCurrency2Id) {
         return {
           currency: mockCurrency2,
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png',
           currencyId: WBTC.address,
-          safetyLevel: SafetyLevel.Verified,
+          safetyInfo: getCurrencySafetyInfo(GraphQLApi.SafetyLevel.Verified, undefined),
         }
       }
 
@@ -85,7 +89,7 @@ describe('DoubleLogo', () => {
       <DoubleCurrencyLogo
         currencies={[mockCurrency1, mockCurrency2]}
         size={32}
-        customIcon={<div data-testid="custom-icon">Custom Icon</div>}
+        customIcon={<Flex data-testid="custom-icon">Custom Icon</Flex>}
       />,
     )
     expect(asFragment()).toMatchSnapshot()

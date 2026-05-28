@@ -1,20 +1,45 @@
-import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
-import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { UNITAGS_API_CACHE_KEY, fetchUsername } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import { UnitagUsernameRequest, UnitagUsernameResponse } from 'uniswap/src/features/unitags/types'
+import { PlainMessage } from '@bufbuild/protobuf'
+import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { GetUsernameRequest, GetUsernameResponse } from '@universe/api'
+import { UseQueryApiHelperHookArgs } from '@universe/api'
+import { useTranslation } from 'react-i18next'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { getUnitagFormatError } from 'uniswap/src/features/unitags/getUnitagFormatError'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 export function useUnitagsUsernameQuery({
   params,
   ...rest
-}: UseQueryApiHelperHookArgs<UnitagUsernameRequest, UnitagUsernameResponse>): UseQueryResult<UnitagUsernameResponse> {
-  const queryKey = [UNITAGS_API_CACHE_KEY, 'username', params]
+}: UseQueryApiHelperHookArgs<
+  PlainMessage<GetUsernameRequest>,
+  GetUsernameResponse
+>): UseQueryResult<GetUsernameResponse> {
+  const { t } = useTranslation()
+  const queryKey = [ReactQueryCacheKey.UnitagsApi, 'username', params]
 
-  return useQuery<UnitagUsernameResponse>({
-    queryKey,
-    queryFn: params ? async (): ReturnType<typeof fetchUsername> => await fetchUsername(params) : skipToken,
-    staleTime: ONE_MINUTE_MS,
-    gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
-    ...rest,
-  })
+  const formatError = params?.username ? getUnitagFormatError(params.username, t) : undefined
+  const shouldQueryForUnitag = params && formatError === undefined
+
+  return useQuery(
+    persistableQueryOptions<GetUsernameResponse>({
+      queryKey,
+      queryFn: shouldQueryForUnitag
+        ? async (): Promise<GetUsernameResponse> => {
+            const response = await unitagsApiClient.fetchUsername(params)
+            return new GetUsernameResponse({
+              available: response.available,
+              requiresEnsMatch: response.requiresEnsMatch,
+              username: response.username,
+              metadata: response.metadata,
+              address: response.address,
+            })
+          }
+        : skipToken,
+      staleTime: ONE_MINUTE_MS,
+      gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
+      ...rest,
+    }),
+  )
 }

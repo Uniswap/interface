@@ -1,5 +1,5 @@
 export enum UpgradeStatus {
-  Recommended,
-  Required,
-  NotRequired,
+  Recommended = 0,
+  Required = 1,
+  NotRequired = 2,
 }

@@ -1,0 +1,163 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'portfolio-chart-happy-path'
+
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- openLink: uniswap://e2e/override-gates?gates=profit_loss
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.PortfolioChartCollapsed}
+    timeout: 15000
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartCollapsed}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartExpanded}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1w
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'PortfolioChartOpenDetails'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.PortfolioChartToggle}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'PortfolioChartOpenDetails'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartExpanded}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartCollapsed}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioPerformance}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartDetailsMoreButton}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1h
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1d
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1w
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1m
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1y
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}all
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1d
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1h
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1h
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1w
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1w
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1m
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1m
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1y
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1y
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}all
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}all
+
+- tapOn:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1d
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${output.testIds.PortfolioChartSelectedPeriodPrefix}1d
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'PortfolioChartCloseDetails'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Back}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'PortfolioChartCloseDetails'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartCollapsed}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartExpanded}
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartPeriodPrefix}1w
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

@@ -1,18 +1,17 @@
-import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
-import { AccountMeta } from "uniswap/src/features/accounts/types"
-import { ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
-import { GasFeeEstimates } from "uniswap/src/features/transactions/types/transactionDetails"
-import { WrapType } from "uniswap/src/features/transactions/types/wrap"
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { GasEstimate } from '@universe/api'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 
 export type WrapCallbackParams = {
-  account: AccountMeta
+  address: string
   inputCurrencyAmount: CurrencyAmount<Currency>
   wrapType: WrapType.Wrap | WrapType.Unwrap
   onSuccess: () => void
   onFailure: () => void
   txRequest: ValidatedTransactionRequest
   txId?: string
-  gasEstimates?: GasFeeEstimates
+  gasEstimate?: GasEstimate
 }
 
 export type WrapCallback = (params: WrapCallbackParams) => void

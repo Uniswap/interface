@@ -1,53 +1,38 @@
-import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { Text, TouchableArea } from 'ui/src'
-import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
-import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
+import { GqlResult } from '@universe/api'
+import { useMemo } from 'react'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
+import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
-import { TokenOptionSection, TokenSection, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
-import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
-import { GqlResult } from 'uniswap/src/data/types'
-import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
-
-function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <TouchableArea onPress={onPress}>
-      <Text color="$accent1" variant="buttonLabel3">
-        {t('tokens.selector.button.clear')}
-      </Text>
-    </TouchableArea>
-  )
-}
+import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
+import { TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 
 export function useTokenSectionsForEmptySearch({
-  activeAccountAddress,
+  addresses,
   chainFilter,
-}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<TokenSection[]> {
-  const dispatch = useDispatch()
-
-  const { data: popularTokenOptions, loading } = usePopularTokensOptions(activeAccountAddress, chainFilter)
+}: Omit<TokenSectionsHookProps, 'oppositeSelectedToken'>): GqlResult<OnchainItemSection<TokenOption>[]> {
+  const portfolioData = usePortfolioBalancesForAddressById(addresses)
+  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions({ chainFilter, portfolioData })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
-  // it's a dependency of useMemo => useCallback
-  const onPressClearSearchHistory = useCallback((): void => {
-    dispatch(clearSearchHistory())
-  }, [dispatch])
-
-  const recentSection = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.RecentTokens,
-    tokenOptions: recentlySearchedTokenOptions,
-    endElement: <ClearAll onPress={onPressClearSearchHistory} />,
+  const recentSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.RecentSearches,
+    options: recentlySearchedTokenOptions,
+    endElement: <ClearRecentSearchesButton />,
   })
 
-  const popularSection = useTokenOptionsSection({
-    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
-    sectionKey: TokenOptionSection.PopularTokens,
-    tokenOptions: popularTokenOptions?.slice(0, MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT),
+  const trendingSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.TrendingTokens,
+    options: trendingTokenOptions?.slice(0, MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT),
   })
-  const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
+  const sections = useMemo(
+    () => [...(recentSection ?? []), ...(trendingSection ?? [])],
+    [trendingSection, recentSection],
+  )
 
   return useMemo(
     () => ({

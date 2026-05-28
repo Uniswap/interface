@@ -1,22 +1,17 @@
-import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import {
-  ScreenRequest,
-  ScreenResponse,
-  UNISWAP_API_CACHE_KEY,
-  fetchTrmScreen,
-} from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
+import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type ScreenRequest, type ScreenResponse, type UseQueryApiHelperHookArgs } from '@universe/api'
+import { ComplianceApiClient } from 'uniswap/src/data/apiClients/uniswapApi/ComplianceApiClient'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useTrmScreenQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<ScreenRequest, ScreenResponse>): UseQueryResult<ScreenResponse> {
-  const queryKey = [UNISWAP_API_CACHE_KEY, uniswapUrls.trmPath, params]
+  const queryKey = [ReactQueryCacheKey.Compliance, params]
 
   return useQuery<ScreenResponse>({
     queryKey,
-    queryFn: params ? async (): ReturnType<typeof fetchTrmScreen> => await fetchTrmScreen(params) : skipToken,
+    queryFn: params ? async (): Promise<ScreenResponse> => await ComplianceApiClient.screenAddress(params) : skipToken,
     ...rest,
   })
 }

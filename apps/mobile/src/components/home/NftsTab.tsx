@@ -1,23 +1,23 @@
 import { FlashList } from '@shopify/flash-list'
+import { isAndroid } from '@universe/environment'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
-import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useSporeColors } from 'ui/src'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { NftsList } from 'uniswap/src/components/nfts/NftsList'
+import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
-import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
-import { NftsList } from 'wallet/src/components/nfts/NftsList'
-import { NFTItem } from 'wallet/src/features/nfts/types'
-
-export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
+import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NftsTab = memo(
-  forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
+  forwardRef<FlashList<unknown>, TabProps>(function NftsTabInner(
     {
       owner,
       containerProps,
@@ -32,31 +32,51 @@ export const NftsTab = memo(
   ) {
     const colors = useSporeColors()
     const insets = useAppInsets()
-    const navigation = useAppStackNavigation()
+    const accounts = useAccounts()
+    const { defaultChainId } = useEnabledChains()
+    const navigateToNftExplorerLink = useNavigateToNftExplorerLink()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle,
     )
 
+    // `useAccounts()` returns a new object reference on every Redux dispatch even when
+    // the address set is unchanged. Memoizing on the joined keys keeps `walletAddresses`
+    // referentially stable so `renderNFTItem` doesn't churn the FlashList every render.
+    const accountsKey = Object.keys(accounts).sort().join(',')
+    // oxlint-disable-next-line react/exhaustive-deps -- intentionally keying on accountsKey to skip identity-only changes to accounts
+    const walletAddresses = useMemo(() => Object.keys(accounts).sort(), [accountsKey])
+
     const renderNFTItem = useCallback(
       (item: NFTItem, index: number) => {
-        const onPressNft = (): void => {
-          navigation.navigate(MobileScreens.NFTItem, {
-            owner,
-            address: item.contractAddress ?? '',
+        const onPressNft = async (): Promise<void> => {
+          const nftDetails = {
+            chainId: fromGraphQLChain(item.chain) ?? defaultChainId,
+            contractAddress: item.contractAddress ?? '',
             tokenId: item.tokenId ?? '',
-            isSpam: item.isSpam,
-            fallbackData: item,
-          })
+          }
+          const openseaUrl = getOpenseaLink(nftDetails)
+
+          if (openseaUrl) {
+            await openUri({ uri: openseaUrl })
+          } else {
+            navigateToNftExplorerLink(nftDetails)
+          }
         }
 
         return (
-          <Flex fill m="$spacing4">
-            <NftViewWithContextMenu index={index} item={item} owner={owner} onPress={onPressNft} />
+          <Flex m="$spacing4">
+            <NftViewWithContextMenu
+              index={index}
+              item={item}
+              owner={owner}
+              walletAddresses={walletAddresses}
+              onPress={onPressNft}
+            />
           </Flex>
         )
       },
-      [owner, navigation],
+      [owner, walletAddresses, defaultChainId, navigateToNftExplorerLink],
     )
 
     const refreshControl = useMemo(() => {

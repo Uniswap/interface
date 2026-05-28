@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { PreV16UserState } from '~/state/migrations/oldTypes'
 
 export type PersistAppStateV6 = {
   _persist: PersistState
@@ -13,12 +13,12 @@ export const migration6 = (state: PersistAppStateV6 | undefined) => {
     return state
   }
   // Remove a previously-persisted variable
-  if (state?.user && 'selectedWallet' in state.user) {
+  if (state.user && 'selectedWallet' in state.user) {
     const connectionType = state.user.selectedWallet
     if (connectionType !== undefined) {
       state.user.recentConnectionMeta = { type: connectionType }
     }
-    delete state.user['selectedWallet']
+    delete state.user.selectedWallet
   }
   return {
     ...state,

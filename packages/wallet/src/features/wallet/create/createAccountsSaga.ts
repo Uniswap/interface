@@ -1,13 +1,14 @@
 import { put } from 'typed-redux-saga'
+import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { addAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export interface CreateAccountsParams {
   accounts: Account[]
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* createAccounts({ accounts }: CreateAccountsParams) {
   yield* put(addAccounts(accounts))
 
@@ -29,4 +30,7 @@ export const {
   wrappedSaga: createAccountsSaga,
   reducer: createAccountsReducer,
   actions: createAccountsActions,
-} = createMonitoredSaga(createAccounts, 'createAccounts')
+} = createMonitoredSaga({
+  saga: createAccounts,
+  name: 'createAccounts',
+})

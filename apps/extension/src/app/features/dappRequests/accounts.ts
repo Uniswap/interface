@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { type JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
-import { DappInfo, dappStore } from 'src/app/features/dapp/store'
+import { type DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
-import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
+import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
-  AccountResponse,
-  DappRequest,
-  DappResponseType,
-  ErrorResponse,
-  GetAccountRequest,
-  RequestAccountRequest,
+  type AccountResponse,
+  type DappRequest,
+  type ErrorResponse,
+  type GetAccountRequest,
+  type RequestAccountRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select } from 'typed-redux-saga'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -26,12 +26,17 @@ import { extractBaseUrl } from 'utilities/src/format/urls'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 
-function getAccountResponse(
-  chainId: UniverseChainId,
-  dappRequest: DappRequest,
-  provider: JsonRpcProvider,
-  dappInfo: DappInfo,
-): AccountResponse {
+function getAccountResponse({
+  chainId,
+  dappRequest,
+  provider,
+  dappInfo,
+}: {
+  chainId: UniverseChainId
+  dappRequest: DappRequest
+  provider: JsonRpcProvider
+  dappInfo: DappInfo
+}): AccountResponse {
   const orderedConnectedAddresses = getOrderedConnectedAddresses(
     dappInfo.connectedAccounts,
     dappInfo.activeConnectedAddress,
@@ -46,12 +51,17 @@ function getAccountResponse(
   }
 }
 
-function sendAccountResponseAnalyticsEvent(
-  senderUrl: string,
-  chainId: UniverseChainId,
-  dappInfo: DappInfo,
-  accountResponse: AccountResponse,
-): void {
+function sendAccountResponseAnalyticsEvent({
+  senderUrl,
+  chainId,
+  dappInfo,
+  accountResponse,
+}: {
+  senderUrl: string
+  chainId: UniverseChainId
+  dappInfo: DappInfo
+  accountResponse: AccountResponse
+}): void {
   const dappUrl = extractBaseUrl(senderUrl)
 
   sendAnalyticsEvent(ExtensionEventName.DappConnect, {
@@ -66,16 +76,20 @@ function sendAccountResponseAnalyticsEvent(
  * Gets the active account, and returns the account address, chainId, and providerUrl.
  * Chain id + provider url are from the last connected chain for the dApp and wallet. If this has not been set, it will be the default chain and provider.
  */
-export function* getAccount(
-  dappRequest: GetAccountRequest | RequestAccountRequest,
-  { id, url }: SenderTabInfo,
-  dappInfo: DappInfo,
-) {
+export function* getAccount({
+  dappRequest,
+  senderTabInfo: { id, url },
+  dappInfo,
+}: {
+  dappRequest: GetAccountRequest | RequestAccountRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   const chainId = dappInfo.lastChainId
   const provider = yield* call(getProvider, chainId)
 
-  const response = getAccountResponse(chainId, dappRequest, provider, dappInfo)
-  sendAccountResponseAnalyticsEvent(url, chainId, dappInfo, response)
+  const response = getAccountResponse({ chainId, dappRequest, provider, dappInfo })
+  sendAccountResponseAnalyticsEvent({ senderUrl: url, chainId, dappInfo, accountResponse: response })
 
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
@@ -88,13 +102,13 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
   const activeAccount = yield* select(selectActiveAccount)
   const dappUrl = extractBaseUrl(url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
-  const { defaultChainId } = yield* call(getEnabledChainIdsSaga)
+  const { defaultChainId } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
 
   if (!dappUrl || !activeAccount) {
     return undefined
   }
 
-  yield* call(saveDappConnection, dappUrl, activeAccount, favIconUrl)
+  yield* call(saveDappConnection, { dappUrl, account: activeAccount, iconUrl: favIconUrl })
   // No dapp info means that this is a first time connection request
   if (!dappInfo) {
     yield* put(
@@ -126,13 +140,13 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
   const accountInfo = yield* call(saveAccount, senderTabInfo)
 
   if (!accountInfo) {
-    const errorReponse: ErrorResponse = {
+    const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(providerErrors.unauthorized()),
       requestId: request.requestId,
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorReponse)
+    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorResponse)
   } else {
     const { dappUrl, activeAccount, connectedAddresses, chainId, providerUrl } = accountInfo
 
@@ -146,7 +160,8 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
 
     yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, accountResponse)
 
-    sendAnalyticsEvent(ExtensionEventName.DappConnectRequest, {
+    // Track that a connection was established
+    sendAnalyticsEvent(ExtensionEventName.DappConnect, {
       dappUrl,
       chainId,
       activeConnectedAddress: activeAccount.address,

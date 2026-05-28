@@ -1,0 +1,38 @@
+query TokenPromo($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    id
+    address
+    chain
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+    }
+  }
+}
+
+query TokensPromo($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    id
+    name
+    address
+    chain
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+    }
+  }
+}

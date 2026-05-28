@@ -1,10 +1,8 @@
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
-import { ChainId } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   toTradingApiSupportedChainId,
@@ -13,12 +11,10 @@ import {
 const FALLBACK_NUM_CHAINS = 8
 
 export function useNumBridgingChains(): number {
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
-      unichainEnabled,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 
@@ -29,12 +25,10 @@ export function useNumBridgingChains(): number {
 }
 
 export function useIsBridgingChain(chainId: UniverseChainId): boolean {
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
-      unichainEnabled,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 
@@ -45,12 +39,10 @@ export function useIsBridgingChain(chainId: UniverseChainId): boolean {
 }
 
 export function useBridgingSupportedChainIds(): UniverseChainId[] {
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
-      unichainEnabled,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 

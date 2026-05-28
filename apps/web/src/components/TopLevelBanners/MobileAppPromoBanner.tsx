@@ -1,19 +1,18 @@
-import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { isWebAndroid, isWebIOS } from '@universe/environment'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useState } from 'react'
-import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { hideMobileAppPromoBannerAtom } from 'state/application/atoms'
-import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
-import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { getWalletMeta } from 'utils/walletMeta'
+import { Anchor, Flex, styled, Text, TouchableArea } from 'ui/src'
+import { X } from 'ui/src/components/icons/X'
+import { ReactComponent as UniswapLogo } from '~/assets/svg/uniswap_app_logo.svg'
+import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from '~/state/application/atoms'
+import { getWalletMeta } from '~/utils/walletMeta'
 
 const Wrapper = styled(Flex, {
   height: 56,
   width: '100%',
-  backgroundColor: '$accent2',
+  backgroundColor: '$accent2Solid',
   pl: '$spacing12',
   pr: '$spacing16',
   zIndex: '$sticky',
@@ -41,10 +40,12 @@ const StyledButton = styled(Anchor, {
  * - The user is on a mobile device our app supports
  * - The user is not using Safari (since we don't want to conflict with the Safari-native Smart App Banner)
  * - The user has not dismissed the banner during this session
+ * - The user has not clicked the Uniswap wallet or Get Uniswap Wallet buttons in wallet options
  */
-export function useMobileAppPromoBannerEligible() {
+export function useMobileAppPromoBannerEligible(): boolean {
   const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)
-  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner
+  const persistHideMobileAppPromoBanner = useAtomValue(persistHideMobileAppPromoBannerAtom)
+  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner && !persistHideMobileAppPromoBanner
 }
 
 const UNIVERSAL_DOWNLOAD_LINK = 'https://uniswapwallet.onelink.me/8q3y/39b0eeui'
@@ -79,31 +80,18 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
 
 export function MobileAppPromoBanner() {
   const { t } = useTranslation()
-  const [isVisible, setIsVisible] = useState(true)
-  const mobileAppPromoBannerEligible = useMobileAppPromoBannerEligible()
   const [, setHideMobileAppPromoBanner] = useAtom(hideMobileAppPromoBannerAtom)
-  const colors = useSporeColors()
 
   const provider = useEthersWeb3Provider()
 
   const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
 
-  if (!mobileAppPromoBannerEligible || !isVisible) {
-    return null
-  }
-
   return (
     <Wrapper>
       <Flex shrink row gap="$spacing8" alignItems="center">
-        <X
-          data-testid="mobile-promo-banner-close-button"
-          size={20}
-          color={colors.neutral2.val}
-          onClick={() => {
-            setIsVisible(false)
-            setHideMobileAppPromoBanner(true)
-          }}
-        />
+        <TouchableArea data-testid="mobile-promo-banner-close-button" onPress={() => setHideMobileAppPromoBanner(true)}>
+          <X size="$icon.20" color="$neutral2" />
+        </TouchableArea>
         <UniswapLogo width="32px" height="32px" />
         <Flex shrink>
           <Text variant="body3">{t('mobileAppPromo.banner.title')}</Text>

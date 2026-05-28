@@ -1,0 +1,243 @@
+import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
+import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { AccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
+import { makeSelectTokenBalanceOverridesForWalletAddress } from 'uniswap/src/features/portfolio/slice/selectors'
+import { removeTokenFromBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
+import { CurrencyId } from 'uniswap/src/types/currency'
+import {
+  buildCurrencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+  isNativeCurrencyAddress,
+} from 'uniswap/src/utils/currencyId'
+import { createLogger } from 'utilities/src/logger/logger'
+
+const FILE_NAME = 'portfolioBalanceOverrides.ts'
+
+// The backend seems to be truncating some decimals for certain tokens,
+// so instead of checking for exact equality, we check if the quantities are "aproximately" equal.
+const APPROXIMATE_EQUALITY_THRESHOLD_PERCENT = 0.02 // 2%
+
+// Module-level references to Redux store
+// These are initialized once during app startup
+let portfolioQueryReduxStore: ToolkitStore | null = null
+
+/**
+ * Initializes the portfolio balance override mechanism.
+ * This must be called once during each app initialization after the Redux store is created.
+ */
+export function initializePortfolioQueryOverrides({ store }: { store: ToolkitStore }): void {
+  const log = createLogger(FILE_NAME, 'initializePortfolioQueryOverrides', '[REST-ITBU]')
+
+  if (portfolioQueryReduxStore) {
+    log.warn('`initializePortfolioQueryOverrides` called multiple times')
+  }
+
+  portfolioQueryReduxStore = store
+
+  log.debug('Portfolio query overrides successfully initialized')
+}
+
+export function getPortfolioQueryReduxStore(): ToolkitStore | null {
+  return portfolioQueryReduxStore
+}
+
+const selectTokenBalanceOverridesForWalletAddress = makeSelectTokenBalanceOverridesForWalletAddress()
+
+/**
+ * Get balance overrides for a specific address from Redux.
+ * @returns Set of currency IDs that have pending overrides, or empty set if none
+ */
+export function getOverridesForAddress({ address }: { address: string }): Set<CurrencyId> {
+  if (!portfolioQueryReduxStore) {
+    return new Set()
+  }
+
+  const normalizedAddress = normalizeTokenAddressForCache(address)
+  const overrides = selectTokenBalanceOverridesForWalletAddress(portfolioQueryReduxStore.getState(), normalizedAddress)
+
+  if (!overrides) {
+    return new Set()
+  }
+
+  return new Set(Object.keys(overrides))
+}
+
+/**
+ * Get all currency IDs with overrides for the addresses in a query.
+ * @returns Set of currency IDs that need overriding for this query
+ */
+export function getOverridesForQuery({
+  accountAddressesByPlatform,
+}: {
+  accountAddressesByPlatform: AccountAddressesByPlatform
+}): Set<CurrencyId> {
+  const allOverrides = new Set<CurrencyId>()
+
+  Object.values(accountAddressesByPlatform).forEach((address) => {
+    const overrides = getOverridesForAddress({ address })
+    overrides.forEach((currencyId) => allOverrides.add(currencyId))
+  })
+
+  return allOverrides
+}
+
+/**
+ * Check if two balance quantities are approximately equal (within 2% threshold).
+ * This is used to determine if the backend has caught up with the onchain balance.
+ * @returns true if the quantities are within 2% of each other
+ */
+export function areBalancesApproximatelyEqual({
+  onchainQuantity,
+  cachedQuantity,
+}: {
+  onchainQuantity: number
+  cachedQuantity: number | undefined
+}): boolean {
+  if (typeof cachedQuantity !== 'number') {
+    return false
+  }
+
+  if (cachedQuantity === 0) {
+    return onchainQuantity === 0
+  }
+
+  const difference = Math.abs(onchainQuantity - cachedQuantity)
+  const percentDifference = difference / Math.abs(cachedQuantity)
+
+  return percentDifference <= APPROXIMATE_EQUALITY_THRESHOLD_PERCENT
+}
+
+/**
+ * Clean up overrides from Redux when the backend has caught up.
+ * Compares the onchain data with the cached data and removes overrides that are no longer needed.
+ */
+export function cleanupCaughtUpOverrides({
+  ownerAddress,
+  originalData,
+  mergedData,
+}: {
+  ownerAddress: string
+  originalData: GetPortfolioResponse | undefined
+  mergedData: GetPortfolioResponse | undefined
+}): void {
+  const reduxStore = portfolioQueryReduxStore
+
+  if (!reduxStore || !originalData?.portfolio?.balances || !mergedData?.portfolio?.balances) {
+    return
+  }
+
+  const log = createLogger(FILE_NAME, 'cleanupCaughtUpOverrides', '[REST-ITBU]')
+
+  const overrideCurrencyIds = getOverridesForAddress({ address: ownerAddress })
+
+  log.debug('Checking if clean up is needed for caught up balances', {
+    overrideCurrencyIds: Array.from(overrideCurrencyIds),
+  })
+
+  if (overrideCurrencyIds.size === 0) {
+    return
+  }
+
+  // Build a map of currency ID to original backend balance (only for overridden currencies)
+  const originalBalancesMap = new Map<CurrencyId, number>()
+  originalData.portfolio.balances.forEach((balance) => {
+    if (!balance.token?.chainId || !balance.token.address || !balance.amount?.amount) {
+      return
+    }
+
+    const chainId = balance.token.chainId
+    const tokenAddress = balance.token.address
+    const address = isNativeCurrencyAddress(chainId, tokenAddress) ? getNativeAddress(chainId) : tokenAddress
+    const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, address))
+
+    // Only store balances that have active overrides
+    if (overrideCurrencyIds.has(currencyId)) {
+      originalBalancesMap.set(currencyId, balance.amount.amount)
+    }
+  })
+
+  // Track which overrides we've checked in the merged data
+  const processedOverrideIds = new Set<CurrencyId>()
+
+  // Check each merged balance that has an override to see if backend has caught up
+  mergedData.portfolio.balances.forEach((balance) => {
+    if (!balance.token?.chainId || !balance.token.address || !balance.amount?.amount) {
+      return
+    }
+
+    const chainId = balance.token.chainId
+    const tokenAddress = balance.token.address
+    const address = isNativeCurrencyAddress(chainId, tokenAddress) ? getNativeAddress(chainId) : tokenAddress
+    const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, address))
+
+    if (!overrideCurrencyIds.has(currencyId)) {
+      return
+    }
+
+    processedOverrideIds.add(currencyId)
+
+    const onchainQuantity = balance.amount.amount
+    const backendQuantity = originalBalancesMap.get(currencyId)
+
+    if (areBalancesApproximatelyEqual({ onchainQuantity, cachedQuantity: backendQuantity })) {
+      log.debug(`Backend has caught up for ${currencyId}, removing override`, {
+        onchainQuantity,
+        backendQuantity,
+      })
+
+      reduxStore.dispatch(
+        removeTokenFromBalanceOverride({
+          ownerAddress,
+          chainId,
+          tokenAddress: address,
+        }),
+      )
+    } else {
+      log.debug(`Backend has not caught up for ${currencyId}, keeping override`, {
+        onchainQuantity,
+        backendQuantity,
+      })
+    }
+  })
+
+  // Handle overrides for tokens that were removed from merged data (zero balance).
+  // These tokens won't appear in mergedData.portfolio.balances because mergeOnChainBalances
+  // filters them out, but we still need to check if the backend has caught up.
+  overrideCurrencyIds.forEach((overrideCurrencyId) => {
+    if (processedOverrideIds.has(overrideCurrencyId)) {
+      return
+    }
+
+    const backendQuantity = originalBalancesMap.get(overrideCurrencyId)
+
+    // If backend also has zero balance or no longer returns this token, it has caught up
+    if (
+      backendQuantity === undefined ||
+      areBalancesApproximatelyEqual({ onchainQuantity: 0, cachedQuantity: backendQuantity })
+    ) {
+      const chainId = currencyIdToChain(overrideCurrencyId)
+      const tokenAddress = currencyIdToAddress(overrideCurrencyId)
+
+      if (chainId && tokenAddress) {
+        log.debug(`Backend has caught up for removed token ${overrideCurrencyId}, removing override`, {
+          backendQuantity,
+        })
+
+        reduxStore.dispatch(
+          removeTokenFromBalanceOverride({
+            ownerAddress,
+            chainId,
+            tokenAddress,
+          }),
+        )
+      }
+    } else {
+      log.debug(`Backend has not caught up for removed token ${overrideCurrencyId}, keeping override`, {
+        backendQuantity,
+      })
+    }
+  })
+}

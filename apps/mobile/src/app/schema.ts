@@ -1,5 +1,5 @@
-/* eslint-disable max-lines */
-import { RankingType } from 'uniswap/src/data/types'
+/* oxlint-disable max-lines */
+import { RankingType } from '@universe/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -64,7 +64,7 @@ export const initialSchema = {
   },
 }
 
-export const v0Schema = {
+const v0Schema = {
   ...initialSchema,
   transactions: {},
   notifications: {
@@ -115,7 +115,6 @@ export const v4Schema = {
   ...v3Schema,
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { balances, ...restV4Schema } = v4Schema
 delete restV4Schema.favorites.followedAddresses
 
@@ -205,9 +204,8 @@ export const v28Schema = { ...v27Schema }
 
 export const v29Schema = { ...v28Schema }
 
-export const v30Schema = { ...v29Schema }
+const v30Schema = { ...v29Schema }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { tokenLists, ...v31SchemaIntermediate } = { ...v30Schema }
 export const v31Schema = v31SchemaIntermediate
 
@@ -267,7 +265,6 @@ delete v38SchemaIntermediate.experiments
 
 export const v39Schema = { ...v38SchemaIntermediate }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { walletConnect, ...v39SchemaIntermediate } = { ...v39Schema }
 
 export const v40Schema = { ...v39SchemaIntermediate }
@@ -296,7 +293,7 @@ export const v43Schema = {
 }
 delete v43Schema.favorites.hiddenNfts
 
-export const { providers, ...v44Schema } = {
+export const v44Schema = {
   ...v43Schema,
 }
 
@@ -363,7 +360,7 @@ export const v51Schema = {
   ...v50Schema,
   modals: {
     ...v50Schema.modals,
-    ['language-selector']: {
+    'language-selector': {
       isOpen: false,
       initialState: undefined,
     },
@@ -386,7 +383,7 @@ export const v52Schema = {
 const v53SchemaIntermediate = {
   ...v52Schema,
   languageSettings: { currentLanguage: Language.English },
-  modals: { ...v52Schema.modals, ['language-selector']: undefined },
+  modals: { ...v52Schema.modals, 'language-selector': undefined },
 }
 delete v53SchemaIntermediate.modals['language-selector']
 
@@ -637,7 +634,8 @@ const v81SchemaIntermediate = {
 delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v81Schema = v81SchemaIntermediate
 
-// v82 had a migration but no schema update so skipping it here
+export const v82Schema = v81Schema
+
 export const v83Schema = {
   ...v81Schema,
   pushNotifications: {
@@ -673,6 +671,75 @@ delete v85SchemaIntermediate.favorites.tokensVisibility
 delete v85SchemaIntermediate.favorites.nftsVisibility
 export const v85Schema = v85SchemaIntermediate
 
+export const v86Schema = {
+  ...v85Schema,
+  batchedTransactions: {},
+}
+
+export const v87Schema = v86Schema
+
+const v88SchemaIntermediate = {
+  ...v87Schema,
+  appearanceSettings: {
+    ...v87Schema.appearanceSettings,
+    hapticsEnabled: undefined,
+  },
+  userSettings: {
+    ...v87Schema.userSettings,
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
+    hapticsEnabled: v87Schema.appearanceSettings.hapticsEnabled ?? true,
+  },
+}
+delete v88SchemaIntermediate.appearanceSettings.hapticsEnabled
+
+export const v88Schema = v88SchemaIntermediate
+
+export const v89Schema = { ...v88Schema }
+
+export const v90Schema = { ...v89Schema }
+
+export const v91Schema = {
+  ...v90Schema,
+  pushNotifications: {
+    generalUpdatesEnabled: v90Schema.pushNotifications.generalUpdatesEnabled,
+  },
+}
+
+const v92SchemaIntermediate = {
+  ...v91Schema,
+  cloudBackup: undefined,
+  wallet: {
+    ...v91Schema.wallet,
+    androidCloudBackupEmail: null,
+  },
+}
+
+delete v92SchemaIntermediate.cloudBackup
+
+export const v92Schema = v92SchemaIntermediate
+
+export const v93Schema = v92Schema
+
+export const v95Schema = {
+  ...v93Schema,
+  visibility: {
+    ...v93Schema.visibility,
+    activity: {},
+  },
+}
+
+export const v96Schema = v95Schema
+
+export const v97Schema = v96Schema
+
+const v98Schema = {
+  ...v97Schema,
+  userSettings: {
+    ...v97Schema.userSettings,
+    enableCustomGasFeeEntry: false,
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v85Schema => v85Schema
+export const getSchema = (): typeof v98Schema => v98Schema

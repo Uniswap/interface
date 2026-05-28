@@ -1,26 +1,33 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Maybe } from 'graphql/jsutils/Maybe'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { TokenSelectorModal } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAddresses } from 'wallet/src/features/accounts/store/hooks'
 
 interface TokenSelectorPanelProps {
   currencyInfo: Maybe<CurrencyInfo>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   showTokenSelector: boolean
-  onSelectCurrency: (currency: Currency, field: CurrencyField, isBridgePair: boolean) => void
+  onSelectCurrency: ({
+    currency,
+    field,
+    allowCrossChainPair,
+  }: {
+    currency: Currency
+    field: CurrencyField
+    allowCrossChainPair: boolean
+  }) => void
   onHideTokenSelector: () => void
   onShowTokenSelector: () => void
   onSetMax: (amount: string) => void
@@ -37,7 +44,7 @@ export function TokenSelectorPanel({
   showTokenSelector,
 }: TokenSelectorPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const addresses = useActiveAddresses()
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const showMaxButton = currencyBalance && !currencyBalance.equalTo(0)
@@ -50,7 +57,7 @@ export function TokenSelectorPanel({
     <>
       <Flex fill overflow="hidden">
         <TokenSelectorModal
-          activeAccountAddress={activeAccountAddress}
+          addresses={addresses}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           isModalOpen={showTokenSelector}
@@ -70,25 +77,28 @@ export function TokenSelectorPanel({
               </Text>
               {currencyInfo && (
                 <Text color="$neutral2" variant="body3">
+                  {/* oxlint-disable typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here */}
                   {t('send.input.token.balance.title', {
-                    balance: formattedCurrencyBalance,
-                    symbol: currencyInfo.currency.symbol,
+                    balance: formattedCurrencyBalance ?? '',
+                    symbol: currencyInfo.currency.symbol ?? '',
                   })}
+                  {/* oxlint-enable typescript/no-unnecessary-condition */}
                 </Text>
               )}
             </Flex>
           </Flex>
           <Flex row gap="$spacing12">
-            {showMaxButton && onSetMax && (
-              <MaxAmountButton
+            {showMaxButton && (
+              <PresetAmountButton
+                percentage="max"
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={CurrencyField.INPUT}
                 transactionType={TransactionType.Send}
-                onSetMax={onSetMax}
+                onSetPresetValue={onSetMax}
               />
             )}
-            <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+            <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
           </Flex>
         </Flex>
       </TouchableArea>

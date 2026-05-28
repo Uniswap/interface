@@ -35,7 +35,7 @@ export function convertScientificNotationToNumber(value: string): string {
       }
       try {
         convertedValue = JSBI.multiply(JSBI.BigInt(x), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(e))).toString()
-      } catch (error) {
+      } catch (_error) {
         logger.debug(
           'convertScientificNotation',
           'convertScientificNotationToNumber',

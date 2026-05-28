@@ -1,40 +1,42 @@
 import { Currency } from '@uniswap/sdk-core'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
+import { DAI, DAI_ARBITRUM_ONE, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
+const ETH = nativeOnChain(UniverseChainId.Mainnet)
 
 const TEST_TOKEN_INPUT: TokenOption[] = [
   {
+    type: OnchainItemListOptionType.Token,
     currencyInfo: {
       currency: DAI,
       currencyId: currencyId(DAI),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,
   },
   {
+    type: OnchainItemListOptionType.Token,
     currencyInfo: {
       currency: ETH,
       currencyId: currencyId(ETH),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,
   },
   {
+    type: OnchainItemListOptionType.Token,
     currencyInfo: {
       currency: DAI_ARBITRUM_ONE,
       currencyId: currencyId(DAI_ARBITRUM_ONE),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,
@@ -45,7 +47,7 @@ const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: UniverseChainId | null,
   searchFilter?: string,
-): Currency[] => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
+): Currency[] => filter({ tokenOptions: currencies, chainFilter, searchFilter }).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {

@@ -1,0 +1,25 @@
+/* Basel Grotesk Font Faces */
+
+@font-face {
+  font-family: "Basel Grotesk";
+  src:
+    url("../fonts/Basel-Grotesk-Book.woff2") format("woff2"),
+    url("../fonts/Basel-Grotesk-Book.woff") format("woff");
+  font-weight: 485;
+  font-style: normal;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: "Basel Grotesk";
+  src:
+    url("../fonts/Basel-Grotesk-Medium.woff2") format("woff2"),
+    url("../fonts/Basel-Grotesk-Medium.woff") format("woff");
+  font-weight: 535;
+  font-style: normal;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

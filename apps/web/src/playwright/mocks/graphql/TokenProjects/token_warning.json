@@ -1,0 +1,36 @@
+{
+  "data": {
+    "tokenProjects": [
+      {
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4MWVmYmI3OGM4YjkxN2Y2Nzk4NmJjZTU0Y2U1NzUwNjljMDE0MzY4MV8=",
+        "logoUrl": null,
+        "safetyLevel": "STRONG_WARNING",
+        "tokens": [
+          {
+            "id": "test-0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+            "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+            "chain": "ETHEREUM",
+            "symbol": "test",
+            "name": "test token",
+            "decimals": 18,
+            "project": {
+              "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4NmIxNzU0NzRlODkwOTRjNDRkYTk4Yjk1NGVlZGVhYzQ5NTI3MWQwZl9EYWk=",
+              "name": "Dai",
+              "logo": {
+                "id": "SW1hZ2U6aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1VuaXN3YXAvYXNzZXRzL21hc3Rlci9ibG9ja2NoYWlucy9ldGhlcmV1bS9hc3NldHMvMHg2QjE3NTQ3NEU4OTA5NEM0NERhOThiOTU0RWVkZUFDNDk1MjcxZDBGL2xvZ28ucG5n",
+                "url": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1eFBB78C8b917f67986BcE54cE575069c0143681/logo.png",
+                "__typename": "Image"
+              },
+              "safetyLevel": "STRONG_WARNING",
+              "logoUrl": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1eFBB78C8b917f67986BcE54cE575069c0143681/logo.png",
+              "isSpam": false,
+              "__typename": "TokenProject"
+            },
+            "__typename": "Token"
+          }
+        ],
+        "__typename": "TokenProject"
+      }
+    ]
+  }
+}

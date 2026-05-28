@@ -1,7 +1,8 @@
 import type { IconProps as TamaguiIconProps } from '@tamagui/helpers-icon'
+import { isWebPlatform } from '@universe/environment'
 import { createElement, forwardRef, useState } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
-import { ColorTokens, SpecificTokens, Stack, ThemeKeys, View, isWeb, styled, usePropsAndStyle } from 'tamagui'
+import { ColorTokens, SpecificTokens, Stack, styled, ThemeKeys, usePropsAndStyle, View } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
@@ -11,7 +12,6 @@ type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { colo
 export type IconProps = Omit<Omit<TamaguiIconProps, 'size' | 'width' | 'height'>, 'color'> & {
   size?: IconSizeTokens | number | { width: number; height: number }
   // we need the string & {} to allow strings but not lose the intellisense autocomplete
-  // eslint-disable-next-line @typescript-eslint/ban-types
   color?: (ColorTokens | ThemeKeys | (string & {})) | DynamicColor | null
   Component?: React.FunctionComponent<SvgPropsWithRef>
 }
@@ -30,6 +30,8 @@ const IconFrame = styled(Stack, {
   },
 })
 
+IconFrame.displayName = 'IconFrame'
+
 export type GeneratedIconProps = IconProps & { hoverColor?: IconProps['color'] }
 export type GeneratedIcon = React.ForwardRefExoticComponent<GeneratedIconProps & React.RefAttributes<Svg>>
 
@@ -44,7 +46,7 @@ export function createIcon({
 }): readonly [GeneratedIcon, GeneratedIcon] {
   const Icon = forwardRef<Svg, GeneratedIconProps>(({ color, hoverColor: hoverColorProp, ...propsIn }, ref) => {
     const [hover, setHover] = useState(false)
-    const renderColor = color ?? defaultFill ?? (isWeb ? 'currentColor' : undefined)
+    const renderColor = color ?? defaultFill ?? (isWebPlatform ? 'currentColor' : undefined)
     const hoverColor = hoverColorProp ?? renderColor
 
     const [props, style] = usePropsAndStyle(
@@ -60,18 +62,23 @@ export function createIcon({
       },
     )
 
+    // On web, style must be an object, not an array. The Tamagui compiler may
+    // return an array in production builds which causes React DOM to throw:
+    // "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
+    const flattenedStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
+
+    // @ts-expect-error this type is hard to map but its right
     const svgProps: SvgPropsWithRef = {
       ref,
       ...props,
-      // @ts-expect-error this type is hard to map but its right
-      style,
+      style: flattenedStyle,
     }
 
     const comp = props.Component ? createElement(props.Component, svgProps) : getIcon(svgProps)
 
     // Only enabled on web because mobile doesn't support hover events
     // It is also optional because it breaks some layouts
-    if (isWeb && hoverColorProp) {
+    if (isWebPlatform && hoverColorProp) {
       return (
         <View onHoverIn={() => setHover(true)} onHoverOut={() => setHover(false)}>
           {comp}
@@ -85,9 +92,15 @@ export function createIcon({
   Icon.displayName = name
 
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
+    // Flatten style array on web - Animated.createAnimatedComponent may wrap styles in an array
+    // which causes React DOM to throw: "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
+    const { style, ...rest } = props as SvgPropsWithRef
+    const flatStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
+
     return getIcon({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(props as any as SvgPropsWithRef),
+      // oxlint-disable-next-line typescript/no-explicit-any -- Type casting needed for complex SVG prop types
+      ...(rest as any),
+      style: flatStyle,
       ref,
     })
   })
@@ -97,7 +110,7 @@ export function createIcon({
   const AnimatedIconPlain = withAnimated(IconPlain)
 
   const AnimatedIcon = forwardRef<Svg, IconProps>((props: IconProps, ref) => (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any -- AnimatedIconPlain requires any cast for compatibility
     <Icon ref={ref} {...props} Component={AnimatedIconPlain as any} />
   ))
 

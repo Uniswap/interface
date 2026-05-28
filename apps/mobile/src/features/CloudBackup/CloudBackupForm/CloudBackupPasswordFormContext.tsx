@@ -1,13 +1,13 @@
-import { PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import {
-  PasswordErrors,
-  PasswordStrength,
   getPasswordStrength,
   isPasswordStrongEnough,
+  PasswordErrors,
+  PasswordStrength,
 } from 'wallet/src/utils/password'
 
-export type CloudBackupPasswordFormContextType = {
+type CloudBackupPasswordFormContextType = {
   password: string
   passwordStrength: PasswordStrength
   error: PasswordErrors | undefined
@@ -18,7 +18,7 @@ export type CloudBackupPasswordFormContextType = {
   onPasswordChangeText: (newPassword: string) => void
 }
 
-export const CloudBackupPasswordFormContext = createContext<CloudBackupPasswordFormContextType | null>(null)
+const CloudBackupPasswordFormContext = createContext<CloudBackupPasswordFormContextType | null>(null)
 
 export function useCloudBackupPasswordFormContext(): CloudBackupPasswordFormContextType {
   const context = useContext(CloudBackupPasswordFormContext)

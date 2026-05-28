@@ -16,7 +16,7 @@ class ThemeModule(private val reactContext: ReactApplicationContext) : ReactCont
   override fun getName() = "ThemeModule"
 
   @ReactMethod fun setColorScheme(style: String) {
-    val activity = currentActivity
+    val activity = reactApplicationContext.currentActivity
     when (style) {
       "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
       "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

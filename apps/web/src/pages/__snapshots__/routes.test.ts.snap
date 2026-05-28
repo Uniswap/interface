@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Routes router definition should match snapshot 1`] = `
+exports[`Routes > router definition should match snapshot 1`] = `
 [
   {
     "enabled": [Function],
@@ -21,6 +21,14 @@ exports[`Routes router definition should match snapshot 1`] = `
       ":tab/:chainName",
     ],
     "path": "/explore",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/explore/tokens/solana/So11111111111111111111111111111111111111112",
   },
   {
     "enabled": [Function],
@@ -68,6 +76,30 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
+    "path": "/explore/auctions/:chainName/:auctionAddress",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/liquidity/launch-auction",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/liquidity/launch-auction/x/callback",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
     "path": "/vote/*",
   },
   {
@@ -85,6 +117,14 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/buy",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/sell",
   },
   {
     "enabled": [Function],
@@ -125,6 +165,30 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/swap",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/positions/add/new",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/positions/add/:chainName/:poolAddress",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/positions/add",
   },
   {
     "enabled": [Function],
@@ -174,6 +238,14 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
+    "path": "/migrate/v2/:chainName/:pairAddress",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
     "path": "/migrate/v3/:chainName/:tokenId",
   },
   {
@@ -215,14 +287,6 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/pools/v2/find",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/pools/v2",
   },
   {
     "enabled": [Function],
@@ -286,7 +350,7 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/migrate/v2",
+    "path": "/auth/passkey/extension",
   },
   {
     "enabled": [Function],
@@ -294,7 +358,27 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/migrate/v2/:address",
+    "path": "/manage/passkey/:walletAddress",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [
+      "tokens",
+      "pools",
+      "defi",
+      "nfts",
+      "activity",
+      ":walletAddress",
+      ":walletAddress/tokens",
+      ":walletAddress/pools",
+      ":walletAddress/defi",
+      ":walletAddress/nfts",
+      ":walletAddress/activity",
+    ],
+    "path": "/portfolio",
   },
   {
     "enabled": [Function],
@@ -302,7 +386,7 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/nfts",
+    "path": "/extension/uninstall",
   },
   {
     "enabled": [Function],
@@ -310,7 +394,7 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/nfts/asset/:contractAddress/:tokenId",
+    "path": "/wrapped",
   },
   {
     "enabled": [Function],
@@ -318,23 +402,7 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/nfts/profile",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/nfts/collection/:contractAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/nfts/collection/:contractAddress/activity",
+    "path": "/preview",
   },
   {
     "enabled": [Function],

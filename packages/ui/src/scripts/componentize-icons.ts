@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
-/* eslint-disable no-useless-escape */
+/* oxlint-disable no-console -- misc script, so it's okay */
+/* oxlint-disable typescript/no-explicit-any -- misc script, so it's okay */
+
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path, { join } from 'node:path'
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
-import { ensureDirSync, existsSync, readFileSync, readdirSync, writeFileSync } from 'fs-extra'
-import path, { join } from 'path'
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// oxlint-disable-next-line typescript/ban-ts-comment
+// @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
+
+// Generates .tsx from src/assets/icons/*.svg and re-exports hand-written icons in components/icons
+// without a matching SVG (does not create missing .tsx files).
 
 // Types
 
@@ -44,10 +46,12 @@ async function run(): Promise<void> {
 
 async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): Promise<void> {
   // Ensure output directory exists
-  ensureDirSync(dirs.output)
+  mkdirSync(dirs.output, { recursive: true })
 
   let indexFile = ``
-  const fileNames = readdirSync(dirs.input).filter((name) => name.endsWith('.svg'))
+  const fileNames = readdirSync(dirs.input)
+    .filter((name: string) => name.endsWith('.svg'))
+    .sort()
 
   for (const fileName of fileNames) {
     const className = generateClassName(fileName)
@@ -61,29 +65,34 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
       continue
     }
 
-    // Generate and write file
+    // Generate and write file (without formatting)
     const svg = readFileSync(inputPath, 'utf-8')
-    const element = await generateSVGComponent(svg, fileName)
+    const element = generateSVGComponentString(svg, fileName)
     if (element) {
       console.log(`🦄 ${fileName}`)
       writeFileSync(outputPath, element, 'utf-8')
     }
   }
 
-  // Format and write index file
-  console.log('Writing index file...')
-  const formattedIndex = await prettierFormat(indexFile)
-  writeFileSync(join(dirs.output, 'exported.ts'), formattedIndex, 'utf-8')
-}
+  // Also export hand-written components that exist in the output directory
+  // but don't have corresponding SVG sources (e.g. multi-color logos)
+  const generatedClassNames = new Set(fileNames.map(generateClassName))
+  const existingComponents = readdirSync(dirs.output)
+    .filter((name: string) => name.endsWith('.tsx'))
+    .map((name: string) => path.basename(name, '.tsx'))
+    .filter((name: string) => !generatedClassNames.has(name))
+    .filter((name: string) => name !== 'index' && name !== 'exported')
+    .filter((name: string) => !name.endsWith('.stories'))
+    .sort()
 
-async function generateSVGComponent(svg: string, fileName: string): Promise<string | undefined> {
-  try {
-    const element = generateSVGComponentString(svg, fileName)
-    return await prettierFormat(element)
-  } catch (err) {
-    console.log(`Error converting icon: ${fileName}: ${(err as any).message}`)
-    return undefined
+  for (const className of existingComponents) {
+    indexFile += `\nexport * from './${className}'`
   }
+
+  // Write index file (without formatting)
+  console.log('Writing index file...')
+  const indexPath = join(dirs.output, 'exported.ts')
+  writeFileSync(indexPath, indexFile, 'utf-8')
 }
 
 // Core SVG File Generation
@@ -98,9 +107,10 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   // Because CSS does not exist on Native platforms
   // We need to duplicate the styles applied to the
   // SVG to its children
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // oxlint-disable-next-line typescript/no-non-null-assertion -- SVG element is guaranteed to exist after cheerio parsing
   const svgAttribs = $('svg')[0]!.attribs
-  delete svgAttribs.xmlns
+  delete svgAttribs['xmlns']
+  // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
   const attribsOfInterest: Record<string, any> = {}
 
   Object.keys(svgAttribs).forEach((key) => {
@@ -109,6 +119,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
     }
   })
 
+  // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
   $('*').each((_, el: any) => {
     Object.keys(el.attribs).forEach((x) => {
       if (x.includes('-')) {
@@ -133,45 +144,48 @@ function generateSVGComponentString(svg: string, fileName: string): string {
 
   const parsedSvgToReact = $('svg')
     .toString()
-    .replace(/ class=\"[^\"]+\"/g, '')
-    .replace(/ version=\"[^\"]+\"/g, '')
+    .replace(/ class="[^"]+"/g, '')
+    .replace(/ version="[^"]+"/g, '')
     .replace(/width="[0-9]+"/, '')
     .replace(/height="[0-9]+"/, '')
     .replace('<svg', '<Svg')
     .replace('</svg', '</Svg')
-    .replace(new RegExp('<circle', 'g'), '<_Circle')
-    .replace(new RegExp('</circle', 'g'), '</_Circle')
-    .replace(new RegExp('<ellipse', 'g'), '<Ellipse')
-    .replace(new RegExp('</ellipse', 'g'), '</Ellipse')
-    .replace(new RegExp('<g', 'g'), '<G')
-    .replace(new RegExp('</g', 'g'), '</G')
-    .replace(new RegExp('<linear-gradient', 'g'), '<LinearGradient')
-    .replace(new RegExp('</linear-gradient', 'g'), '</LinearGradient')
-    .replace(new RegExp('<radial-gradient', 'g'), '<RadialGradient')
-    .replace(new RegExp('</radial-gradient', 'g'), '</RadialGradient')
-    .replace(new RegExp('<path', 'g'), '<Path')
-    .replace(new RegExp('</path', 'g'), '</Path')
-    .replace(new RegExp('<line', 'g'), '<Line')
-    .replace(new RegExp('</line', 'g'), '</Line')
-    .replace(new RegExp('<polygon', 'g'), '<Polygon')
-    .replace(new RegExp('</polygon', 'g'), '</Polygon')
-    .replace(new RegExp('<polyline', 'g'), '<Polyline')
-    .replace(new RegExp('</polyline', 'g'), '</Polyline')
-    .replace(new RegExp('<rect', 'g'), '<Rect')
-    .replace(new RegExp('</rect', 'g'), '</Rect')
-    .replace(new RegExp('<symbol', 'g'), '<Symbol')
-    .replace(new RegExp('</symbol', 'g'), '</Symbol')
-    .replace(new RegExp('<text', 'g'), '<_Text')
-    .replace(new RegExp('</text', 'g'), '</_Text')
-    .replace(new RegExp('<use', 'g'), '<Use')
-    .replace(new RegExp('</use', 'g'), '</Use')
-    .replace(new RegExp('<defs', 'g'), '<Defs')
-    .replace(new RegExp('</defs', 'g'), '</Defs')
-    .replace(new RegExp('<stop', 'g'), '<Stop')
-    .replace(new RegExp('</stop', 'g'), '</Stop')
-    .replace(new RegExp('<clipPath', 'g'), '<ClipPath')
-    .replace(new RegExp('</clipPath', 'g'), '</ClipPath')
-    .replace(new RegExp('px', 'g'), '')
+    .replace(/<circle/g, '<Circle')
+    .replace(/<\/circle/g, '</Circle')
+    .replace(/<ellipse/g, '<Ellipse')
+    .replace(/<\/ellipse/g, '</Ellipse')
+    .replace(/<g/g, '<G')
+    .replace(/<\/g/g, '</G')
+    .replace(/<linear-gradient/g, '<LinearGradient')
+    .replace(/<\/linear-gradient/g, '</LinearGradient')
+    .replace(/<radial-gradient/g, '<RadialGradient')
+    .replace(/<\/radial-gradient/g, '</RadialGradient')
+    .replace(/<path/g, '<Path')
+    .replace(/<\/path/g, '</Path')
+    .replace(/<line/g, '<Line')
+    .replace(/<\/line/g, '</Line')
+    .replace(/<polygon/g, '<Polygon')
+    .replace(/<\/polygon/g, '</Polygon')
+    .replace(/<polyline/g, '<Polyline')
+    .replace(/<\/polyline/g, '</Polyline')
+    .replace(/<rect/g, '<Rect')
+    .replace(/<\/rect/g, '</Rect')
+    .replace(/<symbol/g, '<Symbol')
+    .replace(/<\/symbol/g, '</Symbol')
+    .replace(/<text/g, '<Text')
+    .replace(/<\/text/g, '</Text')
+    .replace(/<use/g, '<Use')
+    .replace(/<\/use/g, '</Use')
+    .replace(/<defs/g, '<Defs')
+    .replace(/<\/defs/g, '</Defs')
+    .replace(/<stop/g, '<Stop')
+    .replace(/<\/stop/g, '</Stop')
+    .replace(/<clipPath/g, '<ClipPath')
+    .replace(/<\/clipPath/g, '</ClipPath')
+    .replace(/<mask/g, '<Mask')
+    .replace(/<\/mask/g, '</Mask')
+    .replace(/px/g, '')
+    .replace(/style="mask-type:luminance"/g, "style={{ maskType: 'luminance' }}")
 
   const foundFills = Array.from(parsedSvgToReact.matchAll(/fill="(#[a-z0-9]+)"/gi)).flat()
   const defaultFill = foundFills[1]
@@ -187,6 +201,7 @@ G,
 LinearGradient,
 RadialGradient,
 Line,
+Mask,
 Path,
 Polygon,
 Polyline,
@@ -195,12 +210,12 @@ Symbol,
 Use,
 Defs,
 Stop,
-ClipPath
-Text as _Text,
-Circle as _Circle,
+ClipPath,
+Text,
+Circle,
 } from 'react-native-svg'
 
-// eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
+// oxlint-disable-next-line universe-custom/no-relative-import-paths
 import { createIcon } from '../factories/createIcon'
 
 export const [${className}, Animated${className}] = createIcon({
@@ -211,7 +226,7 @@ getIcon: (props) => (
 ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 })
 `
-    .replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
+    .replace(/fill="(#[a-z0-9]+)"/gi, `fill="currentColor"`)
     .replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
     .replaceAll(`xlink:href`, 'xlinkHref')
 }
@@ -220,31 +235,6 @@ ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 
 function generateClassName(fileName: string): string {
   return uppercamelcase(path.basename(fileName, '.svg')) as string
-}
-
-// Formatting
-
-import fs from 'fs'
-import { format } from 'prettier'
-
-const configPath = path.resolve(__dirname, '../../../../.prettierrc')
-// eslint-disable-next-line security/detect-non-literal-fs-filename
-const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
-
-// it was removing needed imports for some reason
-
-async function prettierFormat(source: string): Promise<string> {
-  // lol for some reason it removes imports it shouldnt it you run it in one pass
-  // running this in two passes with the second organizing imports fixes it...
-  const formattedOnce = await format(source, {
-    ...config,
-    organizeImportsSkipDestructiveCodeActions: true,
-    parser: 'typescript',
-  })
-  return await format(formattedOnce, {
-    ...config,
-    parser: 'typescript',
-  })
 }
 
 // This must be at the end to run all code

@@ -1,0 +1,28 @@
+diff --git a/lib/module/components/bottomSheet/BottomSheet.js b/lib/module/components/bottomSheet/BottomSheet.js
+index 9b18d5e8cad0681d3f1fc798d7b8c669b393dfb7..377ee9ed896b3ed458c434a8ffde869fd5803dbc 100644
+--- a/lib/module/components/bottomSheet/BottomSheet.js
++++ b/lib/module/components/bottomSheet/BottomSheet.js
+@@ -1,8 +1,8 @@
+ import React, { useMemo, useCallback, forwardRef, useImperativeHandle, memo, useEffect } from 'react';
+ import { Platform } from 'react-native';
+ import invariant from 'invariant';
+-import Animated, { useAnimatedReaction, useSharedValue, useAnimatedStyle, useDerivedValue, runOnJS, interpolate, Extrapolate, runOnUI, cancelAnimation, useWorkletCallback, // @ts-expect-error Module '"react-native-reanimated"' has no exported member 'ReduceMotion'
+-ReduceMotion } from 'react-native-reanimated';
++// @ts-expect-error Module '"react-native-reanimated"' has no exported member 'ReduceMotion'
++import Animated, { useAnimatedReaction, useSharedValue, useAnimatedStyle, useDerivedValue, runOnJS, interpolate, Extrapolate, runOnUI, cancelAnimation, useWorkletCallback, ReduceMotion } from 'react-native-reanimated';
+ import { State } from 'react-native-gesture-handler';
+ import { useScrollable, usePropsValidator, useReactiveSharedValue, useNormalizedSnapPoints, useKeyboard } from '../../hooks';
+ import { BottomSheetInternalProvider, BottomSheetProvider } from '../../contexts';
+diff --git a/src/components/bottomSheet/BottomSheet.tsx b/src/components/bottomSheet/BottomSheet.tsx
+index cd6ea6bfbace8e9e0b5f0759d4dc7559d48d248f..3248773a3beab478143d3c9d13a47ff6ffd712f2 100644
+--- a/src/components/bottomSheet/BottomSheet.tsx
++++ b/src/components/bottomSheet/BottomSheet.tsx
+@@ -527,7 +527,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+         animatedAnimationSource.value === ANIMATION_SOURCE.SNAP_POINT_CHANGE &&
+         animatedAnimationState.value === ANIMATION_STATE.RUNNING
+       ) {
+-        return animatedNextPositionIndex.value;
++        return Math.max(animatedCurrentIndex.value, currentIndex);
+       }
+ 
+       return currentIndex;

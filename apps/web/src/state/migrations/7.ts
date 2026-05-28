@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { PreV16UserState } from '~/state/migrations/oldTypes'
 
 export type PersistAppStateV7 = {
   _persist: PersistState
@@ -12,12 +12,12 @@ export const migration7 = (state: PersistAppStateV7 | undefined) => {
   if (!state) {
     return state
   }
-  const userHidAndroidAnnouncementBanner = state?.user?.hideAndroidAnnouncementBanner
-  if (state?.user && 'hideAndroidAnnouncementBanner' in state.user) {
-    delete state.user['hideAndroidAnnouncementBanner']
+  const userHidAndroidAnnouncementBanner = state.user?.hideAndroidAnnouncementBanner
+  if (state.user && 'hideAndroidAnnouncementBanner' in state.user) {
+    delete state.user.hideAndroidAnnouncementBanner
   }
   // If the the user has previously hidden the Android announcement banner, we respect that preference.
-  if (state?.user && userHidAndroidAnnouncementBanner) {
+  if (state.user && userHidAndroidAnnouncementBanner) {
     return {
       ...state,
       user: {

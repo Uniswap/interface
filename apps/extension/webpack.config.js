@@ -13,10 +13,32 @@ const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
+// Also required for Tamagui static extration
+process.env.APP_ID = 'extension'
 
 const isDevelopment = NODE_ENV === 'development'
+const isProduction = NODE_ENV === 'production'
 const appDirectory = path.resolve(__dirname)
 const manifest = require('./src/manifest.json')
+
+/**
+ * Runs `scripts/validateBuildOutput.ts --webpack` after webpack finishes emitting. The
+ * script scans every emitted `.js` file for bundler regressions that only surface at
+ * runtime — primarily classic `importScripts(` worker chunk loading, which produces the
+ * `chunks/chunks/<hash>.js` NetworkError that shipped in v1.73.0/v1.74.0. Throwing here
+ * fails the webpack build, so CI catches it before the artifact uploads.
+ */
+class ValidateBuildOutputPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('ValidateBuildOutputPlugin', () => {
+      const { execSync } = require('node:child_process')
+      execSync('bun run scripts/validateBuildOutput.ts --webpack', {
+        cwd: __dirname,
+        stdio: 'inherit',
+      })
+    })
+  }
+}
 
 // Add all node modules that have to be compiled
 const compileNodeModules = [
@@ -28,6 +50,10 @@ const compileNodeModules = [
   'expo-linear-gradient',
   'react-native-image-picker',
   'expo-modules-core',
+  'react-native-reanimated',
+  // RN gesture-handler 2.28 ships some raw .ts sources alongside compiled .js (packaging regression);
+  // route them through swc so webpack can parse TS-only syntax.
+  'react-native-gesture-handler',
 ]
 
 // This is needed for webpack to compile JavaScript.
@@ -47,8 +73,8 @@ const babelLoaderConfiguration = {
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
-      // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: ['module:@react-native/babel-preset'],
+      // The 'babel-preset-expo' preset is recommended to match React Native's packager
+      presets: ['babel-preset-expo'],
       // Re-write paths to import only the modules needed by the app
       plugins: ['react-native-web'],
     },
@@ -111,13 +137,14 @@ const {
             }
           : {},
         compress: false,
+        hot: true, // Enable HMR
         static: {
           directory: path.join(__dirname, '../dev'),
         },
         client: {
           // logging: "info",
           progress: true,
-          reconnect: false,
+          reconnect: true,
           overlay: {
             errors: true,
             warnings: false,
@@ -131,7 +158,7 @@ const {
           writeToDisk: true,
         },
       },
-      devtool: 'cheap-module-source-map',
+      devtool: 'inline-cheap-module-source-map',
       plugins: [new ReactRefreshWebpackPlugin()],
     }
   : {
@@ -153,8 +180,22 @@ module.exports = (env) => {
   const BUILD_ENV = env.BUILD_ENV
   const BUILD_NUM = env.BUILD_NUM || 0
 
+  const publicAssetsVariant = isDevelopment
+    ? 'local'
+    : BUILD_ENV === 'dev'
+      ? 'dev'
+      : BUILD_ENV === 'beta'
+        ? 'beta'
+        : 'prod'
+
   // Title Postfix
-  const EXTENSION_NAME_POSTFIX = BUILD_ENV === 'dev' ? 'DEV' : BUILD_ENV === 'beta' ? 'BETA' : ''
+  const EXTENSION_NAME_POSTFIX = isDevelopment
+    ? 'LOCAL'
+    : BUILD_ENV === 'dev'
+      ? 'DEV'
+      : BUILD_ENV === 'beta'
+        ? 'BETA'
+        : ''
 
   // Description
   let EXTENSION_DESCRIPTION = manifest.description
@@ -170,22 +211,63 @@ module.exports = (env) => {
 
   return {
     mode: NODE_ENV,
+    // Enables ESM output capability (prerequisite for `output.workerChunkLoading: 'import'` below).
+    // Entries that don't opt in — background SW, content scripts, UI entries — remain classic scripts.
+    experiments: {
+      outputModule: true,
+    },
     entry: {
-      background: './src/background/background.ts',
-      onboarding: './src/entry/onboarding.tsx',
-      loadSidebar: './src/entry/loadSidebar.ts',
-      sidebar: './src/entry/sidebar.tsx',
-      injected: './src/contentScript/injected.ts',
-      ethereum: './src/contentScript/ethereum.ts',
-      popup: './src/entry/popup.tsx',
-      unitagClaim: './src/entry/unitagClaim.tsx',
+      background: './src/entrypoints/background.ts',
+      onboarding: './src/entrypoints/onboarding/main.tsx',
+      loadSidebar: './src/entrypoints/sidepanel/loadSidebar.ts',
+      sidebar: './src/entrypoints/sidepanel/main.tsx',
+      injected: './src/entrypoints/injected.content.ts',
+      ethereum: './src/entrypoints/ethereum.content.ts',
+      popup: './src/entrypoints/fallback-popup/main.tsx',
+      unitagClaim: './src/entrypoints/unitagClaim/main.tsx',
     },
     output: {
       filename: '[name].js',
-      chunkFilename: '[name].js',
+      chunkFilename: 'chunks/[chunkhash].js',
       path: path.resolve(__dirname, dir),
       clean: true,
       publicPath: '',
+      // Web Workers in this extension are constructed with `new Worker(..., { type: 'module' })`
+      // (see `src/workers/hashcashWorker.ts`). `workerChunkLoading: 'import'` makes webpack
+      // emit native `import()` for any sub-chunks instead of the classic `importScripts(<url>)`
+      // (which path-doubled under MV3 once `chunkFilename` put chunks under `chunks/`).
+      // Requires `experiments.outputModule: true` above. This setting alone is not enough
+      // when the worker has dependencies shared with the main bundle — see
+      // `optimization.splitChunks` below.
+      workerChunkLoading: 'import',
+    },
+    // Keep worker chunks self-contained.
+    //
+    // With `experiments.outputModule: true`, webpack emits shared dependency chunks in
+    // ESM format (`export const id=753; export const modules={...}`), but the worker
+    // entry chunk itself is still in classic array-push format
+    // (`var t={...}; function n(e){...t[n](...)}`). Those two formats can't talk to
+    // each other — the classic worker runtime calls into a factories registry that is
+    // never assigned because the ESM loader that would bridge them isn't included in
+    // the worker chunk. The worker throws `TypeError: r[e] is not a function` on the
+    // first `require()` and idle-exits silently. No `error` event reaches the main
+    // thread, so the parent's `bidc` channel waits forever.
+    //
+    // Excluding worker chunks from `splitChunks` forces webpack to inline every worker
+    // dependency into the single worker entry, matching the shape WXT/Vite already
+    // produce (a self-contained ~80KB file). The hashcash worker chunk is named via
+    // the `webpackChunkName: "hashcash-worker"` magic comment in
+    // `src/workers/hashcashWorker.ts`.
+    optimization: {
+      splitChunks: {
+        chunks(chunk) {
+          if (typeof chunk.name === 'string' && chunk.name.includes('worker')) {
+            return false
+          }
+          // Default for everything else: split async chunks (webpack's default behavior).
+          return chunk.canBeInitial() === false
+        },
+      },
     },
     // https://webpack.js.org/configuration/other-options/#level
     infrastructureLogging: { level: 'warn' },
@@ -197,6 +279,15 @@ module.exports = (env) => {
           resolve: {
             fullySpecified: false, // disable the behaviour
           },
+        },
+        // Add immediate execution calls to entry point files
+        {
+          test: /\/(background|injected\.content|ethereum\.content)\.ts$/,
+          use: [
+            {
+              loader: path.resolve(__dirname, 'webpack-plugins/immediate-execution-loader.js'),
+            },
+          ],
         },
         {
           oneOf: [
@@ -252,7 +343,8 @@ module.exports = (env) => {
                     // for example if you have constants.ts then constants.js goes here and it will eval them
                     // at build time and if it can flatten views even if they use imports from that file
                     importsWhitelist: ['constants.js'],
-                    disableExtraction: process.env.NODE_ENV === 'development',
+                    // TODO: test re-enabling extraction in production when #27138 merges
+                    disableExtraction: true,
                   },
                 },
 
@@ -281,6 +373,13 @@ module.exports = (env) => {
         'react-native-vector-icons$': 'react-native-vector-icons/dist',
         src: path.resolve(__dirname, 'src'), // absolute imports in apps/web
         'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
+        'expo-blur': require.resolve('./__mocks__/expo-blur.jsx'),
+        'react-router': path.resolve(
+          __dirname,
+          isProduction
+            ? '../../node_modules/react-router/dist/production/index.mjs'
+            : '../../node_modules/react-router/dist/development/index.mjs',
+        ),
       },
       // Add support for web-based extensions so we can share code between mobile/extension
       extensions: [
@@ -307,11 +406,18 @@ module.exports = (env) => {
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
         'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
         'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
-        'process.env.IS_UNISWAP_EXTENSION': '"true"',
+        // process.env.APP_ID is used by @universe/config. When that package's
+        // getConfig() function is removed, this define can be removed.
+        'process.env.APP_ID': '"extension"',
       }),
       new CleanWebpackPlugin(),
       new NodePolyfillPlugin(), // necessary to compile with reactnative-dotenv
       ...plugins,
+      // Post-emit scan for production builds — fails the build if any emitted JS contains
+      // forbidden runtime patterns (e.g. `importScripts(` from classic worker chunk loading).
+      // Skipped in dev to keep HMR rebuilds fast and because the bug class only manifests
+      // when code-splitting kicks in for non-dev builds.
+      ...(isProduction ? [new ValidateBuildOutputPlugin()] : []),
       new MiniCssExtractPlugin(),
       new ProgressPlugin(),
       new ProvidePlugin({
@@ -324,35 +430,98 @@ module.exports = (env) => {
           {
             from: 'src/manifest.json',
             force: true,
+            // oxlint-disable-next-line no-unused-vars -- biome-parity: oxlint is stricter here
             transform(content) {
-              return Buffer.from(
-                JSON.stringify(
-                  {
-                    ...manifest,
-                    description: EXTENSION_DESCRIPTION,
-                    version: EXTENSION_VERSION,
-                    name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
-                  },
-                  null,
-                  2,
-                ),
-              )
+              const transformedManifest = {
+                ...manifest,
+                description: EXTENSION_DESCRIPTION,
+                version: EXTENSION_VERSION,
+                name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
+                externally_connectable: {
+                  ...manifest.externally_connectable,
+                  matches:
+                    BUILD_ENV === 'prod'
+                      ? ['https://app.uniswap.org/*']
+                      : ['https://app.uniswap.org/*', 'https://app.corn-staging.com/*', 'https://dev.ew.unihq.org/*'],
+                },
+                // Ensure content scripts are registered in the webpack build (WXT handles this automatically).
+                // These mirror the matches/runAt used in the TS entrypoints — localhost matches
+                // only in local (isDevelopment) and dev builds, never in beta/prod.
+                content_scripts: (() => {
+                  const matches =
+                    isDevelopment || BUILD_ENV === 'dev'
+                      ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+                      : ['https://*/*']
+                  return [
+                    {
+                      id: 'injected',
+                      matches,
+                      js: ['injected.js'],
+                      run_at: 'document_start',
+                      all_frames: true,
+                    },
+                    {
+                      id: 'ethereum',
+                      matches,
+                      js: ['ethereum.js'],
+                      run_at: 'document_start',
+                      // Ethereum provider must run in the MAIN world to attach to window.ethereum
+                      world: 'MAIN',
+                      all_frames: true,
+                    },
+                  ]
+                })(),
+              }
+
+              return Buffer.from(JSON.stringify(transformedManifest, null, 2))
             },
           },
           {
-            from: 'src/assets/fonts/*.{woff,woff2,ttf}',
+            from: 'src/public/assets/fonts/*.{woff,woff2,ttf}',
             to: 'assets/fonts/[name][ext]',
             force: true,
           },
           {
-            from: 'src/assets/*.{html,png,svg}',
+            from: 'src/public/assets/*.{png,svg}',
             to: 'assets/[name][ext]',
             force: true,
           },
           {
-            from: 'src/*.{html,png,svg}',
-            to: '[name][ext]',
+            from: `src/publicAssetsByEnv/${publicAssetsVariant}/*.{png,svg}`,
+            to: 'assets/[name][ext]',
             force: true,
+          },
+          {
+            from: 'src/entrypoints/sidepanel/index.html',
+            to: 'sidepanel.html',
+            force: true,
+            transform(content) {
+              return content.toString().replace('src="loadSidebar.ts"', 'src="loadSidebar.js"')
+            },
+          },
+          {
+            from: 'src/entrypoints/fallback-popup/index.html',
+            to: 'fallback-popup.html',
+            force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="popup.js"')
+            },
+          },
+          {
+            from: 'src/entrypoints/onboarding/index.html',
+            to: 'onboarding.html',
+            force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="onboarding.js"')
+            },
+          },
+          {
+            from: 'src/entrypoints/unitagClaim/index.html',
+            to: 'unitagClaim.html',
+            force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="unitagClaim.js"')
+            },
           },
         ],
       }),

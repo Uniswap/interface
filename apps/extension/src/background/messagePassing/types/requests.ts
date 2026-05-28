@@ -1,11 +1,12 @@
 import { DappRequestSchema } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { MessageSchema } from 'src/background/messagePassing/messageTypes'
+import { MessageSchema } from 'uniswap/src/extension/messagePassing/messageTypes'
 import { z } from 'zod'
 
 // ENUMS
 
 // Requests from content scripts to the extension (non-dapp requests)
 export enum ContentScriptUtilityMessageType {
+  ArcBrowserCheck = 'ArcBrowserCheck',
   FocusOnboardingTab = 'FocusOnboardingTab',
   ErrorLog = 'Error',
   AnalyticsLog = 'AnalyticsLog',
@@ -16,14 +17,22 @@ export const ErrorLogSchema = MessageSchema.extend({
   message: z.string(),
   fileName: z.string(),
   functionName: z.string(),
-  tags: z.record(z.string()).optional(),
+  tags: z.record(z.string(), z.string()).optional(),
+  extra: z.record(z.string(), z.unknown()).optional(),
 })
 export type ErrorLog = z.infer<typeof ErrorLogSchema>
+
+export const ArcBrowserCheckMessageSchema = MessageSchema.extend({
+  type: z.literal(ContentScriptUtilityMessageType.ArcBrowserCheck),
+  isArcBrowser: z.boolean(),
+})
+
+export type ArcBrowserCheckMessage = z.infer<typeof ArcBrowserCheckMessageSchema>
 
 export const AnalyticsLogSchema = MessageSchema.extend({
   type: z.literal(ContentScriptUtilityMessageType.AnalyticsLog),
   message: z.string(),
-  tags: z.record(z.string()),
+  tags: z.record(z.string(), z.string()),
 })
 export type AnalyticsLog = z.infer<typeof AnalyticsLogSchema>
 
@@ -45,6 +54,7 @@ export const DappRequestMessageSchema = z.object({
   senderTabInfo: z.object({
     id: z.number(),
     url: z.string(),
+    frameUrl: z.string().optional(),
     favIconUrl: z.string().optional(),
   }),
   isSidebarClosed: z.optional(z.boolean()),
@@ -70,7 +80,6 @@ export enum ExtensionToDappRequestType {
 const BaseExtensionRequestSchema = MessageSchema.extend({
   type: z.nativeEnum(ExtensionToDappRequestType),
 })
-export type BaseExtensionRequest = z.infer<typeof BaseExtensionRequestSchema>
 
 export const ExtensionChainChangeSchema = BaseExtensionRequestSchema.extend({
   type: z.literal(ExtensionToDappRequestType.SwitchChain),
@@ -84,15 +93,3 @@ export const UpdateConnectionRequestSchema = BaseExtensionRequestSchema.extend({
   addresses: z.array(z.string()), // TODO (Thomas): Figure out what to do for type safety here
 })
 export type UpdateConnectionRequest = z.infer<typeof UpdateConnectionRequestSchema>
-
-export const ExtensionToDappRequestSchema = z.union([
-  ExtensionChainChangeSchema,
-  UpdateConnectionRequestSchema,
-])
-export type ExtensionToDappRequest = z.infer<typeof ExtensionToDappRequestSchema>
-
-// VALIDATORS
-
-export function isValidExtensionToDappRequest(request: unknown): request is ExtensionToDappRequest {
-  return ExtensionToDappRequestSchema.safeParse(request).success
-}

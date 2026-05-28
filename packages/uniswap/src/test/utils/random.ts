@@ -33,6 +33,5 @@ export const randomEnumValue = <T extends Record<string, string | number>>(enumO
  * @returns A random value from the specified array.
  */
 export const randomChoice = <T>(choices: T[]): T => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return choices[Math.floor(Math.random() * choices.length)]!
 }

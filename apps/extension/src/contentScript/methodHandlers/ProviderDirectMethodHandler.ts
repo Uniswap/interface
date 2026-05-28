@@ -1,9 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { ProviderDirectMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { WindowEthereumRequest } from 'src/contentScript/types'
-import { logger } from 'utilities/src/logger/logger'
+import { logContentScriptError } from 'src/contentScript/utils'
 
 /**
  * Handles all provider direct requests
@@ -12,18 +12,25 @@ import { logger } from 'utilities/src/logger/logger'
 
 export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private methodHandlers: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any -- Provider method handlers accept varied parameter types from JSON-RPC calls
     [key: string]: (provider: JsonRpcProvider, params: any[]) => Promise<any>
   }
 
-  constructor(
-    getChainId: () => string | undefined,
-    getProvider: () => JsonRpcProvider | undefined,
-    getConnectedAddresses: () => Address[] | undefined,
-    setChainIdAndMaybeEmit: (newChainId: string) => void,
-    setProvider: (newProvider: JsonRpcProvider) => void,
-    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
-  ) {
+  constructor({
+    getChainId,
+    getProvider,
+    getConnectedAddresses,
+    setChainIdAndMaybeEmit,
+    setProvider,
+    setConnectedAddressesAndMaybeEmit,
+  }: {
+    getChainId: () => string | undefined
+    getProvider: () => JsonRpcProvider | undefined
+    getConnectedAddresses: () => Address[] | undefined
+    setChainIdAndMaybeEmit: (newChainId: string) => void
+    setProvider: (newProvider: JsonRpcProvider) => void
+    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void
+  }) {
     super(
       getChainId,
       getProvider,
@@ -34,7 +41,6 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
     )
 
     this.methodHandlers = {
-      /* eslint-disable @typescript-eslint/explicit-function-return-type */
       [ProviderDirectMethods.eth_getBalance]: (provider, params) => provider.getBalance(params[0]),
       [ProviderDirectMethods.eth_getCode]: (provider, params) => provider.getCode(params[0]),
       [ProviderDirectMethods.eth_getStorageAt]: (provider, params) => provider.getStorageAt(params[0], params[1]),
@@ -47,8 +53,10 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
       [ProviderDirectMethods.eth_getTransactionByHash]: (provider, params) => provider.getTransaction(params[0]),
       [ProviderDirectMethods.eth_getTransactionReceipt]: (provider, params) =>
         provider.getTransactionReceipt(params[0]),
+      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
       [ProviderDirectMethods.net_version]: async (provider, params) => provider.send('net_version', params),
       [ProviderDirectMethods.web3_clientVersion]: async (provider, params) =>
+        // oxlint-disable-next-line typescript/no-unsafe-return
         provider.send('web3_clientVersion', params),
     }
   }
@@ -62,14 +70,14 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
         return
       }
       const response = handler(provider, request.params)
-      this.handleResponse(response, source, request.requestId)
+      this.handleResponse({ response, source, requestId: request.requestId })
     } else {
       // We shouldn't end up here because injected.ts checks that the method is supported before calling this function
-      logger.error(new Error('Unexpected method requested'), {
-        tags: {
-          file: 'ProviderDirectMethodHandler.ts',
-          function: 'handleRequest',
-        },
+      // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
+      logContentScriptError({
+        errorMessage: 'Unexpected method requested',
+        fileName: 'ProviderDirectMethodHandler.ts',
+        functionName: 'handleRequest',
         extra: {
           method: request.method,
           dapp: window.origin,
@@ -78,12 +86,16 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
     }
   }
 
-  private handleResponse(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: Promise<any>,
-    source: MessageEventSource | null,
-    requestId: string,
-  ): void {
+  private handleResponse({
+    response,
+    source,
+    requestId,
+  }: {
+    // oxlint-disable-next-line typescript/no-explicit-any -- JSON-RPC response can contain arbitrary data structures
+    response: Promise<any>
+    source: MessageEventSource | null
+    requestId: string
+  }): void {
     response
       .then((result) => {
         source?.postMessage({
@@ -91,17 +103,17 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
           result: JSON.parse(
             JSON.stringify(result, (_key, value) => {
               if (!value) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+                // oxlint-disable-next-line typescript/no-unsafe-return
                 return value
               } else if (BigNumber.isBigNumber(value)) {
                 return value.toHexString()
               } else if (value.type === 'BigNumber' && value.hex) {
                 // Unsure of why but sometimes the provider has converted the BigNumber with BigNumber.toJSON() e.g. eth_getBlockByNumber
                 // which is a format not currently accepted by some dapps e.g. Morpho
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+                // oxlint-disable-next-line typescript/no-unsafe-return
                 return value.hex
               }
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+              // oxlint-disable-next-line typescript/no-unsafe-return
               return value
             }),
           ),

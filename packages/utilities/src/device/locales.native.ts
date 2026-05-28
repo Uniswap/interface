@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { getLocales } from 'expo-localization'
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG, DeviceLocale } from 'utilities/src/device/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -12,7 +12,7 @@ export function getDeviceLocales(): DeviceLocale[] {
     const isKnownError = e instanceof Error && e.message.includes('Unsupported ISO 3166 country')
     if (!isKnownError) {
       logger.error(e, {
-        level: 'warning',
+        level: 'warn',
         tags: { file: 'utils.ts', function: 'getDeviceLocales' },
       })
     }

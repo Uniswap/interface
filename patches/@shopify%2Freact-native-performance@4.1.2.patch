@@ -1,0 +1,27 @@
+diff --git a/node_modules/@shopify/react-native-performance/.bun-tag-dc7a7fd6c2cb2d2 b/.bun-tag-dc7a7fd6c2cb2d2
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/android/src/main/kotlin/com/shopify/reactnativeperformance/PerformanceMarker.kt b/android/src/main/kotlin/com/shopify/reactnativeperformance/PerformanceMarker.kt
+index 19b8fb43b8e699bcce5f13064e327be4f642c644..f0e4a2344d9245f05ff5f9d73b5f1386df2cdbd7 100644
+--- a/android/src/main/kotlin/com/shopify/reactnativeperformance/PerformanceMarker.kt
++++ b/android/src/main/kotlin/com/shopify/reactnativeperformance/PerformanceMarker.kt
+@@ -126,7 +126,7 @@ class PerformanceMarkerManager : SimpleViewManager<PerformanceMarker>() {
+                 "onRenderComplete",
+                 MapBuilder.of(
+                         "registrationName", "onRenderComplete")
+-        ).build();
++        ).build().toMutableMap();
+     }
+ 
+     override fun getName() = "PerformanceMarker"
+diff --git a/ios/ReactNativePerformance/ReactNativePerformance.m b/ios/ReactNativePerformance/ReactNativePerformance.m
+index 485211356fc14de4205e6d0c7e06eb5116992e0b..dbb4bb5637656b7f62fc88249b4ed5402c22290d 100644
+--- a/ios/ReactNativePerformance/ReactNativePerformance.m
++++ b/ios/ReactNativePerformance/ReactNativePerformance.m
+@@ -1,5 +1,5 @@
+ #import "ReactNativePerformance.h"
+-#import "ReactNativePerformance-Swift.h"
++#import <ReactNativePerformance/ReactNativePerformance-Swift.h>
+ 
+ static NSTimeInterval startupTimestamp = -1.0;
+ 

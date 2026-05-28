@@ -1,17 +1,17 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "composite": false,
     "incremental": true,
     "isolatedModules": false,
     "paths": {
-      "shared-cloud/*": ["../src/shared-cloud/*"]
+      "~/*": ["../src/*"],
+      "functions/*": ["./*"]
     },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node", "@cloudflare/workers-types"],
+    "types": ["node", "@cloudflare/workers-types", "vitest/globals"]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["../../../index.d.ts", "**/*.ts", "**/*.tsx"],
   "references": [
     {
       "path": "../../../packages/ui"

@@ -1,27 +1,16 @@
-import { CreditCardIcon } from 'components/Icons/CreditCard'
-import { Sell } from 'components/Icons/Sell'
-import { Send } from 'components/Icons/Send'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useAccount } from 'hooks/useAccount'
-import { useSwitchChain } from 'hooks/useSwitchChain'
-import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { DeprecatedButton, Flex, styled, Text, useMedia } from 'ui/src'
-import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
+import { useNavigate } from 'react-router'
+import { Button, Flex, useMedia } from 'ui/src'
+import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
+import { ArrowUpCircle } from 'ui/src/components/icons/ArrowUpCircle'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useActiveAccount } from '~/features/accounts/store/hooks'
+import { useSelectChain } from '~/hooks/useSelectChain'
+import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
-const TDPActionPill = styled(DeprecatedButton, {
-  size: 'medium',
-  borderRadius: 50,
-  flexGrow: 1,
-  fontSize: '$medium',
-  fontWeight: '$large',
-  height: 48,
-  hoverStyle: {
-    filter: 'brightness(0.85)',
-  },
-})
+const TDP_ACTION_TABS_MAX_WIDTH = 780
 
 type TabItem = {
   label: string
@@ -31,63 +20,66 @@ type TabItem = {
 
 export function TDPActionTabs() {
   const { t } = useTranslation()
-  const { currencyChain, currencyChainId, address, tokenColor } = useTDPContext()
-  const switchChain = useSwitchChain()
+  const { currencyChain, currencyChainId, address, tokenColor, multiChainMap } = useTDPStore((s) => ({
+    currencyChain: s.currencyChain,
+    currencyChainId: s.currencyChainId,
+    address: s.address,
+    tokenColor: s.tokenColor,
+    multiChainMap: s.multiChainMap,
+  }))
+  const selectChain = useSelectChain()
   const navigate = useNavigate()
-  const account = useAccount()
+
+  const currentConnectedChainId = useActiveAccount(currencyChainId)?.chainId
+
+  const hasBalance = Boolean(multiChainMap[currencyChain]?.balance)
+
   const chainUrlParam = currencyChain.toLowerCase()
   const addressUrlParam = address === NATIVE_CHAIN_ID ? 'ETH' : address
-  const textColor = tokenColor && getContrastPassingTextColor(tokenColor)
   const media = useMedia()
   const showIcons = !media.xs
 
   const toActionLink = useCallback(
     async (href: string) => {
-      if (account.chainId && account.chainId !== currencyChainId) {
-        await switchChain(currencyChainId)
+      if (currentConnectedChainId && currentConnectedChainId !== currencyChainId && isEVMChain(currencyChainId)) {
+        await selectChain(currencyChainId)
       }
       navigate(href)
     },
-    [account, currencyChainId, switchChain, navigate],
+    [currentConnectedChainId, currencyChainId, selectChain, navigate],
   )
 
-  const tabs: TabItem[] = [
-    {
-      label: t('common.buy.label'),
-      href: `/swap/?chain=${chainUrlParam}&outputCurrency=${addressUrlParam}`,
-      icon: <CreditCardIcon fill="currentColor" />,
-    },
-    {
-      label: t('common.sell.label'),
-      href: `/swap?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
-      icon: <Sell fill="currentColor" />,
-    },
-    {
-      label: t('common.send.button'),
-      href: `/send?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
-      icon: <Send fill="currentColor" />,
-    },
-  ]
+  const tabs: TabItem[] = useMemo(
+    () => [
+      {
+        label: t('common.buy.label'),
+        href: `/swap/?chain=${chainUrlParam}&outputCurrency=${addressUrlParam}`,
+        icon: <ArrowDownCircle />,
+      },
+      ...(hasBalance
+        ? [
+            {
+              label: t('common.sell.label'),
+              href: `/swap?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
+              icon: <ArrowUpCircle />,
+            },
+          ]
+        : []),
+    ],
+    [t, chainUrlParam, addressUrlParam, hasBalance],
+  )
   return (
-    <Flex row justifyContent="center" gap="$spacing8" width="100%">
+    <Flex row justifyContent="center" gap="$spacing8" width="100%" mx="auto" maxWidth={TDP_ACTION_TABS_MAX_WIDTH}>
       {tabs.map((tab) => (
-        <TDPActionPill
+        <Button
           key={tab.label}
           onPress={() => toActionLink(tab.href)}
           backgroundColor={tokenColor}
-          hoverStyle={{ backgroundColor: tokenColor }}
-          pressStyle={{ backgroundColor: tokenColor }}
-          color={textColor}
+          size="medium"
+          icon={showIcons ? tab.icon : undefined}
         >
-          <Flex row gap="$spacing8" alignItems="center">
-            {showIcons && (
-              <Text color={textColor} display="flex">
-                {tab.icon}
-              </Text>
-            )}
-            <Text color={textColor}>{tab.label}</Text>
-          </Flex>
-        </TDPActionPill>
+          {tab.label}
+        </Button>
       ))}
     </Flex>
   )

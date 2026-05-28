@@ -1,10 +1,11 @@
 import { SkeletonBox } from 'src/app/components/loading/SkeletonBox'
 import { Flex } from 'ui/src'
-import { WALLET_PREVIEW_CARD_HEIGHT } from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
+import { WALLET_PREVIEW_CARD_MIN_HEIGHT } from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 
 export function SelectWalletsSkeleton({ repeat = 3 }: { repeat?: number }): JSX.Element {
   return (
     <Flex fill gap="$spacing12">
+      {/* oxlint-disable-next-line max-params */}
       {new Array(repeat).fill(null).map((_, i, { length }) => (
         <WalletSkeleton key={i} opacity={(length - i) / length} />
       ))}
@@ -20,7 +21,7 @@ function WalletSkeleton({ opacity }: { opacity: number }): JSX.Element {
       borderColor="$surface3"
       borderRadius="$rounded20"
       borderWidth="$spacing1"
-      height={WALLET_PREVIEW_CARD_HEIGHT}
+      height={WALLET_PREVIEW_CARD_MIN_HEIGHT}
       justifyContent="flex-start"
       opacity={opacity}
       overflow="hidden"

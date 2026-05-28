@@ -1,23 +1,40 @@
+import { FeatureFlags, getFeatureFlag, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+
+export const getFeatureFlaggedChainIds = createGetFeatureFlaggedChainIds({
+  getLineaStatus: () => getFeatureFlag(FeatureFlags.Linea),
+  getTempoStatus: () => getFeatureFlag(FeatureFlags.Tempo),
+  getXLayerStatus: () => getFeatureFlag(FeatureFlags.XLayer),
+})
 
 // Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
 export function useFeatureFlaggedChainIds(): UniverseChainId[] {
-  // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
-  // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
-  // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
-  const monadTestnetEnabled = useFeatureFlag(FeatureFlags.MonadTestnet)
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
+  const lineaStatus = useFeatureFlag(FeatureFlags.Linea)
+  const tempoStatus = useFeatureFlag(FeatureFlags.Tempo)
+  const xLayerStatus = useFeatureFlag(FeatureFlags.XLayer)
 
   return useMemo(
     () =>
-      filterChainIdsByFeatureFlag({
-        [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
-        [UniverseChainId.Unichain]: unichainEnabled,
-      }),
-    [monadTestnetEnabled, unichainEnabled],
+      createGetFeatureFlaggedChainIds({
+        getLineaStatus: () => lineaStatus,
+        getTempoStatus: () => tempoStatus,
+        getXLayerStatus: () => xLayerStatus,
+      })(),
+    [lineaStatus, tempoStatus, xLayerStatus],
   )
+}
+
+export function createGetFeatureFlaggedChainIds(ctx: {
+  getLineaStatus: () => boolean
+  getTempoStatus: () => boolean
+  getXLayerStatus: () => boolean
+}): () => UniverseChainId[] {
+  return () =>
+    filterChainIdsByFeatureFlag({
+      [UniverseChainId.Linea]: ctx.getLineaStatus(),
+      [UniverseChainId.Tempo]: ctx.getTempoStatus(),
+      [UniverseChainId.XLayer]: ctx.getXLayerStatus(),
+    })
 }

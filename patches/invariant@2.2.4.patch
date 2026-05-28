@@ -1,0 +1,25 @@
+diff --git a/node_modules/invariant/.bun-tag-299d6e43876c54ed b/.bun-tag-299d6e43876c54ed
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/browser.js b/browser.js
+index b3941bc603f8788a59f4c5987c1fc08834a0ae6d..5a5344ad83aa5c998eca96d2d7186fa90e76c6f3 100644
+--- a/browser.js
++++ b/browser.js
+@@ -47,3 +47,6 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
+ };
+ 
+ module.exports = invariant;
++
++// ESM exports for Vite 7.1.3 compatibility
++export default invariant;
+diff --git a/invariant.js b/invariant.js
+index b543e9ff018f4bbdb6a67923bfd30df6b6a2a4f8..19f8388d2f9279d5ed095fd3d5947ccc2618ce37 100644
+--- a/invariant.js
++++ b/invariant.js
+@@ -49,3 +49,6 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
+ };
+ 
+ module.exports = invariant;
++
++// ESM exports for Vite 7.1.3 compatibility  
++export default invariant;

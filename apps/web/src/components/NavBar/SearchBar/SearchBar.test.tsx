@@ -1,27 +1,22 @@
-import { SearchBar } from 'components/NavBar/SearchBar'
-import { mocked } from 'test-utils/mocked'
-import { render, screen } from 'test-utils/render'
-import { useMedia } from 'ui/src'
+import { SearchBar } from '~/components/NavBar/SearchBar'
+import { mockMediaSize } from '~/test-utils/mockMediaSize'
+import { render, screen } from '~/test-utils/render'
 
-jest.mock('tamagui', () => ({
-  ...jest.requireActual('tamagui'),
-  useMedia: jest.fn(),
+vi.mock('tamagui', async () => {
+  const actual = await vi.importActual('tamagui')
+  return {
+    ...actual,
+    useMedia: vi.fn(),
+  }
+})
+
+vi.mock('uniswap/src/components/modals/ScrollLock', () => ({
+  useUpdateScrollLock: vi.fn(),
 }))
 
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
-    mocked(useMedia).mockReturnValue({
-      xxs: false,
-      xs: false,
-      sm: false,
-      md: false,
-      lg: false,
-      xl: false,
-      xxl: true,
-      xxxl: true,
-      short: false,
-      midHeight: false,
-    })
+    mockMediaSize('xxxl')
   })
 
   it('should render searchbar on larger screen', () => {

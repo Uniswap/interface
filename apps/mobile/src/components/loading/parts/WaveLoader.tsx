@@ -21,9 +21,7 @@ export function WaveLoader(): JSX.Element {
 
   useEffect(() => {
     yPosition.value = withRepeat(withTiming(1, { duration: WAVE_DURATION }), Infinity, false)
-
-    // only want to do this once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [])
 
   const animatedStyle = useAnimatedStyle(() => ({

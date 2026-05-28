@@ -1,0 +1,50 @@
+import type { Animated } from 'react-native'
+import {
+  ColorTokens,
+  Flex,
+  GetThemeValueForKey,
+  Separator,
+  Text,
+  TouchableArea,
+  useLayoutAnimationOnChange,
+} from 'ui/src'
+import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
+import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+
+export type ExpandoRowProps = {
+  isExpanded: boolean
+  onPress: () => void
+  label: string
+  mx?: number | Animated.AnimatedNode | GetThemeValueForKey<'marginHorizontal'> | null
+  color?: ColorTokens
+}
+
+export function ExpandoRow({ label, isExpanded, onPress, mx, color = '$neutral3' }: ExpandoRowProps): JSX.Element {
+  useLayoutAnimationOnChange(isExpanded)
+
+  return (
+    <TouchableArea activeOpacity={1} mx={mx} testID="expando-row" onPress={onPress}>
+      <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
+        <Flex centered grow row gap="$spacing12">
+          <Separator />
+
+          <Flex centered row gap="$gap4">
+            <Text color={color} textAlign="center" variant="body3" testID="expando-row-label">
+              {label}
+            </Text>
+
+            <Flex centered justifyContent="center" testID="expando-row-icon">
+              {isExpanded ? (
+                <ChevronsIn color={color} size="$icon.16" />
+              ) : (
+                <ChevronsOut color={color} size="$icon.16" />
+              )}
+            </Flex>
+          </Flex>
+
+          <Separator />
+        </Flex>
+      </Flex>
+    </TouchableArea>
+  )
+}

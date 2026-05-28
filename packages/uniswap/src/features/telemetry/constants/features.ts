@@ -18,6 +18,7 @@ export enum FiatOffRampEventName {
   FiatOffRampWidgetOpened = 'Fiat OffRamp Widget Opened',
   FiatOffRampWidgetCompleted = 'Fiat OffRamp Widget Completed',
   FiatOffRampFundsSent = 'Fiat OffRamp Funds Sent',
+  FiatOffRampPaymentMethodFilterSelected = 'Fiat OffRamp Payment Method Filter Selected',
 }
 
 export enum FiatOnRampEventName {
@@ -25,9 +26,51 @@ export enum FiatOnRampEventName {
   FiatOnRampTransactionUpdated = 'Fiat OnRamp Transaction Updated',
   FiatOnRampTokenSelected = 'Fiat OnRamp Token Selected',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
+  FiatOnRampTransferWidgetOpened = 'Fiat OnRamp Transfer Widget Opened',
+  FiatOnRampPaymentMethodFilterSelected = 'Fiat OnRamp Payment Method Filter Selected',
 }
 
-export enum InstitutionTransferEventName {
-  InstitutionTransferTransactionUpdated = 'Institution Transfer Transaction Updated',
-  InstitutionTransferWidgetOpened = 'Institution Transfer Widget Opened',
+export enum SwapEventName {
+  SwapAutorouterVisualizationExpanded = 'Swap Autorouter Visualization Expanded',
+  SwapBlocked = 'Swap Blocked',
+  SwapDetailsExpanded = 'Swap Details Expanded',
+  SwapError = 'Swap Error',
+  SwapEstimateGasCallFailed = 'Swap Estimate Gas Call Failed',
+  SwapFirstAction = 'Swap First Action',
+  SwapFirstSignatureRequested = 'Swap First Signature Requested',
+  SwapMaxTokenAmountSelected = 'Swap Max Token Amount Selected',
+  SwapModifiedInWallet = 'Swap Modified in Wallet',
+  SwapPreselectAssetSelected = 'Swap Preselect Asset Selected',
+  SwapPresetTokenAmountSelected = 'Swap Preset Token Amount Selected',
+  SwapPriceUpdateAcknowledged = 'Swap Price Update Acknowledged',
+  SwapQuoteFetch = 'Swap Quote Fetch',
+  SwapQuoteReceived = 'Swap Quote Received',
+  SwapQuoteFailed = 'Swap Quote Failed',
+  SwapSigned = 'Swap Signed',
+  SwapSubmittedButtonClicked = 'Swap Submit Button Clicked',
+  SwapTokensReversed = 'Swap Tokens Reversed',
+  SwapTransactionCompleted = 'Swap Transaction Completed',
+  SwapTransactionFailed = 'Swap Transaction Failed',
+}
+
+export enum SwapBlockedCategory {
+  JupiterUnactionableQuote = 'Jupiter Unactionable Quote',
+  QuoteSimulationFailure = 'EVM Quote Simulation Failure',
+  CalldataFetchFailure = 'EVM Calldata Fetch Failure',
+  CalldataSimulationFailure = 'EVM Calldata Simulation Failure',
+}
+
+export enum LiquidityEventName {
+  AddLiquiditySubmitted = 'Add Liquidity Submitted',
+  CollectLiquiditySubmitted = 'Collect Liquidity Submitted',
+  MigrateLiquiditySubmitted = 'Migrate Liquidity Submitted',
+  RemoveLiquiditySubmitted = 'Remove Liquidity Submitted',
+  SelectLiquidityPoolFeeTier = 'Select Liquidity Pool Fee Tier',
+  TransactionModifiedInWallet = 'Transaction Modified in Wallet',
+}
+
+export enum AuctionEventName {
+  AuctionWithdrawSubmitted = 'Auction Withdraw Submitted',
+  AuctionBidSubmitted = 'Auction Bid Submitted',
+  AuctionBidInputted = 'Auction Bid Inputted',
 }

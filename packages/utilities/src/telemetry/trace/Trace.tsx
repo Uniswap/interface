@@ -1,17 +1,25 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
-import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
-import { isWeb } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+import { isWebPlatform } from '@universe/environment'
+import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
+// oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 
-export function getEventsFromProps(logPress?: boolean, logFocus?: boolean, logKeyPress?: boolean): string[] {
+function getEventsFromProps({
+  logPress = false,
+  logFocus = false,
+  logKeyPress = false,
+}: {
+  logPress?: boolean
+  logFocus?: boolean
+  logKeyPress?: boolean
+}): string[] {
   const events = []
   if (logPress) {
-    events.push(isWeb ? 'onClick' : 'onPress')
+    events.push(isWebPlatform ? 'onClick' : 'onPress')
   }
   if (logFocus) {
     events.push(BrowserEvent.onFocus)
@@ -49,7 +57,7 @@ export type TraceProps = {
 // only used for avoiding double logging in development
 const devDoubleLogDisableMap: Record<string, boolean> = {}
 
-function _Trace({
+function TraceInner({
   children,
   logImpression,
   eventOnTrigger,
@@ -66,12 +74,12 @@ function _Trace({
 }: PropsWithChildren<TraceProps & ITraceContext>): JSX.Element {
   const id = useId()
 
-  const { useIsPartOfNavigationTree, shouldLogScreen: shouldLogScreen } = useAnalyticsNavigationContext()
+  const { useIsPartOfNavigationTree, shouldLogScreen } = useAnalyticsNavigationContext()
   const isPartOfNavigationTree = useIsPartOfNavigationTree()
   const parentTrace = useTrace()
 
   const events = useMemo(() => {
-    return getEventsFromProps(logPress, logFocus, logKeyPress)
+    return getEventsFromProps({ logPress, logFocus, logKeyPress })
   }, [logFocus, logKeyPress, logPress])
 
   // Component props are destructured to ensure shallow comparison
@@ -108,8 +116,7 @@ function _Trace({
         }
       }
     }
-    // Impressions should only be logged on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [logImpression])
 
   const modifiedChildren =
@@ -124,14 +131,14 @@ function _Trace({
             // For each child, augment event handlers defined in `actionProps` with event tracing
             return React.cloneElement(
               child,
-              getEventHandlers(
+              getEventHandlers({
                 child,
                 consumedProps,
-                events,
-                eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
+                triggers: events,
+                eventName: eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
                 element,
                 properties,
-              ),
+              }),
             )
           })
         }
@@ -185,4 +192,4 @@ function NavAwareTrace({
   return <>{children}</>
 }
 
-export const Trace = memo(_Trace)
+export const Trace = memo(TraceInner)

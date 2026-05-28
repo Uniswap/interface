@@ -1,11 +1,10 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/features/chains/types'
-import type { Account, Client, Transport } from 'viem'
+import type { Account, Chain, Client, Transport } from 'viem'
 import { useConnectorClient } from 'wagmi'
 
-function clientToSigner(client?: Client<Transport, UniverseChainInfo, Account>) {
-  if (!client || !client.chain) {
+function clientToSigner(client?: Client<Transport, Chain, Account>) {
+  if (!client) {
     return undefined
   }
   const { chain, transport, account } = client

@@ -1,7 +1,8 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { Currency } from '@uniswap/sdk-core'
+import { GasFeeResult } from '@universe/api'
 import { providers } from 'ethers'
-import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ParsedWarnings, WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -9,8 +10,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -44,7 +44,7 @@ type SendContextState = {
   gasFee: GasFeeResult
   warnings: ParsedWarnings
   txRequest: TransactionRequest | undefined
-  onSelectCurrency: (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => void
+  onSelectCurrency: ({ currency }: { currency: Currency }) => void
   updateSendForm: (newState: Partial<TransactionState>) => void
 } & TransactionState
 
@@ -96,17 +96,18 @@ export function SendContextProvider({
   )
 
   const warnings = useSendWarnings(t, derivedSendInfo)
-  const txRequest = useSendTransactionRequest(derivedSendInfo)
-  const gasFee = useTransactionGasFee(
-    txRequest,
-    warnings.some((warning) => warning.action === WarningAction.DisableReview),
-  )
+  const { data: txRequest } = useSendTransactionRequest(derivedSendInfo)
+  const gasFee = useTransactionGasFee({
+    tx: txRequest ?? undefined,
+    skip: warnings.some((warning) => warning.action === WarningAction.DisableReview),
+    shouldUsePreviousValueDuringLoading: true,
+  })
   const txRequestWithGasSettings = useMemo(
     (): providers.TransactionRequest => ({ ...txRequest, ...gasFee.params }),
     [gasFee.params, txRequest],
   )
   const gasWarning = useTransactionGasWarning({
-    account,
+    accountAddress: account.address,
     derivedInfo: derivedSendInfo,
     gasFee: gasFee.value,
   })
@@ -117,13 +118,15 @@ export function SendContextProvider({
 
   // helper function for currency selection
   const onSelectCurrency = useCallback(
-    (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => {
+    ({ currency }: { currency: Currency }) => {
       updateSendForm({
         [CurrencyField.INPUT]: {
           address: currencyAddress(currency),
           chainId: currency.chainId,
           type: AssetType.Currency,
         },
+        exactAmountToken: '',
+        exactAmountFiat: '',
         selectingCurrencyField: undefined,
       })
     },

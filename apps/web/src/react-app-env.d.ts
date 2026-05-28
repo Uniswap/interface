@@ -1,4 +1,4 @@
-/// <reference types="react-scripts" />
+/// <reference types="vite/client" />
 
 interface Window {
   GIT_COMMIT_HASH?: string
@@ -13,6 +13,23 @@ interface Window {
     isRabby?: true
     isTrust?: true
     isLedgerConnect?: true
+  }
+  // Binance extension injected properties
+  // Note: These follow the EIP-1193 Ethereum Provider standard
+  BinanceChain?: {
+    request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
+    on?: (event: string, handler: (...args: unknown[]) => void) => void
+    removeListener?: (event: string, handler: (...args: unknown[]) => void) => void
+    isConnected?: () => boolean
+    isTrustWallet?: boolean
+  }
+  binancew3w?: {
+    ethereum?: {
+      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
+      on?: (event: string, handler: (...args: unknown[]) => void) => void
+      removeListener?: (event: string, handler: (...args: unknown[]) => void) => void
+      isConnected?: () => boolean
+    }
   }
 }
 
@@ -34,4 +51,17 @@ declare module '*.webm' {
 declare module '*.mov' {
   const src: string
   export default src
+}
+
+declare module '*.svg' {
+  import React from 'react'
+  const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>
+  export { ReactComponent }
+  const src: string
+  export default src
+}
+
+declare module '*.svg?url' {
+  const content: string
+  export default content
 }

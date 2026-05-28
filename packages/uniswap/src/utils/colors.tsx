@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
-import { GlobalColorNames, colors as GlobalColors, GlobalPalette, colorsLight, opacify } from 'ui/src/theme'
+import { GlobalColorNames, colors as GlobalColors, GlobalPalette, opacify } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assert } from 'utilities/src/errors'
-import { hex } from 'wcag-contrast'
-
-export const MIN_COLOR_CONTRAST_THRESHOLD = 3
+import { hexToRGB } from 'utilities/src/theme/colors'
 
 export function getNetworkColorKey(chainId: UniverseChainId): `chain_${UniverseChainId}` {
   return `chain_${chainId}`
@@ -26,20 +24,6 @@ export function useNetworkColors(chainId: UniverseChainId): {
     foreground,
     background: opacify(10, foreground),
   }
-}
-
-/**
- * Picks a contrast-passing text color to put on top of a given background color.
- * The threshold right now is 3.0, which is the WCAG AA standard.
- * @param backgroundColor The hex value of the background color to check contrast against
- * @returns either 'white' or 'black'
- */
-export function getContrastPassingTextColor(backgroundColor: string): '$white' | '$black' {
-  const lightText = colorsLight.white
-  if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
-    return '$white'
-  }
-  return '$black'
 }
 
 /**
@@ -140,17 +124,4 @@ export function getColorDiffScore(colorA: string | null, colorB: string | null):
   }
   // Range 1 -> 442, add one to avoid comparison bugs when result is 0
   return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2)) + 1
-}
-
-// Converts a hex string to rgb format.
-export function hexToRGB(hexString: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString)
-  if (!result || !result[1] || !result[2] || !result[3]) {
-    return null
-  }
-  return {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  }
 }

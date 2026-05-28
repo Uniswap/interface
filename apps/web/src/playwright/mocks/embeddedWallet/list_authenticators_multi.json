@@ -1,0 +1,16 @@
+{
+  "authenticators": [
+    {
+      "credentialId": "cred-icloud-1",
+      "providerName": 15,
+      "createdAt": 1704067200000,
+      "aaguid": "fbfc3007-154e-4ecc-8c0b-6e020557d7bd"
+    },
+    {
+      "credentialId": "cred-chrome-2",
+      "providerName": 2,
+      "createdAt": 1706745600000,
+      "aaguid": "adce0002-35bc-c60a-648b-0b25f1f05503"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { Plus } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -12,14 +13,14 @@ export function PlusCircle(): JSX.Element {
       borderColor="$surface3"
       borderRadius="$roundedFull"
       borderWidth="$spacing1"
-      height={iconSizes.icon40}
+      height={isExtensionApp ? iconSizes.icon40 : iconSizes.icon32}
       p="$spacing8"
       shadowColor={isDarkMode ? '$shadowColor' : '$surface3'}
       shadowOffset={{ width: 0, height: 0 }}
       shadowRadius={10}
-      width={iconSizes.icon40}
+      width={isExtensionApp ? iconSizes.icon40 : iconSizes.icon32}
     >
-      <Plus color="$neutral2" size="$icon.16" strokeWidth={2} />
+      <Plus color="$neutral2" size={isExtensionApp ? '$icon.36' : '$icon.16'} strokeWidth={2} />
     </Flex>
   )
 }

@@ -51,15 +51,15 @@ export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFo
   })
   const priceFormatted = useDerivedValue(() => {
     const { symbol, code } = currencyInfo
-    return numberToLocaleStringWorklet(
-      price.value,
+    return numberToLocaleStringWorklet({
+      value: price.value,
       locale,
-      {
+      options: {
         style: 'currency',
         currency: code,
       },
       symbol,
-    )
+    })
   })
 
   return useMemo(
@@ -68,7 +68,8 @@ export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFo
       formatted: priceFormatted,
       shouldAnimate,
     }),
-    [price, priceFormatted, shouldAnimate],
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+    [],
   )
 }
 

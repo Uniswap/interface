@@ -3,23 +3,22 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { Flex, useIsDarkMode } from 'ui/src'
+import { Flex, UniversalImage, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
+import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
+import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
+import { type FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -38,11 +37,11 @@ export function ExchangeTransferConnecting({
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const { isOffRamp } = useFiatOnRampContext()
 
-  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
-    activeAccountAddress,
-    UniverseChainId.Mainnet,
-    serviceProvider.serviceProvider,
-  )
+  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator({
+    ownerAddress: activeAccountAddress,
+    chainId: UniverseChainId.Mainnet,
+    serviceProvider: serviceProvider.serviceProvider,
+  })
 
   const onError = useCallback((): void => {
     dispatch(
@@ -76,12 +75,12 @@ export function ExchangeTransferConnecting({
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       onClose()
-      sendAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
+      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransferWidgetOpened, {
         externalTransactionId,
         serviceProvider: serviceProvider.serviceProvider,
       })
 
-      await openUri(widgetUrl).catch(onError)
+      await openUri({ uri: widgetUrl }).catch(onError)
       dispatchAddTransaction({ isOffRamp: false })
     }
     if (timeoutElapsed && !widgetLoading && widgetData) {
@@ -100,7 +99,7 @@ export function ExchangeTransferConnecting({
   ])
 
   const isDarkMode = useIsDarkMode()
-  const logoUrl = getServiceProviderLogo(serviceProvider.logos, isDarkMode)
+  const logoUrl = getOptionalServiceProviderLogo(serviceProvider.logos, isDarkMode) ?? ''
 
   return (
     <Screen>
@@ -113,7 +112,14 @@ export function ExchangeTransferConnecting({
             justifyContent="center"
             width={ServiceProviderLogoStyles.icon.width}
           >
-            <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+            <UniversalImage
+              uri={logoUrl}
+              size={{
+                height: ServiceProviderLogoStyles.icon.height,
+                width: ServiceProviderLogoStyles.icon.width,
+              }}
+              style={{ image: { borderRadius: ServiceProviderLogoStyles.icon.borderRadius } }}
+            />
           </Flex>
         }
         serviceProviderName={serviceProvider.name}

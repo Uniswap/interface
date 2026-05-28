@@ -1,5 +1,5 @@
 import type { Insets } from 'react-native'
-import { GetProps, SizeTokens, View, styled } from 'tamagui'
+import { GetProps, SizeTokens, styled, View } from 'tamagui'
 import { animationsEnter, animationsEnterExit, animationsExit } from 'ui/src/animations/presets'
 
 export const flexStyles = {
@@ -69,5 +69,7 @@ export const Flex = styled(View, {
     animateEnterExit: animationsEnterExit,
   } as const,
 })
+
+Flex.displayName = 'Flex'
 
 export type FlexProps = GetProps<typeof Flex>

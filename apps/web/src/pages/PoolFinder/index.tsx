@@ -1,36 +1,41 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { V2Unsupported } from 'components/V2Unsupported'
-import { useAccount } from 'hooks/useAccount'
-import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { useTotalSupply } from 'hooks/useTotalSupply'
-import { useV2Pair } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import ms from 'ms'
-import { CurrencySelector } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { useEffect, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
-import { useTokenBalance } from 'state/connection/hooks'
-import { usePairAdder } from 'state/user/hooks'
-import { PositionField } from 'types/position'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, Text } from 'ui/src'
+import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
+import { V2Unsupported } from '~/components/V2Unsupported'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
+import { CurrencySelector } from '~/features/Liquidity/Create/SelectTokenStep'
+import { useAccount } from '~/hooks/useAccount'
+import { useNetworkSupportsV2 } from '~/hooks/useNetworkSupportsV2'
+import { useTotalSupply } from '~/hooks/useTotalSupply'
+import { useV2Pair } from '~/hooks/useV2Pairs'
+import { useTokenBalance } from '~/state/connection/hooks'
+import { SwitchNetworkAction } from '~/state/popups/types'
+import { usePairAdder } from '~/state/user/hooks'
+import { PositionField } from '~/types/position'
 
-export default function PoolFinder() {
+export function PoolFinder() {
   const account = useAccount()
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
-  const { formatCurrencyAmount } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const breadcrumb = useEntryPointBreadcrumb()
   const [success, setSuccess] = useState(false)
 
   const [currency0, setCurrency0] = useState<Currency | undefined>(() =>
@@ -51,7 +56,7 @@ export default function PoolFinder() {
   const hasPosition = Boolean(position && JSBI.greaterThan(position.quotient, JSBI.BigInt(0)))
 
   const userPoolBalance = useTokenBalance(account.address, pair?.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
+  const { totalSupply: totalPoolTokens } = useTotalSupply(pair?.liquidityToken)
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
@@ -68,8 +73,8 @@ export default function PoolFinder() {
   const token0UsdValue = useUSDCValue(token0Deposited)
   const token1UsdValue = useUSDCValue(token1Deposited)
 
-  const currency0CurrencyInfo = useCurrencyInfo(currency0 ? currencyId(currency0) : undefined)
-  const currency1CurrencyInfo = useCurrencyInfo(currency1 ? currencyId(currency1) : undefined)
+  const currency0CurrencyInfo = useCurrencyInfo(currencyId(currency0))
+  const currency1CurrencyInfo = useCurrencyInfo(currencyId(currency1))
 
   const networkSupportsV2 = useNetworkSupportsV2()
   if (!networkSupportsV2) {
@@ -77,11 +82,11 @@ export default function PoolFinder() {
   }
 
   return (
-    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
+    <Trace logImpression page={InterfacePageName.PoolPage}>
       <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-          <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-            <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
+          <BreadcrumbNavLink style={{ gap: '8px' }} to={breadcrumb.to}>
+            <ArrowLeft size="$icon.16" /> {breadcrumb.label}
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
 
@@ -143,10 +148,10 @@ export default function PoolFinder() {
                 }}
               >
                 <Text variant="body2" textAlign="right">
-                  {formatCurrencyAmount({
-                    amount: token0UsdValue.add(token1UsdValue),
-                    type: NumberType.FiatTokenQuantity,
-                  })}
+                  {convertFiatAmountFormatted(
+                    token0UsdValue.add(token1UsdValue).toExact(),
+                    NumberType.FiatTokenQuantity,
+                  )}
                 </Text>
                 <Text variant="body3" color="$neutral2">
                   {t('position.value')}
@@ -154,33 +159,38 @@ export default function PoolFinder() {
               </Flex>
             </Flex>
           )}
-          {!account.isConnected ? (
-            <DeprecatedButton theme="secondary" mt="$gap32" onPress={accountDrawer.open}>
-              {t('common.connectWallet.button')}
-            </DeprecatedButton>
-          ) : (
-            <DeprecatedButton
-              theme="secondary"
-              mt="$gap32"
-              isDisabled={!hasPosition || success}
-              onPress={() => {
-                if (hasPosition && pair) {
-                  addPair(pair)
-                  setSuccess(true)
-                  setTimeout(() => {
-                    setSuccess(false)
-                  }, ms('3s'))
-                }
-              }}
-            >
-              {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
-            </DeprecatedButton>
-          )}
+          <Flex row>
+            {!account.isConnected ? (
+              <Button size="large" emphasis="secondary" mt="$gap32" onPress={accountDrawer.open}>
+                {t('common.connectWallet.button')}
+              </Button>
+            ) : (
+              <Button
+                size="large"
+                emphasis="secondary"
+                mt="$gap32"
+                isDisabled={!hasPosition || success}
+                onPress={() => {
+                  if (hasPosition && pair) {
+                    addPair(pair)
+                    setSuccess(true)
+                    setTimeout(() => {
+                      setSuccess(false)
+                    }, ms('3s'))
+                  }
+                }}
+              >
+                {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
+              </Button>
+            )}
+          </Flex>
         </Flex>
 
         <CurrencySearchModal
           isOpen={currencySearchInputState !== undefined}
           onDismiss={() => setCurrencySearchInputState(undefined)}
+          switchNetworkAction={SwitchNetworkAction.PoolFinder}
+          flow={TokenSelectorFlow.Liquidity}
           onCurrencySelect={(currency) => {
             if (currencySearchInputState === PositionField.TOKEN0) {
               setCurrency0(currency)
@@ -194,3 +204,5 @@ export default function PoolFinder() {
     </Trace>
   )
 }
+
+export default PoolFinder

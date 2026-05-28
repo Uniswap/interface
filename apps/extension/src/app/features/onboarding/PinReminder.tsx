@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Pin, X } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 
 const POPUP_WIDTH = 240
 const POPUP_OFFSET = 4
@@ -35,7 +35,7 @@ export function PinReminder({
       >
         <Flex shrink gap="$spacing4">
           <Flex row shrink alignItems="center" gap="$spacing4">
-            <Pin color="$accent1" size={iconSizes.icon16} />
+            <Pin color="$accent1" size="$icon.16" />
             <Text variant="body3">{t('onboarding.complete.pin.title')}</Text>
           </Flex>
           <Text color="$neutral2" variant="body4">

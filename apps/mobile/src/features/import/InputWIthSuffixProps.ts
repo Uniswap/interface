@@ -14,7 +14,7 @@ export interface InputWithSuffixProps {
   multiline?: boolean
   textAlign?: 'left' | 'right' | 'center'
   lineHeight?: number
-  textInputRef: React.RefObject<NativeTextInput>
+  textInputRef: React.RefObject<NativeTextInput | null>
   onBlur?: () => void
   onFocus?: () => void
   onChangeText?: (text: string) => void

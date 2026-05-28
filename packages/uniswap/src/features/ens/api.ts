@@ -1,12 +1,19 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* oxlint-disable typescript/explicit-function-return-type */
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers/lib/ethers'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ENS_TUNNELING_BATCH_GATEWAY } from 'uniswap/src/features/ens/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { sanitizeAvatarUrl } from 'utilities/src/format/urls'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
-const ONCHAIN_ENS_CACHE_KEY = 'OnchainENS'
+const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
 
 export enum EnsLookupType {
   Name = 'name',
@@ -31,7 +38,12 @@ async function getNameFetch(address: string, provider: providers.JsonRpcProvider
   const fwdAddr = name ? await provider.resolveName(name) : null
 
   // Normalize data as provider response is checksummed
-  return areAddressesEqual(fwdAddr, address) ? name : null
+  return areAddressesEqual({
+    addressInput1: { address: fwdAddr, platform: Platform.EVM },
+    addressInput2: { address, platform: Platform.EVM },
+  })
+    ? name
+    : null
 }
 
 async function getAddressFetch(name: string, provider: providers.JsonRpcProvider) {
@@ -41,11 +53,25 @@ async function getAddressFetch(name: string, provider: providers.JsonRpcProvider
 async function getAvatarFetch(address: string, provider: providers.JsonRpcProvider) {
   const name = await provider.lookupAddress(address)
   const fwdAddr = name ? await provider.resolveName(name) : null
-  const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
-  return checkedName ? await provider.getAvatar(checkedName) : null
+  const checkedName = areAddressesEqual({
+    addressInput1: { address, platform: Platform.EVM },
+    addressInput2: { address: fwdAddr, platform: Platform.EVM },
+  })
+    ? name
+    : null
+  const avatarUrl = checkedName ? await provider.getAvatar(checkedName) : null
+  return sanitizeAvatarUrl(avatarUrl)
 }
 
-async function getTextFetch(key: string, name: string, provider: providers.JsonRpcProvider) {
+async function getTextFetch({
+  key,
+  name,
+  provider,
+}: {
+  key: string
+  name: string
+  provider: providers.JsonRpcProvider
+}) {
   const resolver = await provider.getResolver(name)
   const text = resolver?.getText(key)
   return text ?? null
@@ -54,11 +80,17 @@ async function getTextFetch(key: string, name: string, provider: providers.JsonR
 async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | null> {
   const { type, nameOrAddress } = params
 
-  const provider = createEthersProvider(UniverseChainId.Mainnet)
+  const provider = createProvider({ chainId: UniverseChainId.Mainnet, rpcType: RPCType.Public })
 
   if (!provider) {
     return null
   }
+
+  // Set ENS V2 tunneling batch gateway for CCIP-read tunneling for universal resolver
+  const withTunnel = provider as providers.JsonRpcProvider & {
+    setTunnelingBatchGateways?: (urls: string[]) => void
+  }
+  withTunnel.setTunnelingBatchGateways?.([ENS_TUNNELING_BATCH_GATEWAY])
 
   switch (type) {
     case EnsLookupType.Name:
@@ -68,33 +100,37 @@ async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | nul
     case EnsLookupType.Avatar:
       return await getAvatarFetch(nameOrAddress, provider)
     case EnsLookupType.Description:
-      return await getTextFetch('description', nameOrAddress, provider)
+      return await getTextFetch({ key: 'description', name: nameOrAddress, provider })
     case EnsLookupType.TwitterUsername:
-      return await getTextFetch('com.twitter', nameOrAddress, provider)
+      return await getTextFetch({ key: 'com.twitter', name: nameOrAddress, provider })
     default:
       throw new Error(`Invalid ENS lookup type: ${type}`)
   }
 }
 
 function useEnsQuery(type: EnsLookupType, nameOrAddress?: string | null) {
-  return useQuery<string | null>({
-    queryKey: [ONCHAIN_ENS_CACHE_KEY, type, nameOrAddress],
-    queryFn: nameOrAddress
-      ? async (): ReturnType<typeof getOnChainEnsFetch> =>
-          await getOnChainEnsFetch({ type, nameOrAddress, chainId: UniverseChainId.Mainnet })
-      : skipToken,
-    staleTime: 5 * ONE_MINUTE_MS,
-  })
+  return useQuery(
+    persistableQueryOptions<string | null>({
+      queryKey: [ReactQueryCacheKey.OnchainENS, type, nameOrAddress],
+      queryFn: nameOrAddress
+        ? async (): ReturnType<typeof getOnChainEnsFetch> =>
+            await getOnChainEnsFetch({ type, nameOrAddress, chainId: UniverseChainId.Mainnet })
+        : skipToken,
+      staleTime: 5 * ONE_MINUTE_MS,
+    }),
+  )
 }
 
 export function useENSName(address?: Address) {
-  return useEnsQuery(EnsLookupType.Name, address)
+  const isValidEVMAddress = isEVMAddress(address)
+  return useEnsQuery(EnsLookupType.Name, isValidEVMAddress ? address : undefined)
 }
 export function useAddressFromEns(maybeName: string | null) {
   return useEnsQuery(EnsLookupType.Address, maybeName)
 }
 export function useENSAvatar(address?: string | null) {
-  return useEnsQuery(EnsLookupType.Avatar, address)
+  const isValidEVMAddress = isEVMAddress(address)
+  return useEnsQuery(EnsLookupType.Avatar, isValidEVMAddress ? address : undefined)
 }
 export function useENSDescription(name?: string | null) {
   return useEnsQuery(EnsLookupType.Description, name)

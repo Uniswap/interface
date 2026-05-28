@@ -12,7 +12,7 @@ export function useSortedAccountList(addresses: Address[]): AddressWithBalance[]
     addresses,
   })
 
-  /* 
+  /*
   Why are we using previousAccountBalanceData?
 
   This is a workaround for a data fetching inefficiency. When removing an address, we send a new query 

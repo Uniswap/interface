@@ -1,7 +1,7 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
+import { amounts, ON_PRESS_EVENT_PAYLOAD, portfolio } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -16,9 +16,25 @@ const { resolvers } = queryResolvers({
 
 const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
+const defaultProps = {
+  onPress: jest.fn(),
+  onClose: jest.fn(),
+}
+
+// Skip entering animation of AccountIcon
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock')
+
+  Reanimated.Layout = { duration: (): object => ({}) }
+
+  return Reanimated
+})
+
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(<AccountList accounts={[ACCOUNT]} onPress={jest.fn()} />, { resolvers })
+    const tree = render(<AccountList {...defaultProps} accounts={[ACCOUNT]} />, {
+      resolvers,
+    })
 
     expect(
       await screen.findByText(
@@ -34,7 +50,7 @@ describe(AccountList, () => {
 
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
-    render(<AccountList accounts={[ACCOUNT]} onPress={onPressSpy} />, {
+    render(<AccountList {...defaultProps} accounts={[ACCOUNT]} onPress={onPressSpy} />, {
       resolvers,
     })
     // go to success state
@@ -56,12 +72,12 @@ describe(AccountList, () => {
   describe('signer accounts', () => {
     it('renders signer accounts section if there are signer accounts', () => {
       const signerAccounts = createArray(3, signerMnemonicAccount)
-      render(<AccountList accounts={signerAccounts} onPress={jest.fn()} />, { resolvers })
-
-      expect(screen.queryByText('Your other wallets')).toBeTruthy()
+      render(<AccountList {...defaultProps} accounts={signerAccounts} />, {
+        resolvers,
+      })
 
       signerAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress(account.address))
+        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }
@@ -70,7 +86,9 @@ describe(AccountList, () => {
     })
 
     it('does not render signer accounts section if there are no signer accounts', () => {
-      render(<AccountList accounts={[readOnlyAccount()]} onPress={jest.fn()} />, { resolvers })
+      render(<AccountList {...defaultProps} accounts={[readOnlyAccount()]} />, {
+        resolvers,
+      })
 
       expect(screen.queryByText('Your other wallets')).toBeFalsy()
       cleanup()
@@ -80,12 +98,14 @@ describe(AccountList, () => {
   describe('view only accounts', () => {
     it('renders view only accounts section if there are view only accounts', () => {
       const viewOnlyAccounts = createArray(3, readOnlyAccount)
-      render(<AccountList accounts={viewOnlyAccounts} onPress={jest.fn()} />, { resolvers })
+      render(<AccountList {...defaultProps} accounts={viewOnlyAccounts} />, {
+        resolvers,
+      })
 
       expect(screen.queryByText('View-only wallets')).toBeTruthy()
 
       viewOnlyAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress(account.address))
+        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }
@@ -94,7 +114,7 @@ describe(AccountList, () => {
     })
 
     it('does not render view only accounts section if there are no view only accounts', () => {
-      render(<AccountList accounts={[signerMnemonicAccount()]} onPress={jest.fn()} />, {
+      render(<AccountList {...defaultProps} accounts={[signerMnemonicAccount()]} />, {
         resolvers,
       })
 

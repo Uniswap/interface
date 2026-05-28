@@ -1,30 +1,30 @@
-import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-export const MAINNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.Mainnet)
-export const BASE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Base)
-export const ARBITRUM_CURRENCY = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
-export const MONAD_TESTNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.MonadTestnet)
-export const OPTIMISM_CURRENCY = NativeCurrency.onChain(UniverseChainId.Optimism)
-export const POLYGON_CURRENCY = NativeCurrency.onChain(UniverseChainId.Polygon)
-export const CELO_CURRENCY = NativeCurrency.onChain(UniverseChainId.Celo)
-export const AVALANCHE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Avalanche)
-export const WORLD_CHAIN_CURRENCY = NativeCurrency.onChain(UniverseChainId.WorldChain)
-export const ZORA_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zora)
-export const ZKSYNC_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zksync)
+export const MAINNET_CURRENCY = nativeOnChain(UniverseChainId.Mainnet)
+export const BASE_CURRENCY = nativeOnChain(UniverseChainId.Base)
+export const ARBITRUM_CURRENCY = nativeOnChain(UniverseChainId.ArbitrumOne)
+export const OPTIMISM_CURRENCY = nativeOnChain(UniverseChainId.Optimism)
+export const POLYGON_CURRENCY = nativeOnChain(UniverseChainId.Polygon)
+export const CELO_CURRENCY = nativeOnChain(UniverseChainId.Celo)
+export const AVALANCHE_CURRENCY = nativeOnChain(UniverseChainId.Avalanche)
+export const WORLD_CHAIN_CURRENCY = nativeOnChain(UniverseChainId.WorldChain)
+export const ZORA_CURRENCY = nativeOnChain(UniverseChainId.Zora)
+export const ZKSYNC_CURRENCY = nativeOnChain(UniverseChainId.Zksync)
 
 type CurrencyInfoOptions = {
-  nativeCurrency: NativeCurrency
+  nativeCurrency: Currency
 }
 
 export const benignSafetyInfo: SafetyInfo = {
   tokenList: TokenList.Default,
-  protectionResult: ProtectionResult.Benign,
+  protectionResult: GraphQLApi.ProtectionResult.Benign,
   blockaidFees: {
     buyFeePercent: 0,
     sellFeePercent: 0,
@@ -37,7 +37,6 @@ export const currencyInfo = createFixture<CurrencyInfo, CurrencyInfoOptions>({
   currencyId: currencyId(nativeCurrency),
   currency: nativeCurrency,
   logoUrl: faker.image.imageUrl(),
-  safetyLevel: SafetyLevel.Verified,
   safetyInfo: benignSafetyInfo,
 }))
 
@@ -89,7 +88,6 @@ export const removeSafetyInfo = (item: Maybe<CurrencyInfo>): Maybe<CurrencyInfo>
   if (!item) {
     return item
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { safetyInfo: _, ...rest } = item
   return rest
 }

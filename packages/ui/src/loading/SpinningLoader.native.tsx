@@ -33,7 +33,8 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
       -1,
     )
     return () => cancelAnimation(rotation)
-  }, [rotation])
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+  }, [])
 
   if (disabled) {
     return <EmptySpinner color="$neutral3" size={size} />

@@ -1,1 +1,36 @@
-{}
+{
+  "ignore_dirs": [
+    "node_modules",
+    "build",
+    "dist",
+    ".next",
+    "out",
+    ".nx",
+    ".turbo",
+    ".expo",
+    "coverage",
+    ".yarn",
+    "Pods",
+    ".gradle",
+    ".idea",
+    ".DS_Store",
+    ".tamagui",
+    "DerivedData",
+    "xcuserdata",
+    "buck-out",
+    ".buckd",
+    "fastlane",
+    "artifacts",
+    ".ccache",
+    "cache",
+    "storybook-static",
+    ".maestro",
+    ".rnef",
+    ".swc",
+    "test-results",
+    ".vercel",
+    ".wrangler",
+    "types",
+    "dts"
+  ]
+}

@@ -1,6 +1,6 @@
-import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 import {
   getFiatCurrencyName,
   useAppFiatCurrency,
@@ -9,10 +9,17 @@ import {
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
-import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-// eslint-disable-next-line no-restricted-imports
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
+import {
+  FiatCurrencyInfo,
+  FiatOnRampCurrency,
+  FORCountry,
+  OffRampTransferDetailsRequest,
+  RampDirection,
+} from 'uniswap/src/features/fiatOnRamp/types'
+// oxlint-disable-next-line no-restricted-imports -- Buy hooks need direct SDK imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
+import { useMeldSupportedCurrencyToCurrencyInfo } from '~/appGraphql/data/types'
 
 type FiatOnRampCurrencyInfo = {
   meldSupportedFiatCurrency: FiatCurrencyInfo
@@ -58,7 +65,7 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
 
   return {
     meldSupportedFiatCurrency,
-    notAvailableInThisRegion: supportedFiatCurrencies?.fiatCurrencies?.length === 0,
+    notAvailableInThisRegion: supportedFiatCurrencies?.fiatCurrencies.length === 0,
   }
 }
 
@@ -69,15 +76,44 @@ export function useFiatOnRampSupportedTokens(
   const { data: quoteCurrencyOptions } = useFiatOnRampAggregatorSupportedTokensQuery({
     fiatCurrency: fiatCurrency.code,
     countryCode: countryCode ?? 'US',
+    rampDirection: RampDirection.ON_RAMP,
   })
+  const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()
 
   return useMemo(() => {
     return (
-      quoteCurrencyOptions?.supportedTokens?.map((currency) => {
+      quoteCurrencyOptions?.supportedTokens.map((currency) => {
         const meldCurrencyCode = currency.cryptoCurrencyCode
-        const currencyInfo = meldSupportedCurrencyToCurrencyInfo(currency)
+        const currencyInfo = meldSupportedCurrencyToCurrencyInfo?.(currency)
         return { currencyInfo, meldCurrencyCode }
       }) ?? []
     )
-  }, [quoteCurrencyOptions?.supportedTokens])
+  }, [quoteCurrencyOptions?.supportedTokens, meldSupportedCurrencyToCurrencyInfo])
+}
+
+export function useOffRampTransferDetailsRequest(): OffRampTransferDetailsRequest | null {
+  const [searchParams] = useSearchParams()
+
+  const externalTransactionId = searchParams.get('externalTransactionId')
+  const baseCurrencyCode = searchParams.get('baseCurrencyCode')
+  const baseCurrencyAmount = searchParams.get('baseCurrencyAmount')
+  const depositWalletAddress = searchParams.get('depositWalletAddress')
+
+  return useMemo(() => {
+    if (baseCurrencyCode && baseCurrencyAmount && depositWalletAddress) {
+      return {
+        moonpayDetails: {
+          baseCurrencyCode,
+          baseCurrencyAmount: Number(baseCurrencyAmount),
+          depositWalletAddress,
+        },
+      } as unknown as OffRampTransferDetailsRequest
+    } else if (externalTransactionId) {
+      return {
+        meldDetails: { sessionId: externalTransactionId },
+      } as unknown as OffRampTransferDetailsRequest
+    }
+
+    return null
+  }, [baseCurrencyCode, baseCurrencyAmount, depositWalletAddress, externalTransactionId])
 }

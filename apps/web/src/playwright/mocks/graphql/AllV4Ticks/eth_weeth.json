@@ -1,0 +1,24 @@
+{
+  "data": {
+    "v4Pool": {
+      "id": "VjRQb29sOkVUSEVSRVVNXzB4YTJhYTE2YjQ1ODcxYTcxNzJhZmY4Zjc2NWExN2ZlZGRkNzVhOTc3OGRlYWE0Mzk1NWJhODgwM2NkOTFiMTVlZA==",
+      "ticks": [
+        {
+          "tick": -887272,
+          "liquidityNet": "1938870572656072759",
+          "price0": "0.000000000000000000000000000000000000002938956807585584838874754865031438",
+          "price1": "340256786836388094050805785045698600000",
+          "__typename": "V4PoolTick"
+        },
+        {
+          "tick": 887272,
+          "liquidityNet": "-1938870572656072759",
+          "price0": "340256786836388094050805785045698600000",
+          "price1": "0.000000000000000000000000000000000000002938956807585584838874754865031438",
+          "__typename": "V4PoolTick"
+        }
+      ],
+      "__typename": "V4Pool"
+    }
+  }
+}

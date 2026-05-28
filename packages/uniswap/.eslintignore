@@ -1,7 +1,0 @@
-**/__generated__/**
-
-# Generated contract types
-src/abis/types
-
-# Generated connectquery rest apis
-src/data/rest/conversionTracking/api

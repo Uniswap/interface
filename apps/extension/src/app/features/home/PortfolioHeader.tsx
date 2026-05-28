@@ -3,35 +3,33 @@ import { memo, useEffect, useState } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
-import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
-import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
 import { selectPopupState } from 'src/app/features/popups/selectors'
-import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
+import { closePopup, openPopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
+import { Circle, Flex, Popover, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
+import { DynamicSizeText } from 'ui/src/components/text/DynamicSizeText/DynamicSizeText'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
-import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const POPUP_SHADOW_RADIUS = 4
 
@@ -58,7 +56,8 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
         }),
       )
     }
-  }, [isScreenFocused, pressProgress])
+    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
+  }, [isScreenFocused])
 
   const onBegin = (): void => {
     pressProgress.value = withTiming(1)
@@ -85,7 +84,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
     <TouchableArea
       hoverable
       borderRadius="$roundedFull"
-      p="$spacing8"
+      p="$spacing6"
       onHoverIn={onBegin}
       onHoverOut={onCancel}
       onPress={onPressSettingsLocal}
@@ -97,13 +96,12 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
   )
 }
 
-export const PortfolioHeader = memo(function _PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
+export const PortfolioHeader = memo(function PortfolioHeaderInner({ address }: PortfolioHeaderProps): JSX.Element {
   const dispatch = useDispatch()
 
   const displayName = useDisplayName(address)
-  const { avatar } = useAvatar(address)
-  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
-  const formattedAddress = sanitizeAddressText(shortenAddress(address))
+  const walletHasName = displayName && displayName.type !== DisplayNameType.Address
+  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 
   // Used to delay popup showing on initial render, which leads to improper anchoring
@@ -114,11 +112,10 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const onPressAccount = async (): Promise<void> => {
     dispatch(closePopup(PopupName.Connect))
-    navigate(AppRoutes.AccountSwitcher)
+    navigate(`/${AppRoutes.AccountSwitcher}`)
   }
 
   const { isConnected, lastChainId, dappUrl, dappIconUrl } = useDappContext()
-  const connectedAccounts = useDappConnectedAccounts(dappUrl)
   const showConnectionStatus = isConnected || dappUrl.startsWith('http://') || dappUrl.startsWith('https://')
 
   const toggleConnectPopup = (): void => {
@@ -155,18 +152,18 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   return (
     <Flex gap="$spacing8">
-      <Flex row justifyContent="space-between">
+      <Flex row justifyContent="space-between" alignItems="flex-start">
         <TouchableArea pressStyle={{ scale: 0.95 }} onPress={onPressAccount}>
-          <Flex group row alignItems="center" gap="$spacing4">
+          <Flex row alignItems="center" gap="$spacing4">
             <Flex $group-hover={{ opacity: 0.6 }}>
-              <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon48} />
+              <AccountIcon address={address} size={iconSizes.icon48} />
             </Flex>
             <Flex $group-hover={{ opacity: 1 }} opacity={0}>
-              <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+              <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
             </Flex>
           </Flex>
         </TouchableArea>
-        <Flex row alignItems="center" gap="$spacing4" justifyContent="space-around">
+        <Flex row alignItems="center" gap="$spacing6" justifyContent="space-around">
           {showConnectionStatus && (
             <Popover
               offset={10}
@@ -180,7 +177,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
               }}
             >
               <Popover.Trigger onPress={toggleConnectPopup}>
-                <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing8">
+                <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing6">
                   <ConnectionStatusIcon
                     dappIconUrl={dappIconUrl}
                     dappUrl={dappUrl}
@@ -194,22 +191,14 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 borderColor="$surface2"
                 borderRadius="$rounded20"
                 borderWidth="$spacing1"
-                disableRemoveScroll={false}
+                enableRemoveScroll={true}
                 zIndex="$default"
                 {...animationPresets.fadeInDownOutUp}
                 shadowColor="$shadowColor"
                 shadowRadius={POPUP_SHADOW_RADIUS}
               >
                 <Popover.Arrow backgroundColor="transparent" />
-                {isConnected ? (
-                  <SwitchNetworksModal />
-                ) : (
-                  <ConnectPopupContent
-                    asPopover
-                    showConnectButton={connectedAccounts.length > 0 && !isConnected}
-                    onClose={(): void => onClosePopup()}
-                  />
-                )}
+                <ConnectPopupContent asPopover onClose={onClosePopup} />
               </Popover.Content>
             </Popover>
           )}
@@ -220,13 +209,14 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
         {walletHasName ? (
           <AnimatedUnitagDisplayName address={address} displayName={displayName} />
         ) : (
-          <TouchableArea testID="account-header/address-only" onPress={onPressCopyAddress}>
-            <Flex centered row shrink gap="$spacing4">
-              <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading1">
-                {formattedAddress}
-              </Text>
-              <CopyAlt color="$neutral3" size="$icon.16" />
-            </Flex>
+          <TouchableArea testID="account-header/address-only" onPress={onPressCopyAddress} width="100%">
+            <DynamicSizeText
+              variant="subheading1"
+              gap="$spacing4"
+              floatingSuffix={<CopyAlt color="$neutral3" size="$icon.16" />}
+            >
+              {formattedAddress}
+            </DynamicSizeText>
           </TouchableArea>
         )}
       </Flex>

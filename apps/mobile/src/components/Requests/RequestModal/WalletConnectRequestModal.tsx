@@ -1,41 +1,54 @@
 import { useNetInfo } from '@react-native-community/netinfo'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
-import { KidSuperCheckinModal } from 'src/components/Requests/RequestModal/KidSuperCheckinModal'
+import { ActionCannotBeCompletedContent } from 'src/components/Requests/RequestModal/ActionCannotBeCompletedContent'
+import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
 import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
 import {
+  getDoesMethodCostGas,
   WalletConnectRequestModalContent,
-  methodCostsGas,
 } from 'src/components/Requests/RequestModal/WalletConnectRequestModalContent'
-import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
+import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
-  WalletConnectRequest,
+  isBatchedTransactionRequest,
   isTransactionRequest,
+  isUserOpRequest,
   setDidOpenFromDeepLink,
+  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { spacing } from 'ui/src/theme'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { isSelfCallWithData, isSignTypedDataRequest } from 'uniswap/src/features/dappRequests/utils'
+import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'
+import { useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {
   onClose: () => void
-  request: WalletConnectRequest
+  request: WalletConnectSigningRequest
 }
 
 const VALID_REQUEST_TYPES = [
@@ -45,6 +58,7 @@ const VALID_REQUEST_TYPES = [
   EthMethod.EthSign,
   EthMethod.EthSendTransaction,
   UwULinkMethod.Erc20Send,
+  EthMethod.WalletSendCalls,
 ]
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
@@ -52,34 +66,92 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
+  // Initialize with null to indicate scan hasn't completed yet
+  const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
+  const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
+  const [gasOverrides, setGasOverrides] = useState<GasFeeOverrides | undefined>(undefined)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
+  // 4337 sponsored userOps: paymaster pays. UwULinkErc20Send short-circuits to
+  // its own modal before this component renders, so we don't need to filter it
+  // here. The override row is hidden for sponsored userOps by withholding the
+  // setter from the content — matching the extension SendCalls gate.
+  const isSponsoredUserOp = isUserOpRequest(request) && request.gasSponsored
+  const isOverridesEligible = enableCustomGasFeeEntry && !isSponsoredUserOp
+  const effectiveGasOverrides = isOverridesEligible ? gasOverrides : undefined
+  // No `recommended` baseline available here — when only one of maxBaseFeeGwei /
+  // priorityFeeGwei is overridden, maxFeePerGas is omitted and the gas service
+  // falls back to its own estimate for that combined field.
+  const { urgency, gasLimitOverride } = useMemo(
+    () => buildGasServiceUrgencyOverride({ gasOverrides: effectiveGasOverrides }),
+    [effectiveGasOverrides],
+  )
+
+  const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
+  const enableEip5792Methods = useFeatureFlag(FeatureFlags.Eip5792Methods)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
 
   const tx: providers.TransactionRequest | undefined = useMemo(() => {
-    if (!isTransactionRequest(request)) {
-      return undefined
+    if (isTransactionRequest(request)) {
+      return { ...request.transaction, chainId }
     }
-
-    return { ...request.transaction, chainId }
+    if (isBatchedTransactionRequest(request)) {
+      return { ...request.encodedTransaction, chainId }
+    }
+    return undefined
   }, [chainId, request])
 
   const signerAccounts = useSignerAccounts()
-  const signerAccount = signerAccounts.find((account) => areAddressesEqual(account.address, request.account))
-  const gasFee = useTransactionGasFee(tx)
+  const signerAccount = signerAccounts.find((account) =>
+    // TODO(WALL-7065): Update to support solana
+    areAddressesEqual({
+      addressInput1: { address: account.address, platform: Platform.EVM },
+      addressInput2: { address: request.account, platform: Platform.EVM },
+    }),
+  )
+  const delegationData = useLiveAccountDelegationDetails({
+    address: request.account,
+    chainId,
+  })
+  // Check if this is a self-transaction (to === from) with data
+  // This is required for delegation to occur
+  // Note: chainId is required for correct address comparison
+  const isSelfTransaction = useMemo(
+    () =>
+      isSelfCallWithData({
+        from: request.account,
+        to: tx?.to,
+        data: tx?.data ? String(tx.data) : undefined,
+        chainId,
+      }),
+    [request.account, tx?.to, tx?.data, chainId],
+  )
+  const shouldDelegate = Boolean(
+    delegationData?.needsDelegation && enableEip5792Methods && hasSmartWalletConsent && isSelfTransaction,
+  )
+  const smartContractDelegationAddress = shouldDelegate
+    ? delegationData?.contractAddress // latest Uniswap delegation address
+    : delegationData?.currentDelegationAddress
+  const gasFee = useTransactionGasFee({
+    tx,
+    urgency,
+    gasLimitOverride,
+    ...(smartContractDelegationAddress && { smartContractDelegationAddress }),
+  })
 
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
     chainId,
     gasFee,
-    value: isTransactionRequest(request) ? request.transaction.value : undefined,
+    value: tx?.value?.toString(),
   })
 
-  const { isBlocked: isSenderBlocked, isBlockedLoading: isSenderBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(tx?.to)
-
-  const isBlocked = isSenderBlocked ?? isRecipientBlocked
-  const isBlockedLoading = isSenderBlockedLoading || isRecipientBlockedLoading
+  const getHasMismatch = useHasAccountMismatchCallback()
+  const hasMismatch = getHasMismatch(chainId)
+  // When link mode is active we can sign messages through universal links on device
+  const suppressOfflineWarning = request.isLinkModeSupported
 
   const checkConfirmEnabled = (): boolean => {
-    if (!netInfo.isInternetReachable) {
+    if (!netInfo.isInternetReachable && !suppressOfflineWarning) {
       return false
     }
 
@@ -87,11 +159,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return false
     }
 
-    if (isBlocked || isBlockedLoading) {
+    if (shouldDisableConfirm({ riskLevel, confirmedRisk })) {
       return false
     }
 
-    if (methodCostsGas(request)) {
+    if (isUserOpRequest(request) && request.gasSponsored) {
+      // TODO(SWAP-2508): Need to handle case where userOp not sponsored: confirm should be disabled if !gasFee
+      return true
+    }
+
+    if (getDoesMethodCostGas(request)) {
       return !!(tx && hasSufficientFunds && gasFee.value && !gasFee.error && !gasFee.isLoading)
     }
 
@@ -111,7 +188,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const rejectOnCloseRef = useRef(true)
 
   const onReject = async (): Promise<void> => {
-    if (request.dapp.source === 'walletconnect') {
+    if (request.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
       await wcWeb3Wallet.respondSessionRequest({
         topic: request.sessionId,
         response: {
@@ -127,8 +204,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
       eth_method: request.type,
-      dapp_url: request.dapp.url,
-      dapp_name: request.dapp.name,
+      dapp_url: request.dappRequestInfo.url,
+      dapp_name: request.dappRequestInfo.name,
       wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Reject,
@@ -146,27 +223,47 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return
     }
 
-    if (request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send) {
-      if (!tx) {
-        return
-      }
-      const txnWithFormattedGasEstimates = formatExternalTxnWithGasEstimates({
-        transaction: tx,
-        gasFeeResult: gasFee,
-      })
+    if (
+      request.type === EthMethod.EthSendTransaction ||
+      request.type === UwULinkMethod.Erc20Send ||
+      request.type === EthMethod.WalletSendCalls
+    ) {
+      if (isUserOpRequest(request)) {
+        dispatch(
+          signWcRequestActions.trigger({
+            sessionId: request.sessionId,
+            requestInternalId: request.internalId,
+            method: EthMethod.WalletSendCalls,
+            transaction: { chainId },
+            account: signerAccount,
+            dappRequestInfo: request.dappRequestInfo,
+            chainId,
+            request,
+          }),
+        )
+      } else {
+        if (!tx) {
+          return
+        }
+        const txnWithFormattedGasEstimates = formatExternalTxnWithGasEstimates({
+          transaction: tx,
+          gasFeeResult: gasFee,
+        })
 
-      dispatch(
-        signWcRequestActions.trigger({
-          sessionId: request.sessionId,
-          requestInternalId: request.internalId,
-          method: EthMethod.EthSendTransaction,
-          transaction: txnWithFormattedGasEstimates,
-          account: signerAccount,
-          dapp: request.dapp,
-          chainId,
-          request,
-        }),
-      )
+        dispatch(
+          signWcRequestActions.trigger({
+            sessionId: request.sessionId,
+            requestInternalId: request.internalId,
+            method:
+              request.type === EthMethod.WalletSendCalls ? EthMethod.WalletSendCalls : EthMethod.EthSendTransaction,
+            transaction: txnWithFormattedGasEstimates,
+            account: signerAccount,
+            dappRequestInfo: request.dappRequestInfo,
+            chainId,
+            request,
+          }),
+        )
+      }
     } else {
       dispatch(
         signWcRequestActions.trigger({
@@ -176,7 +273,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           method: request.type,
           message: request.message || request.rawMessage,
           account: signerAccount,
-          dapp: request.dapp,
+          dappRequestInfo: request.dappRequestInfo,
           chainId,
         }),
       )
@@ -187,8 +284,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
       eth_method: request.type,
-      dapp_url: request.dapp.url,
-      dapp_name: request.dapp.name,
+      dapp_url: request.dappRequestInfo.url,
+      dapp_name: request.dappRequestInfo.name,
       wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Confirm,
@@ -238,21 +335,23 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     )
   }
 
-  // KidSuper Uniswap Cafe check-in screen
-  if (request.type === EthMethod.PersonalSign && request.dapp.name === 'Uniswap Cafe') {
-    return (
-      <KidSuperCheckinModal request={request} onClose={handleClose} onConfirm={onConfirmPress} onReject={onReject} />
-    )
+  if (enablePermitMismatchUx && hasMismatch && isSignTypedDataRequest(request)) {
+    return <ActionCannotBeCompletedContent request={request} onReject={onReject} />
   }
 
   return (
     <ModalWithOverlay
       confirmationButtonText={
-        isTransactionRequest(request) ? t('common.button.accept') : t('walletConnect.request.button.sign')
+        isTransactionRequest(request) || isBatchedTransactionRequest(request) || isUserOpRequest(request)
+          ? t('common.button.confirm')
+          : t('walletConnect.request.button.sign')
       }
       disableConfirm={!confirmEnabled}
       name={ModalName.WCSignRequest}
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
+      contentContainerStyle={{
+        paddingHorizontal: spacing.none,
+      }}
       onClose={handleClose}
       onConfirm={onConfirmPress}
       onReject={onReject}
@@ -260,8 +359,13 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       <WalletConnectRequestModalContent
         gasFee={gasFee}
         hasSufficientFunds={hasSufficientFunds}
-        isBlocked={isBlocked}
         request={request}
+        showSmartWalletActivation={shouldDelegate}
+        confirmedRisk={confirmedRisk}
+        gasOverrides={isOverridesEligible ? effectiveGasOverrides : undefined}
+        onConfirmRisk={setConfirmedRisk}
+        onChangeGasOverrides={isOverridesEligible ? setGasOverrides : undefined}
+        onRiskLevelChange={setRiskLevel}
       />
     </ModalWithOverlay>
   )

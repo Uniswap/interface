@@ -1,6 +1,12 @@
 import fs from 'fs'
-import { findRouteByPath, routes } from 'pages/RouteDefinitions'
+import React from 'react'
 import { parseStringPromise } from 'xml2js'
+import { findRouteByPath, routes } from '~/pages/RouteDefinitions'
+
+vi.mock('~/pages/Swap', () => ({
+  SwapPage: () => React.createElement(React.Fragment),
+  Swap: () => React.createElement(React.Fragment),
+}))
 
 describe('Routes', () => {
   it('sitemap URLs should exist as Router paths', async () => {

@@ -1,523 +1,355 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
-.c21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c18 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
-}
-
-.c14 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c22 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c8 {
-  color: #222222;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c8::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c8 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c8::-webkit-outer-spin-button,
-.c8::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c8::-webkit-input-placeholder {
-  color: #CECECE;
-}
-
-.c8::-moz-placeholder {
-  color: #CECECE;
-}
-
-.c8:-ms-input-placeholder {
-  color: #CECECE;
-}
-
-.c8::placeholder {
-  color: #CECECE;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c23 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c16 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c9 {
-  max-height: 84px;
-  max-width: calc(100% - 43px);
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c9::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c9::-moz-placeholder {
-  opacity: 1;
-}
-
-.c9:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c9::placeholder {
-  opacity: 1;
-}
-
-.c10 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c7 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c1 {
-  opacity: 1;
-  pointer-events: initial;
-  gap: 1px;
-}
-
-.c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #F9F9F9;
-  padding: 16px 16px;
-  border-radius: 0px 0px 16px 16px;
-  height: 64px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-}
-
-.c17 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c17:hover {
-  opacity: 0.6;
-}
-
-.c17:active {
-  opacity: 0.4;
-}
-
-.c2 {
-  position: relative;
-  background-color: #F9F9F9;
-  padding: 0px 12px 60px 12px;
-  height: 256px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  gap: 4px;
-  border-radius: 16px 16px 0px 0px;
-}
-
-.c3 {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-}
-
-.c24 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  width: 20px;
-  height: 8px;
-}
-
-.c24:hover {
-  opacity: 0.6;
-}
-
-.c24:active {
-  opacity: 0.4;
-}
-
-.c24 path {
-  stroke: #CECECE;
-  stroke-width: 2px;
-}
-
-.c20 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c20:hover {
-  opacity: 0.6;
-}
-
-.c20:active {
-  opacity: 0.4;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
+exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="c0 c2"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
           <div
-            class="c3"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
           >
             <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
               data-disable-theme="true"
             >
               You’re sending
             </span>
           </div>
           <div
-            class="c4 c5 c6"
-          >
-            <span
-              class="c7"
-            >
-              $
-            </span>
-            <input
-              autocomplete="off"
-              autocorrect="off"
-              class="c8 c9"
-              inputmode="decimal"
-              maxlength="79"
-              minlength="1"
-              pattern="^[0-9]*[.,]?[0-9]*$"
-              placeholder="0"
-              spellcheck="false"
-              type="text"
-              value="1000"
-            />
-            <span
-              class="c10"
-            >
-              1000
-            </span>
-          </div>
-          <div
-            class="c11"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
           >
             <div
-              class="c4 c12 c13"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
             >
               <div
-                class="c14 css-n8z49y"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
               >
-                100.00 DAI
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _userSelect-none _textAlign-left"
+                  data-disable-theme="true"
+                  style="line-height: 84px; font-size: 70px;"
+                >
+                  $
+                </span>
               </div>
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-calc100-43p1180324142 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value="1000"
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              >
+                1000
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        >
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              100.00 DAI
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      >
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                        style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                        width="36"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                    data-disable-theme="true"
+                  >
+                    DAI
+                  </span>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _width-10037"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+          >
+            <div
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
               <svg
                 fill="none"
-                height="100%"
                 stroke-width="8"
-                style="width: 16px; height: 16px; color: rgb(191, 191, 191);"
-                viewBox="0 0 16 16"
-                width="100%"
+                style="width: 24px; height: 24px; color: rgb(155, 155, 155);"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
                   fill="currentColor"
+                  fill-rule="evenodd"
                 />
               </svg>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
         <div
-          class="c15"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
         >
-          <div
-            class="c4 c5 c16 c17"
-          >
+          <div>
             <div
-              class="c18 c19"
-              width="100%"
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
             >
               <div
-                class="c18 c19 c20"
-                width="100%"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
               >
                 <div
-                  class="c21"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
                 >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                    tabindex="0"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); min-height: 48px; margin-left: 0px; margin-right: 0px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transition: marginRight 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
                     >
                       <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
-                        data-testid="input-currency-logo-container"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
                       >
                         <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                          tabindex="0"
                         >
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
                           >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
-                        data-testid="output-currency-logo-container"
-                      >
-                        <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
-                        >
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
-                          >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="object-fit: contain; width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms ease-in-out;"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -525,553 +357,451 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c18 c5"
-                  width="100%"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="c0"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                   >
                     <div
-                      class="c22 css-n8z49y"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
                     >
-                      DAI
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
                     </div>
-                    <div
-                      class="c18 c23"
-                      width="100%"
-                    />
                   </div>
                 </div>
               </div>
             </div>
-            <svg
-              class="c24"
-            >
-              dropdown.svg
-            </svg>
           </div>
         </div>
-        <span
-          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-        >
-          <h2
-            class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-            data-disable-theme="true"
-            id="title-:r6:"
-            role="heading"
-          />
-        </span>
       </div>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
-.c20 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c17 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
-}
-
-.c13 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c21 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c7 {
-  color: #222222;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c7::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c7 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c7::-webkit-outer-spin-button,
-.c7::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c7::-webkit-input-placeholder {
-  color: #CECECE;
-}
-
-.c7::-moz-placeholder {
-  color: #CECECE;
-}
-
-.c7:-ms-input-placeholder {
-  color: #CECECE;
-}
-
-.c7::placeholder {
-  color: #CECECE;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c11 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c22 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c15 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c8 {
-  max-height: 84px;
-  max-width: 100%;
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c8::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c8::-moz-placeholder {
-  opacity: 1;
-}
-
-.c8:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c8::placeholder {
-  opacity: 1;
-}
-
-.c9 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c1 {
-  opacity: 1;
-  pointer-events: initial;
-  gap: 1px;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #F9F9F9;
-  padding: 16px 16px;
-  border-radius: 0px 0px 16px 16px;
-  height: 64px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-}
-
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
-.c2 {
-  position: relative;
-  background-color: #F9F9F9;
-  padding: 0px 12px 60px 12px;
-  height: 256px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  gap: 4px;
-  border-radius: 16px 16px 0px 0px;
-}
-
-.c3 {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-}
-
-.c23 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  width: 20px;
-  height: 8px;
-}
-
-.c23:hover {
-  opacity: 0.6;
-}
-
-.c23:active {
-  opacity: 0.4;
-}
-
-.c23 path {
-  stroke: #CECECE;
-  stroke-width: 2px;
-}
-
-.c19 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c19:hover {
-  opacity: 0.6;
-}
-
-.c19:active {
-  opacity: 0.4;
-}
-
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
-}
-
+exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="c0 c2"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
           <div
-            class="c3"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
           >
             <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
               data-disable-theme="true"
             >
               You’re sending
             </span>
           </div>
           <div
-            class="c4 c5 c6"
-          >
-            <input
-              autocomplete="off"
-              autocorrect="off"
-              class="c7 c8"
-              inputmode="decimal"
-              maxlength="79"
-              minlength="1"
-              pattern="^[0-9]*[.,]?[0-9]*$"
-              placeholder="0"
-              spellcheck="false"
-              type="text"
-              value="1"
-            />
-            <span
-              class="c9"
-            >
-              1
-            </span>
-          </div>
-          <div
-            class="c10"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
           >
             <div
-              class="c4 c11 c12"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+            >
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-10037 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value="1"
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              >
+                1
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        >
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              $100.00
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      >
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
             >
               <div
-                class="c13 css-n8z49y"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
               >
-                $100.00 USD
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                        style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                        width="36"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                    data-disable-theme="true"
+                  >
+                    DAI
+                  </span>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _width-10037"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+          >
+            <div
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
               <svg
                 fill="none"
-                height="100%"
                 stroke-width="8"
-                style="width: 16px; height: 16px; color: rgb(191, 191, 191);"
-                viewBox="0 0 16 16"
-                width="100%"
+                style="width: 24px; height: 24px; color: rgb(155, 155, 155);"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
                   fill="currentColor"
+                  fill-rule="evenodd"
                 />
               </svg>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
         <div
-          class="c14"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
         >
-          <div
-            class="c4 c5 c15 c16"
-          >
+          <div>
             <div
-              class="c17 c18"
-              width="100%"
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
             >
               <div
-                class="c17 c18 c19"
-                width="100%"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
               >
                 <div
-                  class="c20"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
                 >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                    tabindex="0"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); min-height: 48px; margin-left: 0px; margin-right: 0px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transition: marginRight 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
                     >
                       <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
-                        data-testid="input-currency-logo-container"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
                       >
                         <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                          tabindex="0"
                         >
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
                           >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
-                        data-testid="output-currency-logo-container"
-                      >
-                        <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
-                        >
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
-                          >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="object-fit: contain; width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms ease-in-out;"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1079,568 +809,461 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c17 c5"
-                  width="100%"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="c0"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                   >
                     <div
-                      class="c21 css-n8z49y"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
                     >
-                      DAI
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
                     </div>
-                    <div
-                      class="c17 c22"
-                      width="100%"
-                    />
                   </div>
                 </div>
               </div>
             </div>
-            <svg
-              class="c23"
-            >
-              dropdown.svg
-            </svg>
           </div>
         </div>
-        <span
-          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-        >
-          <h2
-            class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-            data-disable-theme="true"
-            id="title-:ra:"
-            role="heading"
-          />
-        </span>
       </div>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c18 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
-}
-
-.c14 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c22 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c8 {
-  color: #222222;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c8::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c8 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c8::-webkit-outer-spin-button,
-.c8::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c8::-webkit-input-placeholder {
-  color: #CECECE;
-}
-
-.c8::-moz-placeholder {
-  color: #CECECE;
-}
-
-.c8:-ms-input-placeholder {
-  color: #CECECE;
-}
-
-.c8::placeholder {
-  color: #CECECE;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c23 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c16 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c9 {
-  max-height: 84px;
-  max-width: calc(100% - 43px);
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c9::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c9::-moz-placeholder {
-  opacity: 1;
-}
-
-.c9:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c9::placeholder {
-  opacity: 1;
-}
-
-.c10 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c7 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-  color: #CECECE;
-}
-
-.c1 {
-  opacity: 1;
-  pointer-events: initial;
-  gap: 1px;
-}
-
-.c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #F9F9F9;
-  padding: 16px 16px;
-  border-radius: 0px 0px 16px 16px;
-  height: 64px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-}
-
-.c17 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c17:hover {
-  opacity: 0.6;
-}
-
-.c17:active {
-  opacity: 0.4;
-}
-
-.c2 {
-  position: relative;
-  background-color: #F9F9F9;
-  padding: 0px 12px 60px 12px;
-  height: 256px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  gap: 4px;
-  border-radius: 16px 16px 0px 0px;
-}
-
-.c3 {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-}
-
-.c24 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  width: 20px;
-  height: 8px;
-}
-
-.c24:hover {
-  opacity: 0.6;
-}
-
-.c24:active {
-  opacity: 0.4;
-}
-
-.c24 path {
-  stroke: #CECECE;
-  stroke-width: 2px;
-}
-
-.c20 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c20:hover {
-  opacity: 0.6;
-}
-
-.c20:active {
-  opacity: 0.4;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
+exports[`SendCurrencyInputform > should render placeholder values 1`] = `
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="c0 c2"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
           <div
-            class="c3"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
           >
             <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
               data-disable-theme="true"
             >
               You’re sending
             </span>
           </div>
           <div
-            class="c4 c5 c6"
-          >
-            <span
-              class="c7"
-            >
-              $
-            </span>
-            <input
-              autocomplete="off"
-              autocorrect="off"
-              class="c8 c9"
-              inputmode="decimal"
-              maxlength="79"
-              minlength="1"
-              pattern="^[0-9]*[.,]?[0-9]*$"
-              placeholder="0"
-              spellcheck="false"
-              type="text"
-              value=""
-            />
-            <span
-              class="c10"
-            />
-          </div>
-          <div
-            class="c11"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
           >
             <div
-              class="c4 c12 c13"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
             >
               <div
-                class="c14 css-n8z49y"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
               >
-                0 DAI
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _userSelect-none _textAlign-left"
+                  data-disable-theme="true"
+                  style="line-height: 84px; font-size: 70px;"
+                >
+                  $
+                </span>
               </div>
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-calc100-43p1180324142 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value=""
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        >
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              0 DAI
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      >
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                        style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                        width="36"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                    data-disable-theme="true"
+                  >
+                    DAI
+                  </span>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _width-10037"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+          >
+            <div
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
               <svg
                 fill="none"
-                height="100%"
                 stroke-width="8"
-                style="width: 16px; height: 16px; color: rgb(191, 191, 191);"
-                viewBox="0 0 16 16"
-                width="100%"
+                style="width: 24px; height: 24px; color: rgb(155, 155, 155);"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
                   fill="currentColor"
+                  fill-rule="evenodd"
                 />
               </svg>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
         <div
-          class="c15"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
         >
-          <div
-            class="c4 c5 c16 c17"
-          >
+          <div>
             <div
-              class="c18 c19"
-              width="100%"
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
             >
               <div
-                class="c18 c19 c20"
-                width="100%"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
               >
                 <div
-                  class="c21"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
                 >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                    tabindex="0"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); min-height: 48px; margin-left: 0px; margin-right: 0px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transition: marginRight 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      class="t_unmounted  t_unmounted"
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
                     >
                       <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
-                        data-testid="input-currency-logo-container"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
                       >
                         <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                          tabindex="0"
                         >
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
                           >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
-                        data-testid="output-currency-logo-container"
-                      >
-                        <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                          data-testid="token-logo"
-                        >
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                          />
-                          <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            data-testid="img-token-image"
-                          >
-                            <img
-                              height="36"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                              width="36"
-                            />
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="object-fit: contain; width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(270deg); transition: all 100ms ease-in-out;"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1648,47 +1271,108 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c18 c5"
-                  width="100%"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="c0"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                   >
                     <div
-                      class="c22 css-n8z49y"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
                     >
-                      DAI
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
                     </div>
-                    <div
-                      class="c18 c23"
-                      width="100%"
-                    />
                   </div>
                 </div>
               </div>
             </div>
-            <svg
-              class="c24"
-            >
-              dropdown.svg
-            </svg>
           </div>
         </div>
-        <span
-          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-        >
-          <h2
-            class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-            data-disable-theme="true"
-            id="title-:r2:"
-            role="heading"
-          />
-        </span>
       </div>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+    </div>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;

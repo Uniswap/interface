@@ -1,9 +1,5 @@
 import { QueryResult } from '@apollo/client'
-import {
-  Chain,
-  Exact,
-  TokenProjectWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 export const validTokenProjectResponse = {
   data: {
@@ -28,4 +24,7 @@ export const validTokenProjectResponse = {
       __typename: 'Token',
     },
   },
-} as unknown as QueryResult<TokenProjectWebQuery, Exact<{ chain: Chain; address?: string }>>
+} as unknown as QueryResult<
+  GraphQLApi.TokenProjectWebQuery,
+  GraphQLApi.Exact<{ chain: GraphQLApi.Chain; address?: string }>
+>

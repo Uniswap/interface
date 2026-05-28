@@ -1,0 +1,55 @@
+# Lefthook configuration optimized for performance
+# https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+
+# Skip hooks in CI/rebase/merge
+skip_output:
+  - meta
+  - summary
+
+pre-commit:
+  parallel: true
+  commands:
+    fast-checks:
+      env:
+        CI: "true"
+        FORCE_COLOR: "0"
+      run: TERM=dumb bun g:check:fast
+      fail_text: "If this is a fresh git worktree, run 'bun install' first — fast-checks needs node_modules/."
+      stage_fixed: true
+
+    git-secrets:
+      run: |
+        export TERM=dumb
+        if command -v git-secrets &> /dev/null; then
+          git-secrets --register-aws > /dev/null
+          echo "Running git-secrets..."
+          git-secrets --pre_commit_hook -- "$@"
+        else
+          echo "git-secrets not installed, skipping..."
+        fi
+
+    trufflehog:
+      run: |
+        export TERM=dumb
+        if command -v trufflehog &> /dev/null; then
+          # Scan staged diff via stdin so the hook works in git worktrees (where .git is
+          # a file, not a directory) and actually scans the pending commit's content.
+          git diff --cached --no-color | trufflehog stdin --only-verified --fail
+        else
+          echo "trufflehog not installed, skipping..."
+        fi
+
+post-checkout:
+  commands:
+    check-deps-sync:
+      run: ./scripts/check-deps-sync.sh
+
+post-merge:
+  commands:
+    check-deps-sync:
+      run: ./scripts/check-deps-sync.sh
+
+post-rewrite:
+  commands:
+    check-deps-sync:
+      run: ./scripts/check-deps-sync.sh

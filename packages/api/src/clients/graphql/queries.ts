@@ -1,0 +1,17 @@
+export enum GQLQueries {
+  Nfts = 'Nfts',
+  NftsTab = 'NftsTab',
+  PortfolioBalances = 'PortfolioBalances',
+  SelectWalletScreen = 'SelectWalletScreen',
+  TransactionHistoryUpdater = 'TransactionHistoryUpdater',
+  Token = 'Token',
+  TokenDetailsScreen = 'TokenDetailsScreen',
+  TokenPriceHistory = 'TokenPriceHistory',
+  TokenProjects = 'TokenProjects',
+  TopTokens = 'TopTokens',
+  SearchTokens = 'SearchTokens',
+  ExploreSearch = 'ExploreSearch',
+  SpotPrices = 'SpotPrices',
+  ExploreTokensTab = 'ExploreTokensTab',
+  FavoriteTokenCard = 'FavoriteTokenCard',
+}

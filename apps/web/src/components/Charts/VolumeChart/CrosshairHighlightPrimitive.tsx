@@ -2,7 +2,7 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/highlight-bar-crosshair/highlight-bar-crosshair.ts.
  * Modifications are called out with comments.
  */
-import { roundRect } from 'components/Charts/utils'
+
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CrosshairMode,
@@ -13,6 +13,7 @@ import {
   SeriesAttachedParameter,
   Time,
 } from 'lightweight-charts'
+import { roundRect } from '~/components/Charts/utils'
 
 interface BitmapPositionLength {
   /** coordinate for use with a bitmap rendering scope */
@@ -33,12 +34,17 @@ function centreOffset(lineBitmapWidth: number): number {
  * @param desiredWidthMedia - desired width (in media coordinates)
  * @returns Position of of the start point and length dimension.
  */
-export function positionsLine(
-  positionMedia: number,
-  pixelRatio: number,
+export function positionsLine({
+  positionMedia,
+  pixelRatio,
   desiredWidthMedia = 1,
-  widthIsBitmap?: boolean,
-): BitmapPositionLength {
+  widthIsBitmap = false,
+}: {
+  positionMedia: number
+  pixelRatio: number
+  desiredWidthMedia?: number
+  widthIsBitmap?: boolean
+}): BitmapPositionLength {
   const scaledPosition = Math.round(pixelRatio * positionMedia)
   const lineBitmapWidth = widthIsBitmap ? desiredWidthMedia : Math.round(desiredWidthMedia * pixelRatio)
   const offset = centreOffset(lineBitmapWidth)
@@ -71,7 +77,11 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
     }
     target.useBitmapCoordinateSpace((scope) => {
       const ctx = scope.context
-      const crosshairPos = positionsLine(this._data.x, scope.horizontalPixelRatio, Math.max(1, this._data.barSpacing))
+      const crosshairPos = positionsLine({
+        positionMedia: this._data.x,
+        pixelRatio: scope.horizontalPixelRatio,
+        desiredWidthMedia: Math.max(1, this._data.barSpacing),
+      })
       ctx.fillStyle = this._data.color
       const crosshairYPosition = this._data.crosshairYPosition * scope.verticalPixelRatio
 
@@ -92,14 +102,14 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
           scope.bitmapSize.height - crosshairYPosition,
         )
       } else {
-        roundRect(
+        roundRect({
           ctx,
-          crosshairXPosition,
-          crosshairYPosition,
-          crosshairPos.length,
-          scope.bitmapSize.height - crosshairYPosition,
-          9,
-        )
+          x: crosshairXPosition,
+          y: crosshairYPosition,
+          w: crosshairPos.length,
+          h: scope.bitmapSize.height - crosshairYPosition,
+          radii: 9,
+        })
       }
 
       // Modification: lower opacity of all content outside the highlight bar
@@ -233,7 +243,7 @@ export class CrosshairHighlightPrimitive implements ISeriesPrimitive<Time> {
   private _onMouseMove(param: MouseEventParams) {
     const chart = this.chart()
     const logical = param.logical
-    if (logical === null || logical === undefined || !chart) {
+    if (logical === undefined || !chart) {
       this.setData({
         x: 0,
         visible: false,

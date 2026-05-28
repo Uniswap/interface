@@ -1,0 +1,26 @@
+{
+  "name": "@universe/trpc",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck trpc",
+    "lint": "nx lint trpc",
+    "lint:fix": "nx lint:fix trpc",
+    "check": "nx check trpc",
+    "check:fast": "nx check:fast trpc",
+    "check:deps:usage": "nx check:deps:usage trpc"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

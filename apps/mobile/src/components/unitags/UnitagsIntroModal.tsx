@@ -1,40 +1,34 @@
+import 'react-native-reanimated'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { DeprecatedButton, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
+import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
-import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { Lightning, Person, Ticket } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/slice'
 
-export function UnitagsIntroModal(): JSX.Element {
+export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName.UnitagsIntro>): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const appDispatch = useDispatch()
-  const modalState = useSelector(selectModalState(ModalName.UnitagsIntro)).initialState
-  const address = modalState?.address
-  const entryPoint = modalState?.entryPoint
+  const { onClose } = useReactNavigationModal()
 
-  const onClose = (): void => {
-    appDispatch(closeModal({ name: ModalName.UnitagsIntro }))
-  }
+  const params = route.params
+  const address = params.address
+  const entryPoint = params.entryPoint
 
   const onPressClaimOneNow = (): void => {
-    if (!entryPoint) {
-      throw new Error('Missing entry point in UnitagsIntroModal')
-    }
-
     appDispatch(setHasCompletedUnitagsIntroModal(true))
+    onClose()
     navigate(MobileScreens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
       params: {
@@ -45,7 +39,6 @@ export function UnitagsIntroModal(): JSX.Element {
     if (address) {
       sendAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
     }
-    onClose()
   }
 
   return (
@@ -65,14 +58,14 @@ export function UnitagsIntroModal(): JSX.Element {
           />
         </Flex>
         <Flex gap="$spacing16" px="$spacing20">
-          <BodyItem Icon={UserSquare} title={t('unitags.intro.features.profile')} />
+          <BodyItem Icon={Person} title={t('unitags.intro.features.profile')} />
           <BodyItem Icon={Ticket} title={t('unitags.intro.features.free')} />
           <BodyItem Icon={Lightning} title={t('unitags.intro.features.ens')} />
         </Flex>
-        <Flex gap="$spacing8">
-          <DeprecatedButton size="medium" theme="primary" onPress={onPressClaimOneNow}>
+        <Flex row gap="$spacing8">
+          <Button variant="branded" emphasis="primary" size="large" onPress={onPressClaimOneNow}>
             {t('common.button.continue')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
         <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24">
           <TermsOfService />
@@ -85,7 +78,7 @@ export function UnitagsIntroModal(): JSX.Element {
 function BodyItem({ Icon, title }: { Icon: GeneratedIcon; title: string }): JSX.Element {
   return (
     <Flex row alignItems="center" gap="$spacing16">
-      <Icon color="$accent1" size={iconSizes.icon20} strokeWidth={2} />
+      <Icon color="$accent1" size="$icon.20" strokeWidth={2} />
       <Text color="$neutral2" variant="body3">
         {title}
       </Text>

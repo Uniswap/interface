@@ -1,0 +1,407 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZA==",
+        "tokensTotalDenominatedValue": {
+          "value": 430.92621335099375,
+          "__typename": "Amount"
+        },
+        "tokensTotalDenominatedValueChange": {
+          "absolute": {
+            "value": -9.597723135593014,
+            "__typename": "Amount"
+          },
+          "percentage": {
+            "value": -2.178706385886763,
+            "__typename": "Amount"
+          },
+          "__typename": "AmountChange"
+        },
+        "tokenBalances": [
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlJWUklSVkpGVlUxZk1IaGtRVU14TjBZNU5UaEVNbVZsTlRJellUSXlNRFl5TURZNU9UUTFPVGRETVRORU9ETXhaV00zX1VTRA==",
+            "quantity": 245,
+            "isHidden": false,
+            "denominatedValue": {
+              "id": "QW1vdW50OjI0NS4xMDM4ODMzMzJfVVNE",
+              "currency": "USD",
+              "value": 245.103883332,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46RVRIRVJFVU1fMHhkQUMxN0Y5NThEMmVlNTIzYTIyMDYyMDY5OTQ1OTdDMTNEODMxZWM3",
+              "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+              "chain": "ETHEREUM",
+              "decimals": 6,
+              "name": "Tether USD",
+              "standard": "ERC20",
+              "symbol": "USDT",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4ZGFjMTdmOTU4ZDJlZTUyM2EyMjA2MjA2OTk0NTk3YzEzZDgzMWVjN19UZXRoZXI=",
+                "isSpam": false,
+                "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+                "name": "Tether",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -0.04401680473447023,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlFWSkNTVlJTVlUxZmJuVnNiQT09X1VTRA==",
+            "quantity": 0.0244816053717038,
+            "isHidden": false,
+            "denominatedValue": {
+              "id": "QW1vdW50OjU2LjE3OTE2MzkyNjcxNzI5X1VTRA==",
+              "currency": "USD",
+              "value": 56.17916392671729,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46QVJCSVRSVU1fbnVsbA==",
+              "address": null,
+              "chain": "ARBITRUM",
+              "decimals": 18,
+              "name": "Ethereum",
+              "standard": "NATIVE",
+              "symbol": "ETH",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGxfRXRoZXJldW0=",
+                "isSpam": false,
+                "logoUrl": "https://token-icons.s3.amazonaws.com/eth.png",
+                "name": "Ethereum",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -5.047316001373758,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlJWUklSVkpGVlUxZmJuVnNiQT09X1VTRA==",
+            "quantity": 0.0162809341458855,
+            "isHidden": false,
+            "denominatedValue": {
+              "id": "QW1vdW50OjM3LjM2MDY3MzYzMTI3MDgxNF9VU0Q=",
+              "currency": "USD",
+              "value": 37.360673631270814,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+              "address": null,
+              "chain": "ETHEREUM",
+              "decimals": 18,
+              "name": "Ethereum",
+              "standard": "NATIVE",
+              "symbol": "ETH",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGxfRXRoZXJldW0=",
+                "isSpam": false,
+                "logoUrl": "https://token-icons.s3.amazonaws.com/eth.png",
+                "name": "Ethereum",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -5.047316001373758,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlJWUklSVkpGVlUxZk1IZzNSbU0yTmpVd01HTTRORUUzTmtGa04yVTVZemt6TkRNM1lrWmpOVUZqTXpORk1rUkVZVVU1X1VTRA==",
+            "quantity": 0.205128608325686,
+            "isHidden": false,
+            "denominatedValue": {
+              "id": "QW1vdW50OjI4LjcwMTUyNTAzOTEzMTE3M19VU0Q=",
+              "currency": "USD",
+              "value": 28.701525039131173,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46RVRIRVJFVU1fMHg3RmM2NjUwMGM4NEE3NkFkN2U5YzkzNDM3YkZjNUFjMzNFMkREYUU5",
+              "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+              "chain": "ETHEREUM",
+              "decimals": 18,
+              "name": "Aave Token",
+              "standard": "ERC20",
+              "symbol": "AAVE",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4N2ZjNjY1MDBjODRhNzZhZDdlOWM5MzQzN2JmYzVhYzMzZTJkZGFlOV9BYXZl",
+                "isSpam": false,
+                "logoUrl": "https://coin-images.coingecko.com/coins/images/12645/large/aave-token-round.png?1720472354",
+                "name": "Aave",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -4.7114374975774975,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlFrRlRSVjl1ZFd4c19VU0Q=",
+            "quantity": 0.0093590045766906,
+            "isHidden": false,
+            "denominatedValue": {
+              "id": "QW1vdW50OjIxLjQ3NjU3NTc1MjM2MDg1NV9VU0Q=",
+              "currency": "USD",
+              "value": 21.476575752360855,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46QkFTRV9udWxs",
+              "address": null,
+              "chain": "BASE",
+              "decimals": 18,
+              "name": "Ethereum",
+              "standard": "NATIVE",
+              "symbol": "ETH",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGxfRXRoZXJldW0=",
+                "isSpam": false,
+                "logoUrl": "https://token-icons.s3.amazonaws.com/eth.png",
+                "name": "Ethereum",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -5.047316001373758,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlVFOU1XVWRQVGw4d2VESTNPVEZDWTJFeFpqSmtaVFEyTmpGRlJEZzRRVE13UXprNVFUZGhPVFEwT1VGaE9EUXhOelE9X1VTRA==",
+            "quantity": 1,
+            "isHidden": true,
+            "denominatedValue": {
+              "id": "QW1vdW50OjAuOTk5Mjc4MTE3Nl9VU0Q=",
+              "currency": "USD",
+              "value": 0.9992781176,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46UE9MWUdPTl8weDI3OTFCY2ExZjJkZTQ2NjFFRDg4QTMwQzk5QTdhOTQ0OUFhODQxNzQ=",
+              "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+              "chain": "POLYGON",
+              "decimals": 6,
+              "name": "Bridged USDC",
+              "standard": "ERC20",
+              "symbol": "USDC.e",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4YTBiODY5OTFjNjIxOGIzNmMxZDE5ZDRhMmU5ZWIwY2UzNjA2ZWI0OF9CcmlkZ2VkIFVTREM=",
+                "isSpam": false,
+                "logoUrl": "https://coin-images.coingecko.com/coins/images/33000/large/usdc.png?1700119918",
+                "name": "Bridged USDC",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -0.13439344777285145,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlVFOU1XVWRQVGw4d2VEQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01EQXdNREF3TURBd01ERXdNVEE9X1VTRA==",
+            "quantity": 1.1168383089447937,
+            "isHidden": true,
+            "denominatedValue": {
+              "id": "QW1vdW50OjAuNDIzNTkwMjc5MTc4MDcyMDdfVVNE",
+              "currency": "USD",
+              "value": 0.42359027917807207,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46UE9MWUdPTl8weDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDEwMTA=",
+              "address": "0x0000000000000000000000000000000000001010",
+              "chain": "POLYGON",
+              "decimals": 18,
+              "name": "POL",
+              "standard": "NATIVE",
+              "symbol": "POL",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4N2QxYWZhN2I3MThmYjg5M2RiMzBhM2FiYzBjZmM2MDhhYWNmZWJiMF9QT0wgKGV4LU1BVElDKQ==",
+                "isSpam": false,
+                "logoUrl": "https://coin-images.coingecko.com/coins/images/32440/large/polygon.png?1698233684",
+                "name": "POL (ex-MATIC)",
+                "safetyLevel": "VERIFIED",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -6.047775315535542,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NldrdFRXVTVEWHpCNE5VRTNaRFppTWtZNU1rTTNOMFpCUkRaRFEyRkNaRGRGUlRBMk1qUkZOalE1TURkRllXWXpSUT09X1VTRA==",
+            "quantity": 3,
+            "isHidden": true,
+            "denominatedValue": {
+              "id": "QW1vdW50OjAuMzI5OTkwNzU3Nl9VU0Q=",
+              "currency": "USD",
+              "value": 0.3299907576,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46WktTWU5DXzB4NUE3ZDZiMkY5MkM3N0ZBRDZDQ2FCZDdFRTA2MjRFNjQ5MDdFYWYzRQ==",
+              "address": "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E",
+              "chain": "ZKSYNC",
+              "decimals": 18,
+              "name": "ZKsync",
+              "standard": "ERC20",
+              "symbol": "ZK",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OlpLU1lOQ18weDVhN2Q2YjJmOTJjNzdmYWQ2Y2NhYmQ3ZWUwNjI0ZTY0OTA3ZWFmM2VfWktzeW5j",
+                "isSpam": false,
+                "logoUrl": "https://coin-images.coingecko.com/coins/images/38043/large/ZKTokenBlack.png?1718614502",
+                "name": "ZKsync",
+                "safetyLevel": "STRONG_WARNING",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -3.6520453756358706,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlFrRlRSVjh3ZURjME9VUTFOekF3TmtFeFJrWTBSamRtWmpoRFpEQmhNak00TlRJMVFqQTRSRGcxWlVORk16TT1fVVNE",
+            "quantity": 7.6942069,
+            "isHidden": true,
+            "denominatedValue": {
+              "id": "QW1vdW50OjAuMDAwNzIzMjE0MTM1NDcyNzI4NF9VU0Q=",
+              "currency": "USD",
+              "value": 0.0007232141354727284,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46QkFTRV8weDc0OUQ1NzAwNkExRkY0RjdmZjhDZDBhMjM4NTI1QjA4RDg1ZUNFMzM=",
+              "address": "0x749D57006A1FF4F7ff8Cd0a238525B08D85eCE33",
+              "chain": "BASE",
+              "decimals": 7,
+              "name": "BASED CLOWN",
+              "standard": "ERC20",
+              "symbol": "BLOWN",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkJBU0VfMHg3NDlkNTcwMDZhMWZmNGY3ZmY4Y2QwYTIzODUyNWIwOGQ4NWVjZTMzX0JBU0VEIENMT1dO",
+                "isSpam": true,
+                "logoUrl": null,
+                "name": "BASED CLOWN",
+                "safetyLevel": "STRONG_WARNING",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -5.157796082239052,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4MThkMDU4YTdFMDQ4NkU2MzJmN0RmQzQ3M0JDNzZENzJDRDIwMWNBZF9WRzlyWlc0NlFrRlRSVjh3ZUdJMU5tUXdPRE01T1RrNFJtUTNPVVZHUTBReE5XTXlOMk5HT1RZMk1qVXdRVUUxT0VRMlJETT1fVVNE",
+            "quantity": 0.9999570252934015,
+            "isHidden": true,
+            "denominatedValue": {
+              "id": "QW1vdW50OjAuMDAwNDcyNDExMzUzNjM4MTg0NzZfVVNE",
+              "currency": "USD",
+              "value": 0.00047241135363818476,
+              "__typename": "Amount"
+            },
+            "token": {
+              "id": "VG9rZW46QkFTRV8weGI1NmQwODM5OTk4RmQ3OUVGQ0QxNWMyN2NGOTY2MjUwQUE1OEQ2RDM=",
+              "address": "0xb56d0839998Fd79EFCD15c27cF966250AA58D6D3",
+              "chain": "BASE",
+              "decimals": 18,
+              "name": "Based USA",
+              "standard": "ERC20",
+              "symbol": "USA",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkJBU0VfMHhiNTZkMDgzOTk5OGZkNzllZmNkMTVjMjdjZjk2NjI1MGFhNThkNmQzX0Jhc2VkIFVTQQ==",
+                "isSpam": false,
+                "logoUrl": "https://coin-images.coingecko.com/coins/images/37981/large/BASE_USA_200px.png?1716203776",
+                "name": "Based USA",
+                "safetyLevel": "STRONG_WARNING",
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "__typename": "Token"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": 34.07762617176508,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "__typename": "TokenBalance"
+          }
+        ],
+        "__typename": "Portfolio"
+      }
+    ]
+  }
+}

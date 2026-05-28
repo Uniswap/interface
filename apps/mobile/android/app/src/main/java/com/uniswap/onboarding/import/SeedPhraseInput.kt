@@ -47,6 +47,7 @@ import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.Inva
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.NotEnoughWords
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.TooManyWords
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.WrongRecoveryPhrase
+import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.WordIsAddress
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.Status.Error
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.Status.Valid
 import com.uniswap.onboarding.shared.PasteButton
@@ -159,6 +160,7 @@ private fun SeedPhraseError(viewModel: SeedPhraseInputViewModel) {
       is NotEnoughWords, TooManyWords -> rnStrings.errorPhraseLength
       is WrongRecoveryPhrase -> rnStrings.errorWrongPhrase
       is InvalidPhrase -> rnStrings.errorInvalidPhrase
+      is WordIsAddress -> rnStrings.errorWordIsAddress
     }
   }
 

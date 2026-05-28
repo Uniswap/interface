@@ -3,11 +3,11 @@ import * as fs from 'fs'
 import { dirname } from 'path'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
-  var searchStrLen = searchStr.length
-  if (searchStrLen == 0) {
+  const searchStrLen = searchStr.length
+  if (searchStrLen === 0) {
     return []
   }
-  var startIndex = 0,
+  let startIndex = 0,
     index,
     indices: number[] = []
   while ((index = str.indexOf(searchStr, startIndex)) > -1) {
@@ -74,7 +74,7 @@ function checkGeneralizedHookFiles() {
 }
 
 // Put any files here that we explicitly want to ignore!
-const IGNORED_SPLIT_RULE_FILES: string[] = []
+const IGNORED_SPLIT_RULE_FILES: string[] = ['packages/gating/src/sdk/statsig.native.ts']
 
 function checkSplitFiles() {
   const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
@@ -104,6 +104,33 @@ function checkSplitFiles() {
   })
 }
 
+function checkHookFilesHaveTests() {
+  const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
+
+  touchedFiles.forEach((file) => {
+    // skip non-hook files
+    if (!file.includes('/hooks/') && !file.includes('/hooks.ts')) {
+      return
+    }
+
+    // skip test files
+    if (file.includes('.test.')) {
+      return
+    }
+
+    const baseFile = file.substring(0, file.indexOf('.ts'))
+    const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
+
+    const assumedTestFile = `${dirname(__filename)}/${baseFile}.test.${extension}`
+
+    if (!fs.existsSync(assumedTestFile)) {
+      warn(
+        `\`${file}\` doesn't appear to have an accompanying test file (assumed \`${assumedTestFile}\`). Consider adding tests for this hook!`,
+      )
+    }
+  })
+}
+
 async function processAddChanges() {
   const updatedTsFiles = danger.git.modified_files
     .concat(danger.git.created_files)
@@ -116,7 +143,7 @@ async function processAddChanges() {
 
   // Check for non-UI package lines for tamagui imports
   const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles, {
-    exclude: ['env.d.ts', 'tamaguiProvider.tsx'],
+    exclude: ['env.d.ts', 'tamaguiProvider.tsx', 'setupTests.ts', 'oxlint.config.ts'],
   })
   const allNonUILinesAdded = allNonUILinesAddedByFile.flatMap((x) => x)
   allNonUILinesAdded.forEach((change) => {
@@ -153,7 +180,7 @@ async function processAddChanges() {
         change.content.includes('BottomSheetFlashList'))
     ) {
       warn(
-        `Detected import from '@gorhom/bottom-sheet' for ${change.content.match(/BottomSheetScrollView|BottomSheetFlatList|BottomSheetFlashList/g)?.join(', ')}. Consider adding the focus hook from 'useBottomSheetFocusHook' to ensure scrollables work correctly, especially on Android.`,
+        `Detected import from '@gorhom/bottom-sheet' for ${change.content.match(/BottomSheetScrollView|BottomSheetFlatList|BottomSheetFlashList/g)?.join(', ')}. Consider setting focusHook to 'useFocusEffect' to ensure scrollables work within bottom sheets, especially on Android.`,
       )
     }
   })
@@ -183,6 +210,12 @@ async function processAddChanges() {
         idx,
         Math.min(change.content.length, idx + longestImportLength + 6 + 1),
       )
+
+      // Skip warning on specific icon imports, needed for web to avoid pulling in all icons
+      if (change.content.includes('ui/src/components/icons/')) {
+        return
+      }
+
       if (!validLongerImports.some((validImport) => potentialSubstring.includes(validImport))) {
         const endOfImport = change.content.indexOf(`'`, idx + 6) // skipping the "from '"
         warn(
@@ -192,15 +225,16 @@ async function processAddChanges() {
     })
   })
 
-  linesAddedByFile.forEach((linesAdded) => {
+  linesAddedByFile.forEach((linesAdded, fileIndex) => {
     const concatenatedAddedLines = linesAdded.reduce((acc, curr) => acc + curr.content, '')
+    const filePath = updatedTsFiles[fileIndex]
 
     // In this section we concatenate all the added lines by file in order to account for multiline changes.
 
-    // Check for non-recommended sentry usage
+    // Check for non-recommended logger usage
     if (/logger\.error\(\s*new Error\(/.test(concatenatedAddedLines)) {
       warn(
-        `It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`,
+        `It appears you may be manually logging an error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`,
       )
     }
     if (/logger\.error\(\s*['`"]/.test(concatenatedAddedLines)) {
@@ -218,7 +252,35 @@ async function processAddChanges() {
         `It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`,
       )
     }
+
+    // Check for direct string cache key usage with react query (skip mission-control app)
+    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/mission-control/')) {
+      fail(
+        `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
+      )
+    }
   })
+
+  // Warn if any changed file contains TouchableArea (entire file, not just diff)
+  const changedFiles = danger.git.modified_files
+    .concat(danger.git.created_files)
+    .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx'))
+  const filesWithTouchableArea: string[] = []
+  for (const file of changedFiles) {
+    try {
+      const fileContent = fs.readFileSync(file, 'utf8')
+      if (fileContent.includes('TouchableArea')) {
+        filesWithTouchableArea.push(file)
+      }
+    } catch {
+      // Ignore files that can't be read (e.g., deleted or binary)
+    }
+  }
+  if (filesWithTouchableArea.length > 0) {
+    warn(
+      `Detected usage of \`TouchableArea\` in the following file(s):\n\n${filesWithTouchableArea.map((f) => `- ${f}`).join('\n')}\n\nIn each of these files, please audit the usage of \`TouchableArea\` and consider migrating to the new implementation! Examples of new variants and API usage can be found in the \`TouchableArea.stories.tsx\` file.`,
+    )
+  }
 }
 
 async function checkCocoaPodsVersion() {
@@ -274,7 +336,7 @@ async function checkPRSize() {
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {
   warn(
-    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `yarn upload-env-local` to store it in 1Password.',
+    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `bun upload-env-local` to store it in 1Password.',
   )
 }
 
@@ -286,6 +348,9 @@ checkSplitFiles()
 
 // Check hook file pattern
 checkGeneralizedHookFiles()
+
+// Check hook tests
+checkHookFilesHaveTests()
 
 // Run checks on added changes
 processAddChanges()
@@ -316,7 +381,7 @@ const updatedGraphQLfile = danger.git.modified_files.find((file) => file.endsWit
 
 if (updatedGraphQLfile) {
   warn(
-    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `yarn mobile ios` and rebuilding for iOS. ' +
+    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `bun mobile ios` and rebuilding for iOS. ' +
       'You may need to add or remove generated files to the project.pbxproj. For more information see `apps/mobile/ios/WidgetsCore/MobileSchema/README.md`',
   )
 }

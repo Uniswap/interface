@@ -6,7 +6,6 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { iconSizes } from 'ui/src/theme'
 
 type ScrollDownOverlayProps = {
   scrollDownButonText?: string
@@ -47,7 +46,7 @@ export function ScrollDownOverlay({ onScrollDownPress, scrollDownButonText }: Sc
         <Text color="$accent1" variant="buttonLabel2">
           {scrollDownButonText ?? t('common.button.scrollDown')}
         </Text>
-        <ArrowDown color="$accent1" size={iconSizes.icon16} />
+        <ArrowDown color="$accent1" size="$icon.16" />
       </TouchableArea>
     </AnimatedFlex>
   )

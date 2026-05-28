@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src'
+import { Contract } from 'ui/src/components/icons/Contract'
 import { Sign } from 'ui/src/components/icons/Sign'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Permit2SignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { Permit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
+import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 
 const SignIcon = (): JSX.Element => (
   <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$accent1">
@@ -12,9 +14,12 @@ const SignIcon = (): JSX.Element => (
   </Flex>
 )
 
-export function Permit2SignatureStepRow({ status }: StepRowProps<Permit2SignatureStep>): JSX.Element {
+export function Permit2SignatureStepRow({
+  status,
+  currentStepIndex,
+  totalStepsCount,
+}: StepRowProps<Permit2SignatureStep>): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const title = status === StepStatus.Active ? t('common.signMessageWallet') : t('common.signMessage')
 
@@ -26,8 +31,56 @@ export function Permit2SignatureStepRow({ status }: StepRowProps<Permit2Signatur
         url: uniswapUrls.helpArticleUrls.approvalsExplainer,
         text: t('common.whySign'),
       }}
-      rippleColor={colors.accent1.val}
       status={status}
+      currentStepIndex={currentStepIndex}
+      totalStepsCount={totalStepsCount}
+    />
+  )
+}
+
+const ContractIcon = (): JSX.Element => (
+  <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$accent1">
+    <Contract size="$icon.24" />
+  </Flex>
+)
+
+export function Permit2TransactionStepRow({
+  // oxlint-disable-next-line no-unused-vars -- biome-parity: oxlint is stricter here
+  step,
+  status,
+  currentStepIndex,
+  totalStepsCount,
+  currentIndexOfStepType,
+  totalCountOfStepType,
+}: StepRowProps<Permit2TransactionStep> & {
+  currentIndexOfStepType: number
+  totalCountOfStepType?: number
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  const indexText =
+    totalCountOfStepType && totalCountOfStepType > 1 ? ` (${currentIndexOfStepType + 1}/${totalCountOfStepType})` : ''
+
+  const title = {
+    [StepStatus.Preview]: t('common.approvePermitTx', { indexText }),
+    [StepStatus.Failed]: t('common.approvePermitTx', { indexText }),
+    [StepStatus.Replaced]: t('common.approvePermitTx', { indexText }),
+    [StepStatus.Active]: t('common.approvePermitTx.active', { indexText }),
+    [StepStatus.InProgress]: t('common.approvePermitTx.pending', { indexText }),
+    [StepStatus.Complete]: t('common.approvePermitTx', { indexText }),
+  }[status]
+
+  return (
+    <StepRowSkeleton
+      title={title}
+      icon={<ContractIcon />}
+      learnMore={{
+        url: uniswapUrls.helpArticleUrls.mismatchedImports,
+        text: t('common.approvePermitTx.explainer'),
+      }}
+      status={status}
+      currentStepIndex={currentStepIndex}
+      totalStepsCount={totalStepsCount}
     />
   )
 }

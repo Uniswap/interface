@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { getPrimaryStablecoin, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
@@ -33,22 +33,22 @@ export function useUSDTokenUpdater({
   useEffect(() => {
     shouldUseUSDRef.current = isFiatInput
   }, [isFiatInput])
-
   useEffect(() => {
     if (!currency || !price || !isUniverseChainId(currency.chainId)) {
       return undefined
     }
 
-    const exactAmountUSD = (parseFloat(exactAmountFiat || '0') / conversionRate).toFixed(NUM_DECIMALS_USD)
+    const _exactAmountFiat = exactAmountFiat === '.' ? '0' : exactAmountFiat || '0'
+    const exactAmountUSD = (parseFloat(_exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)
 
     if (shouldUseUSDRef.current) {
       const stablecoinAmount = getCurrencyAmount({
         value: exactAmountUSD,
         valueType: ValueType.Exact,
-        currency: STABLECOIN_AMOUNT_OUT[currency.chainId]?.currency,
+        currency: getPrimaryStablecoin(currency.chainId),
       })
 
-      const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
+      const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined
 
       return onTokenAmountUpdated(currencyAmount?.toExact() ?? '')
     }
@@ -58,7 +58,7 @@ export function useUSDTokenUpdater({
       valueType: ValueType.Exact,
       currency,
     })
-    const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
+    const usdPrice = exactCurrencyAmount ? price.quote(exactCurrencyAmount) : undefined
     const fiatPrice = parseFloat(usdPrice?.toExact() ?? '0') * conversionRate
 
     return onFiatAmountUpdated(fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '')

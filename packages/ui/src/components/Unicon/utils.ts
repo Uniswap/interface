@@ -1,10 +1,11 @@
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import { UNICON_COLORS } from 'ui/src/components/Unicon/Colors'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
+import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 
 export const getUniconsDeterministicHash = (address: string): bigint => {
-  if (!isAddress(address)) {
-    throw new Error('Invalid Ethereum address')
+  if (!isEVMAddressWithChecksum(address) && !isSVMAddress(address)) {
+    throw new Error('Invalid address')
   }
   const hash = keccak256(toUtf8Bytes(address))
   const hashNumber = BigInt('0x' + hash.slice(2, 12))

@@ -1,18 +1,19 @@
 import type { Filter } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
-import { useAccount } from 'hooks/useAccount'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
-import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
 import { logger } from 'utilities/src/logger/logger'
+import { getInterfaceProvider } from '~/constants/providers'
+import { useAccount } from '~/hooks/useAccount'
+import { useBlockNumber } from '~/lib/hooks/useBlockNumber'
+import { useAppDispatch, useAppSelector } from '~/state/hooks'
+import { fetchedLogs, fetchedLogsError, fetchingLogs } from '~/state/logs/slice'
+import { isHistoricalLog, keyToFilter } from '~/state/logs/utils'
 
-export default function Updater(): null {
+export function Updater(): null {
   const dispatch = useAppDispatch()
+  // oxlint-disable-next-line no-shadow
   const state = useAppSelector((state) => state.logs)
   const { chainId } = useAccount()
-  const { provider } = useWeb3React()
+  const provider = getInterfaceProvider(chainId)
 
   const blockNumber = useBlockNumber
 
@@ -22,6 +23,7 @@ export default function Updater(): null {
     }
 
     const active = state[chainId]
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
     if (!active) {
       return []
     }
@@ -93,3 +95,5 @@ export default function Updater(): null {
 
   return null
 }
+
+export default Updater

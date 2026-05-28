@@ -1,8 +1,26 @@
-import { ChartHeaderProtocolInfo } from 'components/Charts/ChartHeader'
-import { CustomHistogramData, StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+/**
+ * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/stacked-bars-series/renderer.ts
+ * Modifications are called out with comments.
+ */
+
+import { GraphQLApi } from '@universe/api'
+import { CustomData, UTCTimestamp } from 'lightweight-charts'
+
+// Modification: custom implementations of lw-chart's histogram data types
+export interface SingleHistogramData extends CustomData {
+  value: number
+  time: UTCTimestamp
+}
+
+export interface StackedHistogramData extends CustomData {
+  values: Record<GraphQLApi.PriceSource, number | undefined>
+  time: UTCTimestamp
+}
+
+export type CustomHistogramData = SingleHistogramData | StackedHistogramData
 
 export function isStackedHistogramData(data: CustomHistogramData): data is StackedHistogramData {
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   return (data as StackedHistogramData).values !== undefined
 }
 
@@ -18,17 +36,6 @@ export function getCumulativeSum(data: CustomHistogramData): number {
 // Get summed value of all bars of data
 export function getCumulativeVolume(data: CustomHistogramData[]) {
   return data.reduce((sum, curr) => (sum += getCumulativeSum(curr)), 0)
-}
-
-export function getVolumeProtocolInfo(
-  data: StackedHistogramData | undefined,
-  sources: PriceSource[],
-): ChartHeaderProtocolInfo[] {
-  const info = new Array<ChartHeaderProtocolInfo>()
-  for (const source of sources) {
-    info.push({ protocol: source, value: data?.values[source] })
-  }
-  return info
 }
 
 /* Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/helpers/ */
@@ -47,7 +54,15 @@ interface BitmapPositionLength {
  * @param pixelRatio - pixel ratio for the corresponding axis (vertical or horizontal)
  * @returns Position of of the start point and length dimension.
  */
-export function positionsBox(position1Media: number, position2Media: number, pixelRatio: number): BitmapPositionLength {
+export function positionsBox({
+  position1Media,
+  position2Media,
+  pixelRatio,
+}: {
+  position1Media: number
+  position2Media: number
+  pixelRatio: number
+}): BitmapPositionLength {
   const scaledPosition1 = Math.round(pixelRatio * position1Media)
   const scaledPosition2 = Math.round(pixelRatio * position2Media)
   return {
@@ -80,7 +95,15 @@ function columnSpacing(barSpacingMedia: number, horizontalPixelRatio: number) {
  * @param spacing - Spacing gap between columns (in Bitmap coordinates). (optional, provide if you have already calculated it)
  * @returns Desired width for column bars (in Bitmap coordinates)
  */
-function desiredColumnWidth(barSpacingMedia: number, horizontalPixelRatio: number, spacing?: number) {
+function desiredColumnWidth({
+  barSpacingMedia,
+  horizontalPixelRatio,
+  spacing,
+}: {
+  barSpacingMedia: number
+  horizontalPixelRatio: number
+  spacing?: number
+}) {
   return (
     Math.round(barSpacingMedia * horizontalPixelRatio) -
     (spacing ?? columnSpacing(barSpacingMedia, horizontalPixelRatio))
@@ -107,7 +130,7 @@ interface ColumnCommon {
  */
 function columnCommon(barSpacingMedia: number, horizontalPixelRatio: number): ColumnCommon {
   const spacing = columnSpacing(barSpacingMedia, horizontalPixelRatio)
-  const columnWidthBitmap = desiredColumnWidth(barSpacingMedia, horizontalPixelRatio, spacing)
+  const columnWidthBitmap = desiredColumnWidth({ barSpacingMedia, horizontalPixelRatio, spacing })
   const shiftLeft = columnWidthBitmap % 2 === 0
   const columnHalfWidthBitmap = (columnWidthBitmap - (shiftLeft ? 0 : 1)) / 2
   return {
@@ -132,11 +155,15 @@ export interface ColumnPosition {
  * @param previousPosition - result from this function for the previous bar.
  * @returns initial column position
  */
-function calculateColumnPosition(
-  xMedia: number,
-  columnData: ColumnCommon,
-  previousPosition: ColumnPosition | undefined,
-): ColumnPosition {
+function calculateColumnPosition({
+  xMedia,
+  columnData,
+  previousPosition,
+}: {
+  xMedia: number
+  columnData: ColumnCommon
+  previousPosition?: ColumnPosition
+}): ColumnPosition {
   const xBitmapUnRounded = xMedia * columnData.horizontalPixelRatio
   const xBitmap = Math.round(xBitmapUnRounded)
   const xPositions: ColumnPosition = {
@@ -172,24 +199,35 @@ interface ColumnPositionItem {
  * @param startIndex - start index for visible bars within the items array
  * @param endIndex - end index for visible bars within the items array
  */
-export function calculateColumnPositionsInPlace(
-  items: ColumnPositionItem[],
-  barSpacingMedia: number,
-  horizontalPixelRatio: number,
-  startIndex: number,
-  endIndex: number,
-): void {
+export function calculateColumnPositionsInPlace({
+  items,
+  barSpacingMedia,
+  horizontalPixelRatio,
+  startIndex,
+  endIndex,
+}: {
+  items: ColumnPositionItem[]
+  barSpacingMedia: number
+  horizontalPixelRatio: number
+  startIndex: number
+  endIndex: number
+}) {
   const common = columnCommon(barSpacingMedia, horizontalPixelRatio)
-  let previous: ColumnPositionItem | undefined = undefined
+  let previous: ColumnPositionItem | undefined
   for (let i = startIndex; i < Math.min(endIndex, items.length); i++) {
     // Modification fix: is possible for previous column to not be directly behind the current column, i.e. if whitespace in between
-    if (previous?.x && items[i].x - previous?.x > barSpacingMedia) {
+    if (previous?.x && items[i].x - previous.x > barSpacingMedia) {
       previous = undefined
     }
-    items[i].column = calculateColumnPosition(items[i].x, common, previous?.column)
+    items[i].column = calculateColumnPosition({
+      xMedia: items[i].x,
+      columnData: common,
+      previousPosition: previous?.column,
+    })
     previous = items[i]
   }
   const minColumnWidth = (items as ColumnPositionItem[]).reduce(
+    // oxlint-disable-next-line max-params
     (smallest: number, item: ColumnPositionItem, index: number) => {
       if (!item.column || index < startIndex || index > endIndex) {
         return smallest

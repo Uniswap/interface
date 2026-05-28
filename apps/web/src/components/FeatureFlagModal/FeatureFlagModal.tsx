@@ -1,159 +1,206 @@
-import { SmallButtonPrimary } from 'components/Button/buttons'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
-import styled from 'lib/styled-components'
-import { PropsWithChildren } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { ModalCloseIcon } from 'ui/src'
-import { breakpoints } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
+import type { DynamicConfigKeys } from '@universe/gating'
 import {
-  DynamicConfigKeys,
   DynamicConfigs,
+  ExternallyConnectableExtensionConfigKey,
+  FeatureFlags,
+  getFeatureFlagName,
+  getOverrideAdapter,
+  Layers,
   NetworkRequestsConfigKey,
-  QuickRouteChainsConfigKey,
-} from 'uniswap/src/features/gating/configs'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+  useDynamicConfigValue,
+  useFeatureFlagWithExposureLoggingDisabled,
+} from '@universe/gating'
+import type { PropsWithChildren, ReactNode } from 'react'
+import { memo, useMemo, useState } from 'react'
+import { Button, Flex, FlexProps, Input, ModalCloseIcon, styled, Switch, Text, TouchableArea } from 'ui/src'
+import { Pin } from 'ui/src/components/icons/Pin'
+import { useLayerValue } from 'uniswap/src/components/gating/Rows'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useEvent } from 'utilities/src/react/hooks'
+import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
+import { buildFlagGroups } from '~/components/FeatureFlagModal/flagGroups'
+import { usePinnedExperiments, usePinnedFeatureFlags } from '~/dev/usePinnedFeatureFlags'
+import { useModalState } from '~/hooks/useModalState'
+import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
+import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
-const Wrapper = styled(Column)`
-  padding: 20px 16px;
-  width: 100%;
-  gap: 8px;
-`
+const CenteredRowProps: FlexProps = {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  py: '$gap8',
+  maxWidth: '100%',
+  gap: '$gap4',
+}
 
-const FlagsColumn = styled(Column)`
-  max-height: 600px;
-  padding-bottom: 8px;
-  overflow-y: auto;
+const CenteredRow = styled(Flex, CenteredRowProps)
 
-  @media screen and (max-width: ${breakpoints.md}px) {
-    max-height: unset;
+const TouchableCenteredRow = styled(TouchableArea, CenteredRowProps)
+
+const FlagInfo = styled(Flex, {
+  flexShrink: 1,
+})
+
+function fuzzyMatch(query: string, ...targets: string[]): boolean {
+  if (!query.trim()) {
+    return true
   }
-`
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean)
+  const combined = targets.join(' ').toLowerCase()
+  return words.every((word) => combined.includes(word))
+}
 
-const CenteredRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0px;
-  max-width: 100%;
-  gap: 4px;
-`
+interface GatingRowContentProps {
+  title: string
+  label?: string
+  rightContent?: ReactNode
+}
 
-const Header = styled(CenteredRow)`
-  font-weight: 535;
-  font-size: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  justify-content: space-between;
-`
-const FlagName = styled.span`
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.neutral1};
-`
-const FlagGroupName = styled.span`
-  font-size: 20px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.neutral1};
-  font-weight: 535;
-`
-const FlagDescription = styled.span`
-  font-size: 12px;
-  line-height: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  display: flex;
-  align-items: center;
-`
+export function GatingRowContent({ title, label, rightContent }: GatingRowContentProps): JSX.Element {
+  return (
+    <CenteredRow flexGrow={1} flexShrink={1} py={rightContent ? '$none' : undefined}>
+      <FlagInfo>
+        <Text variant="body2" {...EllipsisTamaguiStyle}>
+          {title}
+        </Text>
+        {label && (
+          <Text variant="body4" color="$neutral2" {...EllipsisTamaguiStyle}>
+            {label}
+          </Text>
+        )}
+      </FlagInfo>
+      {rightContent}
+    </CenteredRow>
+  )
+}
 
-const FlagInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 8px;
-  flex-shrink: 1;
-  overflow: hidden;
-`
+export function GatingSwitch({
+  checked,
+  onCheckedChange,
+}: {
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
+}): JSX.Element {
+  return (
+    <Flex
+      onPressIn={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+      onPress={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+    >
+      <Switch checked={checked} onCheckedChange={onCheckedChange} variant="branded" />
+    </Flex>
+  )
+}
 
-const SaveButton = styled.button`
-  border-radius: 12px;
-  padding: 8px;
-  margin: 0px 20px;
-  background: ${({ theme }) => theme.surface3};
-  font-weight: 535;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
+type PinnableRowProps = GatingRowContentProps & {
+  isPinned: boolean
+  onPinPress: () => void
+}
 
-  :hover {
-    background: ${({ theme }) => theme.surface3};
-  }
-`
+function PinnableRow({ isPinned, onPinPress, title, label, rightContent }: PinnableRowProps): JSX.Element {
+  return (
+    <TouchableCenteredRow group="item" onPress={onPinPress} gap="$gap8">
+      <Flex
+        alignSelf="center"
+        p="$padding4"
+        opacity={isPinned ? 1 : 0}
+        $group-item-hover={{ opacity: isPinned ? 1 : 0.6 }}
+      >
+        <Pin size="$icon.16" color={isPinned ? '$accent1' : '$neutral2'} />
+      </Flex>
+      <GatingRowContent title={title} label={label} rightContent={rightContent} />
+    </TouchableCenteredRow>
+  )
+}
 
 interface FeatureFlagProps {
   label: string
   flag: FeatureFlags
 }
 
-function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }>) {
+const FeatureFlagGroup = memo(function FeatureFlagGroup({
+  name,
+  children,
+}: PropsWithChildren<{ name: string }>): JSX.Element {
   return (
     <>
       <CenteredRow key={name}>
-        <FlagGroupName>{name}</FlagGroupName>
+        <Text variant="body1">{name}</Text>
       </CenteredRow>
       {children}
     </>
   )
-}
+})
 
-const FlagVariantSelection = styled.select`
-  border-radius: 12px;
-  padding: 8px;
-  background: ${({ theme }) => theme.surface3};
-  font-weight: 535;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  :hover {
-    background: ${({ theme }) => theme.surface3};
-  }
-`
-
-function Variant({ option }: { option: string }) {
-  return <option value={option}>{option}</option>
-}
-
-function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
+const FeatureFlagOption = memo(function FeatureFlagOption({ flag, label }: FeatureFlagProps): JSX.Element {
   const enabled = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
-  return (
-    <CenteredRow key={flag}>
-      <FlagInfo>
-        <FlagName>{name}</FlagName>
-        <FlagDescription>{label}</FlagDescription>
-      </FlagInfo>
-      <FlagVariantSelection
-        id={name}
-        onChange={(e) => {
-          Statsig.overrideGate(name, e.target.value === 'Enabled' ? true : false)
-        }}
-        value={enabled ? 'Enabled' : 'Disabled'}
-      >
-        {['Enabled', 'Disabled'].map((variant) => (
-          <Variant key={variant} option={variant} />
-        ))}
-      </FlagVariantSelection>
-    </CenteredRow>
-  )
-}
+  const { isPinned, pinFlag, unpinFlag } = usePinnedFeatureFlags()
+  const isOptionPinned = isPinned(name)
 
-function DynamicConfigDropdown<
+  // oxlint-disable-next-line no-shadow
+  const onFlagVariantChange = useEvent((enabled: boolean) => {
+    getOverrideAdapter().overrideGate(name, enabled)
+  })
+
+  const onPinPress = useEvent(() => {
+    if (isOptionPinned) {
+      unpinFlag(name)
+    } else {
+      pinFlag(name)
+    }
+  })
+
+  return (
+    <PinnableRow
+      key={flag}
+      isPinned={isOptionPinned}
+      onPinPress={onPinPress}
+      title={name}
+      label={label}
+      rightContent={
+        <Flex
+          onPressIn={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+          onPress={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+        >
+          <Switch checked={enabled} onCheckedChange={onFlagVariantChange} variant="branded" />
+        </Flex>
+      }
+    />
+  )
+})
+
+interface LayerOptionProps {
+  layerName: Layers
+}
+const LayerOption = memo(function LayerOption({ layerName }: LayerOptionProps): JSX.Element {
+  const { value, overrideValue } = useLayerValue(layerName)
+  const { isPinned, pinExperiment, unpinExperiment } = usePinnedExperiments()
+
+  return (
+    <>
+      {Object.entries(value).map(([key, val]) => {
+        return (
+          typeof val === 'boolean' && (
+            <PinnableRow
+              key={key}
+              isPinned={isPinned(key)}
+              onPinPress={() => (isPinned(key) ? unpinExperiment(key) : pinExperiment(key))}
+              title={key}
+              label={undefined}
+              rightContent={
+                <GatingSwitch checked={val} onCheckedChange={(enabled) => overrideValue<boolean>({ [key]: enabled })} />
+              }
+            />
+          )
+        )
+      })}
+    </>
+  )
+})
+
+const DynamicConfigDropdown = memo(function DynamicConfigDropdown<
   Conf extends Exclude<DynamicConfigs, DynamicConfigs.GasStrategies>,
   Key extends DynamicConfigKeys[Conf],
 >({
@@ -167,130 +214,178 @@ function DynamicConfigDropdown<
   config: Conf
   configKey: Key
   label: string
-  options: any[]
-  selected: any[]
-  parser: (opt: string) => any
-}) {
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    Statsig.overrideConfig(config, { [configKey]: selectedValues })
-  }
+  options: Array<string | number> | Record<string, string | number>
+  selected: unknown[]
+  parser: (opt: string) => unknown
+}): JSX.Element {
+  const onValueChange = useEvent((value: string) => {
+    getOverrideAdapter().overrideDynamicConfig(config, {
+      [configKey]: parser(value),
+    })
+  })
+
+  const currentValue = String(selected[0] ?? '')
+
   return (
     <CenteredRow key={config}>
       <FlagInfo>
-        <FlagName>{config}</FlagName>
-        <FlagDescription>{label}</FlagDescription>
+        <Text variant="body2">{config}</Text>
+        <Text variant="body4" color="$neutral2">
+          {label}
+        </Text>
       </FlagInfo>
-      <select multiple onChange={handleSelectChange}>
-        {options.map((opt) => (
-          <option key={opt} value={opt} selected={selected.includes(opt)}>
-            {opt}
-          </option>
-        ))}
-      </select>
+      <FeatureFlagSelector id={config} value={currentValue} onValueChange={onValueChange} options={options} />
     </CenteredRow>
+  )
+})
+
+export function FeatureFlagModal(): JSX.Element {
+  const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
+  const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const removeAllOverrides = useEvent(() => {
+    getOverrideAdapter().removeAllOverrides()
+  })
+
+  const handleReload = useEvent(() => {
+    window.location.reload()
+  })
+
+  const isSearching = searchQuery.trim().length > 0
+
+  const flagGroups = useMemo(
+    () =>
+      buildFlagGroups({
+        extensionDropdown: (
+          <DynamicConfigDropdown
+            selected={[externallyConnectableExtensionId]}
+            options={TRUSTED_CHROME_EXTENSION_IDS}
+            parser={(id: string) => id}
+            config={DynamicConfigs.ExternallyConnectableExtension}
+            configKey={ExternallyConnectableExtensionConfigKey.ExtensionId}
+            label="Which Extension the web app will communicate with"
+          />
+        ),
+        networkRequestsConfig: <NetworkRequestsConfig />,
+        layerOptions: (
+          <Flex ml="$padding8" gap="$gap8">
+            <FeatureFlagGroup name={Layers.ExplorePage}>
+              <LayerOption layerName={Layers.ExplorePage} />
+            </FeatureFlagGroup>
+            <FeatureFlagGroup name={Layers.SwapPage}>
+              <LayerOption layerName={Layers.SwapPage} />
+            </FeatureFlagGroup>
+          </Flex>
+        ),
+      }),
+    [externallyConnectableExtensionId],
+  )
+
+  return (
+    <Modal name={ModalName.FeatureFlags} isModalOpen={isOpen} onClose={closeModal} padding={0}>
+      <Flex py="$gap20" px="$gap16" gap="$gap8">
+        <CenteredRow borderBottomColor="$surface3" borderBottomWidth={1} borderRadius={0}>
+          <Flex row grow alignItems="center" justifyContent="space-between">
+            <Text variant="subheading2">Feature Flag Settings</Text>
+            <Button onPress={removeAllOverrides} variant="branded" size="small" fill={false}>
+              Clear Overrides
+            </Button>
+          </Flex>
+          <ModalCloseIcon onClose={closeModal} />
+        </CenteredRow>
+        <Input
+          autoFocus
+          placeholder="Search flags..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          width="100%"
+          height={40}
+          backgroundColor="$surface2"
+          borderColor="$surface3"
+          borderWidth={1}
+          borderRadius="$rounded12"
+          padding="$spacing12"
+          color="$neutral1"
+          placeholderTextColor="$neutral3"
+          focusStyle={{ borderColor: '$accent1' }}
+        />
+        <Flex
+          maxHeight="600px"
+          pb="$gap8"
+          $platform-web={{ overflowY: 'auto', overflowX: 'hidden' }}
+          $md={{ maxHeight: 'unset' }}
+        >
+          {(() => {
+            let hasResults = false
+
+            const groups = flagGroups.map((group) => {
+              const matchingFlags = isSearching
+                ? group.flags.filter(({ flag, label }) => fuzzyMatch(searchQuery, getFeatureFlagName(flag), label))
+                : group.flags
+              const groupNameMatches = isSearching && fuzzyMatch(searchQuery, group.name)
+
+              if (matchingFlags.length === 0 && !groupNameMatches) {
+                // Groups with extra content (e.g. Network Requests, Layers) show when not searching,
+                // but hide during search if their name doesn't match
+                if (isSearching || !group.extra) {
+                  return null
+                }
+              }
+
+              hasResults = true
+
+              // If specific flags match, show only those. If only the group name matches, show all flags in the group.
+              const flagsToShow = matchingFlags.length > 0 ? matchingFlags : group.flags
+
+              return (
+                <FeatureFlagGroup key={group.name} name={group.name}>
+                  {flagsToShow.map(({ flag, label }) => (
+                    <FeatureFlagOption key={flag} flag={flag} label={label} />
+                  ))}
+                  {group.extra}
+                </FeatureFlagGroup>
+              )
+            })
+
+            return (
+              <>
+                {groups}
+                {/* oxlint-disable-next-line typescript/no-unnecessary-condition */}
+                {isSearching && !hasResults && (
+                  <Text variant="body2" color="$neutral3" py="$gap16" textAlign="center">
+                    No flags found
+                  </Text>
+                )}
+              </>
+            )
+          })()}
+        </Flex>
+        <Button onPress={handleReload} variant="default" emphasis="secondary" size="small" fill={false}>
+          Reload
+        </Button>
+      </Flex>
+    </Modal>
   )
 }
 
-export default function FeatureFlagModal() {
-  const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
-  const closeModal = useCloseModal()
+export default FeatureFlagModal
+
+function NetworkRequestsConfig() {
+  const currentValue = useDynamicConfigValue({
+    config: DynamicConfigs.NetworkRequests,
+    key: NetworkRequestsConfigKey.BalanceMaxRefetchAttempts,
+    defaultValue: 30,
+  })
 
   return (
-    <Modal name={ModalName.FeatureFlags} isModalOpen={open} onClose={closeModal} padding={0}>
-      <Wrapper>
-        <Header>
-          <Row width="100%" justify="space-between">
-            <span>Feature Flag Settings</span>
-            <SmallButtonPrimary
-              onClick={() => {
-                Statsig.removeGateOverride()
-                Statsig.removeConfigOverride()
-              }}
-            >
-              Clear Overrides
-            </SmallButtonPrimary>
-          </Row>
-          <ModalCloseIcon onClose={closeModal} />
-        </Header>
-        <FlagsColumn>
-          <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
-          <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
-          <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
-          <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
-          <FeatureFlagOption
-            flag={FeatureFlags.IndicativeSwapQuotes}
-            label="[Universal Swap Flow Only] Enable Quick Routes"
-          />
-          <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
-          <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersBase}
-            label="UniswapX Priority Orders (on Base)"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
-            label="UniswapX Priority Orders (on Unichain)"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
-            label="[Universal Swap Flow Only] Enables receiving UniswapX orders on Arbitrum in the shared swap flow"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.Eip6936Enabled}
-            label="Enable EIP-6963: Multi Injected Provider Discovery"
-          />
-          <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
-          <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
-          <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
-          <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
-          <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
-          <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
-          <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption
-            flag={FeatureFlags.TokenSelectorTrendingTokens}
-            label="Enable 24h volume trending tokens in Token Selector"
-          />
-          <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
-            <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
-          </FeatureFlagGroup>
-          <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
-          <FeatureFlagGroup name="Quick routes">
-            <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
-            <DynamicConfigDropdown
-              selected={useQuickRouteChains()}
-              options={SUPPORTED_CHAIN_IDS}
-              parser={Number.parseInt}
-              config={DynamicConfigs.QuickRouteChains}
-              configKey={QuickRouteChainsConfigKey.Chains}
-              label="Enable quick routes for these chains"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Network Requests">
-            <DynamicConfigDropdown
-              selected={[30]}
-              options={[1, 10, 20, 30]}
-              parser={Number.parseInt}
-              config={DynamicConfigs.NetworkRequests}
-              configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
-              label="Max refetch attempts"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="UniswapX Flags">
-            <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
-            <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Debug">
-            <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
-            <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
-          </FeatureFlagGroup>
-        </FlagsColumn>
-        <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
-      </Wrapper>
-    </Modal>
+    <DynamicConfigDropdown
+      selected={[currentValue]}
+      options={[1, 10, 20, 30]}
+      parser={Number.parseInt}
+      config={DynamicConfigs.NetworkRequests}
+      configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
+      label="Max refetch attempts"
+    />
   )
 }

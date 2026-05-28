@@ -1,14 +1,17 @@
+import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { usePrevious } from 'react-native-wagmi-charts'
+import { ScrollView } from 'react-native'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
-import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { useWalletRestore } from 'src/features/wallet/hooks'
-import { DeprecatedButton, Flex } from 'ui/src'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
+import { useBiometricAppSpeedBump } from 'src/features/biometrics/useBiometricAppSpeedBump'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { Button, Flex, flexStyles } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -20,59 +23,66 @@ type Props = {
 
 export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
-  const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
+  const { walletRestoreType } = useWalletRestore({
+    openModalImmediately: true,
+  })
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
+  const navigation = useNavigation()
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
-  const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
+  useFocusEffect(
+    useCallback(() => {
+      if (walletRestoreType !== WalletRestoreType.None) {
+        navigation.goBack()
 
-  useEffect(() => {
-    if (prevIsWalletRestoreModalOpen && !isWalletRestoreModalOpen) {
-      onDismiss?.()
-    }
-  })
+        // This is a very unlikely edge case if the user somehow get to this screen on a new device.
+        // In this case, we want to back an additional time to dismiss the NewDevice modal which is
+        // will try to reopen anytime this screen is focused.
+        if (walletRestoreType === WalletRestoreType.NewDevice) {
+          navigation.goBack()
+        }
+      }
+    }, [walletRestoreType, navigation]),
+  )
+
+  useLockScreenOnBlur()
 
   const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)
     setShowSeedPhraseViewWarningModal(false)
   }
-
-  const onConfirmWarning = async (): Promise<void> => {
-    if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
-      await biometricTrigger()
-    } else {
-      onShowSeedPhraseConfirmed()
-    }
-  }
-
-  const {
-    requiredForAppAccess: biometricAuthRequiredForAppAccess,
-    requiredForTransactions: biometricAuthRequiredForTransactions,
-  } = useBiometricAppSettings()
-  const { trigger: biometricTrigger } = useBiometricPrompt(onShowSeedPhraseConfirmed)
+  const { onBiometricContinue } = useBiometricAppSpeedBump(onShowSeedPhraseConfirmed)
 
   useEffect(() => {
-    const listener = addScreenshotListener(() => setShowScreenShotWarningModal(showSeedPhrase))
-    return () => listener?.remove()
-  }, [showSeedPhrase])
+    const listener = addScreenshotListener(() =>
+      navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.close') }),
+    )
+    return () => listener.remove()
+  }, [showSeedPhrase, t])
 
   return (
     <>
-      <Flex grow mt="$spacing16">
-        <Flex grow pt="$spacing16" px="$spacing16">
-          <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+        style={flexStyles.fill}
+      >
+        <Flex grow mt="$spacing16">
+          <Flex grow pt="$spacing16" px="$spacing16">
+            <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <DeprecatedButton
-          testID={TestID.Next}
-          theme="secondary"
-          onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}
-        >
-          {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
-        </DeprecatedButton>
-      </Flex>
+        <Flex row borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
+          <Button
+            size="large"
+            emphasis="secondary"
+            testID={TestID.Next}
+            onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}
+          >
+            {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
+          </Button>
+        </Flex>
+      </ScrollView>
 
       {showSeedPhraseViewWarningModal && (
         <WarningModal
@@ -91,17 +101,9 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
               onDismiss?.()
             }
           }}
-          onAcknowledge={onConfirmWarning}
+          onAcknowledge={onBiometricContinue}
         />
       )}
-      <WarningModal
-        caption={t('setting.recoveryPhrase.warning.screenshot.message')}
-        acknowledgeText={t('common.button.close')}
-        isOpen={showScreenShotWarningModal}
-        modalName={ModalName.ScreenshotWarning}
-        title={t('setting.recoveryPhrase.warning.screenshot.title')}
-        onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
-      />
     </>
   )
 }

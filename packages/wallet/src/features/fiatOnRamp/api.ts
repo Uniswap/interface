@@ -1,16 +1,11 @@
+import type { OffRampTransferDetailsRequest, OffRampTransferDetailsResponse } from '@universe/api'
 import dayjs from 'dayjs'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
-import {
-  FORTransactionDetails,
-  FORTransactionResponse,
-  OffRampTransferDetailsRequest,
-  OffRampTransferDetailsResponse,
-} from 'uniswap/src/features/fiatOnRamp/types'
+import { ForApiClient } from 'uniswap/src/data/apiClients/forApi/ForApiClient'
+import { extractFORTransactionDetails } from 'uniswap/src/features/activity/extract/extractFiatOnRampTransactionDetails'
+import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { extractFORTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import { isOffRampTransaction } from 'wallet/src/features/transactions/utils'
 
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
@@ -19,11 +14,15 @@ const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 5
 /**
  * Utility to fetch FOR transactions
  */
-export async function fetchFORTransaction(
-  previousTransactionDetails: FORTransactionDetails,
-  forceFetch: boolean,
-  activeAccountAddress: Address | null,
-): Promise<FORTransactionDetails | undefined> {
+export async function fetchFORTransaction({
+  previousTransactionDetails,
+  forceFetch,
+  activeAccountAddress,
+}: {
+  previousTransactionDetails: FORTransactionDetails
+  forceFetch: boolean
+  activeAccountAddress: Address | null
+}): Promise<FORTransactionDetails | undefined> {
   const isOffRamp = isOffRampTransaction(previousTransactionDetails)
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
     dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
@@ -34,13 +33,7 @@ export async function fetchFORTransaction(
     forceFetch: forceFetch || isRecent,
   }
 
-  const res = await fetch(`${uniswapUrls.forApiUrl}/Transaction`, {
-    headers: FOR_API_HEADERS,
-    method: 'POST',
-    body: JSON.stringify(requestParams),
-  })
-
-  const { transaction }: FORTransactionResponse = await res.json()
+  const { transaction } = await ForApiClient.getTransaction(requestParams)
   if (!transaction) {
     const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
       dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms'),
@@ -72,15 +65,20 @@ export async function fetchFORTransaction(
     }
   }
 
-  return extractFORTransactionDetails(transaction, isOffRamp, activeAccountAddress)
+  return extractFORTransactionDetails({ transaction, isOffRamp, activeAccountAddress })
 }
 
-export async function fetchOffRampTransferDetails(
-  sessionId: string | null,
-  baseCurrencyCode: string | null,
-  baseCurrencyAmount: number | null,
-  depositWalletAddress: string | null,
-): Promise<OffRampTransferDetailsResponse> {
+export async function fetchOffRampTransferDetails({
+  sessionId,
+  baseCurrencyCode,
+  baseCurrencyAmount,
+  depositWalletAddress,
+}: {
+  sessionId: string | null
+  baseCurrencyCode: string | null
+  baseCurrencyAmount: number | null
+  depositWalletAddress: string | null
+}): Promise<OffRampTransferDetailsResponse> {
   let requestParams: OffRampTransferDetailsRequest | undefined
 
   if (baseCurrencyCode && baseCurrencyAmount && depositWalletAddress) {
@@ -90,20 +88,18 @@ export async function fetchOffRampTransferDetails(
         baseCurrencyAmount,
         depositWalletAddress,
       },
-    }
+    } as unknown as OffRampTransferDetailsRequest
   } else if (sessionId) {
     requestParams = {
       meldDetails: {
         sessionId,
       },
-    }
+    } as unknown as OffRampTransferDetailsRequest
   }
 
-  const res = await fetch(`${uniswapUrls.forApiUrl}/OffRampTransferDetails`, {
-    headers: FOR_API_HEADERS,
-    method: 'POST',
-    body: JSON.stringify(requestParams),
-  })
+  if (!requestParams) {
+    throw new Error('Invalid request params: either moonpay or meld details required')
+  }
 
-  return res.json() as Promise<OffRampTransferDetailsResponse>
+  return ForApiClient.getOffRampTransferDetails(requestParams)
 }

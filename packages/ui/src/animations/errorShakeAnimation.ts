@@ -1,7 +1,18 @@
-import { Easing, SharedValue, withRepeat, withTiming } from 'react-native-reanimated'
+/**
+ * Platform-agnostic error shake animation export.
+ *
+ * - Native: Uses react-native-reanimated (errorShakeAnimation.native.ts)
+ * - Web: No-op implementation (errorShakeAnimation.web.ts)
+ */
 
-export function errorShakeAnimation(input: SharedValue<number>): number {
-  return withRepeat(withTiming(5, { duration: 50, easing: Easing.inOut(Easing.ease) }), 3, true, () => {
-    input.value = 0
-  })
+export interface SharedValue<T> {
+  value: T
+}
+
+/**
+ * Applies a shake animation to indicate an error.
+ * Returns the animated value for the shake offset.
+ */
+export function errorShakeAnimation(_input: SharedValue<number>): number {
+  throw new Error('errorShakeAnimation: Implemented in .native.ts and .web.ts')
 }

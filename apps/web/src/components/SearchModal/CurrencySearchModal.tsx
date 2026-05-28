@@ -1,29 +1,40 @@
 import { Currency } from '@uniswap/sdk-core'
-import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import { memo } from 'react'
-import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { CurrencySearch } from '~/components/SearchModal/CurrencySearch'
+import { SwitchNetworkAction } from '~/state/popups/types'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
+  switchNetworkAction: SwitchNetworkAction
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
   chainIds?: UniverseChainId[]
+  variation?: TokenSelectorVariation
+  flow?: TokenSelectorFlow
+  swapTab?: SwapTab
 }
 
-export default memo(function CurrencySearchModal({
+export const CurrencySearchModal = memo(function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
+  switchNetworkAction,
   chainIds,
+  variation,
+  flow,
+  swapTab,
 }: CurrencySearchModalProps) {
   return (
     <Modal
@@ -39,8 +50,12 @@ export default memo(function CurrencySearchModal({
       <CurrencySearch
         currencyField={currencyField}
         onCurrencySelect={onCurrencySelect}
+        switchNetworkAction={switchNetworkAction}
         onDismiss={onDismiss}
         chainIds={chainIds}
+        variation={variation}
+        flow={flow}
+        swapTab={swapTab}
       />
     </Modal>
   )

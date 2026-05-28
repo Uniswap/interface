@@ -1,16 +1,12 @@
-import { forwardRef, useCallback, useRef, useState } from 'react'
+import { isAndroid } from '@universe/environment'
+import { forwardRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports
-import type {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  TextInput as NativeTextInput,
-  TextInputFocusEventData,
-} from 'react-native'
+import type { LayoutChangeEvent, TextInput as NativeTextInput } from 'react-native'
 import {
   AnimatePresence,
-  DeprecatedButton,
+  ColorTokens,
   Flex,
+  FlexProps,
   Input,
   InputProps,
   SpaceTokens,
@@ -27,11 +23,22 @@ import { ViewGestureHandler } from 'uniswap/src/components/ViewGestureHandler/Vi
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { isAndroid, isIOS } from 'utilities/src/platform'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { useEvent } from 'utilities/src/react/hooks'
 
+const ENTER_EXIT_STYLE = { opacity: 0, scale: 0 }
 const DEFAULT_MIN_HEIGHT = 48
 const CANCEL_CHEVRON_X_OFFSET = -6
+const SHADOW_PROPS = {
+  shadowColor: '$shadowColor',
+  shadowOffset: SHADOW_OFFSET_SMALL,
+  shadowOpacity: 0.25,
+  shadowRadius: 6,
+  elevationAndroid: 6,
+  '$theme-dark': {
+    shadowColor: '$black',
+  },
+} satisfies Partial<FlexProps>
 
 export const springConfig = {
   stiffness: 1000,
@@ -54,14 +61,18 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
+  mx?: SpaceTokens
+  my?: SpaceTokens
   hideIcon?: boolean
   minHeight?: number
   cancelBehaviorType?: CancelBehaviorType
+  borderColor?: ColorTokens
+  borderWidth?: SpaceTokens
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
-  // eslint-disable-next-line complexity
-  function _SearchTextInput(props, ref) {
+  // oxlint-disable-next-line complexity
+  function SearchTextInputInner(props, ref) {
     const dimensions = useDeviceDimensions()
     const { t } = useTranslation()
     const {
@@ -72,15 +83,25 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onClose,
       onChangeText,
       onFocus,
+      onKeyPress,
       placeholder,
       py = '$spacing12',
       px = '$spacing16',
+      mx,
+      my,
       showShadow,
       value,
       hideIcon,
       minHeight = DEFAULT_MIN_HEIGHT,
       cancelBehaviorType = CancelBehaviorType.CancelButton,
+      keyboardType = 'default',
+      inputMode: inputModeProp,
+      placeholderTextColor = '$neutral2',
+      borderColor = '$surface5',
+      borderWidth = '$spacing1',
     } = props
+
+    const inputMode = inputModeProp ?? 'text'
 
     const inputRef = useRef<Input>(null)
     const combinedRef = useComposedRefs<Input>(inputRef, ref)
@@ -93,47 +114,43 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const showBackChevron = !!onCancel && cancelBehaviorType === CancelBehaviorType.BackChevron
     const cancelChevronWidth = showBackChevron ? iconSizes.icon20 + CANCEL_CHEVRON_X_OFFSET : 0
 
-    const onCancelButtonLayout = useCallback((event: LayoutChangeEvent) => {
+    const onCancelButtonLayout = useEvent((event: LayoutChangeEvent) => {
       setCancelButtonWidth(event.nativeEvent.layout.width)
-    }, [])
+    })
 
-    const onPressCancel = (): void => {
+    const onPressCancel = useEvent((): void => {
       inputRef.current?.clear()
       setIsFocus(false)
       dismissNativeKeyboard()
       sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
       onChangeText?.('')
       onCancel?.()
-    }
+    })
 
-    const onTextInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
+    const onTextInputFocus = useEvent((e: Parameters<NonNullable<InputProps['onFocus']>>[0]): void => {
       onFocus?.(e)
       setIsFocus(true)
-    }
+    })
 
-    const onChangeTextInput = useCallback(
-      (text: string) => {
-        onChangeText?.(text)
-      },
-      [onChangeText],
+    const animateOnly = useMemo(
+      () => [cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'],
+      [cancelBehaviorType],
     )
 
-    const animationDirection = cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'
-
     return (
-      <Flex row shrink alignItems="center">
+      <Flex row shrink alignItems="center" mx={mx}>
         {showBackChevron && (
           <Flex
-            animation="200ms"
             left={0}
             opacity={isFocus ? 1 : 0}
             pointerEvents={isFocus ? 'auto' : 'none'}
             position="absolute"
             scale={isFocus ? 1 : 0}
+            testID={TestID.Back}
             x={CANCEL_CHEVRON_X_OFFSET}
           >
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
-              <RotatableChevron color="$neutral1" direction="left" height={iconSizes.icon20} width={iconSizes.icon20} />
+              <RotatableChevron color="$neutral1" direction="left" size="$icon.20" />
             </TouchableArea>
           </Flex>
         )}
@@ -142,26 +159,20 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           grow
           row
           alignItems="center"
-          animateOnly={[animationDirection]}
+          animateOnly={animateOnly}
           animation="quick"
           backgroundColor={backgroundColor}
-          borderRadius="$roundedFull"
+          borderRadius="$rounded16"
           gap="$spacing8"
           minHeight={minHeight}
           ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
+          my={my}
           px={px}
           py={py}
-          {...(showShadow && {
-            shadowColor: '$shadowColor',
-            shadowOffset: SHADOW_OFFSET_SMALL,
-            shadowOpacity: 0.25,
-            shadowRadius: 6,
-            elevation: 6,
-            '$theme-dark': {
-              shadowColor: '$black',
-            },
-          })}
+          borderColor={borderColor}
+          borderWidth={borderWidth}
+          {...(showShadow && SHADOW_PROPS)}
         >
           {!hideIcon && (
             <Flex py="$spacing4">
@@ -186,29 +197,26 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 outlineWidth={0}
                 p="$none"
                 placeholder={placeholder}
-                placeholderTextColor="$neutral2"
+                placeholderTextColor={placeholderTextColor}
                 position="absolute"
                 returnKeyType="done"
                 testID={TestID.ExploreSearchInput}
                 textContentType="none"
+                keyboardType={keyboardType}
+                inputMode={inputMode}
                 top={0}
-                // fix horizontal text wobble on iOS
-                {...(isIOS && {
-                  width: '100%',
-                })}
                 // avoid turning into a controlled input if not wanting to
                 {...(typeof value !== 'undefined' && {
                   value,
                 })}
+                // web and iOS need this to avoid platform specific issues
                 // fix Android TextInput issue when the width is changed
                 // (the placeholder text was wrapping in 2 lines when the width was changed)
-                {...(isAndroid && {
-                  width: value ? undefined : 9999,
-                })}
-                width="100%"
-                onChangeText={onChangeTextInput}
+                width={!isAndroid ? '100%' : value ? undefined : 9999}
+                onChangeText={onChangeText}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}
+                onKeyPress={onKeyPress}
               />
             </ViewGestureHandler>
           </Flex>
@@ -216,23 +224,15 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
           <AnimatePresence>
             {showCloseButton && (
-              <DeprecatedButton
+              <TouchableArea
                 animation="quick"
                 backgroundColor={backgroundColor}
-                enterStyle={{ opacity: 0, scale: 0 }}
-                exitStyle={{ opacity: 0, scale: 0 }}
-                icon={
-                  <RotatableChevron
-                    color="$neutral3"
-                    direction="up"
-                    height={iconSizes.icon20}
-                    width={iconSizes.icon20}
-                  />
-                }
-                p="$none"
-                theme="secondary"
+                enterStyle={ENTER_EXIT_STYLE}
+                exitStyle={ENTER_EXIT_STYLE}
                 onPress={onClose}
-              />
+              >
+                <RotatableChevron color="$neutral3" direction="up" size="$icon.20" />
+              </TouchableArea>
             )}
           </AnimatePresence>
         </Flex>

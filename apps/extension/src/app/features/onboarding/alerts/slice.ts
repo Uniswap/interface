@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export enum AlertName {
   PinToToolbar = 'PinToToolbar',
@@ -20,14 +20,12 @@ const slice = createSlice({
   name: 'alerts',
   initialState,
   reducers: {
-    openAlert: (state, action: PayloadAction<AlertName>) => {
-      state[action.payload].isOpen = true
-    },
     closeAlert: (state, action: PayloadAction<AlertName>) => {
       state[action.payload].isOpen = false
     },
+    resetAlerts: () => initialState,
   },
 })
 
-export const { openAlert, closeAlert } = slice.actions
+export const { closeAlert, resetAlerts } = slice.actions
 export const { reducer: alertsReducer } = slice

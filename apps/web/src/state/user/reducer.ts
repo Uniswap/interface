@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import { RouterPreference } from 'state/routing/types'
-import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
+import { RouterPreference } from '~/state/routing/types'
+import { SerializedPair, SlippageTolerance } from '~/state/user/types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -37,6 +37,8 @@ export interface UserState {
   showSurveyPopup?: boolean
 
   originCountry?: string
+
+  isEmbeddedWalletBackedUp?: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -53,12 +55,16 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   showSurveyPopup: undefined,
   originCountry: undefined,
+  isEmbeddedWalletBackedUp: false,
 }
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    updateIsEmbeddedWalletBackedUp(state, { payload: { isEmbeddedWalletBackedUp } }) {
+      state.isEmbeddedWalletBackedUp = isEmbeddedWalletBackedUp
+    },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
       state.timestamp = currentTimestamp()
@@ -79,6 +85,7 @@ const userSlice = createSlice({
         serializedPair.token0.address !== serializedPair.token1.address
       ) {
         const chainId = serializedPair.token0.chainId
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }
@@ -87,6 +94,7 @@ const userSlice = createSlice({
     setOriginCountry(state, { payload: country }) {
       state.originCountry = country
     },
+    resetUser: () => initialState,
   },
 })
 
@@ -97,5 +105,7 @@ export const {
   updateUserRouterPreference,
   updateUserDeadline,
   updateUserSlippageTolerance,
+  updateIsEmbeddedWalletBackedUp,
+  resetUser,
 } = userSlice.actions
 export default userSlice.reducer

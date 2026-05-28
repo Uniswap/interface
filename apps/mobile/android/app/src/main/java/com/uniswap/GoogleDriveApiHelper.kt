@@ -110,27 +110,27 @@ class GoogleDriveApiHelper {
           )
           val listener = object : ActivityEventListener {
             override fun onActivityResult(
-              activity: Activity?,
+              activity: Activity,
               requestCode: Int,
               resultCode: Int,
-              intent: Intent?
+              data: Intent?
             ) {
               // Remove the listener after using it
               reactContext.removeActivityEventListener(this)
               if (requestCode == Request.GOOGLE_SIGN_IN.value && resultCode == Activity.RESULT_OK) {
 
-                val signInTask = GoogleSignIn.getSignedInAccountFromIntent(intent)
+                val signInTask = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account: GoogleSignInAccount? =
                   signInTask.getResult(ApiException::class.java)
                 continuation.resumeWith(Result.success(account))
 
               } else {
                 continuation.resumeWith(Result.failure(Exception("Oauth process has been interrupted")))
-                Log.d("Activity intent", "Indent null")
+                Log.d("Activity intent", "Intent null")
               }
             }
 
-            override fun onNewIntent(p0: Intent?) {}
+            override fun onNewIntent(intent: Intent) {}
           }
           reactContext.addActivityEventListener(listener)
         } catch (e: Exception) {

@@ -1,10 +1,11 @@
+/* oxlint-disable typescript/no-unnecessary-condition */
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { updateVersion } from 'state/global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
-import { ListsState } from 'state/lists/types'
-import { Mutable } from 'types/mutable'
+import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
+import { updateVersion } from '~/state/global/actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList, resetLists } from '~/state/lists/actions'
+import { ListsState } from '~/state/lists/types'
+import { Mutable } from '~/types/mutable'
 
 type ListState = ListsState['byUrl'][string]
 
@@ -17,12 +18,10 @@ const NEW_LIST_STATE: ListState = {
 
 export const initialState: ListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_INACTIVE_LIST_URLS,
-  byUrl: {
-    ...DEFAULT_INACTIVE_LIST_URLS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
-      memo[listUrl] = NEW_LIST_STATE
-      return memo
-    }, {}),
-  },
+  byUrl: DEFAULT_INACTIVE_LIST_URLS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
+    memo[listUrl] = NEW_LIST_STATE
+    return memo
+  }, {}),
 }
 
 export default createReducer(initialState, (builder) =>
@@ -85,6 +84,7 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(removeList, (state, { payload: url }) => {
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (state.byUrl[url]) {
         delete state.byUrl[url]
       }
@@ -103,7 +103,7 @@ export default createReducer(initialState, (builder) =>
       // state loaded from localStorage, but new lists have never been initialized
       if (!state.lastInitializedDefaultListOfLists) {
         state.byUrl = initialState.byUrl
-      } else if (state.lastInitializedDefaultListOfLists) {
+      } else {
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),
           new Set(),
@@ -124,5 +124,6 @@ export default createReducer(initialState, (builder) =>
       }
 
       state.lastInitializedDefaultListOfLists = DEFAULT_INACTIVE_LIST_URLS
-    }),
+    })
+    .addCase(resetLists, () => initialState),
 )

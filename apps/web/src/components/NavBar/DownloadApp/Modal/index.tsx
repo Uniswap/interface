@@ -1,89 +1,114 @@
-import { InterfaceModalName } from '@uniswap/analytics-events'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
-import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
-import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
-import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
-import { useCallback, useState } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { AnimateTransition, Flex, ModalCloseIcon, TouchableArea } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { atom, useAtom } from 'jotai'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatedPager, Flex, useMedia, WebBottomSheet } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseUnitag'
+import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
+import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
+import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
+import { useIOSBodyScrollLock } from '~/hooks/useIOSBodyScrollLock'
+import { useModalState } from '~/hooks/useModalState'
+import { useAppSelector } from '~/state/hooks'
 
 export enum Page {
-  GetStarted,
-  GetApp,
-  PasskeyGeneration,
+  DownloadApp = 0,
+  ChooseUnitag = 1,
+  KeyManagement = 2,
+  PasskeyGeneration = 3,
 }
+
+export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 
 export function GetTheAppModal() {
-  const [page, setPage] = useState<Page>(Page.GetStarted)
-  const isOpen = useModalIsOpen(ApplicationModal.GET_THE_APP)
-  const closeModal = useCloseModal()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const initialInnerPage = useAppSelector((state) => {
+    const modal = state.application.openModal
+    return modal?.name === ModalName.GetTheApp ? modal.initialState?.initialInnerPage : undefined
+  })
+  const showMobileDownload = initialInnerPage === 'mobile'
+  const initialPage = showMobileDownload || !isEmbeddedWalletEnabled ? Page.DownloadApp : Page.ChooseUnitag
+
+  const [page, setPage] = useAtom(downloadAppModalPageAtom)
+  const { isOpen, closeModal } = useModalState(ModalName.GetTheApp)
+
+  // Read `initialPage` through a ref inside the 500ms timeout so the post-close reset uses
+  // the recomputed value (after Redux clears `openModal` and `showMobileDownload` flips
+  // false) instead of the stale closure captured when `close` was created.
+  const initialPageRef = useRef(initialPage)
+  useEffect(() => {
+    initialPageRef.current = initialPage
+  }, [initialPage])
+
   const close = useCallback(() => {
     closeModal()
-    setTimeout(() => setPage(Page.GetStarted), 500)
+    setTimeout(() => setPage(initialPageRef.current), 500)
   }, [closeModal, setPage])
-  const showBackButton = page !== Page.GetStarted
-  const accountDrawer = useAccountDrawer()
 
-  const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const isControl = isAccountCTAExperimentControl || isEmbeddedWalletEnabled
+  const [unitag, setUnitag] = useState('')
+  useEffect(() => {
+    setPage(initialPage)
+  }, [initialPage, setPage])
+
+  const media = useMedia()
+  const isSheet = media.md
+  const isDismissible = !isEmbeddedWalletEnabled || showMobileDownload
+
+  const keyboardHeight = useIOSBodyScrollLock(isOpen)
+
+  const content = (
+    <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none" width="100%">
+      {/* The Page enum value corresponds to the modal page's index */}
+      <AnimatedPager currentIndex={page}>
+        <DownloadAppsModal onClose={close} initialInnerPage={showMobileDownload ? 'mobile' : undefined} />
+        <ChooseUnitagModal
+          setUnitag={setUnitag}
+          goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
+          onClose={close}
+          setPage={setPage}
+        />
+        <KeyManagementModal goBack={() => setPage(Page.ChooseUnitag)} onClose={close} setPage={setPage} />
+        <PasskeyGenerationModal
+          unitag={unitag}
+          goBack={() => setPage(Page.KeyManagement)}
+          onClose={close}
+          setPage={setPage}
+        />
+      </AnimatedPager>
+    </Flex>
+  )
+
+  // Render WebBottomSheet directly on mobile: <Modal>'s outer Dialog focus trap
+  // fights the inner Sheet's on iOS Safari and breaks keyboard handling.
+  if (isSheet) {
+    return (
+      <WebBottomSheet
+        isOpen={isOpen}
+        onClose={isDismissible ? close : undefined}
+        maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
+        p={0}
+      >
+        <Flex pb={keyboardHeight ? `${keyboardHeight}px` : undefined}>{content}</Flex>
+      </WebBottomSheet>
+    )
+  }
 
   return (
-    <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
-      <Modal
-        name={ModalName.DownloadApp}
-        isModalOpen={isOpen}
-        maxWidth={isAccountCTAExperimentControl ? 620 : 700}
-        onClose={closeModal}
-        padding={0}
-      >
-        <Flex
-          row
-          position="absolute"
-          top="$spacing24"
-          width="100%"
-          justifyContent={showBackButton ? 'space-between' : 'flex-end'}
-          zIndex={zIndexes.modal}
-          pl="$spacing24"
-          pr="$spacing24"
-        >
-          {showBackButton && (
-            <TouchableArea onPress={() => setPage(Page.GetStarted)}>
-              <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
-            </TouchableArea>
-          )}
-          {page !== Page.PasskeyGeneration && <ModalCloseIcon onClose={close} data-testid="get-the-app-close-button" />}
-        </Flex>
-        <Flex
-          data-testid="download-uniswap-modal"
-          position="relative"
-          width="100%"
-          userSelect="none"
-          height={isControl ? 'unset' : '520px'}
-        >
-          {/* The Page enum value corresponds to the modal page's index */}
-          <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
-            <GetStarted
-              setPage={setPage}
-              toConnectWalletDrawer={() => {
-                close()
-                accountDrawer.open()
-              }}
-            />
-            <GetTheApp />
-            <PasskeyGenerationModal setPage={setPage} />
-          </AnimateTransition>
-        </Flex>
-      </Modal>
-    </Trace>
+    <Modal
+      skipLogImpression
+      name={ModalName.DownloadApp}
+      isModalOpen={isOpen}
+      isDismissible={isDismissible}
+      maxWidth={480}
+      onClose={close}
+      padding="$spacing32"
+    >
+      {content}
+    </Modal>
   )
 }
+
+export default GetTheAppModal

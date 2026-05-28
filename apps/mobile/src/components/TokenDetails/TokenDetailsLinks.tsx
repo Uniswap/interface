@@ -1,82 +1,236 @@
-import React from 'react'
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
+import { useWindowDimensions } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
+import { LinkButton, type LinkButtonProps, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
-import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
-import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
+import { BlockExplorer, GlobeFilled, Page, XTwitter } from 'ui/src/components/icons'
+import { spacing } from 'ui/src/theme'
+import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { MultichainAddressSheet } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet'
+import { MultichainExplorerList } from 'uniswap/src/components/MultichainTokenDetails/MultichainExplorerList'
+import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
+import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
-import { getTwitterLink } from 'wallet/src/utils/linking'
+import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { ExplorerDataType, getExplorerLink, getTwitterLink, openUri } from 'uniswap/src/utils/linking'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+const MIN_SHEET_HEIGHT = 520
+const INITIAL_SNAP_PERCENT = 0.65
+
+const SCROLL_CONTENT_STYLE = { paddingHorizontal: spacing.spacing24 }
+
+const ListHeaderSpacer = (): JSX.Element => <Flex width="$spacing16" />
+const ItemSeparatorComponent = (): JSX.Element => <Flex width="$spacing8" />
+
+const renderItem = ({ item }: { item: LinkButtonProps }): JSX.Element => <LinkButton {...item} />
+
+const keyExtractor = (item: LinkButtonProps): string => item.testID ?? item.label
+
+/** Fetches cross-chain token data and returns entries ordered by network selector order. */
+function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
+  const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
+  const { data } = GraphQLApi.useTokenProjectsQuery({
+    variables: { contracts: [contractInput] },
+  })
+
+  const entries = useMemo(() => {
+    const tokens = data?.tokenProjects?.[0]?.tokens
+    if (!tokens) {
+      return []
+    }
+    const result: MultichainTokenEntry[] = []
+    for (const token of tokens) {
+      const chainId = fromGraphQLChain(token.chain)
+      if (chainId && token.address) {
+        result.push({ chainId, address: token.address, isNative: false })
+      }
+    }
+    return result
+  }, [data])
+
+  return useOrderedMultichainEntries(entries)
+}
 
 export function TokenDetailsLinks(): JSX.Element {
   const { t } = useTranslation()
+  const trace = useTrace()
 
-  const { address, chainId, currencyId } = useTokenDetailsContext()
+  const {
+    address,
+    chainId,
+    currencyId,
+    isMultichainAddressSheetOpen,
+    openMultichainAddressSheet,
+    closeMultichainAddressSheet,
+  } = useTokenDetailsContext()
+
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const multichainEntries = useMultichainTokenEntries(currencyId)
+  const hasMultipleChains = multichainEntries.length > 1
+
+  const { height: screenHeight } = useWindowDimensions()
+  const multichainSnapPoints = useMemo(() => {
+    const percentHeight = INITIAL_SNAP_PERCENT * screenHeight
+    const initialSnap = Math.min(Math.max(percentHeight, MIN_SHEET_HEIGHT), screenHeight)
+    return [initialSnap, '100%']
+  }, [screenHeight])
 
   const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
 
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
+  const explorerLink = getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN })
   const explorerName = getChainInfo(chainId).explorer.name
 
+  const isNativeCurrency = isNativeCurrencyAddress(chainId, address)
+
+  const [isExplorerSheetOpen, setIsExplorerSheetOpen] = useState(false)
+
+  const handleExplorerPress = useCallback(
+    async (url: string, explorerChainId: UniverseChainId) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.TokenExplorerLink,
+        chain_name: getChainInfo(explorerChainId).urlParam,
+      })
+      await openUri({ uri: url })
+      setIsExplorerSheetOpen(false)
+    },
+    [trace],
+  )
+
+  const links = useMemo((): LinkButtonProps[] => {
+    const showMultichainDropdowns = multichainTokenUxEnabled && hasMultipleChains
+    const isNativeAddress = isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
+    const items: LinkButtonProps[] = []
+
+    if (!isNativeAddress) {
+      if (showMultichainDropdowns) {
+        items.push({
+          Icon: Page,
+          element: ElementName.MultichainAddress,
+          label: t('common.address'),
+          testID: TestID.MultichainAddressDropdown,
+          onPress: openMultichainAddressSheet,
+        })
+      } else {
+        items.push({
+          buttonType: LinkButtonType.Copy,
+          element: ElementName.Copy,
+          label: t('common.text.contract'),
+          testID: TestID.TokenLinkCopy,
+          value: address,
+        })
+      }
+    }
+
+    if (!isNativeCurrency) {
+      if (showMultichainDropdowns) {
+        items.push({
+          Icon: BlockExplorer,
+          element: ElementName.MultichainExplorer,
+          label: t('common.explorer'),
+          testID: TestID.MultichainExplorerDropdown,
+          onPress: () => setIsExplorerSheetOpen(true),
+        })
+      } else {
+        items.push({
+          Icon: getBlockExplorerIcon(chainId),
+          buttonType: LinkButtonType.Link,
+          element: ElementName.TokenLinkEtherscan,
+          label: explorerName,
+          testID: TestID.TokenLinkEtherscan,
+          value: explorerLink,
+        })
+      }
+    }
+
+    if (homepageUrl) {
+      items.push({
+        Icon: GlobeFilled,
+        buttonType: LinkButtonType.Link,
+        element: ElementName.TokenLinkWebsite,
+        label: t('token.links.website'),
+        testID: TestID.TokenLinkWebsite,
+        value: homepageUrl,
+      })
+    }
+
+    if (twitterName) {
+      items.push({
+        Icon: XTwitter,
+        buttonType: LinkButtonType.Link,
+        element: ElementName.TokenLinkTwitter,
+        label: t('token.links.twitter'),
+        testID: TestID.TokenLinkTwitter,
+        value: getTwitterLink(twitterName),
+      })
+    }
+
+    return items
+  }, [
+    chainId,
+    address,
+    isNativeCurrency,
+    multichainTokenUxEnabled,
+    hasMultipleChains,
+    openMultichainAddressSheet,
+    homepageUrl,
+    twitterName,
+    explorerName,
+    explorerLink,
+    t,
+  ])
+
   return (
-    <View style={{ marginHorizontal: -14 }}>
-      <Flex gap="$spacing8">
-        <Text color="$neutral2" mx="$spacing16" variant="subheading2">
-          {t('token.links.title')}
-        </Text>
+    <Flex gap="$spacing8">
+      <Text color="$neutral2" mx="$spacing16" variant="subheading2">
+        {t('token.links.title')}
+      </Text>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={links}
+        ListHeaderComponent={ListHeaderSpacer}
+        ListFooterComponent={ItemSeparatorComponent}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex row gap="$spacing8" px="$spacing16">
-            <LinkButton
-              Icon={getBlockExplorerIcon(chainId)}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkEtherscan}
-              label={explorerName}
-              testID={TestID.TokenLinkEtherscan}
-              value={explorerLink}
-            />
+      {isExplorerSheetOpen && (
+        <Modal
+          fullScreen
+          overrideInnerContainer
+          name={ModalName.MultichainExplorerModal}
+          snapPoints={multichainSnapPoints}
+          onClose={() => setIsExplorerSheetOpen(false)}
+        >
+          <BottomSheetScrollView contentContainerStyle={SCROLL_CONTENT_STYLE} showsVerticalScrollIndicator={false}>
+            <MultichainExplorerList renderedInModal chains={multichainEntries} onExplorerPress={handleExplorerPress} />
+          </BottomSheetScrollView>
+        </Modal>
+      )}
 
-            {homepageUrl && (
-              <LinkButton
-                Icon={GlobeIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkWebsite}
-                label={t('token.links.website')}
-                testID={TestID.TokenLinkWebsite}
-                value={homepageUrl}
-              />
-            )}
-
-            {twitterName && (
-              <LinkButton
-                Icon={TwitterIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkTwitter}
-                label={t('token.links.twitter')}
-                testID={TestID.TokenLinkTwitter}
-                value={getTwitterLink(twitterName)}
-              />
-            )}
-
-            {!isDefaultNativeAddress(address) && (
-              <LinkButton
-                buttonType={LinkButtonType.Copy}
-                element={ElementName.Copy}
-                label={t('common.text.contract')}
-                testID={TestID.TokenLinkCopy}
-                value={address}
-              />
-            )}
-          </Flex>
-        </ScrollView>
-      </Flex>
-    </View>
+      <MultichainAddressSheet
+        isOpen={isMultichainAddressSheetOpen}
+        chains={multichainEntries}
+        onClose={closeMultichainAddressSheet}
+      />
+    </Flex>
   )
 }

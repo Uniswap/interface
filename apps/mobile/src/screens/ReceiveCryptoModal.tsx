@@ -1,20 +1,21 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
+import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ACCOUNT_IMAGE_SIZE = 52
@@ -45,7 +46,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   }
 
   return (
-    <TouchableArea onPress={onPressShowWalletQr}>
+    <TouchableArea testID={TestID.WalletReceiveCrypto} onPress={onPressShowWalletQr}>
       <Flex row alignItems="flex-start" gap="$spacing12" px="$spacing8">
         <Flex
           fill
@@ -74,7 +75,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
                 height={ICON_SIZE}
                 width={ICON_SIZE}
               >
-                <CopySheets color="$neutral2" size={iconSizes.icon16} />
+                <CopySheets color="$neutral2" size="$icon.16" />
               </Flex>
             </TouchableArea>
             <Flex
@@ -85,7 +86,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
               height={ICON_SIZE}
               width={ICON_SIZE}
             >
-              <QrCode color="$neutral2" size={iconSizes.icon16} />
+              <QrCode color="$neutral2" size="$icon.16" />
             </Flex>
           </Flex>
         </Flex>
@@ -94,15 +95,11 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   )
 }
 
-export function ReceiveCryptoModal(): JSX.Element {
+export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalName.ReceiveCryptoModal>): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { initialState } = useSelector(selectModalState(ModalName.ReceiveCryptoModal))
-
-  const onClose = (): void => {
-    dispatch(closeModal({ name: ModalName.ReceiveCryptoModal }))
-  }
+  const { serviceProviders } = route.params
+  const { onClose } = useReactNavigationModal()
 
   return (
     <Modal
@@ -119,7 +116,7 @@ export function ReceiveCryptoModal(): JSX.Element {
             {t('home.upsell.receive.title')}
           </Text>
           <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-            {t('home.upsell.receive.description')}
+            {t('fiatOnRamp.receiveCrypto.transferFunds')}
           </Text>
         </Flex>
         <AccountCardItem onClose={onClose} />
@@ -130,7 +127,7 @@ export function ReceiveCryptoModal(): JSX.Element {
           </Text>
           <Separator />
         </Flex>
-        <ServiceProviderSelector serviceProviders={initialState || []} onClose={onClose} />
+        <ServiceProviderSelector serviceProviders={serviceProviders} onClose={onClose} />
       </Flex>
     </Modal>
   )

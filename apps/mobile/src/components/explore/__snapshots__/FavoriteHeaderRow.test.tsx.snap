@@ -13,22 +13,18 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       "marginRight": 8,
     }
   }
+  testID="favorite-token-header"
 >
   <Text
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#9B9B9B",
-            "light": "#7D7D7D",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.63)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 20,
       }
     }
     suppressHighlighting={true}
@@ -36,26 +32,67 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     Editing Title
   </Text>
   <View
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
     hitSlop={16}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
-      {
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
   >
     <Text
@@ -63,12 +100,7 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       maxFontSizeMultiplier={1.2}
       style={
         {
-          "color": {
-            "dynamic": {
-              "dark": "#FC72FF",
-              "light": "#FC72FF",
-            },
-          },
+          "color": "#FF37C7",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "500",
@@ -97,22 +129,18 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       "marginRight": 8,
     }
   }
+  testID="favorite-token-header"
 >
   <Text
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#9B9B9B",
-            "light": "#7D7D7D",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.63)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 20,
       }
     }
     suppressHighlighting={true}
@@ -120,26 +148,67 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     Title
   </Text>
   <View
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
     hitSlop={16}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
-      {
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
     testID="edit"
   >
@@ -161,7 +230,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
             "borderWidth": 0,
           },
           {
-            "color": "#7D7D7D",
+            "color": "rgba(19, 19, 19, 0.63)",
             "height": 20,
             "width": 20,
           },
@@ -176,7 +245,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       vbWidth={18}
     >
       <RNSVGGroup
-        color="#7D7D7D"
+        color="rgba(19, 19, 19, 0.63)"
         fill={null}
         propList={
           [

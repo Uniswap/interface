@@ -1,0 +1,52 @@
+{
+  "name": "hashcash-native",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/hashcash-native/src",
+  "projectType": "library",
+  "tags": ["platform:native", "scope:hashcash", "type:lib"],
+  "targets": {
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "build": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "clean": {
+      "command": "rm -rf android/build node_modules/**/android/build lib",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "specs": {
+      "command": "tsc --noEmit false && nitrogen --logLevel=\"debug\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "codegen:clean": {
+      "command": "rm -rf nitrogen/generated",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "codegen": {
+      "command": "rm -rf nitrogen/generated && tsc --noEmit false && nitrogen --logLevel=\"debug\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

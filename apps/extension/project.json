@@ -1,0 +1,246 @@
+{
+  "tags": ["scope:extension", "type:app"],
+  "targets": {
+    "build": {
+      "executor": "nx:noop",
+      "dependsOn": ["^build", "prepare"]
+    },
+    "build:firefox": {
+      "command": "wxt build -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:production": {
+      "command": "webpack --node-env=production --env BUILD_ENV=prod BUILD_NUM=${BUILD_NUM:-0}",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:wxt": {
+      "command": "wxt build",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:circular": {
+      "command": "bunx madge --circular ./src/entrypoints/sidepanel/main.tsx ./src/entrypoints/onboarding/main.tsx ./src/entrypoints/unitagClaim/main.tsx",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:deps:usage": {},
+    "clean": {
+      "command": "wxt clean",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev": {
+      "command": "wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev:firefox": {
+      "command": "wxt -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:download": {
+      "command": "bash ../../scripts/downloadEnvLocal.sh m4dhqfltt3dokkqi3hqwigmf2a .env",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:upload": {
+      "command": "bash ../../scripts/uploadEnvLocal.sh m4dhqfltt3dokkqi3hqwigmf2a .env",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint:typeaware-custom": {
+      "command": "bun config/oxlint-plugins/typeaware-custom.ts apps/extension"
+    },
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "postinstall": {
+      "command": "wxt prepare",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "command": "wxt prepare",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/wxt.config.ts",
+        "{projectRoot}/config/**",
+        "{projectRoot}/src/entrypoints/**/*",
+        "{projectRoot}/package.json"
+      ],
+      "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
+    },
+    "snapshots": {
+      "command": "jest -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "command": "wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute": {
+      "command": "bun run scripts/startAbsolute.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:mac": {
+      "command": "WXT_ABSOLUTE_OUTDIR=/Users/Shared/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:windows": {
+      "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:linux": {
+      "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:webpack": {
+      "command": "webpack serve --config webpack.config.js",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:webpack:absolute": {
+      "command": "webpack serve --config webpack.config.js --output-path /Users/Shared/stretch",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "command": "jest",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "zip": {
+      "command": "wxt zip",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "zip:firefox": {
+      "command": "wxt zip -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:e2e": {
+      "command": "wxt build -b chrome --mode production",
+      "options": {
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "BUILD_ENV": "dev",
+          "BUILD_NUM": "0"
+        }
+      },
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": ["{projectRoot}/.output/chrome-mv3"],
+      "cache": true,
+      "dependsOn": ["^build", "prepare"]
+    },
+    "build:e2e:webpack": {
+      "command": "webpack --node-env=production --env BUILD_ENV=dev --env BUILD_NUM=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": ["{projectRoot}/build"],
+      "cache": true,
+      "dependsOn": ["^build", "prepare"]
+    },
+    "playwright:test": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:smoke": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts e2e/tests/smoke/",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:ui": {
+      "command": "playwright test --ui --config=e2e/config/playwright.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e": {
+      "command": "nx playwright:test extension",
+      "dependsOn": ["build:e2e"]
+    },
+    "e2e:smoke": {
+      "command": "nx playwright:test:smoke extension",
+      "dependsOn": ["build:e2e"]
+    },
+    "e2e:ui": {
+      "command": "nx playwright:ui extension",
+      "dependsOn": ["build:e2e"]
+    },
+    "diff:builds": {
+      "command": "bun run scripts/diffBuilds.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "validate:build": {
+      "command": "bun run scripts/validateBuildOutput.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build:wxt"]
+    },
+    "validate:build:dev": {
+      "command": "bun run scripts/validateBuildOutput.ts --dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "validate:build:prod": {
+      "command": "bun run scripts/validateBuildOutput.ts --prod",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build:wxt"]
+    }
+  }
+}

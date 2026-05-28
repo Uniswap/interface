@@ -1,29 +1,5 @@
-import { colorsLight, opacify } from 'ui/src/theme'
-import {
-  AdjustmentType,
-  adjustColorVariant,
-  findNearestThemeColor,
-  getColorDiffScore,
-  hexToRGB,
-} from 'uniswap/src/utils/colors'
-
-it('returns an hex color with opacity', () => {
-  expect(opacify(10, '#000000')).toEqual('#0000001a')
-})
-
-it('ignores color when not an hex', () => {
-  expect(opacify(10, '000000')).toEqual('000000')
-})
-
-it('throws when color is not valid', () => {
-  expect(() => opacify(10, '#000')).toThrow()
-  expect(() => opacify(10, '#00000000')).toThrow()
-})
-
-it('throws when amount is not valid', () => {
-  expect(() => opacify(-1, '#000000')).toThrow()
-  expect(() => opacify(120, '#000000')).toThrow()
-})
+import { colorsLight } from 'ui/src/theme'
+import { AdjustmentType, adjustColorVariant, findNearestThemeColor, getColorDiffScore } from 'uniswap/src/utils/colors'
 
 describe('adjustColorVariant', () => {
   it('handles undefined', () => {
@@ -41,7 +17,7 @@ describe('adjustColorVariant', () => {
 
 describe('findNearestThemeColor', () => {
   it('Finds correct theme color for color in theme', () => {
-    expect(findNearestThemeColor(colorsLight.accent1)).toEqual('pinkBase')
+    expect(findNearestThemeColor(colorsLight.statusSuccess)).toEqual('greenBase')
   })
 })
 
@@ -51,11 +27,5 @@ describe('getColorDiffScore', () => {
   })
   it('returns max for opposite color', () => {
     expect(getColorDiffScore('#000000', '#ffffff')).toEqual(442.6729559300637)
-  })
-})
-
-describe('hexToRGB', () => {
-  it('converts hex to rgb', () => {
-    expect(hexToRGB('#000000')).toEqual({ b: 0, g: 0, r: 0 })
   })
 })

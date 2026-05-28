@@ -1,29 +1,25 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils'
-import { atom, useAtom } from 'jotai'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useCallback, useMemo, useState } from 'react'
-import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Text, useSporeColors } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Flex, Text, useMedia } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
+import {
+  useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
+} from '~/features/Explore/state/exploreTablesFilterStore'
+import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 
-export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
+const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 
-function ProtocolFilter() {
+export function ProtocolFilter() {
   const { t } = useTranslation()
-  const colors = useSporeColors()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const [open, setOpen] = useState(false)
-  const [selectedProtocol, setSelectedProtocol] = useAtom(exploreProtocolVersionFilterAtom)
-  const protocolVersions = useMemo(() => {
-    const options = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
-    return isV4DataEnabled ? options : options.filter((o) => o !== ProtocolVersion.V4)
-  }, [isV4DataEnabled])
+  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
+  const { setSelectedProtocol } = useExploreTablesFilterStoreActions()
+  const media = useMedia()
 
   const onVersionChange = useCallback(
     (protocol: ProtocolVersion) => {
@@ -34,18 +30,18 @@ function ProtocolFilter() {
   )
 
   const versionFilterOptions = useMemo(() => {
-    return protocolVersions.map((option) => (
+    return PROTOCOL_VERSIONS.map((option) => (
       <InternalMenuItem key={`ExplorePools-version-${option}`} onPress={() => onVersionChange(option)}>
         {option === ProtocolVersion.UNSPECIFIED ? t('common.all') : getProtocolVersionLabel(option)}
-        {selectedProtocol === option && <Check size={16} color={colors.accent1.val} />}
+        {selectedProtocol === option && <Check size="$icon.16" color="$accent1" />}
       </InternalMenuItem>
     ))
-  }, [protocolVersions, selectedProtocol, onVersionChange, colors, t])
+  }, [selectedProtocol, onVersionChange, t])
 
   return (
-    <div>
+    <Flex>
       <Trace modal={ModalName.ExploreProtocolFilter}>
-        <DropdownSelector
+        <Dropdown
           isOpen={open}
           toggleOpen={() => setOpen((prev) => !prev)}
           menuLabel={
@@ -55,23 +51,14 @@ function ProtocolFilter() {
                 : getProtocolVersionLabel(selectedProtocol)}
             </Text>
           }
-          internalMenuItems={<>{versionFilterOptions}</>}
-          dropdownStyle={{
-            width: 160,
-            className: 'scrollbar-hidden',
-            top: 'calc(100% + 20px)',
-            right: 0,
-            $lg: {
-              right: 'unset',
-              left: 0,
-            },
-          }}
+          dropdownStyle={{ width: 160 }}
           buttonStyle={{ height: 40, width: 'max-content' }}
-          adaptToSheet={false}
-        />
+          allowFlip
+          alignRight={!media.lg}
+        >
+          {versionFilterOptions}
+        </Dropdown>
       </Trace>
-    </div>
+    </Flex>
   )
 }
-
-export default ProtocolFilter

@@ -1,28 +1,18 @@
-import { useMemo } from 'react'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import {
-  TokenOption,
-  TokenOptionSection,
-  TokenSection,
-  TokenSelectorFlow,
-} from 'uniswap/src/components/TokenSelector/types'
+  type OnchainItemListOption,
+  OnchainItemListOptionType,
+  type TokenOption,
+} from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
-import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
-import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { differenceWith } from 'utilities/src/primitives/array'
 
-export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
-  return {
-    currencyInfo,
-    balanceUSD: null,
-    quantity: null,
-  }
-}
-
 export function createEmptyTokenOptionFromBridgingToken(
-  token: GetSwappableTokensResponse['tokens'][0],
+  token: TradingApi.GetSwappableTokensResponse['tokens'][0],
 ): TokenOption | undefined {
   const currencyInfo = tradingApiSwappableTokenToCurrencyInfo(token)
 
@@ -31,22 +21,23 @@ export function createEmptyTokenOptionFromBridgingToken(
   }
 
   return {
+    type: OnchainItemListOptionType.Token,
     currencyInfo,
     balanceUSD: null,
     quantity: null,
   }
 }
 
-export function toGqlSafetyLevel(safetyLevel: SafetyLevel): GqlSafetyLevel | null {
+export function toGqlSafetyLevel(safetyLevel: TradingApi.SafetyLevel): GraphQLApi.SafetyLevel | null {
   switch (safetyLevel) {
-    case SafetyLevel.BLOCKED:
-      return GqlSafetyLevel.Blocked
-    case SafetyLevel.MEDIUM_WARNING:
-      return GqlSafetyLevel.MediumWarning
-    case SafetyLevel.STRONG_WARNING:
-      return GqlSafetyLevel.StrongWarning
-    case SafetyLevel.VERIFIED:
-      return GqlSafetyLevel.Verified
+    case TradingApi.SafetyLevel.BLOCKED:
+      return GraphQLApi.SafetyLevel.Blocked
+    case TradingApi.SafetyLevel.MEDIUM_WARNING:
+      return GraphQLApi.SafetyLevel.MediumWarning
+    case TradingApi.SafetyLevel.STRONG_WARNING:
+      return GraphQLApi.SafetyLevel.StrongWarning
+    case TradingApi.SafetyLevel.VERIFIED:
+      return GraphQLApi.SafetyLevel.Verified
     default:
       return null
   }
@@ -68,47 +59,19 @@ function tokenOptionComparator(tokenOption: TokenOption, otherTokenOption: Token
   return areCurrencyIdsEqual(tokenOption.currencyInfo.currencyId, otherTokenOption.currencyInfo.currencyId)
 }
 
-export function formatSearchResults(
-  searchResultCurrencies: CurrencyInfo[] | undefined,
-  portfolioBalancesById: Record<string, PortfolioBalance> | undefined,
-  searchFilter: string | null,
-): TokenOption[] | undefined {
-  if (!searchResultCurrencies) {
-    return undefined
-  }
-
-  const formattedOptions = searchResultCurrencies.map((currencyInfo): TokenOption => {
-    const portfolioBalanceResult = portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()]
-    // Use currencyInfo from Search Results because the search query fetches protectionInfo but portfolioBalances does not
-    return portfolioBalanceResult ? { ...portfolioBalanceResult, currencyInfo } : createEmptyBalanceOption(currencyInfo)
-  })
-
-  // Sort to bring exact matches to the top
-  formattedOptions.sort((res1: TokenOption, res2: TokenOption) => {
-    const res1Match = isExactTokenOptionMatch(res1, searchFilter || '')
-    const res2Match = isExactTokenOptionMatch(res2, searchFilter || '')
-
-    if (res1Match && !res2Match) {
-      return -1
-    } else if (!res1Match && res2Match) {
-      return 1
-    } else {
-      return 0
-    }
-  })
-
-  return formattedOptions
-}
-
 /**
  * Utility to merge the search results with the bridging tokens.
  * Also updates the search results section name accordingly
  */
-export function mergeSearchResultsWithBridgingTokens(
-  searchResults: TokenSection[] | undefined,
-  bridgingTokens: TokenOption[] | undefined,
-  sectionHeaderString: string | undefined,
-): TokenSection[] | undefined {
+export function mergeSearchResultsWithBridgingTokens({
+  searchResults,
+  bridgingTokens,
+  sectionHeaderString,
+}: {
+  searchResults?: OnchainItemSection<TokenOption>[]
+  bridgingTokens?: TokenOption[]
+  sectionHeaderString?: string
+}): OnchainItemSection<TokenOption>[] | undefined {
   if (!searchResults || !bridgingTokens || bridgingTokens.length === 0) {
     return searchResults
   }
@@ -116,15 +79,8 @@ export function mergeSearchResultsWithBridgingTokens(
   const extractedBridgingTokens: TokenOption[] = []
 
   const extractedSearchResults = searchResults.map((section) => {
-    const sectionResults2D: TokenOption[][] = []
     const sectionResults: TokenOption[] = []
     section.data.forEach((token) => {
-      if (isTokenOptionArray(token)) {
-        // 2D array is for horizontal token list sections, which is not applicable for search results
-        sectionResults2D.push(token)
-        return
-      }
-
       const isBridgingToken = bridgingTokens.some((bridgingToken) =>
         areCurrencyIdsEqual(token.currencyInfo.currencyId, bridgingToken.currencyInfo.currencyId),
       )
@@ -138,18 +94,18 @@ export function mergeSearchResultsWithBridgingTokens(
 
     return {
       ...section,
-      data: sectionResults2D.length > 0 ? sectionResults2D : sectionResults,
+      data: sectionResults,
     }
   })
 
-  const bridgingSection: TokenSection = {
-    sectionKey: TokenOptionSection.BridgingTokens,
+  const bridgingSection: OnchainItemSection<TokenOption> = {
+    sectionKey: OnchainItemSectionName.BridgingTokens,
     data: extractedBridgingTokens,
   }
 
   // Update the search results section name to "Other tokens on {{network}}" if there is a valid bridging section
   const searchResultsSection = extractedSearchResults.find(
-    (section) => section.sectionKey === TokenOptionSection.SearchResults,
+    (section) => section.sectionKey === OnchainItemSectionName.SearchResults,
   )
   if (bridgingSection.data.length > 0 && searchResultsSection && sectionHeaderString) {
     searchResultsSection.name = sectionHeaderString
@@ -159,69 +115,24 @@ export function mergeSearchResultsWithBridgingTokens(
   return [bridgingSection, ...extractedSearchResults].filter((section) => section.data.length > 0)
 }
 
-export function isTokenOptionArray(option: TokenOption | TokenOption[]): option is TokenOption[] {
-  return Array.isArray(option)
-}
-
-function isExactTokenOptionMatch(searchResult: TokenOption, query: string): boolean {
-  return (
-    searchResult.currencyInfo.currency.name?.toLowerCase() === query.toLowerCase() ||
-    searchResult.currencyInfo.currency.symbol?.toLowerCase() === query.toLowerCase()
-  )
-}
-
-export function useTokenOptionsSection({
-  sectionKey,
-  tokenOptions,
-  rightElement,
-  endElement,
-  name,
-}: {
-  sectionKey: TokenOptionSection
-  tokenOptions?: TokenOption[] | TokenOption[][]
-  rightElement?: JSX.Element
-  endElement?: JSX.Element
-  name?: string
-}): TokenSection[] | undefined {
-  return useMemo(() => {
-    if (!tokenOptions) {
-      return undefined
-    }
-
-    // If it is a 2D array, check if any of the inner arrays are not empty
-    // Otherwise, check if the array is not empty
-    const is2DArray = tokenOptions?.length > 0 && Array.isArray(tokenOptions[0])
-    const hasData = is2DArray
-      ? tokenOptions.some((item) => isTokenOptionArray(item) && item.length > 0)
-      : tokenOptions.length > 0
-
-    return hasData
-      ? [
-          {
-            sectionKey,
-            data: tokenOptions,
-            name,
-            rightElement,
-            endElement,
-          },
-        ]
-      : undefined
-  }, [name, rightElement, endElement, sectionKey, tokenOptions])
+export function isTokenOptionArray(option: OnchainItemListOption): option is TokenOption[] {
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
+  return Array.isArray(option) && option.every((item) => item.type === OnchainItemListOptionType.Token)
 }
 
 export function isSwapListLoading({
   loading,
   portfolioSection,
-  popularSection,
+  trendingSection,
   isTestnetModeEnabled,
 }: {
   loading: boolean
-  portfolioSection: TokenSection[] | undefined
-  popularSection: TokenSection[] | undefined
+  portfolioSection: OnchainItemSection<TokenOption>[] | undefined
+  trendingSection: OnchainItemSection<TokenOption>[] | undefined
   isTestnetModeEnabled: boolean
 }): boolean {
-  // the popular section is not shown on testnet
-  return loading && (isTestnetModeEnabled ? !portfolioSection : !portfolioSection || !popularSection)
+  // the trending section is not shown on testnet
+  return loading && (isTestnetModeEnabled ? !portfolioSection : !portfolioSection || !trendingSection)
 }
 
 export function flowToModalName(flow: TokenSelectorFlow): ModalNameType | undefined {

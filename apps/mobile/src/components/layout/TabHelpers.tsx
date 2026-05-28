@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-unused-styles */
 import { FlashList, FlashListProps } from '@shopify/flash-list'
 import React, { RefObject, useCallback, useMemo } from 'react'
 import {
@@ -15,11 +14,9 @@ import { Route } from 'react-native-tab-view'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
-import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48
-export const SWIPE_THRESHOLD = 5
 
 export const TAB_STYLES = StyleSheet.create({
   activeTabIndicator: {
@@ -72,7 +69,7 @@ export type HeaderConfig = {
 }
 
 export type ScrollPair = {
-  list: RefObject<FlatList> | RefObject<FlashList<unknown>>
+  list: RefObject<FlatList | null> | RefObject<FlashList<unknown> | null>
   position: Animated.SharedValue<number>
   index: number
 }
@@ -85,6 +82,7 @@ export type TabProps = {
   renderedInModal?: boolean
   refreshing?: boolean
   onRefresh?: () => void
+  isActiveTab?: boolean
   headerHeight?: number
   testID?: TestIDType
 }
@@ -103,15 +101,8 @@ export type TabLabelProps = {
   focused: boolean
   isExternalProfile?: boolean
   textStyleType?: 'primary' | 'secondary'
-  enableNotificationBadge?: boolean
 }
-export const TabLabel = ({
-  route,
-  focused,
-  isExternalProfile,
-  textStyleType = 'primary',
-  enableNotificationBadge,
-}: TabLabelProps): JSX.Element => {
+export const TabLabel = ({ route, focused, textStyleType = 'primary' }: TabLabelProps): JSX.Element => {
   return (
     <Flex row alignItems="center" gap="$spacing4" testID={`home-tab-${route.title}`}>
       <Text
@@ -128,9 +119,6 @@ export const TabLabel = ({
       >
         {route.title}
       </Text>
-      {/* Streamline UI by hiding the Activity tab spinner when focused
-      and showing it only on the specific pending transactions. */}
-      {enableNotificationBadge && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
     </Flex>
   )
 }
@@ -138,11 +126,16 @@ export const TabLabel = ({
 /**
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
  */
-export const useScrollSync = (
-  currentTabIndex: SharedValue<number>,
-  scrollPairs: ScrollPair[],
-  headerConfig: HeaderConfig,
-): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
+export const useScrollSync = ({
+  currentTabIndex,
+  scrollPairs,
+  headerConfig,
+}: {
+  currentTabIndex: SharedValue<number>
+  scrollPairs: ScrollPair[]
+  headerConfig: HeaderConfig
+}): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
+  // oxlint-disable-next-line typescript/no-duplicate-type-constituents -- biome-parity: oxlint is stricter here
   const sync: FlatListProps<unknown>['onMomentumScrollEnd'] | FlashListProps<unknown>['onMomentumScrollEnd'] =
     useCallback(
       (event: { nativeEvent: NativeScrollEvent }) => {

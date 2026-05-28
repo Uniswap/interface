@@ -1,0 +1,32 @@
+diff --git a/v4/core/core.cjs b/v4/core/core.cjs
+index 1234567..abcdefg 100644
+--- a/v4/core/core.cjs
++++ b/v4/core/core.cjs
+@@ -75,7 +75,10 @@ class $ZodEncodeError extends Error {
+     }
+ }
+ exports.$ZodEncodeError = $ZodEncodeError;
+-exports.globalConfig = {};
++// Patched by Uniswap: Enable jitless mode by default to avoid CSP unsafe-eval
++// violations when running in browser extension content scripts (MAIN world context).
++// See: https://github.com/colinhacks/zod/issues/4461
++exports.globalConfig = { jitless: true };
+ function config(newConfig) {
+     if (newConfig)
+         Object.assign(exports.globalConfig, newConfig);
+diff --git a/v4/core/core.js b/v4/core/core.js
+index 1234567..abcdefg 100644
+--- a/v4/core/core.js
++++ b/v4/core/core.js
+@@ -68,7 +68,10 @@ export class $ZodEncodeError extends Error {
+         this.name = "ZodEncodeError";
+     }
+ }
+-export const globalConfig = {};
++// Patched by Uniswap: Enable jitless mode by default to avoid CSP unsafe-eval
++// violations when running in browser extension content scripts (MAIN world context).
++// See: https://github.com/colinhacks/zod/issues/4461
++export const globalConfig = { jitless: true };
+ export function config(newConfig) {
+     if (newConfig)
+         Object.assign(globalConfig, newConfig);

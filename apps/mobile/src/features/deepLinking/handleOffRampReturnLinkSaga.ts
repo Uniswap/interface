@@ -1,27 +1,27 @@
+import { Alert } from 'react-native'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
+import { dismissInAppBrowser } from 'src/utils/linking'
 import { call, put } from 'typed-redux-saga'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOffRampMetaData, OffRampTransferDetailsResponse } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOffRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
+import i18n from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { fetchOffRampTransferDetails } from 'wallet/src/features/fiatOnRamp/api'
-import { dismissInAppBrowser } from 'wallet/src/utils/linking'
 
 export function* handleOffRampReturnLink(url: URL) {
   try {
     yield* call(_handleOffRampReturnLink, url)
-  } catch (error) {
-    // TODO: handle error in UI
-    // Alert.alert(i18n.t('walletConnect.error.general.title'), i18n.t('walletConnect.error.general.message'))
-    // yield* put(openModal({ name: ModalName.Send, initialState: initialSendState }))
+  } catch {
+    Alert.alert(i18n.t('fiatOffRamp.error.populateSend.title'), i18n.t('fiatOffRamp.error.populateSend.description'))
   }
 }
 
@@ -39,13 +39,12 @@ function* _handleOffRampReturnLink(url: URL) {
   let offRampTransferDetails: OffRampTransferDetailsResponse | undefined
 
   try {
-    offRampTransferDetails = yield* call(
-      fetchOffRampTransferDetails,
-      externalTransactionId,
-      currencyCode,
-      Number(currencyAmount),
-      walletAddress,
-    )
+    offRampTransferDetails = yield* call(fetchOffRampTransferDetails, {
+      sessionId: externalTransactionId,
+      baseCurrencyCode: currencyCode,
+      baseCurrencyAmount: Number(currencyAmount),
+      depositWalletAddress: walletAddress,
+    })
   } catch (error) {
     logger.error(error, {
       tags: { file: 'handleOffRampReturnLinkSaga', function: 'handleOffRampReturnLink' },
@@ -54,7 +53,11 @@ function* _handleOffRampReturnLink(url: URL) {
     throw new Error('Failed to fetch offramp transfer details')
   }
 
-  if (!offRampTransferDetails) {
+  if (
+    !offRampTransferDetails.tokenAddress ||
+    !offRampTransferDetails.baseCurrencyCode ||
+    !offRampTransferDetails.depositWalletAddress
+  ) {
     throw new Error('Missing offRampTransferDetails in fiat offramp deep link')
   }
 
@@ -79,7 +82,7 @@ function* _handleOffRampReturnLink(url: URL) {
 
   const fiatOffRampMetaData: FiatOffRampMetaData = {
     name: provider,
-    logoUrl: logos.lightLogo,
+    logoUrl: logos?.lightLogo ?? '',
     onSubmitCallback: (amountUSD?: number) => {
       sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, { ...analyticsProperties, amountUSD })
     },

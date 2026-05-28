@@ -1,15 +1,12 @@
 import React, { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { SvgProps } from 'react-native-svg'
-import { Text, ThemeKeys } from 'ui/src'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import TrashIcon from 'ui/src/assets/icons/trash.svg'
-import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
-import { ThemeNames } from 'ui/src/theme'
+import { GeneratedIcon, Text, ThemeKeys } from 'ui/src'
+import { AlertTriangle, Trash, WalletFilled } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { isEmbeddedWalletAccount } from 'wallet/src/utils/mnemonics'
 
 export enum RemoveWalletStep {
   Warning = 'warning',
@@ -27,10 +24,10 @@ interface ModalContentParams {
 interface ModalContentResult {
   title: React.ReactNode
   description: React.ReactNode
-  Icon: React.ComponentType<SvgProps>
+  Icon: GeneratedIcon
   iconColorLabel: ThemeKeys
+  iconBackgroundColor: ThemeKeys
   actionButtonLabel?: string
-  actionButtonTheme?: ThemeNames
 }
 
 export const useModalContent = ({
@@ -58,10 +55,10 @@ export const useModalContent = ({
           </Text>
         ),
         description: t('account.recoveryPhrase.remove.initial.description'),
-        Icon: TrashIcon,
+        Icon: Trash,
         iconColorLabel: 'statusCritical',
+        iconBackgroundColor: 'statusCritical2',
         actionButtonLabel: t('common.button.continue'),
-        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -70,15 +67,16 @@ export const useModalContent = ({
       return {
         title: t('account.wallet.button.import'),
         description: t('account.recoveryPhrase.remove.import.description'),
-        Icon: WalletIcon,
+        Icon: WalletFilled,
         iconColorLabel: 'neutral2',
+        iconBackgroundColor: 'surface3',
         actionButtonLabel: t('common.button.continue'),
-        actionButtonTheme: 'secondary',
       }
     }
 
     // 2nd and final speed bump when removing or replacing recovery phrase
     if (isRemovingRecoveryPhrase && currentStep === RemoveWalletStep.Final) {
+      const highlight = <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />
       return {
         title: (
           <Text color="$neutral1" variant="body1">
@@ -88,24 +86,25 @@ export const useModalContent = ({
             />
           </Text>
         ),
-        description: (
+        description: isEmbeddedWalletAccount(account) ? (
+          <Trans components={{ highlight }} i18nKey="account.recoveryPhrase.remove.embeddedWallet.description" />
+        ) : (
           <Trans
-            components={{
-              highlight: <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />,
-            }}
+            components={{ highlight }}
             i18nKey="account.recoveryPhrase.remove.final.description"
             values={{ cloudProviderName: getCloudProviderName() }}
           />
         ),
-        Icon: AlertTriangleIcon,
+        Icon: AlertTriangle,
         iconColorLabel: 'statusCritical',
+        iconBackgroundColor: 'statusCritical2',
       }
     }
 
     // removing mnemonic account
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
       const associatedAccountNames = associatedAccounts
-        .filter((aa): aa is Account => aa.address !== account?.address)
+        .filter((aa): aa is Account => aa.address !== account.address)
         .map((aa) => aa.name ?? '')
 
       return {
@@ -121,10 +120,10 @@ export const useModalContent = ({
           </Text>
         ),
         description: t('account.recoveryPhrase.remove.mnemonic.description', { walletNames: associatedAccountNames }),
-        Icon: TrashIcon,
+        Icon: Trash,
         iconColorLabel: 'statusCritical',
+        iconBackgroundColor: 'statusCritical2',
         actionButtonLabel: t('common.button.remove'),
-        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -143,10 +142,10 @@ export const useModalContent = ({
           </Text>
         ),
         description: t('account.wallet.remove.viewOnly'),
-        Icon: TrashIcon,
+        Icon: Trash,
         iconColorLabel: 'neutral2',
+        iconBackgroundColor: 'surface3',
         actionButtonLabel: t('common.button.remove'),
-        actionButtonTheme: 'secondary',
       }
     }
 

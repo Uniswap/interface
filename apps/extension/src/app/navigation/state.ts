@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Location, NavigationType, Router, createHashRouter } from 'react-router-dom'
+import { createHashRouter, Location, NavigationType } from 'react-router'
 
 interface RouterState {
   historyAction: NavigationType
@@ -30,11 +30,7 @@ export function setRouterState(next: RouterState): void {
   listeners.forEach((l) => l(next))
 }
 
-export function getRouterState(): RouterState | null {
-  return state
-}
-
-export function subscribeToRouterState(listener: RouterStateListener): () => void {
+function subscribeToRouterState(listener: RouterStateListener): () => void {
   listeners.add(listener)
 
   if (state) {
@@ -56,7 +52,7 @@ export function useRouterState(): RouterState | null {
   return val
 }
 
-// as far as i can tell, react-router-dom doesn't give us this type so have to work around
+// as far as i can tell, react-router doesn't give us this type so have to work around
 type Router = ReturnType<typeof createHashRouter>
 
 let router: Router | null = null
@@ -80,10 +76,10 @@ type RouterNavigateArgs = Parameters<RouterNavigate>
 // note: useNavigation().navigate() returns void, so making this match that function for easier swapping out
 export const navigate = (to: RouterNavigateArgs[0] | number, opts?: RouterNavigateArgs[1]): void => {
   if (typeof to === 'number') {
-    // eslint-disable-next-line no-void
+    // oxlint-disable-next-line no-void -- Router navigation returns Promise<void> requiring explicit void handling
     void getRouter().navigate(to)
     return
   }
-  // eslint-disable-next-line no-void
+  // oxlint-disable-next-line no-void -- Router navigation returns Promise<void> requiring explicit void handling
   void getRouter().navigate(to, opts)
 }

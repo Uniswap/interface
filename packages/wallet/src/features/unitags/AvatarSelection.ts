@@ -1,42 +1,33 @@
-import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
+import { useCallback, useState } from 'react'
+import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { NUM_FIRST_NFTS } from 'wallet/src/components/nfts/NftsList'
-import { formatNftItems } from 'wallet/src/features/nfts/utils'
-
-// Selected image will be shrunk to max width/height
-// URI will then be for an image of those dimensions
-const IMAGE_OPTIONS: ImageLibraryOptions = {
-  mediaType: 'photo',
-  maxWidth: 500,
-  maxHeight: 500,
-  quality: 1, // best quality
-  includeBase64: false,
-  selectionLimit: 1,
-}
-
-export async function selectPhotoFromLibrary(): Promise<string | undefined> {
-  const response = await launchImageLibrary(IMAGE_OPTIONS)
-  if (!response.didCancel && !response.errorCode && response.assets) {
-    return response.assets[0]?.uri
-  }
-  return undefined
-}
+import { formatNftItems } from 'uniswap/src/features/nfts/utils'
+import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 
 export function useAvatarSelectionHandler({
   address,
   avatarImageUri,
   setAvatarImageUri,
-  showModal,
+  onOpenModal,
+  onCloseModal,
 }: {
   address: string
   avatarImageUri: string | undefined
-  setAvatarImageUri: (uri: string) => void
-  showModal: () => void
-}): { avatarSelectionHandler: () => Promise<void>; hasNFTs: boolean } {
+  setAvatarImageUri: (uri?: string) => void
+  onOpenModal?: () => void
+  onCloseModal?: () => void
+}): {
+  avatarSelectionHandler: () => Promise<void>
+  hasNFTs: boolean
+  showModal: boolean
+  openModal: () => void
+  closeModal: () => void
+} {
   const { gqlChains } = useEnabledChains()
+  const [showModal, setShowModal] = useState(false)
 
-  const { data: nftsData } = useNftsTabQuery({
+  const { data: nftsData } = GraphQLApi.useNftsTabQuery({
     variables: {
       ownerAddress: address,
       first: NUM_FIRST_NFTS,
@@ -46,20 +37,30 @@ export function useAvatarSelectionHandler({
   })
   const nftItems = formatNftItems(nftsData)
 
-  const hasNFTs = nftItems !== undefined && nftItems?.length > 0
+  const hasNFTs = nftItems !== undefined && nftItems.length > 0
   const hasAvatarImage = avatarImageUri && avatarImageUri !== ''
 
-  if (hasNFTs || hasAvatarImage) {
-    return { avatarSelectionHandler: async () => showModal(), hasNFTs }
-  } else {
-    return {
-      avatarSelectionHandler: async (): Promise<void> => {
-        const selectedPhoto = await selectPhotoFromLibrary()
-        if (selectedPhoto) {
-          setAvatarImageUri(selectedPhoto)
-        }
-      },
-      hasNFTs,
+  const openModal = useCallback((): void => {
+    onOpenModal?.()
+    setShowModal(true)
+  }, [onOpenModal])
+
+  const closeModal = useCallback((): void => {
+    onCloseModal?.()
+    setShowModal(false)
+  }, [onCloseModal])
+
+  const avatarSelectionHandler = useCallback(async (): Promise<void> => {
+    if (hasNFTs || hasAvatarImage) {
+      openModal()
+      return
     }
-  }
+
+    const selectedPhoto = await selectPhotoFromLibrary()
+    if (selectedPhoto) {
+      setAvatarImageUri(selectedPhoto)
+    }
+  }, [hasAvatarImage, hasNFTs, openModal, setAvatarImageUri])
+
+  return { avatarSelectionHandler, hasNFTs, showModal, openModal, closeModal }
 }
