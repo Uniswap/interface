@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { AnimatableCopyIcon, Flex, Popover, Separator, Text, TouchableArea, useIsTouchDevice } from 'ui/src'
@@ -20,7 +21,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 
 const iconButtonProps = {
   hitSlop: 8,
@@ -44,11 +45,12 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
   const shadowProps = useShadowPropsMedium()
   const isTouchDevice = useIsTouchDevice()
 
-  const { data, loading } = usePortfolioTotalValue({
+  const { data, error, loading } = usePortfolioTotalValue({
     evmAddress: platform === Platform.EVM ? address : undefined,
     svmAddress: platform === Platform.SVM ? address : undefined,
     enabled: isOpen && !!address,
   })
+  const isLoading = !data && (loading || !!error)
 
   const formattedBalance = convertFiatAmountFormatted(data?.balanceUSD, NumberType.PortfolioBalance)
 
@@ -162,7 +164,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
               <Text variant="body3" color="$neutral2">
                 {t('portfolio.tokens.table.column.balance')}
               </Text>
-              <Text variant="body3" color="$neutral1" loading={loading} loadingPlaceholderText="$00,000.00">
+              <Text variant="body3" color="$neutral1" loading={isLoading} loadingPlaceholderText="$00,000.00">
                 {formattedBalance}
               </Text>
             </Flex>
@@ -175,7 +177,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
               <RelativeChange
                 change={data?.percentChange}
                 absoluteChange={data?.absoluteChangeUSD}
-                loading={loading}
+                loading={isLoading}
                 variant="body3"
                 arrowSize="$icon.12"
               />

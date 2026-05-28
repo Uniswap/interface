@@ -7,6 +7,7 @@ import { all, call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { doesGetPortfolioQueryMatchAddress, getPortfolioQueriesToUpdate } from 'uniswap/src/data/rest/getPortfolio'
+import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import {
@@ -18,6 +19,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createLogger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // This delay is arbitrary but enough time for our endpoints to reflect updated balances
@@ -269,8 +271,22 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
     predicate: (query: { queryKey: readonly unknown[] }) =>
       doesGetPortfolioQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
   })
+
+  // Invalidate aggregate wallet-balance queries for this address. The response is
+  // aggregate-only (no per-balance entries), so a plain invalidate-and-refetch is sufficient.
+  yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
+    predicate: (query: { queryKey: readonly unknown[] }) =>
+      doesGetWalletBalancesQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
+  })
+
+  // Invalidate token profit/loss queries for this address so the TDP Performance section updates after swaps
+  yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
+    predicate: (query: { queryKey: readonly unknown[] }) =>
+      query.queryKey[0] === ReactQueryCacheKey.GetWalletTokenProfitLoss && query.queryKey[1] === activeAddress,
+  })
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* updatePortfolioCache({
   ownerAddress,
   currencyIds,

@@ -32,10 +32,17 @@ import type { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebApp } from 'utilities/src/platform'
 
 export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
-export const SWAP_GAS_URGENCY_OVERRIDE = isWebApp ? TradingApi.Urgency.NORMAL : undefined // on Interface, use a normal urgency, else use TradingAPI default
+
+/** Default urgency for all swap-related TAPI requests (quote, swap, approval). */
+export const DEFAULT_URGENCY_LEVEL = TradingApi.UrgencyWithOverrides.level.URGENT
+
+/** Builds the TAPI `urgency` wire field: object form when caller overrides are
+ *  present, bare level string otherwise. */
+export function buildUrgency(overrides: TradingApi.UrgencyOverrides | undefined): TradingApi.Urgency {
+  return overrides ? { level: DEFAULT_URGENCY_LEVEL, overrides } : DEFAULT_URGENCY_LEVEL
+}
 
 interface TradingApiResponseToTradeArgs {
   currencyIn: Currency

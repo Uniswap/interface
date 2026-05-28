@@ -1,7 +1,10 @@
 import { AdaptParent } from '@tamagui/adapt'
-import { useEffect, useId } from 'react'
+import { useContext, useEffect, useId } from 'react'
 import { styled, Tooltip as TamaguiTooltip, withStaticProperties } from 'tamagui'
+// oxlint-disable-next-line no-restricted-imports -- consume the depth context the same way AdaptiveWebPopoverContent does
+import { EffectiveModalOrSheetZIndexContext, stackingLayerAbove } from 'ui/src/components/modal/AdaptiveWebModal'
 import { TooltipContentProps } from 'ui/src/components/tooltip/Tooltip'
+import { zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -43,7 +46,7 @@ const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((p
 
 HigherOrderStyledContent.displayName = 'HigherOrderStyledContent'
 
-const Content = styled(HigherOrderStyledContent, {
+const ContentInner = styled(HigherOrderStyledContent, {
   animation: 'simple',
   gap: '$spacing8',
   alignItems: 'center',
@@ -67,7 +70,27 @@ const Content = styled(HigherOrderStyledContent, {
   },
 })
 
-Content.displayName = 'Content'
+ContentInner.displayName = 'TooltipContentInner'
+
+// Reads the parent modal/sheet/popover's effective z-index (provided by
+// AdaptiveWebModal / AdaptiveWebPopoverContent) and renders one layer above
+// it, floored at zIndexes.tooltip. Mirrors AdaptiveWebPopoverContent so
+// tooltips stack consistently with sibling popovers.
+const Content = ContentInner.styleable<TooltipContentProps>(({ zIndex, children, ...props }, ref) => {
+  const effectiveModalZ = useContext(EffectiveModalOrSheetZIndexContext)
+  const stackingLayerNumber = zIndex ?? stackingLayerAbove(effectiveModalZ, zIndexes.tooltip)
+  return (
+    <ContentInner ref={ref} zIndex={stackingLayerNumber} {...props}>
+      <EffectiveModalOrSheetZIndexContext.Provider
+        value={typeof stackingLayerNumber === 'number' ? stackingLayerNumber : effectiveModalZ}
+      >
+        {children}
+      </EffectiveModalOrSheetZIndexContext.Provider>
+    </ContentInner>
+  )
+})
+
+Content.displayName = 'TooltipContent'
 
 const Arrow = styled(TamaguiTooltip.Arrow, {
   size: '$spacing12',

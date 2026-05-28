@@ -1,4 +1,5 @@
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +27,6 @@ import {
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'

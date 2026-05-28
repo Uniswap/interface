@@ -1,12 +1,12 @@
+import { isMobileWeb } from '@universe/environment'
 import { Fragment, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, AnchorProps, Flex, Text, TouchableArea } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import Expand from '~/components/Expand'
+import { Expand } from '~/components/Expand'
 import { PrivacyOptions } from '~/components/Icons/PrivacyOptions'
 import { useModalState } from '~/hooks/useModalState'
 
@@ -34,6 +34,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
   const { toggle: toggleIsOpen, value: isOpen } = useBooleanState(false)
   const { t } = useTranslation()
   const { toggleModal: togglePrivacyPolicy } = useModalState(ModalName.PrivacyPolicy)
+  const { toggleModal: toggleDisclosures } = useModalState(ModalName.Disclosures)
   const { openModal: openPrivacyChoices } = useModalState(ModalName.PrivacyChoices)
   const handleOnMenuPress = useCallback(
     (handler: () => void) => () => {
@@ -64,6 +65,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
         <MenuLink href={uniswapUrls.termsOfServiceUrl} target="_blank">
           {t('common.termsOfService')}
         </MenuLink>
+        <MenuLink onPress={handleOnMenuPress(toggleDisclosures)}>{t('common.disclosures')}</MenuLink>
       </Flex>
     </Expand>
   )

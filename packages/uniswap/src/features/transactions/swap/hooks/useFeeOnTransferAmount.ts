@@ -28,7 +28,6 @@ export function useFeeOnTransferAmounts(
     const { input: inputCurrencyInfo, output: outputCurrencyInfo } = currencies
 
     const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     const tradeHasFeeToken = acceptedTrade?.inputTax?.greaterThan(0) || acceptedTrade?.outputTax?.greaterThan(0)
 
     if (!acceptedTrade || !tradeHasFeeToken || acceptedTrade.indicative || isBridge(acceptedTrade)) {

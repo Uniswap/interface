@@ -71,11 +71,9 @@ const Tab = ({
   const popoverRef = useRef<Popover>(null)
   const location = useLocation()
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +popoverRef
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
-  // oxlint-disable-next-line react/exhaustive-deps -- location dependency is sufficient for this effect
   useEffect(() => closeMenu(), [location, closeMenu])
 
   const Label = (

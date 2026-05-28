@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Mobile App",
   "extends": "../../config/tsconfig/expo.json",
-  "exclude": [".storybook/storybook.requires.ts"],
+  "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts"],
   "references": [
     {
       "path": "../../packages/sessions"
@@ -17,6 +17,12 @@
       "path": "../../packages/gating"
     },
     {
+      "path": "../../packages/encoding"
+    },
+    {
+      "path": "../../packages/config"
+    },
+    {
       "path": "../../packages/api"
     },
     {
@@ -24,6 +30,9 @@
     },
     {
       "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/environment"
     },
     {
       "path": "../../packages/ui"

@@ -1,3 +1,4 @@
+import { isMobileWeb, isWebPlatform } from '@universe/environment'
 import { ReactNode } from 'react'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
@@ -7,7 +8,6 @@ import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileWeb, isWebPlatform } from 'utilities/src/platform'
 
 interface InfoModalProps {
   name: ModalNameType

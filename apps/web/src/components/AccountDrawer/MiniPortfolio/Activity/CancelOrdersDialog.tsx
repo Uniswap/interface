@@ -17,9 +17,8 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useCancelOrdersGasEstimate } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
-import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
-import { DetailLineItem } from '~/components/swap/DetailLineItem'
-import { ThemedText } from '~/theme/components'
+import { DetailLineItem } from '~/components/DetailLineItem'
+import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
 import { ExternalLink } from '~/theme/components/Links'
 
 const ModalHeader = styled(GetHelpHeader, {
@@ -70,7 +69,7 @@ function useCancelOrdersDialogContent(
     case CancellationState.PENDING_SIGNATURE:
       return {
         title: t('common.confirmCancellation'),
-        icon: <LoaderV3 size="64px" color={colors.accent1.val} />,
+        icon: <LogoLoadingSpinner size="64px" color={colors.accent1.val} />,
       }
     case CancellationState.PENDING_CONFIRMATION:
       return {
@@ -127,9 +126,9 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
-          <ThemedText.SubHeaderLarge width="100%" textAlign="center">
+          <Text variant="body1" width="100%" textAlign="center">
             {title}
-          </ThemedText.SubHeaderLarge>
+          </Text>
           <Flex row justifyContent="center" mt="$spacing32" minHeight={24}>
             {cancelSubmitted ? (
               <ExternalLink
@@ -149,7 +148,9 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
                 {t('common.viewOnExplorer')}
               </ExternalLink>
             ) : (
-              <ThemedText.BodySmall color="neutral2">{t('common.proceedInWallet')}</ThemedText.BodySmall>
+              <Text variant="body3" color="$neutral2">
+                {t('common.proceedInWallet')}
+              </Text>
             )}
           </Flex>
         </Container>
@@ -173,7 +174,6 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         displayHelpCTA
         iconBackgroundColor="$surface3"
       >
-        {/* oxlint-disable-next-line typescript/no-unnecessary-condition */}
         <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={cancellationGasFeeInfo?.gasFeeDisplayValue} />
       </Dialog>
     )

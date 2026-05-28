@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
+import { getConfig } from 'src/config'
 import { getCloudBackupList } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
-import { config } from 'uniswap/src/config'
 
 type UseCloudBackup = {
   backups: CloudStorageMnemonicBackup[]
@@ -25,7 +25,7 @@ export const useCloudBackups = (options?: UseCloudBackupOptions): UseCloudBackup
     // delays native oauth consent screen to avoid UI freezes
     setTimeout(async () => {
       try {
-        if (config.isE2ETest) {
+        if (getConfig().isE2ETest) {
           setIsLoading(false)
           setIsError(false)
           return

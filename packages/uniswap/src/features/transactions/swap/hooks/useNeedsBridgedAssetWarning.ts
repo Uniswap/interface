@@ -1,10 +1,10 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { isWebApp } from 'utilities/src/platform'
 
 export function useNeedsBridgedAssetWarning(
   derivedSwapInfo: DerivedSwapInfo,

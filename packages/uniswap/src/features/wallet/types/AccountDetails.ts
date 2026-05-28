@@ -1,7 +1,7 @@
+import { HexString } from '@universe/encoding'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
-import { HexString } from 'utilities/src/addresses/hex'
 
 export type BaseAccountDetails<TPlatform extends Platform, TAddressType extends string = string> = {
   platform: TPlatform

@@ -7,7 +7,8 @@ function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined 
 
   // Also check bounding rectangle to handle portal'd elements not caught by `contains`.
   const rect = node.current?.getBoundingClientRect()
-  if (!rect) {
+  // jsdom often reports 0×0 rects before layout; treating (0,0) as "inside" would swallow every outside click.
+  if (!rect || rect.width <= 0 || rect.height <= 0) {
     return false
   }
 

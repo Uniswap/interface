@@ -1,28 +1,38 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { IconCloud, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
-import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import { approvedERC20, InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
+import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
 import { Ticker } from '~/pages/Landing/components/TokenCloud/Ticker'
+import { usePromoTokensData } from '~/pages/Landing/components/TokenCloud/usePromoTokensData'
 
-const tokenList = shuffleArray(approvedERC20) as InteractiveToken[]
+export function TokenCloud(): JSX.Element {
+  const { tokenList, getTokenPricePercentChange } = usePromoTokensData()
 
-export function TokenCloud() {
-  const renderOuterElement = useCallback((item: ItemPoint<InteractiveToken>) => {
-    return <Ticker itemPoint={item} />
-  }, [])
+  const renderOuterElement = useCallback(
+    (item: ItemPoint<InteractiveToken>) => {
+      return (
+        <Ticker
+          itemPoint={item}
+          pricePercentChange={getTokenPricePercentChange(item.itemData.chain, item.itemData.address)}
+        />
+      )
+    },
+    [getTokenPricePercentChange],
+  )
 
   const navigate = useNavigate()
   const onPress = useCallback(
     (item: ItemPoint<InteractiveToken>) => {
       const { address, chain } = item.itemData
-      navigate(
-        getTokenDetailsURL({
-          address,
-          chain,
-        }),
-      )
+      Promise.resolve(
+        navigate(
+          getTokenDetailsURL({
+            address,
+            chain,
+          }),
+        ),
+      ).catch(() => {})
     },
     [navigate],
   )

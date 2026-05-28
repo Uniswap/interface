@@ -58,6 +58,7 @@ type RemoveDelegationForChainParams = {
   onFailure?: (error: Error) => void
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* removeDelegationForChain(params: RemoveDelegationForChainParams) {
   const { chainId, account, walletAddress } = params
 
@@ -76,6 +77,7 @@ function* removeDelegationForChain(params: RemoveDelegationForChainParams) {
   return transactionHash
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* removeDelegation(params: RemoveDelegationParams) {
   const { account, walletAddress, chainIds, onSuccess, onFailure } = params
 

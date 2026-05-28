@@ -1,3 +1,4 @@
+import { isAndroid, isIOS } from '@universe/environment'
 import type { SectionListData } from 'react-native'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
@@ -9,8 +10,7 @@ import {
   FORQuote,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
-import { isAndroid, isIOS } from 'utilities/src/platform'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 
 const APPLE_PAY = 'Apple Pay'
 const GOOGLE_PAY = 'Google Pay'

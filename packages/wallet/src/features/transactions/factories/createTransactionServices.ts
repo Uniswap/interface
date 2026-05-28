@@ -7,6 +7,8 @@ import type { PublicClient } from 'viem'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
+import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type {
   DelegationType,
   TransactionSagaDependencies,
@@ -17,6 +19,8 @@ import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/s
 export type CreateTransactionServicesResult = {
   transactionSigner: TransactionSigner
   transactionService: TransactionService
+  userOpSigner?: UserOpSigner
+  userOpService?: UserOpService
 }
 
 /**
@@ -31,6 +35,7 @@ export function* createTransactionServices(
     submitViaPrivateRpc: boolean
     delegationType: DelegationType
     request?: TransactionRequest
+    includeUserOpServices?: boolean
   },
 ): SagaIterator<CreateTransactionServicesResult> {
   const signerManager = yield* call(getSignerManager)
@@ -110,5 +115,23 @@ export function* createTransactionServices(
     getProvider,
   })
 
-  return { transactionSigner, transactionService }
+  let userOpSigner: UserOpSigner | undefined
+  let userOpService: UserOpService | undefined
+
+  if (input.includeUserOpServices) {
+    userOpSigner = dependencies.createBundledDelegationUserOpSignerService({
+      delegationInfo,
+      getAccount: () => input.account,
+      getProvider,
+      getViemClient,
+      getSignerManager: () => signerManager,
+    })
+
+    userOpService = dependencies.createUserOpService({
+      userOpSigner,
+      logger: dependencies.logger,
+    })
+  }
+
+  return { transactionSigner, transactionService, userOpSigner, userOpService }
 }

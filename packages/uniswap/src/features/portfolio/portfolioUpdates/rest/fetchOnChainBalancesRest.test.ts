@@ -1,6 +1,6 @@
 import 'utilities/src/logger/mocks'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { type Token as SearchToken } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { Token as SearchToken } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import * as searchTokensAndPools from 'uniswap/src/data/rest/searchTokensAndPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'

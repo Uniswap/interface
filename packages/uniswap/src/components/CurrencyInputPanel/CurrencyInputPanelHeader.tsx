@@ -1,4 +1,5 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { isExtensionApp, isWebAppDesktop, isWebPlatform } from '@universe/environment'
 import { useCallback } from 'react'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
@@ -13,7 +14,6 @@ import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/D
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string
@@ -24,6 +24,7 @@ interface CurrencyInputPanelHeaderProps {
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   showDefaultTokenOptions: boolean
   hidePresets?: boolean
+  actualGasFee?: string
 }
 
 export function CurrencyInputPanelHeader({
@@ -35,6 +36,7 @@ export function CurrencyInputPanelHeader({
   onSetPresetValue,
   showDefaultTokenOptions,
   hidePresets,
+  actualGasFee,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const renderPreset = useCallback(
     (preset: PresetPercentage) => (
@@ -45,10 +47,11 @@ export function CurrencyInputPanelHeader({
         currencyField={currencyField}
         elementName={ElementName.PresetPercentage}
         buttonProps={PRESET_BUTTON_PROPS}
+        actualGasFee={actualGasFee}
         onSetPresetValue={onSetPresetValue}
       />
     ),
-    [currencyAmount, currencyBalance, currencyField, onSetPresetValue],
+    [currencyAmount, currencyBalance, currencyField, onSetPresetValue, actualGasFee],
   )
 
   if (!headerLabel && !showDefaultTokenOptions) {

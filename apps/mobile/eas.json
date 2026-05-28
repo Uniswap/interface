@@ -6,7 +6,7 @@
   "build": {
     "development": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "developmentClient": true,
       "distribution": "internal",
       "android": {
@@ -16,7 +16,7 @@
     },
     "development-simulator": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "developmentClient": true,
       "distribution": "internal",
       "android": {
@@ -31,7 +31,7 @@
     },
     "e2e-simulator": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "developmentClient": false,
       "distribution": "internal",
       "env": {
@@ -49,7 +49,7 @@
     },
     "development-release": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "distribution": "internal",
       "android": {
         "buildType": "apk",
@@ -58,7 +58,7 @@
     },
     "beta": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "distribution": "internal",
       "android": {
         "buildType": "apk",
@@ -67,7 +67,7 @@
     },
     "beta-release": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "distribution": "internal",
       "android": {
         "buildType": "apk",
@@ -76,7 +76,7 @@
     },
     "production": {
       "bun": "1.3.11",
-      "node": "22.13.1",
+      "node": "22.22.2",
       "autoIncrement": true,
       "android": {
         "buildType": "apk",

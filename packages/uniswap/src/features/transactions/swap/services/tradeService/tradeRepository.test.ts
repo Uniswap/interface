@@ -169,6 +169,7 @@ describe('TradeRepository', () => {
       tokenIn: '0x1234',
       tokenOut: '0x5678',
       swapper: '0xabcd',
+      autoSlippage: TradingApi.AutoSlippage.DEFAULT,
     }
 
     it('calls the underlying fetchIndicativeQuote with the same parameters', async () => {

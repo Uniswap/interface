@@ -1,12 +1,14 @@
 import { useEffect, useMemo } from 'react'
-import { useExtractedTokenColor, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
+import { useSrcColor } from '~/hooks/useColor'
 import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { parseTokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
-/** Passed to color extraction as `defaultColor` so failures (no palette) stay distinguishable from real accent/extracted colors. */
+/** Passed as `defaultColor` so extraction failures stay distinguishable from real colors. */
 const TOKEN_COLOR_EXTRACTION_SENTINEL = '#feedface'
 
 export function useUpdateCreateAuctionTokenColor(): void {
@@ -28,9 +30,9 @@ export function useUpdateCreateAuctionTokenColor(): void {
     return tokenForm.existingTokenCurrencyInfo?.currency.name ?? undefined
   }, [tokenForm])
 
-  const { tokenColor, tokenColorLoading } = useExtractedTokenColor({
-    imageUrl,
-    tokenName: currencyName,
+  const { tokenColor, tokenColorLoading } = useSrcColor({
+    src: imageUrl,
+    currencyName,
     backgroundColor: colors.surface3.val,
     defaultColor: TOKEN_COLOR_EXTRACTION_SENTINEL,
   })
@@ -44,7 +46,8 @@ export function useUpdateCreateAuctionTokenColor(): void {
       setTokenColor(undefined)
       return
     }
+    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
     const extractionFailed = tokenColor?.toLowerCase() === TOKEN_COLOR_EXTRACTION_SENTINEL
-    setTokenColor(extractionFailed ? undefined : (tokenColor ?? undefined))
+    setTokenColor(extractionFailed ? undefined : parseTokenAccentHex(tokenColor ?? undefined))
   }, [imageUrl, tokenColor, tokenColorLoading, setTokenColor])
 }

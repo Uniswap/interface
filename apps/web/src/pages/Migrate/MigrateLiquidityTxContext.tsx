@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext } from 'react'
-import { V2PairInfo, V3PositionInfo } from '~/components/Liquidity/types'
+import { V2PairInfo, V3PositionInfo } from 'uniswap/src/features/positions/types'
 import {
   MigratePositionTxContextType,
   useMigrateLPPositionTxInfo,

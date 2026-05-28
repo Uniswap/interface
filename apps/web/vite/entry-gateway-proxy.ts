@@ -6,49 +6,84 @@ const DEV_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-dev.api.un
 const STAGING_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
 const PROD_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-prod.api.uniswap.org'
 
+const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
+
 /**
- * Returns the appropriate Entry Gateway API URL for the proxy target.
- * Duplicated from @universe/api to avoid importing app code into build config.
+ * Returns the appropriate Entry Gateway API URL for the default proxy target.
+ * Duplicated from @universe/api to avoid pulling app config into vite.config.
  */
-function getEntryGatewayProxyTarget(): string {
-  // Allow override via environment variable
+function getDefaultProxyTarget(): string {
   if (process.env.ENTRY_GATEWAY_API_URL_OVERRIDE) {
     return process.env.ENTRY_GATEWAY_API_URL_OVERRIDE
   }
 
-  // Check if we're in dev/staging/prod environment
-  const nodeEnv = process.env.NODE_ENV
-  const isBeta = process.env.REACT_APP_STAGING === 'true'
+  const isDev = process.env.NODE_ENV === 'development'
+  const isStaging = process.env.ENVIRONMENT === 'staging'
 
-  // Determine URL based on environment
-  if (nodeEnv === 'development' || isBeta) {
+  if (isDev || isStaging) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
   } else {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
   }
 }
 
-// oxlint-disable-next-line import/no-unused-modules -- used in vite.config.mts
-export function createEntryGatewayProxy(ctx: {
+interface CreateProxyContext {
   getLogger: () => {
     log: typeof console.log
   }
-}): ProxyOptions {
+}
+
+/**
+ * Vite's `server.proxy` config picks one entry per request based on URL
+ * prefix. To support env-pinned proxy paths like
+ * `/entry-gateway/prod/<service>` we register a separate proxy entry per env
+ * with its own backend target, plus the default `/entry-gateway` entry as
+ * a fallback.
+ *
+ * Env-pinned entries strip `/entry-gateway/<env>` so the upstream sees the
+ * same path the default proxy would forward. The env segment is the only
+ * piece of "knowledge" the proxy needs — there is no feature registry.
+ */
+// oxlint-disable-next-line import/no-unused-modules -- used in vite.config.mts
+export function createEntryGatewayProxies(ctx: CreateProxyContext): Record<string, ProxyOptions> {
+  return {
+    [`${ENTRY_GATEWAY_PROXY_PATH}/dev`]: createEntryGatewayProxy(ctx, {
+      target: DEV_ENTRY_GATEWAY_API_BASE_URL,
+      pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/dev`,
+    }),
+    [`${ENTRY_GATEWAY_PROXY_PATH}/staging`]: createEntryGatewayProxy(ctx, {
+      target: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+      pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/staging`,
+    }),
+    [`${ENTRY_GATEWAY_PROXY_PATH}/prod`]: createEntryGatewayProxy(ctx, {
+      target: PROD_ENTRY_GATEWAY_API_BASE_URL,
+      pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/prod`,
+    }),
+    [ENTRY_GATEWAY_PROXY_PATH]: createEntryGatewayProxy(ctx, {
+      target: process.env.VITE_BACKEND_URL || getDefaultProxyTarget(),
+      pathPrefix: ENTRY_GATEWAY_PROXY_PATH,
+    }),
+  }
+}
+
+function createEntryGatewayProxy(
+  ctx: CreateProxyContext,
+  { target, pathPrefix }: { target: string; pathPrefix: string },
+): ProxyOptions {
   const { getLogger } = ctx
-  // Use VITE_BACKEND_URL if set, otherwise use environment-aware URL
-  const target = process.env.VITE_BACKEND_URL || getEntryGatewayProxyTarget()
+  // oxlint-disable-next-line security/detect-non-literal-regexp
+  const stripPrefix = new RegExp(`^${pathPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
   return {
     target,
     changeOrigin: true,
     secure: true,
-    rewrite: (path) => path.replace(/^\/entry-gateway/, ''),
+    rewrite: (path) => path.replace(stripPrefix, ''),
 
     configure: (proxy, options) => {
       // Forward cookies FROM browser TO backend
       proxy.on('proxyReq', (proxyReq, req) => {
-        getLogger().log(
-          `[Proxy] ${req.method} ${req.url} -> ${options.target}${req.url?.replace('/entry-gateway', '')}`,
-        )
+        const rewrittenPath = req.url?.replace(stripPrefix, '')
+        getLogger().log(`[Proxy] ${req.method} ${req.url} -> ${options.target}${rewrittenPath}`)
 
         // Log all headers being sent to backend
         const headers = proxyReq.getHeaders()

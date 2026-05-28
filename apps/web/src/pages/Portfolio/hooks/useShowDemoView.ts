@@ -1,4 +1,3 @@
-/* oxlint-disable-next-line no-restricted-imports, no-restricted-syntax */
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 

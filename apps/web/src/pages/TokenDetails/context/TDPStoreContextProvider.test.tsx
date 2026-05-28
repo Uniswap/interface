@@ -17,6 +17,7 @@ function createDerivedState(overrides: {
   address: string
   tokenQuery?: { loading: boolean; data?: unknown }
   tokenColor?: string
+  balanceError?: Error
 }) {
   return {
     currencyChain: GraphQLApi.Chain.Ethereum,
@@ -27,6 +28,7 @@ function createDerivedState(overrides: {
       data: validTokenProjectResponse.data,
     },
     multiChainMap: {},
+    balanceError: overrides.balanceError,
     selectedMultichainChainId: undefined,
     tokenColor: overrides.tokenColor,
     currency: undefined,
@@ -117,8 +119,7 @@ describe('TDPStoreContextProvider', () => {
     await waitFor(() => {
       expect(storeRef.current).not.toBeNull()
     })
-    const addressBefore = storeRef.current?.getState().address
-    expect(addressBefore).toBe(TOKEN_A)
+    expect(storeRef.current?.getState().address).toBe(TOKEN_A)
 
     // Same identity (params unchanged), but derived state has new tokenQuery reference
     mocked(useCreateTDPContext).mockReturnValue(
@@ -172,6 +173,43 @@ describe('TDPStoreContextProvider', () => {
     await waitFor(() => {
       expect(storeRef.current?.getState().address).toBe(TOKEN_A)
       expect(storeRef.current?.getState().tokenColor).toBe('#FF0000')
+    })
+  })
+
+  it('updates the raw balance query error when identity is unchanged', async () => {
+    mocked(useCreateTDPContext).mockReturnValue(
+      createDerivedState({
+        address: TOKEN_A,
+        balanceError: undefined,
+      }) as unknown as ReturnType<typeof useCreateTDPContext>,
+    )
+
+    const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
+    const { rerender } = render(
+      <TDPStoreContextProvider>
+        <StoreCapture storeRef={storeRef} />
+      </TDPStoreContextProvider>,
+    )
+
+    await waitFor(() => {
+      expect(storeRef.current).not.toBeNull()
+    })
+    expect(storeRef.current?.getState().balanceError).toBeUndefined()
+
+    mocked(useCreateTDPContext).mockReturnValue(
+      createDerivedState({
+        address: TOKEN_A,
+        balanceError: new Error('Network error'),
+      }) as unknown as ReturnType<typeof useCreateTDPContext>,
+    )
+    rerender(
+      <TDPStoreContextProvider>
+        <StoreCapture storeRef={storeRef} />
+      </TDPStoreContextProvider>,
+    )
+
+    await waitFor(() => {
+      expect(storeRef.current?.getState().balanceError).toEqual(expect.any(Error))
     })
   })
 })

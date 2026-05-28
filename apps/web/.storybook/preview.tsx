@@ -1,4 +1,3 @@
-import '@reach/dialog/styles.css'
 import '../src/global.css'
 import '../src/polyfills'
 import type { Preview } from '@storybook/react'

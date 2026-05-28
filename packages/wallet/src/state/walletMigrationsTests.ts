@@ -6,7 +6,6 @@
  *
  * For unit tests of individual migrations, see walletMigrations.test.ts.
  */
-/* oxlint-disable typescript/no-explicit-any -- Migration test utilities require flexible typing */
 /* oxlint-disable max-lines */
 /* oxlint-disable max-params */
 

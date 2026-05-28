@@ -1,9 +1,11 @@
 import { GqlResult } from '@universe/api'
+import { isMobileApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { Flex } from 'ui/src'
 import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
@@ -17,10 +19,12 @@ import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
-import { isMobileApp } from 'utilities/src/platform'
 
-// oxlint-disable-next-line complexity
+// Matches the default 40px section header plus the single-line outage banner and spacing on web.
+const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104
+
 function useTokenSectionsForSwap({
   addresses,
   chainFilter,
@@ -110,9 +114,27 @@ function useTokenSectionsForSwap({
     options: suggestedSectionOptions,
   })
 
+  const isPortfolioOutage = !!portfolioTokenOptions && !!portfolioTokenOptionsError
+
+  const portfolioOutageSectionHeader = useMemo(() => {
+    if (!isPortfolioOutage) {
+      return undefined
+    }
+    return (
+      <Flex backgroundColor="$surface1" width="100%">
+        <SectionHeader sectionKey={OnchainItemSectionName.YourTokens} />
+        <Flex backgroundColor="$surface1" px="$spacing8" pt="$spacing8">
+          <DataApiOutageBanner />
+        </Flex>
+      </Flex>
+    )
+  }, [isPortfolioOutage])
+
   const portfolioSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.YourTokens,
     options: portfolioTokenOptions,
+    sectionHeader: portfolioOutageSectionHeader,
+    sectionHeaderHeight: isPortfolioOutage ? PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT : undefined,
   })
 
   const memoizedEndElement = useMemo(() => <ClearRecentSearchesButton />, [])

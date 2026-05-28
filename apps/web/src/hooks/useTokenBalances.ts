@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { currencyKey } from '~/utils/currencyKey'
 
@@ -31,6 +31,7 @@ export function useTokenBalances({ cacheFirst }: { cacheFirst?: boolean } = {}):
     }
 
     const balanceList = Object.values(balancesById)
+    // oxlint-disable-next-line no-shadow
     const balanceMap = balanceList.reduce((balanceMap, tokenBalance) => {
       const currency = tokenBalance.currencyInfo.currency
       const key = currencyKey(currency)

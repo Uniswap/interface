@@ -34,7 +34,6 @@ export function useSwapHandlers(): SwapHandlers {
   const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
 
   const caip25Info = useAccountsStore((state) => {
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     return state.getActiveConnector(Platform.EVM).session?.caip25Info
   })
 

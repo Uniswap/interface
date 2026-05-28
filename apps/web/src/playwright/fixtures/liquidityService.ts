@@ -43,15 +43,17 @@ const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
 export async function stubLiquidityServiceEndpoint({
   page,
   endpoint,
+  service = LiquidityService,
   modifyRequestData,
   modifyResponseData,
 }: {
   page: Page
   endpoint: MethodInfo
+  service?: ServiceType
   modifyRequestData?: (data: any) => any
   modifyResponseData?: (data: any) => any
 }) {
-  const endpointPath = getServiceMethodPath(LiquidityService, endpoint)
+  const endpointPath = getServiceMethodPath(service, endpoint)
 
   // Liquidity service uses Connect/gRPC-web protocol with specific path structure
   // The endpoint will be something like: uniswap.liquidity.v1.LiquidityService/MigrateV3ToV4LPPosition

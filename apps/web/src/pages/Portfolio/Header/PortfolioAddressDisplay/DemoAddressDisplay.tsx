@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ReactComponent as Unicon } from '~/assets/svg/demo-wallet-emblem.svg'
+import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 
 export function DemoAddressDisplay({ isCompact }: { isCompact: boolean }) {
   const colors = useSporeColors()
@@ -14,7 +15,14 @@ export function DemoAddressDisplay({ isCompact }: { isCompact: boolean }) {
 
   return (
     <Flex row alignItems="center" gap="$spacing12" testID={TestID.DemoWalletDisplay}>
-      <Flex borderRadius="$roundedFull" backgroundColor="$accent2" width={iconSize} height={iconSize} centered>
+      <Flex
+        borderRadius="$roundedFull"
+        backgroundColor="$accent2"
+        width={iconSize}
+        height={iconSize}
+        centered
+        transition={HEADER_TRANSITION}
+      >
         <Unicon
           width={uniconSize}
           height={uniconSize}
@@ -31,7 +39,7 @@ export function DemoAddressDisplay({ isCompact }: { isCompact: boolean }) {
             <Eye color="$neutral2" size="$icon.16" />
           </Flex>
         </Tooltip.Trigger>
-        <Tooltip.Content ml="$spacing8" zIndex={zIndexes.overlay}>
+        <Tooltip.Content ml="$spacing8">
           <Text variant="body4">{t('portfolio.disconnected.demoWallet.description')}</Text>
         </Tooltip.Content>
       </Tooltip>

@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -13,11 +14,11 @@ import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { getLPBaseAnalyticsProperties } from '~/components/Liquidity/analytics'
-import { ReviewModal, ReviewModalProps } from '~/components/Liquidity/ReviewModal'
-import { getPoolIdOrAddressFromCreatePositionInfo } from '~/components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { ReviewModal, ReviewModalProps } from '~/features/Liquidity/ReviewModal'
+import { getPoolIdOrAddressFromCreatePositionInfo } from '~/features/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
 import { useAccount } from '~/hooks/useAccount'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
@@ -65,6 +66,7 @@ export function CreatePositionModal({
   const startChainId = connectedAccount.chainId
   const navigate = useNavigate()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
   const onSuccess = useCallback(() => {
     setSteps([])
@@ -125,6 +127,7 @@ export function CreatePositionModal({
                 TOKEN1: currencyAmounts.TOKEN1.currency,
               },
             }),
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient.toString(),
           expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient.toString(),
@@ -154,6 +157,7 @@ export function CreatePositionModal({
     creatingPoolOrPair,
     poolOrPair,
     disableOneClickSwap,
+    isCentralizedPricesEnabled,
   ])
 
   return (

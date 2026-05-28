@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { GraphQLApi, isError } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { useCallback, useMemo, useState } from 'react'
 import {
   MOBILE_WEB_NUM_FIRST_NFTS,
@@ -15,7 +16,6 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useGroupNftsByVisibility } from 'uniswap/src/features/nfts/hooks/useGroupNftsByVisibility'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
-import { isMobileWeb } from 'utilities/src/platform'
 
 export function useNftListRenderData({
   owner,

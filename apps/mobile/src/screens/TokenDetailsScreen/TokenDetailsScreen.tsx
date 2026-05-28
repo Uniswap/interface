@@ -13,7 +13,7 @@ import { TokenDetailsBridgedAssetSection } from 'src/components/TokenDetails/Tok
 import { TokenDetailsContextProvider, useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
-import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
+import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats/TokenDetailsStats'
 import { TokenPerformance } from 'src/components/TokenDetails/TokenPerformance'
 import { TokenDetailsActionButtonsWrapper } from 'src/screens/TokenDetailsScreen/TokenDetailsActionButtonsWrapper'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsScreen/TokenDetailsHeaders'
@@ -27,6 +27,7 @@ import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
@@ -39,27 +40,38 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 const CONTEXT_MENU_RENDER_DELAY_MS = 1000
 
 export function TokenDetailsScreen({ route, navigation }: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
-  const { currencyId } = route.params
+  const { currencyId, isMultichainAsset } = route.params
   const normalizedCurrencyId = normalizeAddress(currencyId, AddressStringFormat.Lowercase)
 
   return (
-    <TokenDetailsContextProvider currencyId={normalizedCurrencyId} navigation={navigation}>
+    <TokenDetailsContextProvider
+      currencyId={normalizedCurrencyId}
+      navigation={navigation}
+      initialIsMultichainAsset={isMultichainAsset}
+    >
       <TokenDetailsWrapper />
     </TokenDetailsContextProvider>
   )
 }
 
 function TokenDetailsWrapper(): JSX.Element {
-  const { chainId, address, currencyId } = useTokenDetailsContext()
+  const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
   const { data: token } = useTokenBasicInfoPartsFragment({ currencyId })
+  const { data: projectParts } = useTokenBasicProjectPartsFragment({ currencyId })
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  // Combine the navigator-provided hint with the project-derived signal so the
+  // first analytics impression carries the correct value even when the project
+  // fragment hasn't resolved yet.
+  const isMultichainAsset = initialIsMultichainAsset || isMultichainProjectTokens(projectParts.project?.tokens)
 
   const traceProperties = useMemo(
     () => ({
       chain: chainId,
       address,
       currencyName: token.name,
+      ...(multichainTokenUxEnabled ? { multichain: isMultichainAsset } : {}),
     }),
-    [address, chainId, token.name],
+    [address, chainId, isMultichainAsset, multichainTokenUxEnabled, token.name],
   )
 
   return (
@@ -181,14 +193,24 @@ const TokenBalancesWrapper = memo(function TokenBalancesWrapperInner(): JSX.Elem
     })
   }
 
-  const { currentChainBalance, otherChainBalances } = useCrossChainBalances({
+  const {
+    currentChainBalance,
+    otherChainBalances,
+    error: balanceError,
+    dataUpdatedAt,
+  } = useCrossChainBalances({
     evmAddress: activeAddress,
     currencyId,
     crossChainTokens,
   })
 
   return isChainEnabled ? (
-    <TokenBalances currentChainBalance={currentChainBalance} otherChainBalances={otherChainBalances} />
+    <TokenBalances
+      currentChainBalance={currentChainBalance}
+      otherChainBalances={otherChainBalances}
+      isOutage={!!balanceError}
+      dataUpdatedAt={dataUpdatedAt}
+    />
   ) : null
 })
 

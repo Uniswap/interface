@@ -7,7 +7,7 @@ import {
   PoolProgressIndicator,
   PoolProgressIndicatorHeader,
   SIDEBAR_WIDTH,
-} from '~/components/PoolProgressIndicator/PoolProgressIndicator'
+} from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
 import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,

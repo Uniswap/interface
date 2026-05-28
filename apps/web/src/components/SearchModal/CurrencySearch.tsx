@@ -11,10 +11,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 interface CurrencySearchProps {
@@ -25,6 +24,7 @@ interface CurrencySearchProps {
   chainIds?: UniverseChainId[]
   variation?: TokenSelectorVariation
   flow?: TokenSelectorFlow
+  swapTab?: SwapTab
 }
 
 export function CurrencySearch({
@@ -35,12 +35,12 @@ export function CurrencySearch({
   chainIds,
   variation,
   flow = TokenSelectorFlow.Swap,
+  swapTab = SwapTab.Swap,
 }: CurrencySearchProps) {
   const addresses = useActiveAddresses()
 
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
-  const { currentTab } = useSwapAndLimitContext()
   const prevChainId = usePrevious(chainId)
 
   const selectChain = useSelectChain()
@@ -64,12 +64,12 @@ export function CurrencySearch({
   )
 
   useEffect(() => {
-    if ((currentTab !== SwapTab.Swap && currentTab !== SwapTab.Send) || !isMultichainContext) {
+    if ((swapTab !== SwapTab.Swap && swapTab !== SwapTab.Send) || !isMultichainContext) {
       return
     }
 
     showSwitchNetworkNotification({ chainId, prevChainId, action: switchNetworkAction })
-  }, [currentTab, chainId, prevChainId, isMultichainContext, switchNetworkAction])
+  }, [swapTab, chainId, prevChainId, isMultichainContext, switchNetworkAction])
 
   const isSingleChainContext = chainIds?.length === 1
   const resolvedChainId = isSingleChainContext
@@ -87,7 +87,7 @@ export function CurrencySearch({
           chainId={resolvedChainId}
           chainIds={chainIds ?? chains}
           currencyField={currencyField}
-          flow={currentTab === SwapTab.Limit ? TokenSelectorFlow.Limit : flow}
+          flow={swapTab === SwapTab.Limit ? TokenSelectorFlow.Limit : flow}
           isSurfaceReady={true}
           variation={
             variation ??

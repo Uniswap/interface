@@ -90,3 +90,5 @@ export function PrivacyChoicesModal() {
     </Modal>
   )
 }
+
+export default PrivacyChoicesModal

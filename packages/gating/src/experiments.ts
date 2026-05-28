@@ -30,6 +30,7 @@ export enum ArbitrumXV2SamplingProperties {
 }
 
 export enum PrivateRpcProperties {
+  CalldataHintsEnabled = 'calldata_hints_enabled',
   FlashbotsEnabled = 'flashbots_enabled',
   RefundPercent = 'refund_percent',
 }

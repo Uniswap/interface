@@ -13,7 +13,7 @@ export enum BackoffStrategy {
 
 export type RetryConfig = {
   /** Max number of attempts INCLUDING the first one. Defaults to 3. */
-  maxAttempts: number
+  maxAttempts?: number
   /** Base delay between attempts in ms (default: 1s). */
   baseDelayMs?: number
   backoffStrategy?: BackoffStrategy

@@ -1,17 +1,16 @@
-import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
-import { MMKV } from 'react-native-mmkv'
+import type { Middleware, PreloadedState, StoreEnhancer } from '@reduxjs/toolkit'
+import { isRNDev, isUnitTestEnv } from '@universe/environment'
+import { createMMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
-import { isNonTestDev } from 'utilities/src/environment/constants'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { setReduxPersistor } from 'wallet/src/state/persistor'
 
-const storage = new MMKV()
+const storage = createMMKV()
 
 const reduxStorage: Storage = {
   setItem: (key, value) => {
@@ -23,7 +22,7 @@ const reduxStorage: Storage = {
     return Promise.resolve(value)
   },
   removeItem: (key) => {
-    storage.delete(key)
+    storage.remove(key)
     return Promise.resolve()
   },
 }
@@ -38,26 +37,17 @@ export const persistConfig = {
 
 export const persistedReducer = persistReducer(persistConfig, mobileReducer)
 
-const dataDogReduxEnhancer = createDatadogReduxEnhancer({
-  shouldLogReduxState: (state: MobileState): boolean => {
-    // Do not log the state if a user has opted out of analytics.
-    return !!state.telemetry.allowAnalytics
-  },
-})
+const enhancers: StoreEnhancer[] = []
 
-const enhancers = [dataDogReduxEnhancer]
-
-if (isNonTestDev) {
+if (!isUnitTestEnv() && isRNDev()) {
+  // oxlint-disable-next-line typescript/no-var-requires
   const reactotron = require('src/../ReactotronConfig').default
   enhancers.push(reactotron.createEnhancer())
 }
 
 const middlewares: Middleware[] = [delegationListenerMiddleware.middleware]
 
-const setupStore = (
-  preloadedState?: PreloadedState<MobileState>,
-  // oxlint-disable-next-line typescript/explicit-function-return-type
-) => {
+const setupStore = (preloadedState?: PreloadedState<MobileState>) => {
   return createStore({
     reducer: persistedReducer,
     preloadedState,

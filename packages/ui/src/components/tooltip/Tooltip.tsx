@@ -6,8 +6,12 @@ export type { TooltipProps } from 'tamagui'
 type TriggerProps = React.ComponentProps<typeof TamaguiTooltip.Trigger>
 export type TooltipContentProps = Omit<React.ComponentProps<typeof TamaguiTooltip.Content>, 'zIndex'> & {
   animationDirection?: 'left' | 'right' | 'top' | 'bottom'
-  // zIndex is required to properly display components
-  zIndex: NonNullable<React.ComponentProps<typeof TamaguiTooltip.Content>['zIndex']>
+  /**
+   * Escape hatch for the stacking layer. When omitted, Tooltip.Content reads
+   * EffectiveModalOrSheetZIndexContext and renders one layer above its closest
+   * modal/sheet/popover ancestor (floor: `zIndexes.tooltip`).
+   */
+  zIndex?: React.ComponentProps<typeof TamaguiTooltip.Content>['zIndex']
 }
 type ArrowProps = React.ComponentProps<typeof TamaguiTooltip.Arrow>
 

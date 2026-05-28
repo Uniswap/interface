@@ -3,9 +3,10 @@ import { SettingsItem } from 'src/app/features/settings/components/SettingsItem'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Accordion, Flex, ScrollView, Text } from 'ui/src'
-import { Clock, Wrench } from 'ui/src/components/icons'
+import { Chart, Clock, Wrench } from 'ui/src/components/icons'
 import { CacheConfig } from 'uniswap/src/components/gating/CacheConfig'
 import { GatingOverrides } from 'uniswap/src/components/gating/GatingOverrides'
+import { useAnalyticsDebugStore } from 'uniswap/src/features/telemetry/debug/useAnalyticsDebugStore'
 
 /**
  * When modifying this component, take into consideration that this is used
@@ -13,6 +14,8 @@ import { GatingOverrides } from 'uniswap/src/components/gating/GatingOverrides'
  */
 export function DevMenuScreen(): JSX.Element {
   const { navigateTo } = useExtensionNavigation()
+  const analyticsDebugEnabled = useAnalyticsDebugStore((s) => s.enabled)
+  const toggleAnalyticsDebugger = useAnalyticsDebugStore((s) => s.actions.toggleEnabled)
 
   return (
     <ScrollView>
@@ -31,6 +34,11 @@ export function DevMenuScreen(): JSX.Element {
           Icon={Clock}
           title="Hashcash Benchmark"
           onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.HashcashBenchmark}`)}
+        />
+        <SettingsItem
+          Icon={Chart}
+          title={analyticsDebugEnabled ? 'Disable Analytics Debugger' : 'Enable Analytics Debugger'}
+          onPress={toggleAnalyticsDebugger}
         />
 
         <Text variant="heading3" mt="$padding12">

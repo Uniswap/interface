@@ -1,5 +1,7 @@
+/* oxlint-disable max-lines */
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Platform } from 'react-native'
 import type { LayoutChangeEvent, TextStyle, ViewStyle } from 'react-native'
 import Animated, {
   useAnimatedStyle,
@@ -12,10 +14,44 @@ import { Flex, Shine, Text, TextLoaderWrapper, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+export const AnimatedCharStyles = {
+  wrapperStyle: {
+    overflow: 'hidden',
+  } satisfies ViewStyle,
+}
+
+const AnimatedFontStyles = {
+  fontStyle: {
+    fontSize: fonts.heading2.fontSize,
+    // special case for the home screen balance, instead of using the heading2 font weight
+    fontWeight: '500',
+    lineHeight: fonts.heading2.lineHeight,
+    top: 1,
+  } satisfies TextStyle,
+  invisible: {
+    opacity: 0,
+    position: 'absolute',
+  } satisfies TextStyle,
+}
+
+const NativeNumberTextStyles = {
+  fontStyle: {
+    // Use the button font family for number rendering because android's "Book" variant
+    // looks noticeably thinner than the balance text shown elsewhere in this component.
+    fontFamily: fonts.buttonLabel1.family,
+  } satisfies TextStyle,
+}
+
+const StaticNumberStyles = {
+  fontStyle: {
+    ...NativeNumberTextStyles.fontStyle,
+    ...(Platform.OS === 'android' ? { includeFontPadding: false } : {}),
+  } satisfies TextStyle,
+}
 
 // Native-specific duration for balance change color indication
 export const BALANCE_CHANGE_INDICATION_DURATION = ONE_SECOND_MS * 2
@@ -68,7 +104,6 @@ const RollNumber = ({
     marginLeft: isRightToLeft ? -ADDITIONAL_WIDTH_FOR_ANIMATIONS : 0,
   }
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +digit, currency
   useEffect(() => {
     const finishColor = shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1 && chars !== lastChars.current) {
@@ -108,8 +143,8 @@ const RollNumber = ({
         style={[
           animatedFontStyle,
           AnimatedFontStyles.fontStyle,
-          // fontFamily set to button style because android "Book" version of the font looks noticeably thinner
-          { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family },
+          NativeNumberTextStyles.fontStyle,
+          { height: DIGIT_HEIGHT },
         ]}
       >
         {char}
@@ -153,7 +188,8 @@ const RollNumber = ({
         style={[
           animatedFontStyle,
           AnimatedFontStyles.fontStyle,
-          { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family },
+          NativeNumberTextStyles.fontStyle,
+          { height: DIGIT_HEIGHT },
         ]}
       >
         {digit}
@@ -247,36 +283,53 @@ interface ReanimatedNumberProps extends AnimatedNumberProps {
   currency: FiatCurrencyInfo
 }
 
-const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
-  const currency = useAppFiatCurrencyInfo()
+const StaticNumber = ({
+  currency,
+  shouldFadeDecimals,
+  value,
+}: Pick<ReanimatedNumberProps, 'currency' | 'shouldFadeDecimals' | 'value'>): JSX.Element => {
   const colors = useSporeColors()
+  const amountOfCurrency = value?.split(currency.decimalSeparator)
 
-  if (props.disableAnimations) {
-    const amountOfCurrency = props.value?.split(currency.decimalSeparator)
-    if (amountOfCurrency?.length === 2) {
-      return (
-        <Text
+  // Keep the static path on native text primitives. On Android, routing this
+  // through Tamagui Text uses different font metrics/padding and can introduce clipping.
+  return (
+    <Animated.Text
+      allowFontScaling={false}
+      style={[
+        AnimatedFontStyles.fontStyle,
+        StaticNumberStyles.fontStyle,
+        {
+          color: colors.neutral1.val,
+          height: DIGIT_HEIGHT,
+        },
+      ]}
+    >
+      {shouldFadeDecimals && amountOfCurrency?.length === 2 ? amountOfCurrency[0] : value}
+      {shouldFadeDecimals && amountOfCurrency?.length === 2 && (
+        <Animated.Text
           allowFontScaling={false}
           style={[
             AnimatedFontStyles.fontStyle,
+            StaticNumberStyles.fontStyle,
             {
-              color: colors.neutral1.val,
+              color: colors.neutral3.val,
             },
           ]}
-          testID={TestID.PortfolioBalance}
         >
-          {amountOfCurrency[0]}
-          <Text
-            style={{
-              color: colors.neutral3.val,
-            }}
-          >
-            {currency.decimalSeparator}
-            {amountOfCurrency[1]}
-          </Text>
-        </Text>
-      )
-    }
+          {currency.decimalSeparator}
+          {amountOfCurrency[1]}
+        </Animated.Text>
+      )}
+    </Animated.Text>
+  )
+}
+
+const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
+  const currency = useAppFiatCurrencyInfo()
+
+  if (props.disableAnimations) {
+    return <StaticNumber currency={currency} shouldFadeDecimals={props.shouldFadeDecimals} value={props.value} />
   }
 
   return <ReanimatedNumber {...props} currency={currency} />
@@ -299,30 +352,48 @@ const ReanimatedNumber = ({
   const [commonPrefixLength, setCommonPrefixLength] = useState<number>(0)
   const [nextColor, setNextColor] = useState<string>()
   const scale = useSharedValue(1)
-  const offset = useSharedValue(0)
+
+  // Measure actual container width so scaling works when the component
+  // doesn't have full screen width (e.g. next to the portfolio chart).
+  const [containerWidth, setContainerWidth] = useState(SCREEN_WIDTH - SCREEN_WIDTH_BUFFER)
+  const [textWidth, setTextWidth] = useState(0)
+
+  const onContainerLayout = useCallback((e: LayoutChangeEvent) => {
+    const measuredContainerWidth = e.nativeEvent.layout.width
+    if (measuredContainerWidth > 0) {
+      setContainerWidth(measuredContainerWidth)
+    }
+  }, [])
+
+  const onTextLayout = useCallback((e: LayoutChangeEvent) => {
+    const measuredTextWidth = e.nativeEvent.layout.width
+    if (measuredTextWidth > 0) {
+      setTextWidth(measuredTextWidth)
+    }
+  }, [])
 
   const colors = useSporeColors()
 
   const scaleWrapper = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
+      transform: [{ translateX: -containerWidth / 2 }, { scale: scale.value }, { translateX: containerWidth / 2 }],
       display: 'flex',
       flexDirection: 'row',
     }
-  }, [scale])
+  }, [scale, containerWidth])
 
-  const fitBalanceOnLayout = (e: LayoutChangeEvent): void => {
-    const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / e.nativeEvent.layout.width
+  useEffect(() => {
+    if (textWidth <= 0 || containerWidth <= 0) {
+      return
+    }
 
+    const newScale = containerWidth / textWidth
     if (newScale < 1) {
-      const newOffset = (e.nativeEvent.layout.width - e.nativeEvent.layout.width * newScale) / 2
       scale.value = withTiming(newScale)
-      offset.value = withTiming(-newOffset)
     } else if (scale.value < 1) {
       scale.value = withTiming(1)
-      offset.value = withTiming(0)
     }
-  }
+  }, [containerWidth, scale, textWidth])
 
   useEffect(() => {
     if (balance && value && value !== prevValue) {
@@ -377,7 +448,7 @@ const ReanimatedNumber = ({
         <Flex borderRadius="$rounded4" flexDirection="row">
           <Text
             allowFontScaling={false}
-            style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family }]}
+            style={[AnimatedFontStyles.fontStyle, NativeNumberTextStyles.fontStyle, { height: DIGIT_HEIGHT }]}
             opacity={0}
           >
             {loadingPlaceholderText}
@@ -388,91 +459,64 @@ const ReanimatedNumber = ({
   }
 
   return (
-    <Animated.View style={scaleWrapper} testID={TestID.PortfolioBalance}>
-      <Flex
-        group
-        row
-        alignItems="flex-start"
-        backgroundColor="$surface1"
-        borderRadius="$rounded4"
-        width={MAX_DEVICE_WIDTH}
-      >
-        <TopAndBottomGradient />
-        <Shine disabled={!warmLoading}>
-          <Flex row animation="fast" width={MAX_DEVICE_WIDTH}>
-            {chars.map((_, index) => (
-              <Char
-                key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
-                chars={chars}
-                charsSizes={charsSizes}
-                commonPrefixLength={commonPrefixLength}
-                currency={currency}
-                index={index}
-                isRightToLeft={isRightToLeft}
-                nextColor={nextColor}
-                shouldFadeDecimals={shouldFadeDecimals}
-              />
-            ))}
-          </Flex>
-        </Shine>
-        <Animated.Text
-          allowFontScaling={false}
-          style={[AnimatedFontStyles.invisible, AnimatedFontStyles.fontStyle]}
-          onLayout={fitBalanceOnLayout}
+    <Flex overflow="hidden" onLayout={onContainerLayout}>
+      <Animated.View style={scaleWrapper}>
+        <Flex
+          group
+          row
+          alignItems="flex-start"
+          backgroundColor="$surface1"
+          borderRadius="$rounded4"
+          width={MAX_DEVICE_WIDTH}
         >
-          {value}
-        </Animated.Text>
-        {EndElement && (
-          <Animated.View key="refresh-icon" style={{ height: DIGIT_HEIGHT }}>
-            <Animated.View
-              style={[
-                {
-                  height: DIGIT_HEIGHT,
-                  width: DIGIT_MAX_WIDTH,
-                  position: 'absolute',
-                  marginVertical: 'auto',
-                  justifyContent: 'center',
-                },
-                AnimatedCharStyles.wrapperStyle,
-                iconAnimatedLeft,
-              ]}
-            >
-              {EndElement}
+          <TopAndBottomGradient />
+          <Shine disabled={!warmLoading}>
+            <Flex row animation="fast" width={MAX_DEVICE_WIDTH}>
+              {chars.map((_, index) => (
+                <Char
+                  key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
+                  chars={chars}
+                  charsSizes={charsSizes}
+                  commonPrefixLength={commonPrefixLength}
+                  currency={currency}
+                  index={index}
+                  isRightToLeft={isRightToLeft}
+                  nextColor={nextColor}
+                  shouldFadeDecimals={shouldFadeDecimals}
+                />
+              ))}
+            </Flex>
+          </Shine>
+          <Animated.Text
+            allowFontScaling={false}
+            style={[AnimatedFontStyles.invisible, AnimatedFontStyles.fontStyle]}
+            onLayout={onTextLayout}
+          >
+            {value}
+          </Animated.Text>
+          {EndElement && (
+            <Animated.View key="refresh-icon" style={{ height: DIGIT_HEIGHT }}>
+              <Animated.View
+                style={[
+                  {
+                    height: DIGIT_HEIGHT,
+                    width: DIGIT_MAX_WIDTH,
+                    position: 'absolute',
+                    marginVertical: 'auto',
+                    justifyContent: 'center',
+                  },
+                  AnimatedCharStyles.wrapperStyle,
+                  iconAnimatedLeft,
+                ]}
+              >
+                {EndElement}
+              </Animated.View>
             </Animated.View>
-          </Animated.View>
-        )}
-      </Flex>
-    </Animated.View>
+          )}
+        </Flex>
+      </Animated.View>
+    </Flex>
   )
 }
 
 export default AnimatedNumber
-
-interface AnimatedFontStylesType {
-  fontStyle: TextStyle
-  invisible: TextStyle
-}
-
-interface AnimatedCharStylesType {
-  wrapperStyle: ViewStyle
-}
-
-export const AnimatedCharStyles: AnimatedCharStylesType = {
-  wrapperStyle: {
-    overflow: 'hidden',
-  },
-}
-
-export const AnimatedFontStyles: AnimatedFontStylesType = {
-  fontStyle: {
-    fontSize: fonts.heading2.fontSize,
-    // special case for the home screen balance, instead of using the heading2 font weight
-    fontWeight: '500',
-    lineHeight: fonts.heading2.lineHeight,
-    top: 1,
-  },
-  invisible: {
-    opacity: 0,
-    position: 'absolute',
-  },
-}

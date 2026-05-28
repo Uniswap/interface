@@ -32,9 +32,9 @@ describe('PasskeyGenerationModal', () => {
   })
 
   it('renders default state', () => {
-    const { asFragment, getByText } = render(<PasskeyGenerationModal {...getDefaultProps()} />)
+    const { asFragment, getByTestId } = render(<PasskeyGenerationModal {...getDefaultProps()} />)
     expect(asFragment()).toMatchSnapshot()
-    expect(getByText('Create your passkey')).toBeVisible()
+    expect(getByTestId(TestID.CreatePasskey)).toBeVisible()
   })
 
   it('renders loading state', () => {

@@ -115,7 +115,6 @@ type DeepLinkHandler = (url: URL, data: BasePayload) => DeepLinkActionResult
  *
  * @param urlString - The URL to parse.
  */
-// oxlint-disable-next-line complexity
 export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
   const url = new URL(urlString)
   const screen = url.searchParams.get('screen') ?? 'other'

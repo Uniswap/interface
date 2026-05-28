@@ -1,5 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
-
 import type { InAppNotification } from '@universe/api'
 import { InlineBannerNotification, type NotificationClickTarget } from '@universe/notifications'
 import { AnimatePresence, motion } from 'framer-motion'

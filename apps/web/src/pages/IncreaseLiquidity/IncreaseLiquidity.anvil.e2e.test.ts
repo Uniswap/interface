@@ -1,5 +1,5 @@
 import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
+import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -11,16 +11,6 @@ import { Mocks } from '~/playwright/mocks/mocks'
 import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
-
-function modifyV4RequestData(data: { v4IncreaseLpPosition: { simulateTransaction: boolean } }) {
-  data.v4IncreaseLpPosition.simulateTransaction = false
-  return data
-}
-
-function modifyV3RequestData(data: { v3IncreaseLpPosition: { simulateTransaction: boolean } }) {
-  data.v3IncreaseLpPosition.simulateTransaction = false
-  return data
-}
 
 test.describe(
   'Increase liquidity',
@@ -35,8 +25,8 @@ test.describe(
     test('should increase liquidity of a position', async ({ page, anvil }) => {
       await stubLiquidityServiceEndpoint({
         page,
-        endpoint: LiquidityService.methods.increaseLPPosition,
-        modifyRequestData: modifyV4RequestData,
+        endpoint: LiquidityService.methods.increasePosition,
+        service: LiquidityService,
       })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.route(
@@ -60,8 +50,8 @@ test.describe(
       test('should approve and increase liquidity on a V4 position', async ({ page, anvil }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.increaseLPPosition,
-          modifyRequestData: modifyV4RequestData,
+          endpoint: LiquidityService.methods.increasePosition,
+          service: LiquidityService,
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
@@ -84,8 +74,8 @@ test.describe(
       test('should approve and increase liquidity on a V3 position', async ({ page, anvil }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.increaseLPPosition,
-          modifyRequestData: modifyV3RequestData,
+          endpoint: LiquidityService.methods.increasePosition,
+          service: LiquidityService,
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
@@ -108,8 +98,8 @@ test.describe(
       test('should skip permit2 approval when allowance already set', async ({ page, anvil }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.increaseLPPosition,
-          modifyRequestData: modifyV4RequestData,
+          endpoint: LiquidityService.methods.increasePosition,
+          service: LiquidityService,
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
@@ -121,8 +111,9 @@ test.describe(
         await stubLiquidityServiceEndpoint({
           page,
           endpoint: LiquidityService.methods.checkLPApproval,
+          service: LiquidityService,
           modifyResponseData: (data) => {
-            return { ...data, token1Approval: null, permitBatchData: null }
+            return { ...data, transactions: [], v4BatchPermitData: null }
           },
         })
         await anvil.setErc20Allowance({ address: assume0xAddress(USDT.address), spender: PERMIT2_ADDRESS })

@@ -1,9 +1,5 @@
 import { type ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import {
-  type CreateLPPositionRequest,
-  type IncreaseLPPositionRequest,
-  type MigrateV3ToV4LPPositionRequest,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import { type MigrateV3ToV4LPPositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import {
   type CreatePositionRequest,
   type IncreasePositionRequest,
@@ -69,7 +65,7 @@ interface BaseLiquidityTxAndGasInfo {
 export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Increase
   unsigned: boolean
-  increasePositionRequestArgs: IncreaseLPPositionRequest | IncreasePositionRequest | undefined
+  increasePositionRequestArgs: IncreasePositionRequest | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
@@ -79,11 +75,12 @@ export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Create
   unsigned: boolean
-  createPositionRequestArgs: CreateLPPositionRequest | CreatePositionRequest | undefined
+  createPositionRequestArgs: CreatePositionRequest | undefined
 }
 
 export interface MigratePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
+  unsigned: boolean
   migratePositionRequestArgs: MigrateV3ToV4LPPositionRequest | undefined
 }
 
@@ -163,7 +160,10 @@ function validateLiquidityTxContext(
 
   const { action, txRequest, permit } = liquidityTxContext
   const unsigned =
-    (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
+    (liquidityTxContext.type === 'increase' ||
+      liquidityTxContext.type === 'create' ||
+      liquidityTxContext.type === 'migrate') &&
+    liquidityTxContext.unsigned
   if (unsigned) {
     if (!permit) {
       return undefined

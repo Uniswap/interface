@@ -89,6 +89,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
       transactionTypeInfo?: TransactionTypeInfo
       preSignedTransaction?: SignedTransactionRequest
     }): Promise<void> => {
+      // oxlint-disable-next-line no-shadow
       const { request, transactionTypeInfo, preSignedTransaction } = params
       const requestWithTxInfo = {
         ...request,

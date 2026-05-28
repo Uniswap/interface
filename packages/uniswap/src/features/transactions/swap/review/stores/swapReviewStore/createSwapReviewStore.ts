@@ -1,5 +1,5 @@
+import { isDevEnv } from '@universe/environment'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { isDevEnv } from 'utilities/src/environment/env'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'

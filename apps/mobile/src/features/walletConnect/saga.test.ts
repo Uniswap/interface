@@ -125,6 +125,7 @@ describe('WalletConnect Saga', () => {
           chains: [UniverseChainId.Mainnet],
           dappRequestInfo,
           verifyStatus: DappVerificationStatus.Verified,
+          trustedOriginUrl: 'https://verified-origin.com',
         },
       }
 
@@ -219,6 +220,7 @@ describe('WalletConnect Saga', () => {
           chains: [UniverseChainId.Mainnet],
           dappRequestInfo,
           verifyStatus: DappVerificationStatus.Verified,
+          trustedOriginUrl: 'https://valid-dapp.com',
         },
       }
 
@@ -305,6 +307,7 @@ describe('WalletConnect Saga', () => {
           chains: [UniverseChainId.Mainnet],
           dappRequestInfo,
           verifyStatus: DappVerificationStatus.Unverified,
+          trustedOriginUrl: undefined,
         },
       }
 

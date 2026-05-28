@@ -2,8 +2,9 @@ import { type DiscriminatedQuoteResponse, type TradingApi, type TradingApiClient
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { type Logger } from 'utilities/src/logger/logger'
 
-// Minimal parameters needed for indicative quotes
-export interface IndicativeQuoteRequest {
+// Minimal parameters needed for indicative quotes.
+// Exactly one of autoSlippage or slippageTolerance must be provided.
+interface IndicativeQuoteBase {
   type: TradingApi.TradeType
   amount: string
   tokenInChainId: number
@@ -12,6 +13,10 @@ export interface IndicativeQuoteRequest {
   tokenOut: string
   swapper: string
 }
+
+export type IndicativeQuoteRequest =
+  | (IndicativeQuoteBase & { autoSlippage: TradingApi.AutoSlippage; slippageTolerance?: never })
+  | (IndicativeQuoteBase & { slippageTolerance: number; autoSlippage?: never })
 
 // Type for the indicative quote fetcher function
 export type FetchIndicativeQuote = (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>

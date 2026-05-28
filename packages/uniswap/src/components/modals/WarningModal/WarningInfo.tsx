@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { PropsWithChildren, ReactNode, useCallback, useRef, useState } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
@@ -6,7 +7,6 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 type WarningInfoProps = {

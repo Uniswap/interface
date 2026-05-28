@@ -1,29 +1,25 @@
-import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
 
-export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
+interface TickerProps {
+  itemPoint: ItemPoint<InteractiveToken>
+  pricePercentChange: number
+}
+
+export function Ticker({ itemPoint, pricePercentChange }: TickerProps): JSX.Element {
   const { formatPercent } = useLocalizationContext()
 
   const { color, size, floatingElementPosition, itemData } = itemPoint
-  const { address, chain, symbol } = itemData
+  const { symbol } = itemData
 
-  const tokenPromoQuery = GraphQLApi.useTokenPromoQuery({
-    variables: {
-      address: address !== NATIVE_CHAIN_ID ? address : undefined,
-      chain,
-    },
-  })
-
-  const pricePercentChange = useMemo(() => {
-    return tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-  }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
-
+  const absChangeFormatted = useMemo(
+    () => formatPercent(Math.abs(pricePercentChange)),
+    [formatPercent, pricePercentChange],
+  )
   return (
     <Flex
       position="absolute"
@@ -49,8 +45,8 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
           {symbol}
         </Text>
         <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
-          <Text variant="body2">{formatPercent(Math.abs(pricePercentChange))}</Text>
+          <DeltaArrow delta={pricePercentChange} formattedDelta={absChangeFormatted} />
+          <Text variant="body2">{absChangeFormatted}</Text>
         </Flex>
       </Flex>
     </Flex>

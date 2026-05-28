@@ -1,6 +1,6 @@
 import { Flex } from 'ui/src'
 import { TableText } from '~/components/Table/shared/TableText'
-import { useAuctionTimeRemaining } from '~/components/Toucan/Auction/hooks/useAuctionTimeRemaining'
+import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 
 interface TimeRemainingCellProps {
   startBlockTimestamp: bigint | undefined

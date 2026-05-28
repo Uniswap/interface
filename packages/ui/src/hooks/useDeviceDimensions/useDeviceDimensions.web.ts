@@ -1,8 +1,8 @@
+import { isExtensionApp } from '@universe/environment'
 import { useEffect, useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
-import { isExtensionApp } from 'utilities/src/platform'
 
 const isClient = typeof window === 'object'
 

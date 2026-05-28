@@ -1,6 +1,6 @@
 import { DAI } from 'uniswap/src/constants/tokens'
+import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
 import { SelfSendSpeedBumpModal } from '~/pages/Swap/Send/SelfSendSpeedBump'
-import { SendContext, SendContextType } from '~/state/send/SendContext'
 import { render, screen } from '~/test-utils/render'
 
 const mockSendContext: SendContextType = {

@@ -1,9 +1,10 @@
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import appsFlyer from 'react-native-appsflyer'
-import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { getConfig } from 'src/config'
 import { logger } from 'utilities/src/logger/logger'
 
 export function initAppsFlyer(): void {
+  const config = getConfig()
   appsFlyer.initSdk(
     {
       devKey: config.appsflyerApiKey,

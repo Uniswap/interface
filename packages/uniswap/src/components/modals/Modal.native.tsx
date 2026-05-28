@@ -6,6 +6,7 @@ import {
   // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
   BottomSheetTextInput as GorhomBottomSheetTextInput,
 } from '@gorhom/bottom-sheet'
+import { isIOS } from '@universe/environment'
 import { BlurView } from 'expo-blur'
 import type { ComponentProps } from 'react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -23,7 +24,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isIOS } from 'utilities/src/platform'
 
 /**
  * (android only)

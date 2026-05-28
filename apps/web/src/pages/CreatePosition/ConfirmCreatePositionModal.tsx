@@ -4,9 +4,9 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { PriceDifference } from '~/components/Liquidity/Create/types'
+import { PriceDifference } from '~/features/Liquidity/Create/types'
 
-export default function ConfirmCreatePositionModal({
+export function ConfirmCreatePositionModal({
   isOpen,
   onClose,
   onContinue,

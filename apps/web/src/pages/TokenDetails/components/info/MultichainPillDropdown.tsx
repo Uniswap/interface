@@ -3,6 +3,8 @@ import type { ComponentProps } from 'react'
 import { Popover, Text, TouchableArea, useMedia } from 'ui/src'
 import { AdaptiveWebPopoverContent } from 'ui/src/components/popover/AdaptiveWebPopoverContent'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 type MultichainPillPopoverContentProps = Omit<ComponentProps<typeof AdaptiveWebPopoverContent>, 'children' | 'isOpen'>
 
@@ -50,6 +52,7 @@ export function MultichainPillDropdown({
   isOpen,
   onOpenChange,
   popoverContentProps,
+  modalName,
   children,
 }: {
   testID: string
@@ -58,6 +61,7 @@ export function MultichainPillDropdown({
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   popoverContentProps: MultichainPillPopoverContentProps
+  modalName: ModalNameType
   children: React.ReactNode
 }) {
   const media = useMedia()
@@ -65,22 +69,24 @@ export function MultichainPillDropdown({
   const { webBottomSheetProps: sheetPropsFromParent, ...restPopoverContentProps } = popoverContentProps
 
   return (
-    <Popover hoverable={!media.md} placement="top-start" offset={8} stayInFrame allowFlip onOpenChange={onOpenChange}>
-      <Popover.Trigger>
-        <TokenInfoButton testID={testID} icon={icon} name={name} />
-      </Popover.Trigger>
-      <AdaptiveWebPopoverContent
-        isOpen={isOpen}
-        {...restPopoverContentProps}
-        adaptWhen={media.md}
-        webBottomSheetProps={{
-          maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
-          ...sheetPropsFromParent,
-          onClose: () => onOpenChange(false),
-        }}
-      >
-        {children}
-      </AdaptiveWebPopoverContent>
-    </Popover>
+    <Trace logImpression={isOpen} modal={modalName}>
+      <Popover hoverable={!media.md} placement="top-start" offset={8} stayInFrame allowFlip onOpenChange={onOpenChange}>
+        <Popover.Trigger>
+          <TokenInfoButton testID={testID} icon={icon} name={name} />
+        </Popover.Trigger>
+        <AdaptiveWebPopoverContent
+          isOpen={isOpen}
+          {...restPopoverContentProps}
+          adaptWhen={media.md}
+          webBottomSheetProps={{
+            maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+            ...sheetPropsFromParent,
+            onClose: () => onOpenChange(false),
+          }}
+        >
+          {children}
+        </AdaptiveWebPopoverContent>
+      </Popover>
+    </Trace>
   )
 }

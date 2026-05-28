@@ -1,6 +1,6 @@
+import { isAndroid, isTouchable, isWebApp, isWebPlatform } from '@universe/environment'
 import React, { memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { LayoutChangeEvent, View } from 'react-native'
-// oxlint-disable-next-line typescript/no-restricted-imports
 import { GestureResponderEvent } from 'react-native'
 import Animated, { useSharedValue } from 'react-native-reanimated'
 import {
@@ -22,7 +22,6 @@ import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isAndroid, isTouchable, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -134,7 +133,6 @@ export function ActionSheetDropdown({
     })
   }
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +toggleMeasurements?.sticky, insets.top
   useEffect(() => {
     if (!isWebPlatform) {
       return undefined
@@ -160,7 +158,6 @@ export function ActionSheetDropdown({
     }
   }, [toggleMeasurements?.sticky, insets.top])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +setOpen, setToggleMeasurements
   const closeDropdown = useCallback(
     (event: GestureResponderEvent): void => {
       setOpen(false)
@@ -352,7 +349,6 @@ function DropdownContent({
     }
   }, [initialScrollY, toggleMeasurements.sticky])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +toggleMeasurements
   useEffect(() => {
     setWindowScrollY(0)
   }, [toggleMeasurements])

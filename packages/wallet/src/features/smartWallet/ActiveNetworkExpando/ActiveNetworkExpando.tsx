@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useCallback } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { Flex, GetThemeValueForKey, HeightAnimator, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -7,7 +8,6 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isMobileApp } from 'utilities/src/platform'
 import {
   ITEM_PADDING,
   MAX_VISIBLE_HEIGHT_MOBILE,

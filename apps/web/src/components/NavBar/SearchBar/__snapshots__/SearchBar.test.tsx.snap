@@ -1,28 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`disable nft on searchbar > should render searchbar on larger screen 1`] = `
-.c1 {
-  background-color: rgba(19, 19, 19, 0.08);
-  color: rgba(19, 19, 19, 0.63);
-  padding: 0px 8px;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 535;
-  line-height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.6;
-  backdrop-filter: blur(60px);
-}
-
-.c0 {
-  width: 20px;
-  height: 20px;
-}
-
 <div>
   <span
     class=""
@@ -34,7 +12,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="Dialog--:r4:-title"
+        id="Dialog--«r4»-title"
         role="heading"
       />
     </span>
@@ -52,7 +30,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa1360334080"
         >
           <div
-            class="c0"
+            class="sc-hvigdm kCHUNr"
             data-testid="nav-search-icon"
           >
             <svg
@@ -78,7 +56,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
           </span>
         </div>
         <div
-          class="c1"
+          class="sc-bRKDuR jTHZbx"
         >
           /
         </div>

@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { useCallback, useState } from 'react'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
@@ -8,14 +9,23 @@ export function useAvatarSelectionHandler({
   address,
   avatarImageUri,
   setAvatarImageUri,
-  showModal,
+  onOpenModal,
+  onCloseModal,
 }: {
   address: string
   avatarImageUri: string | undefined
-  setAvatarImageUri: (uri: string) => void
-  showModal: () => void
-}): { avatarSelectionHandler: () => Promise<void>; hasNFTs: boolean } {
+  setAvatarImageUri: (uri?: string) => void
+  onOpenModal?: () => void
+  onCloseModal?: () => void
+}): {
+  avatarSelectionHandler: () => Promise<void>
+  hasNFTs: boolean
+  showModal: boolean
+  openModal: () => void
+  closeModal: () => void
+} {
   const { gqlChains } = useEnabledChains()
+  const [showModal, setShowModal] = useState(false)
 
   const { data: nftsData } = GraphQLApi.useNftsTabQuery({
     variables: {
@@ -30,17 +40,27 @@ export function useAvatarSelectionHandler({
   const hasNFTs = nftItems !== undefined && nftItems.length > 0
   const hasAvatarImage = avatarImageUri && avatarImageUri !== ''
 
-  if (hasNFTs || hasAvatarImage) {
-    return { avatarSelectionHandler: async () => showModal(), hasNFTs }
-  } else {
-    return {
-      avatarSelectionHandler: async (): Promise<void> => {
-        const selectedPhoto = await selectPhotoFromLibrary()
-        if (selectedPhoto) {
-          setAvatarImageUri(selectedPhoto)
-        }
-      },
-      hasNFTs,
+  const openModal = useCallback((): void => {
+    onOpenModal?.()
+    setShowModal(true)
+  }, [onOpenModal])
+
+  const closeModal = useCallback((): void => {
+    onCloseModal?.()
+    setShowModal(false)
+  }, [onCloseModal])
+
+  const avatarSelectionHandler = useCallback(async (): Promise<void> => {
+    if (hasNFTs || hasAvatarImage) {
+      openModal()
+      return
     }
-  }
+
+    const selectedPhoto = await selectPhotoFromLibrary()
+    if (selectedPhoto) {
+      setAvatarImageUri(selectedPhoto)
+    }
+  }, [hasAvatarImage, hasNFTs, openModal, setAvatarImageUri])
+
+  return { avatarSelectionHandler, hasNFTs, showModal, openModal, closeModal }
 }

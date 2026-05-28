@@ -1,9 +1,9 @@
 import { TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { Signer } from 'ethers/lib/ethers'
 import { useCallback } from 'react'
 import { useSigner } from 'uniswap/src/contexts/UniswapContext'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
-import { isWebApp } from 'utilities/src/platform'
 
 async function getSignature(permitData: TradingApi.NullablePermit, signer: Signer): Promise<string | undefined> {
   const { domain, types, values } = permitData || {}

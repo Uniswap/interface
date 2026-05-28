@@ -8,7 +8,7 @@ exports[`NetworkLogo > renders without error 1`] = `
   >
     <div
       class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-      data-testid="network-logo"
+      data-testid="network-logo-8453"
       style="width: 20px; height: 20px; border-radius: 6px; border-width: 0px; border-style: solid;"
     >
       <div
@@ -42,7 +42,7 @@ exports[`TransactionSummaryNetworkLogo > renders without error 1`] = `
   >
     <div
       class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-      data-testid="network-logo"
+      data-testid="network-logo-8453"
       style="width: 23.2px; height: 23.2px; border-radius: 6.96px; border-width: 1.6px; border-style: solid;"
     >
       <div

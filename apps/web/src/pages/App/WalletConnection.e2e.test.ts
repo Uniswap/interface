@@ -1,8 +1,9 @@
+import { getPortfolio, listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
-import ms from 'ms'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest()
 
@@ -16,7 +17,12 @@ test.describe(
     ],
   },
   () => {
-    test('disconnect wallet', async ({ page }) => {
+    test('disconnect wallet', async ({ page, dataApi }) => {
+      // Mock DataApi so the account drawer doesn't layout-shift mid-hover when the
+      // activity/portfolio requests fail (the banner mounting breaks the Tooltip hover).
+      await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions_empty)
+      await dataApi.intercept(getPortfolio, Mocks.DataApiService.get_portfolio_empty)
+
       await page.goto(`/swap?featureFlagOverrideOff=${getFeatureFlagName(FeatureFlags.EmbeddedWallet)}`)
 
       // Verify wallet is connected
@@ -25,20 +31,17 @@ test.describe(
       // Disconnect the wallet
       await page.getByTestId(TestID.Web3StatusConnected).click()
 
-      // Wait for the disconnect button to be visible
       await getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect).waitFor({ state: 'visible' })
-      await getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect).hover()
+
+      // Hover opens the disconnect tooltip; retry as a unit in case drawer content shifts mid-hover.
+      await expect(async () => {
+        await getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect).hover()
+        await expect(page.getByTestId(TestID.WalletDisconnectInModal)).toBeVisible({ timeout: 2_000 })
+      }).toPass({ timeout: 4_000 })
       await page.getByTestId(TestID.WalletDisconnectInModal).click()
 
-      // Check if tooltip content appears (Solana enabled case)
-      const hasTooltip = await page.getByTestId(TestID.WalletDisconnectInModal).isVisible({ timeout: ms('3s') })
-
-      if (hasTooltip) {
-        await page.getByTestId(TestID.WalletDisconnectInModal).click()
-      }
-
       // Verify wallet has disconnected
-      await expect(await page.getByText('Connect wallet')).toBeVisible()
+      await expect(page.getByTestId(TestID.NavConnectWalletButton)).toBeVisible()
     })
 
     test('should connect wallet', async ({ page }) => {

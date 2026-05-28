@@ -9,6 +9,7 @@ import {
   type LogEntry,
   useHashcashBenchmarkStore,
 } from 'src/app/features/settings/stores/hashcashBenchmarkStore'
+import { createHashcashWorker } from 'src/workers/hashcashWorker'
 import { Button, Flex, ScrollView, Text, TouchableArea } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { useShallow } from 'zustand/shallow'
@@ -425,11 +426,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
     }
 
     const channel = createHashcashWorkerChannel({
-      getWorker: () =>
-        new Worker(
-          new URL('@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
-          { type: 'module' },
-        ),
+      getWorker: createHashcashWorker,
     })
 
     try {
@@ -516,11 +513,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
     const workerCount = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 4 : 4
     const channel = createHashcashMultiWorkerChannel({
       workerCount,
-      getWorker: () =>
-        new Worker(
-          new URL('@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
-          { type: 'module' },
-        ),
+      getWorker: createHashcashWorker,
     })
 
     try {

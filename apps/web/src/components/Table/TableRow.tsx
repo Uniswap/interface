@@ -11,6 +11,7 @@ import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/co
 import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getCommonPinningStyles'
 import { CellContainer, DataRow } from '~/components/Table/styled'
 import { useTableSize } from '~/components/Table/TableSizeProvider'
+import type { TableColumnMeta } from '~/components/Table/types'
 
 const TableRowLink = styled(Link, {
   cursor: 'pointer',
@@ -36,13 +37,15 @@ function TableCellComponent<T extends RowData>({
   const colors = useSporeColors()
   const { background, ...positionStyles } = getCommonPinningStyles({ column: cell.column, colors, v2, isHeader: false })
 
+  const overflowVisible = Boolean((cell.column.columnDef.meta as TableColumnMeta | undefined)?.overflowVisible)
+
   return (
     <CellContainer
       style={positionStyles}
       backgroundColor={background}
       borderTopLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
       borderBottomLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
-      overflow="hidden"
+      overflow={overflowVisible ? 'visible' : 'hidden'}
       $group-hover={{
         backgroundColor: isPinned && v2 ? '$surface1Hovered' : 'unset',
       }}
@@ -68,7 +71,7 @@ interface TableRowProps<T extends RowData> {
 
 function TableRowComponent<T extends RowData>({
   row,
-  v2 = true,
+  v2,
   rowWrapper,
   rowHeight: propRowHeight,
   compactRowHeight: propCompactRowHeight,

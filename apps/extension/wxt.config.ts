@@ -7,8 +7,11 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
 import { getTsconfigAliases } from './config/getTsconfigAliases'
+
+// process.env.APP_ID is used by @universe/config. Set at the Node level so the
+// Tamagui static extractor can resolve it.
+process.env.APP_ID = 'extension'
 
 const icons = {
   16: 'assets/icon16.png',
@@ -34,7 +37,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.71.0'
+const BASE_VERSION = '1.74.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -111,16 +114,68 @@ export default defineConfig({
         }
       }
     },
-    // Validate build output after dev builds complete
-    'build:done': async (wxt) => {
-      // Only validate in development mode (dev server)
-      if (wxt.config.mode !== 'development') {
+    // Post-process generated manifest to add content_script `id` fields and ensure parity
+    // with the legacy webpack-generated manifest. WXT's `defineContentScript()` doesn't
+    // expose an `id` option (as of 0.20.x), so we inject it here based on the js filename.
+    // See https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#id
+    'build:manifestGenerated': (_wxt, manifest) => {
+      if (!manifest.content_scripts) {
         return
       }
+      for (const cs of manifest.content_scripts) {
+        if (cs.id) {
+          continue
+        }
+        const jsFile = cs.js?.[0]
+        if (!jsFile) {
+          continue
+        }
+        // Examples: 'content-scripts/injected.js' -> 'injected'
+        const base = path.basename(jsFile, '.js')
+        cs.id = base
+      }
+    },
+    // (previously a manualChunks hook was here to route background-reachable modules into
+    // a single chunk; it broke UI entries by forcing cross-chunk imports from sidepanel/
+    // onboarding/popup into background.js. Removed once jsbi/env-loading/hashcash fixes
+    // eliminated the top-level SW throws that originally motivated the hack.)
+    //
+    // Rename the IIFE var for main-world content scripts so it doesn't collide with a
+    // page global. WXT defaults `build.lib.name` to `safeVarName(entrypoint.name)`, so
+    // the ethereum entrypoint (`ethereum.content.ts`) emits `var ethereum = (IIFE)()`
+    // at the top level of the MAIN-world content script. In the page's global scope
+    // that assignment becomes `window.ethereum = <IIFE return>` AFTER the IIFE body
+    // has set `window.ethereum = new WindowEthereumProxy()` — clobbering our proxy
+    // with the IIFE's return value (a Promise from WXT's async entry wrapper). Prefix
+    // the var name with `__wxt_` to break the collision without changing the entry
+    // filename or output path.
+    'vite:build:extendConfig': (entrypoints, viteConfig) => {
+      const isContentScriptGroup = entrypoints.length === 1 && entrypoints[0]?.type === 'content-script'
+      if (!isContentScriptGroup) {
+        return
+      }
+      const entry = entrypoints[0]
+      if (!entry) {
+        return
+      }
+      // Only override when Vite is building the content script as a classic IIFE
+      // (this is the `build.lib` path WXT takes for content scripts).
+      const lib = viteConfig.build?.lib
+      if (lib && typeof lib === 'object' && 'name' in lib && typeof lib.name === 'string') {
+        lib.name = `__wxt_cs_${lib.name}`
+      }
+    },
+    // Validate build output after every build (dev and production). The script scans for
+    // bundler regressions that only surface at runtime — most notably classic
+    // `importScripts(` worker chunk loading, which produces the `chunks/chunks/<hash>.js`
+    // NetworkError in shipped builds. Skipping production here is how that bug shipped to
+    // v1.73.0/v1.74.0 unnoticed, so validation now runs on both modes.
+    'build:done': async (wxt) => {
       const { execSync } = await import('node:child_process')
+      const modeFlag = wxt.config.mode === 'development' ? '--dev' : '--prod'
       try {
         // Run script directly to avoid Nx dependsOn chain that would trigger a full rebuild
-        execSync('bunx tsx scripts/validateBuildOutput.ts --dev', {
+        execSync(`bun run scripts/validateBuildOutput.ts ${modeFlag}`, {
           cwd: wxt.config.root,
           stdio: 'inherit',
         })
@@ -174,30 +229,14 @@ export default defineConfig({
         default_icon: icons,
       },
 
-      content_scripts: [
-        {
-          id: 'injected',
-          run_at: 'document_start',
-          matches:
-            isDevelopment || BUILD_ENV === 'dev'
-              ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
-              : ['https://*/*'],
-          js: ['content-scripts/injected.js'],
-        },
-        {
-          id: 'ethereum',
-          run_at: 'document_start',
-          matches:
-            isDevelopment || BUILD_ENV === 'dev'
-              ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
-              : ['https://*/*'],
-          js: ['content-scripts/ethereum.js'],
-          world: 'MAIN',
-        },
-      ],
+      // Content scripts are auto-registered from `src/entrypoints/*.content.ts` via WXT's
+      // `defineContentScript()` export. We used to duplicate them here, which produced four
+      // entries in the manifest (two manual + two auto). The `id` field is added by the
+      // `build:manifestGenerated` hook above since `defineContentScript()` doesn't accept it.
 
       // Permissions
       permissions: ['alarms', 'notifications', 'sidePanel', 'storage', 'tabs'],
+      host_permissions: ['https://*.uniswap.org/*'],
 
       commands: {
         _execute_action: {
@@ -215,15 +254,39 @@ export default defineConfig({
         matches:
           BUILD_ENV === 'prod'
             ? ['https://app.uniswap.org/*']
-            : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
+            : ['https://app.uniswap.org/*', 'https://app.corn-staging.com/*', 'https://dev.ew.unihq.org/*'],
       },
     }
   },
 
   // Vite configuration copied from web project
   vite: (env) => {
-    // Load ALL env variables (including those without VITE_ prefix)
-    const envVars = loadEnv(env.mode, process.cwd(), '')
+    // Load ALL env variables (including those without VITE_ prefix). Matches webpack's
+    // DotenvPlugin behavior: read the monorepo-root `.env` (user-provided) AND the
+    // monorepo-root `.env.defaults` (checked-in defaults), with `.env` taking precedence.
+    // Vite only reads from one directory per call and doesn't know about `.env.defaults`,
+    // so we do both loads and merge.
+    const monorepoRoot = path.resolve(import.meta.dirname, '../..')
+    const envDefaults = loadEnv(env.mode, monorepoRoot, '')
+    // Re-read with a custom-named prefix file: loadEnv only looks at `.env`, `.env.local`,
+    // `.env.<mode>`, `.env.<mode>.local`. Manually parse `.env.defaults` since Vite won't.
+    const defaultsPath = path.join(monorepoRoot, '.env.defaults')
+    const parsedDefaults: Record<string, string> = {}
+    if (fs.existsSync(defaultsPath)) {
+      for (const rawLine of fs.readFileSync(defaultsPath, 'utf-8').split('\n')) {
+        const line = rawLine.trim()
+        if (!line || line.startsWith('#')) continue
+        const eq = line.indexOf('=')
+        if (eq === -1) continue
+        const key = line.slice(0, eq).trim()
+        const value = line
+          .slice(eq + 1)
+          .trim()
+          .replace(/^['"]|['"]$/g, '')
+        parsedDefaults[key] = value
+      }
+    }
+    const envVars = { ...parsedDefaults, ...envDefaults }
 
     const __dirname = path.dirname(new URL(import.meta.url).pathname)
     const isProduction = process.env.NODE_ENV === 'production'
@@ -242,13 +305,17 @@ export default defineConfig({
       'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
       'process.env.IS_STATIC': '""',
       'process.env.EXPO_OS': '"web"',
+      // process.env.APP_ID is used by @universe/config. When that package's
+      // getConfig() function is removed, this define can be removed.
+      'process.env.APP_ID': '"extension"',
       ...envDefines,
-      'process.env.REACT_APP_IS_UNISWAP_INTERFACE': '"false"',
-      'process.env.IS_UNISWAP_EXTENSION': '"true"',
     }
 
     const cacheDir = path.resolve(__dirname, 'node_modules/.vite')
-    const forceOptimize = shouldInvalidateOptimizeDepsForEnv({ defines, cacheDir })
+    const forceOptimize = shouldInvalidateOptimizeDepsForEnv({
+      defines,
+      cacheDir,
+    })
 
     // External package aliases from web config
     const overrides = {
@@ -258,7 +325,20 @@ export default defineConfig({
       // Skip expo-crypto alias during prepare phase since it imports react-native-web
       crypto: isPreparePhase ? 'crypto' : 'expo-crypto',
       'expo-clipboard': path.resolve(__dirname, '../web/src/lib/expo-clipboard.jsx'),
-      jsbi: path.resolve(__dirname, '../../node_modules/jsbi/dist/jsbi.mjs'), // force consistent ESM build
+      // Shim jsbi through a local file that re-exports every static method as a named
+      // export. jsbi.mjs itself only has `export default JSBI`, and JSBI's static methods
+      // are non-enumerable class members, so Rollup's ESM interop wrapper (__toESM) only
+      // surfaces `default`. Code like `import JSBI from 'jsbi'; JSBI.BigInt(0)` bundles
+      // to `i.BigInt(0)` where `i` is the namespace without the static methods — runtime
+      // TypeError in the service worker at module evaluation time.
+      jsbi: path.resolve(__dirname, 'src/shims/jsbi.mjs'),
+      // Vite-only override: route the hashcash worker helper to a `?worker`-based
+      // variant. Vite's `new Worker(new URL(...))` detection doesn't fire when the URL
+      // escapes the Vite root (apps/extension → packages/sessions), so we use the
+      // `?worker` query instead. Webpack doesn't read this alias and falls through
+      // to `src/workers/hashcashWorker.ts` (which uses `new URL()` — webpack handles
+      // it correctly regardless of cross-package path).
+      'src/workers/hashcashWorker': path.resolve(__dirname, 'src/workers/hashcashWorker.vite'),
       // Dynamically load all monorepo package aliases from tsconfig.base.json
       ...getTsconfigAliases(),
     }
@@ -427,7 +507,8 @@ export default defineConfig({
       },
 
       build: {
-        sourcemap: isProduction ? false : 'hidden',
+        // Always emit hidden sourcemaps. Prod uploads them to Datadog for symbolication; the zip step excludes *.map so they don't ship to users.
+        sourcemap: 'hidden',
         minify: isProduction ? 'esbuild' : undefined,
         rollupOptions: {
           output: {
@@ -440,6 +521,18 @@ export default defineConfig({
         commonjsOptions: {
           include: [/buffer/, /jsbi/, /node_modules/, /cookie/, /void-elements/, /@apollo\/client/],
           transformMixedEsModules: true,
+        },
+      },
+
+      // Use `format: 'es'` to emit module workers for correct imports in Chrome extensions.
+      worker: {
+        format: 'es',
+        rollupOptions: {
+          output: {
+            entryFileNames: 'assets/[name]-[hash].js',
+            chunkFileNames: 'assets/[name]-[hash].js',
+            assetFileNames: 'assets/[name]-[hash].[ext]',
+          },
         },
       },
 
@@ -459,9 +552,11 @@ export default defineConfig({
   // See the README for more information.
   // https://wxt.dev/guide/essentials/config/browser-startup.html
   webExt: {
+    disabled: process.env.WXT_NO_OPEN_BROWSER === 'true',
+
     startUrls: ['https://app.uniswap.org'],
 
-    chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
+    chromiumArgs: [`--user-data-dir=${process.env.WXT_CHROME_USER_DATA_DIR ?? './.wxt/chrome-data'}`],
 
     // Optional: Open devtools in the browser automatically
     // openDevtools: true,

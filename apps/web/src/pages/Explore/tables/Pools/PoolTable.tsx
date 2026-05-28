@@ -18,17 +18,16 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
+import { type FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import { PoolSortFields, TablePool } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, OrderDirection, unwrapToken } from '~/appGraphql/data/util'
-import { FeeData } from '~/components/Liquidity/Create/types'
-import LPIncentiveFeeStatTooltip from '~/components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
-import { isDynamicFeeTier } from '~/components/Liquidity/utils/feeTiers'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -37,17 +36,29 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { getChainUrlParam, useChainIdFromUrlParam } from '~/features/params/chainParams'
-import useSimplePagination from '~/hooks/useSimplePagination'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
+import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
+import { useSimplePagination } from '~/hooks/useSimplePagination'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
   usePoolTableStoreActions,
 } from '~/pages/Explore/tables/Pools/poolTableStore'
-import { TABLE_PAGE_SIZE } from '~/state/explore'
-import { useTopPools } from '~/state/explore/topPools/useTopPools'
-import { PoolStat } from '~/state/explore/types'
+import { PoolStat } from '~/types/explore'
+import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
+
+export interface PoolLinkData {
+  chainId: UniverseChainId
+  poolIdOrHash: string
+  token0Address?: string
+  token1Address?: string
+  fee?: FeeData
+  hookAddress?: string
+  protocolVersion?: string
+}
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',
@@ -63,6 +74,7 @@ interface PoolTableValues {
   volume30d: string
   volOverTvl?: number
   link: string
+  linkState?: { entryPoint?: string }
   protocolVersion?: string
   feeTier?: FeeData
   rewardApr?: number
@@ -70,23 +82,86 @@ interface PoolTableValues {
   token1CurrencyId?: string
 }
 
+function isGqlPool(pool: TablePool | PoolStat): pool is TablePool & { hash: string } {
+  return 'hash' in pool
+}
+
+function getPoolIdOrHash(pool: TablePool | PoolStat): string {
+  return isGqlPool(pool) ? pool.hash : pool.id
+}
+
+function getPoolVolumes(pool: TablePool | PoolStat): { tvl: number; volume24h: number; volume30d: number } {
+  if (isGqlPool(pool)) {
+    return { tvl: pool.tvl ?? 0, volume24h: pool.volume24h ?? 0, volume30d: pool.volume30d ?? 0 }
+  }
+  return {
+    tvl: pool.totalLiquidity?.value ?? 0,
+    volume24h: pool.volume1Day?.value ?? 0,
+    volume30d: pool.volume30Day?.value ?? 0,
+  }
+}
+
+function buildV4CurrencyId(
+  pool: TablePool | PoolStat,
+  chainId: UniverseChainId,
+): {
+  token0CurrencyId?: string
+  token1CurrencyId?: string
+} {
+  if (pool.protocolVersion !== GraphQLApi.ProtocolVersion.V4) {
+    return {}
+  }
+  const token0 = pool.token0?.address || getNativeAddress(chainId)
+  const token1 = pool.token1?.address || getNativeAddress(chainId)
+  return {
+    token0CurrencyId: token0 ? buildCurrencyId(chainId, token0) : undefined,
+    token1CurrencyId: token1 ? buildCurrencyId(chainId, token1) : undefined,
+  }
+}
+
+function getPoolLink(
+  pool: TablePool | PoolStat,
+  opts: { chainId: UniverseChainId; linkBuilder?: (data: PoolLinkData) => string },
+): string {
+  const poolIdOrHash = getPoolIdOrHash(pool)
+  const linkData: PoolLinkData = {
+    chainId: opts.chainId,
+    poolIdOrHash,
+    token0Address: pool.token0?.address ?? undefined,
+    token1Address: pool.token1?.address ?? undefined,
+    fee: pool.feeTier ?? undefined,
+    hookAddress: pool.hookAddress,
+    protocolVersion: pool.protocolVersion?.toLowerCase(),
+  }
+  return opts.linkBuilder?.(linkData) ?? `/explore/pools/${getChainUrlParam(opts.chainId)}/${poolIdOrHash}`
+}
+
+function formatVolume(
+  amount: number,
+  convertFiatAmountFormatted: (amount: number, type: FiatNumberType) => string,
+): string {
+  return amount ? convertFiatAmountFormatted(amount, NumberType.FiatTokenStats) : '-'
+}
+
 function PoolDescription({
   token0,
   token1,
-  showMainnetNetworkLogo,
 }: {
   token0?: Token | TokenStats
   token1?: Token | TokenStats
   chainId: UniverseChainId
-  showMainnetNetworkLogo?: boolean
 }) {
-  const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
+  const currency0 = token0 ? gqlToCurrency(token0) : undefined
+  const currency1 = token1 ? gqlToCurrency(token1) : undefined
+  const reverse = currency0 && currency1 ? shouldReverseForWaterfall(currency0, currency1) : false
+  const [baseToken, quoteToken] = reverse ? [token1, token0] : [token0, token1]
+  const currencies = reverse ? [currency1, currency0] : [currency0, currency1]
 
   return (
     <Flex row gap="$gap8" alignItems="center" maxWidth="100%">
-      <DoubleCurrencyLogo currencies={currencies} size={24} showMainnetNetworkLogo={showMainnetNetworkLogo} />
+      <DoubleCurrencyLogo currencies={currencies} size={24} />
       <EllipsisText>
-        {token0?.symbol}/{token1?.symbol}
+        {baseToken?.symbol}/{quoteToken?.symbol}
       </EllipsisText>
     </Flex>
   )
@@ -231,6 +306,8 @@ export function PoolsTable({
   maxHeight,
   hiddenColumns,
   forcePinning,
+  getLink,
+  linkState,
 }: {
   pools?: TablePool[] | PoolStat[]
   loading: boolean
@@ -240,6 +317,8 @@ export function PoolsTable({
   maxHeight?: number
   hiddenColumns?: PoolSortFields[]
   forcePinning?: boolean
+  getLink?: (pool: PoolLinkData) => string
+  linkState?: { entryPoint?: string }
 }) {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
@@ -258,23 +337,9 @@ export function PoolsTable({
     () =>
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
-        const isGqlPool = 'hash' in pool
         const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain) ?? defaultChainId
-
-        const token0Address = pool.token0?.address || getNativeAddress(chainId)
-        const token1Address = pool.token1?.address || getNativeAddress(chainId)
-        const currency0Id =
-          pool.protocolVersion === GraphQLApi.ProtocolVersion.V4 && token0Address
-            ? buildCurrencyId(chainId, token0Address)
-            : undefined
-        const currency1Id =
-          pool.protocolVersion === GraphQLApi.ProtocolVersion.V4 && token1Address
-            ? buildCurrencyId(chainId, token1Address)
-            : undefined
-
-        const parseVolume = (amount: number | undefined): string => {
-          return amount ? convertFiatAmountFormatted(amount, NumberType.FiatTokenStats) : '-'
-        }
+        const poolIdOrHash = getPoolIdOrHash(pool)
+        const volumes = getPoolVolumes(pool)
 
         return {
           index: poolSortRank,
@@ -283,25 +348,24 @@ export function PoolsTable({
               token0={unwrapToken(chainId, pool.token0) as TokenStats | Token | undefined}
               token1={unwrapToken(chainId, pool.token1) as TokenStats | Token | undefined}
               chainId={chainId}
-              showMainnetNetworkLogo={multichainTokenUxEnabled}
             />
           ),
           protocolVersion: pool.protocolVersion?.toLowerCase(),
           feeTier: pool.feeTier,
-          tvl: parseVolume((isGqlPool ? pool.tvl : pool.totalLiquidity?.value) ?? 0),
-          volume24h: parseVolume((isGqlPool ? pool.volume24h : pool.volume1Day?.value) ?? 0),
-          volume30d: parseVolume((isGqlPool ? pool.volume30d : pool.volume30Day?.value) ?? 0),
+          tvl: formatVolume(volumes.tvl, convertFiatAmountFormatted),
+          volume24h: formatVolume(volumes.volume24h, convertFiatAmountFormatted),
+          volume30d: formatVolume(volumes.volume30d, convertFiatAmountFormatted),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
           rewardApr: pool.boostedApr,
-          link: `/explore/pools/${getChainUrlParam(chainId)}/${isGqlPool ? pool.hash : pool.id}`,
-          token0CurrencyId: currency0Id,
-          token1CurrencyId: currency1Id,
+          link: getPoolLink(pool, { chainId, linkBuilder: getLink }),
+          linkState,
+          ...buildV4CurrencyId(pool, chainId),
           analytics: {
             elementName: ElementName.PoolsTableRow,
             properties: {
               chain_id: chainId,
-              pool_address: isGqlPool ? pool.hash : pool.id,
+              pool_address: poolIdOrHash,
               token0_address: pool.token0?.address,
               token0_symbol: pool.token0?.symbol,
               token1_address: pool.token1?.address,
@@ -314,7 +378,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [convertFiatAmountFormatted, defaultChainId, filterString, multichainTokenUxEnabled, pools],
+    [convertFiatAmountFormatted, defaultChainId, filterString, getLink, linkState, pools],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -374,7 +438,7 @@ export function PoolsTable({
       }),
       columnHelper.accessor((row) => row.feeTier, {
         id: 'feeTier',
-        size: 80,
+        size: 100,
         header: () => (
           <HeaderCell>
             <Text variant="body3" color="$neutral2">
@@ -435,7 +499,7 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled
         ? columnHelper.accessor((row) => row.rewardApr, {
             id: PoolSortFields.RewardApr,
-            size: 130,
+            size: 120,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
@@ -448,7 +512,7 @@ export function PoolsTable({
             sortingFn: 'basic',
             cell: ({ row }: { row?: Row<PoolTableValues> }) => {
               if (!row?.original) {
-                return null
+                return <Cell loading={showLoadingSkeleton} />
               }
 
               const { apr, token0CurrencyId, token1CurrencyId, rewardApr } = row.original
@@ -510,7 +574,7 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.VolOverTvl)
         ? columnHelper.accessor((row) => row.volOverTvl, {
             id: 'volOverTvl',
-            size: 120,
+            size: 110,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader

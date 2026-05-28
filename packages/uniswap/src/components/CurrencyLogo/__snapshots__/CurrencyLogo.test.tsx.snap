@@ -11,7 +11,7 @@ exports[`CurrencyLogo > renders a currency logo with network logo 1`] = `
       data-testid="token-logo"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -20,7 +20,7 @@ exports[`CurrencyLogo > renders a currency logo with network logo 1`] = `
         <img
           height="40"
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-          style="object-fit: contain; border-radius: 20px; z-index: 1;"
+          style="object-fit: contain; border-radius: 40px; z-index: 1;"
           width="40"
         />
       </div>
@@ -29,7 +29,7 @@ exports[`CurrencyLogo > renders a currency logo with network logo 1`] = `
       >
         <div
           class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-          data-testid="network-logo"
+          data-testid="network-logo-42161"
           style="width: 19px; height: 19px; border-radius: 5.7px; border-width: 1.5px; border-style: solid;"
         >
           <div
@@ -68,7 +68,7 @@ exports[`CurrencyLogo > renders without error 1`] = `
       data-testid="token-logo"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -77,7 +77,7 @@ exports[`CurrencyLogo > renders without error 1`] = `
         <img
           height="40"
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-          style="object-fit: contain; border-radius: 20px; z-index: 1;"
+          style="object-fit: contain; border-radius: 40px; z-index: 1;"
           width="40"
         />
       </div>

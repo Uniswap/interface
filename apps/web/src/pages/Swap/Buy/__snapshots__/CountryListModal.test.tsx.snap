@@ -57,11 +57,26 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 </div>
               </div>
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _position-relative _height-10037 _flexGrow-1"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _width-10037 _height-t-size-spac100347358"
               >
-                <svg
-                  data-testid="mocked-svg"
-                />
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _left-t-space-spa1360334080 _top-0px _bottom-0px _alignItems-center _justifyContent-center _pointerEvents-none"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                    viewBox="0 0 26 26"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                      fill="currentColor"
+                      fill-opacity="0.63"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </div>
                 <span
                   class="_dsp_contents"
                 >

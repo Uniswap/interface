@@ -4,7 +4,7 @@ import React, { CSSProperties, memo, useCallback, useMemo, useState } from 'reac
 import { usePopper } from 'react-popper'
 import { zIndexes } from 'ui/src/theme'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import useInterval from '~/lib/hooks/useInterval'
+import { useInterval } from '~/lib/hooks/useInterval'
 
 const PopoverContainer = deprecatedStyled.div<{ show: boolean }>`
   z-index: ${zIndexes.popover};
@@ -86,7 +86,7 @@ export interface PopoverProps {
   style?: CSSProperties
 }
 
-const Popover = memo(function Popover({
+export const Popover = memo(function Popover({
   content,
   show,
   children,
@@ -144,5 +144,3 @@ const Popover = memo(function Popover({
     </>
   )
 })
-
-export default Popover

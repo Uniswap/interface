@@ -17,7 +17,7 @@ import type { Mock } from 'vitest'
 const mockPlatformState = vi.hoisted(() => ({ isMobileApp: false }))
 
 vi.mock('uniswap/src/features/telemetry/send')
-vi.mock('utilities/src/platform', () => ({
+vi.mock('@universe/environment', () => ({
   get isMobileApp(): boolean {
     return mockPlatformState.isMobileApp
   },

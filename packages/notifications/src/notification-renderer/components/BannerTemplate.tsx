@@ -106,7 +106,6 @@ interface BannerTemplateProps {
  * BannerTemplate component
  *
  * A reusable template for rendering lower-banner notifications.
- * Extracted from SolanaPromoBanner to be shared across the notification system.
  *
  * Features:
  * - Fixed position in lower-left corner

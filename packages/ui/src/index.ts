@@ -85,6 +85,7 @@ export { VerticalDottedLineSeparator } from './components/lines/VerticalDottedLi
 export {
   EffectiveModalOrSheetZIndexContext,
   ModalCloseIcon,
+  stackingLayerAbove,
   useEffectiveModalOrSheetZIndex,
   WebBottomSheet,
 } from './components/modal/AdaptiveWebModal'
@@ -101,6 +102,7 @@ export { SwipeableCardStack } from './components/swipeablecards/SwipeableCardSta
 export { Switch } from './components/switch/Switch'
 export { type SwitchProps } from './components/switch/types'
 export * from './components/text'
+export { Coachmark, type CoachmarkProps } from './components/coachmark/Coachmark'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
 export { Unicon } from './components/Unicon'
@@ -110,6 +112,7 @@ export * from './components/UniversalImage/types'
 export * from './components/UniversalImage/UniversalImage'
 export * from './components/UniversalImage/utils'
 export { MobileDeviceHeight } from './hooks/constants'
+export { type FontSizeOptions, useDynamicFontSizing } from './hooks/useDynamicFontSizing'
 export { useIsDarkMode } from './hooks/useIsDarkMode'
 export { useIsShortMobileDevice } from './hooks/useIsShortMobileDevice'
 export { type DynamicColor, useSporeColors } from './hooks/useSporeColors'

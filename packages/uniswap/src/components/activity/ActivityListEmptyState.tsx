@@ -1,10 +1,10 @@
+import { isExtensionApp } from '@universe/environment'
 import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { isExtensionApp } from 'utilities/src/platform'
 
 interface ActivityListEmptyStateProps {
   containerStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>

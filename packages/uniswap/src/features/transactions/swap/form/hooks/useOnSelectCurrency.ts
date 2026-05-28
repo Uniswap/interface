@@ -58,7 +58,6 @@ export function useOnSelectCurrency({
   const queryClient = useQueryClient()
 
   return useEvent(
-    // oxlint-disable-next-line complexity
     ({
       currency,
       field,

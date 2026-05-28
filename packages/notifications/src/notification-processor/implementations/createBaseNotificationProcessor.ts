@@ -7,6 +7,17 @@ import {
 import { type NotificationTracker } from '@universe/notifications/src/notification-tracker/NotificationTracker'
 import { getLogger } from 'utilities/src/logger/logger'
 
+export interface BaseNotificationProcessorOptions {
+  /**
+   * Per-style overrides for the maximum number of concurrent primary notifications.
+   * Defaults: LOWER_LEFT_BANNER=3, SYSTEM_BANNER=1, all others=1.
+   *
+   * Platforms with more LOWER_LEFT_BANNER sources (e.g. mobile) can raise the limit
+   * so lower-priority banners aren't silently dropped by the style cap.
+   */
+  notificationTypeLimits?: Partial<Record<ContentStyle, number>>
+}
+
 /**
  * Creates a base notification processor that implements style-based deduplication and limiting,
  * as well as separating primary and chained notifications using topological sorting.
@@ -15,15 +26,20 @@ import { getLogger } from 'utilities/src/logger/logger'
  * 1. Builds a dependency graph of notifications based on POPUP actions
  * 2. Uses topological sort to identify root notifications (those with no incoming edges)
  * 3. Filters out notifications that have already been processed (tracked)
- * 4. Limits the number of primary notifications per content style (LOWER_LEFT_BANNER: 3, others: 1)
+ * 4. Limits the number of primary notifications per content style (see `options.notificationTypeLimits`)
  * 5. Returns primary notifications for immediate rendering and chained notifications for later
  *
  * This properly handles notification chains of any length (A → B → C → D → ...).
  *
  * @param tracker - The NotificationTracker to check which notifications have been processed
+ * @param options - Optional per-style limit overrides
  * @returns A NotificationProcessor that applies these rules
  */
-export function createBaseNotificationProcessor(tracker: NotificationTracker): NotificationProcessor {
+export function createBaseNotificationProcessor(
+  tracker: NotificationTracker,
+  options?: BaseNotificationProcessorOptions,
+): NotificationProcessor {
+  const notificationTypeLimits = options?.notificationTypeLimits
   return createNotificationProcessor({
     process: async (notifications: InAppNotification[]): Promise<NotificationProcessorResult> => {
       const processedIds = await tracker.getProcessedIds()
@@ -79,7 +95,7 @@ export function createBaseNotificationProcessor(tracker: NotificationTracker): N
       })
 
       // Step 4: Limit the number of primary notifications per content style
-      const limitedPrimary = limitNotifications(filteredPrimary)
+      const limitedPrimary = limitNotifications(filteredPrimary, notificationTypeLimits)
 
       // Step 5: Convert chained notifications to a Map for fast lookup
       const chainedMap = new Map<string, InAppNotification>()
@@ -214,12 +230,27 @@ function getPopupTarget(onClick: { onClick: OnClickAction[]; onClickLink?: strin
 }
 
 /**
- * Limits the number of notifications per content style.
+ * Default per-style limits. Platforms can override individual entries via
+ * `BaseNotificationProcessorOptions.notificationTypeLimits`.
+ *
  * - LOWER_LEFT_BANNER: up to 3 notifications
  * - SYSTEM_BANNER: 1 notification (sticky system alerts)
  * - All other styles: 1 notification each
  */
-function limitNotifications(notifications: InAppNotification[]): InAppNotification[] {
+const DEFAULT_STYLE_LIMITS: Partial<Record<ContentStyle, number>> = {
+  [ContentStyle.LOWER_LEFT_BANNER]: 3,
+  [ContentStyle.SYSTEM_BANNER]: 1,
+}
+const FALLBACK_STYLE_LIMIT = 1
+
+/**
+ * Limits the number of notifications per content style, applying any caller overrides
+ * on top of the defaults.
+ */
+function limitNotifications(
+  notifications: InAppNotification[],
+  notificationTypeLimits: Partial<Record<ContentStyle, number>> | undefined,
+): InAppNotification[] {
   const groupedByStyle = new Map<number, InAppNotification[]>()
 
   for (const notification of notifications) {
@@ -232,7 +263,7 @@ function limitNotifications(notifications: InAppNotification[]): InAppNotificati
   const limited: InAppNotification[] = []
 
   for (const [style, group] of groupedByStyle.entries()) {
-    const limit = getStyleLimit(style)
+    const limit = getStyleLimit(style, notificationTypeLimits)
     limited.push(...group.slice(0, limit))
   }
 
@@ -240,15 +271,16 @@ function limitNotifications(notifications: InAppNotification[]): InAppNotificati
 }
 
 /**
- * Returns the maximum number of concurrent notifications for a given content style.
+ * Returns the maximum number of concurrent notifications for a given content style,
+ * preferring caller overrides, then defaults, then a generic fallback.
  */
-function getStyleLimit(style: number): number {
-  if (style === ContentStyle.LOWER_LEFT_BANNER) {
-    return 3
-  }
-  if (style === ContentStyle.SYSTEM_BANNER) {
-    return 1
-  }
-  // Default: 1 for MODAL, UNSPECIFIED, and any future styles
-  return 1
+function getStyleLimit(
+  style: number,
+  notificationTypeLimits: Partial<Record<ContentStyle, number>> | undefined,
+): number {
+  return (
+    notificationTypeLimits?.[style as ContentStyle] ??
+    DEFAULT_STYLE_LIMITS[style as ContentStyle] ??
+    FALLBACK_STYLE_LIMIT
+  )
 }

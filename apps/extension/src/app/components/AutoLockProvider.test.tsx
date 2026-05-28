@@ -48,6 +48,7 @@ const renderAutoLockProvider = (deviceAccessTimeout: DeviceAccessTimeout) => {
           hideSpamTokens: true,
           hapticsEnabled: true,
           deviceAccessTimeout,
+          enableCustomGasFeeEntry: false,
         },
       },
     },

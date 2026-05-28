@@ -4,7 +4,7 @@ import { DAI, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { gqlToCurrency, getTokenDetailsURL, unwrapToken } from '~/appGraphql/data/util'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 const PATHUSD_ADDRESS = '0x20c0000000000000000000000000000000000000'
 

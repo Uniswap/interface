@@ -7,11 +7,13 @@ export {
   parseTokenPriceMessage,
 } from '@universe/prices/src/sources/websocket/messageParser'
 // Internals (testing / custom setups)
+export { getTokenPriceSource } from '@universe/prices/src/getTokenPriceSource'
 export { createPriceSubscriptionHandler } from '@universe/prices/src/sources/websocket/subscriptionApi'
 export type {
   ConnectionEstablishedMessage,
   Logger,
   PriceKey,
+  PriceSource,
   RawTokenPriceMessage,
   TokenIdentifier,
   TokenInput,

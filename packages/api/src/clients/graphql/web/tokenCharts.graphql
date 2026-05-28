@@ -70,7 +70,7 @@ query TokenHistoricalTvls($chain: Chain!, $address: String = null, $duration: Hi
     chain
     market(currency: USD, multichain: $multichain) {
       id
-      historicalTvl(duration: $duration) {
+      historicalTvl(duration: $duration, multichain: $multichain) {
         id
         timestamp
         value

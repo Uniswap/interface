@@ -1,5 +1,5 @@
 import { usePrivy } from '@privy-io/react-auth'
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 
 vi.mock('@privy-io/react-auth', () => ({
@@ -16,6 +16,10 @@ describe('useOAuthResult', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     sessionStorage.clear()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('returns idle state when no sessionStorage key is set', () => {
@@ -85,7 +89,23 @@ describe('useOAuthResult', () => {
     })
   })
 
-  it('resets to initial state when provider is pending but account not linked', () => {
+  it('stays pending when ready but not yet authenticated (Privy code exchange in flight)', () => {
+    sessionStorage.setItem(TEST_KEY, 'google')
+
+    vi.mocked(usePrivy).mockReturnValue({
+      ready: true,
+      authenticated: false,
+      user: null,
+    } as unknown as ReturnType<typeof usePrivy>)
+
+    const { result } = renderHook(() => useOAuthResult(TEST_KEY))
+
+    expect(result.current.pending).toBe(true)
+    expect(result.current.provider).toBeNull()
+    expect(sessionStorage.getItem(TEST_KEY)).toBe('google')
+  })
+
+  it('stays pending when authenticated but linked account has not synced yet', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
     vi.mocked(usePrivy).mockReturnValue({
@@ -96,8 +116,9 @@ describe('useOAuthResult', () => {
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
-    expect(result.current).toEqual({ provider: null, providerEmail: undefined, pending: false })
-    expect(sessionStorage.getItem(TEST_KEY)).toBeNull()
+    expect(result.current.pending).toBe(true)
+    expect(result.current.provider).toBeNull()
+    expect(sessionStorage.getItem(TEST_KEY)).toBe('google')
   })
 
   it('clears sessionStorage after detection', () => {
@@ -112,5 +133,57 @@ describe('useOAuthResult', () => {
     renderHook(() => useOAuthResult(TEST_KEY))
 
     expect(sessionStorage.getItem(TEST_KEY)).toBeNull()
+  })
+
+  it('treats the flow as abandoned after the 10s timeout if success never arrives', () => {
+    vi.useFakeTimers()
+    sessionStorage.setItem(TEST_KEY, 'google')
+
+    vi.mocked(usePrivy).mockReturnValue({
+      ready: true,
+      authenticated: false,
+      user: null,
+    } as unknown as ReturnType<typeof usePrivy>)
+
+    const { result } = renderHook(() => useOAuthResult(TEST_KEY))
+
+    expect(result.current.pending).toBe(true)
+    expect(sessionStorage.getItem(TEST_KEY)).toBe('google')
+
+    act(() => {
+      vi.advanceTimersByTime(10_000)
+    })
+
+    expect(result.current).toEqual({ provider: null, providerEmail: undefined, pending: false })
+    expect(sessionStorage.getItem(TEST_KEY)).toBeNull()
+  })
+
+  it('does not clobber a successful detection when the abandonment timer fires later', () => {
+    vi.useFakeTimers()
+    sessionStorage.setItem(TEST_KEY, 'google')
+
+    vi.mocked(usePrivy).mockReturnValue({
+      ready: true,
+      authenticated: true,
+      user: { google: { email: 'user@gmail.com' } },
+    } as unknown as ReturnType<typeof usePrivy>)
+
+    const { result } = renderHook(() => useOAuthResult(TEST_KEY))
+
+    expect(result.current).toEqual({
+      provider: 'google',
+      providerEmail: 'user@gmail.com',
+      pending: false,
+    })
+
+    act(() => {
+      vi.advanceTimersByTime(10_000)
+    })
+
+    expect(result.current).toEqual({
+      provider: 'google',
+      providerEmail: 'user@gmail.com',
+      pending: false,
+    })
   })
 })

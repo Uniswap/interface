@@ -33,7 +33,6 @@ export function useUSDTokenUpdater({
   useEffect(() => {
     shouldUseUSDRef.current = isFiatInput
   }, [isFiatInput])
-  // oxlint-disable-next-line react/exhaustive-deps -- +shouldUseUSDRef, formatCurrencyAmount
   useEffect(() => {
     if (!currency || !price || !isUniverseChainId(currency.chainId)) {
       return undefined

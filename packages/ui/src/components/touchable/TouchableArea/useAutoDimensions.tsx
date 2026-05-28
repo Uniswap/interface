@@ -1,7 +1,7 @@
+import { isMobileApp } from '@universe/environment'
 import { useCallback, useState } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 import type { YStackProps } from 'tamagui'
-import { isMobileApp } from 'utilities/src/platform'
 
 type PossiblyNumber = PossiblyUndefined<number>
 

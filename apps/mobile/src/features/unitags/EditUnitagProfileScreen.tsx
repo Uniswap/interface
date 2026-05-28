@@ -3,9 +3,8 @@ import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { KeyboardStickyView } from 'react-native-keyboard-controller'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { UnitagStackScreenProp } from 'src/app/navigation/types'
+import type { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Text } from 'ui/src'
@@ -45,7 +44,11 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
   const menuActions = useMemo(() => {
     return [
       { title: t('unitags.profile.action.edit'), systemIcon: 'pencil' },
-      { title: t('unitags.profile.action.delete'), systemIcon: 'trash', destructive: true },
+      {
+        title: t('unitags.profile.action.delete'),
+        systemIcon: 'trash',
+        destructive: true,
+      },
     ]
   }, [t])
 
@@ -87,13 +90,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
         >
           <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
         </BackHeader>
-        <EditUnitagProfileContent
-          address={address}
-          unitag={unitag}
-          entryPoint={entryPoint}
-          SaveButtonWrapper={KeyboardStickyView}
-          onNavigate={onNavigate}
-        />
+        <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={entryPoint} onNavigate={onNavigate} />
       </Flex>
       {showDeleteUnitagModal && (
         <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onCloseDeleteModal} />

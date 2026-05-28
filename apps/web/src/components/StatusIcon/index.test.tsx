@@ -1,4 +1,4 @@
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
 import { mocked } from '~/test-utils/mocked'

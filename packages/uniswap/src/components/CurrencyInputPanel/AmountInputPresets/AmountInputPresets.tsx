@@ -1,3 +1,4 @@
+import { isHoverable } from '@universe/environment'
 import { Key } from 'react'
 import { ButtonProps, Flex, FlexProps } from 'ui/src'
 import { AmountInputPresetsProps } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
@@ -6,7 +7,6 @@ import {
   HOVER_REVEAL_EXIT_TRANSITION,
   HOVER_REVEAL_TRANSFORM,
 } from 'uniswap/src/components/CurrencyInputPanel/hoverStyles'
-import { isHoverable } from 'utilities/src/platform'
 
 export const PRESET_BUTTON_PROPS: ButtonProps = { variant: 'default', py: '$spacing4' }
 

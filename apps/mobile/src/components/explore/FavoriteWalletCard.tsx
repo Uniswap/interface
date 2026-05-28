@@ -1,3 +1,4 @@
+import { isIOS } from '@universe/environment'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
@@ -11,7 +12,6 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
-import { isIOS } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 

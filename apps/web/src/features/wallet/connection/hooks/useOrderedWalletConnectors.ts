@@ -1,11 +1,10 @@
+import { isMobileWeb, isE2eTestEnv } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { AccessPattern } from 'uniswap/src/features/accounts/store/types/Connector'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isMobileWeb } from 'utilities/src/platform'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useRecentConnectorId } from '~/connection/constants'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
@@ -146,6 +145,7 @@ function shouldShowOnlyInjectedConnector(injectedWallets: ExternalWallet[]): boo
 }
 
 function buildSecondaryConnectorsList({
+  // oxlint-disable-next-line no-shadow
   isMobileWeb,
   walletConnectWallet,
   coinbaseSdkWallet,
@@ -259,7 +259,7 @@ export function useOrderedWallets({
       ? undefined
       : getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID)
 
-    if (isPlaywrightEnv()) {
+    if (isE2eTestEnv()) {
       const mockWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.MOCK_CONNECTOR_ID)
       // Return mock wallet if found, otherwise return empty array
       // Tests auto-connect so the wallet selector isn't needed

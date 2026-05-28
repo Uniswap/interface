@@ -1,4 +1,3 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useSelector } from 'react-redux'
@@ -7,10 +6,8 @@ import { Flex, GeneratedIcon, IconProps, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export enum LinkButtonType {
@@ -56,11 +53,6 @@ export function LinkButton({
       return
     }
     await copyAddressToClipboard(value)
-
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.CopyAddress,
-      screen: MobileScreens.TokenDetails,
-    })
   }
 
   const onPress = async (): Promise<void> => {

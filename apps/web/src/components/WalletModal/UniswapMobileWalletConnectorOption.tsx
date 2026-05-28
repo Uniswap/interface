@@ -1,6 +1,6 @@
+import { isMobileWeb } from '@universe/environment'
 import { QrCode } from 'ui/src/components/icons/QrCode'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { isMobileWeb } from 'utilities/src/platform'
 import { WalletConnectorOption } from '~/components/WalletModal/WalletConnectorOption'
 import { useWalletWithId } from '~/features/accounts/store/hooks'
 

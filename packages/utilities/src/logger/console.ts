@@ -1,5 +1,3 @@
-/* oxlint-disable no-console -- need to use console here */
-
 const consoleError = console.error
 const consoleWarn = console.warn
 

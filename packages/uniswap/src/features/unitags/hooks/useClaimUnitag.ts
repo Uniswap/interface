@@ -1,7 +1,7 @@
-import { ensureNewErrorCode, SignMessageFunc } from '@universe/api'
+import { SignMessageFunc, UnitagErrorCode } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -20,15 +20,19 @@ type ClaimUnitagInput = {
   signMessage?: SignMessageFunc
 }
 
+export type ClaimUnitagResult = {
+  claimError?: string
+  errorCode?: UnitagErrorCode
+}
+
 /**
  * A custom async hook that handles the process of claiming a Unitag
  * Hook must be used inside the OnboardingContext
  */
-export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimError?: string }>) => {
+export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<ClaimUnitagResult>) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const resetUnitagsQueries = useResetUnitagsQueries()
-  const unitagsApiClient = useUnitagsApiClient()
 
   return async ({ claim, context, signMessage }: ClaimUnitagInput) => {
     const deviceId = await getUniqueId()
@@ -54,7 +58,10 @@ export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimE
       })
 
       if (claimResponse.errorCode) {
-        return { claimError: parseUnitagErrorCode(t, ensureNewErrorCode(claimResponse.errorCode)) }
+        return {
+          claimError: parseUnitagErrorCode(t, claimResponse.errorCode),
+          errorCode: claimResponse.errorCode,
+        }
       }
 
       resetUnitagsQueries()

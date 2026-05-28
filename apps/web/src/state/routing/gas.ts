@@ -7,7 +7,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { getContract } from 'utilities/src/contracts/getContract'
-import { RPC_PROVIDERS } from '~/constants/providers'
+import { getRpcProvider } from '~/constants/providers'
 import { ApproveInfo, WrapInfo } from '~/state/routing/types'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
@@ -40,7 +40,7 @@ export async function getApproveInfo({
     return { needsApprove: false }
   }
 
-  const provider = RPC_PROVIDERS[currency.chainId]
+  const provider = getRpcProvider(currency.chainId)
   const tokenContract = getContract({ address: currency.address, ABI: ERC20_ABI, provider }) as Erc20
 
   let approveGasUseEstimate
@@ -82,7 +82,7 @@ export async function getWrapInfo({
     return { needsWrap: false }
   }
 
-  const provider = RPC_PROVIDERS[chainId]
+  const provider = getRpcProvider(chainId)
   const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
 
   // If any of these arguments aren't provided, then we cannot generate wrap cost info

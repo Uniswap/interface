@@ -190,10 +190,7 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
   return useCurrencyBalance(account, token) as CurrencyAmount<Token> | undefined
 }
 
-export default function useCurrencyBalance(
-  account?: string,
-  currency?: Currency,
-): CurrencyAmount<Currency> | undefined {
+export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount<Currency> | undefined {
   return useCurrencyBalances(
     account,
     useMemo(() => [currency], [currency]),

@@ -1,3 +1,4 @@
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
@@ -6,7 +7,7 @@ import type { TieredNetworkOptions } from 'uniswap/src/components/network/Networ
 import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface NetworkFilterContentProps {
@@ -55,7 +56,12 @@ function SelectableNetworkOption({
   })
 
   return (
-    <TouchableArea hoverable borderRadius="$rounded8" onPress={handlePress}>
+    <TouchableArea
+      hoverable
+      borderRadius="$rounded8"
+      testID={`${ElementName.NetworkButton}-${chainId ?? 'all'}`}
+      onPress={handlePress}
+    >
       <NetworkOption
         chainId={chainId}
         currentlySelected={selectedChain === chainId}

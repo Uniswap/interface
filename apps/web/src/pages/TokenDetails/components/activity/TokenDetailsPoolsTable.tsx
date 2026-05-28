@@ -1,22 +1,26 @@
 import { ApolloError } from '@apollo/client'
 import { type Currency } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { usePoolsFromTokenAddress } from '~/appGraphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
-import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
 import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl, PoolSortFields.RewardApr]
 
-function TokenDetailsPoolsTableContent({ referenceCurrency }: { referenceCurrency: Currency }): JSX.Element {
+function TokenDetailsPoolsTableContent({
+  referenceCurrency,
+  isMultichainView,
+}: {
+  referenceCurrency: Currency
+  isMultichainView: boolean
+}): JSX.Element {
   const { chainId, wrapped: referenceToken, isNative } = referenceCurrency
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
     sortMethod: s.sortMethod,
     sortAscending: s.sortAscending,
@@ -30,7 +34,7 @@ function TokenDetailsPoolsTableContent({ referenceCurrency }: { referenceCurrenc
     sortState,
     chainId: referenceCurrency.chainId,
     isNative,
-    multichain: multichainTokenUxEnabled,
+    multichain: isMultichainView,
   })
   const combinedError =
     errorV2 && errorV3
@@ -56,11 +60,17 @@ function TokenDetailsPoolsTableContent({ referenceCurrency }: { referenceCurrenc
   )
 }
 
-export function TokenDetailsPoolsTable({ referenceCurrency }: { referenceCurrency: Currency }): JSX.Element {
+export function TokenDetailsPoolsTable({
+  referenceCurrency,
+  isMultichainView,
+}: {
+  referenceCurrency: Currency
+  isMultichainView: boolean
+}): JSX.Element {
   return (
     <ExploreTablesFilterStoreContextProvider>
       <PoolTableStoreContextProvider>
-        <TokenDetailsPoolsTableContent referenceCurrency={referenceCurrency} />
+        <TokenDetailsPoolsTableContent referenceCurrency={referenceCurrency} isMultichainView={isMultichainView} />
       </PoolTableStoreContextProvider>
     </ExploreTablesFilterStoreContextProvider>
   )

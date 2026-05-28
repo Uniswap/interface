@@ -1,5 +1,7 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import type { ComponentProps } from 'react'
+import { useEffect } from 'react'
 import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
@@ -21,11 +23,14 @@ import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
+import { useResetGasOverridesOnInputChainChange } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useResetGasOverridesOnInputChainChange'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { useSwapFlowTimer } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimerContext'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 
 interface SwapFormScreenProps {
   hideContent: boolean
@@ -48,12 +53,19 @@ export function SwapFormScreen({
   focusHook,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
+  const tracker = useSwapFlowTimer()
+
+  useEffect(() => {
+    tracker?.mark(DDRumManualTiming.SwapFormScreenMount)
+  }, [tracker])
+
   const { selectingCurrencyField, hideSettings } = useSwapFormStore((s) => ({
     selectingCurrencyField: s.selectingCurrencyField,
     hideSettings: s.hideSettings,
   }))
 
   const { trade, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({ trade: s.trade, chainId: s.chainId }))
+  useResetGasOverridesOnInputChainChange()
   const tradeRouting = trade.trade?.routing
 
   const filteredSettings = filterSettingsByPlatformAndTradeRouting(settings, {
@@ -81,6 +93,8 @@ export function SwapFormScreen({
 }
 
 function SwapFormContent(): JSX.Element {
+  usePerformanceLogger(DDRumManualTiming.SwapFormContentRender, [])
+
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtensionApp}>

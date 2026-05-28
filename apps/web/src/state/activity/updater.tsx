@@ -1,5 +1,8 @@
+import { SharedQueryClient } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import {
   finalizeTransaction,
   interfaceApplyTransactionHashToBatch,
@@ -13,11 +16,9 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
-import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from '~/constants/misc'
 import { useHandleUniswapXActivityUpdate } from '~/hooks/useHandleUniswapXActivityUpdate'
 import { usePollPendingBatchTransactions } from '~/state/activity/polling/batch'
@@ -27,6 +28,8 @@ import { useActivePlanTransactions, usePollPendingPlanTransactions } from '~/sta
 import { usePollPendingTransactions } from '~/state/activity/polling/transactions'
 import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 export function ActivityStateUpdater() {
@@ -49,9 +52,32 @@ function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: O
   return null
 }
 
+function resolveSwapPriceSource({
+  inputCurrencyId,
+  chainId,
+  isCentralizedPricesEnabled,
+}: {
+  inputCurrencyId: string | undefined
+  chainId: number
+  isCentralizedPricesEnabled: boolean
+}) {
+  const address = inputCurrencyId?.includes('-') ? currencyIdToAddress(inputCurrencyId) : undefined
+  if (!address) {
+    return undefined
+  }
+  return getDisplayedPriceSource({
+    isCentralizedPricesEnabled,
+    surface: 'usdc',
+    chainId,
+    address,
+    queryClient: SharedQueryClient,
+  })
+}
+
 function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const handleUniswapXActivityUpdate = useHandleUniswapXActivityUpdate()
 
   return useCallback(
@@ -152,13 +178,19 @@ function useOnActivityUpdate(): OnActivityUpdate {
             swapStartTimestamp: original.typeInfo.swapStartTimestamp,
             planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
             transactedUSDValue: original.typeInfo.transactedUSDValue,
+            priceSource: resolveSwapPriceSource({
+              inputCurrencyId: original.typeInfo.inputCurrencyId,
+              chainId,
+              isCentralizedPricesEnabled,
+            }),
           })
         } else if (original.typeInfo.type === TransactionType.Bridge) {
+          const bridgeChainIn = currencyIdToChain(original.typeInfo.inputCurrencyId) ?? chainId
           logSwapFinalized({
             id: original.id,
             hash,
             batchId,
-            chainInId: currencyIdToChain(original.typeInfo.inputCurrencyId) ?? chainId,
+            chainInId: bridgeChainIn,
             chainOutId: currencyIdToChain(original.typeInfo.outputCurrencyId) ?? chainId,
             analyticsContext,
             status: update.status,
@@ -166,6 +198,11 @@ function useOnActivityUpdate(): OnActivityUpdate {
             swapStartTimestamp: original.typeInfo.swapStartTimestamp,
             planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
             transactedUSDValue: original.typeInfo.transactedUSDValue,
+            priceSource: resolveSwapPriceSource({
+              inputCurrencyId: original.typeInfo.inputCurrencyId,
+              chainId: bridgeChainIn,
+              isCentralizedPricesEnabled,
+            }),
           })
         }
 
@@ -174,7 +211,6 @@ function useOnActivityUpdate(): OnActivityUpdate {
         }
         // TransactionType can only be UniswapXOrder here
         // This check is in place in case more types get added in the future
-        // oxlint-disable-next-line typescript/no-unnecessary-condition
       } else if (activity.type === ActivityUpdateTransactionType.UniswapXOrder) {
         handleUniswapXActivityUpdate({ activity, popupDismissalTime })
       } else if (
@@ -197,6 +233,8 @@ function useOnActivityUpdate(): OnActivityUpdate {
         }
       }
     },
-    [analyticsContext, dispatch, handleUniswapXActivityUpdate],
+    [analyticsContext, dispatch, handleUniswapXActivityUpdate, isCentralizedPricesEnabled],
   )
 }
+
+export default ActivityStateUpdater

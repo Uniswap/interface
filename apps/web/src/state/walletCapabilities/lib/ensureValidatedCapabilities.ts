@@ -1,4 +1,4 @@
-import { ensure0xHex, type HexString, isValidHexString, numberToHex } from 'utilities/src/addresses/hex'
+import { ensure0xHex, type HexString, isValidHexString, numberToHex } from '@universe/encoding'
 import { ChainCapabilities, GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
 /**

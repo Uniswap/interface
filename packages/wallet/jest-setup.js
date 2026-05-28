@@ -1,3 +1,4 @@
+import '@universe/environment/jest-package-mocks'
 import 'utilities/jest-package-mocks'
 import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/jest-package-mocks'
@@ -39,7 +40,6 @@ jest.mock('uniswap/src/config', () => ({
     tradingApiUrlOverride: '',
     tradingApiWebTestEnv: '',
     uniswapApiKey: 'test-uniswap-key',
-    unitagsApiUrlOverride: '',
     walletConnectProjectId: 'test-wallet-connect-id',
     walletConnectProjectIdBeta: 'test-wallet-connect-beta',
     walletConnectProjectIdDev: 'test-wallet-connect-dev',
@@ -73,12 +73,4 @@ Object.defineProperty(global, 'crypto', {
 // Use native locales
 jest.mock('utilities/src/device/locales', () => {
   return jest.requireActual('utilities/src/device/locales.native.ts')
-})
-
-// Mock getConfig to use native implementation
-jest.mock('@universe/config', () => {
-  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.native')
-  return {
-    getConfig,
-  }
 })

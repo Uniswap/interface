@@ -43,7 +43,7 @@ export function useBlockCountdown(chainId: EVMUniverseChainId | undefined): numb
       setCountdown(calculateCountdown())
     }, ONE_SECOND_MS)
 
-    // oxlint-disable-next-line consistent-return
+    // oxlint-disable-next-line typescript/consistent-return
     return () => {
       clearInterval(interval)
     }

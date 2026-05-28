@@ -1,14 +1,16 @@
 import { ReactNode } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { capitalize } from 'tsafe'
-import { Button, Flex, Separator, styled } from 'ui/src'
+import { Button, Flex, Separator, styled, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { DynamicSizeText } from 'ui/src/components/text/DynamicSizeText/DynamicSizeText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -16,16 +18,14 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
+import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { useSendContext } from '~/state/send/SendContext'
-import { ThemedText } from '~/theme/components'
-import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
 const ReviewContentContainer = styled(Flex, {
   width: '100%',
@@ -45,16 +45,16 @@ const SendModalHeader = ({
 }) => {
   return (
     <Flex row justifyContent="space-between" alignItems="center">
-      <Flex gap="$gap4">
+      <Flex gap="$gap4" grow>
         {label && (
-          <ThemedText.BodySmall color="neutral2" lineHeight="20px">
+          <Text variant="body3" color="$neutral2">
             {label}
-          </ThemedText.BodySmall>
+          </Text>
         )}
-        <ThemedText.HeadlineLarge lineHeight="44px">{header}</ThemedText.HeadlineLarge>
-        <ThemedText.BodySmall lineHeight="20px" color="neutral2">
+        <Text variant="heading2">{header}</Text>
+        <Text variant="body3" color="$neutral2">
           {subheader}
-        </ThemedText.BodySmall>
+        </Text>
       </Flex>
       <Flex height={36}>{image}</Flex>
     </Flex>
@@ -73,7 +73,6 @@ export type SendModalProps = SendModalInnerProps & {
 
 export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInnerProps) {
   const { t } = useTranslation()
-  const { chainId } = useMultichainContext()
   const account = useAccount()
 
   const {
@@ -88,6 +87,11 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData, currencyBalance },
   } = useSendContext()
+  const chainId = inputCurrency?.chainId
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalance,
+    txType: TransactionType.Send,
+  })
   const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
 
   const activeCurrency = useAppFiatCurrency()
@@ -112,7 +116,6 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
     ? [formattedFiatInputAmount, currencySymbolAmount]
     : [currencySymbolAmount, formattedFiatInputAmount]
 
-  const maxInputAmount = maxAmountSpend(currencyBalance)
   const isMax =
     maxInputAmount && (parsedTokenAmount?.equalTo(maxInputAmount) || parsedTokenAmount?.greaterThan(maxInputAmount))
 
@@ -141,12 +144,22 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
             header={
               recipientData?.unitag || recipientData?.ensName ? (
                 <Flex row gap="$gap4" alignItems="center">
-                  <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                  {recipientData.unitag && (
-                    <Flex pt="$spacing8">
-                      <Unitag size={36} />
-                    </Flex>
-                  )}
+                  <DynamicSizeText
+                    maxWebFontSize={36}
+                    minWebFontSize={24}
+                    lineHeight="44px"
+                    color="neutral1"
+                    gap="$gap4"
+                    floatingSuffix={
+                      recipientData.unitag && (
+                        <Flex pt="$spacing8">
+                          <Unitag size={36} />
+                        </Flex>
+                      )
+                    }
+                  >
+                    {recipientData.unitag ?? recipientData.ensName}
+                  </DynamicSizeText>
                 </Flex>
               ) : (
                 shortenAddress({ address: recipientData?.address })
@@ -160,12 +173,12 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
         </Flex>
         <Separator />
         <Flex row alignItems="center" width="100%" justifyContent="space-between" px="$spacing12">
-          <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-            <Trans i18nKey="common.networkCost" />
-          </ThemedText.BodySmall>
+          <Text variant="body3" color="$neutral2">
+            {t('common.networkCost')}
+          </Text>
           <Flex row width="min-content" gap="$gap4" alignItems="center">
             <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
-            <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
+            <Text variant="body3">{gasFeeFormatted}</Text>
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.SendReviewButton}>
@@ -179,7 +192,7 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
               icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
               onPress={handleConfirm}
             >
-              <Trans i18nKey="common.confirmSend.button" />
+              {t('common.confirmSend.button')}
             </Button>
           </Flex>
         </Trace>

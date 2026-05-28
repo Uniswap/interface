@@ -47,6 +47,7 @@ export interface SubmitUniswapXOrderParams {
   onFailure: () => void
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   const { quote, routing, permit, approveTxHash, txId, chainId, typeInfo, account, analytics, onSuccess, onFailure } =
     params

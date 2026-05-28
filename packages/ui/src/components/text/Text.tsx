@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { PropsWithChildren } from 'react'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
@@ -5,7 +6,6 @@ import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreen
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type TamaguiTextProps = GetProps<typeof TamaguiText>
 

@@ -123,6 +123,7 @@ exports[`ProviderConnectionError > should render the component and call callback
         >
           <button
             class="is_Button  t_group_item"
+            dd-action-name="Try again"
             style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
           >
             <span

@@ -1,4 +1,4 @@
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
+import { HexString, isValidHexString } from '@universe/encoding'
 import { Address } from 'viem'
 import { concat, keccak256, pad, toHex } from 'viem/utils'
 import type { AnvilClient } from '~/playwright/anvil/anvil-manager'

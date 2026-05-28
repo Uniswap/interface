@@ -1,4 +1,5 @@
 import { GasFeeResult } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { Flex, SpinningLoader, Text } from 'ui/src'
@@ -8,7 +9,6 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type GasFeeRowProps = {
   gasFee: GasFeeResult

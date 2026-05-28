@@ -1,3 +1,4 @@
+/* oxlint-disable eslint-js/no-restricted-syntax */
 import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
@@ -182,12 +183,10 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
 })
 export type WalletSwitchEthereumChainRequest = z.infer<typeof WalletSwitchEthereumChainRequestSchema>
 
-// oxlint-disable-next-line no-restricted-syntax
 export const PermissionRequestSchema = z.record(z.string(), z.record(z.string(), z.any()))
 
 const CaveatSchema = z.object({
   type: z.string(),
-  // oxlint-disable-next-line no-restricted-syntax
   value: z.any(),
 })
 

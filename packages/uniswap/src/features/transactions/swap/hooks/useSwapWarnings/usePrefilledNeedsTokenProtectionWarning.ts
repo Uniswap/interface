@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -6,7 +7,6 @@ import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
-import { isWebApp } from 'utilities/src/platform'
 
 /*
  * Display token protection warning modal on swap button click.

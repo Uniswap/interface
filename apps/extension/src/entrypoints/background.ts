@@ -174,6 +174,59 @@ function makeBackground(): void {
     }
   }
 
+  // Relay external messages (from web app passkey popup) to extension tabs.
+  // In MV3, onMessageExternal only fires in the service worker, not in extension pages.
+  // The onboarding tab needs these messages for the passkey import flow.
+  //
+  // Security: validate the sender origin before relaying. `externally_connectable` in the
+  // manifest gates which origins can reach us at all, but we add a second hostname check
+  // here so a future manifest loosening (or a misconfigured dev build) doesn't silently
+  // expose the internal message bus to untrusted popups. Listing the staging hosts in
+  // every build is intentional: the manifest is the real gate (it only registers them in
+  // non-prod), so prod builds reject staging origins because the popup can't connect at
+  // all. Keeping a single set here avoids drift between build flavors.
+  const ALLOWED_POPUP_HOSTS = new Set(['app.uniswap.org', 'app.corn-staging.com', 'dev.ew.unihq.org'])
+  // The chrome.runtime.onMessageExternal API requires the (message, sender, sendResponse)
+  // signature for sync replies, so the channel pattern in messageChannels.ts can't carry
+  // it. Same reason for the chrome.runtime.sendMessage relay below: TypedRuntimeMessageChannel
+  // is fire-and-forget, and we need the response to flow back to the popup.
+  // oxlint-disable-next-line max-params
+  chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+    const senderUrl = sender.url
+    if (!senderUrl) {
+      return false
+    }
+    let senderHost: string
+    try {
+      senderHost = new URL(senderUrl).hostname
+    } catch {
+      return false
+    }
+    if (!ALLOWED_POPUP_HOSTS.has(senderHost)) {
+      logger.warn('background.ts', 'onMessageExternal', 'rejected relay from unknown origin', { senderHost })
+      return false
+    }
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See comment above re: external popup relay
+    chrome.runtime
+      .sendMessage(message)
+      .then((response) => {
+        sendResponse(response)
+      })
+      .catch((error) => {
+        logger.error(error, {
+          tags: {
+            file: 'background.ts',
+            function: 'onMessageExternal',
+          },
+        })
+        // Reply with an error so the popup's awaited sendMessage rejects promptly instead
+        // of hanging until chrome's default timeout.
+        sendResponse({ error: 'relay failed' })
+      })
+    // Return true to keep sendResponse channel open for async response
+    return true
+  })
+
   initApp().catch((error) => {
     logger.error(error, {
       tags: {
@@ -184,7 +237,6 @@ function makeBackground(): void {
   })
 }
 
-// oxlint-disable-next-line import/no-unused-modules
 export default defineBackground({
   type: 'module',
   main() {

@@ -1,4 +1,6 @@
+import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { GraphQLApi } from '@universe/api'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -16,13 +18,13 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { usePortfolioValueModifiers } from 'uniswap/src/features/portfolio/balances/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { noop } from 'utilities/src/react/noop'
-import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type AccountCardItemProps = {
@@ -45,17 +47,28 @@ function PortfolioValue({
 }: PortfolioValueProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const apolloClient = useApolloClient()
+  const { gqlChains } = useEnabledChains()
+  const valueModifiers = usePortfolioValueModifiers(address)
 
-  // When we add a new wallet, we'll make a new network request to fetch all accounts as a single request.
-  // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
-  // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
-
-  const { data } = useAccountListData({
-    fetchPolicy: 'cache-first',
-    addresses: [address],
-  })
-
-  const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  // When a new wallet is added, the parent's combined query is keyed on a new addresses tuple
+  // and `data` is briefly undefined. Read this address's value synchronously from the Apollo
+  // cache as a fallback so previously-known wallets don't flash "loading". This is a one-shot
+  // read with no subscription — re-renders are driven purely by the parent prop changing.
+  const cachedPortfolioValue = useMemo<number | undefined>(() => {
+    if (providedPortfolioValue !== undefined) {
+      return undefined
+    }
+    try {
+      const cached = apolloClient.readQuery<GraphQLApi.AccountListQuery, GraphQLApi.AccountListQueryVariables>({
+        query: GraphQLApi.AccountListDocument,
+        variables: { addresses: [address], valueModifiers, chains: gqlChains },
+      })
+      return cached?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined
+    } catch {
+      return undefined
+    }
+  }, [apolloClient, providedPortfolioValue, address, valueModifiers, gqlChains])
 
   const portfolioValue = providedPortfolioValue ?? cachedPortfolioValue
 
@@ -70,7 +83,7 @@ function PortfolioValue({
   )
 }
 
-export function AccountCardItem({
+function AccountCardItemInner({
   address,
   isViewOnly,
   isPortfolioValueLoading,
@@ -243,3 +256,8 @@ const NotificationsBadgeContainer = ({
   children: React.ReactNode
   address: string
 }): JSX.Element => <NotificationBadge address={address}>{children}</NotificationBadge>
+
+// Memoized so that polling-driven re-renders of the parent AccountList only re-render rows
+// whose primitive props (address, portfolioValue, loading, isViewOnly) actually changed.
+// onPress/onClose are useCallback-stabilized in AccountSwitcherModal.
+export const AccountCardItem = React.memo(AccountCardItemInner)

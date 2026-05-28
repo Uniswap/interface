@@ -69,6 +69,10 @@ interface UseActivityFilteringResult {
   sentinelRef: React.MutableRefObject<HTMLElement | null>
   /** Whether server-side filtering is being used */
   isUsingServerFiltering: boolean
+  /** Error from the underlying activity data fetch, if any. */
+  error: Error | undefined
+  /** Epoch ms when activity data was last successfully fetched. */
+  dataUpdatedAt: number | undefined
 }
 
 /**
@@ -101,15 +105,17 @@ export function useActivityFiltering({
     return SERVER_FILTER_MAP[selectedTransactionType as ActivityFilterType]
   }, [canUseServerSideFiltering, selectedTransactionType])
 
-  const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetching } = useActivityData({
-    evmOwner: evmAddress,
-    svmOwner: svmAddress,
-    ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
-    fiatOnRampParams: undefined,
-    chainIds: chainId ? [chainId] : undefined,
-    filterTransactionTypes: serverFilterTypes,
-    searchText,
-  })
+  const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetching, error, dataUpdatedAt } =
+    useActivityData({
+      evmOwner: evmAddress,
+      svmOwner: svmAddress,
+      ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
+      fiatOnRampParams: undefined,
+      chainIds: chainId ? [chainId] : undefined,
+      filterTransactionTypes: serverFilterTypes,
+      searchText,
+      maxItems: Infinity,
+    })
 
   // Track chainId changes to show loading skeleton when switching networks
   // We need this because placeholderData keeps old data visible during refetch,
@@ -145,7 +151,8 @@ export function useActivityFiltering({
     (isFetching && !sectionData?.length) ||
     (chainIdChanged && isFetching) ||
     (serverFilterChanged && isFetching) ||
-    (searchTextChanged && isFetching)
+    (searchTextChanged && isFetching) ||
+    (!!error && !sectionData?.length)
 
   const { sentinelRef } = useInfiniteScroll({
     onLoadMore: fetchNextPage,
@@ -173,5 +180,7 @@ export function useActivityFiltering({
     isFetchingNextPage,
     sentinelRef,
     isUsingServerFiltering: !!serverFilterTypes,
+    error,
+    dataUpdatedAt,
   }
 }

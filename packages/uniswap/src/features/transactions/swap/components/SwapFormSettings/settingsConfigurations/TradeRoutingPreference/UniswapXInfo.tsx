@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import type { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UniswapXText } from 'ui/src'
@@ -9,7 +10,6 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import type { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function UniswapXInfo({
   children,

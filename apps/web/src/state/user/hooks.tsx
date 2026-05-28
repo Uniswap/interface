@@ -1,5 +1,3 @@
-/* oxlint-disable typescript/no-unnecessary-condition */
-
 import { Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
@@ -48,6 +46,7 @@ export function useUserSlippageTolerance(): [
 
   const dispatch = useAppDispatch()
   const setUserSlippageTolerance = useCallback(
+    // oxlint-disable-next-line no-shadow
     (userSlippageTolerance: Percent | SlippageTolerance.Auto) => {
       let value: SlippageTolerance.Auto | number
       try {

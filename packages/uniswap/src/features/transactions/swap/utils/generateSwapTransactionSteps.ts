@@ -8,7 +8,7 @@ import { createSignUniswapXOrderStep } from 'uniswap/src/features/transactions/s
 import {
   createSwapTransactionAsyncStep,
   createSwapTransactionStep,
-  createSwapTransactionStepBatched,
+  createSwapTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { orderUniswapXSteps } from 'uniswap/src/features/transactions/swap/steps/uniswapxSteps'
 import { isValidSwapTxContext, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -36,6 +36,7 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
 
     if (isClassic(txContext)) {
       const { swapRequestArgs } = txContext
+      const isSponsored = txContext.trade.quote.sponsorshipInfo?.sponsored && txContext.paymasterService
 
       if (txContext.unsigned) {
         return orderClassicSwapSteps({
@@ -45,10 +46,10 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
           swap: createSwapTransactionAsyncStep(swapRequestArgs),
         })
       }
-      if (txContext.txRequests.length > 1) {
+      if (txContext.txRequests.length > 1 || isSponsored) {
         return orderClassicSwapSteps({
           permit: undefined,
-          swap: createSwapTransactionStepBatched(txContext.txRequests),
+          swap: createSwapTransactionStepWalletCall(txContext.txRequests, txContext.paymasterService),
         })
       }
 
@@ -72,10 +73,11 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
         signOrder: createSignUniswapXOrderStep(txContext.permit.typedData, txContext.trade.quote.quote),
       })
     } else if (isBridge(txContext)) {
-      if (txContext.txRequests.length > 1) {
+      const isSponsored = txContext.trade.quote.sponsorshipInfo?.sponsored && txContext.paymasterService
+      if (txContext.txRequests.length > 1 || isSponsored) {
         return orderClassicSwapSteps({
           permit: undefined,
-          swap: createSwapTransactionStepBatched(txContext.txRequests),
+          swap: createSwapTransactionStepWalletCall(txContext.txRequests, txContext.paymasterService),
         })
       }
       return orderClassicSwapSteps({

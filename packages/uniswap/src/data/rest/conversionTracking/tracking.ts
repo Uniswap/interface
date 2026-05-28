@@ -1,6 +1,6 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
 import { type ConversionTrackingApi } from '@universe/api'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 import ms from 'ms'
 import {
   DEFAULT_HEADERS,
@@ -76,7 +76,7 @@ const buildGoogleProxyRequest = ({
     conversions: [
       {
         gclid: lead.id,
-        conversionDateTime: format(new Date(), GOOGLE_CONVERSION_DATETIME_FORMAT),
+        conversionDateTime: dayjs().format(GOOGLE_CONVERSION_DATETIME_FORMAT),
         conversionAction: eventId,
       },
     ],

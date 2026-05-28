@@ -3,7 +3,6 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, type ReactNode, useContext } from 'react'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { useTokenSpotPrice as useTokenSpotPriceLegacy } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPriceCentralized } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceCentralized'
 import {
   useUSDCPrice as useUSDCPriceLegacy,
   useUSDCValue as useUSDCValueLegacy,
@@ -45,40 +44,21 @@ const LEGACY_HOOKS: TokenPriceHooks = {
   useTokenSpotPrice: useTokenSpotPriceLegacy,
 }
 
-// Metrics phase: USDC hooks go through centralized (for TAPI comparison logging),
-// but spot price stays on GQL legacy until Aurora data quality is validated.
-// GQL prices come from The Graph subgraphs (derivedETH × ethPriceUSD) — a different
-// data source than Aurora's hub-and-spoke DAG. Once Aurora is validated against TAPI,
-// this becomes CENTRALIZED_HOOKS (all hooks migrated to centralized price service).
-const METRICS_PHASE_HOOKS: TokenPriceHooks = {
+// Phase 1 (this A/B) flips the USDC-priced display hooks to the centralized service.
+// Phase 2 (`useTokenSpotPrice`, `useTokenMarketStats`, `useTDPPriceChartData`) stays
+// on the legacy GQL/CoinGecko path and will be rolled out separately later.
+const CENTRALIZED_HOOKS: TokenPriceHooks = {
   useUSDCPrice: useUSDCPriceCentralized,
   useUSDCValue: useUSDCValueCentralized,
   useUSDCValueWithStatus: useUSDCValueWithStatusCentralized,
   useTokenSpotPrice: useTokenSpotPriceLegacy,
 }
 
-// Full rollout: all hooks go through centralized price service
-const CENTRALIZED_HOOKS: TokenPriceHooks = {
-  useUSDCPrice: useUSDCPriceCentralized,
-  useUSDCValue: useUSDCValueCentralized,
-  useUSDCValueWithStatus: useUSDCValueWithStatusCentralized,
-  useTokenSpotPrice: useTokenSpotPriceCentralized,
-}
-
 const TokenPriceContext = createContext<TokenPriceHooks>(LEGACY_HOOKS)
 
 export function TokenPriceProvider({ children }: { children: ReactNode }): JSX.Element {
   const useCentralized = useFeatureFlag(FeatureFlags.CentralizedPrices)
-  const useWs = useFeatureFlag(FeatureFlags.CentralizedPricesWs)
-
-  let hooks: TokenPriceHooks
-  if (!useCentralized) {
-    hooks = LEGACY_HOOKS
-  } else if (!useWs) {
-    hooks = METRICS_PHASE_HOOKS
-  } else {
-    hooks = CENTRALIZED_HOOKS
-  }
+  const hooks = useCentralized ? CENTRALIZED_HOOKS : LEGACY_HOOKS
 
   return <TokenPriceContext.Provider value={hooks}>{children}</TokenPriceContext.Provider>
 }

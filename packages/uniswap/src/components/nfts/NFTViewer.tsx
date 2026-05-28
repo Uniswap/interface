@@ -5,6 +5,14 @@ import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
+import { createSemaphore, useSemaphoreGatedValue } from 'utilities/src/react/useSemaphoreGatedValue'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+// Caps NFT image fetches that can be in flight at once. Images fetch in
+// parallel as cells mount, so a fast scroll may create lots of memory strain
+const NFT_IMAGE_LOAD_SEMAPHORE = createSemaphore(24)
+// Timeout for cells whose `onLoad` never fires
+const NFT_IMAGE_LOAD_TIMEOUT_MS = 10 * ONE_SECOND_MS
 
 type Props = {
   uri: string | undefined
@@ -31,7 +39,31 @@ export function NFTViewer(props: Props): JSX.Element {
   const { t } = useTranslation()
 
   // if svgRenderingDisabled is true, use thumbnailUrl which is a PNG, otherwise use uri
+  // Note: `thumbnailUrl` is whatever the indexer returns and is not size-bounded. For
+  // non-OpenSea-indexed collections it is often the original asset (multi-MB PNG/JPEG).
+  // expo-image's `allowDownscaling` shrinks the decoded bitmap, but the source still has
+  // to be fetched and partially decoded — this is a known OOM risk on grids with many
+  // cells visible at once. A future fix should constrain via a CDN size param or proxy.
   const imageHttpUri = svgRenderingDisabled && thumbnailUrl ? thumbnailUrl : uri ? uriToHttpUrls(uri)[0] : undefined
+
+  const isSvg = imageHttpUri ? isSVGUri(imageHttpUri) : false
+  const showFallback = !imageHttpUri || (isSvg && Boolean(svgRenderingDisabled))
+
+  const isGif = imageHttpUri ? isGifUri(imageHttpUri) : false
+  const formattedUri =
+    !showFallback && imageHttpUri
+      ? isGif && limitGIFSize
+        ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize)
+        : imageHttpUri
+      : undefined
+
+  // Cap concurrent NFT image fetches so a fast scroll across the grid can't overwhelm
+  // memory with parallel decodes.
+  const { gatedValue: gatedUri, release: releaseGate } = useSemaphoreGatedValue({
+    value: formattedUri,
+    semaphore: NFT_IMAGE_LOAD_SEMAPHORE,
+    timeoutMs: NFT_IMAGE_LOAD_TIMEOUT_MS,
+  })
 
   const fallback = useMemo(() => {
     const isPlaceholderAddress = isEVMAddress(placeholderContent)
@@ -54,20 +86,16 @@ export function NFTViewer(props: Props): JSX.Element {
     )
   }, [placeholderContent, maxHeight, t])
 
-  if (!imageHttpUri) {
-    // Sometimes Opensea does not return any asset, show placeholder
+  if (showFallback) {
+    // Either no asset or an SVG that this surface refuses to render.
     return fallback
   }
 
-  const isSvg = isSVGUri(imageHttpUri)
-
-  if (isSvg && props.svgRenderingDisabled) {
-    return fallback
+  if (!gatedUri) {
+    // Waiting on a concurrency slot. Render a transparent fill so the parent's
+    // skeleton background shows through; visible only during fast-scroll bursts.
+    return <Flex fill aspectRatio={1} maxHeight={maxHeight ?? '100%'} width="100%" />
   }
-
-  const isGif = isGifUri(imageHttpUri)
-  const formattedUri =
-    isGif && limitGIFSize ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize) : imageHttpUri
 
   const aspectRatio = imageDimensions ? imageDimensions.width / imageDimensions.height : 1
 
@@ -81,7 +109,14 @@ export function NFTViewer(props: Props): JSX.Element {
   return (
     <UniversalImage
       allowUndefinedSize
-      uri={formattedUri}
+      skipSizeCalculation
+      // Skip the cross-fade so we don't hold both old + new bitmaps in memory during
+      // FlashList recycling on the NFT grid.
+      transitionMs={0}
+      // Deprioritize NFT thumbnails in the native loading queue so token logos / avatars
+      // can preempt them.
+      priority="low"
+      uri={gatedUri}
       size={{
         aspectRatio,
         height: imageDimensions?.height ?? maxHeight,
@@ -92,6 +127,8 @@ export function NFTViewer(props: Props): JSX.Element {
       autoplay={autoplay}
       fallback={fallback}
       shouldRasterizeIOS={isGif && Boolean(limitGIFSize)}
+      onLoad={releaseGate}
+      onError={releaseGate}
     />
   )
 }

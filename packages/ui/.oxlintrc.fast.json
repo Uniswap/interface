@@ -1,4 +1,0 @@
-{
-  "extends": ["./.oxlintrc.json", "../../.oxlintrc.fast.json"],
-  "ignorePatterns": ["vitest*.ts", "jest*.js", "babel*.js"]
-}

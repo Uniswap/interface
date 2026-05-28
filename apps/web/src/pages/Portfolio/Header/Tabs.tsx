@@ -11,6 +11,7 @@ import { buildPortfolioUrl, pathToPortfolioTab } from '~/pages/Portfolio/utils/p
 const PORTFOLIO_TAB_TEST_IDS: Record<PortfolioTab, string> = {
   [PortfolioTab.Overview]: TestID.PortfolioTabOverview,
   [PortfolioTab.Tokens]: TestID.PortfolioTabTokens,
+  [PortfolioTab.Pools]: TestID.PortfolioTabPools,
   [PortfolioTab.Defi]: TestID.PortfolioTabDefi,
   [PortfolioTab.Nfts]: TestID.PortfolioTabNfts,
   [PortfolioTab.Activity]: TestID.PortfolioTabActivity,
@@ -22,6 +23,8 @@ function getTabElementName(pageName: InterfacePageName): ElementName {
       return ElementName.PortfolioOverviewTab
     case InterfacePageName.PortfolioTokensPage:
       return ElementName.PortfolioTokensTab
+    case InterfacePageName.PortfolioPoolsPage:
+      return ElementName.PortfolioPoolsTab
     case InterfacePageName.PortfolioDefiPage:
       return ElementName.PortfolioDefiTab
     case InterfacePageName.PortfolioNftsPage:

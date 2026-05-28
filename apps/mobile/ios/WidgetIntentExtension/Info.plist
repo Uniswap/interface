@@ -20,5 +20,7 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).IntentHandler</string>
 	</dict>
+	<key>RCTNewArchEnabled</key>
+	<false/>
 </dict>
 </plist>

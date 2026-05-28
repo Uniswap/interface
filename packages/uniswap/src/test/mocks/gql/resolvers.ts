@@ -4,7 +4,6 @@ import { priceHistory, tokenProject } from 'uniswap/src/test/fixtures'
 
 export const defaultResolvers: GraphQLApi.Resolvers = {
   Query: {
-    // oxlint-disable-next-line max-params
     tokenProjects: (parent, args, context, info) => [
       tokenProject({
         priceHistory: priceHistory({

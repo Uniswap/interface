@@ -14,6 +14,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { hasGasEstimationFailed } from 'uniswap/src/features/gas/utils'
 import { isPrimaryTypePermit, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -62,7 +63,9 @@ type WalletConnectRequestModalContentProps = {
   request: WalletConnectSigningRequest
   showSmartWalletActivation?: boolean
   confirmedRisk: boolean
+  gasOverrides?: GasFeeOverrides
   onConfirmRisk: (confirmed: boolean) => void
+  onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
   onRiskLevelChange: (riskLevel: TransactionRiskLevel) => void
 }
 
@@ -72,7 +75,9 @@ export function WalletConnectRequestModalContent({
   gasFee,
   showSmartWalletActivation,
   confirmedRisk,
+  gasOverrides,
   onConfirmRisk,
+  onChangeGasOverrides,
   onRiskLevelChange,
 }: WalletConnectRequestModalContentProps): JSX.Element {
   const chainId = request.chainId
@@ -103,7 +108,9 @@ export function WalletConnectRequestModalContent({
           gasFee={gasFee}
           showSmartWalletActivation={showSmartWalletActivation}
           confirmedRisk={confirmedRisk}
+          gasOverrides={gasOverrides}
           onConfirmRisk={onConfirmRisk}
+          onChangeGasOverrides={onChangeGasOverrides}
           onRiskLevelChange={onRiskLevelChange}
         />
 
@@ -213,7 +220,9 @@ function ScanningContent({
   gasFee,
   showSmartWalletActivation,
   confirmedRisk,
+  gasOverrides,
   onConfirmRisk,
+  onChangeGasOverrides,
   onRiskLevelChange,
 }: {
   request: WalletConnectSigningRequest
@@ -221,12 +230,13 @@ function ScanningContent({
   gasFee: GasFeeResult
   showSmartWalletActivation?: boolean
   confirmedRisk: boolean
+  gasOverrides?: GasFeeOverrides
   onConfirmRisk: (confirmed: boolean) => void
+  onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
   onRiskLevelChange: (riskLevel: TransactionRiskLevel) => void
 }): JSX.Element {
   switch (request.type) {
     case EthMethod.EthSendTransaction:
-    case UwULinkMethod.Erc20Send:
       return (
         <DappTransactionScanningContent
           transaction={request.transaction}
@@ -237,9 +247,19 @@ function ScanningContent({
           requestMethod={request.type}
           showSmartWalletActivation={showSmartWalletActivation}
           confirmedRisk={confirmedRisk}
+          gasOverrides={gasOverrides}
           onConfirmRisk={onConfirmRisk}
+          onChangeGasOverrides={onChangeGasOverrides}
           onRiskLevelChange={onRiskLevelChange}
         />
+      )
+
+    case UwULinkMethod.Erc20Send:
+      // WalletConnectRequestModal short-circuits this request type and renders
+      // UwULinkErc20SendModal before WalletConnectRequestModalContent is mounted,
+      // so this branch is unreachable. If we hit it, the parent dispatcher is broken.
+      throw new Error(
+        'UwULinkMethod.Erc20Send must be handled by UwULinkErc20SendModal, not WalletConnectRequestModalContent',
       )
 
     case EthMethod.PersonalSign:
@@ -273,7 +293,10 @@ function ScanningContent({
           requestMethod={request.type}
           showSmartWalletActivation={showSmartWalletActivation}
           confirmedRisk={confirmedRisk}
+          tx={isBatchedTransactionRequest(request) ? { ...request.encodedTransaction, chainId } : undefined}
+          gasOverrides={gasOverrides}
           onConfirmRisk={onConfirmRisk}
+          onChangeGasOverrides={onChangeGasOverrides}
           onRiskLevelChange={onRiskLevelChange}
         />
       )

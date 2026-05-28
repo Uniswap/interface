@@ -1,7 +1,7 @@
+import { isWebPlatform } from '@universe/environment'
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { iconSizes } from 'ui/src/theme'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface TokenLoaderProps {
   opacity: number

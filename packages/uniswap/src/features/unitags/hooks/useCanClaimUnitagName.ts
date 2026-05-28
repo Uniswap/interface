@@ -1,40 +1,21 @@
-import { TFunction } from 'i18next'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getUnitagFormatError } from 'uniswap/src/features/unitags/getUnitagFormatError'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
-const MIN_UNITAG_LENGTH = 3
-const MAX_UNITAG_LENGTH = 20
-
-// Helper function to enforce unitag length and alphanumeric characters
-export const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
-  if (unitag.length < MIN_UNITAG_LENGTH) {
-    return t('unitags.username.error.min', {
-      number: MIN_UNITAG_LENGTH,
-    })
-  }
-
-  if (unitag.length > MAX_UNITAG_LENGTH) {
-    return t('unitags.username.error.max', {
-      number: MAX_UNITAG_LENGTH,
-    })
-  }
-
-  if (unitag !== unitag.toLowerCase()) {
-    return t('unitags.username.error.uppercase')
-  }
-
-  if (!UNITAG_VALID_REGEX.test(unitag)) {
-    return t('unitags.username.error.chars')
-  }
-
-  return undefined
-}
-
-export const useCanClaimUnitagName = (unitag: string | undefined): { error: string | undefined; loading: boolean } => {
+/**
+ * @param claimerAddress When set, a username that is "unavailable" only because it is already
+ *   registered to this address is treated as valid (avoids false errors after a successful claim
+ *   when the availability query refetches).
+ */
+export const useCanClaimUnitagName = (
+  unitag: string | undefined,
+  claimerAddress?: string,
+): { error: string | undefined; loading: boolean } => {
   const { t } = useTranslation()
 
   const errorMessageRef = useRef<string | undefined>(undefined)
@@ -52,7 +33,17 @@ export const useCanClaimUnitagName = (unitag: string | undefined): { error: stri
 
   const { loading: ensLoading } = useENS({ nameOrAddress: unitagToSearch, autocompleteDomain: true })
   const loading = unitagLoading || ensLoading
-  const unitagAvailable = !loading && data?.available
+
+  const usernameOwnedByClaimer =
+    !!claimerAddress &&
+    data?.available === false &&
+    !!data.address &&
+    areAddressesEqual({
+      addressInput1: { address: data.address, platform: Platform.EVM },
+      addressInput2: { address: claimerAddress, platform: Platform.EVM },
+    })
+
+  const unitagAvailable = !loading && (Boolean(data?.available) || usernameOwnedByClaimer)
 
   // Check for local error, if it exists
   if (formatError) {
@@ -65,7 +56,7 @@ export const useCanClaimUnitagName = (unitag: string | undefined): { error: stri
   // This check removes the error when:
   // 1. The unitag input is empty
   // 2. The unitag is being loaded (either from the backend or ENS)
-  // 3. The unitag is available (meaning it can be claimed)
+  // 3. The unitag is available (meaning it can be claimed), or already owned by the claimer address
   if (shouldClearError) {
     errorMessageRef.current = undefined
     return { error: errorMessageRef.current, loading }

@@ -24,6 +24,7 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup, hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -133,7 +134,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     options.push(
       <OptionCard
         key={ElementName.AddManualBackup}
-        blurb={t('onboarding.backup.option.manual.description')}
+        blurb={t('onboarding.backup.option.manual.description', { count: getExpectedMnemonicLength(account) })}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PenLine color="$accent1" size="$icon.12" />}

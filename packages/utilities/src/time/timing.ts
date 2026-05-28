@@ -131,7 +131,7 @@ export function useDebounceWithStatus<T>({
     // Cancel the timeout if value changes (also on delay change or unmount)
     // This is how we prevent debounced value from updating if value is changed ...
     // .. within the delay period. Timeout gets cleared and restarted.
-    // oxlint-disable-next-line consistent-return
+    // oxlint-disable-next-line typescript/consistent-return
     return () => {
       clearTimeout(handler)
     }

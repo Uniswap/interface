@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax
 /* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- Anvil test fixtures need direct ethers imports
 import { test as base } from '@playwright/test'

@@ -76,6 +76,11 @@ describe(toPortfolioMultichainBalance, () => {
     expect(toPortfolioMultichainBalance(multichain)).toBeUndefined()
   })
 
+  it('returns undefined when chainBalances is undefined (runtime protobuf mismatch)', () => {
+    const multichain = { ...createMultichainBalance(), chainBalances: undefined } as unknown as MultichainBalance
+    expect(toPortfolioMultichainBalance(multichain)).toBeUndefined()
+  })
+
   it('converts single chainBalance (legacy shape) to PortfolioMultichainBalance', () => {
     const multichain = createMultichainBalance({
       name: 'USD Coin',
@@ -103,6 +108,7 @@ describe(toPortfolioMultichainBalance, () => {
     expect(result!.priceUsd).toBe(10)
     expect(result!.pricePercentChange1d).toBe(-1.5)
     expect(result!.isHidden).toBe(true)
+    expect(result!.tokens[0]!.isHidden).toBe(true)
     expect(result!.tokens).toHaveLength(1)
     expect(result!.tokens[0]!.chainId).toBe(1)
     expect(result!.tokens[0]!.quantity).toBe(2)

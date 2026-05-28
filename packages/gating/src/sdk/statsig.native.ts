@@ -1,5 +1,5 @@
 import { type StatsigClient } from '@statsig/react-bindings'
-import { StatsigClientRN } from '@statsig/react-native-bindings'
+import { StatsigClientRN, type StatsigOptions, type StatsigUser } from '@statsig/react-native-bindings'
 import { getConfig } from '@universe/config'
 import { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
 
@@ -31,3 +31,11 @@ export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
 }
 
 export const getStatsigClient = (): StatsigClient => StatsigClientRN.instance(config.statsigApiKey)
+
+/**
+ * Constructs and registers a `StatsigClientRN` so pre-React `.instance()` lookups
+ * return a real client. `useClientAsyncInit` adopts this existing instance via
+ * `_getInstance(sdkKey)` — no duplicate client is created.
+ */
+export const bootstrapStatsigClient = (user: StatsigUser, options: StatsigOptions): StatsigClient =>
+  new StatsigClientRN(config.statsigApiKey, user, options)

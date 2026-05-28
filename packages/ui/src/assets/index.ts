@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-var-requires
 export const ALL_NETWORKS_LOGO = require('./logos/png/all-networks-icon.png')
 export const ETHEREUM_LOGO = require('./logos/png/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
@@ -73,9 +74,6 @@ export const FOR_CONNECTING_BACKGROUND_LIGHT = require('./backgrounds/for-connec
 
 export const CRYPTO_PURCHASE_BACKGROUND_LIGHT = require('./backgrounds/coins-background-light.png')
 export const CRYPTO_PURCHASE_BACKGROUND_DARK = require('./backgrounds/coins-background-dark.png')
-
-export const SOLANA_BANNER_LIGHT = require('./backgrounds/solana-banner-light.png')
-export const SOLANA_BANNER_DARK = require('./backgrounds/solana-banner-dark.png')
 
 export const SECURITY_SCREEN_BACKGROUND_DARK = {
   ios: require(`./backgrounds/ios/security-background-dark.png`),

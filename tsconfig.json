@@ -56,9 +56,6 @@
       "path": "./packages/mycelium"
     },
     {
-      "path": "./packages/docker-image-builder"
-    },
-    {
       "path": "./packages/websocket"
     },
     {
@@ -87,6 +84,21 @@
     },
     {
       "path": "./packages/trpc"
+    },
+    {
+      "path": "./packages/chains"
+    },
+    {
+      "path": "./packages/encoding"
+    },
+    {
+      "path": "./packages/environment"
+    },
+    {
+      "path": "./packages/config-cli"
+    },
+    {
+      "path": "./packages/cryptography"
     }
   ]
 }

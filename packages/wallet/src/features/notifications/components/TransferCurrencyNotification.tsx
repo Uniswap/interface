@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
@@ -9,7 +10,6 @@ import { TransferCurrencyTxNotification } from 'uniswap/src/features/notificatio
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAndroid } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'

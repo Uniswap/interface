@@ -5,6 +5,7 @@
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { prefetchExtensionStatsigUserId } from 'src/app/core/StatsigProvider'
 import UnitagClaimApp from 'src/app/core/UnitagClaimApp'
 import { initializeReduxStore } from 'src/store/store'
 // oxlint-disable-next-line typescript/no-explicit-any -- Global polyfill cleanup requires any type for runtime modification
@@ -23,6 +24,7 @@ function makeUnitagClaim(): void {
     )
   }
 
+  prefetchExtensionStatsigUserId()
   initializeReduxStore({ readOnly: true })
   initUnitagClaim()
 }

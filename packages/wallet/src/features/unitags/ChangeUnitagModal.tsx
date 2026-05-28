@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { ensureNewErrorCode, UnitagErrorCode } from '@universe/api'
+import { UnitagErrorCode } from '@universe/api'
+import { isAndroid, isExtensionApp, isMobileApp } from '@universe/environment'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
@@ -9,7 +10,7 @@ import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -23,7 +24,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid, isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { ChangeUnitagConfirmButton } from 'wallet/src/features/unitags/ChangeUnitagConfirmButton'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
@@ -49,13 +49,12 @@ export function ChangeUnitagModal({
   const { data: deviceId } = useQuery(uniqueIdQuery())
   const account = useAccount(address)
   const signerManager = useWalletSigners()
-  const unitagsApiClient = useUnitagsApiClient()
 
   const [newUnitag, setNewUnitag] = useState(unitag)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
 
-  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag)
+  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag, address)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const resetUnitagsQueries = useResetUnitagsQueries()
 
@@ -108,7 +107,7 @@ export function ChangeUnitagModal({
         dispatch(
           pushNotification({
             type: AppNotificationType.Error,
-            errorMessage: parseUnitagErrorCode(t, ensureNewErrorCode(changeResponse.errorCode)),
+            errorMessage: parseUnitagErrorCode(t, changeResponse.errorCode),
           }),
         )
         return

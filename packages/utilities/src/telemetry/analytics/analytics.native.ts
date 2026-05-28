@@ -6,7 +6,6 @@ import {
   AnalyticsInitConfig,
   TestnetModeConfig,
   UserPropertyValue,
-  // oxlint-disable-next-line no-restricted-imports -- needed here
 } from 'utilities/src/telemetry/analytics/analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,
@@ -46,6 +45,7 @@ export const analytics: Analytics = {
         undefined, // User ID should be undefined to let Amplitude default to Device ID
         {
           transportProvider, // Used to support custom reverse proxy header
+          disableCookies: true, // Disable cookies for React Native (no document.cookie API)
           // Disable tracking of private user information by Amplitude
           trackingOptions: {
             ...AMPLITUDE_SHARED_TRACKING_OPTIONS,

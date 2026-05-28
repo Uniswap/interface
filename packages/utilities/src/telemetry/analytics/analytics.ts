@@ -1,4 +1,5 @@
 import { PlatformSplitStubError } from 'utilities/src/errors'
+import type { AnalyticsDebugBridge } from 'utilities/src/telemetry/analytics/analyticsDebugCapture'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 
 // matches amplitude supported values, not using amplitude's type to decouple from underlying library
@@ -19,6 +20,7 @@ export type AnalyticsInitConfig = {
   allowed: boolean
   initHash?: string
   userIdGetter?: () => Promise<string>
+  debugBridge?: AnalyticsDebugBridge
 }
 
 export interface Analytics {

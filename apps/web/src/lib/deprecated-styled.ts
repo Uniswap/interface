@@ -14,7 +14,6 @@ import styledFn, {
   type DefaultTheme as DefaultThemeSC,
   keyframes as keyframesFnSC,
   ThemeProvider as ThemeProviderSC,
-  // oxlint-disable-next-line no-restricted-imports -- This is a legacy compatibility file that re-exports styled-components for migration purposes
 } from 'styled-components'
 
 /** @deprecated use `styled` from `ui/src` instead */

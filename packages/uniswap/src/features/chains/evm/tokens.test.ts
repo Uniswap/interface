@@ -177,6 +177,78 @@ describe('buildChainTokens', () => {
     })
   })
 
+  describe('primaryStablecoin parameter', () => {
+    it('should prioritize specified primary stablecoin over default order', () => {
+      const result = buildChainTokens({
+        stables: {
+          USDC: buildUSDC(usdcAddress, chainId),
+          USDT: buildUSDT(usdtAddress, chainId),
+          DAI: buildDAI(daiAddress, chainId),
+        },
+        primaryStablecoin: 'USDT',
+      })
+
+      expect(result.stablecoins).toHaveLength(3)
+      expect(result.stablecoins[0]).toBe(result.USDT) // USDT should be first when specified as primary
+      expect(result.stablecoins[1]).toBe(result.USDC) // USDC should be second
+      expect(result.stablecoins[2]).toBe(result.DAI) // DAI should be third
+    })
+
+    it('should prioritize DAI when specified as primary', () => {
+      const result = buildChainTokens({
+        stables: {
+          USDC: buildUSDC(usdcAddress, chainId),
+          USDT: buildUSDT(usdtAddress, chainId),
+          DAI: buildDAI(daiAddress, chainId),
+        },
+        primaryStablecoin: 'DAI',
+      })
+
+      expect(result.stablecoins).toHaveLength(3)
+      expect(result.stablecoins[0]).toBe(result.DAI) // DAI should be first when specified as primary
+    })
+
+    it('should handle custom stablecoin as primary', () => {
+      const customUSDB = new Token(chainId, '0x4300000000000000000000000000000000000003', 18, 'USDB', 'USDB')
+      const result = buildChainTokens({
+        stables: {
+          USDC: buildUSDC(usdcAddress, chainId),
+          USDB: customUSDB,
+        },
+        primaryStablecoin: 'USDB',
+      })
+
+      expect(result.stablecoins).toHaveLength(2)
+      expect(result.stablecoins[0]).toBe(result.USDB) // USDB should be first when specified as primary
+      expect(result.stablecoins[1]).toBe(result.USDC)
+    })
+
+    it('should fall back to default order when primaryStablecoin not provided', () => {
+      const result = buildChainTokens({
+        stables: {
+          USDC: buildUSDC(usdcAddress, chainId),
+          USDT: buildUSDT(usdtAddress, chainId),
+        },
+      })
+
+      expect(result.stablecoins[0]).toBe(result.USDC) // Default order: USDC first
+      expect(result.stablecoins[1]).toBe(result.USDT)
+    })
+
+    it('should fall back to default order when primaryStablecoin does not exist', () => {
+      const result = buildChainTokens({
+        stables: {
+          USDC: buildUSDC(usdcAddress, chainId),
+          USDT: buildUSDT(usdtAddress, chainId),
+        },
+        primaryStablecoin: 'DAI' as any, // DAI doesn't exist in stables
+      })
+
+      expect(result.stablecoins[0]).toBe(result.USDC) // Should fall back to default order
+      expect(result.stablecoins[1]).toBe(result.USDT)
+    })
+  })
+
   describe('edge cases', () => {
     it('should handle empty stables object', () => {
       expect(() => {

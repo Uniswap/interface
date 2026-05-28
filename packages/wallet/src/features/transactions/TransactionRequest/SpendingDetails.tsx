@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -11,7 +12,6 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function SpendingEthDetails({ value, chainId }: { value: string; chainId: UniverseChainId }): JSX.Element {
   const variant = isMobileApp ? 'body3' : 'body4'

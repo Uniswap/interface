@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,15 +14,19 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { MultichainAddressList } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressList'
 import { MultichainExplorerList } from 'uniswap/src/components/MultichainTokenDetails/MultichainExplorerList'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink, isAllowedExternalUri, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { FOTTooltipContent } from '~/components/swap/SwapLineItem'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { FOTTooltipContent } from '~/features/Swap/SwapLineItem'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { useSwapTaxes } from '~/hooks/useSwapTaxes'
 import {
   MultichainPillDropdown,
@@ -58,7 +63,18 @@ const TokenDescriptionContainer = styled(Text, {
   lineHeight: 24,
 })
 
-function TokenLinkButton({ uri, icon, name }: { uri: string; icon: JSX.Element; name: string }) {
+function TokenLinkButton({
+  uri,
+  icon,
+  name,
+  onPress,
+}: {
+  uri: string
+  icon: JSX.Element
+  name: string
+  /** Fires on click before the browser follows the link (e.g. analytics). */
+  onPress?: () => void
+}) {
   if (!isAllowedExternalUri(uri)) {
     logger.warn('TokenLinkButton', 'render', 'Blocked unsafe external URL', { uri, name })
     return null
@@ -72,6 +88,7 @@ function TokenLinkButton({ uri, icon, name }: { uri: string; icon: JSX.Element; 
       rel="noopener noreferrer"
       {...tokenPillStyles}
       $platform-web={{ textDecorationLine: 'none' }}
+      onPress={onPress}
     >
       {icon}
       <Text variant="buttonLabel3" color="$neutral1">
@@ -83,6 +100,7 @@ function TokenLinkButton({ uri, icon, name }: { uri: string; icon: JSX.Element; 
 
 export function TokenDescription() {
   const { t } = useTranslation()
+  const trace = useTrace()
   const { tokenQuery, multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
     tokenQuery: s.tokenQuery,
     multiChainMap: s.multiChainMap,
@@ -105,9 +123,30 @@ export function TokenDescription() {
   })
 
   const [isCopied, setCopied] = useCopyClipboard()
+
+  const logAddressCopied = useCallback(
+    (chainId: UniverseChainId) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.CopyAddress,
+        chain_name: getChainInfo(chainId).urlParam,
+      })
+    },
+    [trace],
+  )
+
   const copy = useCallback(() => {
     setCopied(displayAddress)
-  }, [displayAddress, setCopied])
+    logAddressCopied(effectiveCurrency.chainId)
+  }, [displayAddress, effectiveCurrency.chainId, logAddressCopied, setCopied])
+
+  const onCopyMultichainAddress = useCallback(
+    (address: string, chainId: UniverseChainId) => {
+      setCopied(address)
+      logAddressCopied(chainId)
+    },
+    [logAddressCopied, setCopied],
+  )
 
   const shadowProps = useShadowPropsMedium()
   const [isExplorerOpen, setIsExplorerOpen] = useState(false)
@@ -128,9 +167,28 @@ export function TokenDescription() {
     ...shadowProps,
   }
 
-  const handleExplorerPress = useCallback((url: string) => {
-    openUri({ uri: url })
-  }, [])
+  const logTdpExplorerLinkClicked = useCallback(
+    (chainId: UniverseChainId) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.TokenExplorerLink,
+        chain_name: getChainInfo(chainId).urlParam,
+      })
+    },
+    [trace],
+  )
+
+  const handleExplorerPress = useCallback(
+    (url: string, chainId: UniverseChainId) => {
+      logTdpExplorerLinkClicked(chainId)
+      openUri({ uri: url }).catch(() => {})
+    },
+    [logTdpExplorerLinkClicked],
+  )
+
+  const handleSingleChainExplorerPress = useCallback(() => {
+    logTdpExplorerLinkClicked(effectiveCurrency.chainId)
+  }, [effectiveCurrency.chainId, logTdpExplorerLinkClicked])
 
   const [isDescriptionTruncated, toggleIsDescriptionTruncated] = useReducer((x) => !x, true)
   const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
@@ -162,8 +220,9 @@ export function TokenDescription() {
       isOpen={isAddressOpen}
       onOpenChange={setIsAddressOpen}
       popoverContentProps={multichainPopoverContentProps}
+      modalName={ModalName.MultichainAddressModal}
     >
-      <MultichainAddressList chains={multichainEntries} onCopyAddress={setCopied} />
+      <MultichainAddressList chains={multichainEntries} onCopyAddress={onCopyMultichainAddress} />
     </MultichainPillDropdown>
   ) : (
     <TokenInfoButton
@@ -192,6 +251,7 @@ export function TokenDescription() {
       isOpen={isExplorerOpen}
       onOpenChange={setIsExplorerOpen}
       popoverContentProps={multichainPopoverContentProps}
+      modalName={ModalName.MultichainExplorerModal}
     >
       <MultichainExplorerList
         chains={multichainEntries}
@@ -210,6 +270,7 @@ export function TokenDescription() {
         )
       }
       name={explorerName}
+      onPress={handleSingleChainExplorerPress}
     />
   )
 

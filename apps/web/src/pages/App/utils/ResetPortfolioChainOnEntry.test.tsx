@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { useEffect } from 'react'
 import { MemoryRouter, Route, Routes, useNavigate, useSearchParams } from 'react-router'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
 import { ResetPortfolioChainOnEntryEffect } from '~/pages/App/utils/ResetPortfolioChainOnEntry'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 function SearchSnapshot(): JSX.Element {
   const [params] = useSearchParams()

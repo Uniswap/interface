@@ -1,8 +1,8 @@
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import AccountDrawer, { MODAL_WIDTH } from '~/components/AccountDrawer'
+import { AccountDrawer, MODAL_WIDTH } from '~/components/AccountDrawer'
 import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
 import { mocked } from '~/test-utils/mocked'
-import mockMediaSize from '~/test-utils/mockMediaSize'
+import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/hooks/useIsUniswapExtensionConnected', () => ({

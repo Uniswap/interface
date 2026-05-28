@@ -1,6 +1,6 @@
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import useAccountRiskCheck from '~/hooks/useAccountRiskCheck'
+import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
 import { setOpenModal } from '~/state/application/reducer'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'

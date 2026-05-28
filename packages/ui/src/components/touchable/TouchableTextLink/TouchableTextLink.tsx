@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import type { ForwardedRef } from 'react'
 import { forwardRef, memo, useMemo, useRef } from 'react'
 import type { GestureResponderEvent } from 'react-native'
@@ -8,7 +9,6 @@ import { TouchableAreaFrame } from 'ui/src/components/touchable/TouchableArea/To
 import type { TouchableAreaProps } from 'ui/src/components/touchable/TouchableArea/types'
 import { getMaybeHoverColor } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 type PropsFromText = Pick<

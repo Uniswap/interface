@@ -1,5 +1,6 @@
 import { call } from '@redux-saga/core/effects'
 import { TradeType } from '@uniswap/sdk-core'
+import { ensure0xHex } from '@universe/encoding'
 import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
@@ -10,7 +11,6 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'

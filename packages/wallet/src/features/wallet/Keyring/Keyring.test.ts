@@ -17,8 +17,9 @@ import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
 
 // Mock the chrome utilities to return valid chrome
 // Needed because the jest runner doesn't currently support platform file-splitting
-jest.mock('utilities/src/chrome/chrome', () => {
+jest.mock('@universe/environment', () => {
   return {
+    ...jest.requireActual('@universe/environment'),
     // Re-import here due to jests's implicit hoisting of mocks
     getChromeWithThrow: (): unknown => require('jest-chrome').chrome,
   }

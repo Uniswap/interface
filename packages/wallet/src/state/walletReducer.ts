@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { type PersistState } from 'redux-persist'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 import { type SagaState } from 'uniswap/src/utils/saga'
-import { batchedTransactionsReducer } from 'wallet/src/features/batchedTransactions/slice'
+import { walletCallTransactionsReducer } from 'wallet/src/features/batchedTransactions/slice'
 import { behaviorHistoryReducer } from 'wallet/src/features/behaviorHistory/slice'
 import { telemetryReducer } from 'wallet/src/features/telemetry/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
@@ -12,7 +12,7 @@ export const walletReducers = {
   behaviorHistory: behaviorHistoryReducer,
   telemetry: telemetryReducer,
   wallet: walletReducer,
-  batchedTransactions: batchedTransactionsReducer,
+  batchedTransactions: walletCallTransactionsReducer,
 } as const
 
 // used to type RootState

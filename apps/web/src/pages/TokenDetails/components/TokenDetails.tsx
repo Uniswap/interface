@@ -1,18 +1,24 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
+import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
 import { MobileBottomBar, TDPActionTabs } from '~/components/NavBar/MobileBottomBar'
+import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { ActivitySection } from '~/pages/TokenDetails/components/activity/ActivitySection'
 import { BalanceSummary } from '~/pages/TokenDetails/components/balances/BalanceSummary'
 import { ChartSection } from '~/pages/TokenDetails/components/chart/ChartSection'
+import { TokenDetailsEarnBanner } from '~/pages/TokenDetails/components/earn/TokenDetailsEarnBanner'
+import { TokenDetailsEarnSection } from '~/pages/TokenDetails/components/earn/TokenDetailsEarnSection'
+import { useTokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
 import { TDPBreadcrumb } from '~/pages/TokenDetails/components/header/TDPBreadcrumb'
 import { TokenDetailsHeader } from '~/pages/TokenDetails/components/header/TokenDetailsHeader'
 import { BridgedAssetSection } from '~/pages/TokenDetails/components/info/BridgedAssetSection'
@@ -37,6 +43,8 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
     currency: s.currency!,
   }))
   const tokenQueryData = tokenQuery.data?.token
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isMultichainAsset = isMultichainProjectTokens(tokenQueryData?.project?.tokens)
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
   const { direction: scrollDirection } = useScroll()
@@ -50,6 +58,13 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const isDesktop = !media.xl
   const showBalanceInfo = isDesktop && showTokenInfo
 
+  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const showEarn = isEarnEnabled && !isTestnetModeEnabled
+
+  const earnData = useTokenDetailsEarnData({ enabled: showEarn, tokenQueryData })
+  const showRightTokenInfo = isDesktop && (showTokenInfo || earnData.userHasEarnPosition)
+
   const chainLabel = getChainLabel(chainId)
   const isTDPTokenCarouselEnabled = useFeatureFlag(FeatureFlags.TDPTokenCarousel)
 
@@ -62,15 +77,17 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
         tokenSymbol: currency.symbol,
         tokenName: currency.name,
         chainId: currency.chainId,
+        ...(multichainTokenUxEnabled ? { multichain: isMultichainAsset } : {}),
       }}
     >
       <TDPBreadcrumb />
-      <DetailsHeaderContainer isCompact={isCompact}>
+      <StickyCollapsibleHeader isCompact={isCompact}>
         <TokenDetailsHeader isCompact={isCompact} />
-      </DetailsHeaderContainer>
+      </StickyCollapsibleHeader>
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <ChartSection />
+          {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
 
           {!showBalanceInfo && (
             <Flex gap="$gap24">
@@ -98,25 +115,28 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
         </LeftPanel>
         <RightPanel>
           {/* Swap always visible on desktop (uses display to preserve state) */}
-          <Flex display={isDesktop ? 'flex' : 'none'}>
+          <Flex display={isDesktop ? 'flex' : 'none'} data-testid={TestID.TokenDetailsSwap}>
             <TDPSwapComponent />
           </Flex>
 
-          {/* Balance and bridged sections only show when user has balance or it's bridged */}
-          <Flex display={showBalanceInfo ? 'flex' : 'none'} gap="$gap24" mt="$gap24">
-            <BalanceSummary />
-            <BridgedAssetSection
-              tokenQueryData={tokenQueryData}
-              currencyInfo={currencyInfo}
-              isBridgedAsset={isBridgedAsset}
-            />
+          {/* Token info sections only show when the user has balance, a bridged asset, or an earn deposit. */}
+          <Flex display={showRightTokenInfo ? 'flex' : 'none'} gap="$gap24" mt="$gap24">
+            {showTokenInfo && <BalanceSummary />}
+            {showEarn && <TokenDetailsEarnSection earnData={earnData} />}
+            {showTokenInfo && (
+              <BridgedAssetSection
+                tokenQueryData={tokenQueryData}
+                currencyInfo={currencyInfo}
+                isBridgedAsset={isBridgedAsset}
+              />
+            )}
           </Flex>
 
           <TokenPerformance />
         </RightPanel>
 
         <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>
-          <Flex data-testid="tdp-mobile-bottom-bar">
+          <Flex data-testid={TestID.TokenDetailsMobileBottomBar}>
             <TDPActionTabs />
           </Flex>
         </MobileBottomBar>

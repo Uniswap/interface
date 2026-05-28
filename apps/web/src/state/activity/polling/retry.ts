@@ -35,7 +35,6 @@ export function retry<T>(
   const promise = new Promise<T>(async (resolve, reject) => {
     let currentAttempt = 0
     rejectCancelled = reject
-    // oxlint-disable-next-line no-constant-condition
     while (true) {
       currentAttempt++
       let result: T

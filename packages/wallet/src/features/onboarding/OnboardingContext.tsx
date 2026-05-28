@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 /* oxlint-disable max-lines */
 import dayjs from 'dayjs'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
@@ -15,8 +16,8 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
+import { MNEMONIC_LENGTH_EW, MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
@@ -59,7 +60,10 @@ export interface OnboardingContext {
     backupType: BackupType
   }) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
-  selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
+  selectImportedAccounts: (
+    accountAddresses: string[],
+    fromAccounts?: SignerMnemonicAccount[],
+  ) => Promise<SignerMnemonicAccount[]>
   finishOnboarding: ({
     importType,
     accounts,
@@ -353,12 +357,21 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   /**
    * Selects imported accounts from within the context and sets them as the
    * selected imported accounts, overriding any previous selection.
+   *
+   * `fromAccounts` lets a caller bypass the context state and select from an
+   * explicitly-provided list. Required when select is called in the same async
+   * block as `generateImportedAccounts`, since this function's closure still
+   * holds the pre-generate `importedAccounts` value at that point.
    */
-  const selectImportedAccounts = async (accountAddresses: string[]): Promise<SignerMnemonicAccount[]> => {
-    if (!importedAccounts) {
+  const selectImportedAccounts = async (
+    accountAddresses: string[],
+    fromAccounts?: SignerMnemonicAccount[],
+  ): Promise<SignerMnemonicAccount[]> => {
+    const accounts = fromAccounts ?? importedAccounts
+    if (!accounts) {
       throw new Error('No imported accounts available for toggling selecting imported accounts')
     }
-    const filteredImportedAccounts = importedAccounts.filter((importedAccount) =>
+    const filteredImportedAccounts = accounts.filter((importedAccount) =>
       accountAddresses.includes(importedAccount.address),
     )
     const namedImportedAccounts = filteredImportedAccounts.map((acc, index) => ({
@@ -367,7 +380,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     }))
 
     // Remove private keys form unselected accounts
-    const unselectedAddresses = importedAccounts
+    const unselectedAddresses = accounts
       .map((acc) => acc.address)
       .filter((address) => !accountAddresses.includes(address))
 
@@ -530,7 +543,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    */
   const addOnboardingAccountMnemonic = (mnemonic: string[]): void => {
     throwIfNotExtension()
-    if (mnemonic.length !== 12 && mnemonic.length !== 24) {
+    if (mnemonic.length !== MNEMONIC_LENGTH_HD && mnemonic.length !== MNEMONIC_LENGTH_EW) {
       throw new Error('Incorrect mnemonic value passed to addOnboardingAccountMnemonic function')
     }
     setOnboardingAccountMnemonic(mnemonic)

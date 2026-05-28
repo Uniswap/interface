@@ -73,7 +73,6 @@ export const DEFAULT_SCRUB_PATTERNS: ScrubPattern[] = [
   },
   {
     name: 'ipv4',
-    // oxlint-disable-next-line security/detect-unsafe-regex
     pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g,
     replacement: '[IP_REDACTED]',
   },

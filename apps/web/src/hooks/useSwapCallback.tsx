@@ -20,7 +20,7 @@ import {
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/hooks/useAccount'
 import type { PermitSignature } from '~/hooks/usePermitAllowance'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useUniswapXSwapCallback } from '~/hooks/useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from '~/hooks/useUniversalRouter'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'

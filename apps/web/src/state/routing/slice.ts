@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
+import { REQUEST_SOURCE } from '@universe/environment'
 import ms from 'ms'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { logger } from 'utilities/src/logger/logger'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
+import { getConfig } from '~/config'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -25,10 +26,7 @@ import {
 } from '~/state/routing/types'
 import { isExactInput, transformQuoteToTrade } from '~/state/routing/utils'
 
-const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
-}
+const UNISWAP_GATEWAY_DNS_URL = getConfig().uniswapGatewayDns
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 

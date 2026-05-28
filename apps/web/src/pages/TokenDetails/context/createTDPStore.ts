@@ -1,4 +1,4 @@
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from '@universe/environment'
 import { create } from 'zustand'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -14,6 +14,7 @@ type TDPActions = {
   setCurrency: (v: TDPState['currency']) => void
   setAddress: (v: TDPState['address']) => void
   setSelectedMultichainChainId: (v: TDPState['selectedMultichainChainId']) => void
+  setBalanceError: (v: TDPState['balanceError']) => void
 }
 
 export type TDPStoreState = TDPState & { actions: TDPActions }
@@ -32,6 +33,7 @@ export const createTDPStore = (initial: TDPState): TDPStore =>
           setCurrency: (currency) => set({ currency }),
           setAddress: (address) => set({ address }),
           setSelectedMultichainChainId: (selectedMultichainChainId) => set({ selectedMultichainChainId }),
+          setBalanceError: (balanceError) => set({ balanceError }),
         },
       }),
       {

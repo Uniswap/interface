@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import {
   type ModalIdWithSlippage,
   TransactionSettingsModalId,
@@ -11,7 +12,6 @@ import {
   useTransactionSettingsActions,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function useTransactionSettingsWithSlippage(): {

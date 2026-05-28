@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, RemoveScroll, Text, useMedia } from 'ui/src'
 import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEmptyState'
+import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokensProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -14,6 +15,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
+import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
 import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
@@ -26,18 +28,7 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
   const { t } = useTranslation()
 
   return (
-    <Flex row alignItems="center">
-      <Flex
-        borderRadius="$roundedFull"
-        backgroundColor="$neutral2"
-        width="$spacing4"
-        height="$spacing4"
-        mx="$spacing8"
-      />
-      <Text variant="body3" color="$neutral2">
-        {t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })}
-      </Text>
-    </Flex>
+    <PortfolioBalanceCountIndicator label={t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })} />
   )
 })
 
@@ -64,13 +55,17 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   // Use URL chain ID as primary filter, search chain filter as fallback
   const effectiveChainId = urlChainId || chainFilter
 
+  // Multichain PnL responses use `multichainTokenProfitLoss` / `chainBreakdown`. With a single-network
+  // filter, the API often omits that shape; request flat `tokenProfitLosses` instead (multichain: false).
+  const requestMultichainPnlShape = multichainTokenUxEnabled && effectiveChainId === null
+
   const { data: tokenProfitLossData, isError: isProfitLossError } = useGetWalletTokensProfitLossQuery({
     input: {
       evmAddress: portfolioAddresses.evmAddress,
       svmAddress: portfolioAddresses.svmAddress,
       chainIds: effectiveChainId ? [effectiveChainId] : enabledChains,
       modifier,
-      multichain: multichainTokenUxEnabled || undefined,
+      multichain: requestMultichainPnlShape || undefined,
     },
     enabled: isProfitLossEnabled,
   })
@@ -89,20 +84,30 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   })
 
   useEffect(() => {
-    if (!tokenData || !tokenProfitLossData?.tokenProfitLosses) {
+    if (!tokenData || !tokenProfitLossData) {
       return
     }
 
-    const pnlCount = tokenProfitLossData.tokenProfitLosses.length
-    const portfolioCount = tokenData.length
+    // Coverage is counted per token-per-chain, not per collapsed multichain row. A user holding ETH
+    // on 5 chains with PnL on 3 of them counts as 3/5, not 1/1
+    const portfolioCount = tokenData.reduce((sum, row) => sum + row.tokens.length, 0)
+
+    const flatPnlCount = tokenProfitLossData.tokenProfitLosses.length
+    const multichainPnlCount = tokenProfitLossData.multichainTokenProfitLoss.reduce(
+      (sum, group) =>
+        sum + (group.chainBreakdown.length > 0 ? group.chainBreakdown.length : group.aggregated?.token ? 1 : 0),
+      0,
+    )
+    const pnlCount = flatPnlCount + multichainPnlCount
     const coverageRate = portfolioCount > 0 ? Math.min(pnlCount / portfolioCount, 1) : 0
 
     sendAnalyticsEvent(UniswapEventName.PnlCoverageReport, {
       pnl_token_count: pnlCount,
       portfolio_token_count: portfolioCount,
       coverage_rate: coverageRate,
+      multichain_ux_enabled: multichainTokenUxEnabled,
     })
-  }, [tokenData, tokenProfitLossData])
+  }, [tokenData, tokenProfitLossData, multichainTokenUxEnabled])
 
   // Filter tokens by search term at client level (chain filtering is handled at API level)
   const filteredTokenData = useMemo(() => {
@@ -115,7 +120,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
 
   // Handler to clear chain filter and show all networks
   const handleShowAllNetworks = useCallback(() => {
-    navigate('/portfolio/tokens')
+    Promise.resolve(navigate('/portfolio/tokens')).catch(() => {})
   }, [navigate])
 
   // Custom empty state for chain filtering
@@ -156,6 +161,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                 svmOwner={portfolioAddresses.svmAddress}
                 endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
                 chainIds={effectiveChainId ? [effectiveChainId] : undefined}
+                part={PortfolioBalancePart.Tokens}
               />
             </Trace>
             <Trace logFocus section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensSearch}>

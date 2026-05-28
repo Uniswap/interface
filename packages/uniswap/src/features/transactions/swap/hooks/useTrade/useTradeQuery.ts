@@ -2,7 +2,10 @@ import { UseQueryResult } from '@tanstack/react-query'
 import { useQueryWithImmediateGarbageCollection } from '@universe/api'
 import { useRef } from 'react'
 import { useTradeService } from 'uniswap/src/features/services'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import {
+  usePollingIntervalByChain,
+  useQuoteRefetchIntervalForChain,
+} from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { parseQuoteCurrencies } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import { createTradeServiceQueryOptions } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useTradeServiceQueryOptions'
 import { TradeWithGasEstimates } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
@@ -12,18 +15,25 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useTradeQuery(params: UseTradeArgs): UseQueryResult<TradeWithGasEstimates> {
   const quoteCurrencyData = parseQuoteCurrencies(params)
-  const pollingIntervalForChain = usePollingIntervalByChain(quoteCurrencyData.currencyIn?.chainId)
-  const internalPollInterval = params.pollInterval ?? pollingIntervalForChain
+  const chainId = quoteCurrencyData.currencyIn?.chainId
+  const chainDefaultPollIntervalMs = usePollingIntervalByChain(chainId)
+  const refetchIntervalForChain = useQuoteRefetchIntervalForChain(chainId)
+  // Caller-supplied `pollInterval` (e.g. USDC price quotes) bypasses chain
+  // randomization on both lines. `refetchIntervalForChain` may be a number or
+  // a function (when randomized); `maxRefetchIntervalMs` mirrors it as a plain
+  // number so we can size `immediateGcTime` from the upper-bound interval.
+  const refetchInterval = params.pollInterval ?? refetchIntervalForChain
+  const maxRefetchIntervalMs = params.pollInterval ?? chainDefaultPollIntervalMs
   const tradeService = useTradeService()
   const getTradeQueryOptions = useEvent(createTradeServiceQueryOptions({ tradeService }))
 
   const response = useQueryWithImmediateGarbageCollection({
     ...getTradeQueryOptions(params),
-    refetchInterval: internalPollInterval,
-    // We set the `gcTime` to 15 seconds longer than the refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
+    refetchInterval,
+    // We set the `gcTime` to 15 seconds longer than the maximum refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
     // then we clear stale data and show a big loading spinner in the swap review screen.
-    immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
+    immediateGcTime: maxRefetchIntervalMs + ONE_SECOND_MS * 15,
     // We want to retry once, rather than the default, in order to populate response.error / Error UI sooner.
     // The query will still poll after failed retries, due to staleness.
     retry: 1,

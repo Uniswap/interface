@@ -1,4 +1,0 @@
-{
-  "extends": ["./.oxlintrc.json", "../../.oxlintrc.fast.json"],
-  "ignorePatterns": [".maestro/**", "dev/**", "webpack*.js", "webpack-plugins/**", "jest*.js"]
-}

@@ -25,13 +25,17 @@ import { migration20 } from '~/state/migrations/20'
 import { migration21 } from '~/state/migrations/21'
 import { migration22 } from '~/state/migrations/22'
 
-vi.mock('utilities/src/platform', () => ({
-  isWebApp: true,
-  isMobileApp: false,
-  isExtensionApp: false,
-  isIOS: false,
-  isAndroid: false,
-}))
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
+  return {
+    ...actual,
+    isWebApp: true,
+    isMobileApp: false,
+    isExtensionApp: false,
+    isIOS: false,
+    isAndroid: false,
+  }
+})
 
 vi.mock('uniswap/src/features/language/utils', () => ({
   getCurrentLanguageFromNavigator: vi.fn().mockReturnValue('en'),

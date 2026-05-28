@@ -34,7 +34,6 @@ export function usePrepareAndSignDappTransaction({
   const currentPreparationRef = useRef<{ cancel: () => void } | null>(null)
 
   // Cancel ongoing preparations when dependencies change
-  // oxlint-disable-next-line react/exhaustive-deps -- chainId and request changes should reset preparation state
   useEffect(() => {
     currentPreparationRef.current?.cancel()
     currentPreparationRef.current = null

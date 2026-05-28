@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { Pressable } from 'react-native'
-import { config } from 'uniswap/src/config'
+import { getConfig } from 'src/config'
 
 type WithScrollToTopProps = PropsWithChildren
 
@@ -16,7 +16,7 @@ export const WithScrollToTop = React.forwardRef<any, WithScrollToTopProps>(({ ch
   }
 
   // In E2E test mode, don't wrap in Pressable to allow Maestro to access child testIDs
-  if (config.isE2ETest) {
+  if (getConfig().isE2ETest) {
     return <>{children}</>
   }
 

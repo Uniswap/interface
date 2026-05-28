@@ -1,3 +1,15 @@
+// Load .env files into process.env so transform-inline-environment-variables can inline them.
+// This makes process.env.X work in local dev (not just CI where shell env vars are set).
+// Must run before Babel plugins are evaluated.
+const dotenv = require('dotenv')
+const path = require('path')
+dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults') })
+dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults.local'), override: true })
+
+// process.env.APP_ID is used by @universe/config. When that package's
+// getConfig() function is removed, this assignment can be removed.
+process.env.APP_ID = 'mobile'
+
 const { NODE_ENV } = process.env
 
 const inProduction = NODE_ENV === 'production'
@@ -42,11 +54,11 @@ module.exports = function (api) {
     ],
     'transform-inline-environment-variables',
     // TypeScript compiles this, but in production builds, metro doesn't use tsc
-    '@babel/plugin-proposal-logical-assignment-operators',
+    '@babel/plugin-transform-logical-assignment-operators',
     // metro doesn't like these
-    '@babel/plugin-proposal-numeric-separator',
+    '@babel/plugin-transform-numeric-separator',
     // https://github.com/software-mansion/react-native-reanimated/issues/3364#issuecomment-1268591867
-    '@babel/plugin-proposal-export-namespace-from',
+    '@babel/plugin-transform-export-namespace-from',
     // 'react-native-reanimated/plugin' must be listed last
     // https://arc.net/l/quote/plrvpkad
     [

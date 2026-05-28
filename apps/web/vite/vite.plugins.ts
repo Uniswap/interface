@@ -93,10 +93,6 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
  * For development builds, gets the target envUrlKey from the local env
  * file and returns the value.
  */
-/**
- * For development builds, gets the target envUrlKey from the local env
- * file and returns the value.
- */
 const getLocalEnvUrl = (envUrlKey: string) => {
   try {
     if (process.env.NODE_ENV !== 'development') {
@@ -113,7 +109,7 @@ const getLocalEnvUrl = (envUrlKey: string) => {
           continue
         }
         if (trimmedLine.startsWith(`${envUrlKey}=`)) {
-          const value = trimmedLine.split('=')[1]?.trim() || ''
+          const value = trimmedLine.split('=')[1]?.trim().replace(/^["']|["']$/g, '') || ''
           if (value) {
             try {
               new URL(value)

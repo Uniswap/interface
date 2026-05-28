@@ -1,5 +1,3 @@
-/* oxlint-disable typescript/no-namespace -- required to define process.env type */
-
 declare global {
   namespace NodeJS {
     // All process.env values used by this package should be listed here
@@ -7,7 +5,6 @@ declare global {
       NODE_ENV?: 'development' | 'production' | 'test'
       BUILD_ENV?: string
       CI?: string
-      VERSION?: string
       WDYR?: string
     }
   }

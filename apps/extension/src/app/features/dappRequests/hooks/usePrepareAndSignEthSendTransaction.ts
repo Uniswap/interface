@@ -4,6 +4,8 @@ import { usePrepareAndSignDappTransaction } from 'src/app/features/dappRequests/
 import { useTransactionGasEstimation } from 'src/app/features/dappRequests/hooks/useTransactionGasEstimation'
 import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -12,6 +14,7 @@ interface UsePrepareAndSignDappTransactionParams {
   request: DappRequestStoreItemForEthSendTxn
   account: Account
   chainId?: UniverseChainId
+  gasOverrides?: GasFeeOverrides
 }
 
 interface UsePrepareAndSignDappTransactionResult {
@@ -36,11 +39,19 @@ export function usePrepareAndSignEthSendTransaction({
   request,
   account,
   chainId,
+  gasOverrides,
 }: UsePrepareAndSignDappTransactionParams): UsePrepareAndSignDappTransactionResult {
+  // No `recommended` baseline available here — when only one of maxBaseFeeGwei /
+  // priorityFeeGwei is overridden, maxFeePerGas is omitted and the gas service
+  // falls back to its own estimate for that combined field.
+  const { urgency, gasLimitOverride } = useMemo(() => buildGasServiceUrgencyOverride({ gasOverrides }), [gasOverrides])
+
   const { gasFeeResult, isInvalidGasFeeResult } = useTransactionGasEstimation({
     baseTx: request.dappRequest.transaction,
     chainId,
     skip: !request.dappRequest.transaction,
+    urgency,
+    gasLimitOverride,
   })
 
   const requestWithGasValues = useMemo(() => {

@@ -1,0 +1,15 @@
+imports:
+  - shared-infra/datadog-2026
+  - shared-infra/incident
+
+values:
+  pulumiConfig:
+    datadog:apiKey: ${pulumiConfig["env:DD_API_KEY"]}
+    datadog:appKey: ${pulumiConfig["env:DD_APP_KEY"]}
+    datadog-cloud-universe:teams: ${teams}
+    datadog-cloud-universe:tagFilterExtra: "uniapp:privy-embedded-wallet"
+    datadog-cloud-universe:defaultTeam: privy-embedded-wallet
+    # Paging + Slack are disabled for the initial rollout (launch Monday). Re-enable
+    # once thresholds have been validated against real prod traffic.
+    datadog-cloud-universe:disablePaging: 'true'
+    datadog-cloud-universe:disableSlack: 'true'

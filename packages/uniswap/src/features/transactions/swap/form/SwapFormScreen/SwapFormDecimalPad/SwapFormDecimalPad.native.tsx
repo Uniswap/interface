@@ -21,8 +21,10 @@ import {
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
+import { useSwapFlowTimer } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimerContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useImmediateVisibility } from 'utilities/src/react/useImmediateVisibility'
@@ -78,6 +80,12 @@ function SwapFormDecimalPadContent({
   }))
 
   const { value: isDecimalPadReady, setTrue: setDecimalPadIsReady } = useBooleanState(false)
+  const tracker = useSwapFlowTimer()
+
+  const handleDecimalPadReady = useCallback(() => {
+    setDecimalPadIsReady()
+    tracker?.mark(DDRumManualTiming.SwapDecimalPadLayout)
+  }, [setDecimalPadIsReady, tracker])
 
   const decimalPadControlledField = useDecimalPadControlledField()
 
@@ -229,7 +237,7 @@ function SwapFormDecimalPadContent({
             selectionRef={selection[decimalPadControlledField]}
             setValue={setValue}
             valueRef={decimalPadValueRef}
-            onReady={setDecimalPadIsReady}
+            onReady={handleDecimalPadReady}
             onTriggerInputShakeAnimation={onDecimalPadTriggerInputShake}
           />
         </Flex>

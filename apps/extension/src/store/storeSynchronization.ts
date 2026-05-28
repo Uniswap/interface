@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { initializeReduxStore } from 'src/store/store'
 import { logger } from 'utilities/src/logger/logger'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { getReduxPersistor } from 'wallet/src/state/persistor'
 import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
 

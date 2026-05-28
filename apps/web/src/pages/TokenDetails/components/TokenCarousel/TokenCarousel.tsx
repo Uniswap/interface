@@ -5,12 +5,12 @@ import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import {
   CARD_SPACING,
   TOKEN_CARD_WIDTH,
   TokenCarouselCard,
 } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarouselCard'
-import { useListTokens } from '~/state/explore/listTokens/useListTokens'
 
 const MAX_CAROUSEL_TOKENS = 20
 const GRADIENT_WIDTH = 80

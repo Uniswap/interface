@@ -6,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSectionsForSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResults'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
@@ -41,14 +42,21 @@ function SearchModalResultsListInner({
   const shouldPrioritizeWallets =
     searchQuery?.toLowerCase().endsWith('.eth') || searchQuery?.toLowerCase().endsWith('.uni')
 
+  /** Align with token search: network from UI filter or parsed from query (e.g. "Unichain ETH"). Pools tab uses UI filter only. */
+  const effectiveTokenSearchChainFilter = useMemo((): UniverseChainId | null => {
+    if (activeTab === SearchTab.Pools) {
+      return chainFilter
+    }
+    return chainFilter ?? parsedChainFilter
+  }, [activeTab, chainFilter, parsedChainFilter])
+
   const {
     data: sections,
     loading,
     error,
     refetch,
   } = useSectionsForSearchResults({
-    // turn off parsed chainFilter for pools (to avoid "eth usdc" searches filtering by eth mainnet)
-    chainFilter: activeTab !== SearchTab.Pools ? (chainFilter ?? parsedChainFilter) : chainFilter,
+    chainFilter: effectiveTokenSearchChainFilter,
     searchFilter: searchQuery,
     activeTab,
     shouldPrioritizePools: searchQuery?.includes('/') ?? false,
@@ -60,6 +68,14 @@ function SearchModalResultsListInner({
   const hasData = Boolean(sections?.length)
   const isOfflineWithNoData = isOffline && !hasData
   const hasActiveFilters = chainFilter !== null || activeTab !== SearchTab.All
+
+  const sectionsForMetrics = useMemo(() => (isOfflineWithNoData ? [] : sections), [isOfflineWithNoData, sections])
+
+  useMultichainSearchModalMetricsAnalytics({
+    sections: sectionsForMetrics,
+    isSearchResultsLoading: loading,
+    isSearchQueryPending: userIsTyping,
+  })
 
   const prevIsOffline = usePreviousWithLayoutEffect(isOffline)
   const hasReconnected = prevIsOffline && !isOffline
@@ -92,7 +108,7 @@ function SearchModalResultsListInner({
       sections={isOfflineWithNoData ? [] : sections}
       searchFilters={{
         query: debouncedParsedSearchFilter ?? debouncedSearchFilter ?? undefined,
-        searchChainFilter: chainFilter,
+        searchChainFilter: effectiveTokenSearchChainFilter,
         searchTabFilter: activeTab,
       }}
       renderedInModal={renderedInModal}

@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { Input, Text } from 'ui/src'
@@ -11,7 +12,6 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isMobileApp } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 // Default font size when not explicitly provided (matches heading2)
@@ -106,7 +106,6 @@ export const AmountInput = forwardRef<Input, Props>(function AmountInputInner(
       ...(adjustWidthToContent ? { fontSize } : {}),
       ...(width !== undefined ? { width } : {}),
     }),
-    // oxlint-disable-next-line react/exhaustive-deps -- TODO https://linear.app/uniswap/issue/INFRA-1031/optimize-memoization-in
     [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent, fontSize],
   )
 

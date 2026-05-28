@@ -13,7 +13,7 @@ export const COPY_FEEDBACK_RESET_MS = 750
 
 interface MultichainAddressListProps {
   chains: MultichainTokenEntry[]
-  onCopyAddress: (address: string) => void
+  onCopyAddress: (address: string, chainId: UniverseChainId) => void
   showInlineFeedback?: boolean
   /** Pass true when rendered inside a Modal to enable BottomSheetScrollView on native. */
   renderedInModal?: boolean
@@ -45,7 +45,7 @@ export function MultichainAddressList({
 
   const handleCopy = useCallback(
     (chainId: UniverseChainId, address: string) => {
-      onCopyAddress(address)
+      onCopyAddress(address, chainId)
       if (showInlineFeedback) {
         setCopiedChainId(chainId)
       }

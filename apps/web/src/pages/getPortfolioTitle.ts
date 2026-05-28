@@ -8,6 +8,8 @@ export const getPortfolioTitle = (path?: string): string => {
   switch (tab) {
     case PortfolioTab.Tokens:
       return i18n.t('web.portfolio.title.tokens')
+    case PortfolioTab.Pools:
+      return i18n.t('web.portfolio.title.pools')
     case PortfolioTab.Defi:
       return i18n.t('web.portfolio.title.defi')
     case PortfolioTab.Nfts:

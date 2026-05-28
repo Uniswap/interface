@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, getTokenValue, Text, VerticalDottedLineSeparator } from 'ui/src'
@@ -18,7 +19,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface PlanDetailsViewProps {
   isExternalProfile?: boolean

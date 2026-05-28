@@ -1,4 +1,10 @@
-import { concatStrings, escapeRegExp, normalizeTextInput, trimToLength } from 'utilities/src/primitives/string'
+import {
+  chunkString,
+  concatStrings,
+  escapeRegExp,
+  normalizeTextInput,
+  trimToLength,
+} from 'utilities/src/primitives/string'
 
 describe(trimToLength, () => {
   it('handles empty string', () => {
@@ -69,5 +75,27 @@ describe(concatStrings, () => {
 
   it('formats more than 3 accounts', () => {
     expect(concatStrings(['1', '2', '3', '4'], 'and')).toEqual('1, 2, 3 and 4')
+  })
+})
+
+describe(chunkString, () => {
+  it('returns an empty array for an empty string', () => {
+    expect(chunkString('', 3)).toEqual([])
+  })
+
+  it('returns a single chunk when value is shorter than size', () => {
+    expect(chunkString('ab', 5)).toEqual(['ab'])
+  })
+
+  it('splits value into evenly-sized chunks when length is a multiple of size', () => {
+    expect(chunkString('abcdef', 2)).toEqual(['ab', 'cd', 'ef'])
+  })
+
+  it('puts the remainder in a final shorter chunk', () => {
+    expect(chunkString('abcdefg', 3)).toEqual(['abc', 'def', 'g'])
+  })
+
+  it('returns one chunk per character when size is 1', () => {
+    expect(chunkString('abc', 1)).toEqual(['a', 'b', 'c'])
   })
 })

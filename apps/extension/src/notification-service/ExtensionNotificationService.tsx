@@ -8,6 +8,7 @@ import {
   SharedQueryClient,
 } from '@universe/api'
 import { SESSION_INIT_QUERY_KEY } from '@universe/api/src/components/ApiInit'
+import { REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
   createApiNotificationTracker,
@@ -19,6 +20,7 @@ import {
   type NotificationService,
 } from '@universe/notifications'
 import ms from 'ms'
+import { getConfig } from 'src/app/config'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateUniswapInterfaceTab, focusOrCreateUnitagTab } from 'src/app/navigation/utils'
 import { createChromeStorageAdapter } from 'src/notification-service/createChromeStorageAdapter'
@@ -34,7 +36,6 @@ import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constant
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { getLogger } from 'utilities/src/logger/logger'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
@@ -69,7 +70,7 @@ function provideExtensionNotificationService(ctx: {
         'Content-Type': 'application/json',
         'x-request-source': REQUEST_SOURCE,
         'x-uniswap-locale': backendLocale,
-        'x-app-version': (process.env.VERSION ?? '').split('.').slice(0, 3).join('.'),
+        'x-app-version': getConfig().appVersion.split('.').slice(0, 3).join('.'),
       }
     },
     getSessionService: () =>

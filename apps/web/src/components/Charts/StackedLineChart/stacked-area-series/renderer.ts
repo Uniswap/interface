@@ -88,7 +88,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
     const areaPaths = this._createAreas(fullLinesMeshed)
 
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     const isHovered = options.hoveredLogicalIndex && options.hoveredLogicalIndex !== -1
     areaPaths.forEach((areaPath, index) => {
       // Modification: determine area fill opacity based on number of lines and hover state

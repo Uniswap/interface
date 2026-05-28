@@ -13,6 +13,7 @@ export function createClassicSwapTxAndGasInfoService(ctx: {
   instructionService: EVMSwapInstructionsService
   gasStrategy: GasStrategy
   transactionSettings: TransactionSettings
+  hasOverrides?: boolean
 }): SwapTxAndGasInfoService<ClassicTrade> {
   const getEVMSwapTransactionRequestInfo = createGetEVMSwapTransactionRequestInfo(ctx)
   const getPermitTxInfo = createGetPermitTxInfo(ctx)

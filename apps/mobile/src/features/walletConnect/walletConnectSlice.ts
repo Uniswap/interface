@@ -4,6 +4,7 @@ import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, type EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { type DappRequestInfo, type EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 import { type Call, type Capability, type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
@@ -12,6 +13,13 @@ export type WalletConnectPendingSession = {
   dappRequestInfo: DappRequestInfo
   proposalNamespaces: ProposalTypes.OptionalNamespaces
   verifyStatus: DappVerificationStatus
+  /**
+   * The origin URL as reported by WalletConnect Verify (`verifyContext.verified.origin`).
+   * Only set when WC Verify supplied a trusted origin — never sourced from dapp-provided
+   * metadata. Use this (not `dappRequestInfo.url`) when making trust decisions such as the
+   * first-party allowlist override.
+   */
+  trustedOriginUrl?: string
 }
 
 export type WalletConnectSession = {
@@ -73,6 +81,15 @@ export interface WalletSendCallsEncodedRequest extends WalletSendCallsRequest {
   encodedRequestId: string
 }
 
+export interface WalletSendCallsUserOperationRequest extends WalletSendCallsRequest {
+  unsignedUserOperation: RpcUserOperation<'0.8'>
+  requestId: string
+  gasSponsored: boolean
+  sponsorMetadata?: { name: string; icon?: string }
+  paymasterServiceUrl: string
+  paymasterServiceContext?: Record<string, unknown>
+}
+
 export interface WalletGetCallsStatusRequest extends BaseRequest {
   id: string
   type: EthMethod.WalletGetCallsStatus
@@ -99,6 +116,7 @@ export type WalletConnectSigningRequest =
   | TransactionRequest
   | UwuLinkErc20Request
   | WalletSendCallsEncodedRequest
+  | WalletSendCallsUserOperationRequest
 
 type PersonalSignRequest = SignRequest & {
   type: EthMethod.PersonalSign | EthMethod.EthSign
@@ -112,7 +130,11 @@ export const isPersonalSignRequest = (request: WalletConnectSigningRequest): req
 
 export const isBatchedTransactionRequest = (
   request: WalletConnectSigningRequest,
-): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls
+): request is WalletSendCallsEncodedRequest =>
+  request.type === EthMethod.WalletSendCalls && 'encodedTransaction' in request
+
+export const isUserOpRequest = (request: WalletConnectSigningRequest): request is WalletSendCallsUserOperationRequest =>
+  request.type === EthMethod.WalletSendCalls && 'unsignedUserOperation' in request
 
 export interface WalletConnectState {
   sessions: {

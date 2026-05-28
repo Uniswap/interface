@@ -1,5 +1,6 @@
 import { LogBox } from 'react-native'
 
+// oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
 if (process.env.IS_E2E_TEST === 'true') {
   LogBox.ignoreAllLogs()
 } else {

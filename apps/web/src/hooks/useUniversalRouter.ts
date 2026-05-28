@@ -8,11 +8,15 @@ import {
   UniversalRouterVersion,
 } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
+import { SharedQueryClient } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
+import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
@@ -20,14 +24,14 @@ import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { PermitSignature } from '~/hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from '~/hooks/useTransactionDeadline'
-import useBlockNumber from '~/lib/hooks/useBlockNumber'
+import { useBlockNumber } from '~/lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from '~/state/routing/types'
 import { useUserSlippageTolerance } from '~/state/user/hooks'
 import { calculateGasMargin } from '~/utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from '~/utils/errors'
-import isZero from '~/utils/isZero'
+import { isZero } from '~/utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from '~/utils/swapErrorToUserReadableMessage'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -78,6 +82,7 @@ export function useUniversalRouterSwapCallback({
   const getDeadline = useGetTransactionDeadline()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
   return useCallback(async (): Promise<{
     type: TradeFillType.Classic
@@ -85,7 +90,9 @@ export function useUniversalRouterSwapCallback({
     deadline?: BigNumber
   }> => {
     try {
+      // oxlint-disable-next-line no-shadow
       const account = accountRef.current
+      // oxlint-disable-next-line no-shadow
       const provider = providerRef.current
       if (account.status !== 'connected') {
         throw new Error('wallet not connected')
@@ -137,6 +144,7 @@ export function useUniversalRouterSwapCallback({
 
       const response = await (async () => {
         try {
+          // oxlint-disable-next-line no-shadow
           const provider = providerRef.current
           if (!provider) {
             throw new Error('missing provider')
@@ -159,6 +167,13 @@ export function useUniversalRouterSwapCallback({
           txHash: response.hash,
           portfolioBalanceUsd,
           trace: analyticsContext,
+          priceSource: getDisplayedPriceSource({
+            isCentralizedPricesEnabled,
+            surface: 'usdc',
+            chainId: trade.inputAmount.currency.chainId,
+            address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
+            queryClient: SharedQueryClient,
+          }),
         }),
       })
       if (tx.data !== response.data) {
@@ -198,5 +213,6 @@ export function useUniversalRouterSwapCallback({
     analyticsContext,
     blockNumber,
     isAutoSlippage,
+    isCentralizedPricesEnabled,
   ])
 }

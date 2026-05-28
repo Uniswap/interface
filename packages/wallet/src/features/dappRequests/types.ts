@@ -63,7 +63,11 @@ export const GetCallsStatusResultSchema = z.object({
   chainId: z.string(),
   status: z.number(), // Status codes as per EIP-5792
   receipts: z.array(GetCallsStatusTransactionReceiptSchema).optional(),
-  capabilities: z.record(z.string(), CapabilitySchema).optional(),
+  capabilities: z
+    .looseObject({
+      caip345: Caip345Schema.optional(),
+    })
+    .optional(),
 })
 
 // Export types for use in other files

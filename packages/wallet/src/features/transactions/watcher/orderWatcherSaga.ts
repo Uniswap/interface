@@ -111,6 +111,7 @@ export class OrderWatcher {
     yield* fork(OrderWatcher.poll, index)
   }
 
+  // oxlint-disable-next-line typescript/explicit-function-return-type
   static *waitForOrderStatus(orderHash: string, queueStatus: QueuedOrderStatus) {
     // Avoid polling until the order has been submitted
     if (queueStatus !== QueuedOrderStatus.Submitted) {

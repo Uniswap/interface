@@ -9,6 +9,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getFiatCurrencyCode, useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { EdgeFade } from 'uniswap/src/features/fiatOnRamp/EdgeFade/EdgeFade'
 import { PaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter'
 import {
@@ -42,13 +43,14 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const { derivedBuyFormInfo, buyFormState, setBuyFormState } = useBuyFormContext()
   const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, providers, paymentMethod } =
     buyFormState
-  const { quotes, meldSupportedFiatCurrency, amountOut } = derivedBuyFormInfo
+  const { quotes, meldSupportedFiatCurrency, amountOut, providerSourceAmount } = derivedBuyFormInfo
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
   const [initialQuotesHeight, setInitialQuotesHeight] = useState<number | null>(null)
   const quotesContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatNumberOrString } = useLocalizationContext()
+  const appFiatCurrency = useAppFiatCurrency()
   const unwrappedCurrency = quoteCurrency?.currencyInfo?.currency
     ? unwrappedToken(quoteCurrency.currencyInfo.currency)
     : undefined
@@ -173,7 +175,11 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           </Text>
           <Flex row gap="$spacing12" alignItems="center" pr="$spacing2">
             <Text variant="body2" color="$neutral2">
-              {convertFiatAmountFormatted(rampAmountFiatValue, NumberType.FiatTokenPrice)}
+              {formatNumberOrString({
+                value: rampAmountFiatValue,
+                type: NumberType.FiatStandard,
+                currencyCode: getFiatCurrencyCode(appFiatCurrency),
+              })}
             </Text>
             {unwrappedCurrencyInfo && <CurrencyLogo currencyInfo={unwrappedCurrencyInfo} size={iconSizes.icon24} />}
           </Flex>
@@ -209,7 +215,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
               quote={q}
               selectedCountry={selectedCountry}
               quoteCurrencyCode={quoteCurrencyCode}
-              inputAmount={onRampInputAmount}
+              inputAmount={String(providerSourceAmount ?? onRampInputAmount)}
               meldSupportedFiatCurrency={meldSupportedFiatCurrency}
               walletAddress={recipientAddress}
               setConnectedProvider={setConnectedProvider}

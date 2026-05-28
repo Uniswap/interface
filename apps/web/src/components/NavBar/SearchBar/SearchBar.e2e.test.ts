@@ -1,4 +1,4 @@
-import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
+import { searchTokens } from '@uniswap/client-data-api/dist/data/v1/search-SearchService_connectquery'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -29,7 +29,7 @@ test.describe(
       await page.getByTestId(TestID.NavSearchIcon).click()
       await page.getByTestId(TestID.ExploreSearchInput).click()
       await page.getByTestId(TestID.ExploreSearchInput).fill('Uniswap')
-      await page.getByRole('button', { name: 'Uniswap UNI 0x1f98...F984' }).click()
+      await page.getByTestId(`token-option-${UNI[1].chainId}-${UNI[1].symbol}`).click()
     })
 
     test('should yield clickable result that is then added to recent searches', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe(
     test('should go to the selected result when recent results are shown', async ({ page }) => {
       await page.getByTestId(TestID.NavSearchIcon).click()
       await expect(page.getByTestId(`section-header-${OnchainItemSectionName.RecentSearches}`)).toBeVisible()
-      await expect(page.getByRole('button', { name: 'Uniswap UNI 0x1f98...F984' })).toBeVisible()
+      await expect(page.getByTestId(`token-option-${UNI[1].chainId}-${UNI[1].symbol}`)).toBeVisible()
     })
 
     test('should clear recent searches when the clear button is clicked', async ({ page }) => {

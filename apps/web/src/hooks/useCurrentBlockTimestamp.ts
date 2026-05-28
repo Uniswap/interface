@@ -10,7 +10,7 @@ import { assume0xAddress } from '~/utils/wagmi'
  * @param refetchInterval - The interval to refetch the block timestamp (defaults to 3 minutes)
  * @returns The current block timestamp
  */
-export default function useCurrentBlockTimestamp({
+export function useCurrentBlockTimestamp({
   refetchInterval = ms('3min'),
   chainId,
 }: {

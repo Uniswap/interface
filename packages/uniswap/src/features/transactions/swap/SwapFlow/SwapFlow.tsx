@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -17,10 +18,12 @@ import type { SwapFormState } from 'uniswap/src/features/transactions/swap/store
 import { useSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { SwapTxStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/SwapTxStoreContextProvider'
 import { CurrentScreen } from 'uniswap/src/features/transactions/swap/SwapFlow/CurrentScreen'
+import { SwapFlowTimer } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimer'
 import { signalSwapModalClosed } from 'uniswap/src/utils/saga'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { useEvent } from 'utilities/src/react/hooks'
 
-export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName'> {
+export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName' | 'swapFlowTimer'> {
   prefilledState?: SwapFormState
   settings: TransactionSettingConfig[]
   hideHeader?: boolean
@@ -64,8 +67,20 @@ export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionMod
   const swapFormStore = useSwapFormStoreBase()
   const closeAndCleanUp = useSwapFlowOnClose({ onClose: transactionModalProps.onClose, swapFormStore })
 
+  const tracker = useMemo(() => new SwapFlowTimer(), [])
+
+  useEffect(() => {
+    tracker.mark(DDRumManualTiming.SwapModalOpen)
+    return () => tracker.dispose()
+  }, [tracker])
+
   return (
-    <TransactionModal modalName={ModalName.Swap} {...transactionModalProps} onClose={closeAndCleanUp}>
+    <TransactionModal
+      modalName={ModalName.Swap}
+      {...transactionModalProps}
+      swapFlowTimer={tracker}
+      onClose={closeAndCleanUp}
+    >
       {/* Re-create the TransactionSettingsContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
       <TransactionSettingsStoreContext.Provider value={transactionSettingsContext}>
         {/* Re-create the SwapFormStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}

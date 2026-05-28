@@ -22,6 +22,7 @@ import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ExploreScreenParams } from 'src/app/navigation/types'
+import { StartEarningSection } from 'src/components/earn/StartEarningSection'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
 import { NetworkPills, NetworkPillsProps } from 'src/components/explore/ExploreSections/NetworkPillsRow'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -29,13 +30,13 @@ import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text } from 'ui/src'
-import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { NoTokens } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explore/useMultichainExploreMetricsAnalytics'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -85,8 +86,6 @@ function ExploreSectionsInner({
   const { t } = useTranslation()
   const insets = useAppInsets()
   const dimensions = useWindowDimensions()
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-
   // Top tokens sorting
   const { uiOrderBy, orderBy, onOrderByChange } = useOrderBy()
 
@@ -95,7 +94,7 @@ function ExploreSectionsInner({
 
   // Track scroll position for double-tap behavior
   const handleScroll = useEvent((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (!isBottomTabsEnabled || !setIsAtTopOnScroll) {
+    if (!setIsAtTopOnScroll) {
       return
     }
     const yOffset = event.nativeEvent.contentOffset.y
@@ -111,16 +110,30 @@ function ExploreSectionsInner({
     }
   }, [chainId, onOrderByChange, orderByMetric])
 
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isMultichainPath = multichainTokenUxEnabled && selectedNetwork === null
+
   const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
     chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
+    ...(isMultichainPath && { multichain: true }),
   })
+
   const isInitialLoading = useInitialLoadingState(isLoading)
 
   const topTokenItems = useTokenItems(data, orderBy)
 
+  const exploreRowChainCounts = useMemo(
+    () => topTokenItems.map(({ tokenItemData }) => tokenItemData.networkCount ?? 1),
+    [topTokenItems],
+  )
+
+  useMultichainExploreMetricsAnalytics({
+    rowChainCounts: exploreRowChainCounts,
+    isExploreTokensLoading: isLoading,
+  })
+
   usePerformanceLogger(DDRumManualTiming.RenderExploreSections, [selectedNetwork, orderBy])
 
-  // Need multiple refs until bottom tabs experiment is complete
   const legendListRef = useRef<LegendListRef>(null)
   const scrollRef = useAnimatedRef<ScrollView>()
 
@@ -142,22 +155,11 @@ function ExploreSectionsInner({
   const isLoadingOrFetching = isLoading || isFetching
   const showFullScreenLoadingState = (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
 
-  const contentContainerStyleWithoutBottomTabs = useMemo(() => {
-    return {
-      paddingBottom: insets.bottom,
-    }
-  }, [insets.bottom])
-
-  const contentContainerStyleWithBottomTabs = useMemo(() => {
+  const contentContainerStyle = useMemo(() => {
     return {
       paddingBottom: ESTIMATED_BOTTOM_TABS_HEIGHT + spacing.spacing32 + insets.bottom,
     }
   }, [insets.bottom])
-
-  const dataWithBottomTabs = useMemo(
-    () => (showFullScreenLoadingState ? [] : topTokenItems),
-    [showFullScreenLoadingState, topTokenItems],
-  )
 
   const listEmptyComponent = useMemo(
     () => <TokenListEmptyComponent isLoading={showFullScreenLoadingState} />,
@@ -176,48 +178,15 @@ function ExploreSectionsInner({
     )
   }
 
-  if (isBottomTabsEnabled) {
-    return (
-      <Flex fill animation="100ms">
-        <LegendList
-          ref={legendListRef}
-          refScrollView={scrollRef}
-          ListEmptyComponent={listEmptyComponent}
-          ListHeaderComponent={
-            <ListHeaderComponent
-              listRef={scrollRef}
-              orderBy={uiOrderBy}
-              showFavorites={showFavorites}
-              showLoading={isInitialLoading}
-              selectedNetwork={selectedNetwork}
-              onSelectNetwork={onSelectNetwork}
-              onOrderByChange={onOrderByChange}
-            />
-          }
-          ListHeaderComponentStyle={styles.foreground}
-          contentContainerStyle={contentContainerStyleWithBottomTabs}
-          data={dataWithBottomTabs}
-          keyExtractor={tokenKey}
-          renderItem={renderItem}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          estimatedItemSize={TOKEN_ITEM_SIZE}
-          drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
-          estimatedListSize={dimensions}
-          onScroll={handleScroll}
-        />
-      </Flex>
-    )
-  }
-
   return (
     <Flex fill animation="100ms">
-      <AnimatedBottomSheetFlashList
-        ref={listRef}
+      <LegendList
+        ref={legendListRef}
+        refScrollView={scrollRef}
         ListEmptyComponent={listEmptyComponent}
         ListHeaderComponent={
           <ListHeaderComponent
-            listRef={listRef}
+            listRef={scrollRef}
             orderBy={uiOrderBy}
             showFavorites={showFavorites}
             showLoading={isInitialLoading}
@@ -227,16 +196,16 @@ function ExploreSectionsInner({
           />
         }
         ListHeaderComponentStyle={styles.foreground}
-        contentContainerStyle={contentContainerStyleWithoutBottomTabs}
-        data={showFullScreenLoadingState ? undefined : topTokenItems}
+        contentContainerStyle={contentContainerStyle}
+        data={showFullScreenLoadingState ? [] : topTokenItems}
         keyExtractor={tokenKey}
-        scrollEventThrottle={16}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         estimatedItemSize={TOKEN_ITEM_SIZE}
         drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
         estimatedListSize={dimensions}
+        onScroll={handleScroll}
       />
     </Flex>
   )
@@ -268,6 +237,8 @@ function tokenRankingStatsToTokenItemData(tokenRankingStat: TokenRankingsStat): 
     pricePercentChange24h: tokenRankingStat.pricePercentChange1Day?.value,
     volume24h: tokenRankingStat.volume1Day?.value,
     totalValueLocked: tokenRankingStat.totalValueLocked?.value,
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- chainTokens can be undefined at runtime despite protobuf typing
+    networkCount: tokenRankingStat.chainTokens?.length || undefined,
   }
 }
 
@@ -354,6 +325,7 @@ const ListHeader = memo(function ListHeader({
   return (
     <Sortable.Layer>
       {showFavorites && <FavoritesSection showLoading={showLoading} listRef={listRef} />}
+      <StartEarningSection />
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing12">
         <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
           {t('explore.tokens.top.title')}

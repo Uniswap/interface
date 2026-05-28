@@ -12,7 +12,6 @@ export const migration56 = (state: PersistAppStateWithSignatures | undefined) =>
   if (!state) {
     return undefined
   }
-  // oxlint-disable-next-line no-unused-vars -- Remove signatures field if it exists
   const { signatures, ...stateWithoutSignatures } = state
   return {
     ...stateWithoutSignatures,

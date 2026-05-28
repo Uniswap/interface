@@ -40,6 +40,10 @@ vi.mock('uniswap/src/features/platforms/utils/chains', () => ({
   chainIdToPlatform: vi.fn(),
 }))
 
+vi.mock('uniswap/src/features/passkey/ShowGetStartedContext', () => ({
+  useShowGetStarted: vi.fn().mockReturnValue(false),
+}))
+
 vi.mock('uniswap/src/features/providers/webForNudgeProvider', () => ({
   useIsWebFORNudgeEnabled: vi.fn(),
   useIsShowingWebFORNudge: vi.fn(),
@@ -117,6 +121,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useColorsFromTokenColor } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useActiveAccount, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { useShowGetStarted } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { chainIdToPlatform, isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -150,6 +155,7 @@ describe('swap form button hooks', () => {
   const mockUseActiveAccount = useActiveAccount as Mock
   const mockChainIdToPlatform = chainIdToPlatform as unknown as Mock
   const mockIsSVMChain = isSVMChain as unknown as Mock
+  const mockUseShowGetStarted = useShowGetStarted as Mock
   const mockUseIsWebFORNudgeEnabled = useIsWebFORNudgeEnabled as Mock
   const mockUseIsShowingWebFORNudge = useIsShowingWebFORNudge as Mock
   const mockUseTransactionModalContext = useTransactionModalContext as Mock
@@ -269,6 +275,7 @@ describe('swap form button hooks', () => {
     vi.clearAllMocks()
 
     mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.EmbeddedWallet && false)
+    mockUseShowGetStarted.mockReturnValue(false)
     mockNativeOnChain.mockReturnValue({ symbol: 'ETH' })
     setConnection()
     setActiveAccount(true)
@@ -323,11 +330,19 @@ describe('swap form button hooks', () => {
       expect(result.current).toBe('swap.finalizingQuote')
     })
 
-    it('returns login when disconnected and embedded wallet enabled', () => {
+    it('returns get started when disconnected, embedded wallet enabled, and showGetStarted', () => {
+      mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.EmbeddedWallet && true)
+      mockUseShowGetStarted.mockReturnValue(true)
+      setConnection({ isDisconnected: true })
+      const { result } = renderHook(() => useSwapFormButtonText())
+      expect(result.current).toBe('common.getStarted')
+    })
+
+    it('returns connect when disconnected and embedded wallet enabled without showGetStarted', () => {
       mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.EmbeddedWallet && true)
       setConnection({ isDisconnected: true })
       const { result } = renderHook(() => useSwapFormButtonText())
-      expect(result.current).toBe('nav.logIn.button')
+      expect(result.current).toBe('common.connect.button')
     })
 
     it('returns connect wallet when disconnected and embedded wallet disabled', () => {

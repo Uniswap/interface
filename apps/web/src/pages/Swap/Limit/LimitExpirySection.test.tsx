@@ -1,6 +1,6 @@
 import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { LimitContext } from '~/features/Swap/state/limit/LimitContext'
 import { LimitExpirySection } from '~/pages/Swap/Limit/LimitExpirySection'
-import { LimitContext } from '~/state/limit/LimitContext'
 import { render } from '~/test-utils/render'
 
 const mockLimitContextValue = {

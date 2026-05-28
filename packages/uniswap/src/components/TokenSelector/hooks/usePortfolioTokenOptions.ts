@@ -5,10 +5,8 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  sortPortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'uniswap/src/features/dataApi/balances/balances'
+import { useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/portfolio/balances/hooks'
+import { sortPortfolioBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
 
 export function usePortfolioTokenOptions({
   chainFilter,
