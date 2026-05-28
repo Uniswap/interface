@@ -1,0 +1,6 @@
+{
+  "ios.buildReactNativeFromSource": "true",
+  "ios.useFrameworks": "static",
+  "ios.forceStaticLinking": "[\"RNFBApp\", \"RNFBAuth\", \"RNFBFirestore\"]"
+}
+

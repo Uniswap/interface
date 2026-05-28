@@ -2,6 +2,7 @@ import { NetworkStatus } from '@apollo/client'
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useIsFocused } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { isAndroid } from '@universe/environment'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
@@ -18,13 +19,12 @@ import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensList'
 import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
-import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
-import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItem'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import {
   TokenBalanceListContextProvider,
+  TokenBalancePressOptions,
   useTokenBalanceListContext,
 } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
@@ -35,12 +35,11 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { isAndroid } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
-  onPressToken: (currencyId: CurrencyId) => void
+  onPressToken: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
   isExternalProfile?: boolean
 }
 
@@ -224,15 +223,7 @@ const HeaderComponent = memo(function HeaderComponentInner(): JSX.Element | null
 
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
   const dispatch = useDispatch()
-  const { balancesById, isWarmLoading, onPressToken } = useTokenBalanceListContext()
-
-  const handlePressLearnMore = useCallback((): void => {
-    navigate(ModalName.HiddenTokenInfoModal)
-  }, [])
-
-  const balance = balancesById?.[item]
-  const currencyInfo = balance?.tokens[0]?.currencyInfo
-  const isHidden = balance?.isHidden ?? false
+  const { balancesById, isWarmLoading } = useTokenBalanceListContext()
 
   const copyAddressToClipboard = useCallback(
     async (address: string): Promise<void> => {
@@ -247,34 +238,35 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     [dispatch],
   )
 
-  // Adapter to bridge multichain balance to PortfolioBalance shape for the context menu.
-  const portfolioBalance: PortfolioBalance | undefined = useMemo(() => {
-    if (!balance?.tokens[0]) {
+  const handlePressLearnMore = useCallback((): void => {
+    navigate(ModalName.HiddenTokenInfoModal)
+  }, [])
+
+  const balance = balancesById?.[item]
+  const currencyInfo = balance?.tokens[0]?.currencyInfo
+  const isHidden = balance?.isHidden ?? false
+
+  const contextMenuActions = useMemo(() => {
+    if (!currencyInfo) {
       return undefined
     }
-    const primaryToken = balance.tokens[0]
     return {
-      id: balance.id,
-      cacheId: balance.cacheId,
-      quantity: primaryToken.quantity,
-      balanceUSD: balance.totalValueUsd,
-      currencyInfo: primaryToken.currencyInfo,
-      relativeChange24: balance.pricePercentChange1d,
-      isHidden: balance.isHidden,
+      copyAddressToClipboard,
+      openReportTokenModal: (): void => {
+        navigate(ModalName.ReportTokenIssue, {
+          currency: currencyInfo.currency,
+          isMarkedSpam: currencyInfo.isSpam,
+          source: 'portfolio',
+        })
+      },
     }
-  }, [balance])
-
-  const handlePressToken = useCallback((): void => {
-    if (currencyInfo?.currencyId && onPressToken) {
-      onPressToken(currencyInfo.currencyId)
-    }
-  }, [currencyInfo?.currencyId, onPressToken])
+  }, [copyAddressToClipboard, currencyInfo])
 
   if (isHiddenTokenBalancesRow(item)) {
     return <HiddenTokensRow onPressLearnMore={handlePressLearnMore} />
   }
 
-  if (!balance || !portfolioBalance || !currencyInfo) {
+  if (!balance || !currencyInfo) {
     // This can happen when the view is out of focus and the user sells/sends 100% of a token's balance.
     // In that case, the token is removed from the balances object, but the FlatList is still using the cached array of IDs until the view comes back into focus.
     // As soon as the view comes back into focus, the FlatList will re-render with the latest data, so users won't really see this Skeleton for more than a few milliseconds when this happens.
@@ -286,25 +278,13 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
   }
 
   return (
-    <TokenBalanceItemContextMenu
-      portfolioBalance={portfolioBalance}
-      copyAddressToClipboard={copyAddressToClipboard}
-      openReportTokenModal={() =>
-        navigate(ModalName.ReportTokenIssue, {
-          currency: portfolioBalance.currencyInfo.currency,
-          isMarkedSpam: portfolioBalance.currencyInfo.isSpam,
-          source: 'portfolio',
-        })
-      }
-      onPressToken={handlePressToken}
-    >
-      <TokenBalanceItem
-        padded
-        isHidden={isHidden}
-        isLoading={isWarmLoading}
-        currencyInfo={currencyInfo}
-        portfolioBalance={balance}
-      />
-    </TokenBalanceItemContextMenu>
+    <TokenBalanceItem
+      padded
+      contextMenuActions={contextMenuActions}
+      isHidden={isHidden}
+      isLoading={isWarmLoading}
+      currencyInfo={currencyInfo}
+      portfolioBalance={balance}
+    />
   )
 })

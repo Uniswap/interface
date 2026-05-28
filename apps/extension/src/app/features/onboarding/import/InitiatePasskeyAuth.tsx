@@ -13,70 +13,67 @@ import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/naviga
 import { Button, Flex, IconButton, SpinningLoader, Text } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
 import {
   ExtensionToInterfaceRequestType,
-  PasskeyCredentialRetrievedSchema,
-  PasskeyRequest,
+  type PasskeyRequest,
   PasskeySignInFlowOpenedSchema,
+  RecoveryExportErrorSchema,
+  RecoveryExportResultSchema,
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
-import { Action, AuthenticationTypes } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
-import { v4 as uuid } from 'uuid'
 
 /**************************************************************************************************************
  *
  *                                     PASSKEY AUTH FLOW: EXTENSION <> WEB APP
  *
+ * The popup owns both WebAuthn ceremonies AND every EmbeddedWallet RPC call so the HTTP
+ * `Origin` header and `clientDataJSON.origin` always match the popup's own origin — no
+ * server-side rpId override is needed, and the extension's chrome-extension:// origin
+ * never appears in the signing pipeline. The extension only provisions the HPKE keypair
+ * (so the plaintext mnemonic never transits the message channel) and decrypts the
+ * ciphertext the popup posts back.
+ *
  * +-------------+                                +---------------+                              +------------+
  * |  Extension  |                                |    Web App    |                              |    User    |
  * +-------------+                                +---------------+                              +------------+
  *  |                                                     |                                                  |
- *  |-- Opens popup via chrome.windows.create ----------->|                                                  |
- *  |   /auth/passkey/extension?request_id=XXX         |                                                  |
+ *  |-- Provision HPKE keypair (SPKI pub key) ----------->|                                                  |
+ *  |-- Open popup via chrome.windows.create ------------>|                                                  |
+ *  |   /auth/passkey/extension?request_id=XXX            |                                                  |
  *  |                                                     |                                                  |
- *  |<-- "Did the extension actually open this window?" --|                                                  |
- *  |    chrome.runtime.sendMessage(EXTENSION_ID,         |                                                  |
- *  |    { type: 'PasskeySignInFlowOpened', requestId })  |                                                  |
+ *  |<-- "PasskeySignInFlowOpened" handshake -------------|                                                  |
+ *  |-- Respond: "PasskeyRequest { encryptionKey }" ----->|                                                  |
  *  |                                                     |                                                  |
- *  |-- Ignores or responds with ------------------------>|                                                  |
- *  |   sendResponse({ type: 'PasskeyRequest',            |                                                  |
- *  |                  requestId, challengeJson })        |                                                  |
+ *  |                                                     |-- Challenge(WALLET_SIGNIN) + ceremony 1 -------->|
+ *  |                                                     |-- WalletSignIn RPC (popup origin)               |
+ *  |                                                     |-- Challenge(EXPORT_SEED_PHRASE,encryptionKey)   |
+ *  |                                                     |-- ceremony 2 + ExportSeedPhrase RPC ------------>|
  *  |                                                     |                                                  |
- *  |                                                     |-- Receives `PasskeyRequest` message ------------>|
- *  |                                                     |   and enables "Sign In" button                   |
- *  |                                                     |                                                  |
- *  |                                                     |<-- Clicks "Sign In" -----------------------------|
- *  |                                                     |    and authenticates with their passkey          |
- *  |                                                     |                                                  |
- *  |<----------------- Sends passkey credentials --------|                                                  |
- *  |   chrome.runtime.sendMessage(EXTENSION_ID,          |                                                  |
- *  |   { type: 'PasskeyCredentialRetrieved',             |                                                  |
- *  |     requestId, credential })                        |                                                  |
- *  |                                                     |                                                  |
+ *  |<-- "RecoveryExportResult { ciphertext, enc }" ------|                                                  |
+ *  |-- Decrypt w/ HPKE priv key + import to keyring ---                                                    |
+ *  |-- Close popup, advance onboarding -----                                                                |
  *
- *  NOTES:
+ *  Recovery fallback (no passkey on this device): the popup falls through to email/OAuth
+ *  tiles on the same view and ends with the same `RecoveryExportResult` message, so both
+ *  authentication paths converge on the extension's single decrypt-and-import step.
  *
- *  For the Web App code, check `apps/web/src/pages/ExtensionPasskeyAuth/index.tsx`.
- *
- *  We're not reusing all of the message passing utils that we use to communicate between the different
- *  parts of the Extension (Sidebar, Background, etc.) because there are some additional constraints around
- *  how a web app can communicate with an Extension.
- *
- *  In order to test this flow, the web app URL must be declared in the `externally_connectable` attribute
- *  of the Extension's `manifest.json`.
+ *  Web app code lives in `apps/web/src/pages/ExtensionPasskeyAuthPopUp/index.tsx`. The web
+ *  app URL must be declared in `externally_connectable` so chrome.runtime.sendMessage works.
  *
  **************************************************************************************************************/
 
 const POPUP_WIDTH = 420
-const POPUP_HEIGHT = 335
+// Height fits the unified Login view (passkey button + "or" separator + email/Apple/Google
+// tiles). The legacy "Log In" landing was 335; recovery steps (Email, PIN) fit too.
+const POPUP_HEIGHT = 560
 
 export function InitiatePasskeyAuth(): JSX.Element {
   const locationState = useLocation().state as InitiatePasskeyAuthLocationState | undefined
@@ -95,7 +92,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
   const webAppBaseUrl = useEmbeddedWalletBaseUrl()
 
   const { goToNextStep } = useOnboardingSteps()
-  const { importWithCredential } = usePasskeyImportContext()
+  const { provisionRecoveryHpkeKey, importRecoveryEncryptedSeedPhrase } = usePasskeyImportContext()
 
   const initiated = useRef(false)
 
@@ -114,10 +111,20 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
   const popupWindow = useRef<chrome.windows.Window | undefined>(undefined)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- Only run once on mount to initiate auth flow, all handlers are created fresh each render
   useEffect(() => {
-    let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
-    let handleMessagePasskeyCredentialRetrieved: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
+    // In MV3, onMessageExternal only fires in the background service worker.
+    // The background relays external messages via chrome.runtime.sendMessage (internal),
+    // so we listen on onMessage instead of onMessageExternal.
+    //
+    // The handshake (`PasskeySignInFlowOpened` → `PasskeyRequest`) needs sync `sendResponse`
+    // to fulfill the popup's awaited `chrome.runtime.sendMessage(...)` promise; the
+    // codebase's TypedRuntimeMessageChannel pattern is fire-and-forget only and can't carry
+    // that response. The two pure listeners (`RecoveryExportResult` / `RecoveryExportError`)
+    // share the same listener registry as the handshake by design, so we register them
+    // through `chrome.runtime.onMessage` here too rather than mixing patterns.
+    let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessage.addListener>[0]
+    let handleRecoveryExportResult: Parameters<typeof chrome.runtime.onMessage.addListener>[0]
+    let handleRecoveryExportError: Parameters<typeof chrome.runtime.onMessage.addListener>[0]
 
     const initiatePasskeyAuth = async (): Promise<void> => {
       if (initiated.current) {
@@ -129,81 +136,101 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       try {
         const requestId = uuid()
 
-        const challengeResponse = await EmbeddedWalletApiClient.fetchChallengeRequest({
-          type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
-          action: Action.EXPORT_SEED_PHRASE,
-        })
+        // Extension owns the HPKE keypair. Only the SPKI public bytes leave this process;
+        // the popup runs the EW RPC calls itself and posts ciphertext back via
+        // RecoveryExportResult for decrypt-in-place below.
+        const { encryptionKey, keypair, suite } = await provisionRecoveryHpkeKey()
 
-        handleMessagePasskeyCredentialRetrieved = async (message: unknown) => {
-          const parsedMessage = parseMessage(message, PasskeyCredentialRetrievedSchema)
+        handleRecoveryExportResult = (message: unknown): void => {
+          const parsed = parseMessage(message, RecoveryExportResultSchema)
+          if (!parsed || parsed.requestId !== requestId) {
+            return
+          }
+          // Self-remove as soon as the expected message arrives so a duplicate relay
+          // doesn't re-trigger the import path.
+          // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+          chrome.runtime.onMessage.removeListener(handleRecoveryExportResult)
+          void (async () => {
+            try {
+              await importRecoveryEncryptedSeedPhrase({
+                keypair,
+                suite,
+                ciphertext: parsed.ciphertext,
+                encapsulatedKey: parsed.encapsulatedKey,
+              })
+              goToNextStep()
+            } catch (e) {
+              // Scrub before logging: errors from HPKE decrypt / keyring import can surface
+              // raw key bytes or partial mnemonic data in their stacks. Only emit a string.
+              const detail = e instanceof Error ? `${e.name}: ${e.message}` : 'unknown error'
+              logger.error(new Error(`recovery export import failed: ${detail}`), {
+                tags: { file: 'InitiatePasskeyAuth.tsx', function: 'handleRecoveryExportResult' },
+              })
+              navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
+                replace: true,
+                state: { showErrorMessage: true } satisfies SelectImportMethodLocationState,
+              })
+            } finally {
+              closeWindow(popupWindow.current)
+            }
+          })()
+        }
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+        chrome.runtime.onMessage.addListener(handleRecoveryExportResult)
+
+        handleRecoveryExportError = (message: unknown): void => {
+          const parsed = parseMessage(message, RecoveryExportErrorSchema)
+          if (!parsed || parsed.requestId !== requestId) {
+            return
+          }
+          // Self-remove after matching; a retry will re-register via a fresh mount.
+          // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+          chrome.runtime.onMessage.removeListener(handleRecoveryExportError)
+          logger.error(new Error(parsed.error), {
+            tags: { file: 'InitiatePasskeyAuth.tsx', function: 'handleRecoveryExportError' },
+          })
+          closeWindow(popupWindow.current)
+          navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
+            replace: true,
+            state: { showErrorMessage: true } satisfies SelectImportMethodLocationState,
+          })
+        }
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+        chrome.runtime.onMessage.addListener(handleRecoveryExportError)
+
+        // oxlint-disable-next-line max-params
+        handleMessagePasskeySignInFlowOpened = (
+          message: unknown,
+          _sender: unknown,
+          sendResponse: (response: unknown) => void,
+        ): boolean | undefined => {
+          const parsedMessage = parseMessage(message, PasskeySignInFlowOpenedSchema)
 
           if (!parsedMessage) {
             return
           }
 
           if (parsedMessage.requestId !== requestId) {
-            logger.debug(
-              'InitiatePasskeyAuth.tsx',
-              'handleMessagePasskeyCredentialRetrieved',
-              'Mismatched request ID',
-              { requestId, message },
-            )
+            logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Mismatched request ID', {
+              requestId,
+              message,
+            })
             return
           }
 
-          closeWindow(popupWindow.current)
-          // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
-          importWithCredential(parsedMessage.credential)
-          goToNextStep()
+          sendResponse({
+            type: ExtensionToInterfaceRequestType.PasskeyRequest,
+            requestId,
+            encryptionKey,
+          } satisfies PasskeyRequest)
         }
 
-        chrome.runtime.onMessageExternal.addListener(handleMessagePasskeyCredentialRetrieved)
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+        chrome.runtime.onMessage.addListener(handleMessagePasskeySignInFlowOpened)
 
-        // oxlint-disable-next-line max-params
-        handleMessagePasskeySignInFlowOpened = async (
-          message: unknown,
-          _sender: unknown,
-          sendResponse: (response: unknown) => void,
-        ) => {
-          try {
-            logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Message received', {
-              message,
-            })
-
-            const parsedMessage = parseMessage(message, PasskeySignInFlowOpenedSchema)
-
-            if (!parsedMessage) {
-              return
-            }
-
-            if (parsedMessage.requestId !== requestId) {
-              logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Mismatched request ID', {
-                requestId,
-                message,
-              })
-              return
-            }
-
-            logger.debug(
-              'InitiatePasskeyAuth.tsx',
-              'handleMessagePasskeySignInFlowOpened',
-              `Sending message: ${ExtensionToInterfaceRequestType.PasskeyRequest}`,
-            )
-
-            sendResponse({
-              type: ExtensionToInterfaceRequestType.PasskeyRequest,
-              requestId,
-              challengeJson: challengeResponse.challengeOptions,
-            } satisfies PasskeyRequest)
-          } catch (e) {
-            handleError(e, 'handleMessagePasskeySignInFlowOpened')
-          }
-        }
-
-        chrome.runtime.onMessageExternal.addListener(handleMessagePasskeySignInFlowOpened)
-
+        const popupUrl = `${webAppBaseUrl}${EXTENSION_PASSKEY_AUTH_PATH}?request_id=${requestId}`
         popupWindow.current = await openPopupWindow({
-          url: `${webAppBaseUrl}${EXTENSION_PASSKEY_AUTH_PATH}?request_id=${requestId}`,
+          url: popupUrl,
           width: POPUP_WIDTH,
           height: POPUP_HEIGHT,
         })
@@ -217,8 +244,12 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
     return () => {
       closeWindow(popupWindow.current)
-      chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeySignInFlowOpened)
-      chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeyCredentialRetrieved)
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+      chrome.runtime.onMessage.removeListener(handleMessagePasskeySignInFlowOpened)
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+      chrome.runtime.onMessage.removeListener(handleRecoveryExportResult)
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax -- See useEffect comment above
+      chrome.runtime.onMessage.removeListener(handleRecoveryExportError)
     }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [])

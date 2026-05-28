@@ -5,7 +5,7 @@ import { GraphQLApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePoolsFromTokenAddress } from '~/appGraphql/data/pools/usePoolsFromTokenAddress'
-import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { TokenDetailsPoolsTable } from '~/pages/TokenDetails/components/activity/TokenDetailsPoolsTable'
 import { mocked } from '~/test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1 } from '~/test-utils/pools/fixtures'
@@ -47,7 +47,9 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = renderWithProvider(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
+    const { asFragment } = renderWithProvider(
+      <TokenDetailsPoolsTable referenceCurrency={mockCurrency} isMultichainView={false} />,
+    )
     expect(screen.getAllByTestId('cell-loading-bubble')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -62,7 +64,9 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = renderWithProvider(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
+    const { asFragment } = renderWithProvider(
+      <TokenDetailsPoolsTable referenceCurrency={mockCurrency} isMultichainView={false} />,
+    )
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -96,7 +100,9 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = renderWithProvider(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
+    const { asFragment } = renderWithProvider(
+      <TokenDetailsPoolsTable referenceCurrency={mockCurrency} isMultichainView={false} />,
+    )
     expect(screen.getByTestId(`tdp-pools-table-${validBEPoolToken0.id}`)).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })

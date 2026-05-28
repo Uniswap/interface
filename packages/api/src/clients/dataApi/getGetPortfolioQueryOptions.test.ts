@@ -2,6 +2,7 @@ import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1
 import type { DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
 import { getGetPortfolioQueryOptions } from '@universe/api/src/clients/dataApi/getGetPortfolioQueryOptions'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('getGetPortfolioQueryOptions', () => {
@@ -12,6 +13,7 @@ describe('getGetPortfolioQueryOptions', () => {
   beforeEach(() => {
     mockClient = {
       getPortfolio: vi.fn().mockResolvedValue(createMockResponse()),
+      getWalletBalances: vi.fn(),
       listTokens: vi.fn(),
       listTopPools: vi.fn(),
     }
@@ -48,22 +50,16 @@ describe('getGetPortfolioQueryOptions', () => {
       expect(options.queryKey[1]).toEqual({ evmAddress: '0xabc', svmAddress: 'solana' })
     })
 
-    it('sorts chainIds in query key for stable cache key', () => {
-      const options = getGetPortfolioQueryOptions(mockClient, {
-        input: { evmAddress: '0xabc', chainIds: [3, 1, 2] },
+    it('produces a stable cache hash under chainId reordering', () => {
+      // Contract: dedupe under our `SharedQueryClient` (queryKeyHashFn: hashKey), which
+      // recursively sorts arrays. Asserts the actual cache contract, not queryKey shape.
+      const a = getGetPortfolioQueryOptions(mockClient, {
+        input: { evmAddress: '0xabc', chainIds: [1, 137, 42161] },
       })
-      const cacheInputs = options.queryKey[2] as { chainIds?: number[] }
-      expect(cacheInputs['chainIds']).toEqual([1, 2, 3])
-    })
-
-    it('produces same query key for same logical input regardless of chainIds order', () => {
-      const options1 = getGetPortfolioQueryOptions(mockClient, {
-        input: { evmAddress: '0xabc', chainIds: [3, 1, 2] },
+      const b = getGetPortfolioQueryOptions(mockClient, {
+        input: { evmAddress: '0xabc', chainIds: [42161, 1, 137] },
       })
-      const options2 = getGetPortfolioQueryOptions(mockClient, {
-        input: { evmAddress: '0xabc', chainIds: [2, 1, 3] },
-      })
-      expect(options1.queryKey).toEqual(options2.queryKey)
+      expect(hashKey(a.queryKey)).toBe(hashKey(b.queryKey))
     })
   })
 

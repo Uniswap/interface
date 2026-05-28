@@ -31,15 +31,6 @@ jest.mock('expo-localization', () => ({
   ],
 }))
 
-jest.mock('utilities/src/environment/env', () => ({
-  isTestEnv: jest.fn(() => true),
-  isDevEnv: jest.fn(() => false),
-  isBetaEnv: jest.fn(() => false),
-  isProdEnv: jest.fn(() => false),
-  isRNDev: jest.fn(() => true),
-  isPlaywrightEnv: jest.fn(() => false),
-}))
-
 jest.mock('@datadog/browser-logs', () => ({
   datadogLogs: {
     // leave it empty as we should avoid it in test mode

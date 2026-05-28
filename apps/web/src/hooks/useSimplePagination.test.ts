@@ -1,4 +1,4 @@
-import useSimplePagination from '~/hooks/useSimplePagination'
+import { useSimplePagination } from '~/hooks/useSimplePagination'
 import { act, renderHook } from '~/test-utils/render'
 
 describe('useSimplePagination', () => {

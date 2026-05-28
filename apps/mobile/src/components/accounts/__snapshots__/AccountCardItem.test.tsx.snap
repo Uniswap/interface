@@ -145,7 +145,9 @@ exports[`AccountCardItem renders correctly 1`] = `
                     "borderTopRightRadius": 999999,
                     "borderTopWidth": 0,
                     "flexDirection": "column",
+                    "height": 32,
                     "position": "relative",
+                    "width": 32,
                   }
                 }
                 testID="account-icon"
@@ -153,6 +155,7 @@ exports[`AccountCardItem renders correctly 1`] = `
                 <View
                   style={
                     {
+                      "flex": 1,
                       "flexDirection": "column",
                     }
                   }

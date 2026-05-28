@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/no-unsafe-return */
 import { GraphQLApi } from '@universe/api'
 import { GQL_CHAINS } from 'uniswap/src/test/fixtures'
 import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'

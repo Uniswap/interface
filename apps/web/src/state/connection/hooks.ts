@@ -1,1 +1,1 @@
-export { default as useCurrencyBalance, useTokenBalance } from '~/lib/hooks/useCurrencyBalance'
+export { useCurrencyBalance, useTokenBalance } from '~/lib/hooks/useCurrencyBalance'

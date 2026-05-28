@@ -1,6 +1,5 @@
 import { WalletName as SolanaWalletName, WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
 import { Wallet as SolanaWallet, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import type { Account } from 'uniswap/src/features/accounts/store/types/Account'
@@ -25,8 +24,8 @@ import {
   useConnectors as useWagmiConnectors,
   Connector as WagmiConnector,
 } from 'wagmi'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
-import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
+import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
 import { buildCAIP25Session } from '~/features/accounts/store/buildCAIP25Session'
 import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
 import type {
@@ -395,15 +394,10 @@ function useEVMWalletInfos(pendingConnection: ExternalWallet | undefined): Platf
 /** Hook that builds SVM wallet infos from Solana wallet adapter data. */
 function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
   const solanaWallet = useSolanaWallet()
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
 
   return useMemo(() => {
     const activeSolanaWallet = solanaWallet.wallet
     const allSolanaWallets = solanaWallet.wallets
-
-    if (!isSolanaEnabled) {
-      return []
-    }
 
     return allSolanaWallets.flatMap((wallet) => {
       const currentSolanaWalletIsActive = wallet.adapter.name === activeSolanaWallet?.adapter.name
@@ -411,19 +405,17 @@ function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
       const walletToUse = currentSolanaWalletIsActive ? activeSolanaWallet : wallet
 
       // Ignore the coinbase adapter if the extension is not detected, as it errs upon connection attempt in this state.
-      /* oxlint-disable typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here */
       if (
         wallet.readyState === SolanaWalletReadyState.NotDetected &&
         wallet.adapter.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
       ) {
-        /* oxlint-enable typescript/no-unnecessary-condition */
         return []
       }
 
       return buildSVMWalletInfo(walletToUse, currentSolanaWalletIsActive)
     })
     // `@solana/wallet-adapter` has inconsistent behavior for when sub-fields of the `useSolanaWallet` return types re-render -- to account for this, we use the entire return value as a dependency instead of its fields.
-  }, [solanaWallet, isSolanaEnabled])
+  }, [solanaWallet])
 }
 
 /** Main hook that combines EVM and SVM wallet data into unified accounts state. */

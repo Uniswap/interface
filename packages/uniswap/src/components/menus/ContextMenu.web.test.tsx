@@ -1,6 +1,5 @@
 import { fireEvent as rtlFireEvent } from '@testing-library/react'
 import { act } from '@testing-library/react-native'
-// oxlint-disable-next-line typescript/no-restricted-imports
 import { View } from 'react-native'
 import { Flex } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'

@@ -4,6 +4,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -12,7 +13,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Button, Flex, flexStyles, Text, useMedia, useSporeColors } from 'ui/src'
 import { EyeSlash, FileListLock, GraduationCap, Key, Lock, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -22,11 +23,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { ManualPageViewScreen, MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -56,6 +59,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }
 
   const mnemonicId = account.mnemonicId
+  const recoveryPhraseWordCount = getExpectedMnemonicLength(account)
+
+  // Split the verification step into pages of MNEMONIC_LENGTH_HD words for longer
+  // (24-word embedded-wallet) phrases. 12-word phrases stay single-page.
+  const totalConfirmPages = Math.max(1, Math.ceil(recoveryPhraseWordCount / MNEMONIC_LENGTH_HD))
+  const isMultiPage = totalConfirmPages > 1
+  const [confirmPage, setConfirmPage] = useState(0)
+  const isLastConfirmPage = confirmPage === totalConfirmPages - 1
 
   const [showSpeedBumpModal, setShowSpeedBumpModal] = useState(false)
 
@@ -102,6 +113,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   useEffect(() => {
     if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {
+      setShowSpeedBumpModal(false)
       if (params.entryPoint === OnboardingEntryPoint.BackupCard) {
         navigate(MobileScreens.Home)
       } else {
@@ -131,15 +143,19 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
         <OnboardingScreen
           disableGoBack={fromCloudBackup}
           Icon={PapersText}
-          subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
+          subtitle={t('onboarding.recoveryPhrase.view.subtitle', { count: recoveryPhraseWordCount })}
           title={
             fromCloudBackup
               ? t('onboarding.recoveryPhrase.view.title.hasPassword')
               : t('onboarding.recoveryPhrase.view.title')
           }
         >
-          <Flex grow justifyContent="space-between">
-            <Flex grow>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+            showsVerticalScrollIndicator={false}
+            style={flexStyles.fill}
+          >
+            <Flex grow justifyContent="space-between">
               <MnemonicDisplay
                 enableRevealButton={onboardingExperimentEnabled}
                 mnemonicId={mnemonicId}
@@ -148,9 +164,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                   setDisplayContinueButtonEnabled(true)
                 }}
               />
-            </Flex>
-            <Flex justifyContent="flex-end">
-              <Flex row>
+              <Flex row mt="$spacing16">
                 <Button
                   size="large"
                   variant="branded"
@@ -162,7 +176,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                 </Button>
               </Flex>
             </Flex>
-          </Flex>
+          </ScrollView>
           {!seedWarningAcknowledged &&
             (onboardingExperimentEnabled ? (
               <ManualBackWarningModal onBack={navigation.goBack} onContinue={() => setSeedWarningAcknowledged(true)} />
@@ -186,22 +200,36 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             <Flex grow pointerEvents={confirmContinueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
               <MnemonicConfirmation
                 mnemonicId={mnemonicId}
-                onConfirmComplete={(): void => setConfirmContinueButtonEnabled(true)}
+                pageStart={isMultiPage ? confirmPage * MNEMONIC_LENGTH_HD : undefined}
+                pageSize={isMultiPage ? MNEMONIC_LENGTH_HD : undefined}
+                currentPage={isMultiPage ? confirmPage : undefined}
+                totalPages={isMultiPage ? totalConfirmPages : undefined}
+                onConfirmComplete={(): void => {
+                  if (isMultiPage && !isLastConfirmPage) {
+                    setConfirmPage((p) => p + 1)
+                    return
+                  }
+                  setConfirmContinueButtonEnabled(true)
+                }}
               />
             </Flex>
-            <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
-              <Flex row>
-                <Button
-                  isDisabled={!confirmContinueButtonEnabled}
-                  size="large"
-                  variant="branded"
-                  testID={TestID.Continue}
-                  onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
-                >
-                  {t('common.button.continue')}
-                </Button>
-              </Flex>
-            </Trace>
+            {(!isMultiPage || isLastConfirmPage) && (
+              <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
+                <Flex row>
+                  <Button
+                    isDisabled={!confirmContinueButtonEnabled}
+                    size="large"
+                    variant="branded"
+                    testID={TestID.Continue}
+                    onPress={() =>
+                      onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful()
+                    }
+                  >
+                    {t('common.button.continue')}
+                  </Button>
+                </Flex>
+              </Trace>
+            )}
           </Flex>
 
           {showSpeedBumpModal && (

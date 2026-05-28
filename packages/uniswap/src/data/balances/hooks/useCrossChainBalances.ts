@@ -1,9 +1,10 @@
-import { WatchQueryFetchPolicy } from '@apollo/client'
+import type { WatchQueryFetchPolicy } from '@apollo/client'
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/balances/hooks/useBalances'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import type { DataApiOutageState, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 export function useCrossChainBalances({
@@ -21,7 +22,14 @@ export function useCrossChainBalances({
 }): {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
-} {
+} & DataApiOutageState {
+  // Shares the same React Query cache key as useBalances calls below — no extra network request
+  const { error: balanceError, dataUpdatedAt } = usePortfolioBalances({
+    evmAddress,
+    svmAddress,
+    fetchPolicy,
+  })
+
   const currentChainBalance =
     useBalances({
       evmAddress,
@@ -55,5 +63,7 @@ export function useCrossChainBalances({
   return {
     currentChainBalance,
     otherChainBalances,
+    error: balanceError,
+    dataUpdatedAt,
   }
 }

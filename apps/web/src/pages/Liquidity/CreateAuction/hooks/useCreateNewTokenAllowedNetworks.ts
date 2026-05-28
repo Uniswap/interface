@@ -2,7 +2,12 @@ import { CreateAuctionConfigKey, DynamicConfigs, useDynamicConfigValue } from '@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainIdArrayType } from 'uniswap/src/features/gating/typeGuards'
 
-const DEFAULT_ALLOWED_NETWORKS = [UniverseChainId.Mainnet, UniverseChainId.Unichain, UniverseChainId.Base]
+const DEFAULT_ALLOWED_NETWORKS = [
+  UniverseChainId.Mainnet,
+  UniverseChainId.Unichain,
+  UniverseChainId.Base,
+  UniverseChainId.Sepolia,
+]
 
 export function useCreateNewTokenAllowedNetworks(): UniverseChainId[] {
   const allowedNetworkIds = useDynamicConfigValue<

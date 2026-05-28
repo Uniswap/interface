@@ -80,12 +80,14 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
 
     const showAggregated = !multichainTokenUxEnabled || !isMultiChainAsset || selectedMultichainChainId === undefined
 
+    // oxlint-disable-next-line no-shadow
     const filteredDeploymentMarket = getTDPFilteredDeploymentMarket({
       multichainTokenUxEnabled,
       isMultiChainAsset,
       selectedMultichainChainId,
       tokens: tokenQueryData.project?.tokens,
     })
+    // oxlint-disable-next-line no-shadow
     const marketStatsInput = getTDPMarketStatsInput({
       tokenQueryData,
       showAggregated,

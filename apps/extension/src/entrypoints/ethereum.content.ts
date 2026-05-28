@@ -8,7 +8,7 @@ import {
 } from 'src/contentScript/types'
 import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
 import { logger } from 'utilities/src/logger/logger'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { defineContentScript } from 'wxt/utils/define-content-script'
 
 declare global {
@@ -69,7 +69,6 @@ function makeEthereum(): void {
     } catch (error) {
       if (__DEV__) {
         // Only log in dev env for debugging purposes to avoid spamming DD with these errors.
-        // oxlint-disable-next-line no-restricted-syntax
         logger.error(error, { tags: { file: 'ethereum.ts', function: 'assignWindowEthereum' } })
       }
     }
@@ -156,9 +155,9 @@ function makeEthereum(): void {
   }
 }
 
-// oxlint-disable-next-line import/no-unused-modules
 export default defineContentScript({
   matches:
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
     __DEV__ || process.env.BUILD_ENV === 'dev'
       ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
       : ['https://*/*'],

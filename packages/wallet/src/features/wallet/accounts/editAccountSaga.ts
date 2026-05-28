@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/explicit-function-return-type */
 import { all, call, put, select } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'

@@ -1,3 +1,4 @@
+import { base64ToUint8 } from '@universe/encoding'
 import { BiometricUnlockStorageData } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { assertAuthenticatorAssertionResponse } from 'src/app/features/biometricUnlock/utils/assertAuthenticatorAssertionResponse'
 import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
@@ -24,11 +25,11 @@ export async function authenticateWithBiometricCredential({
   abortSignal: AbortSignal
 }): Promise<{ publicKeyCredential: PublicKeyCredential; encryptionKey: CryptoKey }> {
   // Convert stored credential ID back to binary format
-  const credentialIdBuffer = Uint8Array.from(atob(credentialId), (c) => c.charCodeAt(0))
+  const credentialIdBuffer = base64ToUint8(credentialId)
 
   const credential = await navigator.credentials.get({
     publicKey: {
-      challenge: generateNew256BitRandomBuffer(),
+      challenge: generateNew256BitRandomBuffer() as BufferSource,
       allowCredentials: [
         {
           type: 'public-key',

@@ -1,5 +1,5 @@
 import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
+import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { createExpectSingleTransaction } from '~/playwright/anvil/transactions'
@@ -9,19 +9,6 @@ import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest({ withAnvil: true })
-
-function modifyRequestData(
-  data:
-    | { v3ClaimLpFeesRequest: { simulateTransaction: boolean } }
-    | { v4ClaimLpFeesRequest: { simulateTransaction: boolean } },
-) {
-  if ('v3ClaimLpFeesRequest' in data) {
-    data.v3ClaimLpFeesRequest.simulateTransaction = false
-  } else if ('v4ClaimLpFeesRequest' in data) {
-    data.v4ClaimLpFeesRequest.simulateTransaction = false
-  }
-  return data
-}
 
 test.describe(
   'Claim fees',
@@ -42,8 +29,8 @@ test.describe(
 
       await stubLiquidityServiceEndpoint({
         page,
-        endpoint: LiquidityService.methods.claimLPFees,
-        modifyRequestData,
+        endpoint: LiquidityService.methods.claimFees,
+        service: LiquidityService,
       })
       await page.route(
         `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
@@ -70,8 +57,8 @@ test.describe(
 
       await stubLiquidityServiceEndpoint({
         page,
-        endpoint: LiquidityService.methods.claimLPFees,
-        modifyRequestData,
+        endpoint: LiquidityService.methods.claimFees,
+        service: LiquidityService,
       })
       await page.route(
         `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
@@ -79,7 +66,7 @@ test.describe(
           await route.fulfill({ path: Mocks.Positions.get_v4_position })
         },
       )
-      await page.goto('/positions/v4/ethereum/13298')
+      await page.goto('/positions/v4/ethereum/13281')
 
       // Perform fee claiming and verify transaction was submitted
       await expectSingleTransaction(async () => {

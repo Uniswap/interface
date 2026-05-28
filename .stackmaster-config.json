@@ -1,0 +1,5 @@
+{
+  "setup": "bun install",
+  "run": "bun web start",
+  "cleanup": ""
+}

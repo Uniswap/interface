@@ -11,38 +11,42 @@ export function CreateAuctionSteps() {
   const step = useCreateAuctionStore((state) => state.step)
   useUpdateCreateAuctionTokenColor()
 
+  const isAddTokenInfoStep = step === CreateAuctionStep.ADD_TOKEN_INFO
+
   return (
     <Flex width="100%" overflow="hidden">
-      <HeightAnimator animation="200ms">
-        <AnimatePresence>
-          {step === CreateAuctionStep.ADD_TOKEN_INFO && (
-            <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-              <AddTokenInfoStep />
-            </Flex>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {step === CreateAuctionStep.CONFIGURE_AUCTION && (
-            <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-              <ConfigureAuctionStep />
-            </Flex>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {step === CreateAuctionStep.CUSTOMIZE_POOL && (
-            <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-              <CustomizePoolStep />
-            </Flex>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {step === CreateAuctionStep.REVIEW_LAUNCH && (
-            <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-              <ReviewLaunchStep />
-            </Flex>
-          )}
-        </AnimatePresence>
-      </HeightAnimator>
+      <AnimatePresence>
+        {isAddTokenInfoStep && (
+          <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+            <AddTokenInfoStep />
+          </Flex>
+        )}
+      </AnimatePresence>
+      {!isAddTokenInfoStep && (
+        <HeightAnimator animation="200ms">
+          <AnimatePresence>
+            {step === CreateAuctionStep.CONFIGURE_AUCTION && (
+              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                <ConfigureAuctionStep />
+              </Flex>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {step === CreateAuctionStep.CUSTOMIZE_POOL && (
+              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                <CustomizePoolStep />
+              </Flex>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {step === CreateAuctionStep.REVIEW_LAUNCH && (
+              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                <ReviewLaunchStep />
+              </Flex>
+            )}
+          </AnimatePresence>
+        </HeightAnimator>
+      )}
     </Flex>
   )
 }

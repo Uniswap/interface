@@ -39,8 +39,6 @@ export type NftsListProps = Omit<
     onRefetchReady?: (refetch: () => void) => void
     /** Optional: callback to receive the loading state */
     onLoadingStateChange?: (isLoading: boolean) => void
-    /** Optional: show header with count and refresh button */
-    showHeader?: boolean
     SearchInputComponent?: React.ComponentType<SearchInputProps>
     /** Optional: test ID for the search input (e.g. PortfolioNftsSearchInput) */
     searchInputTestId?: string

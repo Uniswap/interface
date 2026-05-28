@@ -1,5 +1,4 @@
-/* oxlint-disable no-console -- fixture file */
-/* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
+/* oxlint-disable react/rules-of-hooks -- Playwright fixtures use use() which is not a React hook */
 import { type BrowserContext, test as base } from '@playwright/test'
 import { createExtensionContext } from 'e2e/fixtures/extension-context'
 import { completeOnboarding } from 'e2e/utils/onboarding-helpers'

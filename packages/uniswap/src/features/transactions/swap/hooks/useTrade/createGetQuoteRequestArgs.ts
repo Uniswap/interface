@@ -20,7 +20,8 @@ export type GetQuoteRequestResult = QuoteRoutingParamsResult &
   QuoteSlippageParamsResult & {
     amount: string
     generatePermitAsTransaction?: boolean
-    gasStrategies: GasStrategy[]
+    // Flag-off path: legacy gasStrategies array. Omitted on the flag-on path (GasFeeOverrides).
+    gasStrategies?: GasStrategy[]
     isUSDQuote?: boolean
     swapper: string
     tokenIn: string
@@ -29,6 +30,7 @@ export type GetQuoteRequestResult = QuoteRoutingParamsResult &
     tokenOutChainId: number
     type: TradingApi.TradeType
     urgency?: TradingApi.Urgency
+    walletExecutionContext?: TradingApi.WalletExecutionContext
   }
 
 export type GetQuoteRequestArgsGetter = (input: UseTradeArgs) => GetQuoteRequestResult | undefined

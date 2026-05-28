@@ -31,7 +31,6 @@ export function SlippageControl(props: SlippageControlProps): JSX.Element {
     isZeroSlippage: props.isZeroSlippage,
   })
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +isLayoutReady
   useEffect(() => {
     inputRef.current?.blur()
   }, [isLayoutReady])

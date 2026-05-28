@@ -15,10 +15,15 @@ vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery', async 
   return {
     __esModule: true,
     ...originalModule,
-    useUnitagsUsernameQuery: vi.fn((): { isLoading: boolean; data: { available: boolean } } => ({
-      isLoading: false,
-      data: { available: true },
-    })),
+    useUnitagsUsernameQuery: vi.fn(
+      (): {
+        isLoading: boolean
+        data: { available: boolean; address?: string }
+      } => ({
+        isLoading: false,
+        data: { available: true },
+      }),
+    ),
   }
 })
 
@@ -74,5 +79,19 @@ describe('useCanClaimUnitagName', (): void => {
     const { result } = renderHook(() => useCanClaimUnitagName('unavailable'))
 
     expect(result.current.error).toBe('unitags.claim.error.unavailable')
+  })
+
+  it('should return no error if the unitag is taken but registered to the claimer address', (): void => {
+    const useUnitagsUsernameQueryMock = useUnitagsUsernameQuery as Mock
+    const claimer = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb'
+
+    useUnitagsUsernameQueryMock.mockReturnValueOnce({
+      isLoading: false,
+      data: { available: false, address: claimer.toLowerCase() },
+    })
+    const { result } = renderHook(() => useCanClaimUnitagName('myunitag', claimer))
+
+    expect(result.current.error).toBeUndefined()
+    expect(result.current.loading).toBe(false)
   })
 })

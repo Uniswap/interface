@@ -49,7 +49,7 @@ export function ChooseUnitagModal({
         onClose={onClose}
         goBack={goBack}
       >
-        <Flex px="$spacing32" width="100%" pb="$spacing32">
+        <Flex width="100%">
           <ClaimUnitagContent animateY={false} entryPoint={ExtensionScreens.Home} onComplete={onContinue} />
         </Flex>
       </ModalContent>

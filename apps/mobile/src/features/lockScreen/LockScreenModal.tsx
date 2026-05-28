@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import { BlurView } from 'expo-blur'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +17,6 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const fadeIn = FadeIn.duration(250)

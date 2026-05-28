@@ -67,6 +67,13 @@ env:
       PHASE: 'end'
 - waitForAnimationToEnd
 
+# Bumped 8s → 15s: RN 0.81 takes longer to populate the accessibility
+# tree on the post-launch home mount.
+- extendedWaitUntil:
+    visible:
+      id: 'account-header-settings-icon'
+    timeout: 15000
+
 # Track settings navigation
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
@@ -282,9 +289,21 @@ env:
       PHASE: 'end'
 
 - waitForAnimationToEnd
+
+# RN 0.81 timing: assertVisible the modal text blocks until the 'cancel'
+# testID (on the modal's "Not now" button) is wired before the tap.
+# Mirrors the first cancel pattern above.
+- assertVisible:
+    text: 'Restore your wallet'
 - tapOn:
     id: 'cancel'
 - waitForAnimationToEnd
+
+# Same RN 0.81 timing as the first settings-icon wait above.
+- extendedWaitUntil:
+    visible:
+      id: 'account-header-settings-icon'
+    timeout: 15000
 - tapOn:
     id: 'account-header-settings-icon'
 - waitForAnimationToEnd

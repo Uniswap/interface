@@ -1,7 +1,5 @@
 /* oxlint-disable max-depth */
 /* oxlint-disable max-lines */
-/* oxlint-disable typescript/no-unsafe-return */
-/* oxlint-disable typescript/no-explicit-any -- Migration types require dynamic typing */
 
 import { RankingType } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -301,7 +299,6 @@ export const moveDismissedTokenWarnings = createSafeMigration({
           address,
         }
         newWarnings[chainId] = newWarnings[chainId] || {}
-        // oxlint-disable-next-line typescript/no-non-null-assertion -- Safe assertion in migration context - we just created this key
         newWarnings[chainId]![address] = serializedToken
       }
     })

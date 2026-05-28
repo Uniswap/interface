@@ -1,6 +1,7 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import type { GasFeeResult } from '@universe/api'
 import { TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +27,6 @@ import type {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { isWebApp } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -55,6 +55,12 @@ interface TransactionDetailsProps {
   RoutingInfo?: JSX.Element
   CollapsedInfoRow?: JSX.Element
   RateInfo?: JSX.Element
+  /**
+   * Optional override for the default `NetworkFee` row. When provided, this
+   * replaces the inline `<NetworkFee />` render (used by the gas overrides
+   * feature to swap in the interactive Network cost row + modals).
+   */
+  NetworkCostRowSlot?: ReactNode
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
@@ -85,11 +91,13 @@ export function TransactionDetails({
   transactionUSDValue,
   txSimulationErrors,
   routingType,
+  isSwap: isSwapProp,
   AccountDetails,
   estimatedSwapTime,
   RoutingInfo,
   CollapsedInfoRow,
   RateInfo,
+  NetworkCostRowSlot,
   includesDelegation,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
@@ -105,7 +113,7 @@ export function TransactionDetails({
   const isChainedTrade = routingType && isChained({ routing: routingType })
   const isBridgeTrade = routingType && isBridge({ routing: routingType })
   const isWrapTrade = routingType && isWrap({ routing: routingType })
-  const isSwap = !isBridgeTrade && !isChainedTrade && !isWrapTrade
+  const isSwap = isSwapProp ?? (!isBridgeTrade && !isChainedTrade && !isWrapTrade)
 
   // Used to show slippage settings on mobile, where the modal needs to be added outside of the conditional expected failure banner
   const [showSlippageSettings, setShowSlippageSettings] = useState(false)
@@ -140,15 +148,17 @@ export function TransactionDetails({
           {isSwap && outputCurrency && (
             <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
           )}
-          <NetworkFee
-            chainId={chainId}
-            gasFee={gasFee}
-            indicative={indicative}
-            transactionUSDValue={transactionUSDValue}
-            uniswapXGasBreakdown={uniswapXGasBreakdown}
-            includesDelegation={includesDelegation}
-            showNetworkLogo={showNetworkLogo}
-          />
+          {NetworkCostRowSlot ?? (
+            <NetworkFee
+              chainId={chainId}
+              gasFee={gasFee}
+              indicative={indicative}
+              transactionUSDValue={transactionUSDValue}
+              uniswapXGasBreakdown={uniswapXGasBreakdown}
+              includesDelegation={includesDelegation}
+              showNetworkLogo={showNetworkLogo}
+            />
+          )}
           {!showChildren && CollapsedInfoRow}
           {(isSwap || isChainedTrade) && RoutingInfo}
           {AccountDetails}

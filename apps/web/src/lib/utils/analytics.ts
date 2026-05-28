@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { PriceSourceTag, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
 import {
@@ -167,6 +167,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   batchId,
   includedPermitTransactionStep,
   planAnalytics,
+  priceSource,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
@@ -179,6 +180,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   batchId?: string
   includedPermitTransactionStep?: boolean
   planAnalytics?: PlanSwapTransactionInfoFields
+  priceSource?: PriceSourceTag
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -200,6 +202,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   }),
   // Override routing with per-step routing for plan steps
   ...(planAnalytics?.stepRouting ? { routing: planAnalytics.stepRouting } : {}),
+  price_source: priceSource,
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {

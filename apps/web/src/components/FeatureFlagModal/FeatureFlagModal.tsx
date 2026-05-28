@@ -1,3 +1,4 @@
+import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
 import type { DynamicConfigKeys } from '@universe/gating'
 import {
   DynamicConfigs,
@@ -11,16 +12,15 @@ import {
   useFeatureFlagWithExposureLoggingDisabled,
 } from '@universe/gating'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { memo } from 'react'
-import { Button, Flex, FlexProps, ModalCloseIcon, Switch, styled, Text, TouchableArea } from 'ui/src'
+import { memo, useMemo, useState } from 'react'
+import { Button, Flex, FlexProps, Input, ModalCloseIcon, styled, Switch, Text, TouchableArea } from 'ui/src'
 import { Pin } from 'ui/src/components/icons/Pin'
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
+import { buildFlagGroups } from '~/components/FeatureFlagModal/flagGroups'
 import { usePinnedExperiments, usePinnedFeatureFlags } from '~/dev/usePinnedFeatureFlags'
 import { useModalState } from '~/hooks/useModalState'
 import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
@@ -42,6 +42,15 @@ const TouchableCenteredRow = styled(TouchableArea, CenteredRowProps)
 const FlagInfo = styled(Flex, {
   flexShrink: 1,
 })
+
+function fuzzyMatch(query: string, ...targets: string[]): boolean {
+  if (!query.trim()) {
+    return true
+  }
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean)
+  const combined = targets.join(' ').toLowerCase()
+  return words.every((word) => combined.includes(word))
+}
 
 interface GatingRowContentProps {
   title: string
@@ -130,6 +139,7 @@ const FeatureFlagOption = memo(function FeatureFlagOption({ flag, label }: Featu
   const { isPinned, pinFlag, unpinFlag } = usePinnedFeatureFlags()
   const isOptionPinned = isPinned(name)
 
+  // oxlint-disable-next-line no-shadow
   const onFlagVariantChange = useEvent((enabled: boolean) => {
     getOverrideAdapter().overrideGate(name, enabled)
   })
@@ -229,9 +239,10 @@ const DynamicConfigDropdown = memo(function DynamicConfigDropdown<
   )
 })
 
-export default function FeatureFlagModal(): JSX.Element {
+export function FeatureFlagModal(): JSX.Element {
   const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
   const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const removeAllOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
@@ -240,6 +251,36 @@ export default function FeatureFlagModal(): JSX.Element {
   const handleReload = useEvent(() => {
     window.location.reload()
   })
+
+  const isSearching = searchQuery.trim().length > 0
+
+  const flagGroups = useMemo(
+    () =>
+      buildFlagGroups({
+        extensionDropdown: (
+          <DynamicConfigDropdown
+            selected={[externallyConnectableExtensionId]}
+            options={TRUSTED_CHROME_EXTENSION_IDS}
+            parser={(id: string) => id}
+            config={DynamicConfigs.ExternallyConnectableExtension}
+            configKey={ExternallyConnectableExtensionConfigKey.ExtensionId}
+            label="Which Extension the web app will communicate with"
+          />
+        ),
+        networkRequestsConfig: <NetworkRequestsConfig />,
+        layerOptions: (
+          <Flex ml="$padding8" gap="$gap8">
+            <FeatureFlagGroup name={Layers.ExplorePage}>
+              <LayerOption layerName={Layers.ExplorePage} />
+            </FeatureFlagGroup>
+            <FeatureFlagGroup name={Layers.SwapPage}>
+              <LayerOption layerName={Layers.SwapPage} />
+            </FeatureFlagGroup>
+          </Flex>
+        ),
+      }),
+    [externallyConnectableExtensionId],
+  )
 
   return (
     <Modal name={ModalName.FeatureFlags} isModalOpen={isOpen} onClose={closeModal} padding={0}>
@@ -253,148 +294,72 @@ export default function FeatureFlagModal(): JSX.Element {
           </Flex>
           <ModalCloseIcon onClose={closeModal} />
         </CenteredRow>
+        <Input
+          autoFocus
+          placeholder="Search flags..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          width="100%"
+          height={40}
+          backgroundColor="$surface2"
+          borderColor="$surface3"
+          borderWidth={1}
+          borderRadius="$rounded12"
+          padding="$spacing12"
+          color="$neutral1"
+          placeholderTextColor="$neutral3"
+          focusStyle={{ borderColor: '$accent1' }}
+        />
         <Flex
           maxHeight="600px"
           pb="$gap8"
           $platform-web={{ overflowY: 'auto', overflowX: 'hidden' }}
           $md={{ maxHeight: 'unset' }}
         >
-          <FeatureFlagGroup name="Sessions">
-            <FeatureFlagOption flag={FeatureFlags.SessionsServiceEnabled} label="Enable Sessions Service" />
-            <FeatureFlagOption flag={FeatureFlags.SessionsUpgradeAutoEnabled} label="Enable Sessions Upgrade Auto" />
-            <FeatureFlagOption flag={FeatureFlags.HashcashSolverEnabled} label="Enable Hashcash Solver" />
-            <FeatureFlagOption flag={FeatureFlags.TurnstileSolverEnabled} label="Enable Turnstile Solver" />
-            <FeatureFlagOption
-              flag={FeatureFlags.SessionsPerformanceTrackingEnabled}
-              label="Enable Sessions Performance Tracking"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="FOR API">
-            <FeatureFlagOption flag={FeatureFlags.ForSessionsEnabled} label="Enable FOR Sessions" />
-            <FeatureFlagOption flag={FeatureFlags.ForUrlMigration} label="Enable FOR URL Migration" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Monad">
-            <FeatureFlagOption flag={FeatureFlags.Monad} label="Enable Monad UX" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="XLayer">
-            <FeatureFlagOption flag={FeatureFlags.XLayer} label="Enable XLayer UX" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Solana">
-            <FeatureFlagOption flag={FeatureFlags.Solana} label="Enable Solana UX" />
-            <FeatureFlagOption flag={FeatureFlags.SolanaPromo} label="Turn on Solana promo banners" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Multichain Token UX Improvements">
-            <FeatureFlagOption flag={FeatureFlags.MultichainTokenUx} label="Enable Updated Multichain Token UX" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Swap Features">
-            <FeatureFlagOption flag={FeatureFlags.NoUniswapInterfaceFees} label="Turn off Uniswap interface fees" />
-            <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
-            <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
-            <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
-            <FeatureFlagOption flag={FeatureFlags.UnirouteEnabled} label="Enable Uniroute" />
-            <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
-            <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-            <FeatureFlagOption flag={FeatureFlags.EnablePermitMismatchUX} label="Enable Permit2 mismatch detection" />
-            <FeatureFlagOption flag={FeatureFlags.NetworkFilterV2} label="Enable Network Filter V2" />
-            <FeatureFlagOption flag={FeatureFlags.GasServiceV2} label="Enable Gas Service V2" />
-            <FeatureFlagOption
-              flag={FeatureFlags.ForcePermitTransactions}
-              label="Force Permit2 transaction instead of signatures, always"
-            />
-            <FeatureFlagOption
-              flag={FeatureFlags.ForceDisableWalletGetCapabilities}
-              label="Force disable wallet get capabilities result"
-            />
-            <FeatureFlagOption
-              flag={FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings}
-              label="Allow UniswapX-Only Routes in Swap Settings (for local testing only)"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="UniswapX">
-            <FeatureFlagOption flag={FeatureFlags.UniswapX} label="Enable UniswapX" />
-            <FeatureFlagOption
-              flag={FeatureFlags.UniswapXPriorityOrdersBase}
-              label="UniswapX Priority Orders (on Base)"
-            />
-            <FeatureFlagOption
-              flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
-              label="UniswapX Priority Orders (on Unichain)"
-            />
-            <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="LP">
-            <FeatureFlagOption flag={FeatureFlags.LpPdpD3RangeChart} label="Enable LP PDP D3 Range Chart" />
-            <FeatureFlagOption
-              flag={FeatureFlags.LiquidityBatchedTransactions}
-              label="Enable Batched Transactions for LP flow"
-            />
-            <FeatureFlagOption flag={FeatureFlags.LpDynamicNativeSlippage} label="Enable Dynamic Native Slippage" />
-            <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
-            <FeatureFlagOption flag={FeatureFlags.ClaimFeesV2} label="Enable Claim Fees V2" />
-            <FeatureFlagOption flag={FeatureFlags.CreatePositionV2} label="Enable Create Position V2" />
-            <FeatureFlagOption flag={FeatureFlags.DecreasePositionV2} label="Enable Decrease Position V2" />
-            <FeatureFlagOption flag={FeatureFlags.IncreasePositionV2} label="Enable Increase Position V2" />
-            <FeatureFlagOption flag={FeatureFlags.CheckApprovalV2} label="Enable Check Approval V2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Toucan">
-            <FeatureFlagOption flag={FeatureFlags.ToucanAuctionKYC} label="Enable Toucan Auction KYC" />
-            <FeatureFlagOption flag={FeatureFlags.ToucanLaunchAuction} label="Enable Toucan Launch Auction" />
-            <FeatureFlagOption flag={FeatureFlags.AuctionDetailsV2} label="Enable Auction Details V2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Embedded Wallet">
-            <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
-            <DynamicConfigDropdown
-              selected={[externallyConnectableExtensionId]}
-              options={TRUSTED_CHROME_EXTENSION_IDS}
-              parser={(id) => id}
-              config={DynamicConfigs.ExternallyConnectableExtension}
-              configKey={ExternallyConnectableExtensionConfigKey.ExtensionId}
-              label="Which Extension the web app will communicate with"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.Linea} label="Enable Linea" />
-            <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
-            <FeatureFlagOption flag={FeatureFlags.Tempo} label="Enable Tempo" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Network Requests">
-            <NetworkRequestsConfig />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Debug">
-            <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
-            <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
-            {isPlaywrightEnv() && <FeatureFlagOption flag={FeatureFlags.DummyFlagTest} label="Dummy Flag Test" />}
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Unitags">
-            <FeatureFlagOption flag={FeatureFlags.UnitagsServiceV2} label="New Unitags Service" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Portfolio">
-            <FeatureFlagOption flag={FeatureFlags.PortfolioDefiTab} label="Enable Portfolio DeFi Tab" />
-            <FeatureFlagOption flag={FeatureFlags.ProfitLoss} label="Enable Profit/Loss" />
-            <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Token Details Page">
-            <FeatureFlagOption flag={FeatureFlags.TDPTokenCarousel} label="Enable TDP Token Carousel" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Misc">
-            <FeatureFlagOption flag={FeatureFlags.UniswapWrapped2025} label="Enable Uniswap Wrapped 2025" />
-            <FeatureFlagOption flag={FeatureFlags.UnificationCopy} label="Enable Unification Copy" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Prices">
-            <FeatureFlagOption flag={FeatureFlags.CentralizedPrices} label="Enable Centralized Prices" />
-            <FeatureFlagOption flag={FeatureFlags.CentralizedPricesWs} label="Enable Centralized Prices WebSocket" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Experiments" />
-          <FeatureFlagGroup name="Layers">
-            <Flex ml="$padding8" gap="$gap8">
-              <FeatureFlagGroup name={Layers.ExplorePage}>
-                <LayerOption layerName={Layers.ExplorePage} />
-              </FeatureFlagGroup>
-              <FeatureFlagGroup name={Layers.SwapPage}>
-                <LayerOption layerName={Layers.SwapPage} />
-              </FeatureFlagGroup>
-            </Flex>
-          </FeatureFlagGroup>
+          {(() => {
+            let hasResults = false
+
+            const groups = flagGroups.map((group) => {
+              const matchingFlags = isSearching
+                ? group.flags.filter(({ flag, label }) => fuzzyMatch(searchQuery, getFeatureFlagName(flag), label))
+                : group.flags
+              const groupNameMatches = isSearching && fuzzyMatch(searchQuery, group.name)
+
+              if (matchingFlags.length === 0 && !groupNameMatches) {
+                // Groups with extra content (e.g. Network Requests, Layers) show when not searching,
+                // but hide during search if their name doesn't match
+                if (isSearching || !group.extra) {
+                  return null
+                }
+              }
+
+              hasResults = true
+
+              // If specific flags match, show only those. If only the group name matches, show all flags in the group.
+              const flagsToShow = matchingFlags.length > 0 ? matchingFlags : group.flags
+
+              return (
+                <FeatureFlagGroup key={group.name} name={group.name}>
+                  {flagsToShow.map(({ flag, label }) => (
+                    <FeatureFlagOption key={flag} flag={flag} label={label} />
+                  ))}
+                  {group.extra}
+                </FeatureFlagGroup>
+              )
+            })
+
+            return (
+              <>
+                {groups}
+                {/* oxlint-disable-next-line typescript/no-unnecessary-condition */}
+                {isSearching && !hasResults && (
+                  <Text variant="body2" color="$neutral3" py="$gap16" textAlign="center">
+                    No flags found
+                  </Text>
+                )}
+              </>
+            )
+          })()}
         </Flex>
         <Button onPress={handleReload} variant="default" emphasis="secondary" size="small" fill={false}>
           Reload
@@ -403,6 +368,8 @@ export default function FeatureFlagModal(): JSX.Element {
     </Modal>
   )
 }
+
+export default FeatureFlagModal
 
 function NetworkRequestsConfig() {
   const currentValue = useDynamicConfigValue({

@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileWeb, isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorTokens } from 'ui/src'
@@ -11,7 +12,6 @@ import { SLIPPAGE_LOW_TOLERANCE_LP } from 'uniswap/src/features/transactions/com
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { TransactionSettingsButtonWithTooltip } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
-import { isExtensionApp, isMobileWeb, isWebApp } from 'utilities/src/platform'
 
 const getSettingsIconBackgroundColor = ({
   autoSlippageTolerance,

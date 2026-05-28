@@ -1,17 +1,19 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
 import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
 
 export const SelfSendSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const primaryButton = useMemo(
-    () => ({ text: t('common.button.continue'), onPress: onConfirm, variant: 'critical' as const }),
+    () => ({
+      text: t('common.button.continue'),
+      onPress: onConfirm,
+      variant: 'critical' as const,
+    }),
     [t, onConfirm],
   )
 
@@ -29,7 +31,7 @@ export const SelfSendSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendMod
     <Dialog
       isOpen={isOpen}
       onClose={onDismiss}
-      icon={<AlertTriangleFilled fill={colors.statusCritical.val} size="28px" />}
+      icon={<AlertTriangleFilled color="$statusCritical" size="$icon.28" />}
       iconBackgroundColor="$statusCritical2"
       title={t('send.warning.self.title')}
       subtext={t('send.warning.self.message')}

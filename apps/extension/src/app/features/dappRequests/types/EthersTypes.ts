@@ -1,3 +1,4 @@
+/* oxlint-disable eslint-js/no-restricted-syntax */
 import { isHexString } from 'ethers/lib/utils'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { z } from 'zod'
@@ -6,7 +7,6 @@ import { z } from 'zod'
  * Ethers types copied from `ethers` package
  */
 
-// oxlint-disable-next-line no-restricted-syntax
 export const BigNumberSchema = z.any() // TODO (EXT-831): Add schema once stable
 
 const AccessListEntrySchema = z.object({
@@ -48,7 +48,6 @@ export const EthersTransactionRequestSchema = z.object({
   accessList: AccessListishSchema.optional(),
   maxPriorityFeePerGas: BigNumberishSchema.optional(),
   maxFeePerGas: BigNumberishSchema.optional(),
-  // oxlint-disable-next-line no-restricted-syntax
   customData: z.record(z.string(), z.any()).optional(),
   ccipReadEnabled: z.boolean().optional(),
 })

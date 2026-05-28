@@ -1,8 +1,8 @@
+import { HexString } from '@universe/encoding'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { EVMAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
-import { HexString } from 'utilities/src/addresses/hex'
 
 export const createMockEVMAccountDetails = (overrides: Partial<EVMAccountDetails> = {}): EVMAccountDetails => {
   return {

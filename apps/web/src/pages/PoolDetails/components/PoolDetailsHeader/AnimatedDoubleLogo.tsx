@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 import { Flex, useMedia } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { gqlToCurrency } from '~/appGraphql/data/util'
-import { HEADER_LOGO_SIZE, HEADER_TRANSITION } from '~/components/Explore/stickyHeader/constants'
-import { getHeaderLogoSize } from '~/components/Explore/stickyHeader/getHeaderLogoSize'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { HEADER_LOGO_SIZE, HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { getHeaderLogoSize } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 
 export function AnimatedDoubleLogo({
   token0,

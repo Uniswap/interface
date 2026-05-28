@@ -12,7 +12,7 @@ import { getCurrencyDisplayText, getFormattedCurrencyAmount, getSymbolDisplayTex
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
 
@@ -43,13 +43,15 @@ export function formApproveNotificationTitle({
   currency,
   tokenAddress,
   spender,
+  tokenSymbol,
 }: {
   txStatus: TransactionStatus
   currency: Maybe<Currency>
   tokenAddress: Address
   spender: Address
+  tokenSymbol?: string
 }): string {
-  const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
+  const currencyDisplayText = tokenSymbol ?? getCurrencyDisplayText(currency, tokenAddress)
   const address = shortenAddress({ address: spender })
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.approve.success', {

@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
@@ -7,19 +8,20 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { HEADER_TRANSITION } from '~/components/Explore/stickyHeader/constants'
-import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/Explore/stickyHeader/getHeaderLogoSize'
-import { DesktopHeaderActions } from '~/components/Explore/stickyHeader/HeaderActions/DesktopHeaderActions'
-import { MobileHeaderActions } from '~/components/Explore/stickyHeader/HeaderActions/MobileHeaderActions'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
+import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { DesktopHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/DesktopHeaderActions'
+import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/MobileHeaderActions'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useModalState } from '~/hooks/useModalState'
 import { TokenDetailsNetworkFilter } from '~/pages/TokenDetails/components/header/TokenDetailsNetworkFilter'
@@ -28,6 +30,8 @@ import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useT
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { CopyHelper } from '~/theme/components/CopyHelper'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
@@ -55,6 +59,7 @@ function getShowAddressCopy({
 export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
   const media = useMedia()
+  const trace = useTrace()
   const isMobileScreen = media.md
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
@@ -80,7 +85,13 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
   const openReportTokenModal = useEvent(() => {
-    setModalProps({ source: 'token-details', currency, isMarkedSpam: tokenQuery.data?.token?.project?.isSpam })
+    void setModalProps({
+      source: 'token-details',
+      currency,
+      isMarkedSpam: tokenQuery.data?.token?.project?.isSpam,
+      isMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset,
+      shouldReportMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined,
+    })
     openModal()
   })
 
@@ -106,8 +117,17 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     isMobileScreen,
   })
 
-  const tokenSymbolName = effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
+  const tokenSymbol = tokenQuery.data?.token?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
+  const tokenName = tokenQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
   const showAddressCopy = getShowAddressCopy({ multichainTokenUxEnabled, isNative, isMultiChainAsset, selectedChainId })
+
+  const onBreadcrumbAddressCopied = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.CopyAddress,
+      chain_name: getChainInfo(effectiveCurrency.chainId).urlParam,
+    })
+  })
 
   return (
     <Flex
@@ -125,7 +145,6 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
           chainId={!multichainTokenUxEnabled ? effectiveCurrency.chainId : null}
           size={tokenLogoSize}
           transition={HEADER_TRANSITION}
-          showMainnetNetworkLogo={multichainTokenUxEnabled && selectedChainId === UniverseChainId.Mainnet}
         />
         <Flex gap={isCompact ? '$gap4' : '$gap8'} $md={{ gap: '$none' }} transition={HEADER_TRANSITION}>
           <Flex row flex={1} alignItems="flex-end" gap="$gap8" $sm={{ width: '100%' }}>
@@ -135,7 +154,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
               transition={HEADER_TRANSITION}
               {...EllipsisTamaguiStyle}
             >
-              {effectiveCurrency.name ?? t('tdp.nameNotFound')}
+              {tokenName}
             </Text>
             {!isCompact && !media.md && (
               <Text
@@ -146,7 +165,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 $sm={{ display: 'none' }}
                 transition={HEADER_TRANSITION}
               >
-                {tokenSymbolName}
+                {tokenSymbol}
               </Text>
             )}
           </Flex>
@@ -167,6 +186,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                     iconColor="$neutral2"
                     color="$neutral2"
                     dataTestId={TestID.BreadcrumbHoverCopy}
+                    onCopy={onBreadcrumbAddressCopied}
                   >
                     <Text color="$neutral2">{shortenAddress({ address: displayAddress })}</Text>
                   </CopyHelper>
@@ -197,6 +217,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
       <ReportTokenDataModal
         currency={currency}
         isMarkedSpam={tokenQuery.data?.token?.project?.isSpam}
+        shouldReportMultichainAsset={multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined}
         onReportSuccess={onReportSuccess}
         isOpen={isReportDataIssueModalOpen}
         onClose={closeReportDataIssueModal}

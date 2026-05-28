@@ -11,7 +11,7 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'viem'
+import { isAddress } from '~/chains'
 import { DisconnectedState } from '~/pages/Wrapped/DisconnectedState'
 import { useAppDispatch } from '~/state/hooks'
 
@@ -19,7 +19,7 @@ const MAX_CONTAINER_WIDTH = 1200
 const MAX_CONTAINER_HEIGHT = `calc(100% - ${INTERFACE_NAV_HEIGHT}px)`
 const CONTAINER_BACKGROUND_COLOR = '#361A37'
 
-export default function Wrapped() {
+export function Wrapped() {
   const { useParsedQueryString } = useUrlContext()
   const queryParams = useParsedQueryString()
   const walletAddressRef = useRef<string | undefined>(undefined)
@@ -166,3 +166,5 @@ export default function Wrapped() {
     </Flex>
   )
 }
+
+export default Wrapped

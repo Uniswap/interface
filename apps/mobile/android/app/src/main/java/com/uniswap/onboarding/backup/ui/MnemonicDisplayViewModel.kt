@@ -3,6 +3,7 @@ package com.uniswap.onboarding.backup.ui
 import androidx.lifecycle.ViewModel
 import com.uniswap.RnEthersRs
 import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
+import com.uniswap.onboarding.shared.MNEMONIC_LENGTH_HD
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -10,9 +11,8 @@ import kotlinx.coroutines.flow.update
 class MnemonicDisplayViewModel(
   private val ethersRs: RnEthersRs // Move to repository layer if app gets more complex
 ) : ViewModel() {
-  private val defaultMnemonicsCount = 12
   private val _words =
-    MutableStateFlow(List(defaultMnemonicsCount) { MnemonicWordUiState(num = it + 1, text = "") })
+    MutableStateFlow(List(MNEMONIC_LENGTH_HD) { MnemonicWordUiState(num = it + 1, text = "") })
   val words = _words.asStateFlow()
 
   private var currentMnemonicId = ""

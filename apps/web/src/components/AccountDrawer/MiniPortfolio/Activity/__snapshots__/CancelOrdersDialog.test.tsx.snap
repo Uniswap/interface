@@ -1,21 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`CancelOrdersDialog > should render limit order text 1`] = `
-.c0 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c1 {
-  cursor: auto;
-  color: rgba(19, 19, 19, 0.63);
-}
-
-.c2 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
 <body>
   <div>
     <span
@@ -140,19 +125,21 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                     >
-                      <div
-                        class="c0 c1 css-142zc9n"
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-auto"
+                        data-disable-theme="true"
                         data-testid="swap-li-label"
                       >
                         Network cost
-                      </div>
-                      <div
-                        class="c0 c2 css-142zc9n"
+                      </span>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+                        data-disable-theme="true"
                       >
                         <span>
                           -
                         </span>
-                      </div>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -198,21 +185,6 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
 `;
 
 exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
-.c0 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c1 {
-  cursor: auto;
-  color: rgba(19, 19, 19, 0.63);
-}
-
-.c2 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
 <body>
   <div>
     <span
@@ -337,19 +309,21 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                     >
-                      <div
-                        class="c0 c1 css-142zc9n"
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-text _cursor-auto"
+                        data-disable-theme="true"
                         data-testid="swap-li-label"
                       >
                         Network cost
-                      </div>
-                      <div
-                        class="c0 c2 css-142zc9n"
+                      </span>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-right"
+                        data-disable-theme="true"
                       >
                         <span>
                           -
                         </span>
-                      </div>
+                      </span>
                     </div>
                   </div>
                 </div>

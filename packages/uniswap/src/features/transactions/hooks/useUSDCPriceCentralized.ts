@@ -10,6 +10,8 @@ import { convertScientificNotationToNumber } from 'utilities/src/format/convertS
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { logger } from 'utilities/src/logger/logger'
 
+const MAX_TINY_PRICE_SCALING_DECIMALS = 36
+
 export function useUSDCPriceCentralized(
   currency?: Currency,
   pollInterval?: PollingInterval,
@@ -28,7 +30,7 @@ export function useUSDCPriceCentralized(
   const legacyResult = useUSDCPriceLegacy(isSupported ? undefined : currency, pollInterval)
 
   const centralizedResult = useMemo(() => {
-    if (!currency || !isUniverseChainId(chainId) || livePrice === undefined) {
+    if (!currency || !isUniverseChainId(chainId) || livePrice === undefined || !Number.isFinite(livePrice)) {
       return { price: undefined, isLoading: false }
     }
 
@@ -36,17 +38,28 @@ export function useUSDCPriceCentralized(
       const stablecoin = getPrimaryStablecoin(chainId)
       // Parse human-readable amounts: 1 unit of token, and livePrice (USD per token) in stablecoin.
       // Truncate price to stablecoin decimals so parseUnits doesn't throw (e.g. USDC has 6 decimals).
-      const priceString = truncateToMaxDecimals({
-        value: convertScientificNotationToNumber(livePrice.toString()),
-        maxDecimals: stablecoin.decimals,
-      })
-      const baseAmount = CurrencyAmount.fromRawAmount(currency, parseUnits('1', currency.decimals).toString())
-      const quoteAmount = CurrencyAmount.fromRawAmount(
-        stablecoin,
-        parseUnits(priceString, stablecoin.decimals).toString(),
-      )
+      const getQuoteAmountRaw = (price: number): string =>
+        parseUnits(
+          truncateToMaxDecimals({
+            value: convertScientificNotationToNumber(price.toString()),
+            maxDecimals: stablecoin.decimals,
+          }),
+          stablecoin.decimals,
+        ).toString()
+
+      let baseAmountRaw = parseUnits('1', currency.decimals).toString()
+      let quoteAmountRaw = getQuoteAmountRaw(livePrice)
+
+      if (quoteAmountRaw === '0' && livePrice > 0) {
+        baseAmountRaw = parseUnits(`1${'0'.repeat(MAX_TINY_PRICE_SCALING_DECIMALS)}`, currency.decimals).toString()
+        quoteAmountRaw = getQuoteAmountRaw(livePrice * 10 ** MAX_TINY_PRICE_SCALING_DECIMALS)
+      }
+
+      const baseAmount = CurrencyAmount.fromRawAmount(currency, baseAmountRaw)
+      const quoteAmount = CurrencyAmount.fromRawAmount(stablecoin, quoteAmountRaw)
+
       return {
-        price: new Price({ baseAmount, quoteAmount }),
+        price: quoteAmountRaw === '0' ? undefined : new Price({ baseAmount, quoteAmount }),
         isLoading: false,
       }
     } catch (error) {

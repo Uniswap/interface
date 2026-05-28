@@ -22,7 +22,7 @@ function useExtractedTokenColors(tokenData: TokenData[]): string[] {
     // oxlint-disable-next-line react-hooks/rules-of-hooks -- fixed-length loop, same 15 hook calls every render
     useSrcColor({
       src: tokenData[i]?.currencyInfo?.logoUrl ?? undefined,
-      currencyName: tokenData[i]?.currencyInfo?.currency?.name,
+      currencyName: tokenData[i]?.name ?? tokenData[i]?.currencyInfo?.currency?.name,
     }),
   )
 

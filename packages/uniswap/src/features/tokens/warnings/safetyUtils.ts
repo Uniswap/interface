@@ -1,6 +1,7 @@
-/* oxlint-disable consistent-return */
+/* oxlint-disable typescript/consistent-return */
 import { Currency, NativeCurrency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
@@ -9,7 +10,6 @@ import { AttackType, CurrencyInfo, TokenList } from 'uniswap/src/features/dataAp
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebApp } from 'utilities/src/platform'
 
 export const TOKEN_PROTECTION_FOT_HONEYPOT_BREAKPOINT = 100
 export const TOKEN_PROTECTION_FOT_HIGH_FEE_BREAKPOINT = 80
@@ -68,7 +68,6 @@ export function getTokenProtectionFeeOnTransfer(currencyInfo: Maybe<CurrencyInfo
   }
 }
 
-// oxlint-disable-next-line complexity
 export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): TokenProtectionWarning {
   if (!currencyInfo?.currency || !currencyInfo.safetyInfo) {
     return TokenProtectionWarning.NonDefault
@@ -239,7 +238,6 @@ export function useModalHeaderText({
   }
 }
 
-// oxlint-disable-next-line complexity
 export function useModalSubtitleText({
   tokenProtectionWarning,
   tokenSymbol,
@@ -385,7 +383,6 @@ export function useCardHeaderText({
   }
 }
 
-// oxlint-disable-next-line complexity
 export function useCardSubtitleText({
   tokenProtectionWarning,
   tokenSymbol,

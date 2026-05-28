@@ -1,5 +1,7 @@
+// Eagerly register Statsig before any saga can call .instance(). Must be first.
+import './src/app/statsigBootstrap'
 import './wdyr'
-import { isNonTestDev } from 'utilities/src/environment/constants'
+import { isNonTestDev } from '@universe/environment'
 
 if (isNonTestDev) {
   require('./ReactotronConfig')

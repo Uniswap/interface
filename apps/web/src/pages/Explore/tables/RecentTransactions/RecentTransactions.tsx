@@ -30,10 +30,10 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
 import { useFilteredTransactions } from '~/pages/Explore/tables/RecentTransactions/useFilterTransaction'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const TableRow = styled(Flex, {
   row: true,

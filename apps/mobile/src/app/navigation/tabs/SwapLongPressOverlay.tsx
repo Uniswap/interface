@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { BlurView } from 'expo-blur'
 import { type ReactNode, useMemo } from 'react'
@@ -17,7 +18,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const ANIMATION_DURATION = 200

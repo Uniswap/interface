@@ -3,7 +3,7 @@ import { Flex, FlexProps, HeightAnimator } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { IconSizeTokens } from 'ui/src/theme/tokens'
 
-export default function Expand({
+export function Expand({
   header,
   button,
   children,

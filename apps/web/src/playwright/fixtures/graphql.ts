@@ -92,7 +92,6 @@ export const test = base.extend<GraphqlFixture>({
   },
   // Intercept long running graphql requests here:
   interceptLongRunning: [
-    // oxlint-disable-next-line no-empty-pattern
     async ({ graphql }, use) => {
       graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.test_wallet)
       await use(undefined)

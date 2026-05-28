@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, requireNativeComponent, StyleSheet, ViewProps } from 'react-native'
@@ -7,9 +8,9 @@ import { Flex, flexStyles, HiddenFromScreenReaders, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 const EMPTY_MNEMONIC_EVENT = 'Empty mnemonic'
 
@@ -56,6 +57,10 @@ export function MnemonicDisplay({
   const showMnemonicWithReveal = enableRevealButton ? revealPressed : showMnemonic
 
   const signerMnemonicAccounts = useSignerAccounts()
+  const accountForMnemonic = signerMnemonicAccounts.find(
+    (account) => account.mnemonicId === nativeComponentProps.mnemonicId,
+  )
+  const expectedWordCount = getExpectedMnemonicLength(accountForMnemonic)
   const [keyringPrivateKeyAddresses, setKeyringPrivateKeyAddresses] = useState<string[]>([])
   const [keyringMnemonicIds, setKeyringMnemonicIds] = useState<string[]>([])
 
@@ -99,6 +104,7 @@ export function MnemonicDisplay({
         <Flex mb="$spacing12" onLayout={(e) => setHeight(Math.round(e.nativeEvent.layout.height))}>
           <HiddenMnemonicWordView
             enableRevealButton={enableRevealButton}
+            wordCount={expectedWordCount}
             onRevealPress={() => {
               onMnemonicShown?.()
               setRevealPressed(true)

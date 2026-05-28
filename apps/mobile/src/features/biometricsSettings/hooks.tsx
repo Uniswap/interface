@@ -1,8 +1,8 @@
+import { isAndroid } from '@universe/environment'
 import { hasHardwareAsync, isEnrolledAsync } from 'expo-local-authentication'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { triggerAuthentication } from 'src/features/biometrics/biometricsSlice'
-import { isAndroid } from 'utilities/src/platform'
 
 type TriggerArgs<T> = {
   params?: T

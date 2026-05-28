@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type ComponentRef, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -95,10 +95,22 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const tokenColor = useCreateAuctionTokenColor()
   const { updateCreateNewTokenField, commitTokenFormAndAdvance } = useCreateAuctionStoreActions()
   const [isEditingName, setIsEditingName] = useState(false)
+  const symbolInputRef = useRef<ComponentRef<typeof Input> | null>(null)
 
   const canContinue = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
   const allowedNetworks = useCreateNewTokenAllowedNetworks()
   const address = useActiveAddress(Platform.EVM)
+
+  const handleDisabledContinue = () => {
+    if (createNew.name.trim().length === 0) {
+      setIsEditingName(true)
+      return
+    }
+    if (createNew.symbol.trim().length === 0) {
+      const el = symbolInputRef.current as unknown as HTMLInputElement | null
+      el?.focus()
+    }
+  }
 
   if (!address) {
     return (
@@ -118,7 +130,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
         </Text>
       </Flex>
       <Flex gap="$spacing16">
-        <Flex row alignItems="center" gap="$spacing24" height={88}>
+        <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible">
           <TouchableArea
             width={80}
             height={80}
@@ -136,24 +148,27 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
             </Text>
             {isEditingName ? (
               <Input
-                height={fonts.heading2.lineHeight}
                 autoFocus
+                unstyled
+                outlineStyle="none"
                 value={createNew.name}
                 onChangeText={(text) => updateCreateNewTokenField('name', text)}
                 onBlur={() => setIsEditingName(false)}
                 placeholder={t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
                 placeholderTextColor="$neutral3"
+                fontFamily="$heading"
                 fontSize={fonts.heading2.fontSize}
                 lineHeight={fonts.heading2.lineHeight}
                 fontWeight={fonts.heading2.fontWeight}
                 color="$neutral1"
-                px="$none"
               />
             ) : (
               <Flex row alignItems="center" justifyContent="space-between">
-                <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
-                  {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
-                </Text>
+                <TouchableArea flex={1} minWidth={0} onPress={() => setIsEditingName(true)}>
+                  <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
+                    {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
+                  </Text>
+                </TouchableArea>
                 <TouchableArea
                   alignItems="center"
                   px="$spacing12"
@@ -173,6 +188,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
                 {t('toucan.createAuction.step.tokenInfo.ticker')}
               </Text>
               <Input
+                ref={symbolInputRef}
                 flex={1}
                 value={createNew.symbol}
                 onChangeText={(text) => updateCreateNewTokenField('symbol', text)}
@@ -199,6 +215,8 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           <TokenAdditionalInfoSection
             description={createNew.description}
             onDescriptionChange={(v) => updateCreateNewTokenField('description', v)}
+            websiteLink={createNew.websiteLink}
+            onWebsiteLinkChange={(v) => updateCreateNewTokenField('websiteLink', v)}
           />
         </Flex>
       </Flex>
@@ -208,6 +226,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           emphasis="primary"
           onPress={commitTokenFormAndAdvance}
           isDisabled={!canContinue}
+          onDisabledPress={canContinue ? undefined : handleDisabledContinue}
           fill
           backgroundColor={tokenColor}
         >

@@ -4,7 +4,7 @@ import { CreateAuctionContextProvider } from '~/pages/Liquidity/CreateAuction/Cr
 import { CreateAuctionFormWrapper } from '~/pages/Liquidity/CreateAuction/CreateAuctionFormWrapper'
 import { CreateAuctionSteps } from '~/pages/Liquidity/CreateAuction/CreateAuctionSteps'
 
-export default function CreateAuction() {
+export function CreateAuction() {
   return (
     <Trace logImpression page={InterfacePageName.LaunchAuctionPage}>
       <CreateAuctionContextProvider>
@@ -15,3 +15,5 @@ export default function CreateAuction() {
     </Trace>
   )
 }
+
+export default CreateAuction

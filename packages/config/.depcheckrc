@@ -1,9 +1,0 @@
-ignores: [
-    # Standard ignores
-    "typescript",
-    "@typescript/native-preview",
-    "depcheck",
-
-    # Internal packages / workspaces
-    "@universe/config",
-  ]

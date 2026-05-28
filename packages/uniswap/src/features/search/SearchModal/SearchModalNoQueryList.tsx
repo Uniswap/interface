@@ -7,6 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSectionsForNoQuerySearch } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForNoQuerySearch'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
 
 function EmptyPretypeSection({ title, icon: Icon }: { title: string; icon: GeneratedIcon }): JSX.Element {
   return (
@@ -37,6 +38,12 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   const { t } = useTranslation()
 
   const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
+
+  useMultichainSearchModalMetricsAnalytics({
+    sections,
+    isSearchResultsLoading: loading,
+    isSearchQueryPending: false,
+  })
 
   // Handle empty pretype cases for assets without default results
   const getEmptyElementComponent = (): JSX.Element | undefined => {

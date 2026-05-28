@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { OKB_LOGO, XLAYER_LOGO } from 'ui/src/assets'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
@@ -27,6 +27,7 @@ const tokens = buildChainTokens({
     USDT0: new Token(UniverseChainId.XLayer, '0x779Ded0c9e1022225f8E0630b35a9b54bE713736', 6, 'USDT0', 'USDT0'),
     USDC: buildUSDC('0x74b7F16337b8972027F6196A17a631aC6dE26d22', UniverseChainId.XLayer),
   },
+  primaryStablecoin: 'USDT0',
 })
 
 export const XLAYER_CHAIN_INFO = {
@@ -69,6 +70,7 @@ export const XLAYER_CHAIN_INFO = {
   },
   tokens,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.XLayer],

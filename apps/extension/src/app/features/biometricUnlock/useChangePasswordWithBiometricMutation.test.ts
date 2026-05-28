@@ -38,7 +38,6 @@ const mockLogger = logger as jest.Mocked<typeof logger>
 
 // Mock AuthenticatorAssertionResponse
 class MockAuthenticatorAssertionResponse {
-  // oxlint-disable-next-line max-params
   constructor(
     public userHandle: ArrayBuffer | null,
     public authenticatorData: ArrayBuffer = new ArrayBuffer(0),

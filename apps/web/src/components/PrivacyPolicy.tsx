@@ -1,16 +1,15 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isMobileWeb } from '@universe/environment'
 import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text } from 'ui/src'
 import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobileWeb } from 'utilities/src/platform'
-import Card, { DarkGrayCard } from '~/components/Card/cards'
-import { AutoColumn } from '~/components/deprecated/Column'
-import Row, { AutoRow, RowBetween } from '~/components/deprecated/Row'
+import { Card, DarkGrayCard } from '~/components/Card/cards'
 import { useModalState } from '~/hooks/useModalState'
 import { ExternalLink } from '~/theme/components/Links'
 
@@ -31,13 +30,13 @@ export function PrivacyPolicyModal() {
 
   return (
     <Modal name={ModalName.Legal} isModalOpen={isOpen} onClose={() => closeModal()} padding={0}>
-      <AutoColumn gap="md" ref={node as any}>
-        <RowBetween padding="1rem 1rem 0.5rem 1rem">
+      <Flex gap="$gap12" ref={node as never}>
+        <Flex row width="100%" justifyContent="space-between" alignItems="center" p="$spacing16" pb="$spacing8">
           <Text variant="subheading1">{t('common.legalAndPrivacy')}</Text>
           <ModalCloseIcon onClose={closeModal} />
-        </RowBetween>
+        </Flex>
         <PrivacyPolicy />
-      </AutoColumn>
+      </Flex>
     </Modal>
   )
 }
@@ -52,15 +51,15 @@ function ExternalLinkCard({ href, children }: { href: string; children: ReactNod
         hoverStyle={{ opacity: 0.8 }}
         pressStyle={{ opacity: 0.7 }}
       >
-        <RowBetween>
-          <AutoRow gap="4px">
+        <Flex row width="100%" justifyContent="space-between" alignItems="center">
+          <Flex row flexWrap="wrap" gap="$gap4" alignItems="center">
             <InfoCircle size="$icon.20" color="$accent1" strokeWidth={0} />
             <Text variant="body3" color="$accent1">
               {children}
             </Text>
-          </AutoRow>
+          </Flex>
           <ArrowUpRight size="$icon.20" strokeWidth={0} color="$neutral2" />
-        </RowBetween>
+        </Flex>
       </Card>
     </a>
   )
@@ -109,40 +108,42 @@ function PrivacyPolicy() {
         }
       }}
     >
-      <AutoColumn gap="16px">
-        <AutoColumn gap="sm" style={{ width: '100%' }}>
-          <ExternalLinkCard href="https://uniswap.org/terms-of-service">{t('privacy.uniswaptos')}</ExternalLinkCard>
-          <ExternalLinkCard href="https://uniswap.org/privacy-policy/">{t('common.privacyPolicy')}</ExternalLinkCard>
-        </AutoColumn>
+      <Flex gap="$spacing16">
+        <Flex gap="$gap8" width="100%">
+          <ExternalLinkCard href={uniswapUrls.termsOfServiceUrl}>{t('privacy.uniswaptos')}</ExternalLinkCard>
+          <ExternalLinkCard href={uniswapUrls.privacyPolicyUrl}>{t('common.privacyPolicy')}</ExternalLinkCard>
+        </Flex>
         <Text variant="body3" color="$neutral2">
           {t('privacy.thirdPartyApis')}
         </Text>
-        <AutoColumn gap="md">
+        <Flex gap="$gap12" width="100%">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGrayCard key={i}>
-              <AutoColumn gap="sm">
-                <AutoRow gap="4px">
+              <Flex gap="$gap8" width="100%">
+                <Flex row flexWrap="wrap" gap="$gap4" alignItems="center">
                   <InfoCircle size="$icon.18" color="$neutral1" />
                   <Text variant="body3" color="$neutral1">
                     {name}
                   </Text>
-                </AutoRow>
+                </Flex>
                 <Text variant="body3" color="$neutral2">
                   {description}
                 </Text>
-              </AutoColumn>
+              </Flex>
             </DarkGrayCard>
           ))}
-          <Row justify="center" marginBottom="1rem">
+          <Flex row width="100%" justifyContent="center" mb="$spacing16">
             <ExternalLink
               href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq"
               style={{ fontSize: 12 }}
             >
               {t('common.button.learn')}
             </ExternalLink>
-          </Row>
-        </AutoColumn>
-      </AutoColumn>
+          </Flex>
+        </Flex>
+      </Flex>
     </Flex>
   )
 }
+
+export default PrivacyPolicyModal

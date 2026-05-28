@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -9,7 +10,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
 
 interface DappScanInfoModalProps {
   isOpen: boolean

@@ -39,6 +39,7 @@ interface ActivityAmountCellProps {
   variant?: 'full' | 'compact'
 }
 
+// oxlint-disable-next-line complexity
 function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmountCellProps) {
   const formatter = useLocalizationContext()
   const { t } = useTranslation()

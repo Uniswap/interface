@@ -9,6 +9,7 @@ import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
 export type ChainIdToTxIdToDetails = Partial<
   Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>
@@ -55,6 +56,8 @@ export interface TransactionDetailsCore extends TransactionId {
    * - Plan: Hash is undefined for plan itself, but is defined for each step in the plan.
    */
   hash?: string
+  /** For 4337 transactions, the UserOp hash returned by the bundler */
+  userOpHash?: string
   /**
    * Includes nonce and confirmed time used by all platforms. Wallets also needs to store receipt
    * data for EIP-5792 batch transaction tracking
@@ -383,6 +386,8 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
   swapTxId?: string
+  // Optional symbol override for tokens that can't be resolved via token service (e.g. LP tokens)
+  tokenSymbol?: string
 }
 
 export interface Permit2ApproveTransactionInfo extends BaseTransactionInfo {
@@ -614,6 +619,7 @@ export interface SendCallsTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SendCalls
   encodedTransaction?: EthTransaction
   encodedRequestId?: string
+  unsignedUserOperation?: RpcUserOperation<'0.8'>
   dappInfo?: DappInfoTransactionDetails
 }
 

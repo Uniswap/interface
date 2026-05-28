@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -35,6 +36,8 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -43,37 +46,35 @@ import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hook
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { WrappedLiquidityPositionRangeChart } from '~/components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
-import { BaseQuoteFiatAmount } from '~/components/Liquidity/BaseQuoteFiatAmount'
-import { useGetRangeDisplay } from '~/components/Liquidity/hooks/useGetRangeDisplay'
-import { useReportPositionHandler } from '~/components/Liquidity/hooks/useReportPositionHandler'
-import { LiquidityPositionAmountRows } from '~/components/Liquidity/LiquidityPositionAmountRows'
-import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
-import { LiquidityPositionStackedBars } from '~/components/Liquidity/LiquidityPositionStackedBars'
-import { LoadingRow } from '~/components/Liquidity/Loader'
-import { PositionNFT } from '~/components/Liquidity/PositionNFT'
-import { PositionPageActionButtons } from '~/components/Liquidity/PositionPageActionButtons'
-import type { PositionInfo } from '~/components/Liquidity/types'
-import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
-import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
 import { LoadingFullscreen, LoadingRows } from '~/components/Loader/styled'
-import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
 import { MouseoverTooltip } from '~/components/Tooltip'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
+import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
+import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
+import { useGetRangeDisplay } from '~/features/Liquidity/hooks/useGetRangeDisplay/useGetRangeDisplay'
+import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
+import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
+import { LiquidityPositionAmountRows } from '~/features/Liquidity/LiquidityPositionAmountRows'
+import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
+import { LiquidityPositionStackedBars } from '~/features/Liquidity/LiquidityPositionStackedBars'
+import { LoadingRow } from '~/features/Liquidity/Loader'
+import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
+import { PositionNFT } from '~/features/Liquidity/PositionNFT'
+import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
+import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useSrcColor } from '~/hooks/useColor'
-import { useLpIncentivesFormattedEarnings } from '~/hooks/useLpIncentivesFormattedEarnings'
-import { usePositionTokenURI } from '~/hooks/usePositionTokenURI'
 import { useDynamicMetatags } from '~/pages/metatags'
-import NotFound from '~/pages/NotFound'
+import { NotFound } from '~/pages/NotFound'
+import { usePositionTokenURI } from '~/pages/Positions/usePositionTokenURI'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -102,7 +103,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   }
 }
 
-export default function PositionPageWrapper() {
+export function PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
   if (chainId && !isEVMChain(chainId)) {
@@ -116,6 +117,9 @@ export default function PositionPageWrapper() {
   )
 }
 
+export default PositionPageWrapper
+
+// oxlint-disable-next-line complexity
 function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
   const tokenId = parseTokenId(tokenIdFromUrl)
@@ -123,6 +127,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
   const { pathname } = useLocation()
+  const breadcrumb = useEntryPointBreadcrumb()
   const {
     data,
     isLoading: positionLoading,
@@ -179,6 +184,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       return {}
     }
 
+    // oxlint-disable-next-line no-shadow
     const position = positionInfo.position
     const token0 = position.amount0.currency
     const token1 = position.amount1.currency
@@ -326,8 +332,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
         }
         actionButton={
           <Flex row centered>
-            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
-              {t('common.backToPositions')}
+            <Button width="fit-content" variant="branded" onPress={() => navigate(breadcrumb.to)}>
+              {breadcrumb.label}
             </Button>
           </Flex>
         }
@@ -370,8 +376,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       <BodyWrapper mb={100}>
         <Flex gap="$gap20">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-              <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
+            <BreadcrumbNavLink style={{ gap: '8px' }} to={breadcrumb.to}>
+              <ArrowLeft size="$icon.16" /> {breadcrumb.label}
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
           <Flex

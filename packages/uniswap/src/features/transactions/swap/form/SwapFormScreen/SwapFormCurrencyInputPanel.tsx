@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
@@ -6,7 +7,6 @@ import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapFormCurrencyInputPanel(): JSX.Element {
   const { t } = useTranslation()

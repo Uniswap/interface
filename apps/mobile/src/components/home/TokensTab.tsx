@@ -15,6 +15,7 @@ import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PortfolioEmptyState } from 'uniswap/src/components/portfolio/PortfolioEmptyState'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { TokenBalancePressOptions } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -48,9 +49,9 @@ export const TokensTab = memo(
     const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
     const onPressToken = useCallback(
-      (currencyId: CurrencyId): void => {
+      (currencyId: CurrencyId, options?: TokenBalancePressOptions): void => {
         startProfilerTimer({ source: MobileScreens.Home })
-        tokenDetailsNavigation.navigate(currencyId)
+        tokenDetailsNavigation.navigate(currencyId, options)
       },
       [startProfilerTimer, tokenDetailsNavigation],
     )

@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDatadogStatus } from 'src/features/datadog/DatadogContext'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { logger } from 'utilities/src/logger/logger'
 import {

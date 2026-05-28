@@ -6,7 +6,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { use24hProtocolVolume, useDailyTVLWithChange } from '~/state/explore/protocolStats'
+import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/state/protocolStats'
 
 interface ExploreStatSectionData {
   label: string

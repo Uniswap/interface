@@ -1,8 +1,6 @@
 // oxlint-disable-next-line typescript/triple-slash-reference
 /// <reference path="../../../index.d.ts" />
 // oxlint-disable-next-line typescript/triple-slash-reference
-/// <reference path="../../../packages/uniswap/src/react-native-dotenv.d.ts" />
-// oxlint-disable-next-line typescript/triple-slash-reference
 /// <reference path="../../../packages/ui/src/env.d.ts" />
 
 import { config, TamaguiGroupNames } from '~/tamagui.config'

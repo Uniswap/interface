@@ -30,11 +30,6 @@ vi.mock('ui/src/assets/logos/png/eth-logo.png', () => createAssetModuleMock('png
 vi.mock('ui/src/assets/logos/png/ethereum-logo.png', () => createAssetModuleMock('png'))
 vi.mock('ui/src/assets/graphics/unitag-light-small.png', () => createAssetModuleMock('png'))
 vi.mock('ui/src/assets/logos/png/uniswap-logo-large.png', () => createAssetModuleMock('png'))
-vi.mock('~/assets/images/dropdown.svg', () => createAssetModuleMock('svg'))
-vi.mock('~/assets/svg/search.svg', () => createAssetModuleMock('svg'))
-vi.mock('~/assets/svg/expando-icon-closed.svg', () => createAssetModuleMock('svg'))
-vi.mock('~/assets/svg/expando-icon-opened.svg', () => createAssetModuleMock('svg'))
-
 vi.mock('ui/src/components/Unicon', () => ({
   Unicon: ({ ..._props }: any) => {
     return React.createElement('span', { 'data-testid': 'unicon' }, '🔵')

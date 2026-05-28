@@ -31,6 +31,7 @@ export function createMonitor(def: MonitorDefinition): datadog.Monitor {
     readmeUrl: def.readmeUrl,
     dashboards: def.dashboards,
     includeIncidentWebhook: def.includeIncidentWebhook,
+    additionalSlackChannels: def.additionalSlackChannels,
   })
 
   return new datadog.Monitor(resourceName, {
@@ -50,6 +51,7 @@ export function createMonitor(def: MonitorDefinition): datadog.Monitor {
         }
       : undefined,
     monitorThresholdWindows: def.thresholdWindows,
+    variables: def.variables,
     noDataTimeframe: def.noDataTimeframe,
     notifyNoData: def.notifyNoData,
     renotifyInterval: def.renotifyInterval,

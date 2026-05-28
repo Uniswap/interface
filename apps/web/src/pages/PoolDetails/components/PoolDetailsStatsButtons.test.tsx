@@ -10,7 +10,7 @@ import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
-import useMultiChainPositions from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
+import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import store from '~/state'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'

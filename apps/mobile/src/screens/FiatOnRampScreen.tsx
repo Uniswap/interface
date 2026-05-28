@@ -1,6 +1,7 @@
 /* oxlint-disable max-lines */
 /* oxlint-disable complexity */
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { isIOS, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Image } from 'expo-image'
 import React, { type ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -18,14 +19,12 @@ import {
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
-import { OffRampPopover } from 'src/features/fiatOnRamp/OffRampPopover'
 import { Flex, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampQuotes,
@@ -51,6 +50,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { type FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
@@ -66,7 +66,6 @@ import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { logger } from 'utilities/src/logger/logger'
-import { isIOS, isWebPlatform } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -538,17 +537,13 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
         {isSheetReady && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
             <Flex row justifyContent="center" mt={isShortMobileDevice ? 0 : '$spacing6'}>
-              <OffRampPopover
-                triggerContent={
-                  <PillMultiToggle
-                    defaultOption={isOffRamp ? RampToggle.SELL : RampToggle.BUY}
-                    options={[
-                      { value: RampToggle.BUY, display: t('common.button.buy') },
-                      { value: RampToggle.SELL, display: t('common.button.sell') },
-                    ]}
-                    onSelectOption={onPillToggle}
-                  />
-                }
+              <PillMultiToggle
+                defaultOption={isOffRamp ? RampToggle.SELL : RampToggle.BUY}
+                options={[
+                  { value: RampToggle.BUY, display: t('common.button.buy') },
+                  { value: RampToggle.SELL, display: t('common.button.sell') },
+                ]}
+                onSelectOption={onPillToggle}
               />
               <Flex position="absolute" right={0} top="$spacing6">
                 <FiatOnRampCountryPicker

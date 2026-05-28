@@ -34,12 +34,12 @@ export const SOLANA_CHAIN_INFO = {
   bridge: undefined,
   docs: 'https://docs.solana.com',
   elementName: ElementName.ChainSolana,
+  supportedURVersions: [],
   supportsV4: false,
   supportsNFTs: false,
   explorer: {
     name: 'Solscan',
     url: 'https://solscan.io/',
-    apiURL: 'https://api.explorer.solana.com',
   },
   interfaceName: 'solana',
   label: 'Solana',

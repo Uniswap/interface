@@ -5,7 +5,7 @@ import { EmbeddedWalletConnectionsModal } from '~/components/WalletModal/Embedde
 import { StandardWalletModal } from '~/components/WalletModal/StandardWalletModal'
 import { SwitchWalletModal } from '~/components/WalletModal/SwitchWalletModal'
 
-export default function WalletModal({ connectOnPlatform }: { connectOnPlatform?: Platform | 'any' }) {
+export function WalletModal({ connectOnPlatform }: { connectOnPlatform?: Platform | 'any' }) {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const onClose = useSetMenuCallback(MenuStateVariant.MAIN)
 

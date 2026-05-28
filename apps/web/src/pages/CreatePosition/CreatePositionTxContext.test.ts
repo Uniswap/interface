@@ -1,13 +1,14 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import {
-  CheckApprovalLPResponse,
-  CreateLPPositionResponse,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import { PermitBatch, PermitBatchData } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+  PermitBatch,
+  PermitBatchData,
+  TransactionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { CreatePositionResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { normalizeApprovalResponse } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
+import type { NormalizedApprovalData } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -15,7 +16,7 @@ import { generateCreatePositionTxRequest } from '~/pages/CreatePosition/CreatePo
 import { ETH_MAINNET } from '~/test-utils/constants'
 
 describe('generateCreatePositionTxRequest', () => {
-  const createCalldata = new CreateLPPositionResponse({
+  const createCalldata = new CreatePositionResponse({
     create: {
       from: ZERO_ADDRESS,
       chainId: 1,
@@ -25,61 +26,54 @@ describe('generateCreatePositionTxRequest', () => {
     },
   })
 
-  const rawApprovalCalldata = new CheckApprovalLPResponse({
-    token0Approval: {
-      to: ZERO_ADDRESS,
-      chainId: 1,
-      from: ZERO_ADDRESS,
-      data: '0x',
-      value: '0',
-    },
-    token1Approval: {
-      to: ZERO_ADDRESS,
-      chainId: 1,
-      from: ZERO_ADDRESS,
-      data: '0x',
-      value: '0',
-    },
-    token0Cancel: {
-      to: ZERO_ADDRESS,
-      chainId: 1,
-      from: ZERO_ADDRESS,
-      data: '0x',
-      value: '0',
-    },
-    token1Cancel: {
-      to: ZERO_ADDRESS,
-      chainId: 1,
-      from: ZERO_ADDRESS,
-      data: '0x',
-      value: '0',
-    },
-    permitData: {
-      case: 'permitBatchData',
-      value: new PermitBatchData({
-        domain: {
-          name: 'Uniswap',
-          version: '1',
-          chainId: 1,
-        },
-        types: {
-          EIP712Domain: {
-            fields: [
-              { name: 'name', type: 'string' },
-              { name: 'version', type: 'string' },
-              { name: 'chainId', type: 'uint256' },
-            ],
-          },
-        },
-        values: new PermitBatch({
-          details: [],
-          spender: ZERO_ADDRESS,
-          sigDeadline: '0',
-        }),
-      }),
-    },
+  const token0Approval = new TransactionRequest({
+    to: ZERO_ADDRESS,
+    chainId: 1,
+    from: ZERO_ADDRESS,
+    data: '0x',
+    value: '0',
   })
-  const approvalCalldata = normalizeApprovalResponse(rawApprovalCalldata)!
+  const token1Approval = new TransactionRequest({
+    to: ZERO_ADDRESS,
+    chainId: 1,
+    from: ZERO_ADDRESS,
+    data: '0x',
+    value: '0',
+  })
+  const token0Cancel = new TransactionRequest({
+    to: ZERO_ADDRESS,
+    chainId: 1,
+    from: ZERO_ADDRESS,
+    data: '0x',
+    value: '0',
+  })
+  const token1Cancel = new TransactionRequest({
+    to: ZERO_ADDRESS,
+    chainId: 1,
+    from: ZERO_ADDRESS,
+    data: '0x',
+    value: '0',
+  })
+  const permitBatchData = new PermitBatchData({
+    domain: { name: 'Uniswap', version: '1', chainId: 1 },
+    types: {
+      EIP712Domain: {
+        fields: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+        ],
+      },
+    },
+    values: new PermitBatch({ details: [], spender: ZERO_ADDRESS, sigDeadline: '0' }),
+  })
+  const approvalCalldata: NormalizedApprovalData = {
+    token0Approval,
+    token1Approval,
+    token0Cancel,
+    token1Cancel,
+    v4BatchPermitData: permitBatchData,
+  }
 
   it('returns undefined when the create calldata is undefined', () => {
     expect(
@@ -275,23 +269,23 @@ describe('generateCreatePositionTxRequest', () => {
         },
         approvePositionTokenRequest: undefined,
         approveToken0Request: {
-          ...rawApprovalCalldata.token0Approval,
+          ...token0Approval,
         },
         approveToken1Request: {
-          ...rawApprovalCalldata.token1Approval,
+          ...token1Approval,
         },
         revokeToken0Request: {
-          ...rawApprovalCalldata.token0Cancel,
+          ...token0Cancel,
         },
         revokeToken1Request: {
-          ...rawApprovalCalldata.token1Cancel,
+          ...token1Cancel,
         },
         permit: {
           method: PermitMethod.TypedData,
           typedData: {
-            domain: rawApprovalCalldata.permitData.value!.domain,
-            types: rawApprovalCalldata.permitData.value!.types,
-            values: rawApprovalCalldata.permitData.value!.values,
+            domain: permitBatchData.domain,
+            types: permitBatchData.types,
+            values: permitBatchData.values,
           },
         },
         token0PermitTransaction: undefined,
@@ -381,23 +375,23 @@ describe('generateCreatePositionTxRequest', () => {
         },
         approvePositionTokenRequest: undefined,
         approveToken0Request: {
-          ...rawApprovalCalldata.token0Approval,
+          ...token0Approval,
         },
         approveToken1Request: {
-          ...rawApprovalCalldata.token1Approval,
+          ...token1Approval,
         },
         revokeToken0Request: {
-          ...rawApprovalCalldata.token0Cancel,
+          ...token0Cancel,
         },
         revokeToken1Request: {
-          ...rawApprovalCalldata.token1Cancel,
+          ...token1Cancel,
         },
         permit: {
           method: PermitMethod.TypedData,
           typedData: {
-            domain: rawApprovalCalldata.permitData.value!.domain,
-            types: rawApprovalCalldata.permitData.value!.types,
-            values: rawApprovalCalldata.permitData.value!.values,
+            domain: permitBatchData.domain,
+            types: permitBatchData.types,
+            values: permitBatchData.values,
           },
         },
         token0PermitTransaction: undefined,
@@ -487,23 +481,23 @@ describe('generateCreatePositionTxRequest', () => {
         },
         approvePositionTokenRequest: undefined,
         approveToken0Request: {
-          ...rawApprovalCalldata.token0Approval,
+          ...token0Approval,
         },
         approveToken1Request: {
-          ...rawApprovalCalldata.token1Approval,
+          ...token1Approval,
         },
         revokeToken0Request: {
-          ...rawApprovalCalldata.token0Cancel,
+          ...token0Cancel,
         },
         revokeToken1Request: {
-          ...rawApprovalCalldata.token1Cancel,
+          ...token1Cancel,
         },
         permit: {
           method: PermitMethod.TypedData,
           typedData: {
-            domain: rawApprovalCalldata.permitData.value!.domain,
-            types: rawApprovalCalldata.permitData.value!.types,
-            values: rawApprovalCalldata.permitData.value!.values,
+            domain: permitBatchData.domain,
+            types: permitBatchData.types,
+            values: permitBatchData.values,
           },
         },
         token0PermitTransaction: undefined,

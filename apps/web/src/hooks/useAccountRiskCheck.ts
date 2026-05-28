@@ -4,7 +4,7 @@ import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
 
-export default function useAccountRiskCheck(addresses: { evmAddress?: string; svmAddress?: string }) {
+export function useAccountRiskCheck(addresses: { evmAddress?: string; svmAddress?: string }) {
   const dispatch = useAppDispatch()
   const { isBlocked: isEvmBlocked, isBlockedLoading: isEvmBlockedLoading } = useIsBlocked(
     addresses.evmAddress || undefined,

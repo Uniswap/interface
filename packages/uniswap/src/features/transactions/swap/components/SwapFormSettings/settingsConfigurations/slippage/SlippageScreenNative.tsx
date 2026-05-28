@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorTokens } from 'ui/src'
@@ -16,7 +17,6 @@ import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactio
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
-import { isWebPlatform } from 'utilities/src/platform'
 
 function SlippageMessage({
   inputWarning,

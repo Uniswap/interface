@@ -20,12 +20,11 @@ export function transformPlanResponseToChainedQuote({
 }: TransformPlanParams): ChainedQuoteResponse {
   // Extract amount string from CurrencyAmount
   const inputAmount = validatedInput.amount.quotient.toString()
-  // Construct ClassicInput and ClassicOutput objects
-  const input: TradingApi.ClassicInput = {
+  const input: TradingApi.QuoteInput = {
     amount: inputAmount,
     token: validatedInput.tokenInAddress,
   }
-  const output: TradingApi.ClassicOutput = {
+  const output: TradingApi.QuoteOutput = {
     amount: planResponse.expectedOutput,
     token: validatedInput.tokenOutAddress,
     recipient: planResponse.recipient,

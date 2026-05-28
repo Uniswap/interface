@@ -1,5 +1,6 @@
 /* oxlint-disable max-lines */
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { hexToNumber } from '@universe/encoding'
 import { getPermissions } from 'src/app/features/dappRequests/permissions'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
@@ -48,10 +49,10 @@ import { chainIdToHexadecimalString, toSupportedChainId } from 'uniswap/src/feat
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
-import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
+import { logger } from 'utilities/src/logger/logger'
+import { walletContextValue } from 'wallet/src/features/wallet/context'
 
 export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
@@ -130,18 +131,22 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
         type: DappResponseType.ChainChangeResponse,
       })?.source
 
-      this.setChainIdAndMaybeEmit(message.chainId)
-      this.setProvider(
-        new InstrumentedJsonRpcProvider({
-          url: message.providerUrl,
-          chainIdOrNetwork: parseInt(message.chainId),
-          observer: getRpcObserver(),
-        }),
-      )
-      source?.postMessage({
-        requestId: message.requestId,
-        result: message.chainId,
-      })
+      const chainId = toSupportedChainId(parseInt(message.chainId))
+      const provider = chainId ? walletContextValue.providers.tryGetProvider(chainId) : null
+      if (provider) {
+        this.setChainIdAndMaybeEmit(message.chainId)
+        this.setProvider(provider)
+        source?.postMessage({
+          requestId: message.requestId,
+          result: message.chainId,
+        })
+      } else {
+        logger.warn(
+          'ExtensionEthMethodHandler',
+          'ChainChangeResponseListener',
+          `Provider unavailable for chain ${message.chainId}`,
+        )
+      }
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SendTransactionResponse, (message) => {
@@ -289,24 +294,23 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   private handleDappUpdate({
     connectedAddresses,
     chainId,
-    providerUrl,
+    providerUrl: _providerUrl,
   }: {
     connectedAddresses: string[]
     chainId: string
     providerUrl: string
   }): void {
-    this.setConnectedAddressesAndMaybeEmit(connectedAddresses)
-    this.setChainIdAndMaybeEmit(chainId)
-    this.setProvider(
-      new InstrumentedJsonRpcProvider({
-        url: providerUrl,
-        chainIdOrNetwork: parseInt(chainId),
-        observer: getRpcObserver(),
-      }),
-    )
+    const supportedChainId = toSupportedChainId(parseInt(chainId))
+    const provider = supportedChainId ? walletContextValue.providers.tryGetProvider(supportedChainId) : null
+    if (provider) {
+      this.setConnectedAddressesAndMaybeEmit(connectedAddresses)
+      this.setChainIdAndMaybeEmit(chainId)
+      this.setProvider(provider)
+    } else {
+      logger.warn('ExtensionEthMethodHandler', 'handleDappUpdate', `Provider unavailable for chain ${chainId}`)
+    }
   }
 
-  // oxlint-disable-next-line complexity
   async handleRequest(request: WindowEthereumRequest, source: MessageEventSource | null): Promise<void> {
     switch (request.method) {
       case EthMethod.EthChainId: {
@@ -684,7 +688,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
 // oxlint-disable-next-line typescript/no-explicit-any -- Transaction object from dapp can have various shapes requiring flexible typing
 function adaptTransactionForEthers(transaction: any): any {
   if (typeof transaction.chainId === 'string') {
-    transaction.chainId = parseInt(transaction.chainId, 16)
+    transaction.chainId = hexToNumber(transaction.chainId)
   }
   return transaction
 }

@@ -1,12 +1,6 @@
-import { IncreaseLPPositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import {
-  ChainId,
-  IndependentToken,
-  Protocols,
-  V3IncreaseLPPosition,
-  V3Pool,
-  V3Position,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { ChainId, Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { IncreasePositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import { LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
@@ -45,28 +39,14 @@ describe('Liquidity', () => {
       currency0Amount: createMockCurrencyAmount(USDC, '1000000'),
       currency1Amount: createMockCurrencyAmount(USDT, '1000000'),
     },
-    increasePositionRequestArgs: new IncreaseLPPositionRequest({
-      increaseLpPosition: {
-        case: 'v3IncreaseLpPosition',
-        value: new V3IncreaseLPPosition({
-          protocols: Protocols.V3,
-          tokenId: 1000000,
-          position: new V3Position({
-            pool: new V3Pool({
-              token0: USDC.address,
-              token1: USDT.address,
-              fee: 3000,
-              tickSpacing: DEFAULT_TICK_SPACING,
-            }),
-            tickLower: -887220,
-            tickUpper: 887220,
-          }),
-          walletAddress: '0x18d058a7E0486E632f7DfC473BC76D72CD201cAd',
-          chainId: ChainId.MAINNET,
-          independentAmount: '1000000',
-          independentToken: IndependentToken.TOKEN_1,
-        }),
-      },
+    increasePositionRequestArgs: new IncreasePositionRequest({
+      walletAddress: '0x18d058a7E0486E632f7DfC473BC76D72CD201cAd',
+      chainId: ChainId.MAINNET,
+      protocol: Protocols.V3,
+      token0Address: USDC.address,
+      token1Address: USDT.address,
+      nftTokenId: '1000000',
+      independentToken: new LPToken({ tokenAddress: USDC.address, amount: '1000000' }),
     }),
     txRequest: mockTxRequest,
     unsigned: false,
@@ -217,8 +197,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.txRequest],
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [liquidityTxContext.txRequest],
           },
         ])
       })
@@ -235,8 +215,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.approveToken0Request, liquidityTxContext.txRequest],
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [liquidityTxContext.approveToken0Request, liquidityTxContext.txRequest],
           },
         ])
       })
@@ -254,8 +234,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.approveToken0Request,
               liquidityTxContext.approveToken1Request,
               liquidityTxContext.txRequest,
@@ -279,8 +259,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.revokeToken0Request,
               liquidityTxContext.revokeToken1Request,
               liquidityTxContext.approveToken0Request,
@@ -304,8 +284,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.token0PermitTransaction,
               liquidityTxContext.token1PermitTransaction,
               liquidityTxContext.txRequest,

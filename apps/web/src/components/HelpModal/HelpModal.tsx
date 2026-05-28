@@ -64,3 +64,5 @@ export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
     </Flex>
   )
 }
+
+export default HelpModal

@@ -1,4 +1,4 @@
-/* oxlint-disable typescript/explicit-function-return-type -- utils derived from types in this file benefit from narrow, automatically inferred return types */
+/* oxlint-disable typescript/explicit-function-return-type */
 import { Account } from 'uniswap/src/features/accounts/store/types/Account'
 import { AccountsGetters } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'

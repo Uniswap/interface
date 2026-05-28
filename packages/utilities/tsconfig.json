@@ -6,6 +6,12 @@
   },
   "references": [
     {
+      "path": "../environment"
+    },
+    {
+      "path": "../encoding"
+    },
+    {
       "path": "../../config/vitest-presets"
     }
   ]

@@ -1,5 +1,6 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -44,7 +45,6 @@ describe('currencyId', () => {
 
   it.each([[UniverseChainId.Mainnet, DAI.address, `${UniverseChainId.Mainnet}-${DAI.address}`]])(
     'buildCurrencyId builds correct ID for chainId=%s + address=%s = %s',
-    // oxlint-disable-next-line max-params
     (chainId, address, expectedId) => {
       expect(buildCurrencyId(chainId, address)).toEqual(expectedId)
     },
@@ -52,11 +52,10 @@ describe('currencyId', () => {
 
   it.each([
     [currencyId(DAI), currencyId(DAI), true],
-    [currencyId(DAI), `${UniverseChainId.Mainnet}-${DAI.address.toLowerCase()}`, true],
+    [currencyId(DAI), `${UniverseChainId.Mainnet}-${normalizeTokenAddressForCache(DAI.address)}`, true],
     [currencyId(DAI), currencyId(ETH), false],
   ])(
     'areCurrencyIdsEqual returns correct comparison for currencyId1=%s and currencyId2=%s = %s',
-    // oxlint-disable-next-line max-params
     (currencyId1, currencyId2, expected) => {
       expect(areCurrencyIdsEqual(currencyId1, currencyId2)).toBe(expected)
     },
@@ -115,7 +114,6 @@ describe('currencyId', () => {
     [99999, null, false],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
-    // oxlint-disable-next-line max-params
     (chainId, address, expected) => {
       expect(isNativeCurrencyAddress(chainId, address)).toEqual(expected)
     },
@@ -129,7 +127,7 @@ describe('currencyId', () => {
   })
 
   it.each([
-    [`1-${DAI.address}`, DAI.address.toLowerCase()],
+    [`1-${DAI.address}`, normalizeTokenAddressForCache(DAI.address)],
     [`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`, null],
     ['137-0x0000000000000000000000000000000000001010', '0x0000000000000000000000000000000000001010'],
     ['56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', null],

@@ -1,5 +1,5 @@
 import type { GasFeeResult } from '@universe/api'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { usePrepareAndSignEthSendTransaction } from 'src/app/features/dappRequests/hooks/usePrepareAndSignEthSendTransaction'
@@ -19,6 +19,8 @@ import {
   isWrapRequest,
   SendTransactionRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -32,6 +34,15 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
   const { dappUrl, currentAccount, onConfirm, onCancel } = useDappRequestQueueContext()
   const chainId = useDappLastChainId(dappUrl)
 
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
+  const [gasOverrides, setGasOverrides] = useState<GasFeeOverrides | undefined>(undefined)
+  // When the wallet-level setting is off, drop any in-flight overrides on the
+  // floor — the user can't have set them via this surface (the chip opens the
+  // auto tooltip, not the editor), but they may have toggled it off in a
+  // separate window while this modal is open.
+  const effectiveGasOverrides = enableCustomGasFeeEntry ? gasOverrides : undefined
+  const isOverridesEligible = enableCustomGasFeeEntry
+
   const {
     gasFeeResult: transactionGasFeeResult,
     requestWithGasValues,
@@ -40,6 +51,7 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
     request,
     account: currentAccount,
     chainId,
+    gasOverrides: effectiveGasOverrides,
   })
 
   const onConfirmRequest = useCallback(
@@ -71,12 +83,16 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
       }
       onError={(error) => {
         if (error) {
+          // If we fall back to the legacy specialized UI (Blockaid threw), clear
+          // any in-flight overrides — the legacy footer has no row to show them
+          // through, and silently applying them to the submitted tx would be
+          // confusing. Use the functional setter form to make the clear a no-op
+          // when no overrides are pending; otherwise the boundary's re-catch
+          // would loop forever on every render.
+          setGasOverrides((prev) => (prev ? undefined : prev))
           logger.error(error, {
             tags: { file: 'EthSend', function: 'ErrorBoundary-Blockaid' },
-            extra: {
-              dappRequest,
-              useSimulationResultUI: true,
-            },
+            extra: { dappRequest, useSimulationResultUI: true },
           })
         }
       }}
@@ -84,6 +100,10 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
       <ParsedTransactionRequestContent
         dappRequest={dappRequest}
         transactionGasFeeResult={transactionGasFeeResult}
+        gasOverrides={isOverridesEligible ? effectiveGasOverrides : undefined}
+        // Withhold the setter from the row in Auto mode so the footer falls back
+        // to <NetworkFeeFooter />. Matches mobile WC's gating pattern.
+        onChangeGasOverrides={isOverridesEligible ? setGasOverrides : undefined}
         onCancel={onCancelRequest}
         onConfirm={onConfirmRequest}
       />

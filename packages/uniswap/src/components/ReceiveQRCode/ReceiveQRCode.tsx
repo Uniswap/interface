@@ -1,3 +1,4 @@
+import { isExtensionApp, isWebApp, isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, QRCodeDisplay, Text, TouchableArea, useIsShortMobileDevice, useMedia, useSporeColors } from 'ui/src'
@@ -22,7 +23,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isExtensionApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

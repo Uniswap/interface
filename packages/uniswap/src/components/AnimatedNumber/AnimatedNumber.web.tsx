@@ -4,7 +4,6 @@ import { Flex, Shine, Text, TextLoaderWrapper, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const BALANCE_CHANGE_INDICATION_DURATION = ONE_SECOND_MS / 2
@@ -67,7 +66,7 @@ const AnimatedNumber = ({
   }
 
   return (
-    <Flex row testID={TestID.PortfolioBalance}>
+    <Flex row>
       <Flex group row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4">
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>

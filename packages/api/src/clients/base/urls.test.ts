@@ -1,11 +1,5 @@
-/* oxlint-disable typescript/explicit-function-return-type */
-
 import { TrafficFlows } from '@universe/api/src/clients/base/urls'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
-// Mock the platform and environment utilities
-vi.mock('utilities/src/environment/env')
-vi.mock('utilities/src/platform')
 
 const envConfigs = {
   webProd: {
@@ -67,12 +61,12 @@ const envConfigs = {
   },
   playwrightDev: {
     isWebApp: true,
-    isPlaywrightEnv: true,
+    isE2eTestEnv: true,
     isDevEnv: true,
   },
   playwrightProd: {
     isWebApp: true,
-    isPlaywrightEnv: true,
+    isE2eTestEnv: true,
     isDevEnv: false,
   },
 }
@@ -229,15 +223,12 @@ describe('urls', () => {
   )
 
   it('generates correct URL for GraphQL flow in web/Playwright', async () => {
-    vi.doMock('utilities/src/environment/env', () => ({
+    vi.doMock('@universe/environment', () => ({
       isBetaEnv: () => false,
       isDevEnv: () => false,
       isRNDev: () => false,
-      isPlaywrightEnv: () => true,
+      isE2eTestEnv: () => true,
       isTestEnv: () => false,
-    }))
-
-    vi.doMock('utilities/src/platform', () => ({
       isAndroid: false,
       isExtensionApp: false,
       isMobileApp: false,
@@ -260,7 +251,7 @@ function mockEnvironmentAndPlatform(
     isBetaEnv?: boolean
     isDevEnv?: boolean
     isRNDev?: boolean
-    isPlaywrightEnv?: boolean
+    isE2eTestEnv?: boolean
     isTestEnv?: boolean
     isAndroid?: boolean
     isExtensionApp?: boolean
@@ -272,7 +263,7 @@ function mockEnvironmentAndPlatform(
     isBetaEnv = false,
     isDevEnv = false,
     isRNDev = false,
-    isPlaywrightEnv = false,
+    isE2eTestEnv = false,
     isTestEnv = false,
     isAndroid = false,
     isExtensionApp = false,
@@ -280,15 +271,12 @@ function mockEnvironmentAndPlatform(
     isWebApp = false,
   } = overrides
 
-  vi.doMock('utilities/src/environment/env', () => ({
+  vi.doMock('@universe/environment', () => ({
     isBetaEnv: () => isBetaEnv,
     isDevEnv: () => isDevEnv,
     isRNDev: () => isRNDev,
-    isPlaywrightEnv: () => isPlaywrightEnv,
+    isE2eTestEnv: () => isE2eTestEnv,
     isTestEnv: () => isTestEnv,
-  }))
-
-  vi.doMock('utilities/src/platform', () => ({
     isAndroid,
     isExtensionApp,
     isMobileApp,

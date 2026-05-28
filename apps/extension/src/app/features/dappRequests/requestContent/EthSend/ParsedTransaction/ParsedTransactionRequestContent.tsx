@@ -5,6 +5,7 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DappTransactionScanningContent } from 'wallet/src/components/dappRequests/DappTransactionScanningContent'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
@@ -15,6 +16,8 @@ interface ParsedTransactionRequestContentProps {
   dappRequest: SendTransactionRequest
   onCancel: () => Promise<void>
   onConfirm: () => Promise<void>
+  gasOverrides?: GasFeeOverrides
+  onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
 }
 
 /**
@@ -26,6 +29,8 @@ export function ParsedTransactionRequestContent({
   transactionGasFeeResult,
   onCancel,
   onConfirm,
+  gasOverrides,
+  onChangeGasOverrides,
 }: ParsedTransactionRequestContentProps): JSX.Element | null {
   const { t } = useTranslation()
   const { dappUrl, currentAccount } = useDappRequestQueueContext()
@@ -66,7 +71,9 @@ export function ParsedTransactionRequestContent({
         gasFee={transactionGasFeeResult}
         requestMethod={dappRequest.type}
         confirmedRisk={confirmedRisk}
+        gasOverrides={gasOverrides}
         onConfirmRisk={setConfirmedRisk}
+        onChangeGasOverrides={onChangeGasOverrides}
         onRiskLevelChange={setRiskLevel}
       />
     </DappRequestContent>

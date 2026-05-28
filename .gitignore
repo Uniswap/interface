@@ -36,12 +36,16 @@ yarn-error.log*
 .env
 .env.local
 .env.defaults.local
+.env.tmp
 
 # turbo
 .turbo
 
 # nx
-.nx/
+# `.nx/*` (not `.nx/`) so the activation key in .nx/key/ can be re-included
+# — git cannot un-exclude a path under a directory-excluded parent.
+.nx/*
+!.nx/key/
 graph.json
 
 # .yarn files
@@ -85,6 +89,8 @@ claude.local.md
 CLAUDE.local.md
 .claude/settings.local.json
 .claude/local/
+.claude/worktrees/
+.claude/skills/*-workspace/
 **/*/.claude/user/*
 **/*/.claude/local/
 
@@ -92,6 +98,9 @@ CLAUDE.local.md
 .cursor/mcp.json
 .cursor/rules/local-workflow.mdc
 .cursor/*.log
+
+# argent — skills-lock.json carries per-user absolute paths; the .agents/skills/ tree itself is committed (editor-side .claude/skills/argent-* are symlinks into it)
+skills-lock.json
 
 # lefthook
 .lefthook/

@@ -3,6 +3,9 @@
   "include": ["src"],
   "references": [
     {
+      "path": "../environment"
+    },
+    {
       "path": "../utilities"
     },
     {

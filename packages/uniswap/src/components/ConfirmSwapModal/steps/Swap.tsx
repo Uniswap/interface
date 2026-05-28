@@ -13,7 +13,7 @@ import {
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
-  SwapTransactionStepBatched,
+  SwapTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 
 const SwapIcon = (): JSX.Element => (
@@ -27,7 +27,7 @@ type SwapSteps =
   | SwapTransactionStepAsync
   | UniswapXSignatureStep
   | UniswapXPlanSignatureStep
-  | SwapTransactionStepBatched
+  | SwapTransactionStepWalletCall
 
 /**
  * UI component used to display a swap transaction step in the Swap Confirmation Modal
@@ -64,7 +64,7 @@ export function SwapTransactionStepRow({
       icon={<SwapIcon />}
       learnMore={{
         url:
-          step.type === TransactionStepType.SwapTransactionBatched
+          step.type === TransactionStepType.SwapTransactionWalletCall
             ? uniswapUrls.helpArticleUrls.batchedSwaps
             : uniswapUrls.helpArticleUrls.howToSwapTokens,
         text: t('common.learnMoreSwap'),

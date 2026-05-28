@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -10,7 +11,6 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function AcrossRoutingInfo(): JSX.Element {
   const { t } = useTranslation()
@@ -21,7 +21,7 @@ export function AcrossRoutingInfo(): JSX.Element {
       rejectText: t('common.button.close'),
       modalName: ModalName.AcrossRoutingInfo,
       severity: WarningSeverity.None,
-      title: t('swap.details.orderRouting'),
+      title: t('common.bestRoute'),
       icon: <OrderRouting color="$neutral2" size="$icon.24" />,
       zIndex: zIndexes.popover,
     }),
@@ -68,7 +68,7 @@ export function AcrossRoutingInfo(): JSX.Element {
         analyticsTitle="Across order routing"
       >
         <Text color="$neutral2" variant="body3">
-          {t('swap.details.orderRouting')}
+          {t('common.bestRoute')}
         </Text>
       </WarningInfo>
 

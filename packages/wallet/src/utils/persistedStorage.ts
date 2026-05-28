@@ -1,4 +1,4 @@
-import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { getChromeWithThrow } from '@universe/environment'
 
 const chrome = getChromeWithThrow()
 

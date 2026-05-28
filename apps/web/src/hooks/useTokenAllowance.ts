@@ -60,6 +60,7 @@ export function useUpdateTokenAllowance(
 
   return useCallback(async () => {
     try {
+      // oxlint-disable-next-line no-shadow
       const contract = contractRef.current
       if (!amount) {
         throw new Error('missing amount')
@@ -73,6 +74,7 @@ export function useUpdateTokenAllowance(
 
       const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
       const response = await (async () => {
+        // oxlint-disable-next-line no-shadow
         const contract = contractRef.current
         try {
           if (!contract) {

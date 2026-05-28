@@ -41,6 +41,7 @@ const createUniverseTransactionFromInfo = (typeInfo: TransactionInfo): UniswapTr
 // If a new transaction type is added to web try to map it to a universe transaction type.
 // Some transactions (like APPROVAL) only update the native token balance and don't need to be mapped.
 // TODO(WEB-5565): Align web and universe transaction types
+// oxlint-disable-next-line complexity
 export const createUniverseTransaction = ({
   info,
   chainId,

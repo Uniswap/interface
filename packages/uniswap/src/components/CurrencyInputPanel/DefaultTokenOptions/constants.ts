@@ -1,5 +1,5 @@
+import { isHoverable, isWebAppDesktop } from '@universe/environment'
 import { iconSizes } from 'ui/src/theme'
-import { isHoverable, isWebAppDesktop } from 'utilities/src/platform'
 
 /**
  * If we show more than 6 tokens, we may need to add more animation delays

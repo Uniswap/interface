@@ -1,8 +1,9 @@
-import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import type { FeeData } from '~/components/Liquidity/Create/types'
+import type { FeeData } from 'uniswap/src/features/positions/types'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 
 /**
  * Placeholder address for a token that is being created and does not have an address yet.
@@ -42,6 +43,7 @@ type CreateNewTokenFields = {
   imageUrl: string
   network: UniverseChainId
   xProfile: string
+  websiteLink: string
   totalSupply: CurrencyAmount<Currency>
 }
 
@@ -49,6 +51,7 @@ type ExistingTokenFields = {
   existingTokenCurrencyInfo: CurrencyInfo | undefined
   description: string
   xProfile: string
+  websiteLink: string
   totalSupply: CurrencyAmount<Currency> | undefined
 }
 
@@ -56,15 +59,61 @@ export type CreateNewTokenFormState = { mode: TokenMode.CREATE_NEW } & CreateNew
 export type ExistingTokenFormState = { mode: TokenMode.EXISTING } & ExistingTokenFields
 export type TokenFormState = CreateNewTokenFormState | ExistingTokenFormState
 
-export enum AuctionType {
-  BOOTSTRAP_LIQUIDITY = 'bootstrap_liquidity',
-  FUNDRAISE = 'fundraise',
-}
+/** Default share of total token supply deposited into the auction for new tokens. */
+export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(25, 100)
+
+/** Default share for existing tokens: auction the user's entire wallet balance. */
+export const DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 
 export enum RaiseCurrency {
   ETH = 'ETH',
   USDC = 'USDC',
 }
+
+/** What currency the user types floor price / FDV in (raise token vs USD fiat). */
+export type InputCurrency = 'raise' | 'usd'
+
+/** What the floor-price numeric input represents. */
+export type FloorPriceDenomination = 'floorPrice' | 'fdv'
+
+export type FloorPriceInputState = {
+  /** Canonical floor price this display draft produced; used to avoid hydrating stale input text. */
+  floorPrice: string
+  /** Dot-decimal, unlocalized value exactly as the user entered it. */
+  rawValue: string
+  denomination: FloorPriceDenomination
+  inputCurrency: InputCurrency
+}
+
+export enum PostAuctionLiquidityAllocationType {
+  SINGLE = 'single',
+  TIERED = 'tiered',
+}
+
+export const MIN_POST_AUCTION_LIQUIDITY_PERCENT = 25
+export const MAX_POST_AUCTION_LIQUIDITY_PERCENT = 100
+export const MAX_POST_AUCTION_LIQUIDITY_TIERS = 10
+export const DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE = 100_000
+export const UNBOUNDED_TIER_ID = 'tier-unbounded'
+export const DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT = 100
+
+export type PostAuctionLiquidityTier = {
+  id: string
+  raiseMilestone: string
+  percent: number
+}
+
+export type SinglePostAuctionLiquidityAllocation = {
+  type: PostAuctionLiquidityAllocationType.SINGLE
+  percent: number
+}
+
+export type TieredPostAuctionLiquidityAllocation = {
+  type: PostAuctionLiquidityAllocationType.TIERED
+  tiers: PostAuctionLiquidityTier[]
+}
+
+export type PostAuctionLiquidityAllocation = SinglePostAuctionLiquidityAllocation | TieredPostAuctionLiquidityAllocation
 
 /**
  * Token amounts committed after confirming the token info step.
@@ -72,17 +121,21 @@ export enum RaiseCurrency {
  */
 export type AuctionTokenAmounts = {
   totalSupply: CurrencyAmount<Currency>
+  /** Tokens deposited into the auction (sold S + LP reserve R = r·S). */
   auctionSupplyAmount: CurrencyAmount<Currency>
+  /** Each LP token leg: r·S = R = deposit × r/(1+r). */
   postAuctionLiquidityAmount: CurrencyAmount<Currency>
 }
 
 export type ConfigureAuctionFormState = {
   startTime: Date | undefined
-  maxDurationDays: number
-  activeAuctionType: AuctionType
+  endTime: Date | undefined
   committed: AuctionTokenAmounts | undefined
+  postAuctionLiquidityAllocation: PostAuctionLiquidityAllocation
   raiseCurrency: RaiseCurrency
   floorPrice: string
+  floorPriceInput: FloorPriceInputState | undefined
+  kycValidationHookAddress: string | undefined
 }
 
 type XVerification = {
@@ -93,13 +146,62 @@ type XVerification = {
 export enum PriceRangeStrategy {
   CONCENTRATED_FULL_RANGE = 'concentrated_full_range',
   FULL_RANGE = 'full_range',
+  CUSTOM_RANGE = 'custom_range',
+}
+
+/** Sentinel for an unbounded max price range (+∞). */
+export const CUSTOM_PRICE_RANGE_POSITIVE_INFINITY = 'positive_infinity' as const
+
+/**
+ * Lowest finite percent-from-clearing the histogram renders. Doubles as the leftmost
+ * value the min bound can take, since `−∞` is no longer a selectable option.
+ */
+export const MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING = -100
+
+export type CustomPriceRangeValue = number | typeof CUSTOM_PRICE_RANGE_POSITIVE_INFINITY
+
+export type CustomPriceRangeEntry = {
+  id: string
+  liquidityPercent: number
+  minPercentFromClearing: CustomPriceRangeValue
+  maxPercentFromClearing: CustomPriceRangeValue
+}
+
+export type CustomPriceRangePreset = Pick<CustomPriceRangeEntry, 'minPercentFromClearing' | 'maxPercentFromClearing'>
+
+export const MAX_CUSTOM_PRICE_RANGE_ENTRIES = 10
+
+export const CUSTOM_PRICE_RANGE_PRESETS: readonly CustomPriceRangePreset[] = [
+  { minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+  { minPercentFromClearing: -66, maxPercentFromClearing: 200 },
+  { minPercentFromClearing: -33, maxPercentFromClearing: 50 },
+  { minPercentFromClearing: -20, maxPercentFromClearing: 25 },
+] as const
+
+/** Preset duration for pool timelock (custom uses a calendar end date). */
+export enum TimeLockPreset {
+  ThirtyDays = 'thirty_days',
+  SixMonths = 'six_months',
+  OneYear = 'one_year',
+  Permanent = 'permanent',
+  Custom = 'custom',
+}
+
+export const TIMELOCK_PRESET_DURATION_DAYS: Record<Exclude<TimeLockPreset, TimeLockPreset.Custom>, number> = {
+  [TimeLockPreset.ThirtyDays]: 30,
+  [TimeLockPreset.SixMonths]: 183,
+  [TimeLockPreset.OneYear]: 365,
+  /** Effectively non-expiring for product purposes; encoded as a long fixed duration. */
+  [TimeLockPreset.Permanent]: 365 * 100000,
 }
 
 type CustomizePoolState = {
   fee: FeeData
   priceRangeStrategy: PriceRangeStrategy
+  customPriceRanges: CustomPriceRangeEntry[]
   poolOwner: string
   timeLockEnabled: boolean
+  timeLockPreset: TimeLockPreset
   timeLockDurationDays: number
   sendFeesEnabled: boolean
   feesRecipientAddress: string
@@ -115,7 +217,7 @@ const DEFAULT_FEE_DATA: FeeData = {
 interface CreateAuctionState {
   step: CreateAuctionStep
   tokenForm: TokenFormState
-  tokenColor: string | undefined
+  tokenColor: TokenAccentHex | undefined
   configureAuction: ConfigureAuctionFormState
   customizePool: CustomizePoolState
   xVerification: XVerification | undefined
@@ -126,6 +228,7 @@ export const DEFAULT_EXISTING_TOKEN_FORM: ExistingTokenFormState = {
   existingTokenCurrencyInfo: undefined,
   description: '',
   xProfile: '',
+  websiteLink: '',
   totalSupply: undefined,
 }
 
@@ -136,9 +239,18 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
   customizePool: {
     fee: DEFAULT_FEE_DATA,
     priceRangeStrategy: PriceRangeStrategy.CONCENTRATED_FULL_RANGE,
+    customPriceRanges: [
+      {
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
+        maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
+      },
+    ],
     poolOwner: '',
     timeLockEnabled: false,
-    timeLockDurationDays: 5,
+    timeLockPreset: TimeLockPreset.OneYear,
+    timeLockDurationDays: 365,
     sendFeesEnabled: false,
     feesRecipientAddress: '',
     buybackAndBurnEnabled: false,
@@ -151,15 +263,21 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     imageUrl: '',
     network: UniverseChainId.Unichain,
     xProfile: '',
+    websiteLink: '',
     totalSupply: NEW_TOKEN_DEFAULT_TOTAL_SUPPLY,
   },
   configureAuction: {
     startTime: undefined,
-    maxDurationDays: 5,
-    activeAuctionType: AuctionType.BOOTSTRAP_LIQUIDITY,
+    endTime: undefined,
     committed: undefined,
+    postAuctionLiquidityAllocation: {
+      type: PostAuctionLiquidityAllocationType.SINGLE,
+      percent: DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT,
+    },
     raiseCurrency: RaiseCurrency.ETH,
     floorPrice: '',
+    floorPriceInput: undefined,
+    kycValidationHookAddress: undefined,
   },
 }
 
@@ -173,24 +291,37 @@ interface CreateAuctionStoreActions {
   setTokenForm: (form: TokenFormState) => void
   commitTokenFormAndAdvance: () => void
   setXVerification: (value: XVerification | undefined) => void
-  setAuctionType: (type: AuctionType) => void
-  setAuctionConfig: (config: {
-    auctionSupplyAmount: CurrencyAmount<Currency>
-    postAuctionLiquidityAmount: CurrencyAmount<Currency>
-  }) => void
+  setPostAuctionLiquidityAllocationType: (type: PostAuctionLiquidityAllocationType) => void
+  setSinglePostAuctionLiquidityPercent: (percent: number) => void
+  addPostAuctionLiquidityTier: (options?: { usdPriceNum: number | null }) => void
+  updatePostAuctionLiquidityTier: (
+    tierId: string,
+    config: Partial<Pick<PostAuctionLiquidityTier, 'raiseMilestone' | 'percent'>>,
+  ) => void
+  removePostAuctionLiquidityTier: (tierId: string) => void
+  setAuctionConfig: (config: { auctionSupplyAmount: CurrencyAmount<Currency> }) => void
   setStartTime: (startTime: Date | undefined) => void
-  setMaxDurationDays: (days: number) => void
+  setEndTime: (endTime: Date | undefined) => void
   setRaiseCurrency: (currency: RaiseCurrency) => void
-  setFloorPrice: (price: string) => void
+  setFloorPrice: (price: string, input?: Omit<FloorPriceInputState, 'floorPrice'>) => void
+  setKycValidationHookAddress: (address: string | undefined) => void
   setFee: (fee: FeeData) => void
   setPriceRangeStrategy: (strategy: PriceRangeStrategy) => void
+  addCustomPriceRangePreset: (preset: CustomPriceRangePreset) => void
+  updateCustomPriceRangeLiquidityPercent: (entryId: string, percent: number) => void
+  updateCustomPriceRangeBounds: (
+    entryId: string,
+    bounds: Partial<Pick<CustomPriceRangeEntry, 'minPercentFromClearing' | 'maxPercentFromClearing'>>,
+  ) => void
+  removeCustomPriceRange: (entryId: string) => void
   setPoolOwner: (owner: string) => void
   setTimeLockEnabled: (enabled: boolean) => void
+  setTimeLockPreset: (preset: TimeLockPreset) => void
   setTimeLockDurationDays: (days: number) => void
   setSendFeesEnabled: (enabled: boolean) => void
   setFeesRecipientAddress: (address: string) => void
   setBuybackAndBurnEnabled: (enabled: boolean) => void
-  setTokenColor: (color: string | undefined) => void
+  setTokenColor: (color: TokenAccentHex | undefined) => void
   reset: () => void
 }
 

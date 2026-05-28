@@ -1,7 +1,10 @@
+import { type TransactionRequest } from '@ethersproject/providers'
 import type { BlockaidScanJsonRpcRequest, GasFeeResult } from '@universe/api'
+import { numberToHex } from '@universe/encoding'
 import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { DappRequestFooter } from 'wallet/src/components/dappRequests/DappRequestFooter'
 import { TransactionErrorType } from 'wallet/src/components/dappRequests/TransactionErrorSection'
 import { TransactionLoadingState } from 'wallet/src/components/dappRequests/TransactionLoadingState'
@@ -29,6 +32,14 @@ interface DappSendCallsScanningContentProps {
   gasFee?: GasFeeResult
   requestMethod?: string
   showSmartWalletActivation?: boolean
+  gasOverrides?: GasFeeOverrides
+  onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
+  /**
+   * The encoded batched transaction request (7702 path) — needed by the
+   * Network cost editor to fetch the recommended baseline. Optional because
+   * 4337 sponsored-userOp flows have no concrete tx to estimate against.
+   */
+  tx?: TransactionRequest
 }
 
 /**
@@ -47,6 +58,9 @@ export function DappSendCallsScanningContent({
   gasFee,
   requestMethod,
   showSmartWalletActivation,
+  gasOverrides,
+  onChangeGasOverrides,
+  tx,
 }: DappSendCallsScanningContentProps): JSX.Element {
   // Extract representative data from the first call for display purposes
   const firstCall = calls.length > 0 ? calls[0] : undefined
@@ -62,7 +76,7 @@ export function DappSendCallsScanningContent({
       params: [
         {
           version: '1.0',
-          chainId: `0x${chainId.toString(16)}`,
+          chainId: numberToHex(chainId),
           from: account,
           calls,
         },
@@ -118,6 +132,9 @@ export function DappSendCallsScanningContent({
         gasFee={gasFee}
         requestMethod={requestMethod}
         showSmartWalletActivation={showSmartWalletActivation}
+        tx={tx}
+        gasOverrides={gasOverrides}
+        onChangeGasOverrides={onChangeGasOverrides}
         onConfirmRisk={onConfirmRisk}
       />
     </Flex>

@@ -19,27 +19,26 @@ import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
-import { formatCompactFromRaw } from '~/components/Toucan/Auction/utils/fixedPointFdv'
-import { getAuctionMetadata } from '~/components/Toucan/Config/config'
-import { buildTokenMarketPriceKey } from '~/components/Toucan/hooks/useTokenMarketPrices'
-import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import useSimplePagination from '~/hooks/useSimplePagination'
+import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
 import {
   AuctionStatusFilter,
   AuctionVerificationFilter,
   useExploreTablesFilterStore,
-} from '~/pages/Explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
+import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
+import { auctionCommittedVolumeComparator, useTopAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
+import { useSimplePagination } from '~/hooks/useSimplePagination'
 import { TimeRemainingCell } from '~/pages/Explore/tables/Auctions/TimeRemainingCell'
 import {
   AuctionSortField,
   AuctionTableHeader,
   TokenNameCell,
 } from '~/pages/Explore/tables/Auctions/TopAuctionsTableCells'
-import { TABLE_PAGE_SIZE } from '~/state/explore'
-import { useAuctionTokenPrices } from '~/state/explore/topAuctions/useAuctionTokenPrices'
-import { auctionCommittedVolumeComparator, useTopAuctions } from '~/state/explore/topAuctions/useTopAuctions'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 /**
  * Comparator functions for client-side auction sorting.
@@ -162,15 +161,10 @@ function filterAuctionsBySearchString(auctions: readonly EnrichedAuction[], filt
       return false
     }
 
-    const metadataOverride =
-      auction.chainId && auction.tokenAddress
-        ? getAuctionMetadata({ chainId: auction.chainId, tokenAddress: auction.tokenAddress })
-        : undefined
-
-    const symbolMatch = (metadataOverride?.tokenSymbol ?? auction.tokenSymbol).toLowerCase().includes(lowercaseFilter)
+    const symbolMatch = auction.tokenSymbol.toLowerCase().includes(lowercaseFilter)
     const addressMatch = normalizeTokenAddressForCache(auction.tokenAddress).toLowerCase().includes(lowercaseFilter)
     const auctionIdMatch = auction.auctionId.toLowerCase().includes(lowercaseFilter)
-    const nameMatch = (metadataOverride?.tokenName ?? auction.tokenName)?.toLowerCase().includes(lowercaseFilter)
+    const nameMatch = enrichedAuction.auction?.tokenName?.toLowerCase().includes(lowercaseFilter)
 
     return symbolMatch || addressMatch || auctionIdMatch || nameMatch
   })

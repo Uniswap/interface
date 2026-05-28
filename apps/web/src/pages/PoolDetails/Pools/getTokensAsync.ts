@@ -1,5 +1,5 @@
+import { Interface } from '@ethersproject/abi'
 import { Token } from '@uniswap/sdk-core'
-import { Interface } from 'ethers/lib/utils'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
@@ -85,6 +85,7 @@ function parseTokens({
 }
 
 const createCalls = (target: string, callData: string[]): Call[] =>
+  // oxlint-disable-next-line no-shadow
   callData.map((callData) => ({ target, callData, gasLimit: DEFAULT_GAS_LIMIT }))
 
 function createCallsForToken(address: string) {

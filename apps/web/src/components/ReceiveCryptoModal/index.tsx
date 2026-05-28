@@ -11,12 +11,12 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ChooseMultiPlatformProvider } from '~/components/ReceiveCryptoModal/ChooseMultiPlatformProvider'
 import { ChooseProvider } from '~/components/ReceiveCryptoModal/ChooseProvider'
-import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { useModalState } from '~/hooks/useModalState'
 import { ContentWrapper } from '~/pages/Swap/Buy/shared'
+import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 export function ReceiveCryptoModal() {
   const modalState = useModalInitialState(ModalName.ReceiveCryptoModal)
@@ -109,3 +109,5 @@ export function ReceiveCryptoModal() {
     </Modal>
   )
 }
+
+export default ReceiveCryptoModal

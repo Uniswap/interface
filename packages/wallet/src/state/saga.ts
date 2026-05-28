@@ -21,6 +21,7 @@ export const walletMonitoredSagas: Record<string, MonitoredSaga> = {
   },
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* rootWalletSaga() {
   for (const s of walletSagas) {
     yield* spawn(s)

@@ -14,6 +14,6 @@ class RedirectToSourceAppModule(reactContext: ReactApplicationContext) : ReactCo
 
     @ReactMethod
     fun moveAppToBackground() {
-      currentActivity?.moveTaskToBack(true) 
+      reactApplicationContext.currentActivity?.moveTaskToBack(true) 
   }
 }

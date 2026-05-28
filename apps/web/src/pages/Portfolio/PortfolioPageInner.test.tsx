@@ -18,12 +18,12 @@ vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 
+vi.mock('~/hooks/useScrollCompact', () => ({
+  useScrollCompact: vi.fn().mockReturnValue(false),
+}))
+
 vi.mock('~/pages/Portfolio/Header/Header', () => ({
-  PortfolioHeader: ({ scrollY }: { scrollY?: number }) => (
-    <div data-testid="portfolio-header" data-scroll-y={scrollY}>
-      Portfolio Header Mock
-    </div>
-  ),
+  PortfolioHeader: () => <div data-testid="portfolio-header">Portfolio Header Mock</div>,
 }))
 
 vi.mock('~/pages/Portfolio/PortfolioContent', () => ({
@@ -65,12 +65,12 @@ describe('PortfolioPageInner', () => {
     })
 
     it('should render correctly with banner visible', () => {
-      const { container } = render(<PortfolioPageInner scrollY={0} isBannerVisible={true} />)
+      const { container } = render(<PortfolioPageInner />)
       expect(container).toMatchSnapshot()
     })
 
     it('should render correctly with banner hidden', () => {
-      const { container } = render(<PortfolioPageInner scrollY={200} isBannerVisible={false} />)
+      const { container } = render(<PortfolioPageInner />)
       expect(container).toMatchSnapshot()
     })
   })
@@ -89,12 +89,12 @@ describe('PortfolioPageInner', () => {
     })
 
     it('should render demo view with connect wallet banner', () => {
-      const { container } = render(<PortfolioPageInner scrollY={0} isBannerVisible={true} />)
+      const { container } = render(<PortfolioPageInner />)
       expect(container).toMatchSnapshot()
     })
 
     it('should render demo view with bottom margin', () => {
-      const { container } = render(<PortfolioPageInner scrollY={0} isBannerVisible={false} mb={100} />)
+      const { container } = render(<PortfolioPageInner mb={100} />)
       expect(container).toMatchSnapshot()
     })
   })

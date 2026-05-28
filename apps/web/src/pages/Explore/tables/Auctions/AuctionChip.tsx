@@ -7,14 +7,14 @@ import { iconSizes, opacifyRaw } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { useAuctionTimeRemaining } from '~/components/Toucan/Auction/hooks/useAuctionTimeRemaining'
-import { formatCompactFromRaw } from '~/components/Toucan/Auction/utils/fixedPointFdv'
-import { getAuctionMetadata } from '~/components/Toucan/Config/config'
-import { computeProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
-import { createDottedBackgroundStyles } from '~/components/Toucan/utils/createDottedBackgroundStyles'
-import { getChainUrlParam } from '~/features/params/chainParams'
+import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
+import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
+import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
 import { useSrcColor } from '~/hooks/useColor'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const DOT_OPACITY = 10
 const TOKEN_BACKGROUND_OPACITY = 8
@@ -33,14 +33,14 @@ export function AuctionChip({
 
   const chainId = auction.auction?.chainId
   const tokenAddress = auction.auction?.tokenAddress
-  const metadataOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress }) : undefined
-  const tokenName = metadataOverride?.tokenName ?? auction.auction?.tokenName
-  const tokenSymbol = metadataOverride?.tokenSymbol ?? auction.auction?.tokenSymbol
+  const tokenName = auction.auction?.tokenName
+  const tokenSymbol = auction.auction?.tokenSymbol
 
   const projectedFdv = computeProjectedFdvTableValue({ auction, auctionTokenUsdPrice })
 
   const address = auction.auction?.address
-  const logoUrl = metadataOverride?.logoUrl ?? auction.logoUrl
+  const logoOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress })?.logoUrl : undefined
+  const logoUrl = logoOverride ?? auction.logoUrl
 
   // Color extraction logic
   const { tokenColor, tokenColorLoading } = useSrcColor({
@@ -53,7 +53,6 @@ export function AuctionChip({
   const lockedTokenColorRef = useRef<string | null>(null)
 
   // Reset locked color when logoUrl changes
-  // oxlint-disable-next-line react/exhaustive-deps -- logoUrl is intentionally a dependency to trigger reset on logo change
   useEffect(() => {
     lockedTokenColorRef.current = null
   }, [logoUrl])

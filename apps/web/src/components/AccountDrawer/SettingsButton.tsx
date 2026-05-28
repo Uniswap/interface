@@ -18,7 +18,25 @@ export function SettingsButton({
   icon?: ReactNode
 }): JSX.Element {
   return (
-    <TouchableArea row justifyContent="space-between" py="$padding12" onPress={onClick} testID={testId}>
+    <TouchableArea
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      // Negative horizontal margin pulls the row's box out past the parent
+      // SettingsMenu's `px="$padding12"`, then matching inner padding pushes
+      // content back to the original x. Net: content stays put, hover bg
+      // reaches the SlideOutMenu edges. `mx` stays numeric because Tamagui's
+      // negative-token syntax isn't wired up in this codebase (the convention
+      // is raw numbers for negatives, cf. AuthenticatedHeader.tsx); `px`
+      // tracks $padding12 so the two halves can't drift independently.
+      mx={-12}
+      px="$padding12"
+      py="$padding12"
+      borderRadius="$rounded12"
+      hoverStyle={{ backgroundColor: '$surface2' }}
+      onPress={onClick}
+      testID={testId}
+    >
       <Flex row gap="$gap12" alignItems="center">
         {icon}
         <Text variant="subheading2" color="$neutral1">

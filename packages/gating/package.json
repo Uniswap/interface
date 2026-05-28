@@ -12,10 +12,9 @@
     "utilities": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "22.13.1",
-    "@typescript/native-preview": "7.0.0-dev.20260311.1",
-    "depcheck": "1.4.7",
-    "typescript": "5.8.3",
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2",
     "vitest": "3.2.1"
   },
   "scripts": {

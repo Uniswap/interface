@@ -10,6 +10,12 @@
         "cwd": "{projectRoot}"
       }
     },
+    "android:dev:optimized": {
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebugOptimized --app-id=com.uniswap.mobile.dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "android:release": {
       "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
       "options": {
@@ -40,8 +46,20 @@
         "cwd": "{projectRoot}"
       }
     },
-    "check:deps:usage": {
-      "command": "./scripts/checkDepsUsage.sh",
+    "android:beta:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:dev:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:prod:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh prod",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -52,6 +70,7 @@
         "cwd": "{projectRoot}"
       }
     },
+    "check:deps:usage": {},
     "clean": {
       "command": "react-native-clean-project",
       "options": {
@@ -70,14 +89,26 @@
         "cwd": "{projectRoot}"
       }
     },
-    "depcheck": {
-      "command": "depcheck",
+    "env:android:keystore:download": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
-    "env:android:keystore:download": {
-      "command": "bash ./scripts/downloadAndroidKeystore.sh",
+    "env:android:keystore:download:beta": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download:dev": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download:prod": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh prod",
       "options": {
         "cwd": "{projectRoot}"
       }

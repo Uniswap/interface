@@ -6,17 +6,17 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useDerivedPositionInfo } from '~/components/Liquidity/Create/hooks/useDerivedPositionInfo'
-import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
   type DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
   type PositionState,
   type PriceRangeState,
   RangeAmountInputPriceMode,
-} from '~/components/Liquidity/Create/types'
-import type { DepositState } from '~/components/Liquidity/types'
-import { getPriceRangeInfo } from '~/components/Liquidity/utils/priceRangeInfo'
+} from '~/features/Liquidity/Create/types'
+import { getPriceRangeInfo } from '~/features/Liquidity/utils/priceRangeInfo'
+import type { DepositState } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {

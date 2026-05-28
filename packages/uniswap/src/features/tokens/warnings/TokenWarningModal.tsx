@@ -161,6 +161,7 @@ function TokenWarningModalContent({
       tokenAddress: currencyIdToAddress(currencyInfo0.currencyId),
       tokenName: currencyInfo0.currency.name,
       reportText,
+      reportMultichainAsset: Boolean(currencyInfo0.searchMultichainParent),
     })
 
     // report success for the given case

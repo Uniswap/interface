@@ -1,7 +1,7 @@
+import { isWebApp } from '@universe/environment'
 import { PersistState } from 'redux-persist'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
-import { isWebApp } from 'utilities/src/platform'
 
 type PersistAppStateV22 = {
   _persist: PersistState

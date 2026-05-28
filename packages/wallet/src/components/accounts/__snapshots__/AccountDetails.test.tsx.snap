@@ -56,7 +56,9 @@ exports[`AccountDetails renders without error 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
+              "height": 24,
               "position": "relative",
+              "width": 24,
             }
           }
           testID="account-icon"
@@ -64,6 +66,7 @@ exports[`AccountDetails renders without error 1`] = `
           <View
             style={
               {
+                "flex": 1,
                 "flexDirection": "column",
               }
             }
@@ -241,7 +244,9 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
+              "height": 24,
               "position": "relative",
+              "width": 24,
             }
           }
           testID="account-icon"
@@ -249,6 +254,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           <View
             style={
               {
+                "flex": 1,
                 "flexDirection": "column",
               }
             }

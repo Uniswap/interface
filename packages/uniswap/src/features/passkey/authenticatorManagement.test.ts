@@ -10,6 +10,8 @@ import {
   generateDeviceKeyPair,
   getDeviceSession,
   setDeviceSession,
+  storeNeckMetadata,
+  storeNeckSigningKey,
 } from 'uniswap/src/features/passkey/deviceSession'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
 import { type MockedFunction, vi } from 'vitest'
@@ -19,6 +21,7 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
     fetchListAuthenticatorsRequest: vi.fn(),
     fetchChallengeRequest: vi.fn(),
     fetchStartAuthenticatedSessionRequest: vi.fn(),
+    fetchPrepareAddAuthenticatorRequest: vi.fn(),
     fetchAddAuthenticatorRequest: vi.fn(),
     fetchDeleteAuthenticatorRequest: vi.fn(),
   },
@@ -37,7 +40,24 @@ vi.mock('@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-walle
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   authenticateWithPasskey: vi.fn(),
+  refreshNeckSession: vi.fn(),
 }))
+
+vi.mock('uniswap/src/features/passkey/deviceSession', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/passkey/deviceSession')>()
+  return {
+    ...actual,
+    loadNeckMetadata: vi.fn().mockReturnValue(null),
+    loadNeckSigningKey: vi.fn().mockResolvedValue('mock-private-key'),
+    storeNeckMetadata: vi.fn(),
+    storeNeckSigningKey: vi.fn().mockResolvedValue(undefined),
+    generateDeviceKeyPair: vi.fn().mockResolvedValue({
+      privateKey: 'mock-private-key',
+      publicKeyBase64: 'mock-public-key',
+    }),
+    signWithDeviceKey: vi.fn().mockResolvedValue('mock-device-signature'),
+  }
+})
 
 vi.mock('uniswap/src/features/passkey/passkey', () => ({
   authenticatePasskey: vi.fn(),
@@ -66,6 +86,10 @@ const mockFetchStartAuthenticatedSessionRequest =
 const mockFetchListAuthenticatorsRequest = EmbeddedWalletApiClient.fetchListAuthenticatorsRequest as MockedFunction<
   typeof EmbeddedWalletApiClient.fetchListAuthenticatorsRequest
 >
+const mockFetchPrepareAddAuthenticatorRequest =
+  EmbeddedWalletApiClient.fetchPrepareAddAuthenticatorRequest as MockedFunction<
+    typeof EmbeddedWalletApiClient.fetchPrepareAddAuthenticatorRequest
+  >
 const mockFetchAddAuthenticatorRequest = EmbeddedWalletApiClient.fetchAddAuthenticatorRequest as MockedFunction<
   typeof EmbeddedWalletApiClient.fetchAddAuthenticatorRequest
 >
@@ -81,12 +105,15 @@ describe('authenticatorManagement', () => {
 
   afterEach(() => {
     clearDeviceSession()
-    delete process.env['PRIVY_APP_ID']
   })
 
   describe('listAuthenticators', () => {
     it('returns authenticators from the API', async () => {
       const mockAuthenticators = [{ credentialId: 'cred-1' }, { credentialId: 'cred-2' }]
+      mockFetchChallengeRequest.mockResolvedValue({
+        signingPayload: 'mock-signing-payload',
+        sessionActive: true,
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
       mockFetchListAuthenticatorsRequest.mockResolvedValue({
         authenticators: mockAuthenticators,
         recoveryMethods: [],
@@ -96,12 +123,31 @@ describe('authenticatorManagement', () => {
 
       expect(result.authenticators).toEqual(mockAuthenticators)
       expect(result.recoveryMethods).toEqual([])
-      expect(mockFetchListAuthenticatorsRequest).toHaveBeenCalledWith({ walletId: 'wallet-1' })
+      expect(result.lastExportedMs).toBeUndefined()
+      expect(mockFetchListAuthenticatorsRequest).toHaveBeenCalledWith({
+        deviceAuth: expect.objectContaining({ walletId: 'wallet-1' }),
+      })
+    })
+
+    it('passes through lastExported as milliseconds when present', async () => {
+      mockFetchChallengeRequest.mockResolvedValue({
+        signingPayload: 'mock-signing-payload',
+        sessionActive: true,
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+      mockFetchListAuthenticatorsRequest.mockResolvedValue({
+        authenticators: [],
+        recoveryMethods: [],
+        lastExported: BigInt(1_717_000_000_000),
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchListAuthenticatorsRequest>>)
+
+      const result = await listAuthenticators('wallet-1')
+
+      expect(result.lastExportedMs).toBe(1_717_000_000_000)
     })
   })
 
   describe('startAddAuthenticatorSession', () => {
-    it('sets device session on success', async () => {
+    it('sets the ephemeral device session without persisting NECK on success', async () => {
       mockFetchChallengeRequest.mockResolvedValue({
         challengeOptions: 'challenge-json',
       } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
@@ -117,7 +163,8 @@ describe('authenticatorManagement', () => {
 
       expect(result).toBe('existing-credential-123')
       expect(mockAuthenticatePasskey).toHaveBeenCalledWith('challenge-json')
-      // Device session should now be set
+      expect(storeNeckSigningKey).not.toHaveBeenCalled()
+      expect(storeNeckMetadata).not.toHaveBeenCalled()
       expect(getDeviceSession()).not.toBeNull()
       expect(getDeviceSession()?.policyId).toBe('policy-abc')
     })
@@ -142,8 +189,7 @@ describe('authenticatorManagement', () => {
       ).rejects.toThrow('No active device session')
     })
 
-    it('constructs canonical payload and signs with device key', async () => {
-      process.env['PRIVY_APP_ID'] = 'test-app-id'
+    it('signs the server-prepared payload and submits the device signature', async () => {
       const { privateKey } = await generateDeviceKeyPair()
       setDeviceSession({
         privateKey,
@@ -152,20 +198,17 @@ describe('authenticatorManagement', () => {
         walletId: 'wallet-1',
       })
 
-      // Mock the registration challenge
       mockFetchChallengeRequest.mockResolvedValue({
         challengeOptions: 'reg-challenge-json',
-        existingPublicKeys: ['existingKey1=='],
-        keyQuorumId: 'kq-123',
       } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
 
-      // registerPasskey returns JSON with a publicKey in base64url
       const mockCredentialResponse = JSON.stringify({
-        response: {
-          publicKey: 'dGVzdC1wdWJsaWMta2V5', // base64url encoded
-        },
+        response: { publicKey: 'dGVzdC1wdWJsaWMta2V5' },
       })
       mockRegisterPasskey.mockResolvedValue(mockCredentialResponse)
+      mockFetchPrepareAddAuthenticatorRequest.mockResolvedValue({
+        signingPayload: 'server-prepared-payload',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchPrepareAddAuthenticatorRequest>>)
       mockFetchAddAuthenticatorRequest.mockResolvedValue(
         {} as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchAddAuthenticatorRequest>>,
       )
@@ -179,12 +222,41 @@ describe('authenticatorManagement', () => {
       })
 
       expect(mockRegisterPasskey).toHaveBeenCalledWith('reg-challenge-json')
-      expect(mockFetchAddAuthenticatorRequest).toHaveBeenCalledWith(
-        expect.objectContaining({
-          newCredential: mockCredentialResponse,
-          deviceSignature: expect.any(String),
+      expect(mockFetchPrepareAddAuthenticatorRequest).toHaveBeenCalledWith({
+        newCredential: mockCredentialResponse,
+      })
+      expect(mockFetchAddAuthenticatorRequest).toHaveBeenCalledWith({
+        newCredential: mockCredentialResponse,
+        deviceSignature: 'mock-device-signature',
+      })
+    })
+
+    it('throws if PrepareAddAuthenticator returns no signing payload', async () => {
+      const { privateKey } = await generateDeviceKeyPair()
+      setDeviceSession({
+        privateKey,
+        policyId: 'policy-1',
+        policyExpiresAt: Date.now() + 60_000,
+        walletId: 'wallet-1',
+      })
+
+      mockFetchChallengeRequest.mockResolvedValue({
+        challengeOptions: 'reg-challenge-json',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+      mockRegisterPasskey.mockResolvedValue(JSON.stringify({ response: { publicKey: 'dGVzdC1wdWJsaWMta2V5' } }))
+      mockFetchPrepareAddAuthenticatorRequest.mockResolvedValue({
+        signingPayload: '',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchPrepareAddAuthenticatorRequest>>)
+
+      await expect(
+        registerNewAuthenticator({
+          authenticatorAttachment: 0 as unknown as Parameters<
+            typeof registerNewAuthenticator
+          >[0]['authenticatorAttachment'],
+          walletId: 'wallet-1',
         }),
-      )
+      ).rejects.toThrow('PrepareAddAuthenticator returned no signing payload')
+      expect(mockFetchAddAuthenticatorRequest).not.toHaveBeenCalled()
     })
   })
 

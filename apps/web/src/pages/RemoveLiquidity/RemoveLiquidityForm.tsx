@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 import { ErrorCallout } from '~/components/ErrorCallout'
-import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
-import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
 import { StyledPercentInput } from '~/components/PercentInput'
+import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
 import {
   DecreaseLiquidityStep,
   useRemoveLiquidityModalContext,
@@ -57,17 +57,18 @@ export function RemoveLiquidityForm() {
         px="$padding16"
       >
         <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="pool.withdrawAs" values={{ nativeWrappedSymbol: nativeCurrency.symbol }} />
+          {t('pool.withdrawAs', { nativeWrappedSymbol: nativeCurrency.symbol })}
         </Text>
         <Switch
           id="add-as-weth"
           checked={unwrapNativeCurrency}
+          // oxlint-disable-next-line no-shadow
           onCheckedChange={() => setUnwrapNativeCurrency((unwrapNativeCurrency) => !unwrapNativeCurrency)}
           variant="branded"
         />
       </Flex>
     )
-  }, [canUnwrap, nativeCurrency, unwrapNativeCurrency, setUnwrapNativeCurrency])
+  }, [canUnwrap, nativeCurrency, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   return (
     <Flex gap="$gap24">
@@ -87,10 +88,10 @@ export function RemoveLiquidityForm() {
           gap="$gap12"
         >
           <Text variant="body3" color="$neutral2">
-            <Trans i18nKey="common.withdrawal.amount" />
+            {t('common.withdrawal.amount')}
           </Text>
           <Flex row alignItems="center" justifyContent="center" width="100%">
-            <NumericalInputWrapper width="100%">
+            <NumericalInputWrapper style={{ width: '100%' }}>
               <StyledPercentInput
                 value={percent}
                 onUserInput={(value: string) => {
@@ -99,7 +100,7 @@ export function RemoveLiquidityForm() {
                   }
                 }}
                 placeholder="0"
-                $width={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+                fieldWidth={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                 maxDecimals={0}
                 maxLength={3}
               />

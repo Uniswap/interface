@@ -22,7 +22,7 @@ import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock platform detection - we're testing as extension by default
-vi.mock('utilities/src/platform', () => ({
+vi.mock('@universe/environment', () => ({
   isWeb: false,
   isExtension: true,
   isInterface: false,

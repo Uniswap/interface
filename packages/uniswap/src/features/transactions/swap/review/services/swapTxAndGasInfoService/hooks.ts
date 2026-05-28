@@ -8,6 +8,7 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
 import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -85,12 +86,22 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   const presignPermit = usePresignPermit()
   const trace = useTrace()
   const transactionSettings = useAllTransactionSettings()
+  // tx is unavailable here; this service-level hook runs before individual
+  // tx requests are resolved. Recommended falls back to undefined for full overrides.
+  const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
+  // Only treat as "overrides" for the display path when the user explicitly
+  // set `gasLimit`. The backend skips its `limitInflationFactor` (1.15x) only
+  // for an explicit top-level `gasLimit`; partial overrides (maxBaseFee or
+  // priority only) still get the inflated auto-probed limit, so the display
+  // should keep its inflation backoff in that case.
+  const hasOverrides = gasOverrides?.gasLimit !== undefined
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,
+      gasOverrides,
       presignPermit,
     })
-  }, [swapConfig, presignPermit])
+  }, [swapConfig, gasOverrides, presignPermit])
 
   const decorateWithEVMLogging = useEvent(createDecorateSwapTxInfoServiceWithEVMLogging({ trace, transactionSettings }))
 
@@ -99,18 +110,20 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
       ...swapConfig,
       transactionSettings,
       instructionService,
+      hasOverrides,
     })
     return decorateWithEVMLogging(classicService)
-  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
+  }, [swapConfig, transactionSettings, instructionService, hasOverrides, decorateWithEVMLogging])
 
   const bridgeSwapTxInfoService = useMemo(() => {
     const bridgeService = createBridgeSwapTxAndGasInfoService({
       ...swapConfig,
       transactionSettings,
       instructionService,
+      hasOverrides,
     })
     return decorateWithEVMLogging(bridgeService)
-  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
+  }, [swapConfig, transactionSettings, instructionService, hasOverrides, decorateWithEVMLogging])
 
   const uniswapXSwapTxInfoService = useMemo(() => {
     return createUniswapXSwapTxAndGasInfoService()
@@ -123,9 +136,14 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   }, [swapConfig.getSwapDelegationInfo])
 
   const wrapTxInfoService = useMemo(() => {
-    const wrapService = createWrapTxAndGasInfoService({ ...swapConfig, transactionSettings, instructionService })
+    const wrapService = createWrapTxAndGasInfoService({
+      ...swapConfig,
+      transactionSettings,
+      instructionService,
+      hasOverrides,
+    })
     return decorateWithEVMLogging(wrapService)
-  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
+  }, [swapConfig, transactionSettings, instructionService, hasOverrides, decorateWithEVMLogging])
 
   const solanaSwapTxInfoService = useMemo(() => {
     return createSolanaSwapTxAndGasInfoService()
@@ -273,7 +291,8 @@ export function useSwapParams(): {
   return {
     approvalTxInfo,
     derivedSwapInfo,
-    trade: trade ?? undefined,
+    // Swap tx data is useless without a connected wallet — suppress trade to prevent /swap polling
+    trade: address ? (trade ?? undefined) : undefined,
   }
 }
 

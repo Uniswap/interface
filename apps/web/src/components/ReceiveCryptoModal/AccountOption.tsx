@@ -8,10 +8,8 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
-
 const Container = deprecatedStyled.div`
   display: flex;
   padding-right: 8px;
@@ -48,9 +46,9 @@ export function AccountOption({
     <Container onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <StatusIcon address={account} size={40} />
       <Identifiers>
-        <ThemedText.SubHeader>
+        <Text variant="body2">
           <AddressDisplay address={account} />
-        </ThemedText.SubHeader>
+        </Text>
         {uniswapUsername || ensUsername ? (
           <Text variant="body4" color="neutral2">
             {isHovered ? platformAddressDisplay : shortenAddress({ address: account })}

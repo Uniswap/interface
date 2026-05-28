@@ -1,11 +1,9 @@
 // Custom Uniswap methods that the extension will handle
-/* oxlint-disable typescript/naming-convention */
 export enum UniswapMethods {
   uniswap_openSidebar = 'uniswap_openSidebar',
 }
 
 // Methods that are not supported by the extension because they are deprecated
-/* oxlint-disable typescript/naming-convention */
 export enum DeprecatedEthMethods {
   eth_sign = 'eth_sign', // Security risk
   eth_signTypedData_v3 = 'eth_signTypedData_v3',
@@ -19,7 +17,6 @@ export enum DeprecatedEthMethods {
 // Depending on the frequency with which we see these methods we could show an error
 // in the sidebar for users.
 // The methods come from: https://docs.metamask.io/wallet/reference/json-rpc-api/
-/* oxlint-disable typescript/naming-convention */
 export enum UnsupportedEthMethods {
   wallet_addEthereumChain = 'wallet_addEthereumChain',
   wallet_registerOnboarding = 'wallet_registerOnboarding',

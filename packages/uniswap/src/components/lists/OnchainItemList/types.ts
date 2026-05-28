@@ -26,4 +26,5 @@ export type OnchainItemSection<T extends OnchainItemListOption> = {
   rightElement?: JSX.Element
   endElement?: JSX.Element
   sectionHeader?: JSX.Element
+  sectionHeaderHeight?: number
 }

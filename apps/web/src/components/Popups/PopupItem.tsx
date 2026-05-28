@@ -18,7 +18,7 @@ import {
   UniswapXOrderPopupContent,
 } from '~/components/Popups/PopupContent'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
-import { PopupContent, PopupType, SwitchNetworkAction } from '~/components/Popups/types'
+import { PopupContent, PopupType, SwitchNetworkAction } from '~/state/popups/types'
 
 // oxlint-disable-next-line typescript/consistent-return -- biome-parity: oxlint is stricter here
 export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {

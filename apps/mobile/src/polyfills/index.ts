@@ -3,6 +3,10 @@
  * https://docs.ethers.io/v5/cookbook/react-native/#cookbook-reactnative-security
  */
 
+// Install crypto.subtle polyfill BEFORE any other crypto imports
+import { install as installQuickCrypto } from 'react-native-quick-crypto'
+installQuickCrypto()
+
 // Import the crypto getRandomValues shim BEFORE ethers shims
 import 'react-native-get-random-values'
 // Import the ethers shims BEFORE ethers

@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import { isWebPlatform } from '@universe/environment'
 import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
-import { isWebPlatform } from 'utilities/src/platform'
 // oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
@@ -100,7 +100,6 @@ function TraceInner({
   }, [parentTrace, screen, section, modal, element, page])
 
   // Log impression on mount for elements that are not part of the navigation tree
-  // oxlint-disable-next-line react/exhaustive-deps -- Impressions should only be logged on mount
   useEffect(() => {
     if (!devDoubleLogDisableMap[id] && logImpression && !isPartOfNavigationTree) {
       if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {

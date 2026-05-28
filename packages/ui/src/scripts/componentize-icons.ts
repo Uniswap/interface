@@ -1,13 +1,16 @@
 /* oxlint-disable no-console -- misc script, so it's okay */
 /* oxlint-disable typescript/no-explicit-any -- misc script, so it's okay */
 
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path, { join } from 'node:path'
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
-import { ensureDirSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'fs-extra'
 // oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
+
+// Generates .tsx from src/assets/icons/*.svg and re-exports hand-written icons in components/icons
+// without a matching SVG (does not create missing .tsx files).
 
 // Types
 
@@ -43,10 +46,12 @@ async function run(): Promise<void> {
 
 async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): Promise<void> {
   // Ensure output directory exists
-  ensureDirSync(dirs.output)
+  mkdirSync(dirs.output, { recursive: true })
 
   let indexFile = ``
-  const fileNames = readdirSync(dirs.input).filter((name: string) => name.endsWith('.svg'))
+  const fileNames = readdirSync(dirs.input)
+    .filter((name: string) => name.endsWith('.svg'))
+    .sort()
 
   for (const fileName of fileNames) {
     const className = generateClassName(fileName)
@@ -77,6 +82,8 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
     .map((name: string) => path.basename(name, '.tsx'))
     .filter((name: string) => !generatedClassNames.has(name))
     .filter((name: string) => name !== 'index' && name !== 'exported')
+    .filter((name: string) => !name.endsWith('.stories'))
+    .sort()
 
   for (const className of existingComponents) {
     indexFile += `\nexport * from './${className}'`
@@ -175,7 +182,10 @@ function generateSVGComponentString(svg: string, fileName: string): string {
     .replace(/<\/stop/g, '</Stop')
     .replace(/<clipPath/g, '<ClipPath')
     .replace(/<\/clipPath/g, '</ClipPath')
+    .replace(/<mask/g, '<Mask')
+    .replace(/<\/mask/g, '</Mask')
     .replace(/px/g, '')
+    .replace(/style="mask-type:luminance"/g, "style={{ maskType: 'luminance' }}")
 
   const foundFills = Array.from(parsedSvgToReact.matchAll(/fill="(#[a-z0-9]+)"/gi)).flat()
   const defaultFill = foundFills[1]
@@ -191,6 +201,7 @@ G,
 LinearGradient,
 RadialGradient,
 Line,
+Mask,
 Path,
 Polygon,
 Polyline,

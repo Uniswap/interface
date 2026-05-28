@@ -1,5 +1,5 @@
+import { isWebPlatform } from '@universe/environment'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type BottomSheetContextState = {
   // `isSheetReady` is `true` as soon as the sheet has just begun animating from the bottom.

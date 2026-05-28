@@ -68,6 +68,7 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
  * Internal implementation that actually builds the fragments.
  * Separated to allow memoization wrapper.
  */
+// oxlint-disable-next-line complexity
 function buildActivityRowFragmentsInternal(details: TransactionDetails): ActivityRowFragments {
   const { typeInfo, chainId } = details
 
@@ -165,6 +166,7 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
           counterparty: typeInfo.sender ? getValidAddress({ address: typeInfo.sender, chainId }) : null,
           typeLabel: {
             baseGroup: ActivityFilterType.Receives,
+            overrideLabelKey: 'transaction.status.receive.success',
           },
           protocolInfo: toProtocolInfo(typeInfo.dappInfo),
         }

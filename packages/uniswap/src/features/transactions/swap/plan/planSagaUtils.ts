@@ -1,6 +1,7 @@
 import { ChainedQuoteResponse, TradingApi } from '@universe/api'
 import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
 import { WalletExecutionContext } from '@universe/api/src/clients/trading/__generated__/models/WalletExecutionContext'
+import { isProdEnv } from '@universe/environment'
 import { call, race, SagaGenerator, take } from 'typed-redux-saga'
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -33,7 +34,6 @@ import { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transacti
 import { ChainedActionTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { signalSwapModalClosed } from 'uniswap/src/utils/saga'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 
 interface FetchAndTransformPlanParams {

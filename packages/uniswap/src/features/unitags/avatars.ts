@@ -1,5 +1,4 @@
 import { AvatarUploadResponse, SignMessageFunc, UnitagsServiceApiClient } from '@universe/api'
-import { UnitagsApiClientType } from '@universe/api/src/clients/unitags/createUnitagsApiClient'
 import { isLocalFileUri, uploadFileToS3 } from 'uniswap/src/features/unitags/fileUtils'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -10,7 +9,7 @@ export async function uploadAndUpdateAvatarAfterClaim({
   address,
   signMessage,
 }: {
-  unitagsApiClient: UnitagsApiClientType | UnitagsServiceApiClient
+  unitagsApiClient: UnitagsServiceApiClient
   username: string
   imageUri: string
   address: string

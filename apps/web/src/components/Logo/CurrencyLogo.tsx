@@ -4,7 +4,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { AssetLogoBaseProps } from '~/components/Logo/AssetLogo'
 
-export default function CurrencyLogo(
+export function CurrencyLogo(
   props: AssetLogoBaseProps & {
     currency?: Currency | null
   },

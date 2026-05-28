@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/explicit-function-return-type */
 import { StorageSettingsContent } from 'uniswap/src/features/settings/storage/StorageSettingsContent'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { fireEvent, render, waitFor } from 'uniswap/src/test/test-utils'

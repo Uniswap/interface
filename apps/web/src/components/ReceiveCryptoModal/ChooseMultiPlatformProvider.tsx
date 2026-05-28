@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
@@ -16,8 +16,8 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { shortenAddress } from 'utilities/src/addresses'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
-import { v4 as uuid } from 'uuid'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
@@ -212,12 +212,12 @@ export function ChooseMultiPlatformProvider({
             }}
             components={{
               tosLink: (
-                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/terms-of-service/">
+                <StyledLink color={colors.neutral3.val} href={uniswapUrls.termsOfServiceUrl}>
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/privacy-policy">
+                <StyledLink color={colors.neutral3.val} href={uniswapUrls.privacyPolicyUrl}>
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

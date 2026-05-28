@@ -1,9 +1,9 @@
 import { getAddress } from '@ethersproject/address'
+import { HexString } from '@universe/encoding'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { HexString } from 'utilities/src/addresses/hex'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { tryCatch } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
@@ -203,6 +203,23 @@ export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
   }
 
   return false
+}
+
+/**
+ * Compare two EVM addresses for equality, returning `false` when either side is missing.
+ *
+ * Wraps `areAddressesEqual` so callers that may receive an undefined address aren't fooled by its
+ * `undefined === undefined → true` short-circuit (which would otherwise mark "no address" as equal).
+ */
+export function areEvmAddressesEqual(addressA: Maybe<string>, addressB: Maybe<string>): boolean {
+  if (!addressA || !addressB) {
+    return false
+  }
+
+  return areAddressesEqual({
+    addressInput1: { address: addressA, platform: Platform.EVM },
+    addressInput2: { address: addressB, platform: Platform.EVM },
+  })
 }
 
 /**

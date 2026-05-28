@@ -15,7 +15,7 @@ function createGetOnPressRetry(ctx: {
       // Handles scenarios where plan cannot disable one-click swap beyond first step.
       const shouldDisableOneClickSwap = !error.stepIndex || error.stepIndex === 0
 
-      if (error.step.type === TransactionStepType.SwapTransactionBatched && shouldDisableOneClickSwap) {
+      if (error.step.type === TransactionStepType.SwapTransactionWalletCall && shouldDisableOneClickSwap) {
         return ctx.disableOneClickSwap
       }
     }

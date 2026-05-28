@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
@@ -22,12 +23,13 @@ import { gqlToCurrency } from '~/appGraphql/data/util'
 import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { useAccount } from '~/hooks/useAccount'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
+import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { PositionInfo } from '~/pages/PoolDetails/Pools/cache'
-import useMultiChainPositions from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
+import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import { Swap } from '~/pages/Swap'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const PoolDetailsStatsButtonsRow = styled(Flex, {
   row: true,
@@ -48,6 +50,7 @@ const PoolDetailsStatsButtonsRow = styled(Flex, {
 
 interface PoolDetailsStatsButtonsProps {
   chainId?: UniverseChainId
+  poolIdOrAddress?: string
   token0?: GraphQLApi.Token
   token1?: GraphQLApi.Token
   feeTier?: number
@@ -118,6 +121,7 @@ function findMatchingPosition({
 
 export function PoolDetailsStatsButtons({
   chainId,
+  poolIdOrAddress,
   token0,
   token1,
   feeTier,
@@ -127,6 +131,7 @@ export function PoolDetailsStatsButtons({
   protocolVersion,
   loading,
 }: PoolDetailsStatsButtonsProps) {
+  const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const account = useAccount()
   const { t } = useTranslation()
   const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
@@ -150,6 +155,22 @@ export function PoolDetailsStatsButtons({
       if (tokenId) {
         navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainUrlParam}/${tokenId}`, {
           state: { from: location.pathname },
+        })
+      } else if (isAddLiquidityRevamp && poolIdOrAddress) {
+        const params = buildPoolSearchParams({
+          currencyA: currency0Address,
+          currencyB: currency1Address,
+          chain: chainUrlParam,
+          fee:
+            feeTier !== undefined
+              ? { feeAmount: feeTier, tickSpacing: tickSpacing ?? 0, isDynamic: isDynamic ?? false }
+              : undefined,
+          hookAddress,
+          protocolVersion: protocolVersion?.toLowerCase(),
+        })
+        const search = params.toString()
+        navigate(`/positions/add/${chainUrlParam}/${poolIdOrAddress}${search ? `?${search}` : ''}`, {
+          state: { from: location.pathname, entryPoint: location.pathname },
         })
       } else {
         const queryParams = new URLSearchParams()

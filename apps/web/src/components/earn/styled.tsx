@@ -1,7 +1,7 @@
+import { Flex, styled } from 'ui/src'
 import uImage from '~/assets/images/big_unicorn.png'
 import noise from '~/assets/images/noise.png'
 import xlUnicorn from '~/assets/images/xl_uni.png'
-import { AutoColumn } from '~/components/deprecated/Column'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 export const CardBGImage = deprecatedStyled.span<{ desaturate?: boolean }>`
@@ -46,11 +46,15 @@ export const CardNoise = deprecatedStyled.span`
   user-select: none;
 `
 
-export const CardSection = deprecatedStyled(AutoColumn)<{ disabled?: boolean }>`
-  padding: 1rem;
-  z-index: 1;
-  opacity: ${({ disabled }) => disabled && '0.4'};
-`
+export const CardSection = styled(Flex, {
+  padding: '$spacing16',
+  zIndex: 1,
+  variants: {
+    disabled: {
+      true: { opacity: 0.4 },
+    },
+  },
+})
 
 export const Break = deprecatedStyled.div`
   width: 100%;

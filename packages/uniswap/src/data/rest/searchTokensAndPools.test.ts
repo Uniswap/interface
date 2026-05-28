@@ -1,4 +1,4 @@
-import { ChainToken, MultichainToken, SpamCode, Token } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { ChainToken, MultichainToken, SpamCode, Token } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { multichainTokenToCurrencyInfos, searchTokenToCurrencyInfo } from 'uniswap/src/data/rest/searchTokensAndPools'
 
 function createMultichainToken(
@@ -51,6 +51,13 @@ describe('multichainTokenToCurrencyInfos', () => {
     expect(results[0]?.currency.symbol).toBe('USDC')
     expect(results[1]?.currency.chainId).toBe(137)
     expect(results[1]?.currency.symbol).toBe('USDC')
+
+    const expectedParent = {
+      id: 'mc:1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      tokenCurrencyIds: [results[0]!.currencyId, results[1]!.currencyId],
+    }
+    expect(results[0]?.searchMultichainParent).toEqual(expectedParent)
+    expect(results[1]?.searchMultichainParent).toEqual(expectedParent)
   })
 
   it('should use shared logoUrl from MultichainToken', () => {

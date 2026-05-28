@@ -1,45 +1,50 @@
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   convertRestBalanceToPortfolioBalance,
-  createPortfolioCacheUpdater,
   formatPortfolioResponseToMap,
+  usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
-import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { DAI_CURRENCY_INFO, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
+import { renderHookWithProviders } from 'uniswap/src/test/render'
 
-const mainnetNativeAddress = getNativeAddress(UniverseChainId.Mainnet)
+const {
+  mockUseEnabledChains,
+  mockUseCurrencyIdToVisibility,
+  mockUseGetPortfolioQuery,
+  mockUseHideSmallBalancesSetting,
+  mockUseHideSpamTokensSetting,
+  mockUsePlatformBasedFetchPolicy,
+} = vi.hoisted(() => ({
+  mockUseEnabledChains: vi.fn(),
+  mockUseCurrencyIdToVisibility: vi.fn(),
+  mockUseGetPortfolioQuery: vi.fn(),
+  mockUseHideSmallBalancesSetting: vi.fn(),
+  mockUseHideSpamTokensSetting: vi.fn(),
+  mockUsePlatformBasedFetchPolicy: vi.fn(),
+}))
 
-const mockPortfolioData = {
-  portfolio: {
-    balances: [
-      { token: { address: mainnetNativeAddress, chainId: 1 }, amount: { amount: 1 }, isHidden: false },
-      { token: { address: '0x2', chainId: 1 }, amount: { amount: 2 }, isHidden: false },
-      { token: { address: mainnetNativeAddress, chainId: 1 }, amount: { amount: 3 }, isHidden: true },
-    ],
-    totalValueUsd: 300,
-  },
-}
+vi.mock('uniswap/src/data/rest/getPortfolio', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/rest/getPortfolio')>()),
+  useGetPortfolioQuery: mockUseGetPortfolioQuery,
+}))
 
-const mockPortfolioBalance1: PortfolioBalance = {
-  balanceUSD: 100,
-  cacheId: 'TokenBalance:1-0x1-0xuser',
-  currencyInfo: UNI_CURRENCY_INFO,
-  id: '1-0x1-0xuser',
-  isHidden: false,
-  quantity: 1,
-  relativeChange24: 2.5,
-}
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: mockUseEnabledChains,
+}))
 
-const mockPortfolioBalance2: PortfolioBalance = {
-  balanceUSD: 200,
-  cacheId: 'TokenBalance:1-0x3-0xuser',
-  currencyInfo: DAI_CURRENCY_INFO,
-  id: '1-0x3-0xuser',
-  isHidden: false,
-  quantity: 1,
-  relativeChange24: 0,
-}
+vi.mock('uniswap/src/features/settings/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/settings/hooks')>()),
+  useHideSmallBalancesSetting: mockUseHideSmallBalancesSetting,
+  useHideSpamTokensSetting: mockUseHideSpamTokensSetting,
+}))
+
+vi.mock('uniswap/src/features/transactions/selectors', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/transactions/selectors')>()),
+  useCurrencyIdToVisibility: mockUseCurrencyIdToVisibility,
+}))
+
+vi.mock('uniswap/src/utils/usePlatformBasedFetchPolicy', () => ({
+  usePlatformBasedFetchPolicy: mockUsePlatformBasedFetchPolicy,
+}))
 
 describe(formatPortfolioResponseToMap, () => {
   const owner = '0xuser'
@@ -237,64 +242,67 @@ describe(convertRestBalanceToPortfolioBalance, () => {
   })
 })
 
-describe(createPortfolioCacheUpdater, () => {
-  it('updates balance visibility and total value when hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
+describe(usePortfolioTotalValue, () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    window.localStorage.clear()
 
-    const updater = createPortfolioCacheUpdater(ctx)({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Execute the update
-    updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
-
-    // Verify the key was built correctly
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
-    const result = updaterFn(mockPortfolioData)
-
-    expect(result.portfolio.balances[0].isHidden).toBe(true)
-    expect(result.portfolio.balances[1].isHidden).toBe(false)
-    expect(result.portfolio.balances[2].isHidden).toBe(true)
-    expect(result.portfolio.totalValueUsd).toBe(200)
+    mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    mockUsePlatformBasedFetchPolicy.mockReturnValue({ pollInterval: false })
+    mockUseCurrencyIdToVisibility.mockReturnValue({})
+    mockUseHideSmallBalancesSetting.mockReturnValue(false)
+    mockUseHideSpamTokensSetting.mockReturnValue(false)
   })
 
-  it('updates balance visibility and total value when un-hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
-
-    const updater = createPortfolioCacheUpdater(ctx)({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
+  it('returns the raw error state when the portfolio total request errors before any cached data exists', () => {
+    mockUseGetPortfolioQuery.mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      refetch: vi.fn(),
+      error: new Error('Network error'),
+      status: 'error',
+      dataUpdatedAt: undefined,
     })
 
-    // Execute the update
-    updater({ hidden: false, portfolioBalance: mockPortfolioBalance2 })
+    const { result } = renderHookWithProviders(() =>
+      usePortfolioTotalValue({
+        evmAddress: '0x123',
+      }),
+    )
 
-    // Verify the key was built correctly
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
+    expect(result.current.data).toBeUndefined()
+    expect(result.current.loading).toBe(false)
+    expect(result.current.error).toEqual(expect.any(Error))
+    expect(result.current.dataUpdatedAt).toBeUndefined()
+  })
+
+  it('returns cached portfolio total data alongside the raw error metadata', () => {
+    mockUseGetPortfolioQuery.mockReturnValue({
+      data: {
+        balanceUSD: 100,
+        percentChange: 2,
+        absoluteChangeUSD: 5,
+      },
+      isFetching: false,
+      refetch: vi.fn(),
+      error: new Error('Network error'),
+      status: 'error',
+      dataUpdatedAt: 1710000000000,
     })
 
-    // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
-    const result = updaterFn(mockPortfolioData)
+    const { result } = renderHookWithProviders(() =>
+      usePortfolioTotalValue({
+        evmAddress: '0x123',
+      }),
+    )
 
-    expect(result.portfolio.balances[0].isHidden).toBe(false)
-    expect(result.portfolio.balances[1].isHidden).toBe(false)
-    expect(result.portfolio.balances[2].isHidden).toBe(false)
-    expect(result.portfolio.totalValueUsd).toBe(500)
+    expect(result.current.loading).toBe(false)
+    expect(result.current.data).toEqual({
+      balanceUSD: 100,
+      percentChange: 2,
+      absoluteChangeUSD: 5,
+    })
+    expect(result.current.error).toEqual(expect.any(Error))
+    expect(result.current.dataUpdatedAt).toBe(1710000000000)
   })
 })

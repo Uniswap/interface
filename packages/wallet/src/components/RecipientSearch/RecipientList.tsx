@@ -1,4 +1,5 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
+import { isWebPlatform } from '@universe/environment'
 import { memo, useCallback } from 'react'
 import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -16,7 +17,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export type RecipientSection = SectionListData<SearchableRecipient> & {
   title?: string
@@ -120,6 +120,7 @@ export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: R
         address={recipient.address}
         overrideDisplayName={isNonUnitagSubdomain && recipient.name ? recipient.name : undefined}
         showViewOnlyBadge={isViewOnlyWallet}
+        addressNumVisibleCharacters={8}
         size={35}
       />
     </TouchableArea>

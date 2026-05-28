@@ -1,13 +1,14 @@
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function V4HooksInfo(): JSX.Element {
   const { t } = useTranslation()
@@ -25,6 +26,7 @@ export function V4HooksInfo(): JSX.Element {
         severity: WarningSeverity.None,
         modalName: ModalName.V4HooksInfo,
         icon: <UniswapLogo size="$icon.24" />,
+        zIndex: zIndexes.popover,
       }}
       trigger={
         <Flex row centered>

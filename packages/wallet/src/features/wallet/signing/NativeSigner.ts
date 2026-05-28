@@ -1,8 +1,8 @@
 /* oxlint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
+import { HexString } from '@universe/encoding'
 import { Bytes, providers, Signer } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
-import { HexString } from 'utilities/src/addresses/hex'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**

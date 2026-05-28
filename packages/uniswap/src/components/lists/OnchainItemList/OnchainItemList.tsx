@@ -3,14 +3,18 @@ import { EffectCallback, MutableRefObject } from 'react'
 import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
+import type { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export interface OnchainItemListRef {
   scrollToLocation: (params: { itemIndex: number; sectionIndex: number; animated: boolean }) => void
 }
 
-export type SectionRowInfo = { section: SectionHeaderProps }
+export type SectionRowInfo = {
+  section: SectionHeaderProps & {
+    sectionHeaderHeight?: number
+  }
+}
 
 export interface ItemRowInfo<T extends OnchainItemListOption> {
   item: T

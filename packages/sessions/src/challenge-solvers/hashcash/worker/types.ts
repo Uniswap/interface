@@ -19,6 +19,13 @@ interface CreateHashcashWorkerChannelContext {
    * Called once on first channel creation (singleton pattern).
    */
   getWorker: () => Worker
+  /**
+   * Optional callback invoked when the Worker itself errors (boot failure,
+   * uncaught exception, messageerror). Fires before pending `findProof`
+   * promises reject so apps can log the failure to Datadog with the raw
+   * `ErrorEvent` (e.g. `importScripts` NetworkError).
+   */
+  onWorkerError?: (error: Error) => void
 }
 
 /**

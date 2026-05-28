@@ -1,9 +1,9 @@
+import { isMobileWeb } from '@universe/environment'
 import { useAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { Flex, RemoveScroll } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileWeb } from 'utilities/src/platform'
 import { DefaultMenu } from '~/components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
@@ -54,7 +54,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }): JSX.El
   )
 }
 
-function AccountDrawer(): JSX.Element {
+export function AccountDrawer(): JSX.Element {
   const accountDrawer = useAccountDrawer()
 
   // close on escape keypress
@@ -82,5 +82,3 @@ function AccountDrawer(): JSX.Element {
     </RemoveScroll>
   )
 }
-
-export default AccountDrawer

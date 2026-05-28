@@ -144,21 +144,6 @@ test.describe(
       })
     })
 
-    test.describe('Stats Tiles', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        // Stats content comes from ListTransactions (useSwapsThisWeek); section visibility needs GetPortfolio.
-        await goToPortfolioOverview({ page, graphql, dataApi })
-      })
-
-      test('should display swaps this week stat', async ({ page }) => {
-        await expect(page.getByTestId(TestID.PortfolioOverviewStatsSwapsThisWeek)).toBeVisible()
-      })
-
-      test('should display swapped this week stat', async ({ page }) => {
-        await expect(page.getByTestId(TestID.PortfolioOverviewStatsSwappedThisWeek)).toBeVisible()
-      })
-    })
-
     test.describe('Mini Tokens Table', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
         // Token rows come from GetPortfolio only.

@@ -12,8 +12,28 @@ linker = "hoisted"
 save = "exact"
 
 # Supply chain protection: reject package versions published less than 3 days ago
-# To bypass for specific packages: minimumReleaseAgeExcludes = ["package-name"]
+# @uniswap/client-* packages are internal service definitions that are frequently
+# updated alongside backend proto changes and are trusted as first-party packages.
+# @privy-io/expo, @privy-io/js-sdk-core, and @privy-io/routes are allowed for
+# time-sensitive SDK upgrades coordinated with Privy.
 minimumReleaseAge = 259200
+minimumReleaseAgeExcludes = [
+  "@privy-io/expo",
+  "@privy-io/js-sdk-core",
+  "@privy-io/routes",
+  "@uniswap/client-conversion-proxy",
+  "@uniswap/client-data-api",
+  "@uniswap/client-enclave-data-proxy",
+  "@uniswap/client-explore",
+  "@uniswap/client-for",
+  "@uniswap/client-liquidity",
+  "@uniswap/client-notification-service",
+  "@uniswap/client-platform-service",
+  "@uniswap/client-privy-embedded-wallet",
+  "@uniswap/client-trading",
+  "@uniswap/client-unirpc-v2",
+  "@uniswap/client-unitag",
+]
 
 # Pin the default registry explicitly to prevent registry confusion attacks
 registry = "https://registry.npmjs.org"

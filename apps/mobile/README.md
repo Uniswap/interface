@@ -57,15 +57,15 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
     Look at the `.nvmrc` file in your workspace to determine which version to install. Then run the following command in your terminal with that version:
 
     ```bash
-    nvm install 22.13.1
-    nvm use 22.13.1
+    nvm install 22.22.2
+    nvm use 22.22.2
     ```
 
     Quit and re-open the terminal, and then run to confirm that v22 is running
 
     ```bash
     > node -v
-    v22.13.1
+    v22.22.2
     ```
 
     Alternatively, to automatically try to find and use an `.nvmrc` file in your workspace, per the [official nvm docs for zsh](https://github.com/nvm-sh/nvm?tab=readme-ov-file#zsh), add the following script to your shell (typically `~/.zshrc` on mac):

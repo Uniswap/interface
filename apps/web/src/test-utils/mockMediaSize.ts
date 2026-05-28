@@ -25,8 +25,6 @@ function getMediaState(size: keyof MediaQueryState) {
   return mediaState
 }
 
-function mockMediaSize(size: keyof MediaQueryState) {
+export function mockMediaSize(size: keyof MediaQueryState) {
   mocked(useMedia).mockReturnValue(getMediaState(size))
 }
-
-export default mockMediaSize

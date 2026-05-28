@@ -10,24 +10,67 @@ import type {
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import {
-  base64ToBase64url,
-  base64urlToBase64,
-  canonicalizeJSON,
+  ensureNeckKeyPair,
   generateDeviceKeyPair,
   getDeviceSession,
+  loadNeckMetadata,
   setDeviceSession,
   signWithDeviceKey,
 } from 'uniswap/src/features/passkey/deviceSession'
-import { authenticateWithPasskey } from 'uniswap/src/features/passkey/embeddedWallet'
+import { authenticateWithPasskey, refreshNeckSession } from 'uniswap/src/features/passkey/embeddedWallet'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
 import { logger } from 'utilities/src/logger/logger'
 
-export async function listAuthenticators(
-  walletId?: string,
-): Promise<{ authenticators: Authenticator[]; recoveryMethods: RecoveryMethod[] }> {
+export async function listAuthenticators(walletId?: string): Promise<{
+  authenticators: Authenticator[]
+  recoveryMethods: RecoveryMethod[]
+  lastExportedMs?: number
+}> {
   try {
-    const resp = await EmbeddedWalletApiClient.fetchListAuthenticatorsRequest({ walletId })
-    return { authenticators: resp.authenticators, recoveryMethods: resp.recoveryMethods }
+    const neckMeta = loadNeckMetadata()
+    const resolvedWalletId = walletId ?? neckMeta?.walletId
+
+    if (!resolvedWalletId) {
+      throw new Error('No walletId available for device auth')
+    }
+
+    // Ensure we have both metadata AND the in-memory private key. If either is
+    // missing (e.g. window was closed since last session), this regenerates a fresh
+    // pair; we then MUST refresh the server-side NECK registration to bind the new
+    // pub key, since Challenge(sessionActive) doesn't verify pub-key match.
+    const {
+      privateKey: neckSigningKey,
+      publicKeyBase64: devicePublicKey,
+      isFresh,
+    } = await ensureNeckKeyPair(resolvedWalletId)
+
+    if (isFresh) {
+      await refreshNeckSession(devicePublicKey, resolvedWalletId)
+    }
+
+    const challengeParams = {
+      type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
+      action: Action.LIST_AUTHENTICATORS,
+      walletId: resolvedWalletId,
+      devicePublicKey,
+    }
+
+    let challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeParams)
+    if (!challenge.sessionActive) {
+      await refreshNeckSession(devicePublicKey, resolvedWalletId)
+      challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeParams)
+    }
+
+    if (!challenge.signingPayload) {
+      throw new Error('Challenge did not return a signing payload for LIST_AUTHENTICATORS')
+    }
+
+    const deviceSignature = await signWithDeviceKey(neckSigningKey, challenge.signingPayload)
+    const resp = await EmbeddedWalletApiClient.fetchListAuthenticatorsRequest({
+      deviceAuth: { deviceSignature, walletId: resolvedWalletId, signingPayload: challenge.signingPayload },
+    })
+    const lastExportedMs = resp.lastExported !== undefined ? Number(resp.lastExported) : undefined
+    return { authenticators: resp.authenticators, recoveryMethods: resp.recoveryMethods, lastExportedMs }
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -40,6 +83,10 @@ export async function listAuthenticators(
 }
 
 export async function startAddAuthenticatorSession(walletId?: string): Promise<string> {
+  // NECK_NEW is intentionally ephemeral: the server doesn't persist it in DDB
+  // for this flow, so the wallet's prior NECK remains the device key validated
+  // by deviceAuth endpoints. Persisting NECK_NEW would shadow it and break
+  // subsequent signed calls — keep it in the in-memory deviceSession only.
   const { privateKey, publicKeyBase64: devicePublicKey } = await generateDeviceKeyPair()
 
   const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
@@ -88,7 +135,6 @@ export async function registerNewAuthenticator({
   }
 
   try {
-    // Challenge for registration — returns keyQuorumId + existingPublicKeys
     const options = { authenticatorAttachment, username } as unknown as RegistrationOptions
     const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_REGISTRATION,
@@ -104,31 +150,15 @@ export async function registerNewAuthenticator({
     // Register new passkey in browser
     const newCredential = await registerPasskey(challenge.challengeOptions)
 
-    // Extract new public key from credential response (base64url → standard base64)
-    // newCredential is JSON.stringify(RegistrationResponseJSON) from @simplewebauthn/browser
-    const credentialJson = JSON.parse(newCredential)
-    if (!credentialJson?.response?.publicKey) {
-      throw new Error('Credential response missing publicKey')
+    // Server builds the canonical update-key-quorum PATCH payload (with privy-request-expiry
+    // baked in) and returns it for the device key to sign as-is.
+    const prepareResponse = await EmbeddedWalletApiClient.fetchPrepareAddAuthenticatorRequest({
+      newCredential,
+    })
+    if (!prepareResponse.signingPayload) {
+      throw new Error('PrepareAddAuthenticator returned no signing payload')
     }
-    const b64urlKey: string = credentialJson.response.publicKey
-    const newPublicKey = base64urlToBase64(b64urlKey)
-
-    // Construct Privy PATCH canonical payload and sign with device key
-    const allKeys = [...challenge.existingPublicKeys, newPublicKey]
-    const privyAppId = process.env['PRIVY_APP_ID']
-    if (!privyAppId) {
-      throw new Error('PRIVY_APP_ID is not set')
-    }
-    const payload = {
-      body: { public_keys: allKeys },
-      headers: { 'privy-app-id': privyAppId },
-      method: 'PATCH',
-      url: `https://api.privy.io/v1/key_quorums/${challenge.keyQuorumId}`,
-      version: 1,
-    }
-    const canonicalJson = canonicalizeJSON(payload)
-    const signingPayloadBase64url = base64ToBase64url(btoa(canonicalJson))
-    const deviceSignature = await signWithDeviceKey(session.privateKey, signingPayloadBase64url)
+    const deviceSignature = await signWithDeviceKey(session.privateKey, prepareResponse.signingPayload)
 
     await EmbeddedWalletApiClient.fetchAddAuthenticatorRequest({ newCredential, deviceSignature })
   } catch (error) {
@@ -188,4 +218,24 @@ export async function deleteAuthenticator({
     })
     throw error
   }
+}
+
+export async function deleteAuthenticatorWithPasskey({
+  authenticator,
+  walletId,
+}: {
+  authenticator: Authenticator
+  walletId?: string
+}): Promise<boolean> {
+  const credential = await authenticateWithPasskey(Action.DELETE_AUTHENTICATOR, {
+    walletId,
+    authenticatorId: authenticator.credentialId,
+  })
+  // `authenticateWithPasskey` returns falsy when the user cancels the WebAuthn prompt;
+  // surfacing that as a no-op is the intended UX. Genuine failures throw.
+  if (!credential) {
+    return false
+  }
+  const result = await deleteAuthenticator({ authenticator, credential })
+  return result === true
 }

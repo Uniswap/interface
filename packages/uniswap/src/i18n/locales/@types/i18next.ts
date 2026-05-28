@@ -1,5 +1,6 @@
 import 'i18next'
 
+// oxlint-disable-next-line typescript/no-var-requires
 const en = require('uniswap/src/i18n/locales/source/en-US.json') as Record<string, string>
 
 const resources = {

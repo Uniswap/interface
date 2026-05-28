@@ -40,7 +40,7 @@ const config: StorybookConfig = {
     config.plugins.push(
       new DefinePlugin({
         __DEV__: process.env.NODE_ENV === 'development',
-        'process.env.IS_UNISWAP_EXTENSION': JSON.stringify(process.env.STORYBOOK_EXTENSION || 'false'),
+        'process.env.APP_ID': JSON.stringify(process.env.STORYBOOK_EXTENSION === 'true' ? 'extension' : 'web'),
       }),
     )
 

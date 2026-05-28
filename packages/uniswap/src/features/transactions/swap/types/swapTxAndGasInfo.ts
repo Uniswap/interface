@@ -1,4 +1,5 @@
 import { GasEstimate, GasFeeResult, TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/utils'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import {
@@ -22,7 +23,6 @@ import {
   PopulatedTransactionRequestArray,
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { isWebApp } from 'utilities/src/platform'
 import { Prettify } from 'viem'
 
 export type SwapTxAndGasInfo =
@@ -93,12 +93,14 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
    */
   unsigned: boolean
   txRequests: PopulatedTransactionRequestArray | undefined
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }
 
 export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP
   trade: WrapTrade | UnwrapTrade
   txRequests: PopulatedTransactionRequestArray | undefined
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
@@ -112,6 +114,7 @@ export interface BridgeSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.BRIDGE
   trade: BridgeTrade
   txRequests: PopulatedTransactionRequestArray | undefined
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }
 
 export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
@@ -143,7 +146,7 @@ interface BaseRequiredSwapTxContextFields {
 }
 
 export type ValidatedClassicSwapTxAndGasInfo = Prettify<
-  Required<Omit<ClassicSwapTxAndGasInfo, 'includesDelegation'>> &
+  Required<Omit<ClassicSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
     BaseRequiredSwapTxContextFields &
     (
       | {
@@ -157,21 +160,21 @@ export type ValidatedClassicSwapTxAndGasInfo = Prettify<
           txRequests: PopulatedTransactionRequestArray
         }
     ) &
-    Pick<ClassicSwapTxAndGasInfo, 'includesDelegation'>
+    Pick<ClassicSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
 >
 
 export type ValidatedWrapSwapTxAndGasInfo = Prettify<
-  Required<Omit<WrapSwapTxAndGasInfo, 'includesDelegation'>> &
+  Required<Omit<WrapSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
     BaseRequiredSwapTxContextFields & {
       txRequests: PopulatedTransactionRequestArray
-    } & Pick<WrapSwapTxAndGasInfo, 'includesDelegation'>
+    } & Pick<WrapSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
 >
 
 export type ValidatedBridgeSwapTxAndGasInfo = Prettify<
-  Required<Omit<BridgeSwapTxAndGasInfo, 'includesDelegation'>> &
+  Required<Omit<BridgeSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
     BaseRequiredSwapTxContextFields & {
       txRequests: PopulatedTransactionRequestArray
-    } & Pick<BridgeSwapTxAndGasInfo, 'includesDelegation'>
+    } & Pick<BridgeSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
 >
 
 export type ValidatedUniswapXSwapTxAndGasInfo = Prettify<

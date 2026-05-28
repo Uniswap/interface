@@ -1,10 +1,9 @@
+import { isAndroid, isTestEnv } from '@universe/environment'
+import { getConfig } from 'src/config'
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
-import { config } from 'uniswap/src/config'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 
-const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walletConnectProjectId}`
+const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${getConfig().walletConnectProjectId}`
 
 /**
  * Registers client and device push token with hosted WalletConnect 2.0 Echo Server.

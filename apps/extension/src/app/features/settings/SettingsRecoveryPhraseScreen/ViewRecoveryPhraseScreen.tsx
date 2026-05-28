@@ -8,7 +8,13 @@ import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/n
 import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled, Eye, Key, Laptop } from 'ui/src/components/icons'
+import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useTimeout } from 'utilities/src/time/timing'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
+
+const HIDE_PHRASE_TIMEOUT_MS = ONE_MINUTE_MS * 2
 
 const enum ViewStep {
   Warning = 0,
@@ -37,6 +43,13 @@ export function ViewRecoveryPhraseScreen({
   const mnemonicAccount = mnemonicAccounts[0]
 
   const mnemonicId = mnemonicIdProp ?? mnemonicAccount?.mnemonicId
+
+  const navigateBackToWarningWithPasswordModal = useEvent((): void => {
+    setViewStep(ViewStep.Password)
+  })
+
+  // If the phrase is revealed, navigate back to the warning step after the timeout
+  useTimeout(navigateBackToWarningWithPasswordModal, viewStep === ViewStep.Reveal ? HIDE_PHRASE_TIMEOUT_MS : -1)
 
   if (!mnemonicId) {
     throw new Error('Invalid render of `ViewRecoveryPhraseScreen` without `mnemonicId`')
@@ -105,7 +118,7 @@ export function ViewRecoveryPhraseScreen({
         </SettingsRecoveryPhrase>
       ) : (
         <Flex fill gap="$spacing24" pt="$spacing36">
-          <SeedPhraseDisplay mnemonicId={mnemonicId} />
+          <SeedPhraseDisplay mnemonicId={mnemonicId} expectedWordCount={getExpectedMnemonicLength(mnemonicAccount)} />
 
           <Flex alignItems="center" gap="$spacing8">
             <Text color="$neutral2" textAlign="center" variant="body3">

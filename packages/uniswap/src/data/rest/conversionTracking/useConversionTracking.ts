@@ -1,4 +1,5 @@
 import { ConnectError } from '@connectrpc/connect'
+import { HexString } from '@universe/encoding'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { parse } from 'qs'
@@ -14,7 +15,6 @@ import { useConversionProxy } from 'uniswap/src/data/rest/conversionTracking/use
 import { getExternalConversionLeadsCookie } from 'uniswap/src/data/rest/conversionTracking/utils'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { HexString } from 'utilities/src/addresses/hex'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
 
@@ -38,7 +38,6 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
   ]
   const conversionProxy = useConversionProxy()
 
-  // oxlint-disable-next-line react/exhaustive-deps -- -conversionProxy.mutateAsync
   const trackConversion = useCallback(
     async ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
       const lead = conversionLeads.find(({ type }) => type === platformIdType)

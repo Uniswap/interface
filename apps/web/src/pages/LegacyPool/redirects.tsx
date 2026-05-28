@@ -5,11 +5,11 @@ import { Loader } from 'ui/src/loading/Loader'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getCurrencyWithWrap } from '~/components/Liquidity/utils/currency'
-import { searchParamToBackendName } from '~/features/params/chainParams'
+import { getCurrencyWithWrap } from '~/features/Liquidity/utils/currency'
 import { useCurrency } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useV2Pair } from '~/hooks/useV2Pairs'
+import { searchParamToBackendName } from '~/utils/params/chainParams'
 
 const PoolFinder = lazy(() => import('~/pages/PoolFinder'))
 

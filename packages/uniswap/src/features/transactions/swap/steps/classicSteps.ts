@@ -5,7 +5,7 @@ import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transa
 import type {
   SwapTransactionStep,
   SwapTransactionStepAsync,
-  SwapTransactionStepBatched,
+  SwapTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 
 export type ClassicSwapSteps =
@@ -15,7 +15,7 @@ export type ClassicSwapSteps =
   | Permit2TransactionStep
   | SwapTransactionStep
   | SwapTransactionStepAsync
-  | SwapTransactionStepBatched
+  | SwapTransactionStepWalletCall
 
 export type ClassicSwapFlow =
   | {
@@ -28,7 +28,7 @@ export type ClassicSwapFlow =
       revocation?: undefined
       approval?: undefined
       permit: undefined
-      swap: SwapTransactionStepBatched
+      swap: SwapTransactionStepWalletCall
     }
   | {
       revocation?: TokenRevocationTransactionStep

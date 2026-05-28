@@ -1,30 +1,60 @@
 import { GraphQLApi } from '@universe/api'
+import arbitrumLogo from 'ui/src/assets/logos/png/arbitrum-logo.png?inline'
+import avalancheLogo from 'ui/src/assets/logos/png/avalanche-logo.png?inline'
+import baseLogo from 'ui/src/assets/logos/png/base-logo.png?inline'
+import blastLogo from 'ui/src/assets/logos/png/blast-logo.png?inline'
+import bnbLogo from 'ui/src/assets/logos/png/bnb-logo.png?inline'
+import celoLogo from 'ui/src/assets/logos/png/celo-logo.png?inline'
+import optimismLogo from 'ui/src/assets/logos/png/optimism-logo.png?inline'
+import polygonLogo from 'ui/src/assets/logos/png/polygon-logo.png?inline'
+import unichainLogo from 'ui/src/assets/logos/png/unichain-logo.png?inline'
+import zksyncLogo from 'ui/src/assets/logos/png/zksync-logo.png?inline'
+import zoraLogo from 'ui/src/assets/logos/png/zora-logo.png?inline'
 
-export default function getNetworkLogoUrl(network: string, origin: string) {
-  switch (network) {
-    case GraphQLApi.Chain.Polygon:
-      return origin + '/images/logos/Polygon_Logo.png'
-    case GraphQLApi.Chain.Arbitrum:
-      return origin + '/images/logos/Arbitrum_Logo.png'
-    case GraphQLApi.Chain.Optimism:
-      return origin + '/images/logos/Optimism_Logo.png'
-    case GraphQLApi.Chain.Celo:
-      return origin + '/images/logos/Celo_Logo.png'
-    case GraphQLApi.Chain.Base:
-      return origin + '/images/logos/Base_Logo.png'
-    case GraphQLApi.Chain.Bnb:
-      return origin + '/images/logos/BNB_Logo.png'
-    case GraphQLApi.Chain.Avalanche:
-      return origin + '/images/logos/Avax_Logo.png'
-    case GraphQLApi.Chain.Blast:
-      return origin + '/images/logos/Blast_Logo.png'
-    case GraphQLApi.Chain.Zora:
-      return origin + '/images/logos/Zora_Logo.png'
-    case GraphQLApi.Chain.Zksync:
-      return origin + '/images/logos/zkSync_Logo.png'
-    case GraphQLApi.Chain.Unichain:
-      return origin + '/images/logos/Unichain_Logo.png'
-    default:
-      return ''
+/**
+ * Chains that show an inlined network badge on OG images. Tests iterate this list so
+ * refactors that drop a `?inline` import or a `packages/ui` path fail in CI.
+ */
+export const OG_NETWORK_BADGE_CHAINS = [
+  GraphQLApi.Chain.Polygon,
+  GraphQLApi.Chain.Arbitrum,
+  GraphQLApi.Chain.Optimism,
+  GraphQLApi.Chain.Celo,
+  GraphQLApi.Chain.Base,
+  GraphQLApi.Chain.Bnb,
+  GraphQLApi.Chain.Avalanche,
+  GraphQLApi.Chain.Blast,
+  GraphQLApi.Chain.Zora,
+  GraphQLApi.Chain.Zksync,
+  GraphQLApi.Chain.Unichain,
+] as const
+
+type OgNetworkBadgeChain = (typeof OG_NETWORK_BADGE_CHAINS)[number]
+
+const OG_NETWORK_BADGE_CHAIN_SET: ReadonlySet<string> = new Set(OG_NETWORK_BADGE_CHAINS)
+
+/**
+ * Inline PNG data URLs from `packages/ui` for `@vercel/og` / Satori (`<img src>`).
+ * No separate static `/images/logos/*` fetches — logos ship inside the worker bundle.
+ */
+const NETWORK_LOGO_DATA_URL: Record<OgNetworkBadgeChain, string> = {
+  [GraphQLApi.Chain.Polygon]: polygonLogo,
+  [GraphQLApi.Chain.Arbitrum]: arbitrumLogo,
+  [GraphQLApi.Chain.Optimism]: optimismLogo,
+  [GraphQLApi.Chain.Celo]: celoLogo,
+  [GraphQLApi.Chain.Base]: baseLogo,
+  [GraphQLApi.Chain.Bnb]: bnbLogo,
+  [GraphQLApi.Chain.Avalanche]: avalancheLogo,
+  [GraphQLApi.Chain.Blast]: blastLogo,
+  [GraphQLApi.Chain.Zora]: zoraLogo,
+  [GraphQLApi.Chain.Zksync]: zksyncLogo,
+  [GraphQLApi.Chain.Unichain]: unichainLogo,
+}
+
+/** Returns a data URL or empty string (no logo). `_origin` is unused; kept for call-site stability. */
+export default function getNetworkLogoUrl(network: string, _origin: string): string {
+  if (!OG_NETWORK_BADGE_CHAIN_SET.has(network)) {
+    return ''
   }
+  return NETWORK_LOGO_DATA_URL[network as OgNetworkBadgeChain]
 }

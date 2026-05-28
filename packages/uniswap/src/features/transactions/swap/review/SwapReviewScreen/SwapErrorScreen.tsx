@@ -1,4 +1,5 @@
 import { TradingApi } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, IconButton, Text } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
@@ -17,7 +18,6 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { getErrorContent, TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapErrorScreen({
   submissionError,

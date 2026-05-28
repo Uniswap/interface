@@ -1,4 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { isWebPlatform } from '@universe/environment'
 import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -11,7 +12,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isWebPlatform } from 'utilities/src/platform'
 
 const COPY_CLOSE_DELAY = 400
 

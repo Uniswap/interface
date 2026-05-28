@@ -13,7 +13,6 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
 
-// oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
 export function SwapDisplay({
   inputAmount,
   outputAmount,

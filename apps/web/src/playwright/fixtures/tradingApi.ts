@@ -21,7 +21,6 @@ const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
 /**
  * Generic helper function to stub trading API endpoints and disable transaction simulation
  */
-// oxlint-disable-next-line max-params
 export async function stubTradingApiEndpoint({
   page,
   endpoint,
@@ -100,7 +99,6 @@ export async function stubTradingApiEndpoint({
  * Mocks the /v1/swap endpoint with a static mock response
  * Use this instead of stubTradingApiEndpoint when you need to avoid calling the real API
  */
-// oxlint-disable-next-line import/no-unused-modules
 export async function mockTradingApiSwapResponse({ page }: { page: Page }) {
   await page.route(`**/${uniswapUrls.tradingApiPaths.swap}`, async (route) => {
     await route.fulfill({ path: Mocks.TradingApi.swap })

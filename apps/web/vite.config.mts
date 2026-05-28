@@ -14,9 +14,14 @@ import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { createEntryGatewayProxy } from './vite/entry-gateway-proxy'
+import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
+
+// process.env.APP_ID is sourced from apps/web/.env for browser-side substitution
+// (via envDefines below) and from this assignment for the Node-side Tamagui static
+// extractor — Vite's loadEnv() returns an env object without mutating process.env.
+process.env.APP_ID = 'web'
 
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
@@ -138,7 +143,7 @@ function getNextDevVersion(): string {
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isPreview }) => {
   let env = loadEnv(mode, __dirname, '')
 
   // Load root .env.defaults.local as a base layer (app-level env files take precedence)
@@ -230,10 +235,9 @@ export default defineConfig(({ mode }) => {
   const defines = {
     __DEV__: !isProduction,
     'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.ENVIRONMENT': JSON.stringify(mode),
     'process.env.EXPO_OS': JSON.stringify('web'),
     'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
-    'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
-    'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
     // Enable Tamagui's global z-index stacking to fix modal stacking issues
     'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
     // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW
@@ -440,7 +444,12 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      DEPLOY_TARGET === 'cloudflare' || mode === 'development'
+      // Skip the Cloudflare plugin during `vite preview` — preview only serves
+      // static assets, doesn't need worker bindings, and the plugin's
+      // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and
+      // chokes when one env's build dir is missing (e.g. after switching between
+      // build:production and build:staging). See INFRA-1874.
+      (DEPLOY_TARGET === 'cloudflare' || mode === 'development') && !isPreview
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
@@ -460,7 +469,7 @@ export default defineConfig(({ mode }) => {
       include: [
         'graphql',
         'expo-linear-gradient',
-        'expo-modules-core',
+        'invariant',
         'react-native-web',
         'react-native-gesture-handler',
         'tamagui',
@@ -479,7 +488,13 @@ export default defineConfig(({ mode }) => {
         '@visx/responsive',
       ],
       // Libraries that shouldn't be pre-bundled
-      exclude: ['expo-clipboard', '@connectrpc/connect', '@uniswap/client-liquidity'],
+      exclude: [
+        'expo-clipboard',
+        '@connectrpc/connect',
+        '@uniswap/client-liquidity',
+        '@uniswap/client-privy-embedded-wallet',
+        'expo-modules-core',
+      ],
       esbuildOptions: {
         resolveExtensions: [
           '.web-app.js',
@@ -509,7 +524,7 @@ export default defineConfig(({ mode }) => {
           secure: true,
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
         },
-        ...(ENABLE_PROXY ? { '/entry-gateway': createEntryGatewayProxy({ getLogger }) } : {}),
+        ...(ENABLE_PROXY ? createEntryGatewayProxies({ getLogger }) : {}),
       },
     },
 

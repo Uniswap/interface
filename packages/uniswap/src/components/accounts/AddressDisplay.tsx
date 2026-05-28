@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isWebApp } from '@universe/environment'
 import { PropsWithChildren, useMemo } from 'react'
 import type { FlexAlignType } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -16,7 +17,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isWebApp } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -47,7 +47,7 @@ type AddressDisplayProps = {
   notificationsBadgeContainer?: ({ children, address }: { children: JSX.Element; address: string }) => JSX.Element
   gapBetweenLines?: SpaceTokens
   showViewOnlyBadge?: boolean
-  addressNumVisibleCharacters?: 4 | 6
+  addressNumVisibleCharacters?: 4 | 6 | 8
   grow?: boolean
 }
 
@@ -70,6 +70,7 @@ function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWr
 
 /** Helper component to display AccountIcon and formatted address */
 
+// oxlint-disable-next-line complexity
 export function AddressDisplay({
   allowFontScaling = true,
   overrideDisplayName,

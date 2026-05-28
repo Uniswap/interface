@@ -6,7 +6,7 @@ import { XVerificationClient } from 'uniswap/src/data/apiClients/liquidityServic
 
 type CallbackState = 'loading' | 'success' | 'error'
 
-export default function XOAuthCallbackPage() {
+export function XOAuthCallbackPage() {
   const { t } = useTranslation()
   const [callbackState, setCallbackState] = useState<CallbackState>('loading')
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -76,3 +76,5 @@ export default function XOAuthCallbackPage() {
     </Flex>
   )
 }
+
+export default XOAuthCallbackPage

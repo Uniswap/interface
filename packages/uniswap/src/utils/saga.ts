@@ -35,6 +35,7 @@ export function createSaga<SagaParams, SagaYieldType, SagaResultType>(
 } {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
 
+  // oxlint-disable-next-line typescript/explicit-function-return-type
   const wrappedSaga = function* () {
     while (true) {
       try {
@@ -139,6 +140,7 @@ export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>({
   )
 
   // Handler for a single trigger - extracted to support both serial and parallel modes
+  // oxlint-disable-next-line typescript/explicit-function-return-type
   function* handleTrigger(trigger: { type: typeof triggerAction.type; payload: SagaParams }) {
     try {
       logger.debug('saga', 'monitoredSaga', `${name} triggered`)
@@ -253,6 +255,7 @@ export const signalSwapModalClosed = createAction<void>(`signalSwapModalClosed`)
  */
 export const signalPlanCancellation = createAction<{ planId: string }>(`saga/planCancellation`)
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* waitForRehydration() {
   // First check if already rehydrated (might have happened before saga started)
   const alreadyRehydrated = yield* call(getIsRehydrated)

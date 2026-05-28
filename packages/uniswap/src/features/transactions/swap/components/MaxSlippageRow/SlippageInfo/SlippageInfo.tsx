@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
@@ -9,7 +10,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SlippageInfoCaption } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfoCaption'
 import type { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function SlippageInfo({
   children,

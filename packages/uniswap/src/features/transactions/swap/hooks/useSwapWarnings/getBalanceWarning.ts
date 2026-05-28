@@ -1,8 +1,8 @@
+import { isWebPlatform } from '@universe/environment'
 import { TFunction } from 'i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function getBalanceWarning({
   t,

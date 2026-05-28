@@ -1,7 +1,7 @@
 import { Flex, Shine, styled, useMedia } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ACTION_BUBBLE_SIZE } from '~/components/Explore/stickyHeader/constants'
-import { getHeaderLogoSize, getHeaderTitleLineHeight } from '~/components/Explore/stickyHeader/getHeaderLogoSize'
+import { ACTION_BUBBLE_SIZE } from '~/components/StickyCollapsibleHeader/constants'
+import { getHeaderLogoSize, getHeaderTitleLineHeight } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 
 const HeaderActionSkeleton = styled(Flex, {
   width: ACTION_BUBBLE_SIZE.width,

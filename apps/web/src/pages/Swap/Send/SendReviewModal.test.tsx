@@ -1,13 +1,16 @@
 import '~/test-utils/tokens/mocks'
+import { useDynamicConfigValue } from '@universe/gating'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
+import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { SendReviewModalInner } from '~/pages/Swap/Send/SendReviewModal'
 import { MultichainContext } from '~/state/multichain/types'
-import { SendContext, SendContextType } from '~/state/send/SendContext'
-import { SwapAndLimitContext } from '~/state/swap/types'
 import { render, screen } from '~/test-utils/render'
+
+const useDynamicConfigValueMock = vi.mocked(useDynamicConfigValue)
 
 const mockMultichainContextValue = {
   reset: vi.fn(),
@@ -67,6 +70,15 @@ const mockedSendContextTokenInput: SendContextType = {
 }
 
 describe('SendReviewModal', () => {
+  beforeEach(() => {
+    useDynamicConfigValueMock.mockImplementation((opts: { defaultValue?: unknown }) => {
+      if (opts.defaultValue !== undefined && opts.defaultValue !== null) {
+        return opts.defaultValue
+      }
+      return 100
+    })
+  })
+
   it('should render input in fiat correctly', () => {
     render(
       <MultichainContext.Provider value={mockMultichainContextValue}>

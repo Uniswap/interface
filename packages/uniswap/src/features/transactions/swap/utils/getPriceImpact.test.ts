@@ -4,14 +4,16 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import type { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getPriceImpact } from 'uniswap/src/features/transactions/swap/utils/getPriceImpact'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import type { Mock } from 'vitest'
 
 // Mocks for routing and getSwapFeeUsd
 vi.mock('uniswap/src/features/transactions/swap/utils/routing', () => ({
+  isChained: vi.fn(),
   isClassic: vi.fn(),
+  isJupiter: vi.fn(),
   isUniswapX: vi.fn(),
 }))
 vi.mock('uniswap/src/features/transactions/swap/utils/getSwapFeeUsd', () => ({
@@ -19,6 +21,7 @@ vi.mock('uniswap/src/features/transactions/swap/utils/getSwapFeeUsd', () => ({
 }))
 
 // Type the mocks for TypeScript
+const isChainedMock = isChained as unknown as Mock
 const isClassicMock = isClassic as unknown as Mock
 const isUniswapXMock = isUniswapX as unknown as Mock
 const getSwapFeeUsdFromDerivedSwapInfoMock = getSwapFeeUsdFromDerivedSwapInfo as unknown as Mock
@@ -38,6 +41,10 @@ class UniswapXTradeMock {
     this.quote = quote
   }
 }
+
+// Minimal ChainedActionTrade mock — the real class declares `priceImpact: undefined`,
+// so `getPriceImpact` does not read it on this branch (it falls back to USD values).
+class ChainedActionTradeMock {}
 
 describe('getPriceImpact', () => {
   const mockPercent = (value: number): Percent => {
@@ -177,6 +184,46 @@ describe('getPriceImpact', () => {
       currencyAmountsUSDValue: {
         [CurrencyField.INPUT]: inputUSD,
         [CurrencyField.OUTPUT]: outputUSD,
+      },
+    })
+    // Act
+    const result = getPriceImpact(derivedSwapInfo)
+    // Assert
+    expect(result).toBeUndefined()
+  })
+
+  it('returns USD-based price impact for chained trades with valid USD values', () => {
+    // Arrange
+    const trade = new ChainedActionTradeMock() as unknown as Trade
+    isClassicMock.mockReturnValue(false)
+    isUniswapXMock.mockReturnValue(false)
+    isChainedMock.mockReturnValue(true)
+    const inputUSD = mockCurrencyAmount('1000')
+    const outputUSD = mockCurrencyAmount('900')
+    const derivedSwapInfo = makeDerivedSwapInfo(trade, {
+      currencyAmountsUSDValue: {
+        [CurrencyField.INPUT]: inputUSD,
+        [CurrencyField.OUTPUT]: outputUSD,
+      },
+    })
+    // Act
+    const result = getPriceImpact(derivedSwapInfo)
+    // Assert
+    // 1 - 900/1000 = 0.10 = 10%
+    expect(result).toBeInstanceOf(Percent)
+    expect(result?.equalTo(new Percent(10, 100))).toBe(true)
+  })
+
+  it('returns undefined for chained trade with missing USD values', () => {
+    // Arrange
+    const trade = new ChainedActionTradeMock() as unknown as Trade
+    isClassicMock.mockReturnValue(false)
+    isUniswapXMock.mockReturnValue(false)
+    isChainedMock.mockReturnValue(true)
+    const derivedSwapInfo = makeDerivedSwapInfo(trade, {
+      currencyAmountsUSDValue: {
+        [CurrencyField.INPUT]: null,
+        [CurrencyField.OUTPUT]: null,
       },
     })
     // Act

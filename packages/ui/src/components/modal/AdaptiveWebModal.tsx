@@ -1,4 +1,5 @@
 import { ParentSheetContext } from '@tamagui/sheet'
+import { isWebApp } from '@universe/environment'
 import { type PropsWithChildren, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { createContext, useContext, useMemo } from 'react'
 import type { DimensionValue } from 'react-native'
@@ -19,12 +20,16 @@ import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { isWebApp } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
 
 /** Provides the effective z-index of the current modal/sheet layer so descendants (e.g. context menus) can render above it. When the modal uses the bottom-sheet adapt branch (`Adapt when="md"`), uses Tamagui's ParentSheetContext.zIndex + 1 (same formula as Sheet); otherwise the dialog's z-index. */
 export const EffectiveModalOrSheetZIndexContext = createContext<number | undefined>(undefined)
+
+/** One layer above a host (modal, popover, overlay), with a minimum floor for the stacking scale. */
+export function stackingLayerAbove(hostZIndex: number | undefined, floor: number): number {
+  return Math.max((hostZIndex ?? 0) + 1, floor)
+}
 
 /**
  * Z-index for {@link EffectiveModalOrSheetZIndexContext} in adaptive modals: matches Tamagui sheet stacking when
@@ -203,7 +208,12 @@ export function WebBottomSheet({
             onMouseDown={(e) => e.stopPropagation()}
             onMouseUp={(e) => e.stopPropagation()}
           >
-            {children}
+            {/* Self-provide the depth context so floating descendants (tooltips, popovers) auto-stack
+                above the sheet even when WebBottomSheet is used standalone (i.e. not via AdaptiveWebModal,
+                which already wraps Adapt.Contents in its own Provider that shadows this one). */}
+            <EffectiveModalOrSheetZIndexContext.Provider value={rest.zIndex ?? zIndexes.modal}>
+              {children}
+            </EffectiveModalOrSheetZIndexContext.Provider>
           </Flex>
         </Sheet.Frame>
         <Sheet.Overlay
@@ -250,7 +260,6 @@ type ModalProps = GetProps<typeof View> &
  * On larger screens, it renders as a dialog modal.
  * On smaller screens (mobile devices), it adapts into a bottom sheet.
  */
-// oxlint-disable-next-line complexity
 export function AdaptiveWebModal({
   isOpen,
   onClose,

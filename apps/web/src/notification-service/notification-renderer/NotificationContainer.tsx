@@ -1,4 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
 import { ContentStyle, type InAppNotification } from '@universe/api'
 import { type NotificationClickTarget } from '@universe/notifications'
 import { useEffect, useMemo } from 'react'

@@ -6,7 +6,6 @@ jest.mock('src/contentScript/isSandboxedFrame', () => ({
   isSandboxedFrame: jest.fn(() => false),
 }))
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { isSandboxedFrame } = require('src/contentScript/isSandboxedFrame') as {
   isSandboxedFrame: jest.Mock
 }
@@ -16,7 +15,6 @@ describe('injected', () => {
     // This does not exist in the extension execution environment for content scripts
     Object.defineProperty(document, 'head', { value: undefined, writable: true })
 
-    // oxlint-disable-next-line typescript/no-var-requires
     const injected = require('../entrypoints/injected.content')
     expect(injected).toBeTruthy()
   })
@@ -32,12 +30,10 @@ describe('injected - sandboxed frame', () => {
   })
 
   it('should load without error in sandbox mode', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { addWindowMessageListener } = require('src/background/messagePassing/messageUtils') as {
       addWindowMessageListener: jest.Mock
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const injected = require('../entrypoints/injected.content')
     expect(injected).toBeTruthy()
 

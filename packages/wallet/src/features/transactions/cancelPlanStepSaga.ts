@@ -72,6 +72,7 @@ interface CancelPlanStepParams {
  * - Force-refreshes plan status from Trading API
  * - Updates local state with new plan status
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* cancelPlanStep(params: CancelPlanStepParams) {
   const { planTransaction, cancelRequest, cancelableStepInfo } = params
   const { planId } = planTransaction.typeInfo
@@ -122,6 +123,7 @@ export function* cancelPlanStep(params: CancelPlanStepParams) {
  * Step transactions have `options.request = {}` (empty).
  * We must fetch the transaction from chain to get the nonce for replacement.
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* cancelClassicPlanStep(params: {
   planTransaction: PlanTransactionDetails
   step: TransactionDetails
@@ -200,6 +202,7 @@ function* cancelClassicPlanStep(params: {
 /**
  * Cancels a UniswapX order step by submitting a permit2 nonce invalidation transaction
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* cancelUniswapXPlanStep(params: {
   planTransaction: PlanTransactionDetails
   cancelRequest: providers.TransactionRequest

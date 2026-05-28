@@ -11,10 +11,20 @@ export type PortfolioTabInfo = {
 export function usePortfolioTabs(): PortfolioTabInfo[] {
   const { t } = useTranslation()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
 
   return [
     { path: '/portfolio', pageName: InterfacePageName.PortfolioPage, label: t('portfolio.overview.title') },
-    { path: '/portfolio/tokens', pageName: InterfacePageName.PortfolioTokensPage, label: t('portfolio.tokens.title') },
+    { path: '/portfolio/tokens', pageName: InterfacePageName.PortfolioTokensPage, label: t('common.tokens') },
+    ...(portfolioPoolsBalancesEnabled
+      ? [
+          {
+            path: '/portfolio/pools',
+            pageName: InterfacePageName.PortfolioPoolsPage,
+            label: t('common.pools'),
+          },
+        ]
+      : []),
     ...(isPortfolioDefiTabEnabled
       ? [{ path: '/portfolio/defi', pageName: InterfacePageName.PortfolioDefiPage, label: t('portfolio.defi.title') }]
       : []),
@@ -22,7 +32,7 @@ export function usePortfolioTabs(): PortfolioTabInfo[] {
     {
       path: '/portfolio/activity',
       pageName: InterfacePageName.PortfolioActivityPage,
-      label: t('portfolio.activity.title'),
+      label: t('common.activity'),
     },
   ]
 }
