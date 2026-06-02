@@ -84,6 +84,9 @@ const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
     tokenName: 'Octra',
     tokenSymbol: 'OCT',
   },
+  '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': {
+    logoUrl: '/images/logos/strato-token-launch-logo.jpeg',
+  },
 }
 
 /**
@@ -106,4 +109,5 @@ export const DEFAULT_VERIFIED_AUCTION_IDS = [
   '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
   '42161_0xc27F8a94Df88C4f57B09067e07EA6bC11CA47e11',
   '1_0xb3079Ec6b82f22A1ABfDCA1A22659aB07Cdf2f0F',
+  '1_0xfFDab1083fCbBCEE32997795388B3D61Ebab786E',
 ]

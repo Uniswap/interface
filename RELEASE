@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYHVZgJYi1XCsZfSjdsKremRzECRLMhUBr4osT3exS4kY`
-- CIDv1: `bafybeietyxeuin2cpcwothw6tbgz7yxgf7iypjdusfsepqqokfouvie5ie`
+- CIDv0: `QmWatBgGd4ZGkd2Xuakr3ZrA65uRqp9y3CtHYryUQCM6UK`
+- CIDv1: `bafybeid2qloqnkke257qbx26emm3ouyut27o2gmc6lxmjsbnyb4tttjh2q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,5 +10,5 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeietyxeuin2cpcwothw6tbgz7yxgf7iypjdusfsepqqokfouvie5ie.ipfs.dweb.link/
-- [ipfs://QmYHVZgJYi1XCsZfSjdsKremRzECRLMhUBr4osT3exS4kY/](ipfs://QmYHVZgJYi1XCsZfSjdsKremRzECRLMhUBr4osT3exS4kY/)
+- https://bafybeid2qloqnkke257qbx26emm3ouyut27o2gmc6lxmjsbnyb4tttjh2q.ipfs.dweb.link/
+- [ipfs://QmWatBgGd4ZGkd2Xuakr3ZrA65uRqp9y3CtHYryUQCM6UK/](ipfs://QmWatBgGd4ZGkd2Xuakr3ZrA65uRqp9y3CtHYryUQCM6UK/)
