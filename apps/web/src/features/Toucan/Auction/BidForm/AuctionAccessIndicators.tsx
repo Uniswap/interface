@@ -38,7 +38,7 @@ export function AuctionAccessIndicators(): JSX.Element | null {
   const kycStatus = useAuctionKycStatus({
     walletAddress: address,
     auctionAddress,
-    chainId: chainId ?? UniverseChainId.Sepolia,
+    chainId,
   })
 
   const getWhitelistTooltipText = (): string | undefined => {
