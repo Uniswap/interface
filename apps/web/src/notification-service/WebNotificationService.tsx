@@ -8,7 +8,6 @@ import {
   SESSION_INIT_QUERY_KEY,
   SharedQueryClient,
 } from '@universe/api'
-import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
   createApiNotificationTracker,
   createBaseNotificationProcessor,
@@ -43,6 +42,7 @@ import { NotificationContainer } from '~/notification-service/notification-rende
 import { useNotificationStore } from '~/notification-service/notification-renderer/notificationStore'
 import { getNotificationTelemetry } from '~/notification-service/telemetry/getNotificationTelemetry'
 import store from '~/state'
+import { getIsSessionServiceEnabledOnWeb } from '~/utils/sessionService'
 
 /**
  * Creates the notification service with all necessary dependencies
@@ -73,7 +73,7 @@ function provideWebNotificationService(ctx: {
       }
     },
     getSessionService: () =>
-      provideSessionService({ getBaseUrl: () => getEntryGatewayUrl(), getIsSessionServiceEnabled }),
+      provideSessionService({ getBaseUrl: () => getEntryGatewayUrl(), getIsSessionServiceEnabled: getIsSessionServiceEnabledOnWeb }),
     defaultOptions: {
       credentials: 'include',
     },

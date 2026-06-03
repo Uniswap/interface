@@ -8,11 +8,9 @@ import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/ap
 import type { StatsigUser } from '@universe/gating'
 import {
   getIsHashcashSolverEnabled,
-  getIsSessionServiceEnabled,
   getIsSessionsPerformanceTrackingEnabled,
   getIsSessionUpgradeAutoEnabled,
   getIsTurnstileSolverEnabled,
-  useIsSessionServiceEnabled,
 } from '@universe/gating'
 import {
   type ChallengeSolver,
@@ -69,6 +67,7 @@ import { LivePricesProvider } from '~/state/livePrices/LivePricesProvider'
 import { ThemedGlobalStyle, ThemeProvider } from '~/theme'
 import { TamaguiProvider } from '~/theme/tamaguiProvider'
 import { isBrowserRouterEnabled } from '~/utils/env'
+import { getIsSessionServiceEnabledOnWeb, useIsSessionServiceEnabledOnWeb } from '~/utils/sessionService'
 import { unregister as unregisterServiceWorker } from '~/utils/serviceWorker'
 import { getCanonicalUrl } from '~/utils/urlRoutes'
 
@@ -139,7 +138,7 @@ const provideSessionInitService = () => {
     getSessionService: () =>
       provideSessionService({
         getBaseUrl: getEntryGatewayUrl,
-        getIsSessionServiceEnabled,
+        getIsSessionServiceEnabled: getIsSessionServiceEnabledOnWeb,
         getLogger,
       }),
     challengeSolverService: createChallengeSolverService({
@@ -154,7 +153,7 @@ const provideSessionInitService = () => {
 
 function Updaters() {
   const location = useLocation()
-  const isSessionServiceEnabled = useIsSessionServiceEnabled()
+  const isSessionServiceEnabled = useIsSessionServiceEnabledOnWeb()
 
   const ListsUpdater = useDeferredComponent(loadListsUpdater)
   const ApplicationUpdater = useDeferredComponent(loadApplicationUpdater)
