@@ -47,6 +47,9 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
     if (!shallow(state.tokenQuery, derivedState.tokenQuery)) {
       actions.setTokenQuery(derivedState.tokenQuery)
     }
+    if (!shallow(state.tokenProjectQuery, derivedState.tokenProjectQuery)) {
+      actions.setTokenProjectQuery(derivedState.tokenProjectQuery)
+    }
     if (!shallow(state.multiChainMap, derivedState.multiChainMap)) {
       actions.setMultiChainMap(derivedState.multiChainMap)
     }

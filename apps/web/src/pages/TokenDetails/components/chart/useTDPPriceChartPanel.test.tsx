@@ -1,11 +1,13 @@
 import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
 import { TimePeriod } from '~/appGraphql/data/util'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType, type ChartQueryResult } from '~/components/Charts/utils'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { useTDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/useTDPPriceChartPanel'
+import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 import { renderHook } from '~/test-utils/render'
 
 vi.mock('~/hooks/useTokenPriceChartData', () => ({
@@ -14,6 +16,10 @@ vi.mock('~/hooks/useTokenPriceChartData', () => ({
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper', () => ({
   useTokenSpotPrice: vi.fn(() => undefined),
+}))
+
+vi.mock('~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData', () => ({
+  useTDPPreferProjectMarketData: vi.fn(() => false),
 }))
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => {
@@ -25,6 +31,8 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
 })
 
 const mockUseTokenPriceChartData = vi.mocked(useTokenPriceChartData)
+const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
+const mockUseTDPPreferProjectMarketData = vi.mocked(useTDPPreferProjectMarketData)
 
 type PriceChartQueryMock = ChartQueryResult<PriceChartData, ChartType.PRICE> & {
   disableCandlestickUI: boolean
@@ -58,7 +66,10 @@ const variables = {
 
 describe('useTDPPriceChartPanel', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
     mockUseTokenPriceChartData.mockReturnValue(basePriceQuery)
+    mockUseTokenSpotPrice.mockReturnValue(undefined)
+    mockUseTDPPreferProjectMarketData.mockReturnValue(false)
   })
 
   it('syncs disableCandlestickUI to the store in layout effect', () => {
@@ -120,5 +131,49 @@ describe('useTDPPriceChartPanel', () => {
     )
 
     expect(result.current.showInvalidSkeleton).toBe(true)
+  })
+
+  it('keeps project market data preference off when the token is not a tokenized security', () => {
+    renderHook(() =>
+      useTDPPriceChartPanel({
+        variables: { ...variables, multichain: true },
+        priceChartType: PriceChartType.LINE,
+        setDisableCandlestickUI: vi.fn(),
+        timePeriod: TimePeriod.WEEK,
+        currency: USDC_MAINNET,
+      }),
+    )
+
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: false })
+    expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPriceOverride: undefined,
+        preferProjectMarketData: false,
+      }),
+    )
+  })
+
+  it('prefers project market data when the RWA preference hook opts in', () => {
+    // Represents rwa_coingecko_data being enabled and the current TDP token matching the RWA whitelist.
+    mockUseTDPPreferProjectMarketData.mockReturnValue(true)
+    mockUseTokenSpotPrice.mockReturnValue(123)
+
+    renderHook(() =>
+      useTDPPriceChartPanel({
+        variables: { ...variables, multichain: true },
+        priceChartType: PriceChartType.LINE,
+        setDisableCandlestickUI: vi.fn(),
+        timePeriod: TimePeriod.WEEK,
+        currency: USDC_MAINNET,
+      }),
+    )
+
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: true })
+    expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPriceOverride: 123,
+        preferProjectMarketData: true,
+      }),
+    )
   })
 })

@@ -46,7 +46,7 @@ describe('TokenDescription', () => {
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
       currencyChain: GraphQLApi.Chain.Ethereum,
-      tokenQuery: validTokenProjectResponse,
+      tokenProjectQuery: validTokenProjectResponse,
       multiChainMap: SINGLE_CHAIN_MAP,
     }
     mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -66,7 +66,7 @@ describe('TokenDescription', () => {
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
       currencyChain: GraphQLApi.Chain.Ethereum,
-      tokenQuery: validTokenProjectResponse,
+      tokenProjectQuery: validTokenProjectResponse,
       multiChainMap: SINGLE_CHAIN_MAP,
     }
     mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -92,7 +92,7 @@ describe('TokenDescription', () => {
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
       currencyChain: GraphQLApi.Chain.Ethereum,
-      tokenQuery: { data: undefined, loading: false, error: undefined },
+      tokenProjectQuery: { data: undefined, loading: false, error: undefined },
       multiChainMap: SINGLE_CHAIN_MAP,
     }
     mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -110,7 +110,7 @@ describe('TokenDescription', () => {
   it('does not render website pill for javascript: URI', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const validData = validTokenProjectResponse.data!
-    const unsafeTokenQuery = {
+    const unsafeTokenProjectQuery = {
       ...validTokenProjectResponse,
       data: {
         ...validData,
@@ -128,7 +128,7 @@ describe('TokenDescription', () => {
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
       currencyChain: GraphQLApi.Chain.Ethereum,
-      tokenQuery: unsafeTokenQuery,
+      tokenProjectQuery: unsafeTokenProjectQuery,
       multiChainMap: SINGLE_CHAIN_MAP,
     }
     mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -150,7 +150,7 @@ describe('TokenDescription', () => {
         address: USDC_MAINNET.address,
         currency: USDC_MAINNET,
         currencyChain: GraphQLApi.Chain.Ethereum,
-        tokenQuery: validTokenProjectResponse,
+        tokenProjectQuery: validTokenProjectResponse,
         multiChainMap: MULTI_CHAIN_MAP,
       }
       mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -172,7 +172,7 @@ describe('TokenDescription', () => {
         address: USDC_MAINNET.address,
         currency: USDC_MAINNET,
         currencyChain: GraphQLApi.Chain.Ethereum,
-        tokenQuery: validTokenProjectResponse,
+        tokenProjectQuery: validTokenProjectResponse,
         multiChainMap: SINGLE_CHAIN_MAP,
       }
       mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -193,7 +193,7 @@ describe('TokenDescription', () => {
         address: USDC_MAINNET.address,
         currency: USDC_MAINNET,
         currencyChain: GraphQLApi.Chain.Ethereum,
-        tokenQuery: validTokenProjectResponse,
+        tokenProjectQuery: validTokenProjectResponse,
         multiChainMap: MULTI_CHAIN_MAP,
       }
       mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -215,7 +215,7 @@ describe('TokenDescription', () => {
         address: ETH_MAINNET.wrapped.address,
         currency: ETH_MAINNET,
         currencyChain: GraphQLApi.Chain.Ethereum,
-        tokenQuery: validTokenProjectResponse,
+        tokenProjectQuery: validTokenProjectResponse,
         multiChainMap: MULTI_CHAIN_MAP,
       }
       mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>

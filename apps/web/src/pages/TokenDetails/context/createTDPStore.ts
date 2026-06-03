@@ -9,6 +9,7 @@ export type TDPState = PendingTDPContext | LoadedTDPContext
 /** Actions for partial store updates; only volatile slices that can change without URL change */
 type TDPActions = {
   setTokenQuery: (v: TDPState['tokenQuery']) => void
+  setTokenProjectQuery: (v: TDPState['tokenProjectQuery']) => void
   setMultiChainMap: (v: TDPState['multiChainMap']) => void
   setTokenColor: (v: TDPState['tokenColor']) => void
   setCurrency: (v: TDPState['currency']) => void
@@ -28,6 +29,7 @@ export const createTDPStore = (initial: TDPState): TDPStore =>
         ...initial,
         actions: {
           setTokenQuery: (tokenQuery) => set({ tokenQuery }),
+          setTokenProjectQuery: (tokenProjectQuery) => set({ tokenProjectQuery }),
           setMultiChainMap: (multiChainMap) => set({ multiChainMap }),
           setTokenColor: (tokenColor) => set({ tokenColor }),
           setCurrency: (currency) => set({ currency }),

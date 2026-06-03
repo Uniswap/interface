@@ -14,19 +14,27 @@ import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartDa
 
 export type TDPChartQueryVariables = TokenPriceChartQueryVariables
 
-export function useTDPVolumeChartData(
-  variables: TDPChartQueryVariables,
-  skip: boolean,
-): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
-  const { data, loading } = GraphQLApi.useTokenHistoricalVolumesQuery({ variables, skip })
+export function useTDPVolumeChartData({
+  variables,
+  skip,
+}: {
+  variables: TDPChartQueryVariables
+  skip: boolean
+}): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
+  const { data, loading } = GraphQLApi.useTokenHistoricalVolumesQuery({
+    variables,
+    skip,
+  })
+  const historicalVolume = data?.token?.market?.historicalVolume
+
   return useMemo(() => {
     const entries =
-      data?.token?.market?.historicalVolume
+      historicalVolume
         ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
         .map(withUTCTimestamp) ?? []
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.VOLUME, duration: variables.duration })
     return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
-  }, [data?.token?.market?.historicalVolume, loading, variables.duration])
+  }, [historicalVolume, loading, variables.duration])
 }
 
 function toStackedLineData(entry: { timestamp: number; value: number }): StackedLineData {

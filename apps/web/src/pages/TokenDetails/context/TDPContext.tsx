@@ -18,7 +18,13 @@ type BaseTDPContext = {
   /** Set to `NATIVE_CHAIN_ID` if currency is native, else equal to `currency.address` */
   address: string
 
-  tokenQuery: QueryResult<GraphQLApi.TokenWebQuery, GraphQLApi.Exact<{ chain: GraphQLApi.Chain; address?: string }>>
+  tokenQuery: QueryResult<GraphQLApi.TokenWebQuery, GraphQLApi.TokenWebQueryVariables>
+
+  /** Metadata-only query; gates the page and resolves before the market `tokenQuery`. */
+  tokenProjectQuery: QueryResult<
+    GraphQLApi.TokenProjectWebQuery,
+    GraphQLApi.Exact<{ chain: GraphQLApi.Chain; address?: string }>
+  >
 
   multiChainMap: MultiChainMap
 

@@ -164,6 +164,10 @@ export function buildFlagGroups(extras: {
       name: 'Prices',
       flags: [{ flag: FeatureFlags.CentralizedPrices, label: 'Enable Centralized Prices' }],
     },
+    {
+      name: 'RWA',
+      flags: [{ flag: FeatureFlags.RWACoinGeckoData, label: 'Enable RWA CoinGecko Data' }],
+    },
     { name: 'Experiments', flags: [] },
     {
       name: 'Layers',

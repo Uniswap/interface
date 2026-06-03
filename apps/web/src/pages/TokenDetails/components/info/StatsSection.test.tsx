@@ -5,6 +5,7 @@ import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/use
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
@@ -20,6 +21,10 @@ vi.mock('~/pages/TokenDetails/hooks/useTDPEffectiveCurrency', () => ({
 
 vi.mock('~/pages/TokenDetails/hooks/useTDPStatsMarketSource', () => ({
   useTDPStatsMarketSource: vi.fn(),
+}))
+
+vi.mock('~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData', () => ({
+  useTDPPreferProjectMarketData: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper', () => ({
@@ -60,6 +65,7 @@ describe('StatsSection', () => {
     mocked(useTDPEffectiveCurrency).mockReturnValue(USDC_MAINNET)
     mocked(useTokenSpotPrice).mockReturnValue(undefined)
     mocked(useTDPStatsMarketSource).mockReturnValue(MARKET_SOURCE_AGGREGATED)
+    mocked(useTDPPreferProjectMarketData).mockReturnValue(false)
   })
 
   it('renders the stats wrapper and all stat tiles when market data is populated', () => {
@@ -91,5 +97,33 @@ describe('StatsSection', () => {
 
     expect(screen.queryByTestId(TestID.TokenDetailsStats)).toBeNull()
     expect(screen.getByText('No stats available')).toBeVisible()
+  })
+
+  it('renders the loading skeleton instead of the "no stats available" fallback while the market query is loading', () => {
+    mocked(useTokenMarketStats).mockReturnValue(EMPTY_STATS)
+
+    render(<StatsSection tokenQueryData={undefined} isLoading />)
+
+    expect(screen.getByTestId('token-details-stats-loading')).toBeVisible()
+    expect(screen.queryByTestId(TestID.TokenDetailsStats)).toBeNull()
+    expect(screen.queryByText('No stats available')).toBeNull()
+  })
+
+  it('prefers project market data for RWA tokens', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mocked(useTDPPreferProjectMarketData).mockReturnValue(true)
+    mocked(useTokenSpotPrice).mockReturnValue(123)
+    mocked(useTokenMarketStats).mockReturnValue(POPULATED_STATS)
+
+    render(<StatsSection tokenQueryData={undefined} />)
+
+    expect(useTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: true })
+    expect(useTokenMarketStats).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        currentPriceOverride: 123,
+        preferProjectMarketData: true,
+      }),
+    )
   })
 })

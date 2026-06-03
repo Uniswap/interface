@@ -26,6 +26,7 @@ vi.mock('@universe/api', async (importOriginal) => {
     GraphQLApi: {
       ...actual.GraphQLApi,
       useTokenWebQuery: vi.fn(),
+      useTokenProjectWebQuery: vi.fn(),
     },
   }
 })
@@ -99,6 +100,12 @@ describe('useCreateTDPContext', () => {
       loading: false,
       error: undefined,
     } as ReturnType<typeof GraphQLApi.useTokenWebQuery>)
+    // `currency`, `multiChainMap` and `tokenColor` now derive from the lightweight metadata query.
+    vi.mocked(GraphQLApi.useTokenProjectWebQuery).mockReturnValue({
+      data: validTokenProjectResponse.data,
+      loading: false,
+      error: undefined,
+    } as ReturnType<typeof GraphQLApi.useTokenProjectWebQuery>)
     vi.mocked(usePortfolioBalances).mockReturnValue({
       data: undefined,
       error: undefined,
@@ -125,6 +132,7 @@ describe('useCreateTDPContext', () => {
       currencyChainId: UniverseChainId.Mainnet,
       address: expect.any(String),
       tokenQuery: expect.anything(),
+      tokenProjectQuery: expect.anything(),
       multiChainMap: expect.any(Object),
       balanceError: undefined,
       selectedMultichainChainId: undefined,
@@ -138,12 +146,18 @@ describe('useCreateTDPContext', () => {
       loading: true,
       error: undefined,
     } as ReturnType<typeof GraphQLApi.useTokenWebQuery>)
+    vi.mocked(GraphQLApi.useTokenProjectWebQuery).mockReturnValue({
+      data: undefined,
+      loading: true,
+      error: undefined,
+    } as ReturnType<typeof GraphQLApi.useTokenProjectWebQuery>)
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
     expect(result.current.currency).toBeUndefined()
     expect(result.current.address).toBe(USDC_MAINNET.address)
     expect(result.current.tokenQuery.loading).toBe(true)
+    expect(result.current.tokenProjectQuery.loading).toBe(true)
   })
 
   it('returns LoadedTDPContext (currency defined) when token query has data', () => {

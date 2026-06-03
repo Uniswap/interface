@@ -13,7 +13,6 @@ export interface TokenMarketStats {
 
 export interface MarketDataInput {
   price?: { value?: number }
-  volume?: { value?: number }
   volume24H?: { value?: number }
   priceHigh52W?: { value?: number }
   priceLow52W?: { value?: number }
@@ -23,6 +22,7 @@ export interface ProjectMarketDataInput {
   price?: { value?: number }
   marketCap?: { value?: number }
   fullyDilutedValuation?: { value?: number }
+  volume24H?: { value?: number }
   priceHigh52W?: { value?: number }
   priceLow52W?: { value?: number }
 }
@@ -43,12 +43,17 @@ export function computeTokenMarketStats(params: {
   market?: MarketDataInput
   projectMarket?: ProjectMarketDataInput
   currentPrice?: number
+  preferProjectMarketData?: boolean
 }): TokenMarketStats {
-  const { market, projectMarket, currentPrice } = params
-  const resolvedPrice = currentPrice ?? projectMarket?.price?.value ?? market?.price?.value ?? undefined
+  const { market, projectMarket, currentPrice, preferProjectMarketData } = params
+  const marketVolume = market?.volume24H?.value ?? undefined
+  const projectMarketVolume = projectMarket?.volume24H?.value ?? undefined
+  const resolvedPrice = preferProjectMarketData
+    ? (projectMarket?.price?.value ?? currentPrice ?? market?.price?.value ?? undefined)
+    : (currentPrice ?? projectMarket?.price?.value ?? market?.price?.value ?? undefined)
   const marketCap = projectMarket?.marketCap?.value ?? undefined
   const fdv = projectMarket?.fullyDilutedValuation?.value ?? undefined
-  const volume = market?.volume24H?.value ?? market?.volume?.value ?? undefined
+  const volume = preferProjectMarketData ? (projectMarketVolume ?? marketVolume) : marketVolume
   const rawHigh52w = projectMarket?.priceHigh52W?.value ?? market?.priceHigh52W?.value ?? undefined
   const rawLow52w = projectMarket?.priceLow52W?.value ?? market?.priceLow52W?.value ?? undefined
   const { high52w, low52w } = clamp52wWithCurrentPrice({

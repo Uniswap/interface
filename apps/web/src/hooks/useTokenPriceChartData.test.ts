@@ -29,6 +29,36 @@ const SUBGRAPH_PRICE_HISTORY = [priceHistoryEntry(1000, 10), priceHistoryEntry(2
 
 const COINGECKO_PRICE_HISTORY = [priceHistoryEntry(1000, 20), priceHistoryEntry(2000, 21), priceHistoryEntry(3000, 22)]
 
+const COINGECKO_PROJECT_PRICE_HISTORY = [
+  priceHistoryEntry(1000, 30),
+  priceHistoryEntry(2000, 31),
+  priceHistoryEntry(3000, 32),
+]
+
+const SUBGRAPH_OHLC = [
+  {
+    timestamp: 1000,
+    open: { value: 10 },
+    high: { value: 11 },
+    low: { value: 9 },
+    close: { value: 10 },
+  },
+  {
+    timestamp: 2000,
+    open: { value: 10 },
+    high: { value: 12 },
+    low: { value: 10 },
+    close: { value: 11 },
+  },
+  {
+    timestamp: 3000,
+    open: { value: 11 },
+    high: { value: 13 },
+    low: { value: 11 },
+    close: { value: 12 },
+  },
+]
+
 const BASE_VARIABLES = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0x68749665FF8D2d112Fa859AA293F07A622782F38',
@@ -36,20 +66,23 @@ const BASE_VARIABLES = {
   multichain: false,
 }
 
-function makeSubgraphResult(priceHistory: typeof SUBGRAPH_PRICE_HISTORY) {
+function makeSubgraphResult(priceHistory: typeof SUBGRAPH_PRICE_HISTORY, ohlc: typeof SUBGRAPH_OHLC | null = null) {
   return {
-    data: { token: { market: { priceHistory, ohlc: null, price: { value: 12 } } } },
+    data: { token: { market: { priceHistory, ohlc, price: { value: 12 } } } },
     loading: false,
   }
 }
 
-function makeCoinGeckoResult(priceHistory: typeof COINGECKO_PRICE_HISTORY | []) {
+function makeCoinGeckoResult(
+  priceHistory: typeof COINGECKO_PRICE_HISTORY | [],
+  projectPriceHistory: typeof COINGECKO_PROJECT_PRICE_HISTORY | [] = [],
+) {
   return {
     data: {
       tokenProjects: [
         {
           tokens: [{ chain: GraphQLApi.Chain.Ethereum, market: { priceHistory } }],
-          markets: [],
+          markets: projectPriceHistory.length ? [{ price: { value: 32 }, priceHistory: projectPriceHistory }] : [],
         },
       ],
     },
@@ -122,5 +155,88 @@ describe('useTokenPriceChartData', () => {
 
     // Subgraph entries start at value 10
     expect(result.current.entries[0].value).toBe(10)
+  })
+
+  it('uses project CoinGecko price history for multichain tokens when project market data is preferred', () => {
+    mockUseTokenPriceHistoryQuery.mockReturnValue(
+      makeCoinGeckoResult(COINGECKO_PRICE_HISTORY, COINGECKO_PROJECT_PRICE_HISTORY),
+    )
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: { ...BASE_VARIABLES, multichain: true },
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+        preferProjectMarketData: true,
+      }),
+    )
+
+    // Project CoinGecko entries start at value 30; token-level entries start at 20; subgraph starts at 10
+    expect(result.current.entries[0].value).toBe(30)
+    expect(mockUseTokenPriceHistoryQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        skip: false,
+      }),
+    )
+  })
+
+  it('disables candlesticks and uses project CoinGecko line history when project market data is preferred', () => {
+    mockUseTokenPriceHistoryQuery.mockReturnValue(
+      makeCoinGeckoResult(COINGECKO_PRICE_HISTORY, COINGECKO_PROJECT_PRICE_HISTORY),
+    )
+    mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult(SUBGRAPH_PRICE_HISTORY, SUBGRAPH_OHLC))
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: { ...BASE_VARIABLES, multichain: true },
+        skip: false,
+        priceChartType: PriceChartType.CANDLESTICK,
+        preferProjectMarketData: true,
+      }),
+    )
+
+    expect(result.current.disableCandlestickUI).toBe(true)
+    expect(result.current.entries[0].value).toBe(30)
+    expect(mockUseTokenPriceHistoryQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        skip: false,
+      }),
+    )
+  })
+
+  it('does not fall back to subgraph data while preferred project market history is loading', () => {
+    mockUseTokenPriceHistoryQuery.mockReturnValue({ data: undefined, loading: true })
+    mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult(SUBGRAPH_PRICE_HISTORY, SUBGRAPH_OHLC))
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: { ...BASE_VARIABLES, multichain: true },
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+        preferProjectMarketData: true,
+      }),
+    )
+
+    expect(result.current.loading).toBe(true)
+    expect(result.current.dataQuality).toBe(DataQuality.INVALID)
+    expect(result.current.entries).toHaveLength(0)
+  })
+
+  it('falls back to subgraph data when preferred project market history is missing after loading', () => {
+    mockUseTokenPriceHistoryQuery.mockReturnValue(makeCoinGeckoResult([], []))
+    mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult(SUBGRAPH_PRICE_HISTORY, SUBGRAPH_OHLC))
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: { ...BASE_VARIABLES, multichain: true },
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+        preferProjectMarketData: true,
+      }),
+    )
+
+    expect(result.current.loading).toBe(false)
+    expect(result.current.dataQuality).toBe(DataQuality.VALID)
+    expect(result.current.entries[0].value).toBe(9)
   })
 })

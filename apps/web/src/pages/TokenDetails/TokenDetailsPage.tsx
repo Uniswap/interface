@@ -31,12 +31,13 @@ function TDPPageContent() {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isCompact = useScrollCompact({ thresholdCompact: 100, thresholdExpanded: 60 })
 
-  const { address, currency, currencyChain, currencyChainId, tokenQuery } = useTDPStore((s) => ({
+  const { address, currency, currencyChain, currencyChainId, tokenQuery, tokenProjectQuery } = useTDPStore((s) => ({
     address: s.address,
     currency: s.currency,
     currencyChain: s.currencyChain,
     currencyChainId: s.currencyChainId,
     tokenQuery: s.tokenQuery,
+    tokenProjectQuery: s.tokenProjectQuery,
   }))
 
   const tokenQueryData = tokenQuery.data?.token
@@ -66,10 +67,10 @@ function TDPPageContent() {
 
   // redirect to /explore if token is not found
   useEffect(() => {
-    if (!tokenQuery.loading && !currency) {
+    if (!tokenProjectQuery.loading && !currency) {
       navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
     }
-  }, [currency, tokenQuery.loading, navigate])
+  }, [currency, tokenProjectQuery.loading, navigate])
 
   return (
     <>
@@ -80,7 +81,8 @@ function TDPPageContent() {
         ))}
         {structuredData && <script type="application/ld+json">{JSON.stringify(structuredData)}</script>}
       </Helmet>
-      {tokenQuery.loading || !currency ? (
+      {/* Gate on metadata (not the market `tokenQuery`) so the shell + header paint before market data loads. */}
+      {tokenProjectQuery.loading || !currency ? (
         <TokenDetailsPageSkeleton isCompact={isCompact} />
       ) : (
         <TokenDetailsContent isCompact={isCompact} />

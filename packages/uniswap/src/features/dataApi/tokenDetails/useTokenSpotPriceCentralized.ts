@@ -1,11 +1,17 @@
 import { usePrice } from '@universe/prices'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
-import { useTokenSpotPrice as useTokenSpotPriceLegacy } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenSpotPrice as useTokenSpotPriceLegacy,
+  type UseTokenSpotPriceOptions,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isPriceServiceSupportedChain } from 'uniswap/src/features/prices/isPriceServiceSupportedChain'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
-export function useTokenSpotPriceCentralized(currencyId: CurrencyId | undefined): number | undefined {
+export function useTokenSpotPriceCentralized(
+  currencyId: CurrencyId | undefined,
+  options?: UseTokenSpotPriceOptions,
+): number | undefined {
   const chainId = currencyId ? (currencyIdToChain(currencyId) ?? undefined) : undefined
   const rawAddress = currencyId ? currencyIdToAddress(currencyId) : undefined
 
@@ -22,7 +28,7 @@ export function useTokenSpotPriceCentralized(currencyId: CurrencyId | undefined)
   })
 
   // Legacy fallback: Apollo fragment cache reads — no network, always cheap
-  const legacyPrice = useTokenSpotPriceLegacy(currencyId)
+  const legacyPrice = useTokenSpotPriceLegacy(currencyId, options)
 
-  return isSupported ? centralizedPrice : legacyPrice
+  return options?.preferProjectMarketData ? legacyPrice : isSupported ? centralizedPrice : legacyPrice
 }

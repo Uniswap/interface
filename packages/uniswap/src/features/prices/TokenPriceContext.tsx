@@ -2,7 +2,11 @@ import type { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, type ReactNode, useContext } from 'react'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
-import { useTokenSpotPrice as useTokenSpotPriceLegacy } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenSpotPrice as useTokenSpotPriceLegacy,
+  type UseTokenSpotPriceOptions,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { useTokenSpotPriceCentralized } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceCentralized'
 import {
   useUSDCPrice as useUSDCPriceLegacy,
   useUSDCValue as useUSDCValueLegacy,
@@ -34,7 +38,7 @@ export interface TokenPriceHooks {
     isLoading: boolean
   }
 
-  useTokenSpotPrice: (currencyId: CurrencyId | undefined) => number | undefined
+  useTokenSpotPrice: (currencyId: CurrencyId | undefined, options?: UseTokenSpotPriceOptions) => number | undefined
 }
 
 const LEGACY_HOOKS: TokenPriceHooks = {
@@ -44,14 +48,11 @@ const LEGACY_HOOKS: TokenPriceHooks = {
   useTokenSpotPrice: useTokenSpotPriceLegacy,
 }
 
-// Phase 1 (this A/B) flips the USDC-priced display hooks to the centralized service.
-// Phase 2 (`useTokenSpotPrice`, `useTokenMarketStats`, `useTDPPriceChartData`) stays
-// on the legacy GQL/CoinGecko path and will be rolled out separately later.
 const CENTRALIZED_HOOKS: TokenPriceHooks = {
   useUSDCPrice: useUSDCPriceCentralized,
   useUSDCValue: useUSDCValueCentralized,
   useUSDCValueWithStatus: useUSDCValueWithStatusCentralized,
-  useTokenSpotPrice: useTokenSpotPriceLegacy,
+  useTokenSpotPrice: useTokenSpotPriceCentralized,
 }
 
 const TokenPriceContext = createContext<TokenPriceHooks>(LEGACY_HOOKS)

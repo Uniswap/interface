@@ -1,4 +1,9 @@
-query TokenWeb($chain: Chain!, $address: String = null, $multichain: Boolean = false) {
+query TokenWeb(
+  $chain: Chain!
+  $address: String = null
+  $multichain: Boolean = false
+  $preferProjectMarketData: Boolean = false
+) {
   token(chain: $chain, address: $address) {
     id
     decimals
@@ -45,7 +50,7 @@ query TokenWeb($chain: Chain!, $address: String = null, $multichain: Boolean = f
         id
         chain
         address
-        market(currency: USD) {
+        market(currency: USD) @include(if: $multichain) {
           id
           totalValueLocked {
             id
@@ -66,6 +71,11 @@ query TokenWeb($chain: Chain!, $address: String = null, $multichain: Boolean = f
       }
       markets(currencies: [USD]) {
         id
+        price {
+          id
+          value
+          currency
+        }
         fullyDilutedValuation {
           id
           value
@@ -83,6 +93,15 @@ query TokenWeb($chain: Chain!, $address: String = null, $multichain: Boolean = f
         priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
           id
           value
+        }
+        pricePercentChange24h {
+          id
+          value
+        }
+        volume24H: volume(duration: DAY) @include(if: $preferProjectMarketData) {
+          id
+          value
+          currency
         }
       }
     }

@@ -21,7 +21,9 @@ export type TokenPriceChartQueryVariables = {
   multichain: boolean
 }
 
-function fallbackToPriceChartData(priceHistoryEntry: GraphQLApi.PriceHistoryFallbackFragment): PriceChartData {
+type PriceHistoryEntry = Pick<GraphQLApi.PriceHistoryFallbackFragment, 'timestamp' | 'value'>
+
+function fallbackToPriceChartData(priceHistoryEntry: PriceHistoryEntry): PriceChartData {
   const { value, timestamp } = priceHistoryEntry
   const time = timestamp as UTCTimestamp
   return { time, value, open: value, high: value, low: value, close: value }
@@ -40,13 +42,17 @@ export function useTokenPriceChartData({
   skip,
   priceChartType,
   currentPriceOverride,
+  preferProjectMarketData = false,
 }: {
   variables: TokenPriceChartQueryVariables
   skip: boolean
   priceChartType: PriceChartType
   currentPriceOverride?: number
+  preferProjectMarketData?: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
+  // Project markets do not provide OHLC, so RWA charts always render as line charts even if stale UI state says candle.
+  const effectivePriceChartType = preferProjectMarketData ? PriceChartType.LINE : priceChartType
 
   // For candlestick charts, use subgraph OHLC data (required, not available in CoinGecko)
   // For line charts when fallback is needed, fetch both CoinGecko and subgraph data
@@ -65,6 +71,9 @@ export function useTokenPriceChartData({
     return chainId ? buildCurrencyId(chainId, variables.address) : undefined
   }, [variables.chain, variables.address])
 
+  const shouldFetchCoinGeckoHistory =
+    effectivePriceChartType === PriceChartType.LINE && (!variables.multichain || preferProjectMarketData)
+
   const { data: coinGeckoData, loading: coinGeckoLoading } = GraphQLApi.useTokenPriceHistoryQuery({
     variables: {
       contract: currencyIdValue
@@ -72,7 +81,7 @@ export function useTokenPriceChartData({
         : { address: undefined, chain: variables.chain },
       duration: variables.duration,
     },
-    skip: skip || !currencyIdValue || priceChartType === PriceChartType.CANDLESTICK || variables.multichain,
+    skip: skip || !currencyIdValue || !shouldFetchCoinGeckoHistory,
     // IMPORTANT: Must use no-cache to prevent infinite query loop.
     //
     // TokenPriceHistory returns Token objects (with chain/address) nested inside tokenProjects.
@@ -82,44 +91,64 @@ export function useTokenPriceChartData({
     fetchPolicy: 'no-cache',
   })
 
-  const loading =
-    subgraphLoading || (priceChartType === PriceChartType.LINE && !variables.multichain && coinGeckoLoading)
+  const loading = subgraphLoading || (shouldFetchCoinGeckoHistory && coinGeckoLoading)
 
   // oxlint-disable-next-line complexity
   return useMemo(() => {
     const subgraphMarket = subgraphData?.token?.market
     const { ohlc, priceHistory: subgraphPriceHistory, price: subgraphPrice } = subgraphMarket ?? {}
 
-    // Data source strategy: prefer CoinGecko for line charts, use subgraph for candlesticks
-    // Prefer per-chain CoinGecko history when available so multi-chain tokens render correctly
+    // CoinGecko exposes both project-level market data and per-contract token market data.
+    // Default token pages prefer per-contract CoinGecko history so multichain tokens stay chain-specific.
+    // RWA pages use project-level history because the useful chart is the underlying security, not wrapper liquidity.
     const coinGeckoProject = coinGeckoData?.tokenProjects?.[0]
     const coinGeckoMarket = coinGeckoProject?.markets?.[0]
     const coinGeckoTokenMarket = coinGeckoProject?.tokens.find((token) => token.chain === variables.chain)?.market
-    const coinGeckoPriceHistory = coinGeckoTokenMarket?.priceHistory ?? coinGeckoMarket?.priceHistory
-    const coinGeckoAggregatedPrice = coinGeckoTokenMarket?.price?.value ?? coinGeckoMarket?.price?.value
+    let coinGeckoPriceHistory: (PriceHistoryEntry | undefined)[] | undefined =
+      coinGeckoTokenMarket?.priceHistory ?? coinGeckoMarket?.priceHistory
+    let coinGeckoCurrentPrice = coinGeckoTokenMarket?.price?.value ?? coinGeckoMarket?.price?.value
+    if (preferProjectMarketData) {
+      coinGeckoPriceHistory = coinGeckoMarket?.priceHistory
+      coinGeckoCurrentPrice = coinGeckoMarket?.price?.value
+    }
 
-    // For line charts, prefer CoinGecko priceHistory but use PER-CHAIN current price
-    // For candlestick charts, always use subgraph OHLC (only source)
-    const useCoinGeckoHistory =
-      priceChartType === PriceChartType.LINE && coinGeckoPriceHistory?.length && !variables.multichain
-    const priceHistory = useCoinGeckoHistory ? coinGeckoPriceHistory : subgraphPriceHistory
+    // Candlestick charts always use subgraph OHLC. Line charts use CoinGecko history when available.
+    const isWaitingForProjectMarketHistory =
+      preferProjectMarketData && effectivePriceChartType === PriceChartType.LINE && coinGeckoLoading
+    const shouldUseCoinGeckoHistory =
+      effectivePriceChartType === PriceChartType.LINE &&
+      Boolean(coinGeckoPriceHistory?.length) &&
+      (!variables.multichain || preferProjectMarketData)
 
-    // CRITICAL: Always use per-chain price from subgraph for multi-chain tokens
-    // This ensures USDC on Ethereum shows Ethereum price, not aggregated price
+    let priceHistory: (PriceHistoryEntry | undefined)[] | undefined = subgraphPriceHistory
+    let ohlcPriceHistory = ohlc
+    if (isWaitingForProjectMarketHistory) {
+      priceHistory = undefined
+      ohlcPriceHistory = undefined
+    } else if (shouldUseCoinGeckoHistory) {
+      priceHistory = coinGeckoPriceHistory
+      ohlcPriceHistory = undefined
+    }
+
+    // CRITICAL: By default, multi-chain tokens use per-chain subgraph price.
+    // This ensures USDC on Ethereum shows Ethereum price, not aggregated price.
+    // Tokenized securities opt into project-level price because the underlying security is the useful quote.
     // When centralized prices are enabled, the override provides live WebSocket prices
-    const currentPrice = currentPriceOverride ?? subgraphPrice?.value ?? coinGeckoAggregatedPrice
+    let resolvedMarketPrice = subgraphPrice?.value ?? coinGeckoCurrentPrice
+    if (preferProjectMarketData) {
+      resolvedMarketPrice = coinGeckoCurrentPrice ?? subgraphPrice?.value
+    }
+    const currentPrice = currentPriceOverride ?? resolvedMarketPrice
 
     let entries =
-      (ohlc
-        ? ohlc.filter((v): v is GraphQLApi.CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
-        : priceHistory
-            ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
-            .map(fallbackToPriceChartData)) ?? []
+      (ohlcPriceHistory
+        ? ohlcPriceHistory.filter((v): v is GraphQLApi.CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
+        : priceHistory?.filter((v): v is PriceHistoryEntry => v !== undefined).map(fallbackToPriceChartData)) ?? []
 
-    if (ohlc) {
+    if (ohlcPriceHistory) {
       // Special case: backend returns invalid OHLC data on some chains. If we detect long series of 0's, return an empty array to trigger fallback.
       const zeroCount = entries.filter((x) => x.value === 0).length
-      if (!ohlc.length || zeroCount / entries.length > CANDLESTICK_FALLBACK_THRESHOLD) {
+      if (!ohlcPriceHistory.length || zeroCount / entries.length > CANDLESTICK_FALLBACK_THRESHOLD) {
         enablePriceHistoryFallback() // triggers a re-fetch that uses priceHistory instead of OHLC
         return {
           chartType: ChartType.PRICE,
@@ -132,7 +161,7 @@ export function useTokenPriceChartData({
 
       // For line charts made using ohlc data, the min and max entries should point to their low/high, rather than close,
       // to ensure the chart line makes contact with the min/max lines.
-      if (priceChartType === PriceChartType.LINE) {
+      if (effectivePriceChartType === PriceChartType.LINE) {
         let min = entries[0].low
         let minIndex = 0
         let max = entries[0].high
@@ -158,7 +187,7 @@ export function useTokenPriceChartData({
       }
       // Special case: backend data for OHLC data is currently too granular, so points should be combined, halving the data
       // oxlint-disable-next-line typescript/no-unnecessary-condition
-      else if (priceChartType === PriceChartType.CANDLESTICK) {
+      else if (effectivePriceChartType === PriceChartType.CANDLESTICK) {
         const combinedEntries = []
 
         const startIndex = entries.length % 2 // If the length is odd, start at the second entry
@@ -205,16 +234,24 @@ export function useTokenPriceChartData({
     }
 
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.PRICE, duration: variables.duration })
-    return { chartType: ChartType.PRICE, entries, loading, dataQuality, disableCandlestickUI: fallback }
+    return {
+      chartType: ChartType.PRICE,
+      entries,
+      loading,
+      dataQuality,
+      disableCandlestickUI: preferProjectMarketData || fallback,
+    }
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- coinGeckoData.tokenProjects is intentionally accessed via optional chaining
   }, [
     currentPriceOverride,
     subgraphData?.token?.market,
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
     coinGeckoData?.tokenProjects?.[0],
+    coinGeckoLoading,
+    effectivePriceChartType,
     fallback,
     loading,
-    priceChartType,
+    preferProjectMarketData,
     variables.duration,
     variables.chain,
     variables.multichain,
