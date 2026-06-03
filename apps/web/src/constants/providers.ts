@@ -21,10 +21,20 @@ const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultRe
  * `<StatsigProviderWrapper>` mounts and triggers `StatsigClient.instance(key)`
  * to create a no-options client; the React provider's `useClientAsyncInit`
  * then reuses that broken instance and silently drops `networkConfig.api`,
- * `overrideAdapter`, and `environment.tier`. The cache below preserves the
- * "captured at first call, not rebuilt mid-session" semantics.
+ * `overrideAdapter`, and `environment.tier`. If that first call still beats
+ * Statsig init the chain resolves to legacy — so the cache rebuilds once on the
+ * legacy→UniRPC transition (see `getRpcProvider`) rather than pinning the chain
+ * to legacy for the whole session. ViemClientManager solves the same staleness
+ * by re-resolving per call; ethers providers are stateful (polling/listeners),
+ * so we rebuild-on-transition instead.
  */
-function buildAppProvider(chainId: EVMUniverseChainId): ethersProviders.JsonRpcProvider {
+interface CachedProvider {
+  provider: ethersProviders.JsonRpcProvider
+  /** Whether `provider` is the UniRPC provider (vs the legacy multi-URL fallback). */
+  isUniRpc: boolean
+}
+
+function buildAppProvider(chainId: EVMUniverseChainId): CachedProvider {
   // Prefer UniRPC routing; fall through to the legacy multi-URL provider on
   // either branch — UniRPC inactive OR factory construction returned null
   // (createEthersProviderFactory swallows internal exceptions and returns
@@ -34,32 +44,45 @@ function buildAppProvider(chainId: EVMUniverseChainId): ethersProviders.JsonRpcP
   if (rpcConfig?.isUniRpc) {
     const provider = createProvider({ chainId, rpcType: RPCType.Public })
     if (provider) {
-      return provider
+      return { provider, isUniRpc: true }
     }
   }
 
   const info = getChainInfo(chainId)
-  return new AppJsonRpcProvider(
-    info.rpcUrls.interface.http.map(
-      (url) => new ConfiguredJsonRpcProvider({ url, networkish: { chainId, name: info.interfaceName } }),
+  return {
+    provider: new AppJsonRpcProvider(
+      info.rpcUrls.interface.http.map(
+        (url) => new ConfiguredJsonRpcProvider({ url, networkish: { chainId, name: info.interfaceName } }),
+      ),
     ),
-  )
+    isUniRpc: false,
+  }
 }
 
-const providerCache = new Map<EVMUniverseChainId, ethersProviders.JsonRpcProvider>()
+const providerCache = new Map<EVMUniverseChainId, CachedProvider>()
 
 /**
- * Returns the singleton interface RPC provider for `chainId`. Constructs on
- * first call, then caches. Use this everywhere instead of building providers
- * ad-hoc — it's the only entry point that respects the UniRPC gate.
+ * Returns the singleton interface RPC provider for `chainId`. Use this
+ * everywhere instead of building providers ad-hoc — it's the only entry point
+ * that respects the UniRPC gate.
+ *
+ * Constructs on first call, then caches. The one exception: if the cached
+ * provider is the legacy fallback (built before the UniRPC gate resolved) and
+ * the gate has since turned on, it rebuilds once onto UniRPC and sticks — so a
+ * first call that beat Statsig init doesn't pin the chain to legacy for the
+ * session.
  */
 export function getRpcProvider(chainId: EVMUniverseChainId): ethersProviders.JsonRpcProvider {
-  let provider = providerCache.get(chainId)
-  if (!provider) {
-    provider = buildAppProvider(chainId)
-    providerCache.set(chainId, provider)
+  const cached = providerCache.get(chainId)
+  if (cached) {
+    // Already on UniRPC, or still legacy and the gate is still off → reuse.
+    if (cached.isUniRpc || !defaultResolveRpcConfig({ chainId, rpcType: RPCType.Public })?.isUniRpc) {
+      return cached.provider
+    }
   }
-  return provider
+  const built = buildAppProvider(chainId)
+  providerCache.set(chainId, built)
+  return built.provider
 }
 
 export function getInterfaceProvider(

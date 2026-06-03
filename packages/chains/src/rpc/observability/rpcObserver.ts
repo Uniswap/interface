@@ -1,5 +1,6 @@
 import { logger } from 'utilities/src/logger/logger'
 import { extractProviderName } from './extractProviderName'
+import type { RpcErrorMeta } from './extractRpcErrorMeta'
 
 export interface RpcRequestContext {
   requestId: string
@@ -14,10 +15,13 @@ export interface RpcResponseContext extends RpcRequestContext {
   durationMs: number
 }
 
-export interface RpcErrorContext extends RpcRequestContext {
+// Inherits httpStatus / rpcErrorCode / errorCategory from RpcErrorMeta so the
+// three structured fields are declared once. extractRpcErrorMeta() produces
+// them; the onError logger still gates each on `!== undefined`, so a field
+// added to RpcErrorMeta must also be added to that block to reach Datadog.
+export interface RpcErrorContext extends RpcRequestContext, RpcErrorMeta {
   durationMs: number
   error: unknown
-  errorCategory?: string
 }
 
 export interface RpcObserver {
@@ -162,14 +166,29 @@ function createDatadogRpcObserver(): RpcObserver {
       }
 
       if (log) {
-        logger.warn('rpcObserver', 'onError', 'RPC error', {
+        // Status/code are optional — include them only when recovered, so we
+        // never emit null facets. `httpStatus` present + a 4xx ⇒ intentional
+        // gateway rejection (401/403 bot-block, 429 throttle); `httpStatus`
+        // absent ⇒ no server response (network/transport); `rpcErrorCode`
+        // present ⇒ server handled the request but returned a JSON-RPC error.
+        const payload: Record<string, unknown> = {
           method: ctx.method,
           chainId: ctx.chainId,
           durationMs: Math.round(ctx.durationMs),
           provider,
           transport: ctx.transport,
           error: errorMessage,
-        })
+        }
+        if (ctx.httpStatus !== undefined) {
+          payload['httpStatus'] = ctx.httpStatus
+        }
+        if (ctx.rpcErrorCode !== undefined) {
+          payload['rpcErrorCode'] = ctx.rpcErrorCode
+        }
+        if (ctx.errorCategory !== undefined) {
+          payload['errorCategory'] = ctx.errorCategory
+        }
+        logger.warn('rpcObserver', 'onError', 'RPC error', payload)
       }
     },
   }

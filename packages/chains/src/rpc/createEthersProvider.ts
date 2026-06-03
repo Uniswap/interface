@@ -2,6 +2,7 @@ import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { logger } from 'utilities/src/logger/logger'
 import { SignerInfo } from './FlashbotsCommon'
 import { FlashbotsRpcProvider } from './FlashbotsRpcProvider'
+import { extractRpcErrorMeta } from './observability/extractRpcErrorMeta'
 import { InstrumentedJsonRpcProvider } from './observability/InstrumentedJsonRpcProvider'
 import { normalizeRpcError } from './observability/normalizeRpcError'
 import { generateRequestId, getRpcObserver, type RpcObserver } from './observability/rpcObserver'
@@ -70,7 +71,15 @@ function createJsonRpcFetchFunc(config: {
       })
 
       if (!response.ok) {
-        throw new Error(`RPC request failed: ${response.status} ${response.statusText}`)
+        // Carry the status as a structured field, not just in the message:
+        // on React Native `response.statusText` is empty, so the message alone
+        // ("RPC request failed: 403 ") isn't reliably parseable. extractRpcErrorMeta
+        // reads `.status` directly (with the message as a fallback).
+        const httpError = new Error(`RPC request failed: ${response.status} ${response.statusText}`.trim()) as Error & {
+          status?: number
+        }
+        httpError.status = response.status
+        throw httpError
       }
 
       const json = (await response.json()) as {
@@ -87,8 +96,15 @@ function createJsonRpcFetchFunc(config: {
       return json.result
     } catch (error) {
       // Normalize before handing to the observer so the rate limiter's
-      // bucket-by-message strategy stays effective. Throw the original.
-      config.observer.onError({ ...ctx, durationMs: performance.now() - start, error: normalizeRpcError(error) })
+      // bucket-by-message strategy stays effective; extract status/code from the
+      // raw error (the non-ok branch attaches `.status`, the JSON-RPC branch
+      // attaches `.code`). Throw the original.
+      config.observer.onError({
+        ...ctx,
+        durationMs: performance.now() - start,
+        error: normalizeRpcError(error),
+        ...extractRpcErrorMeta(error),
+      })
       throw error
     }
   }
