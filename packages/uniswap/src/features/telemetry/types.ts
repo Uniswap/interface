@@ -1186,6 +1186,10 @@ export type UniverseEventProperties = {
     | {
         type: 'portfolio'
         wallet_address?: string
+        tokens: boolean
+        tokens_text?: string
+        pools: boolean
+        pools_text?: string
         performance: boolean
         performance_text?: string
         something_else: boolean

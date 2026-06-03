@@ -15,6 +15,7 @@ import {
   getMaxTieredPostAuctionLiquidityEffectivePercent,
   getPostAuctionLiquidityPreviewPercent,
   getPostAuctionLiquidityTierLpDollars,
+  inputExceedsCurrencyPrecision,
   isCustomPriceRangeAllocationValid,
   isCustomPriceRangeEntryValid,
   isValidPartialPercentInput,
@@ -453,5 +454,46 @@ describe('expandCompactNumberInput', () => {
   it('is case-insensitive for suffix letters', () => {
     expect(expandCompactNumberInput('1M')).toBe('1000000')
     expect(expandCompactNumberInput('1B')).toBe('1000000000')
+  })
+})
+
+describe('inputExceedsCurrencyPrecision', () => {
+  it('rejects values with more fractional digits than the currency supports', () => {
+    // ETH (18 decimals): 0.<19 zeros>1 carries 19 fractional digits
+    expect(inputExceedsCurrencyPrecision('0.0000000000000000001', 18)).toBe(true)
+    // USDC (6 decimals): 0.0000001 carries 7 fractional digits
+    expect(inputExceedsCurrencyPrecision('0.0000001', 6)).toBe(true)
+  })
+
+  it('accepts values exactly at the currency precision', () => {
+    // 18 zeros + 1 → 18 fractional digits, exactly the wei boundary
+    expect(inputExceedsCurrencyPrecision('0.000000000000000001', 18)).toBe(false)
+    expect(inputExceedsCurrencyPrecision('0.000001', 6)).toBe(false)
+  })
+
+  it('accepts whole numbers and short decimals', () => {
+    expect(inputExceedsCurrencyPrecision('100', 18)).toBe(false)
+    expect(inputExceedsCurrencyPrecision('0.5', 18)).toBe(false)
+    expect(inputExceedsCurrencyPrecision('1.234', 6)).toBe(false)
+  })
+
+  it('treats intermediate / suffix-only inputs as in-range', () => {
+    expect(inputExceedsCurrencyPrecision('', 18)).toBe(false)
+    expect(inputExceedsCurrencyPrecision('0.', 18)).toBe(false)
+    expect(inputExceedsCurrencyPrecision('k', 18)).toBe(false)
+  })
+
+  it('applies the cap to the post-suffix-expansion value', () => {
+    // 0.001k = 1 (suffix shifts the decimal) — no fractional digits after expansion
+    expect(inputExceedsCurrencyPrecision('0.001k', 0)).toBe(false)
+    // 0.0001m = 100 — still no fractional digits
+    expect(inputExceedsCurrencyPrecision('0.0001m', 0)).toBe(false)
+    // 0.1234567k → 123.4567 → 4 fractional digits → exceeds 3-decimal currency
+    expect(inputExceedsCurrencyPrecision('0.1234567k', 3)).toBe(true)
+  })
+
+  it('rejects any decimal input on a zero-decimal currency', () => {
+    expect(inputExceedsCurrencyPrecision('1.5', 0)).toBe(true)
+    expect(inputExceedsCurrencyPrecision('1', 0)).toBe(false)
   })
 })

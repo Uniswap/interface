@@ -204,6 +204,7 @@ describe('parseRestPosition', () => {
     },
     status: PositionStatus.IN_RANGE,
     isHidden: false,
+    uncollectedFeesUsd: 12.34,
   } as RestPosition
 
   const mockV4PoolPosition: PoolPosition = new MockPoolPosition(ProtocolVersion.V4, '3000')
@@ -221,6 +222,7 @@ describe('parseRestPosition', () => {
     },
     status: PositionStatus.IN_RANGE,
     isHidden: false,
+    uncollectedFeesUsd: 56.78,
   } as RestPosition
 
   it('returns undefined if position is undefined', () => {
@@ -300,6 +302,7 @@ describe('parseRestPosition', () => {
       token1UncollectedFees: mockV3Position.token1UncollectedFees,
       fee0Amount: CurrencyAmount.fromRawAmount(WETH, mockV3Position.token0UncollectedFees),
       fee1Amount: CurrencyAmount.fromRawAmount(DAI, mockV3Position.token1UncollectedFees),
+      uncollectedFeesUsd: 12.34,
       currency0Amount: CurrencyAmount.fromRawAmount(WETH, mockV3Position.amount0),
       currency1Amount: CurrencyAmount.fromRawAmount(DAI, mockV3Position.amount1),
       apr: mockV3Position.apr,
@@ -359,6 +362,7 @@ describe('parseRestPosition', () => {
       token1UncollectedFees: mockV4PoolPosition.token1UncollectedFees,
       fee0Amount: CurrencyAmount.fromRawAmount(WETH, mockV4PoolPosition.token0UncollectedFees),
       fee1Amount: CurrencyAmount.fromRawAmount(DAI, mockV4PoolPosition.token1UncollectedFees),
+      uncollectedFeesUsd: 56.78,
       currency0Amount: CurrencyAmount.fromRawAmount(WETH, mockV4PoolPosition.amount0),
       currency1Amount: CurrencyAmount.fromRawAmount(DAI, mockV4PoolPosition.amount1),
       apr: mockV4PoolPosition.apr,

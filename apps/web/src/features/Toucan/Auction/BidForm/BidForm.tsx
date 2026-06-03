@@ -121,7 +121,10 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     auctionProgressState,
     userBids,
     validationHook,
-    validationError: kycStatus.isError,
+    // Only treat KYC as an unsupported-auction signal once a wallet is connected;
+    // otherwise the disabled verify-wallet query is misread as an error and surfaces
+    // the warning banner instead of the connect-wallet CTA on the action button.
+    validationError: isWalletConnected && kycStatus.isError,
   })
 
   const handleButtonPress = (): void => {

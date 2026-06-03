@@ -41,8 +41,8 @@ interface AnvilManager {
  * Build fork URL from environment variables
  */
 function buildForkUrl(): string {
-  const endpoint = process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME
-  const token = process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN
+  const endpoint = process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME
+  const token = process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN
   if (!endpoint || !token) {
     throw new Error('Missing QuickNode credentials for Anvil fork')
   }

@@ -14,12 +14,14 @@ interface LiquidityPositionDropdownMenuProps {
   liquidityPosition: PositionInfo
   showVisibilityOption?: boolean
   isVisible?: boolean
+  readOnly?: boolean
 }
 
 export const LiquidityPositionDropdownMenu = memo(function LiquidityPositionDropdownMenu({
   liquidityPosition,
   showVisibilityOption = true,
   isVisible = true,
+  readOnly = false,
 }: LiquidityPositionDropdownMenuProps) {
   const isTouchDevice = useIsTouchDevice()
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu, toggle } = useBooleanState(false)
@@ -27,6 +29,7 @@ export const LiquidityPositionDropdownMenu = memo(function LiquidityPositionDrop
     liquidityPosition,
     showVisibilityOption,
     isVisible,
+    readOnly,
   })
 
   return (

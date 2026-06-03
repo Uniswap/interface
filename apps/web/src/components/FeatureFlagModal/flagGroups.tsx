@@ -114,6 +114,7 @@ export function buildFlagGroups(extras: {
       name: 'New Chains',
       flags: [
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
+        { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
         { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
       ],
     },
@@ -154,6 +155,7 @@ export function buildFlagGroups(extras: {
     {
       name: 'Misc',
       flags: [
+        { flag: FeatureFlags.DataLivelinessUI, label: 'Enable Data Liveliness UI' },
         { flag: FeatureFlags.UniswapWrapped2025, label: 'Enable Uniswap Wrapped 2025' },
         { flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' },
       ],

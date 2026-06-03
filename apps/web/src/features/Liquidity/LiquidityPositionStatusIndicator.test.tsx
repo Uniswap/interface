@@ -1,5 +1,5 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { LiquidityPositionStatusIndicator } from '~/features/Liquidity/LiquidityPositionStatusIndicator'
+import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/LiquidityPositionStatusIndicator'
 import { render } from '~/test-utils/render'
 
 describe('LiquidityPositionStatusIndicator', () => {

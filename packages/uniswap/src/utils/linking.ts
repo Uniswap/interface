@@ -333,7 +333,7 @@ export const EARN_VAULT_MODAL_QUERY_VALUE = 'earn-vault'
  * cannot be resolved to a token URL.
  */
 export function getEarnVaultUrl(vault: EarnVaultInfo): string | undefined {
-  const tokenUrl = getTokenUrl(vault.currencyId)
+  const tokenUrl = getTokenUrl(vault.displayCurrencyId)
   if (!tokenUrl) {
     return undefined
   }

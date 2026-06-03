@@ -46,9 +46,15 @@ export function TokenTableHeader({
   const tooltipContent = useMemo(() => getHeaderDescription({ t, category, networkName }), [t, category, networkName])
 
   return (
-    <ClickableHeaderRow onPress={handleSortCategory} group>
-      <MouseoverTooltip disabled={!tooltipContent} size={TooltipSize.Small} text={tooltipContent} placement="top">
-        <Flex row gap="$gap4" alignItems="center">
+    <ClickableHeaderRow onPress={handleSortCategory} width="100%" group>
+      <MouseoverTooltip
+        disabled={!tooltipContent}
+        size={TooltipSize.Small}
+        text={tooltipContent}
+        placement="top"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Flex row gap="$gap4" alignItems="center" cursor="pointer">
           {isCurrentSortMethod && <HeaderArrow orderDirection={direction} size="$icon.16" />}
           <HeaderSortText active={isCurrentSortMethod} variant="body3">
             {headerText}

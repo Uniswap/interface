@@ -112,7 +112,7 @@ export function getTransactionTypeFilterOptions(t: AppTFunction): Record<string,
 export function getTransactionTypesForFilter(filterType: string): TransactionType[] | 'all' {
   switch (filterType) {
     case ActivityFilterType.Sends:
-      return [TransactionType.Send, TransactionType.ToucanBid]
+      return [TransactionType.Send, TransactionType.Deposit, TransactionType.ToucanBid]
     case ActivityFilterType.Receives:
       return [TransactionType.Receive]
     case ActivityFilterType.Swaps:
@@ -146,8 +146,12 @@ export function getTransactionTypesForFilter(filterType: string): TransactionTyp
  */
 export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
   [ActivityFilterType.All]: undefined,
-  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND],
-  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE],
+  [ActivityFilterType.Sends]: [
+    TransactionTypeFilter.SEND,
+    TransactionTypeFilter.VAULT_DEPOSIT,
+    TransactionTypeFilter.VAULT_TRANSFER,
+  ],
+  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE, TransactionTypeFilter.VAULT_TRANSFER],
   [ActivityFilterType.Swaps]: [TransactionTypeFilter.SWAP],
   [ActivityFilterType.Wraps]: [TransactionTypeFilter.WRAP],
   [ActivityFilterType.Approvals]: [TransactionTypeFilter.APPROVE],
@@ -156,7 +160,28 @@ export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter
   [ActivityFilterType.RemoveLiquidity]: [TransactionTypeFilter.DECREASE_LIQUIDITY],
   [ActivityFilterType.Mints]: [TransactionTypeFilter.MINT],
   [ActivityFilterType.ClaimFees]: [TransactionTypeFilter.CLAIM],
+  [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW, TransactionTypeFilter.VAULT_WITHDRAW],
+}
+
+const LEGACY_SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
+  ...SERVER_FILTER_MAP,
+  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND],
+  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE],
   [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW],
+}
+
+export function getServerTransactionTypesForFilter({
+  filterType,
+  isEarnEnabled,
+}: {
+  filterType: string
+  isEarnEnabled: boolean
+}): TransactionTypeFilter[] | undefined {
+  // TODO(CONS-2244): Remove this fallback once Earn is launched and ListTransactions supports multi-filter requests.
+  const serverFilterMap = isEarnEnabled ? SERVER_FILTER_MAP : LEGACY_SERVER_FILTER_MAP
+  const serverFilterTypes = serverFilterMap[filterType as ActivityFilterType]
+
+  return serverFilterTypes?.length === 1 ? serverFilterTypes : undefined
 }
 
 export enum TimePeriod {

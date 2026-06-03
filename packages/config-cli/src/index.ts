@@ -1,7 +1,9 @@
 import { Cli } from 'incur'
+import { approve } from './commands/approve'
 import { login } from './commands/login'
 import { logout } from './commands/logout'
 import { pull } from './commands/pull'
+import { push } from './commands/push'
 import { unzip } from './commands/unzip'
 import { view } from './commands/view'
 import { whoami } from './commands/whoami'
@@ -29,5 +31,7 @@ export const cli = Cli.create('config-cli', {
   .command(whoami)
   .command(view)
   .command(pull)
+  .command(push)
+  .command(approve)
   .command(zip)
   .command(unzip)

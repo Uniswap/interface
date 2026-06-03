@@ -32,6 +32,13 @@ describe('withChainSearchParam', () => {
     expect(next.get(CHAIN_SEARCH_PARAM)).toBe('base')
   })
 
+  it('sets megaeth chain slug', () => {
+    const base = new URLSearchParams('foo=1')
+    const next = withChainSearchParam(base, UniverseChainId.MegaETH)
+    expect(next.get('foo')).toBe('1')
+    expect(next.get(CHAIN_SEARCH_PARAM)).toBe('megaeth')
+  })
+
   it('removes chain when undefined', () => {
     const base = new URLSearchParams(`${CHAIN_SEARCH_PARAM}=base&foo=1`)
     const next = withChainSearchParam(base, undefined)

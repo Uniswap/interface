@@ -13,6 +13,7 @@ import {
   SwapReviewScreen,
   SwapReviewScreenProviders,
 } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 export function CurrentScreen({
   settings,
@@ -25,6 +26,7 @@ export function CurrentScreen({
 }): JSX.Element {
   const { screen } = useTransactionModalContext()
 
+  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
   const { onPrev } = useSwapOnPrevious()
 
   return (
@@ -42,6 +44,7 @@ export function CurrentScreen({
           height="auto"
           alignment={isWebApp ? 'center' : 'top'}
           isModalOpen={screen === TransactionScreen.Review}
+          isDismissible={!isSubmitting}
           name={ModalName.SwapReview}
           padding="$spacing12"
           gap={0}

@@ -51,7 +51,7 @@ export const BaseConfigValues = {
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
 
   // Feature Flags
-  enableEntryGatewayProxy: process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.ENABLE_ENTRY_GATEWAY_PROXY,
+  enableEntryGatewayProxy: process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY,
   enableSessionService: process.env.ENABLE_SESSION_SERVICE,
   enableSessionUpgradeAuto:
     process.env.ENABLE_SESSION_UPGRADE_AUTO ?? process.env.REACT_APP_ENABLE_SESSION_UPGRADE_AUTO,
@@ -69,7 +69,7 @@ export const BaseConfigValues = {
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE,
   tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE ?? process.env.REACT_APP_TRADING_API_URL_OVERRIDE,
-  tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV,
+  tradingApiWebTestEnv: process.env.TRADING_API_TEST_ENV ?? process.env.REACT_APP_TRADING_API_TEST_ENV,
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
 }
 

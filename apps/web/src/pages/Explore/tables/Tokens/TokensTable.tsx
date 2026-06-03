@@ -256,7 +256,7 @@ export function TokenTable({
         id: 'price',
         maxSize: 140,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.PRICE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.PRICE}
@@ -274,7 +274,7 @@ export function TokenTable({
         id: 'percentChange1hr',
         maxSize: 100,
         header: () => (
-          <HeaderCell>
+          <HeaderCell clickable>
             <TokenTableHeader
               category={TokenSortMethod.HOUR_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.HOUR_CHANGE}
@@ -292,7 +292,7 @@ export function TokenTable({
         id: 'percentChange1d',
         maxSize: 140,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.DAY_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.DAY_CHANGE}
@@ -310,7 +310,7 @@ export function TokenTable({
         id: 'fdv',
         maxSize: 120,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.FULLY_DILUTED_VALUATION}
               isCurrentSortMethod={sortMethod === TokenSortMethod.FULLY_DILUTED_VALUATION}
@@ -329,7 +329,7 @@ export function TokenTable({
         meta: { overflowVisible: true },
         maxSize: 150,
         header: () => (
-          <HeaderCell>
+          <HeaderCell clickable>
             <TokenTableHeader
               category={TokenSortMethod.VOLUME}
               isCurrentSortMethod={sortMethod === TokenSortMethod.VOLUME}

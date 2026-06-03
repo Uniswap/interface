@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getPositionKey } from 'uniswap/src/features/positions/utils'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from '~/state/user/hooks'
@@ -84,7 +85,7 @@ export function useWalletPositionsWeb({
 
     const dedupedById = new Map<string, PositionInfo>()
     for (const position of [...allBEPositions, ...parsedSaved]) {
-      const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
+      const positionId = getPositionKey(position)
       if (!dedupedById.has(positionId)) {
         dedupedById.set(positionId, position)
       }

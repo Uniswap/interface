@@ -2,8 +2,12 @@ import { useNavigation } from '@react-navigation/native'
 import type { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
-import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModal'
-import type { EarnVaultModalProps } from 'src/components/earn/EarnVaultModal'
+import type { EarnDepositAmountModalState } from 'src/components/earn/EarnDepositAmountModalState'
+import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModalState'
+import type { EarnDepositSourceSelectorModalProps } from 'src/components/earn/EarnDepositSourceSelectorModalState'
+import type { EarnVaultModalProps } from 'src/components/earn/EarnVaultModalState'
+import type { EarnWithdrawNetworkSelectorModalProps } from 'src/components/earn/EarnWithdrawNetworkSelectorModalState'
+import type { EarnWithdrawReviewModalProps } from 'src/components/earn/EarnWithdrawReviewModalState'
 import type { EarnYouNeedTokenModalProps } from 'src/components/earn/EarnYouNeedTokenModal'
 import type { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import type {
@@ -229,8 +233,12 @@ export type AppStackParamList = {
   [ModalName.ReportTokenIssue]: ReportTokenModalProps
   [ModalName.ReportPortfolioData]: ReportPortfolioDataModalProps
   [ModalName.ReportTokenData]: ReportTokenDataModalProps
+  [ModalName.EarnDepositAmount]: EarnDepositAmountModalState
   [ModalName.EarnDepositReview]: EarnDepositReviewModalProps
+  [ModalName.EarnDepositSourceSelector]: EarnDepositSourceSelectorModalProps
   [ModalName.EarnVault]: EarnVaultModalProps
+  [ModalName.EarnWithdrawNetworkSelector]: EarnWithdrawNetworkSelectorModalProps
+  [ModalName.EarnWithdrawReview]: EarnWithdrawReviewModalProps
   [ModalName.EarnYouNeedToken]: EarnYouNeedTokenModalProps
 }
 

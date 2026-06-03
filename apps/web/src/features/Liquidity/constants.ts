@@ -38,22 +38,6 @@ export const defaultFeeTiers: Record<FeeAmount, FeeDataWithChain> = {
   },
 } as const
 
-export const lpStatusConfig = {
-  [PositionStatus.IN_RANGE]: {
-    color: '$statusSuccess',
-    i18nKey: 'common.withinRange',
-  },
-  [PositionStatus.OUT_OF_RANGE]: {
-    color: '$statusCritical',
-    i18nKey: 'common.outOfRange',
-  },
-  [PositionStatus.CLOSED]: {
-    color: '$neutral2',
-    i18nKey: 'common.closed',
-  },
-  [PositionStatus.UNSPECIFIED]: undefined,
-}
-
 export const LP_POSITION_PROTOCOL_VERSIONS = [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 export const LP_POSITION_STATUS_FILTER_OPTIONS = [
   PositionStatus.IN_RANGE,

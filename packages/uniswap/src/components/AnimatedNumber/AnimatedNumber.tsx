@@ -18,6 +18,7 @@ export type AnimatedNumberProps = {
   disableAnimations?: boolean
   isRightToLeft: boolean
   EndElement?: JSX.Element
+  endElementGap?: number
 }
 
 export interface AnimatedCharStylesType {

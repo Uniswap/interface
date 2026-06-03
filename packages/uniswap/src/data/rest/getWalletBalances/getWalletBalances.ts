@@ -86,6 +86,7 @@ const mapBalanceComponent = (component: BalanceComponent | undefined): Portfolio
   balanceUSD: component?.valueUsd,
   percentChange: component?.percentChange1d,
   absoluteChangeUSD: component?.absoluteChange1d,
+  count: component?.count,
 })
 
 const getBalance = (data: GetWalletBalancesResponse | undefined): WalletBalance | undefined => data?.balance

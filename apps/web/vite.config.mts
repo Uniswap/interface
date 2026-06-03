@@ -32,9 +32,9 @@ const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
 }
 const DEPLOY_TARGET = process.env.DEPLOY_TARGET || 'cloudflare'
-const VITE_DISABLE_SOURCEMAP = process.env.VITE_DISABLE_SOURCEMAP === 'true'
-const DEBUG_PROXY = process.env.VITE_DEBUG_PROXY === 'true'
-const ENABLE_PROXY = process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY === 'true'
+const DISABLE_SOURCEMAP = (process.env.DISABLE_SOURCEMAP ?? process.env.VITE_DISABLE_SOURCEMAP) === 'true'
+const DEBUG_PROXY = (process.env.DEBUG_PROXY ?? process.env.VITE_DEBUG_PROXY) === 'true'
+const ENABLE_PROXY = (process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY) === 'true'
 
 const DEFAULT_PORT = 3000
 
@@ -144,60 +144,82 @@ function getNextDevVersion(): string {
 }
 
 export default defineConfig(({ mode, isPreview }) => {
-  let env = loadEnv(mode, __dirname, '')
+  let env: Record<string, string> = {}
 
-  // Load root .env.defaults.local as a base layer (app-level env files take precedence)
-  const rootEnvDefaultsLocalPath = path.resolve(__dirname, '../../.env.defaults.local')
-  if (fs.existsSync(rootEnvDefaultsLocalPath)) {
-    try {
-      const result = dotenvConfig({ path: rootEnvDefaultsLocalPath })
-      if (result.parsed) {
-        // Only set values that aren't already defined (lowest priority)
-        for (const [key, value] of Object.entries(result.parsed)) {
-          if (!(key in env)) {
-            env[key] = value
+  if (process.env.USE_NEW_CONFIGS === 'true') {
+    // New unified config: read a single .env.new file. Other env sources are
+    // ignored; direct process.env reads elsewhere in this file are unaffected.
+    const newEnvPath = path.resolve(__dirname, '.env.new')
+    if (!fs.existsSync(newEnvPath)) {
+      throw new Error(`USE_NEW_CONFIGS=true but ${newEnvPath} does not exist`)
+    }
+    const result = dotenvConfig({ path: newEnvPath })
+    if (result.error) {
+      throw new Error(`Failed to parse ${newEnvPath}: ${result.error.message}`)
+    }
+    if (result.parsed) {
+      env = { ...result.parsed }
+    }
+    // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
+    // (and emitting "Using vars defined in ..." logs). The .env.new values are forwarded
+    // to the Worker below via the plugin's `config` customizer.
+    process.env.CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV = 'false'
+  } else {
+    env = loadEnv(mode, __dirname, '')
+
+    // Load root .env.defaults.local as a base layer (app-level env files take precedence)
+    const rootEnvDefaultsLocalPath = path.resolve(__dirname, '../../.env.defaults.local')
+    if (fs.existsSync(rootEnvDefaultsLocalPath)) {
+      try {
+        const result = dotenvConfig({ path: rootEnvDefaultsLocalPath })
+        if (result.parsed) {
+          // Only set values that aren't already defined (lowest priority)
+          for (const [key, value] of Object.entries(result.parsed)) {
+            if (!(key in env)) {
+              env[key] = value
+            }
           }
         }
+      } catch (error) {
+        console.warn(
+          `Warning: Failed to read ${rootEnvDefaultsLocalPath}:`,
+          error instanceof Error ? error.message : String(error),
+        )
       }
-    } catch (error) {
-      console.warn(
-        `Warning: Failed to read ${rootEnvDefaultsLocalPath}:`,
-        error instanceof Error ? error.message : String(error),
-      )
     }
-  }
 
-  // Force load .env.[mode] files since NX ignores them
-  const modeEnvPath = path.resolve(__dirname, `.env.${mode}`)
-  if (fs.existsSync(modeEnvPath)) {
-    try {
-      const result = dotenvConfig({ path: modeEnvPath })
-      if (result.parsed) {
-        // Override base values with mode-specific values
-        Object.assign(env, result.parsed)
+    // Force load .env.[mode] files since NX ignores them
+    const modeEnvPath = path.resolve(__dirname, `.env.${mode}`)
+    if (fs.existsSync(modeEnvPath)) {
+      try {
+        const result = dotenvConfig({ path: modeEnvPath })
+        if (result.parsed) {
+          // Override base values with mode-specific values
+          Object.assign(env, result.parsed)
+        }
+        if (result.error) {
+          console.warn(`Warning: Failed to parse ${modeEnvPath}:`, result.error.message)
+        }
+      } catch (error) {
+        console.warn(`Warning: Failed to read ${modeEnvPath}:`, error instanceof Error ? error.message : String(error))
       }
-      if (result.error) {
-        console.warn(`Warning: Failed to parse ${modeEnvPath}:`, result.error.message)
-      }
-    } catch (error) {
-      console.warn(`Warning: Failed to read ${modeEnvPath}:`, error instanceof Error ? error.message : String(error))
     }
-  }
 
-  // Env vars that should be overridable from Vercel/CI (process.env takes precedence over .env files)
-  const VERCEL_OVERRIDABLE_ENV_VARS = [
-    'UNISWAP_GATEWAY_DNS',
-    'API_BASE_URL_V2_OVERRIDE',
-    'ENTRY_GATEWAY_API_URL_OVERRIDE',
-  ]
-  for (const key of VERCEL_OVERRIDABLE_ENV_VARS) {
-    if (process.env[key]) {
-      env[key] = process.env[key]
+    // Env vars that should be overridable from Vercel/CI (process.env takes precedence over .env files)
+    const VERCEL_OVERRIDABLE_ENV_VARS = [
+      'UNISWAP_GATEWAY_DNS',
+      'API_BASE_URL_V2_OVERRIDE',
+      'ENTRY_GATEWAY_API_URL_OVERRIDE',
+    ]
+    for (const key of VERCEL_OVERRIDABLE_ENV_VARS) {
+      if (process.env[key]) {
+        env[key] = process.env[key]
+      }
     }
   }
 
   // Log environment loading for CI verification
-  console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
+  console.log(`ENV_LOADED: mode=${mode} AWS_API_ENDPOINT=${env.AWS_API_ENDPOINT ?? env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
   const isStaging = mode === 'staging'
@@ -237,14 +259,18 @@ export default defineConfig(({ mode, isPreview }) => {
     'process.env.NODE_ENV': JSON.stringify(mode),
     'process.env.ENVIRONMENT': JSON.stringify(mode),
     'process.env.EXPO_OS': JSON.stringify('web'),
-    'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
+    'process.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
     // Enable Tamagui's global z-index stacking to fix modal stacking issues
     'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
     // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW
     ...(isVercelDeploy ? { 'process.env.VERCEL': JSON.stringify(process.env.VERCEL ?? '0') } : {}),
     ...envDefines,
     // Fallback: compute next version from git tags when not set by CI
-    ...(!env.REACT_APP_VERSION_TAG ? { 'process.env.REACT_APP_VERSION_TAG': JSON.stringify(getNextDevVersion()) } : {}),
+    ...(!env.VERSION && !env.REACT_APP_VERSION_TAG
+      ? {
+          'process.env.VERSION': JSON.stringify(getNextDevVersion()),
+        }
+      : {}),
   }
 
   const cacheDir = path.resolve(__dirname, 'node_modules/.vite')
@@ -349,7 +375,7 @@ export default defineConfig(({ mode, isPreview }) => {
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
       }),
-      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(mode),
+      env.SKIP_CSP ? undefined : cspMetaTagPlugin(mode),
       svgr({
         svgrOptions: {
           icon: false,
@@ -405,7 +431,7 @@ export default defineConfig(({ mode, isPreview }) => {
           loose: false,
         },
       }),
-      isProduction || VITE_DISABLE_SOURCEMAP
+      isProduction || DISABLE_SOURCEMAP
         ? undefined
         : bundlesize({
             limits: [
@@ -413,7 +439,7 @@ export default defineConfig(({ mode, isPreview }) => {
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
-      generateAssetsIgnorePlugin(isProduction && !isVercelDeploy && !VITE_DISABLE_SOURCEMAP, __dirname),
+      generateAssetsIgnorePlugin(isProduction && !isVercelDeploy && !DISABLE_SOURCEMAP, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -452,6 +478,18 @@ export default defineConfig(({ mode, isPreview }) => {
       (DEPLOY_TARGET === 'cloudflare' || mode === 'development') && !isPreview
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
+            // When USE_NEW_CONFIGS is on, forward .env.new values to the Worker as vars
+            // (the dotenv auto-loader is disabled above). Return only the `vars` patch —
+            // the plugin uses defu() to merge, which concatenates arrays. Returning the
+            // full workerConfig would duplicate fields like compatibility_flags and
+            // crash the Workers runtime at startup. Skip empty strings so any
+            // wrangler-defined defaults for the same key are preserved.
+            config:
+              process.env.USE_NEW_CONFIGS === 'true'
+                ? () => ({
+                    vars: Object.fromEntries(Object.entries(env).filter(([, value]) => value !== '')),
+                  })
+                : undefined,
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
             viteEnvironment:
               process.env.CLOUDFLARE_ENV === 'production'
@@ -530,7 +568,7 @@ export default defineConfig(({ mode, isPreview }) => {
 
     build: {
       outDir: 'build',
-      sourcemap: VITE_DISABLE_SOURCEMAP ? false : isProduction && !isVercelDeploy ? 'hidden' : true,
+      sourcemap: DISABLE_SOURCEMAP ? false : isProduction && !isVercelDeploy ? 'hidden' : true,
       minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],

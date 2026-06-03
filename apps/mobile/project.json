@@ -295,21 +295,21 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["pod:ensure", "android:ensure"]
+      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
     },
     "start:e2e": {
       "command": "NODE_ENV=development IS_E2E_TEST=true bunx expo start",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["pod:ensure", "android:ensure"]
+      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
     },
     "start:production": {
       "command": "NODE_ENV=production bunx expo start --reset-cache",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["pod:ensure", "android:ensure"]
+      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
     },
     "test": {
       "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
@@ -333,6 +333,14 @@
     "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
+    "prepare": {
+      "executor": "nx:noop",
+      "dependsOn": ["config:pull"]
+    },
+    "config:pull": {
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
+      "options": { "cwd": "{workspaceRoot}" }
+    },
     "unicons": {
       "command": "cd scripts && python3 populate_svgs.py && cd .. && bun run lint --fix",
       "options": {

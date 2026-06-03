@@ -27,10 +27,12 @@ export function useLiquidityPositionDropdownOptions({
   liquidityPosition,
   showVisibilityOption,
   isVisible,
+  readOnly = false,
 }: {
   liquidityPosition: PositionInfo
   showVisibilityOption?: boolean
   isVisible: boolean
+  readOnly?: boolean
 }): MenuOptionItem[] {
   const { t } = useTranslation()
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
@@ -43,15 +45,29 @@ export function useLiquidityPositionDropdownOptions({
 
   return useMemo(() => {
     const chainInfo = getChainInfo(liquidityPosition.chainId)
-
-    const options: MenuOptionItem[] = []
-
     const isV2Position = liquidityPosition.version === ProtocolVersion.V2
     const isV3Position = liquidityPosition.version === ProtocolVersion.V3
     const showMigrateV3Option =
       isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
-
     const hasFees = liquidityPosition.fee0Amount?.greaterThan(0) || liquidityPosition.fee1Amount?.greaterThan(0)
+
+    const viewPoolInfoOption: MenuOptionItem = {
+      onPress: () => {
+        if (!liquidityPosition.poolId) {
+          return
+        }
+        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
+      },
+      label: t('pool.info'),
+      Icon: InfoCircleFilled,
+    }
+
+    // Read-only callers (e.g. watched wallets) can only view the pool — every other action would mutate the owner's positions.
+    if (readOnly) {
+      return [viewPoolInfoOption]
+    }
+
+    const options: MenuOptionItem[] = []
 
     if (!isV2Position && isOpenLiquidityPosition && hasFees) {
       options.push({
@@ -115,17 +131,7 @@ export function useLiquidityPositionDropdownOptions({
       })
     }
 
-    options.push({
-      onPress: () => {
-        if (!liquidityPosition.poolId) {
-          return
-        }
-
-        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
-      },
-      label: t('pool.info'),
-      Icon: InfoCircleFilled,
-    })
+    options.push(viewPoolInfoOption)
 
     if (showVisibilityOption) {
       options.push({
@@ -139,7 +145,7 @@ export function useLiquidityPositionDropdownOptions({
             }),
           )
         },
-        label: isVisible ? t('common.hide.button') : t('common.unhide'),
+        label: isVisible ? t('position.hide') : t('position.unhide'),
         Icon: isVisible ? EyeOff : Eye,
         showDivider: true,
       })
@@ -158,6 +164,7 @@ export function useLiquidityPositionDropdownOptions({
   }, [
     account.chainId,
     dispatch,
+    readOnly,
     isOpenLiquidityPosition,
     reportPositionHandler,
     isVisible,

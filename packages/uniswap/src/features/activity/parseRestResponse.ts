@@ -169,8 +169,10 @@ function extractCurrencyIdFromTx(transaction: TransactionDetails | null): Curren
 
   if (
     transaction.typeInfo.type === TransactionType.Approve ||
+    transaction.typeInfo.type === TransactionType.Deposit ||
     transaction.typeInfo.type === TransactionType.Send ||
-    transaction.typeInfo.type === TransactionType.Receive
+    transaction.typeInfo.type === TransactionType.Receive ||
+    transaction.typeInfo.type === TransactionType.Withdraw
   ) {
     return buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   }

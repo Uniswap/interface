@@ -10,9 +10,11 @@ import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
 } from 'uniswap/src/features/activity/utils/remote'
+import { getTokenAddressFromMintOrBurn } from 'uniswap/src/features/activity/utils/tokenTransfers'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   ConfirmedSwapTransactionInfo,
+  DepositTransactionInfo,
   NFTTradeTransactionInfo,
   NFTTradeType,
   TransactionDetailsType,
@@ -33,6 +35,10 @@ type TransferAssetChange = Extract<
   >[0],
   { __typename: 'TokenTransfer' | 'NftTransfer' }
 >
+
+interface TokenMovementParseOptions {
+  isVault?: boolean
+}
 
 export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
@@ -326,7 +332,11 @@ export function parseRestSwapTransaction(transaction: OnChainTransaction): Confi
   }
 
   // Filter out FOT fee transfers before finding primary amounts
-  const filteredSentTransfers = excludeFOTFeeTransfers(sentTransfers, { ownerAddress, chainId, direction: 'sent' })
+  const filteredSentTransfers = excludeFOTFeeTransfers(sentTransfers, {
+    ownerAddress,
+    chainId,
+    direction: 'sent',
+  })
   const filteredReceivedTransfers = excludeFOTFeeTransfers(receivedTransfers, {
     ownerAddress,
     chainId,
@@ -383,11 +393,40 @@ export function parseRestWrapTransaction(transaction: OnChainTransaction): WrapT
   }
 }
 
-/**
- * Parse a Withdraw transaction from the REST API (e.g., unstaking, lending withdrawals).
- * Uses the actual token data from transfers rather than assuming native/wrapped-native tokens.
- */
-export function parseRestWithdrawTransaction(transaction: OnChainTransaction): WithdrawTransactionInfo | undefined {
+/** Parse a REST deposit transaction from the sent token transfer. */
+export function parseRestDepositTransaction(
+  transaction: OnChainTransaction,
+  options: TokenMovementParseOptions = {},
+): DepositTransactionInfo | undefined {
+  const sendTransfer = transaction.transfers.find(
+    (t) => t.direction === Direction.SEND && t.asset.case === AssetCase.Token,
+  )
+
+  const tokenAddress = sendTransfer?.asset.value?.address
+  if (!tokenAddress) {
+    return undefined
+  }
+
+  const vaultAddress = options.isVault
+    ? getTokenAddressFromMintOrBurn({ transaction, direction: Direction.RECEIVE })
+    : undefined
+
+  return {
+    type: TransactionType.Deposit,
+    assetType: AssetType.Currency,
+    tokenAddress,
+    currencyAmountRaw: sendTransfer.amount?.raw,
+    ...(options.isVault ? { isVault: true } : {}),
+    ...(vaultAddress ? { vaultAddress } : {}),
+    dappInfo: extractDappInfo(transaction),
+  }
+}
+
+/** Parse a REST withdraw transaction from the received token transfer. */
+export function parseRestWithdrawTransaction(
+  transaction: OnChainTransaction,
+  options: TokenMovementParseOptions = {},
+): WithdrawTransactionInfo | undefined {
   const receiveTransfer = transaction.transfers.find(
     (t) => t.direction === Direction.RECEIVE && t.asset.case === AssetCase.Token,
   )
@@ -397,11 +436,17 @@ export function parseRestWithdrawTransaction(transaction: OnChainTransaction): W
     return undefined
   }
 
+  const vaultAddress = options.isVault
+    ? getTokenAddressFromMintOrBurn({ transaction, direction: Direction.SEND })
+    : undefined
+
   return {
     type: TransactionType.Withdraw,
     assetType: AssetType.Currency,
     tokenAddress,
     currencyAmountRaw: receiveTransfer.amount?.raw,
+    ...(options.isVault ? { isVault: true } : {}),
+    ...(vaultAddress ? { vaultAddress } : {}),
     dappInfo: extractDappInfo(transaction),
   }
 }

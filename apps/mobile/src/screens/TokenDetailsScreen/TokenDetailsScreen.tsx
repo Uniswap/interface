@@ -11,10 +11,14 @@ import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBridgedAssetSection } from 'src/components/TokenDetails/TokenDetailsBridgedAssetSection'
 import { TokenDetailsContextProvider, useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
+import { TokenDetailsEarnBanner } from 'src/components/TokenDetails/TokenDetailsEarnBanner'
+import { TokenDetailsEarnSection } from 'src/components/TokenDetails/TokenDetailsEarnSection'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats/TokenDetailsStats'
 import { TokenPerformance } from 'src/components/TokenDetails/TokenPerformance'
+import { useMobileTokenDetailsEarnData } from 'src/components/TokenDetails/useMobileTokenDetailsEarnData'
+import { useTokenDetailsCrossChainBalances } from 'src/components/TokenDetails/useTokenDetailsCrossChainBalances'
 import { TokenDetailsActionButtonsWrapper } from 'src/screens/TokenDetailsScreen/TokenDetailsActionButtonsWrapper'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsScreen/TokenDetailsHeaders'
 import { TokenDetailsModals } from 'src/screens/TokenDetailsScreen/TokenDetailsModals'
@@ -22,7 +26,6 @@ import { Flex, Separator } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -110,6 +113,8 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
 
   const inModal = useIsInModal(MobileScreens.Explore, true)
 
+  const { enabled: showEarn, activeAddress, earnData } = useMobileTokenDetailsEarnData()
+
   return (
     <>
       <HeaderScrollScreen
@@ -133,6 +138,10 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
             <TokenBalancesWrapper />
 
             <TokenDetailsBridgedAssetSection />
+
+            {showEarn && <TokenDetailsEarnSection activeAddress={activeAddress} earnData={earnData} />}
+
+            {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
 
             {!multichainTokenUxEnabled && <Separator />}
           </Flex>
@@ -173,36 +182,14 @@ const TokenDetailsErrorCard = memo(function TokenDetailsErrorCardInner(): JSX.El
 
 const TokenBalancesWrapper = memo(function TokenBalancesWrapperInner(): JSX.Element | null {
   const activeAddress = useActiveAccountAddressWithThrow()
-  const { currencyId, isChainEnabled } = useTokenDetailsContext()
-
-  const projectTokens = useTokenBasicProjectPartsFragment({ currencyId }).data.project?.tokens
-
-  const crossChainTokens: Array<{
-    address: string | null
-    chain: GraphQLApi.Chain
-  }> = []
-
-  for (const token of projectTokens ?? []) {
-    if (!token || !token.chain || token.address === undefined) {
-      continue
-    }
-
-    crossChainTokens.push({
-      address: token.address,
-      chain: token.chain,
-    })
-  }
+  const { isChainEnabled } = useTokenDetailsContext()
 
   const {
     currentChainBalance,
     otherChainBalances,
     error: balanceError,
     dataUpdatedAt,
-  } = useCrossChainBalances({
-    evmAddress: activeAddress,
-    currencyId,
-    crossChainTokens,
-  })
+  } = useTokenDetailsCrossChainBalances({ evmAddress: activeAddress })
 
   return isChainEnabled ? (
     <TokenBalances

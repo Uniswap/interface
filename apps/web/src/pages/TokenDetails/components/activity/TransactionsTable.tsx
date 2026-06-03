@@ -34,6 +34,7 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
+import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
@@ -255,7 +256,9 @@ export function TransactionsTable({
                   type: NumberType.TokenQuantityStats,
                 })}
               </EllipsisText>
-              <TokenLinkCell token={nonReferenceSwapLeg.token} />
+              <TokenHoverCard token={nonReferenceSwapLeg.token}>
+                <TokenLinkCell token={nonReferenceSwapLeg.token} />
+              </TokenHoverCard>
             </Flex>
           )
         },

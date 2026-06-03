@@ -16,6 +16,7 @@ import { parseRestNFTMintTransaction } from 'uniswap/src/features/activity/parse
 import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
 import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
+  parseRestDepositTransaction,
   parseRestSwapTransaction,
   parseRestWithdrawTransaction,
   parseRestWrapTransaction,
@@ -45,6 +46,53 @@ function mapRestStatusToLocal(status: OnChainTransactionStatus, isCancel: boolea
   }
 }
 
+function parseRestOnChainTransactionTypeInfo(transaction: OnChainTransaction): TransactionTypeInfo | undefined {
+  const { label } = transaction
+
+  switch (label) {
+    case OnChainTransactionLabel.VAULT_DEPOSIT:
+      return parseRestDepositTransaction(transaction, { isVault: true })
+    case OnChainTransactionLabel.WITHDRAW:
+    case OnChainTransactionLabel.VAULT_WITHDRAW:
+      return parseRestWithdrawTransaction(transaction, {
+        isVault: label === OnChainTransactionLabel.VAULT_WITHDRAW,
+      })
+    case OnChainTransactionLabel.SEND:
+    case OnChainTransactionLabel.VAULT_TRANSFER_OUT:
+      return parseRestSendTransaction(transaction)
+    case OnChainTransactionLabel.RECEIVE:
+    case OnChainTransactionLabel.VAULT_TRANSFER_IN:
+      return parseRestReceiveTransaction(transaction)
+    case OnChainTransactionLabel.SWAP:
+    case OnChainTransactionLabel.UNISWAP_X:
+      return parseRestSwapTransaction(transaction)
+    case OnChainTransactionLabel.WRAP:
+    case OnChainTransactionLabel.UNWRAP:
+    case OnChainTransactionLabel.LEND:
+      return parseRestWrapTransaction(transaction)
+    case OnChainTransactionLabel.APPROVE:
+      return parseRestApproveTransaction(transaction)
+    case OnChainTransactionLabel.BRIDGE:
+      return parseRestBridgeTransaction(transaction)
+    case OnChainTransactionLabel.MINT:
+      return parseRestNFTMintTransaction(transaction)
+    case OnChainTransactionLabel.CLAIM:
+    case OnChainTransactionLabel.CREATE_PAIR:
+    case OnChainTransactionLabel.CREATE_POOL:
+    case OnChainTransactionLabel.INCREASE_LIQUIDITY:
+    case OnChainTransactionLabel.DECREASE_LIQUIDITY:
+      return parseRestLiquidityTransaction(transaction)
+    case OnChainTransactionLabel.AUCTION_SUBMIT_BID:
+    case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS:
+    case OnChainTransactionLabel.AUCTION_EXIT_BID:
+    case OnChainTransactionLabel.AUCTION_EXIT_PARTIALLY_FILLED_BID:
+    case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS_BATCHED:
+      return parseRestAuctionTransaction(transaction)
+    default:
+      return undefined
+  }
+}
+
 /**
  * Extract transaction details from an onChain transaction in the REST format
  * Returns an array to support batched transactions (e.g., EXECUTE label with swap + approve)
@@ -53,64 +101,21 @@ export default function extractRestOnChainTransactionDetails(transaction: OnChai
   const { chainId, transactionHash, timestampMillis, from, label, status, fee } = transaction
 
   const isCancel = label === OnChainTransactionLabel.CANCEL
-  let typeInfo: TransactionTypeInfo | undefined
 
-  switch (label) {
-    case OnChainTransactionLabel.EXECUTE: {
-      // Handle EXECUTE label separately, this represents batched transactions like swap + approve
-      const parsed = parseRestExecuteTransaction(transaction)
-      if (parsed) {
-        return buildExecuteTransactionDetails({ transaction, parsed, mapStatusFn: mapRestStatusToLocal })
-      }
-      // If can't parse EXECUTE, this will be parsed as unknown transaction
-      break
+  if (label === OnChainTransactionLabel.EXECUTE) {
+    // Handle EXECUTE label separately, this represents batched transactions like swap + approve
+    const parsed = parseRestExecuteTransaction(transaction)
+    if (parsed) {
+      return buildExecuteTransactionDetails({
+        transaction,
+        parsed,
+        mapStatusFn: mapRestStatusToLocal,
+      })
     }
-    case OnChainTransactionLabel.SEND:
-      typeInfo = parseRestSendTransaction(transaction)
-      break
-    case OnChainTransactionLabel.RECEIVE:
-      typeInfo = parseRestReceiveTransaction(transaction)
-      break
-    case OnChainTransactionLabel.SWAP:
-    case OnChainTransactionLabel.UNISWAP_X:
-      typeInfo = parseRestSwapTransaction(transaction)
-      break
-    case OnChainTransactionLabel.WRAP:
-    case OnChainTransactionLabel.UNWRAP:
-    case OnChainTransactionLabel.LEND:
-      typeInfo = parseRestWrapTransaction(transaction)
-      break
-    case OnChainTransactionLabel.WITHDRAW:
-      typeInfo = parseRestWithdrawTransaction(transaction)
-      break
-    case OnChainTransactionLabel.APPROVE:
-      typeInfo = parseRestApproveTransaction(transaction)
-      break
-    case OnChainTransactionLabel.BRIDGE:
-      typeInfo = parseRestBridgeTransaction(transaction)
-      break
-    case OnChainTransactionLabel.MINT:
-      typeInfo = parseRestNFTMintTransaction(transaction)
-      break
-    case OnChainTransactionLabel.CLAIM:
-    case OnChainTransactionLabel.CREATE_PAIR:
-    case OnChainTransactionLabel.CREATE_POOL:
-    case OnChainTransactionLabel.INCREASE_LIQUIDITY:
-    case OnChainTransactionLabel.DECREASE_LIQUIDITY:
-      typeInfo = parseRestLiquidityTransaction(transaction)
-      break
-    case OnChainTransactionLabel.AUCTION_SUBMIT_BID:
-    case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS:
-    case OnChainTransactionLabel.AUCTION_EXIT_BID:
-    case OnChainTransactionLabel.AUCTION_EXIT_PARTIALLY_FILLED_BID:
-    case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS_BATCHED:
-      typeInfo = parseRestAuctionTransaction(transaction)
-      break
+    // If can't parse EXECUTE, this will be parsed as unknown transaction
   }
 
-  if (!typeInfo) {
-    typeInfo = parseRestUnknownTransaction(transaction)
-  }
+  const typeInfo = parseRestOnChainTransactionTypeInfo(transaction) ?? parseRestUnknownTransaction(transaction)
 
   const networkFee = fee
     ? {

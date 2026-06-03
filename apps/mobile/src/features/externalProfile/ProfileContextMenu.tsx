@@ -19,7 +19,6 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { ExplorerDataType, getExplorerLink, getPortfolioUrl, openUri } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
-import { noop } from 'utilities/src/react/noop'
 
 type MenuAction = {
   title: string
@@ -121,7 +120,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         await menuActions[e.nativeEvent.index]?.action()
       }}
     >
-      <TouchableArea centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8" onLongPress={noop}>
+      <TouchableArea centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8">
         <Ellipsis color="$neutral2" size="$icon.16" />
       </TouchableArea>
     </ContextMenu>

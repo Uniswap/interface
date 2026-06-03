@@ -83,6 +83,7 @@
       "options": {
         "cwd": "{projectRoot}"
       },
+      "dependsOn": ["config:pull"],
       "cache": true,
       "inputs": [
         "{projectRoot}/wxt.config.ts",
@@ -91,6 +92,10 @@
         "{projectRoot}/package.json"
       ],
       "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
+    },
+    "config:pull": {
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\"; fi",
+      "options": { "cwd": "{workspaceRoot}" }
     },
     "snapshots": {
       "command": "jest -u",

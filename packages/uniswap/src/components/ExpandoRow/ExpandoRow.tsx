@@ -10,6 +10,7 @@ import {
 } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export type ExpandoRowProps = {
   isExpanded: boolean
@@ -23,17 +24,17 @@ export function ExpandoRow({ label, isExpanded, onPress, mx, color = '$neutral3'
   useLayoutAnimationOnChange(isExpanded)
 
   return (
-    <TouchableArea activeOpacity={1} mx={mx} testID="expando-row" onPress={onPress}>
+    <TouchableArea activeOpacity={1} mx={mx} testID={TestID.ExpandoRow} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
         <Flex centered grow row gap="$spacing12">
           <Separator />
 
           <Flex centered row gap="$gap4">
-            <Text color={color} textAlign="center" variant="body3" testID="expando-row-label">
+            <Text color={color} textAlign="center" variant="body3" testID={TestID.ExpandoRowLabel}>
               {label}
             </Text>
 
-            <Flex centered justifyContent="center" testID="expando-row-icon">
+            <Flex centered justifyContent="center" testID={TestID.ExpandoRowIcon}>
               {isExpanded ? (
                 <ChevronsIn color={color} size="$icon.16" />
               ) : (

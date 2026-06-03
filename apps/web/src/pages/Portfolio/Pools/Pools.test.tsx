@@ -4,6 +4,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { ReactNode } from 'react'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -26,6 +27,11 @@ import { act, render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/hooks/useWalletPositionsWeb', () => ({
   useWalletPositionsWeb: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/dataApi/balances/usePortfolioBalancePart', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/balances/usePortfolioBalancePart')>()),
+  usePortfolioBalancePart: vi.fn(),
 }))
 
 vi.mock('@universe/gating', async (importOriginal) => ({
@@ -133,6 +139,22 @@ function createWalletPositionsResult(
   }
 }
 
+function mockTotalPoolsCount(count: number | undefined): void {
+  mocked(usePortfolioBalancePart).mockReturnValue({
+    data:
+      count === undefined
+        ? undefined
+        : { balanceUSD: undefined, percentChange: undefined, absoluteChangeUSD: undefined, count },
+  } as ReturnType<typeof usePortfolioBalancePart>)
+}
+
+// Loaded balance but backend omitted the `count` field — used to verify the "-" placeholder renders.
+function mockBalanceLoadedWithoutCount(): void {
+  mocked(usePortfolioBalancePart).mockReturnValue({
+    data: { balanceUSD: undefined, percentChange: undefined, absoluteChangeUSD: undefined, count: undefined },
+  } as ReturnType<typeof usePortfolioBalancePart>)
+}
+
 describe('PortfolioPools', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -154,6 +176,7 @@ describe('PortfolioPools', () => {
     })
     mocked(useFeatureFlag).mockReturnValue(false)
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult())
+    mockTotalPoolsCount(0)
   })
 
   it('should render the empty state after positions load with no visible positions', () => {
@@ -182,11 +205,12 @@ describe('PortfolioPools', () => {
     mocked(useWalletPositionsWeb).mockReturnValue(
       createWalletPositionsResult({ visiblePositions: [], hiddenPositions: [MOCK_POSITION] }),
     )
+    mockTotalPoolsCount(1)
 
     render(<PortfolioPools />)
 
     expect(screen.queryByText('No positions')).not.toBeInTheDocument()
-    expect(screen.queryByText('No results found.')).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TestID.PortfolioPoolsNoResults)).not.toBeInTheDocument()
     expect(PortfolioBalance).toHaveBeenCalled()
     expect(PositionsListSection).toHaveBeenCalled()
   })
@@ -204,6 +228,7 @@ describe('PortfolioPools', () => {
 
   it('should render the balance header without a position count while positions are loading', () => {
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ isLoadingPositions: true }))
+    mockTotalPoolsCount(undefined)
 
     render(<PortfolioPools />)
 
@@ -268,6 +293,7 @@ describe('PortfolioPools', () => {
       isExternalWallet: false,
     })
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+    mockTotalPoolsCount(1)
 
     render(<PortfolioPools />)
 
@@ -297,6 +323,7 @@ describe('PortfolioPools', () => {
 
   it('should not render the empty state when positions are present', () => {
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+    mockTotalPoolsCount(1)
 
     render(<PortfolioPools />)
 
@@ -360,6 +387,7 @@ describe('PortfolioPools', () => {
       isExternalWallet: false,
     })
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+    mockTotalPoolsCount(1)
 
     render(<PortfolioPools />)
 
@@ -386,15 +414,32 @@ describe('PortfolioPools', () => {
         visiblePositions: versionFilter.includes(ProtocolVersion.V4) ? [MOCK_POSITION] : [],
       }),
     )
+    mockTotalPoolsCount(1)
 
     render(<PortfolioPools />)
+
+    expect(screen.getByText('1 position')).toBeInTheDocument()
 
     await act(async () => {
       mocked(PositionsHeader).mock.calls[0]?.[0].onVersionChange(ProtocolVersion.V4)
     })
 
-    expect(screen.getByText('No results found.')).toBeInTheDocument()
+    expect(screen.getByTestId(TestID.PortfolioPoolsNoResults)).toBeInTheDocument()
     expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+    expect(PortfolioBalance).toHaveBeenCalled()
+    // Header count stays at backend total even when filters hide the entire list.
+    expect(screen.getByText('1 position')).toBeInTheDocument()
+  })
+
+  it('should render a "-" placeholder when the balance loads but count is missing from the response', () => {
+    mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+    mockBalanceLoadedWithoutCount()
+
+    render(<PortfolioPools />)
+
+    expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+    expect(screen.getByText('-')).toBeInTheDocument()
+    expect(screen.queryByText('1 position')).not.toBeInTheDocument()
     expect(PortfolioBalance).toHaveBeenCalled()
   })
 
@@ -402,6 +447,7 @@ describe('PortfolioPools', () => {
     const user = userEvent.setup()
     const refetch = vi.fn()
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ hasErrorWithoutData: true, refetch }))
+    mockTotalPoolsCount(undefined)
 
     render(<PortfolioPools />)
 
@@ -409,5 +455,60 @@ describe('PortfolioPools', () => {
 
     expect(refetch).toHaveBeenCalledTimes(1)
     expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+  })
+
+  describe('external wallet mode', () => {
+    function mockExternalWallet(): void {
+      mocked(usePortfolioAddresses).mockReturnValue({
+        evmAddress: SAMPLE_SEED_ADDRESS_1,
+        svmAddress: undefined,
+        isExternalWallet: true,
+      })
+      mocked(useResolvedAddresses).mockReturnValue({
+        evmAddress: SAMPLE_SEED_ADDRESS_1,
+        svmAddress: undefined,
+        isExternalWallet: true,
+      })
+      mocked(usePortfolioRoutes).mockReturnValue({
+        tab: PortfolioTab.Pools,
+        chainId: undefined,
+        externalAddress: { address: SAMPLE_SEED_ADDRESS_1, platform: 'evm' },
+        isExternalWallet: true,
+      } as unknown as ReturnType<typeof usePortfolioRoutes>)
+    }
+
+    it('forwards isExternalWallet to the action row and positions list', () => {
+      mockExternalWallet()
+      mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+      mockTotalPoolsCount(1)
+
+      render(<PortfolioPools />)
+
+      expect(mocked(PositionsHeader).mock.calls[0]?.[0]).toEqual(expect.objectContaining({ showCreateButton: false }))
+      expect(mocked(PositionsListSection).mock.calls[0]?.[0]).toEqual(expect.objectContaining({ readOnly: true }))
+    })
+
+    it('hides the import-v2 link and renders the empty state without the New Position CTA', () => {
+      mockExternalWallet()
+      mockTotalPoolsCount(0)
+
+      render(<PortfolioPools />)
+
+      expect(screen.getByText('No positions')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'Explore pools' })).toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: 'New position' })).not.toBeInTheDocument()
+      // Sanity: the connected-only V2 import nudge is not shown in the empty-state branch anyway,
+      // but verify the populated-list branch also hides it via the existing isExternalWallet guard.
+    })
+
+    it('hides the import-v2 link beneath the positions list', () => {
+      mockExternalWallet()
+      mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
+      mockTotalPoolsCount(1)
+
+      render(<PortfolioPools />)
+
+      expect(screen.queryByText('Import v2 positions')).not.toBeInTheDocument()
+    })
   })
 })

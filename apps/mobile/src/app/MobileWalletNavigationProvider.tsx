@@ -342,8 +342,15 @@ function useNavigateToEarnVault(): (args: NavigateToEarnVaultArgs) => void {
   const navigation = useAppStackNavigation()
 
   return useCallback(
-    ({ vault, position }: NavigateToEarnVaultArgs): void => {
+    ({ vault, position, initialAction }: NavigateToEarnVaultArgs): void => {
       closeKeyboardBeforeCallback(() => {
+        // With an explicit action, skip the vault overview and land directly in the
+        // deposit/withdraw amount sheet — matches the in-overview "Deposit"/"Withdraw"
+        // buttons' end state.
+        if (initialAction) {
+          navigation.navigate(ModalName.EarnDepositAmount, { vault, position, initialAction })
+          return
+        }
         navigation.navigate(ModalName.EarnVault, { vault, position })
       })
     },

@@ -7,7 +7,9 @@ import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransitio
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -51,8 +53,13 @@ export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: 
   /** Omit chain badge on the logo when volume spans multiple networks — row uses NetworkIconList on hover instead. */
   const logoChainId = isMultiNetworkRow ? undefined : getChainIdFromChainUrlParam(token.chain.toLowerCase())
   const logoSize = multichainTokenUxEnabled ? iconSizes.icon32 : iconSizes.icon24
-  const disableHoverTransition =
-    chainIdsByVolume.length === 1 && (token.address === NATIVE_CHAIN_ID || token.address === ZERO_ADDRESS)
+  const isNative = token.address === NATIVE_CHAIN_ID
+  const disableHoverTransition = chainIdsByVolume.length === 1 && (isNative || token.address === ZERO_ADDRESS)
+
+  // token.logo returns the WETH logo URL for native ETH — use useCurrencyInfo to get the correct logo
+  const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase()) ?? UniverseChainId.Mainnet
+  const nativeCurrencyInfo = useCurrencyInfo(isNative ? buildNativeCurrencyId(chainId) : undefined)
+  const logoUrl = isNative ? nativeCurrencyInfo?.logoUrl : token.logo
 
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start" width="100%">
@@ -62,7 +69,7 @@ export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: 
           name={token.name}
           size={logoSize}
           symbol={token.symbol}
-          url={token.logo}
+          url={logoUrl}
           alwaysShowNetworkLogo={multichainTokenUxEnabled && !!chainFilter}
         />
       </View>

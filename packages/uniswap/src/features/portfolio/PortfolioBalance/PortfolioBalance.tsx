@@ -1,6 +1,6 @@
 import type { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { isWarmLoadingStatus } from '@universe/api'
-import { isWebPlatform } from '@universe/environment'
+import { isWebApp, isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, RefreshButton, Shine, Text, useIsDarkMode } from 'ui/src'
@@ -11,11 +11,15 @@ import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeCh
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import {
+  usePortfolioBalanceBreakdown,
+  usePortfolioBalancePart,
+} from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
+import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
@@ -60,6 +64,18 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     pollInterval: PollingInterval.Normal,
   })
 
+  const { data: breakdown } = usePortfolioBalanceBreakdown({
+    evmAddress: evmOwner,
+    svmAddress: svmOwner,
+    chainIds,
+    pollInterval: PollingInterval.Normal,
+  })
+
+  // `undefined` means server omitted the field (unavailable); `0` is a valid zero.
+  const poolsUnavailable = breakdown !== undefined && breakdown.pools.balanceUSD === undefined
+  const shouldFallbackToTokens = part === PortfolioBalancePart.Total && poolsUnavailable
+  const activeData = shouldFallbackToTokens ? breakdown.tokens : data
+
   // Ensure component switches theme
   useIsDarkMode()
 
@@ -67,10 +83,14 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const currencyComponents = useAppFiatCurrencyInfo()
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
-  const isLoading = !data && (loading || !!error)
-  const isWarmLoading = !!data && isWarmLoadingStatus(networkStatus)
+  const isLoading = !activeData && (loading || !!error)
+  const isWarmLoading = !!activeData && isWarmLoadingStatus(networkStatus)
 
-  const { percentChange: backendPercentChange, absoluteChangeUSD: backendAbsoluteChangeUSD, balanceUSD } = data || {}
+  const {
+    percentChange: backendPercentChange,
+    absoluteChangeUSD: backendAbsoluteChangeUSD,
+    balanceUSD,
+  } = activeData || {}
 
   const percentChange = hidePercentChange ? undefined : (overridePercentChange ?? backendPercentChange)
   const absoluteChangeUSD = overrideAbsoluteChangeUSD ?? backendAbsoluteChangeUSD
@@ -84,12 +104,22 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
-  const RefreshBalanceButton = useMemo(() => {
-    if (isWebPlatform) {
-      return <RefreshButton isLoading={loading} onPress={refetch} />
+  const balanceEndElement = useMemo(() => {
+    const indicator = shouldFallbackToTokens ? <PoolsUnavailableIndicator /> : undefined
+    const refreshButton = isWebPlatform ? <RefreshButton isLoading={loading} onPress={refetch} /> : undefined
+
+    if (indicator && refreshButton) {
+      return (
+        <Flex row alignItems="center" gap="$spacing4">
+          {indicator}
+          {refreshButton}
+        </Flex>
+      )
     }
-    return undefined
-  }, [loading, refetch])
+    return indicator ?? refreshButton
+  }, [shouldFallbackToTokens, loading, refetch])
+
+  const endElementGap = shouldFallbackToTokens ? (isWebApp ? 8 : 12) : undefined
 
   return (
     <Flex gap="$spacing4" testID={TestID.PortfolioBalance}>
@@ -103,7 +133,8 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
         value={totalBalance}
         warmLoading={isWarmLoading}
         isRightToLeft={isRightToLeft}
-        EndElement={RefreshBalanceButton}
+        EndElement={balanceEndElement}
+        endElementGap={endElementGap}
       />
       <Flex row grow alignItems="center">
         <Shine disabled={!isWarmLoading}>

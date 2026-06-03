@@ -6,7 +6,8 @@ import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/use
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
-import { useTDPPriceChartData, type TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
+import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
 import { getDisplayedPricePercentChange } from '~/pages/TokenDetails/components/chart/tdpPriceChartPercentChange'
 
 interface UseTDPPriceChartPanelParams {
@@ -24,7 +25,7 @@ export function useTDPPriceChartPanel({
   timePeriod,
   currency,
 }: UseTDPPriceChartPanelParams): {
-  priceQuery: ReturnType<typeof useTDPPriceChartData>
+  priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
   showInvalidSkeleton: boolean
   stale: boolean
@@ -39,7 +40,7 @@ export function useTDPPriceChartPanel({
   const spotPriceOverride = useTokenSpotPrice(spotCurrencyId)
   const currentPriceOverride = variables.multichain ? undefined : spotPriceOverride
 
-  const priceQuery = useTDPPriceChartData({
+  const priceQuery = useTokenPriceChartData({
     variables,
     skip: false,
     priceChartType,

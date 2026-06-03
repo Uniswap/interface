@@ -9,6 +9,7 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
 import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
 import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
@@ -173,6 +174,9 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
           />
         )}
         {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+        {flow.step === RecoveryStep.NoWalletFound && (
+          <NoWalletFoundStep t={t} handleClose={() => navigation.goBack()} />
+        )}
       </Flex>
     </OnboardingScreen>
   )

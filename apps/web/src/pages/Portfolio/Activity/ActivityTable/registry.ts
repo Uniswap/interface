@@ -220,6 +220,24 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
+    case TransactionType.Deposit: {
+      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
+      return {
+        amount: {
+          kind: 'single',
+          currencyId,
+          amountRaw: typeInfo.currencyAmountRaw,
+        },
+        counterparty: typeInfo.dappInfo?.address
+          ? getValidAddress({ address: typeInfo.dappInfo.address, chainId })
+          : null,
+        typeLabel: {
+          baseGroup: ActivityFilterType.Sends,
+          overrideLabelKey: 'transaction.status.deposit.success',
+        },
+        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
+      }
+    }
     case TransactionType.Withdraw: {
       const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
       return {

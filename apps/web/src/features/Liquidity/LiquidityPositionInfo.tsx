@@ -1,26 +1,33 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Anchor, Circle, Flex, Text, useMedia } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
+import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
-import {
-  LiquidityPositionStatusIndicator,
-  LiquidityPositionStatusIndicatorLoader,
-} from '~/features/Liquidity/LiquidityPositionStatusIndicator'
 import { TextLoader } from '~/features/Liquidity/Loader'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
+
+function LiquidityPositionStatusIndicatorLoader() {
+  return (
+    <Flex row gap="$spacing6" alignItems="center">
+      <StatusIndicatorCircle color="$surface3" />
+      <TextLoader variant="body3" width={100} />
+    </Flex>
+  )
+}
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
@@ -69,21 +76,29 @@ export function LiquidityPositionInfo({
       ? positionInfo.boostedApr
       : undefined
 
-  const isMigrateToV4ButtonVisible = useMemo(() => {
-    if (!(positionInfo.version === ProtocolVersion.V3 && showMigrateButton)) {
-      return false
+  const migrateButtonConfig = useMemo(() => {
+    if (!showMigrateButton) {
+      return undefined
     }
 
-    if (isV4UnsupportedChain(positionInfo.chainId)) {
-      return false
+    if (positionInfo.version === ProtocolVersion.V3 && !isV4UnsupportedChain(positionInfo.chainId)) {
+      return {
+        fullLabel: t('pool.migrateToV4'),
+        shortLabel: t('common.migrate'),
+        path: `/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`,
+      }
     }
-    // if we're in the md-lg or xl-xxl ranges, hide the button due to overlapping issues
-    const isInMdToLgRange = media.lg && !media.md
-    const isInXlToXxlRange = media.xxl && !media.xl
-    const shouldHideInRange = isInMdToLgRange || isInXlToXxlRange
 
-    return !shouldHideInRange
-  }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl, positionInfo.chainId])
+    if (positionInfo.version === ProtocolVersion.V2 && positionInfo.status !== PositionStatus.CLOSED) {
+      return {
+        fullLabel: t('pool.migrateToV3'),
+        shortLabel: t('common.migrate'),
+        path: `/migrate/v2/${positionInfo.liquidityToken.address}`,
+      }
+    }
+
+    return undefined
+  }, [positionInfo, showMigrateButton, chainInfo.urlParam, t])
 
   const [currency0Info, currency1Info] = useCurrencyInfos([
     currencyId(currency0Amount.currency),
@@ -93,7 +108,7 @@ export function LiquidityPositionInfo({
   const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
 
   return (
-    <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'}>
+    <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'} minWidth={0}>
       <SplitLogo
         inputCurrencyInfo={currency0Info}
         outputCurrencyInfo={currency1Info}
@@ -120,18 +135,18 @@ export function LiquidityPositionInfo({
               </Text>
             )}
           </Flex>
-          <Flex row gap={2} alignItems="center">
+          <Flex row gap={2} alignItems="center" flexWrap="wrap">
             <LiquidityPositionInfoBadges
               size="small"
               version={version}
               v4hook={v4hook}
               feeTier={feeTier}
               cta={
-                isMigrateToV4ButtonVisible
+                migrateButtonConfig
                   ? {
-                      label: t('pool.migrateToV4'),
+                      label: media.lg ? migrateButtonConfig.shortLabel : migrateButtonConfig.fullLabel,
                       iconAfter: <ArrowRight color="current" />,
-                      onPress: () => navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`),
+                      onPress: () => navigate(migrateButtonConfig.path),
                     }
                   : undefined
               }

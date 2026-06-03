@@ -19,10 +19,13 @@ function validatePinned(parsed: unknown): string[] {
 interface PinnedGatingState {
   pinnedFlags: string[]
   pinnedExperiments: string[]
+  pinnedGroups: string[]
   pinFlag: (gateName: string) => void
   unpinFlag: (gateName: string) => void
   pinExperiment: (experimentName: string) => void
   unpinExperiment: (experimentName: string) => void
+  pinGroup: (groupName: string) => void
+  unpinGroup: (groupName: string) => void
 }
 
 const usePinnedGatingStore = create<PinnedGatingState>()(
@@ -30,6 +33,7 @@ const usePinnedGatingStore = create<PinnedGatingState>()(
     (set) => ({
       pinnedFlags: [],
       pinnedExperiments: [],
+      pinnedGroups: [],
       pinFlag: (gateName: string) => {
         set((state) =>
           state.pinnedFlags.includes(gateName) ? state : { pinnedFlags: [...state.pinnedFlags, gateName] },
@@ -52,6 +56,16 @@ const usePinnedGatingStore = create<PinnedGatingState>()(
           pinnedExperiments: state.pinnedExperiments.filter((n) => n !== experimentName),
         }))
       },
+      pinGroup: (groupName: string) => {
+        set((state) =>
+          state.pinnedGroups.includes(groupName) ? state : { pinnedGroups: [...state.pinnedGroups, groupName] },
+        )
+      },
+      unpinGroup: (groupName: string) => {
+        set((state) => ({
+          pinnedGroups: state.pinnedGroups.filter((n) => n !== groupName),
+        }))
+      },
     }),
     {
       name: STORAGE_KEY,
@@ -67,13 +81,14 @@ const usePinnedGatingStore = create<PinnedGatingState>()(
               parsed && typeof parsed === 'object' && 'state' in parsed
                 ? (
                     parsed as {
-                      state: { pinnedFlags: unknown; pinnedExperiments: unknown }
+                      state: { pinnedFlags: unknown; pinnedExperiments: unknown; pinnedGroups: unknown }
                     }
                   ).state
                 : null
             const pinnedFlags = state?.pinnedFlags != null ? validatePinned(state.pinnedFlags) : []
             const pinnedExperiments = state?.pinnedExperiments != null ? validatePinned(state.pinnedExperiments) : []
-            return { state: { pinnedFlags, pinnedExperiments }, version: 0 }
+            const pinnedGroups = state?.pinnedGroups != null ? validatePinned(state.pinnedGroups) : []
+            return { state: { pinnedFlags, pinnedExperiments, pinnedGroups }, version: 0 }
           } catch {
             return null
           }
@@ -128,4 +143,19 @@ export function usePinnedExperiments(): {
   )
 
   return { pinnedExperiments, pinExperiment, unpinExperiment, isPinned }
+}
+
+export function usePinnedFlagGroups(): {
+  pinnedGroups: string[]
+  pinGroup: (groupName: string) => void
+  unpinGroup: (groupName: string) => void
+  isPinned: (groupName: string) => boolean
+} {
+  const pinnedGroups = usePinnedGatingStore((state) => state.pinnedGroups)
+  const pinGroup = usePinnedGatingStore((state) => state.pinGroup)
+  const unpinGroup = usePinnedGatingStore((state) => state.unpinGroup)
+
+  const isPinned = useCallback((groupName: string) => pinnedGroups.includes(groupName), [pinnedGroups])
+
+  return { pinnedGroups, pinGroup, unpinGroup, isPinned }
 }

@@ -6,6 +6,7 @@ import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
 import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
 import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
@@ -139,6 +140,7 @@ export function LoginView({
               />
             )}
             {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+            {flow.step === RecoveryStep.NoWalletFound && <NoWalletFoundStep t={t} handleClose={() => window.close()} />}
           </Flex>
         </Flex>
       </Flex>

@@ -1,0 +1,63 @@
+import { memo, useCallback } from 'react'
+import { useAppStackNavigation } from 'src/app/navigation/types'
+import { TokenDetailsEarnSection as SharedTokenDetailsEarnSection } from 'uniswap/src/components/tokenDetails/TokenDetailsEarnSection'
+import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
+import type { TokenDetailsEarnData } from 'uniswap/src/features/earn/hooks/useTokenDetailsEarnData'
+import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+
+type TokenDetailsEarnSectionProps = {
+  activeAddress: Address | undefined
+  earnData: TokenDetailsEarnData
+}
+
+export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInner({
+  activeAddress,
+  earnData,
+}: TokenDetailsEarnSectionProps): JSX.Element | null {
+  const navigation = useAppStackNavigation()
+  const { navigateToEarnVault } = useWalletNavigation()
+
+  const isSectionVisible = !!earnData.earnVault && !!earnData.earnPosition && earnData.userHasEarnPosition
+
+  const { balanceLookupSettled, hasAnyBalanceForUnderlying } = useEarnDepositSources({
+    vault: earnData.earnVault,
+    walletAddress: activeAddress,
+    isOpen: isSectionVisible,
+  })
+
+  const handleDepositPress = useCallback(
+    (vault: EarnVaultInfo, position: EarnPositionInfo): void => {
+      if (!balanceLookupSettled) {
+        return
+      }
+
+      if (!hasAnyBalanceForUnderlying) {
+        navigation.navigate(ModalName.EarnYouNeedToken, {
+          currencyId: vault.displayCurrencyId,
+        })
+        return
+      }
+
+      navigateToEarnVault({ vault, position, initialAction: EarnAction.Deposit })
+    },
+    [balanceLookupSettled, hasAnyBalanceForUnderlying, navigation, navigateToEarnVault],
+  )
+
+  if (!isSectionVisible || !earnData.earnVault || !earnData.earnPosition) {
+    return null
+  }
+
+  return (
+    <SharedTokenDetailsEarnSection
+      earnVault={earnData.earnVault}
+      earnPosition={earnData.earnPosition}
+      onPositionPress={(vault, position) => navigateToEarnVault({ vault, position })}
+      onWithdrawPress={(vault, position) =>
+        navigateToEarnVault({ vault, position, initialAction: EarnAction.Withdraw })
+      }
+      onDepositPress={handleDepositPress}
+    />
+  )
+})

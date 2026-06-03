@@ -248,10 +248,24 @@ export function TickTooltipContent({
     </Text>
   ) : null
 
+  // In the active bin the current price splits the segment: one token sits in the
+  // sub-range below the current tick, the other above. Divide each token's locked
+  // USD by the width of the sub-range it occupies so the two $/bps densities are
+  // directly comparable. Upstream `useDensityChartData` (`hooks.ts`) swaps the
+  // (amount0Locked, amount1Locked) fields keyed on `priceInverted` so they're
+  // pre-oriented to chart display: amount0Locked ↔ "below display price",
+  // amount1Locked ↔ "above display price". In tick space, "below display price"
+  // = lower tick when priceInverted=false and upper tick when priceInverted=true,
+  // so the partial-width assignment to quote/base mirrors that swap.
+  const lowerPartialBps = isCurrentTick && segment && currentTick !== undefined ? currentTick - segment.startTick : 0
+  const upperPartialBps = isCurrentTick && segment && currentTick !== undefined ? segment.endTick - currentTick : 0
+  const quoteDivisorBps = isCurrentTick ? (priceInverted ? upperPartialBps : lowerPartialBps) : segmentBps
+  const baseDivisorBps = isCurrentTick ? (priceInverted ? lowerPartialBps : upperPartialBps) : segmentBps
+
   const quoteDensity =
-    amountQuoteLockedUSD && segmentBps > 0 ? Number(amountQuoteLockedUSD.toExact()) / segmentBps : undefined
+    amountQuoteLockedUSD && quoteDivisorBps > 0 ? Number(amountQuoteLockedUSD.toExact()) / quoteDivisorBps : undefined
   const baseDensity =
-    amountBaseLockedUSD && segmentBps > 0 ? Number(amountBaseLockedUSD.toExact()) / segmentBps : undefined
+    amountBaseLockedUSD && baseDivisorBps > 0 ? Number(amountBaseLockedUSD.toExact()) / baseDivisorBps : undefined
 
   return (
     <Flex

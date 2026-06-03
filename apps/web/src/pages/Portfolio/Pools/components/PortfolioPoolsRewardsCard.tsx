@@ -20,7 +20,13 @@ import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/u
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
 
-export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: string | undefined }) {
+export function PortfolioPoolsRewardsCard({
+  walletAddress,
+  isExternalWallet = false,
+}: {
+  walletAddress: string | undefined
+  isExternalWallet?: boolean
+}) {
   const { t } = useTranslation()
 
   const {
@@ -128,7 +134,7 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
           {showSkeleton ? (
             <Flex flexGrow={1}>
               <Skeleton>
-                <FlexLoader borderRadius="$rounded4" height={24} width={100} opacity={0.4} />
+                <FlexLoader borderRadius="$rounded12" height={24} width={100} opacity={0.4} />
               </Skeleton>
             </Flex>
           ) : (
@@ -138,7 +144,7 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
                 : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))}
             </Text>
           )}
-          {!isZero && !showSkeleton && (
+          {!isZero && !showSkeleton && !isExternalWallet && (
             <Button
               size="xsmall"
               emphasis="secondary"

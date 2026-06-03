@@ -25,7 +25,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
 
 const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
 
@@ -139,7 +138,6 @@ function FavoriteTokenCard({
         overflow={isIOS ? 'hidden' : 'visible'}
         borderWidth={isDarkMode ? '$none' : '$spacing1'}
         testID={`${TestID.FavoriteTokenCardPrefix}${token?.symbol}`}
-        onLongPress={noop}
         onPress={onPress}
         {...shadowProps}
       >

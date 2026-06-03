@@ -1,16 +1,19 @@
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 export interface EarnVaultCurator {
   name: string
-  address?: string
-  tvlUsd?: number
+  imageUrl?: string
 }
 
 // Frontend-ready vault info derived from the data-api EarnVault protobuf.
 // Keep backend-only fields on the generated type and add display/cache fields here in getEarnVaultInfo.
 export interface EarnVaultInfo {
   id: string
+  /** Actual vault underlying token. For wrapped-native vaults, this stays WETH/Wrapped native. */
   currencyId: string
+  /** User-facing vault token. For wrapped-native vaults, this is the native currency. */
+  displayCurrencyId: string
   /** ERC-4626 vault contract address. */
   vaultAddress: string
   /** Chain on which the vault is deployed. */
@@ -33,6 +36,22 @@ export interface EarnPositionInfo {
   apyPercent: number
   /** Raw ERC-4626 vault share balance. */
   sharesRaw: string
+  /** Populated by GetEarnPosition only; undefined from ListEarnPositions. */
+  lifetimePnlUsd?: number
 }
 
 export type EarnVaultTab = 'balance' | 'details'
+
+export enum EarnAction {
+  Deposit = 'deposit',
+  Withdraw = 'withdraw',
+}
+
+export type EarnDepositSourceOption = {
+  id: string
+  chainId: UniverseChainId
+  currencyInfo: CurrencyInfo
+  balanceQuantity: number
+  /** Undefined when the portfolio query could not price the balance. */
+  balanceUsd: number | undefined
+}

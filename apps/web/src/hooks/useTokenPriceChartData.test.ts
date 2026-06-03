@@ -1,7 +1,6 @@
 import { GraphQLApi } from '@universe/api'
-import { UTCTimestamp } from 'lightweight-charts'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
-import { useTDPPriceChartData } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { renderHook } from '~/test-utils/render'
 
 const { mockUseTokenPriceQuery, mockUseTokenPriceHistoryQuery } = vi.hoisted(() => {
@@ -58,7 +57,7 @@ function makeCoinGeckoResult(priceHistory: typeof COINGECKO_PRICE_HISTORY | []) 
   }
 }
 
-describe('useTDPPriceChartData', () => {
+describe('useTokenPriceChartData', () => {
   beforeEach(() => {
     mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult(SUBGRAPH_PRICE_HISTORY))
     mockUseTokenPriceHistoryQuery.mockReturnValue(makeCoinGeckoResult(COINGECKO_PRICE_HISTORY))
@@ -66,7 +65,7 @@ describe('useTDPPriceChartData', () => {
 
   it('uses CoinGecko price history when it returns data', () => {
     const { result } = renderHook(() =>
-      useTDPPriceChartData({
+      useTokenPriceChartData({
         variables: BASE_VARIABLES,
         skip: false,
         priceChartType: PriceChartType.LINE,
@@ -83,7 +82,7 @@ describe('useTDPPriceChartData', () => {
     mockUseTokenPriceHistoryQuery.mockReturnValue(makeCoinGeckoResult([]))
 
     const { result } = renderHook(() =>
-      useTDPPriceChartData({
+      useTokenPriceChartData({
         variables: BASE_VARIABLES,
         skip: false,
         priceChartType: PriceChartType.LINE,
@@ -101,7 +100,7 @@ describe('useTDPPriceChartData', () => {
     mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult([]))
 
     const { result } = renderHook(() =>
-      useTDPPriceChartData({
+      useTokenPriceChartData({
         variables: BASE_VARIABLES,
         skip: false,
         priceChartType: PriceChartType.LINE,
@@ -114,7 +113,7 @@ describe('useTDPPriceChartData', () => {
 
   it('uses subgraph data for multichain tokens regardless of CoinGecko response', () => {
     const { result } = renderHook(() =>
-      useTDPPriceChartData({
+      useTokenPriceChartData({
         variables: { ...BASE_VARIABLES, multichain: true },
         skip: false,
         priceChartType: PriceChartType.LINE,

@@ -4,12 +4,12 @@ import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TimePeriod } from '~/appGraphql/data/util'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType, type ChartQueryResult } from '~/components/Charts/utils'
-import { useTDPPriceChartData } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { useTDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/useTDPPriceChartPanel'
 import { renderHook } from '~/test-utils/render'
 
-vi.mock('~/pages/TokenDetails/components/chart/hooks', () => ({
-  useTDPPriceChartData: vi.fn(),
+vi.mock('~/hooks/useTokenPriceChartData', () => ({
+  useTokenPriceChartData: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper', () => ({
@@ -24,7 +24,7 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
   }
 })
 
-const mockUseTDPPriceChartData = vi.mocked(useTDPPriceChartData)
+const mockUseTokenPriceChartData = vi.mocked(useTokenPriceChartData)
 
 type PriceChartQueryMock = ChartQueryResult<PriceChartData, ChartType.PRICE> & {
   disableCandlestickUI: boolean
@@ -58,11 +58,11 @@ const variables = {
 
 describe('useTDPPriceChartPanel', () => {
   beforeEach(() => {
-    mockUseTDPPriceChartData.mockReturnValue(basePriceQuery)
+    mockUseTokenPriceChartData.mockReturnValue(basePriceQuery)
   })
 
   it('syncs disableCandlestickUI to the store in layout effect', () => {
-    mockUseTDPPriceChartData.mockReturnValue({ ...basePriceQuery, disableCandlestickUI: true })
+    mockUseTokenPriceChartData.mockReturnValue({ ...basePriceQuery, disableCandlestickUI: true })
     const setDisableCandlestickUI = vi.fn()
 
     renderHook(() =>
@@ -107,7 +107,7 @@ describe('useTDPPriceChartPanel', () => {
   })
 
   it('sets showInvalidSkeleton when data quality is INVALID', () => {
-    mockUseTDPPriceChartData.mockReturnValue({ ...basePriceQuery, dataQuality: DataQuality.INVALID })
+    mockUseTokenPriceChartData.mockReturnValue({ ...basePriceQuery, dataQuality: DataQuality.INVALID })
 
     const { result } = renderHook(() =>
       useTDPPriceChartPanel({

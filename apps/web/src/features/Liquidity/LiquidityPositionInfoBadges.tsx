@@ -129,6 +129,7 @@ export function LiquidityPositionInfoBadges({
               badge.onPress
                 ? (e) => {
                     e.preventDefault()
+                    e.stopPropagation()
                     badge.onPress?.()
                   }
                 : undefined

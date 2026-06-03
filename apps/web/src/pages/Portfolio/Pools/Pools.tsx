@@ -3,11 +3,15 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
+import { Pools } from 'ui/src/components/icons/Pools'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { EmptyPositionsView } from '~/features/Liquidity/components/emptyStates/EmptyPositionsView'
 import { ErrorPositionsView } from '~/features/Liquidity/components/emptyStates/ErrorPositionsView'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
@@ -19,6 +23,7 @@ import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/Por
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
+import { PortfolioPoolsFeesPanel } from '~/pages/Portfolio/Pools/components/PortfolioPoolsFeesPanel'
 import { PortfolioPoolsRewardsCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsRewardsCard'
 import { PoolsActionRow } from '~/pages/Portfolio/Pools/PoolsActionRow'
 import { PortfolioTab } from '~/pages/Portfolio/types'
@@ -26,7 +31,7 @@ import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { useCreatePositionHref } from '~/utils/createPositionRoute'
 import { buildImportV2PositionsHref } from '~/utils/importV2PositionsRoute'
 
-const POSITIONS_LIST_MAX_WIDTH = 736
+const POSITIONS_LIST_MAX_WIDTH = 768
 const POSITIONS_SIDEBAR_WIDTH = 360
 
 const PoolsPositionCountIndicator = memo(function PoolsPositionCountIndicator({ count }: { count: number }) {
@@ -78,6 +83,12 @@ export function PortfolioPools() {
     setStatusFilter((prev) => (prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]))
   }, [])
 
+  const clearFiltersAndSearch = useCallback(() => {
+    setSearch('')
+    setVersionFilter([...DEFAULT_LP_POSITION_PROTOCOL_FILTER])
+    setStatusFilter([...DEFAULT_LP_POSITION_STATUS_FILTER])
+  }, [])
+
   const {
     visiblePositions,
     hiddenPositions,
@@ -95,6 +106,14 @@ export function PortfolioPools() {
     statusFilter,
   })
 
+  const { data: poolsBalance } = usePortfolioBalancePart({
+    part: PortfolioBalancePart.Pools,
+    evmAddress,
+    chainIds: chainId ? [chainId] : undefined,
+  })
+  const hasLoadedBalance = poolsBalance !== undefined
+  const totalPoolsCount = poolsBalance?.count
+
   const hasSolanaOnlyWallet = !resolvedEvmAddress && !!resolvedSvmAddress
   const normalizedSearch = search.trim().toLowerCase()
   const hasModifiedPositionFilters =
@@ -105,17 +124,12 @@ export function PortfolioPools() {
     [visiblePositions, normalizedSearch],
   )
   const hasLoadedPositions = !isLoadingPositions && !hasErrorWithoutData
-  const showEmptyState =
-    hasLoadedPositions &&
-    visiblePositions.length === 0 &&
-    hiddenPositions.length === 0 &&
-    !normalizedSearch &&
-    !hasModifiedPositionFilters
+  const showEmptyState = hasLoadedBalance && totalPoolsCount === 0
   const showNoResults =
     hasLoadedPositions &&
     !showEmptyState &&
     filteredVisiblePositions.length === 0 &&
-    (visiblePositions.length > 0 || !!normalizedSearch || hasModifiedPositionFilters)
+    (!!normalizedSearch || hasModifiedPositionFilters)
 
   const portfolioPoolsUrl = buildPortfolioUrl({
     tab: PortfolioTab.Pools,
@@ -139,10 +153,14 @@ export function PortfolioPools() {
     }
     if (showNoResults) {
       return (
-        <Flex centered py="$spacing48">
-          <Text variant="body1" color="$neutral2">
-            {t('common.noResults')}
-          </Text>
+        <Flex pb="$spacing48">
+          <BaseCard.EmptyState
+            icon={<Pools size="$icon.64" color="$neutral3" />}
+            description={t('portfolio.noResults.filters.title')}
+            buttonLabel={t('portfolio.noResults.filters.clear')}
+            dataTestId={TestID.PortfolioPoolsNoResults}
+            onPress={clearFiltersAndSearch}
+          />
         </Flex>
       )
     }
@@ -159,6 +177,7 @@ export function PortfolioPools() {
         hiddenSectionLabel={t('hidden.pools.info.text.button', { numHidden: hiddenPositions.length })}
         hiddenSectionPadding={{ py: '$spacing12', px: 0 }}
         entryPoint={portfolioPoolsUrl}
+        readOnly={isExternalWallet}
       />
     )
   }
@@ -168,7 +187,7 @@ export function PortfolioPools() {
       return <PoolsUnavailableOnSolanaView />
     }
     if (showEmptyState) {
-      return <EmptyPositionsView newPositionHref={newPositionHref} />
+      return <EmptyPositionsView newPositionHref={newPositionHref} showNewPositionAction={!isExternalWallet} />
     }
 
     return (
@@ -177,7 +196,15 @@ export function PortfolioPools() {
           <PortfolioBalance
             evmOwner={evmAddress}
             chainIds={chainId ? [chainId] : undefined}
-            endText={hasLoadedPositions ? <PoolsPositionCountIndicator count={visiblePositions.length} /> : undefined}
+            endText={
+              hasLoadedBalance ? (
+                totalPoolsCount && totalPoolsCount > 0 ? (
+                  <PoolsPositionCountIndicator count={totalPoolsCount} />
+                ) : (
+                  <PortfolioBalanceCountIndicator label="-" />
+                )
+              ) : undefined
+            }
             part={PortfolioBalancePart.Pools}
           />
           <PoolsActionRow
@@ -188,6 +215,7 @@ export function PortfolioPools() {
             onVersionChange={toggleVersion}
             onStatusChange={toggleStatus}
             createPositionEntryPoint={portfolioPoolsUrl}
+            showCreateButton={!isExternalWallet}
           />
         </Flex>
         <Flex row gap="$spacing24" alignItems="flex-start" $xl={{ flexDirection: 'column' }}>
@@ -216,7 +244,10 @@ export function PortfolioPools() {
             )}
           </Flex>
           <Flex width={POSITIONS_SIDEBAR_WIDTH} flexShrink={0} gap="$gap12" $xl={{ width: '100%' }}>
-            {isLpIncentivesEnabled && <PortfolioPoolsRewardsCard walletAddress={evmAddress} />}
+            {isLpIncentivesEnabled && (
+              <PortfolioPoolsRewardsCard walletAddress={evmAddress} isExternalWallet={isExternalWallet} />
+            )}
+            <PortfolioPoolsFeesPanel walletAddress={evmAddress} chainId={chainId} isExternalWallet={isExternalWallet} />
           </Flex>
         </Flex>
       </Flex>

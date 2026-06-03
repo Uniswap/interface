@@ -32,7 +32,8 @@ export const Header = memo(function Header() {
       className="webkitSticky"
       width="100vw"
       top={0}
-      zIndex={zIndexes.header}
+      // fixed (1030) > sticky (1020) so nav wins DOM-order stacking tiebreak
+      zIndex={zIndexes.fixed}
       pointerEvents="none"
     >
       <style>

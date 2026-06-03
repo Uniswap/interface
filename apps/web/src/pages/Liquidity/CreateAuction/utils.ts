@@ -203,6 +203,15 @@ export function isAllowedCompactNumberInput(value: string): boolean {
   return /^(\d*\.?\d*)[kmbt]?$/i.test(value)
 }
 
+/** True when `value` carries more fractional digits than `decimals` after compact-suffix expansion.
+ * Below the token's smallest unit, `tryParseCurrencyAmount` rounds to zero wei and downstream percent
+ * math (`amountToPercent`, LP derivation) can then divide by an unexpected zero. */
+export function inputExceedsCurrencyPrecision(value: string, decimals: number): boolean {
+  const expanded = expandCompactNumberInput(value) ?? ''
+  const dotIdx = expanded.indexOf('.')
+  return dotIdx !== -1 && expanded.length - dotIdx - 1 > decimals
+}
+
 export function getMinimumPostAuctionLiquidityTierMilestone(previousMilestone?: number): number {
   return previousMilestone && previousMilestone > 0 ? previousMilestone + 1 : 1
 }

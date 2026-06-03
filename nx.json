@@ -18,6 +18,17 @@
       "cache": true,
       "outputs": []
     },
+    "config:pull": {
+      "cache": true,
+      "inputs": [
+        { "env": "USE_NEW_CONFIGS" },
+        { "env": "CONFIG_ENV" },
+        "{workspaceRoot}/packages/config-cli/src/**/*",
+        "{workspaceRoot}/packages/config-cli/package.json",
+        { "runtime": "node -e \"const d=new Date();console.log(d.toISOString().slice(0,13)+'-'+Math.floor(d.getMinutes()/10))\"" }
+      ],
+      "outputs": ["{projectRoot}/.env.new"]
+    },
     "build": {
       "dependsOn": ["^prepare", "prepare", "^build"],
       "inputs": ["dependencies", "sourceFiles", "tsConfig"],

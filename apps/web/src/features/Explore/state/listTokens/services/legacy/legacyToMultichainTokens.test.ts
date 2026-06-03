@@ -1,7 +1,7 @@
 import { SafetyLevel, SpamCode, TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { describe, expect, it, vi } from 'vitest'
 import { tokenStatsToMultichainTokens } from '~/features/Explore/state/listTokens/services/legacy/legacyToMultichainTokens'
-import type { TokenStat } from '~/types/explore'
+import type { ExploreStatVolumeAmounts, TokenStat, TokenStatWithExploreVolumes } from '~/types/explore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 vi.mock('~/utils/params/chainParams', () => ({
@@ -12,21 +12,25 @@ const mockGetChainIdFromChainUrlParam = vi.mocked(getChainIdFromChainUrlParam)
 
 /** Plain-object overrides for tests; TokenStat uses protobuf Amount/TokenProject at runtime. */
 type AmountLike = { value: number }
+type ExploreStatVolumeOverrides = {
+  [K in keyof ExploreStatVolumeAmounts]?: AmountLike
+}
 type TokenStatOverrides = Partial<
   Omit<
     TokenStat,
     'volume' | 'project' | 'price' | 'fullyDilutedValuation' | 'pricePercentChange1Hour' | 'pricePercentChange1Day'
   >
-> & {
-  volume?: AmountLike
-  project?: { name?: string; safetyLevel?: string; isSpam?: boolean }
-  price?: AmountLike
-  fullyDilutedValuation?: AmountLike
-  pricePercentChange1Hour?: AmountLike
-  pricePercentChange1Day?: AmountLike
-}
+> &
+  ExploreStatVolumeOverrides & {
+    volume?: AmountLike
+    project?: { name?: string; safetyLevel?: string; isSpam?: boolean }
+    price?: AmountLike
+    fullyDilutedValuation?: AmountLike
+    pricePercentChange1Hour?: AmountLike
+    pricePercentChange1Day?: AmountLike
+  }
 
-function createTokenStat(overrides: TokenStatOverrides = {}): TokenStat {
+function createTokenStat(overrides: TokenStatOverrides = {}): TokenStatWithExploreVolumes {
   return {
     chain: 'ethereum',
     address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -37,7 +41,7 @@ function createTokenStat(overrides: TokenStatOverrides = {}): TokenStat {
     volume: { value: 1_000_000 } as TokenStat['volume'],
     project: { name: 'Circle', safetyLevel: '1', isSpam: false } as TokenStat['project'],
     ...overrides,
-  } as TokenStat
+  } as TokenStatWithExploreVolumes
 }
 
 describe('tokenStatsToMultichainTokens', () => {
@@ -132,6 +136,36 @@ describe('tokenStatsToMultichainTokens', () => {
     const mc = tokenStatsToMultichainTokens([stat])[0]!
     expect(mc.chainTokens[0]?.stats?.volume1d).toBe(900_000)
     expect(mc.chainTokens[1]?.stats?.volume1d).toBe(100_000)
+  })
+
+  it('should map all per-chain volume periods from explore ChainToken fields', () => {
+    const stat = createTokenStat({
+      volume: undefined,
+      volume1Day: { value: 1_000_000 },
+      volume1Week: { value: 5_000_000 },
+      chainTokens: [
+        {
+          chainId: 1,
+          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+          decimals: 6,
+          volume1d: 200_000,
+          volume7d: 900_000,
+        },
+        {
+          chainId: 137,
+          address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          decimals: 6,
+          volume1d: 50_000,
+          volume7d: 100_000,
+        },
+      ],
+    } satisfies TokenStatOverrides)
+
+    const mc = tokenStatsToMultichainTokens([stat])[0]!
+    expect(mc.chainTokens[0]?.stats?.volume7d).toBe(900_000)
+    expect(mc.chainTokens[1]?.stats?.volume7d).toBe(100_000)
+    expect(mc.stats?.volume1d).toBe(1_000_000)
+    expect(mc.stats?.volume7d).toBe(5_000_000)
   })
 
   it('should leave missing per-chain volume undefined', () => {

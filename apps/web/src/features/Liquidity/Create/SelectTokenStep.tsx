@@ -405,7 +405,14 @@ export function SelectTokensStep({
   }, [isLpIncentivesEnabled, protocolVersion, feeTierData, currentFeeTierKey])
 
   const poolAlreadyExists =
-    isAddLiquidityRevamp && !creatingPoolOrPair && !!poolOrPair && !!poolId && !!token0 && !!token1 && !!fee
+    isAddLiquidityRevamp &&
+    !migratingPosition &&
+    !creatingPoolOrPair &&
+    !!poolOrPair &&
+    !!poolId &&
+    !!token0 &&
+    !!token1 &&
+    !!fee
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 

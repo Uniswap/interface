@@ -53,6 +53,7 @@ vi.mock('ui/src/assets', () => ({
   ZKSYNC_LOGO: 'zksync-logo.png',
   SOLANA_LOGO: 'solana-logo.png',
   LINEA_LOGO: 'linea-logo.png',
+  MEGAETH_LOGO: 'megaeth-logo.png',
   SONEIUM_LOGO: 'soneium-logo.png',
   TEMPO_LOGO: 'tempo-logo.png',
   XLAYER_LOGO: 'xlayer-logo.png',

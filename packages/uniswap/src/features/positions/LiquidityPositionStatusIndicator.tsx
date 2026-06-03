@@ -2,19 +2,9 @@ import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
-import { lpStatusConfig } from '~/features/Liquidity/constants'
-import { TextLoader } from '~/features/Liquidity/Loader'
+import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 
-export function LiquidityPositionStatusIndicatorLoader() {
-  return (
-    <Flex row gap="$spacing6" alignItems="center">
-      <StatusIndicatorCircle color="$surface3" />
-      <TextLoader variant="body3" width={100} />
-    </Flex>
-  )
-}
-
-export function LiquidityPositionStatusIndicator({ status }: { status: PositionStatus }) {
+export function LiquidityPositionStatusIndicator({ status }: { status: PositionStatus }): JSX.Element | null {
   const { t } = useTranslation()
   const config = lpStatusConfig[status]
 

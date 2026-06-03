@@ -1,7 +1,11 @@
 import { type ComponentType, memo } from 'react'
 import type { AppStackParamList, AppStackScreenProp } from 'src/app/navigation/types'
+import { EarnDepositAmountModal } from 'src/components/earn/EarnDepositAmountModal'
 import { EarnDepositReviewModal } from 'src/components/earn/EarnDepositReviewModal'
+import { EarnDepositSourceSelectorModal } from 'src/components/earn/EarnDepositSourceSelectorModal'
 import { EarnVaultModal } from 'src/components/earn/EarnVaultModal'
+import { EarnWithdrawNetworkSelectorModal } from 'src/components/earn/EarnWithdrawNetworkSelectorModal'
+import { EarnWithdrawReviewModal } from 'src/components/earn/EarnWithdrawReviewModal'
 import { EarnYouNeedTokenModal } from 'src/components/earn/EarnYouNeedTokenModal'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import type { GetProps } from 'ui/src'
@@ -38,8 +42,12 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.ReportPortfolioData
   | typeof ModalName.ReportTokenIssue
   | typeof ModalName.ReportTokenData
+  | typeof ModalName.EarnDepositAmount
   | typeof ModalName.EarnDepositReview
+  | typeof ModalName.EarnDepositSourceSelector
   | typeof ModalName.EarnVault
+  | typeof ModalName.EarnWithdrawNetworkSelector
+  | typeof ModalName.EarnWithdrawReview
   | typeof ModalName.EarnYouNeedToken
 >
 
@@ -58,8 +66,12 @@ type ModalNameWithComponentProps = {
   [ModalName.ReportPortfolioData]: GetProps<typeof ReportPortfolioDataModal>
   [ModalName.ReportTokenIssue]: GetProps<typeof ReportTokenIssueModal>
   [ModalName.ReportTokenData]: GetProps<typeof ReportTokenDataModal>
+  [ModalName.EarnDepositAmount]: GetProps<typeof EarnDepositAmountModal>
   [ModalName.EarnDepositReview]: GetProps<typeof EarnDepositReviewModal>
+  [ModalName.EarnDepositSourceSelector]: GetProps<typeof EarnDepositSourceSelectorModal>
   [ModalName.EarnVault]: GetProps<typeof EarnVaultModal>
+  [ModalName.EarnWithdrawNetworkSelector]: GetProps<typeof EarnWithdrawNetworkSelectorModal>
+  [ModalName.EarnWithdrawReview]: GetProps<typeof EarnWithdrawReviewModal>
   [ModalName.EarnYouNeedToken]: GetProps<typeof EarnYouNeedTokenModal>
 }
 

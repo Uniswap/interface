@@ -237,7 +237,7 @@ export function FeeTierSearchModal({
                 </Text>
               </Flex>
               <Flex flex={1} justifyContent="flex-end">
-                <Flex row maxWidth="100%" centered onLayout={onLayout} minHeight="84px">
+                <Flex row alignSelf="center" maxWidth="100%" centered onLayout={onLayout} minHeight="84px">
                   <FeeTierPercentInput
                     value={createFeeValue}
                     onUserInput={(input) => {

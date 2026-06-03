@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { describe, expect, it } from 'vitest'
-import { envName, lastSegment, paramEntryToObject, serializeParams } from './format'
+import { envName, lastSegment, paramEntryToObject, paramName, serializeParams, stripEnvPrefix } from './format'
 
 describe('lastSegment', () => {
   it('returns the segment after the last slash', () => {
@@ -27,6 +27,50 @@ describe('envName', () => {
 
   it('converts every dash, including consecutive ones', () => {
     expect(envName('/web/default/foo-bar-baz')).toBe('FOO_BAR_BAZ')
+  })
+})
+
+describe('paramName', () => {
+  it('converts UPPER_SNAKE_CASE to kebab-lower', () => {
+    expect(paramName('APP_ID')).toBe('app-id')
+  })
+
+  it('handles single-word names', () => {
+    expect(paramName('TIMEOUT')).toBe('timeout')
+  })
+
+  it('round-trips with envName for canonical inputs', () => {
+    expect(paramName(envName('/web/default/foo-bar-baz'))).toBe('foo-bar-baz')
+  })
+
+  it('strips VITE_ prefix before converting', () => {
+    expect(paramName('VITE_API_KEY')).toBe('api-key')
+  })
+
+  it('strips REACT_APP_ prefix before converting', () => {
+    expect(paramName('REACT_APP_API_KEY')).toBe('api-key')
+  })
+
+  it('leaves names without a known prefix unchanged', () => {
+    expect(paramName('OTHER_API_KEY')).toBe('other-api-key')
+  })
+})
+
+describe('stripEnvPrefix', () => {
+  it('strips a leading VITE_ prefix', () => {
+    expect(stripEnvPrefix('VITE_API_KEY')).toBe('API_KEY')
+  })
+
+  it('strips a leading REACT_APP_ prefix', () => {
+    expect(stripEnvPrefix('REACT_APP_API_KEY')).toBe('API_KEY')
+  })
+
+  it('only strips a prefix when it appears at the start', () => {
+    expect(stripEnvPrefix('MY_VITE_API_KEY')).toBe('MY_VITE_API_KEY')
+  })
+
+  it('is a no-op for unprefixed names', () => {
+    expect(stripEnvPrefix('API_KEY')).toBe('API_KEY')
   })
 })
 

@@ -2,6 +2,7 @@ import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_
 import { TradingApi } from '@universe/api'
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestSwapTransaction } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
+import { hasTwoTokenTransfersWithMintOrBurn } from 'uniswap/src/features/activity/utils/tokenTransfers'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   ApproveTransactionInfo,
@@ -14,11 +15,11 @@ import {
 /**
  * Represents a parsed EXECUTE transaction.
  *
- * EXECUTE-labeled on-chain transactions can contain a swap and/or an approval
- * that share a single transaction hash. We surface the swap when present and
- * fall back to the approval only when there is no swap — never both, since
- * emitting two `TransactionDetails` with the same hash causes
- * `useMergeLocalAndRemoteTransactions` to dedup one of them.
+ * EXECUTE-labeled on-chain transactions can contain a swap and/or an approval that
+ * share a single transaction hash. We surface the swap and fall back to the
+ * approval only when there is no swap, since emitting two `TransactionDetails`
+ * with the same hash causes `useMergeLocalAndRemoteTransactions` to dedup one
+ * of them.
  */
 export interface ParsedExecuteTransaction {
   swapInfo?: ConfirmedSwapTransactionInfo
@@ -28,18 +29,19 @@ export interface ParsedExecuteTransaction {
 /**
  * Parse an EXECUTE transaction from the REST API.
  *
- * Prefer displaying swap-only for batched approval+swap txs; otherwise, show approval as standalone if present.
+ * Prefer displaying the swap for batched swap+approval txs; otherwise, show approval as standalone.
  */
 export function parseRestExecuteTransaction(transaction: OnChainTransaction): ParsedExecuteTransaction | undefined {
-  const hasSwapTransfers = transaction.transfers.length > 0
+  const hasTransfers = transaction.transfers.length > 0
   const hasApprovals = transaction.approvals.length > 0
 
-  if (!hasSwapTransfers && !hasApprovals) {
+  if (!hasTransfers && !hasApprovals) {
     return undefined
   }
 
-  // Parse swap if transfers exist
-  if (hasSwapTransfers) {
+  // Earn vault actions are emitted with explicit VAULT_* labels by the data-api.
+  // For generic EXECUTE rows, avoid treating a two-transfer mint/burn receipt as a swap.
+  if (hasTransfers && !hasTwoTokenTransfersWithMintOrBurn(transaction)) {
     const swapInfo = parseRestSwapTransaction(transaction)
     if (swapInfo) {
       return { swapInfo }
@@ -60,7 +62,7 @@ export function parseRestExecuteTransaction(transaction: OnChainTransaction): Pa
 /**
  * Build TransactionDetails array from a parsed EXECUTE transaction.
  *
- * Always returns exactly one entry (swap-preferred, approval-fallback) so the
+ * Always returns exactly one entry (primary action first, approval fallback) so the
  * single on-chain hash maps to a single activity row.
  */
 export function buildExecuteTransactionDetails(params: {

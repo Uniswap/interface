@@ -1,15 +1,18 @@
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { EarnVaultFlow, EarnVaultTab } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
-import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import type { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import type { EarnDepositSourceOption, EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 
 export type EarnVaultModalVaultData = {
-  availableBalance: number
   balanceLookupSettled: boolean
-  currencyInfo: ReturnType<typeof useCurrencyInfo>
+  /** User-facing token info for this vault. Wrapped-native vaults use native currency here. */
+  currencyInfo: Maybe<CurrencyInfo>
+  depositSourceOptions: EarnDepositSourceOption[]
   hasPosition: boolean
   isConnected: boolean
   position: EarnPositionInfo | undefined
+  selectedDepositSource: EarnDepositSourceOption | undefined
+  setSelectedDepositSourceCurrencyId: (currencyId: string) => void
   symbol: string
   vault: EarnVaultInfo | null
 }
@@ -21,10 +24,10 @@ export type EarnVaultModalFlowHandlers = {
   onBuyWithCash: () => void
   onClose: () => void
   onDeposit: () => void
-  onReviewDeposit: (submittedAmount: string) => void
+  onReviewDeposit: (params: { amount: string; sourceChainId: UniverseChainId; sourceCurrencyId: string }) => void
   onSwapForToken: () => void
   onWithdraw: () => void
-  onReviewWithdraw: (params: { amount: string; chainId: UniverseChainId }) => void
+  onReviewWithdraw: (params: { amount: string; chainId: UniverseChainId; destinationCurrencyId: string }) => void
 }
 
 export type EarnVaultModalTabState = {

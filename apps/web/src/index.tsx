@@ -29,7 +29,7 @@ import {
 } from '@universe/sessions'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { StrictMode, useEffect, useMemo } from 'react'
+import { lazy, StrictMode, Suspense, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
@@ -241,6 +241,10 @@ function MaybePrivyProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Gated by `__DEV__` (Vite build-time constant) so Rollup DCE's the `import('agentation')`
+// call in production builds and no chunk is emitted.
+const AgentationLazy = __DEV__ ? lazy(() => import('agentation').then((m) => ({ default: m.Agentation }))) : null
+
 const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
@@ -276,6 +280,11 @@ const RootApp = (): JSX.Element => {
                                                     <WebNotificationServiceManager />
                                                     <ThemedGlobalStyle />
                                                     <App />
+                                                    {AgentationLazy && isDevEnv() && (
+                                                      <Suspense fallback={null}>
+                                                        <AgentationLazy />
+                                                      </Suspense>
+                                                    )}
                                                   </PortalProvider>
                                                 </TamaguiProvider>
                                               </ThemeProvider>

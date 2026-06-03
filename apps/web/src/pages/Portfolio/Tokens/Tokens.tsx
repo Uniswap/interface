@@ -2,7 +2,9 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Flex, RemoveScroll, Text, useMedia } from 'ui/src'
+import { Flex, RemoveScroll, useMedia } from 'ui/src'
+import { Coin } from 'ui/src/components/icons/Coin'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEmptyState'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokensProfitLoss'
@@ -194,10 +196,14 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                   />
                 </Trace>
               ) : (
-                <Flex centered py="$spacing48" data-testid={TestID.PortfolioTokensNoResults}>
-                  <Text variant="body1" color="$neutral2">
-                    {t('common.noResults')}
-                  </Text>
+                <Flex py="$spacing40">
+                  <BaseCard.EmptyState
+                    icon={<Coin size="$icon.64" color="$neutral3" />}
+                    description={t('portfolio.noResults.search.title')}
+                    buttonLabel={t('portfolio.noResults.search.clear')}
+                    dataTestId={TestID.PortfolioTokensNoResults}
+                    onPress={() => setSearch('')}
+                  />
                 </Flex>
               )}
             </>

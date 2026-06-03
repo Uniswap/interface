@@ -10,6 +10,7 @@ import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import {
   expandCompactNumberInput,
+  inputExceedsCurrencyPrecision,
   isAllowedCompactNumberInput,
   percentOfAmount,
 } from '~/pages/Liquidity/CreateAuction/utils'
@@ -74,6 +75,9 @@ export function AuctionSupplySelector({
   const handleRawChange = useCallback(
     (raw: string) => {
       if (!isAllowedCompactNumberInput(raw)) {
+        return
+      }
+      if (inputExceedsCurrencyPrecision(raw, currency.decimals)) {
         return
       }
       setRawInput(raw)

@@ -315,6 +315,7 @@ export enum TransactionType {
   // All asset types
   Send = 'send',
   Receive = 'receive',
+  Deposit = 'deposit',
   Withdraw = 'withdraw',
 
   // Fiat onramp
@@ -512,11 +513,23 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
+export interface DepositTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Deposit
+  assetType: AssetType.Currency
+  tokenAddress: string
+  currencyAmountRaw?: string
+  isVault?: boolean
+  vaultAddress?: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
 export interface WithdrawTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Withdraw
   assetType: AssetType.Currency
   tokenAddress: string
   currencyAmountRaw?: string
+  isVault?: boolean
+  vaultAddress?: string
   dappInfo?: DappInfoTransactionDetails
 }
 
@@ -760,6 +773,7 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | DepositTransactionInfo
   | WithdrawTransactionInfo
   | NFTTradeTransactionInfo
   | NFTApproveTransactionInfo
