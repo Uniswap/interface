@@ -73,7 +73,7 @@ const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
   '8453-0xa53887f7e7c1bf5010b8627f1c1ba94fe7a5d6e0': {
     logoUrl: '/images/logos/rainbow-token-launch-logo.png',
   },
-  '1-0xcccc87d42db3d35018ecae712a0bc53e79d9cccc': {
+  '1-0x9999b7e3cc6979223ff1af980b7d8b90b75d9999': {
     logoUrl: '/images/logos/cap-token-launch-logo.png',
   },
   '42161-0xb628b89067e8f7dfc2cb528a72bcff7d5cedce29': {
@@ -110,4 +110,5 @@ export const DEFAULT_VERIFIED_AUCTION_IDS = [
   '42161_0xc27F8a94Df88C4f57B09067e07EA6bC11CA47e11',
   '1_0xb3079Ec6b82f22A1ABfDCA1A22659aB07Cdf2f0F',
   '1_0xfFDab1083fCbBCEE32997795388B3D61Ebab786E',
+  '1_0x20eEBd78151EAe9Ed2380AC613204aaF5CA0cd24',
 ]
