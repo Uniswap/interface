@@ -1478,7 +1478,7 @@
   "onboarding.intro.mobileScan.button": "Scan QR code to import",
   "onboarding.intro.mobileScan.title": "Have the Uniswap app?",
   "onboarding.keyManagement.description": "Uniswap uses advanced encryption so only you can access your funds. You can export your wallet any time.",
-  "onboarding.keyManagement.securedBy": "Secured by",
+  "onboarding.keyManagement.securedBy": "Protected by",
   "onboarding.keyManagement.title": "Your wallet. Your crypto.",
   "onboarding.landing.button.add": "Add an existing wallet",
   "onboarding.landing.button.create": "Create a wallet",
