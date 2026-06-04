@@ -6,6 +6,7 @@ import { AddressTransactionsSelector } from 'uniswap/src/features/transactions/s
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
+  type FinalizedTransactionStatus,
   type OnChainTransactionDetails,
   type TransactionDetails,
   TransactionStatus,
@@ -105,8 +106,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
     return put(
       ctx.actions.finalizeTransaction({
         ...input.transaction,
-        // @ts-expect-error - TODO: fix this
-        status: input.status,
+        status: input.status as FinalizedTransactionStatus,
       }),
     )
   }
