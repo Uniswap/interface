@@ -1,4 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency } from '@uniswap/sdk-core'
 import { isMobileApp } from '@universe/environment'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { extractDomain } from 'uniswap/src/components/lists/items/wallets/utils'
@@ -32,31 +33,29 @@ export function sendSearchOptionItemClickedAnalytics({
   }
 
   switch (item.type) {
+    case OnchainItemListOptionType.MultichainToken: {
+      const firstCurrency = item.multichainResult.tokens[0]?.currency
+
+      if (firstCurrency === undefined) {
+        logger.warn(
+          'SearchModal/analytics.ts',
+          'sendSearchOptionItemClickedAnalytics',
+          'First currency is undefined in multichain result, skipping analytics',
+          { item },
+        )
+        return
+      }
+
+      if (item.multichainResult.tokens.length === 1) {
+        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency })
+      } else {
+        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency, multichain: true })
+      }
+      return
+    }
     case OnchainItemListOptionType.Token: {
       const currency = item.currencyInfo.currency
-      if (isMobileApp) {
-        sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
-          ...searchContext,
-          name: currency.name ?? '',
-          chain: currency.chainId,
-          address: currency.isNative ? 'NATIVE' : currency.address,
-          type: 'token',
-        })
-      } else {
-        sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
-          ...searchContext,
-          chainId: currency.chainId,
-          suggestion_type: searchContext.isHistory
-            ? NavBarSearchTypes.RecentSearch
-            : searchContext.query && searchContext.query.length > 0
-              ? NavBarSearchTypes.TokenSuggestion
-              : NavBarSearchTypes.TokenTrending,
-          total_suggestions: searchContext.suggestionCount,
-          query_text: searchContext.query ?? '',
-          selected_search_result_name: currency.name ?? '',
-          selected_search_result_address: currency.isNative ? 'NATIVE' : currency.address,
-        })
-      }
+      sendTokenAnalyticsEvent({ searchContext, currency })
       return
     }
     case OnchainItemListOptionType.Pool: {
@@ -108,5 +107,40 @@ export function sendSearchOptionItemClickedAnalytics({
       logger.warn('SearchModal/analytics.ts', 'sendSearchOptionItemClickedAnalytics', 'Unhandled search option type', {
         item,
       })
+  }
+}
+
+function sendTokenAnalyticsEvent({
+  searchContext,
+  currency,
+  multichain = false,
+}: {
+  searchContext: SearchContext
+  currency: Currency
+  multichain?: boolean
+}): void {
+  if (isMobileApp) {
+    sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      ...searchContext,
+      name: currency.name ?? '',
+      chain: currency.chainId,
+      address: currency.isNative ? 'NATIVE' : currency.address,
+      type: multichain ? 'multichain_token' : 'token',
+    })
+  } else {
+    sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
+      ...searchContext,
+      chainId: currency.chainId,
+      suggestion_type: searchContext.isHistory
+        ? NavBarSearchTypes.RecentSearch
+        : searchContext.query && searchContext.query.length > 0
+          ? NavBarSearchTypes.TokenSuggestion
+          : NavBarSearchTypes.TokenTrending,
+      total_suggestions: searchContext.suggestionCount,
+      query_text: searchContext.query ?? '',
+      selected_search_result_name: currency.name ?? '',
+      selected_search_result_address: currency.isNative ? 'NATIVE' : currency.address,
+      token_type: multichain ? 'multichain_token' : 'token',
+    })
   }
 }
