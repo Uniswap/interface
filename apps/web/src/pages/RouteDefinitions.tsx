@@ -154,7 +154,15 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     getElement: (args) => {
-      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+      if (args.browserRouterEnabled && args.hash) {
+        const path = args.hash.replace('#', '')
+        // Only redirect to internal paths starting with a single '/' to prevent
+        // protocol-relative URLs (e.g. //example.org) from causing SecurityErrors.
+        if (path.startsWith('/') && !path.startsWith('//')) {
+          return <Navigate to={path} replace />
+        }
+      }
+      return <Landing />
     },
   }),
   createRouteDefinition({
