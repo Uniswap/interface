@@ -30,6 +30,8 @@ const SHARED_UNI_RPC_CONFIG = {
 
 const webResolveUniRpcConfig = createUniRpcConfigResolver({
   ...SHARED_UNI_RPC_CONFIG,
+  // Web app always routes through UniRPC; extension stays gated below.
+  getFeatureFlag: () => true,
   credentials: 'include',
 })
 

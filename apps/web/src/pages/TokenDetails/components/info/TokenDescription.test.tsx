@@ -3,7 +3,9 @@ import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ZERO_PERCENT } from '~/constants/misc'
 import { useCurrency } from '~/hooks/Tokens'
+import { useSwapTaxes } from '~/hooks/useSwapTaxes'
 import { TokenDescription } from '~/pages/TokenDetails/components/info/TokenDescription'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
@@ -14,6 +16,7 @@ import { render, screen } from '~/test-utils/render'
 import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
 
 vi.mock('~/hooks/Tokens')
+vi.mock('~/hooks/useSwapTaxes')
 
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
   useTDPStore: vi.fn(),
@@ -38,6 +41,7 @@ const MULTI_CHAIN_MAP = {
 describe('TokenDescription', () => {
   beforeEach(() => {
     mocked(useCurrency).mockReturnValue(validUSDCCurrency)
+    mocked(useSwapTaxes).mockReturnValue({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
     mocked(useFeatureFlag).mockReturnValue(false)
   })
 
