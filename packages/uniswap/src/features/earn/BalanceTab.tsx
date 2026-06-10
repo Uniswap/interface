@@ -35,6 +35,15 @@ export function BalanceTab({ position, onDeposit, onWithdraw }: BalanceTabProps)
             </Text>
           }
         />
+        <BalanceRow
+          label={t('explore.earn.vault.lifetimeEarnings')}
+          value={
+            // Show '-' rather than coercing undefined to 0 (would read as a real zero).
+            <Text variant="body2" color="$statusSuccess">
+              {position.lifetimePnlUsd === undefined ? '-' : formatFiat(position.lifetimePnlUsd)}
+            </Text>
+          }
+        />
       </Flex>
 
       <Flex row gap="$spacing8">
@@ -51,7 +60,7 @@ export function BalanceTab({ position, onDeposit, onWithdraw }: BalanceTabProps)
 
 function BalanceRow({ label, value }: { label: string; value: React.ReactNode }): JSX.Element {
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
+    <Flex row alignItems="center" justifyContent="space-between" px="$spacing6">
       <Text variant="body2" color="$neutral1">
         {label}
       </Text>

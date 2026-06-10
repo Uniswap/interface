@@ -5,6 +5,7 @@ export type PortfolioTotalValue = {
   balanceUSD: number | undefined
   percentChange: number | undefined
   absoluteChangeUSD: number | undefined
+  count?: number
 }
 
 export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue>

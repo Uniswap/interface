@@ -14,17 +14,17 @@ const webConfigValues = {
   // #region API Keys
 
   /** Overrides base config — web requires this to be present (walletConnect.ts throws) */
-  walletConnectProjectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
+  walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID ?? process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
 
   // #endregion
 
   // #region Endpoint URLs
 
-  /** REACT_APP_AWS_API_ENDPOINT — Apollo GraphQL API */
-  awsApiEndpoint: process.env.REACT_APP_AWS_API_ENDPOINT,
+  /** AWS_API_ENDPOINT — Apollo GraphQL API */
+  awsApiEndpoint: process.env.AWS_API_ENDPOINT ?? process.env.REACT_APP_AWS_API_ENDPOINT,
 
-  /** REACT_APP_UNISWAP_GATEWAY_DNS — gateway v2 (routing, order status, UniswapX) */
-  uniswapGatewayDns: process.env.REACT_APP_UNISWAP_GATEWAY_DNS,
+  /** UNISWAP_GATEWAY_DNS — gateway v2 (routing, order status, UniswapX) */
+  uniswapGatewayDns: process.env.UNISWAP_GATEWAY_DNS ?? process.env.REACT_APP_UNISWAP_GATEWAY_DNS,
 
   /** ENTRY_GATEWAY_API_URL — BFF proxy target; falls back to staging URL */
   // TODO(apps-infra): Clarify difference between entryGatewayApiUrl (server-side) and entryGatewayApiUrlOverride (BaseConfig)
@@ -33,29 +33,29 @@ const webConfigValues = {
   /** WEBSOCKET_URL — WebSocket proxy target; falls back to staging URL */
   websocketUrl: process.env.WEBSOCKET_URL,
 
-  /** VITE_BACKEND_URL — override proxy target URL in dev */
-  viteBackendUrl: process.env.VITE_BACKEND_URL,
+  /** BACKEND_URL — override proxy target URL in dev */
+  viteBackendUrl: process.env.BACKEND_URL ?? process.env.VITE_BACKEND_URL,
 
-  /** REACT_APP_QUICKNODE_AVAX_RPC_URL */
-  quicknodeAvaxRpcUrl: process.env.REACT_APP_QUICKNODE_AVAX_RPC_URL,
+  /** QUICKNODE_AVAX_RPC_URL */
+  quicknodeAvaxRpcUrl: process.env.QUICKNODE_AVAX_RPC_URL ?? process.env.REACT_APP_QUICKNODE_AVAX_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_BASE_RPC_URL */
-  quicknodeBaseRpcUrl: process.env.REACT_APP_QUICKNODE_BASE_RPC_URL,
+  /** QUICKNODE_BASE_RPC_URL */
+  quicknodeBaseRpcUrl: process.env.QUICKNODE_BASE_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BASE_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_BLAST_RPC_URL */
-  quicknodeBlastRpcUrl: process.env.REACT_APP_QUICKNODE_BLAST_RPC_URL,
+  /** QUICKNODE_BLAST_RPC_URL */
+  quicknodeBlastRpcUrl: process.env.QUICKNODE_BLAST_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BLAST_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_BNB_RPC_URL */
-  quicknodeBnbRpcUrl: process.env.REACT_APP_QUICKNODE_BNB_RPC_URL,
+  /** QUICKNODE_BNB_RPC_URL */
+  quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BNB_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_CELO_RPC_URL */
-  quicknodeCeloRpcUrl: process.env.REACT_APP_QUICKNODE_CELO_RPC_URL,
+  /** QUICKNODE_CELO_RPC_URL */
+  quicknodeCeloRpcUrl: process.env.QUICKNODE_CELO_RPC_URL ?? process.env.REACT_APP_QUICKNODE_CELO_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_OP_RPC_URL */
-  quicknodeOpRpcUrl: process.env.REACT_APP_QUICKNODE_OP_RPC_URL,
+  /** QUICKNODE_OP_RPC_URL */
+  quicknodeOpRpcUrl: process.env.QUICKNODE_OP_RPC_URL ?? process.env.REACT_APP_QUICKNODE_OP_RPC_URL,
 
-  /** REACT_APP_QUICKNODE_POLYGON_RPC_URL */
-  quicknodePolygonRpcUrl: process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL,
+  /** QUICKNODE_POLYGON_RPC_URL */
+  quicknodePolygonRpcUrl: process.env.QUICKNODE_POLYGON_RPC_URL ?? process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL,
 
   // #endregion
 
@@ -80,8 +80,8 @@ const webConfigValues = {
 
   // #region Build Settings
 
-  /** REACT_APP_GIT_COMMIT_HASH — from `git rev-parse HEAD` */
-  gitCommitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
+  /** GIT_COMMIT_HASH — from `git rev-parse HEAD` */
+  gitCommitHash: process.env.GIT_COMMIT_HASH ?? process.env.REACT_APP_GIT_COMMIT_HASH,
 
   /** DEPLOY_TARGET — determines build output format */
   deployTarget: process.env.DEPLOY_TARGET,
@@ -89,14 +89,14 @@ const webConfigValues = {
   /** ENABLE_REACT_COMPILER — opt-in to React Compiler babel plugin */
   enableReactCompiler: process.env.ENABLE_REACT_COMPILER,
 
-  /** VITE_DISABLE_SOURCEMAP — skip sourcemap generation */
-  disableSourcemap: process.env.VITE_DISABLE_SOURCEMAP,
+  /** DISABLE_SOURCEMAP — skip sourcemap generation */
+  disableSourcemap: process.env.DISABLE_SOURCEMAP ?? process.env.VITE_DISABLE_SOURCEMAP,
 
-  /** VITE_DEBUG_PROXY — verbose entry-gateway proxy logging */
-  debugProxy: process.env.VITE_DEBUG_PROXY,
+  /** DEBUG_PROXY — verbose entry-gateway proxy logging */
+  debugProxy: process.env.DEBUG_PROXY ?? process.env.VITE_DEBUG_PROXY,
 
-  /** VITE_SKIP_CSP — skip CSP meta tag injection */
-  skipCsp: process.env.VITE_SKIP_CSP,
+  /** SKIP_CSP — skip CSP meta tag injection */
+  skipCsp: process.env.SKIP_CSP,
 
   /** CLOUDFLARE_ENV — wrangler environment name for CF deploys */
   cloudflareEnv: process.env.CLOUDFLARE_ENV,
@@ -105,14 +105,14 @@ const webConfigValues = {
 
   // #region Analytics & Monitoring
 
-  /** REACT_APP_ANALYTICS_ENABLED — gates remote reporting */
-  analyticsEnabled: process.env.REACT_APP_ANALYTICS_ENABLED,
+  /** ANALYTICS_ENABLED — gates remote reporting */
+  analyticsEnabled: process.env.ANALYTICS_ENABLED ?? process.env.REACT_APP_ANALYTICS_ENABLED,
 
-  /** REACT_APP_SENTRY_ENABLED — gates Sentry error reporting */
-  sentryEnabled: process.env.REACT_APP_SENTRY_ENABLED,
+  /** SENTRY_ENABLED — gates Sentry error reporting */
+  sentryEnabled: process.env.SENTRY_ENABLED ?? process.env.REACT_APP_SENTRY_ENABLED,
 
-  /** REACT_APP_SENTRY_TRACES_SAMPLE_RATE — 0–1 float */
-  sentryTracesSampleRate: process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE,
+  /** SENTRY_TRACES_SAMPLE_RATE — 0–1 float */
+  sentryTracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE ?? process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE,
 
   // #endregion
 }

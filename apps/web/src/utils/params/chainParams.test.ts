@@ -32,6 +32,10 @@ describe('getChainUrlParam', () => {
   it('should return url param for unichain sepolia', () => {
     expect(getChainUrlParam(UniverseChainId.UnichainSepolia)).toBe('unichain_sepolia')
   })
+
+  it('should return url param for megaeth', () => {
+    expect(getChainUrlParam(UniverseChainId.MegaETH)).toBe('megaeth')
+  })
 })
 
 describe('getChainIdFromBackendChain', () => {
@@ -43,5 +47,9 @@ describe('getChainIdFromBackendChain', () => {
     expect(getChainIdFromBackendChain(toGraphQLChain(UniverseChainId.UnichainSepolia))).toBe(
       UniverseChainId.UnichainSepolia,
     )
+  })
+
+  it('should return chain id for megaeth', () => {
+    expect(getChainIdFromBackendChain(toGraphQLChain(UniverseChainId.MegaETH))).toBe(UniverseChainId.MegaETH)
   })
 })

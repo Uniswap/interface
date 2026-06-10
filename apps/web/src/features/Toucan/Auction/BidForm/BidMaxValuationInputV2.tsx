@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
+import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { formatUnits, parseUnits } from '~/chains'
@@ -9,7 +10,6 @@ import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { priceToQ96WithDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { BidMaxValuationSlider } from '~/features/Toucan/Auction/BidForm/BidMaxValuationSlider'
 import type { MaxValuationFieldState } from '~/features/Toucan/Auction/hooks/useBidMaxValuationField'
-import { useFiatTokenConversion } from '~/features/Toucan/Auction/hooks/useFiatTokenConversion'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { computeFdvBidTokenRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { ValuationInputType } from '~/features/Toucan/Shared/ValuationSlider'
@@ -61,7 +61,9 @@ export function BidMaxValuationInputV2({
   const bidCurrency = currencyAmount?.currency ?? currencyInfo?.currency
   const bidTokenDecimals = bidCurrency?.decimals
 
-  const { fiatToBidToken, bidTokenToFiat } = useFiatTokenConversion({ bidCurrency })
+  const { fiatToToken: fiatToBidToken, tokenToFiat: bidTokenToFiat } = useFiatTokenConversion({
+    currency: bidCurrency,
+  })
 
   const [localFdvInput, setLocalFdvInput] = useState<string | null>(null)
 

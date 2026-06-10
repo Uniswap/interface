@@ -1,7 +1,7 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, FlexProps, Text } from 'ui/src'
+import { Flex, FlexProps, styled, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
@@ -11,8 +11,10 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { TokenQueryData } from '~/appGraphql/data/Token'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
+import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 
 const STATS_GAP = '$gap20'
@@ -46,6 +48,41 @@ const TokenStatsSection = ({ children }: { children: ReactNode }) => (
     {children}
   </Flex>
 )
+
+const StatsLoadingContainer = styled(Flex, {
+  row: true,
+  flexWrap: 'wrap',
+  width: '100%',
+})
+
+function LoadingStatTile() {
+  return (
+    <StatWrapper>
+      <LoadingBubble height={16} width={80} containerProps={{ mb: '$spacing4' }} />
+      <LoadingBubble height={32} width={116} skeletonProps={{ borderRadius: '$rounded8' }} />
+    </StatWrapper>
+  )
+}
+
+// Loading state for the stats section, reused by the full-page TDP skeleton so the placeholder is
+// identical in both. It lives here next to StatWrapper/StatsWrapper (which it reuses for dimensional
+// parity) and is built on the cycle-safe LoadingBubble primitive, so the section owns its own loading
+// UI without a Skeleton <-> StatsSection import cycle.
+export function LoadingStats() {
+  return (
+    <StatsWrapper data-testid="token-details-stats-loading">
+      <LoadingBubble height={32} width={120} skeletonProps={{ borderRadius: '$rounded8' }} />
+      <StatsLoadingContainer>
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+      </StatsLoadingContainer>
+    </StatsWrapper>
+  )
+}
 
 type NumericStat = number | undefined | null
 
@@ -89,9 +126,11 @@ function Stat({
 
 type StatsSectionProps = {
   tokenQueryData: TokenQueryData | undefined
+  /** The heavy market query is still in flight. Renders the loading skeleton instead of the empty state. */
+  isLoading?: boolean
 }
 
-export function StatsSection({ tokenQueryData }: StatsSectionProps) {
+export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const effectiveCurrency = useTDPEffectiveCurrency()
@@ -100,16 +139,19 @@ export function StatsSection({ tokenQueryData }: StatsSectionProps) {
     useTDPStatsMarketSource(tokenQueryData)
 
   const currencyIdValue = useMemo(() => currencyId(effectiveCurrency), [effectiveCurrency])
-  const spotPrice = useTokenSpotPrice(currencyIdValue)
+  const preferProjectMarketData = useTDPPreferProjectMarketData()
+  const spotPrice = useTokenSpotPrice(currencyIdValue, { preferProjectMarketData })
 
   const stats = useTokenMarketStats(currencyIdValue, {
     aggregatedData: marketStatsInput,
     currentPriceOverride: spotPrice,
+    preferProjectMarketData,
   })
 
-  const volume =
-    (showAggregatedStats ? tokenQueryData?.market?.volume24H?.value : filteredDeploymentMarket?.volume24H?.value) ??
-    stats.volume
+  const tokenMarketVolume = showAggregatedStats
+    ? tokenQueryData?.market?.volume24H?.value
+    : filteredDeploymentMarket?.volume24H?.value
+  const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
   const tvl = showAggregatedStats
     ? tokenQueryData?.market?.totalValueLocked?.value
     : filteredDeploymentMarket?.totalValueLocked?.value
@@ -172,6 +214,9 @@ export function StatsSection({ tokenQueryData }: StatsSectionProps) {
         </TokenStatsSection>
       </StatsWrapper>
     )
+  }
+  if (isLoading) {
+    return <LoadingStats />
   }
   return (
     <Text color="$neutral3" pt="$spacing40" data-cy="token-details-no-stats-data">

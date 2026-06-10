@@ -12,10 +12,13 @@ import { fireEvent, render, screen } from '~/test-utils/render'
 const ACCOUNT = '0x0000000000000000000000000000000000000001'
 const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 const USDC_VAULT_ADDRESS = '0x1111111111111111111111111111111111111111'
 const DAI_VAULT_ADDRESS = '0x2222222222222222222222222222222222222222'
+const WETH_VAULT_ADDRESS = '0x3333333333333333333333333333333333333333'
 
 const mockUseQuery = vi.hoisted(() => vi.fn())
+const mockUseQueries = vi.hoisted(() => vi.fn())
 
 vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-query')>()
@@ -23,35 +26,56 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
   return {
     ...actual,
     useQuery: mockUseQuery,
+    useQueries: mockUseQueries,
   }
 })
 
 vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
   useLocalizationContext: () => ({
     convertFiatAmountFormatted: (value: number | string) =>
-      `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      `$${Number(value).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`,
     formatCurrencyAmount: ({ value }: { value: { toExact: () => string } }) =>
-      Number(value.toExact()).toLocaleString('en-US', { maximumFractionDigits: 6 }),
+      Number(value.toExact()).toLocaleString('en-US', {
+        maximumFractionDigits: 6,
+      }),
     formatPercent: (value: number) => `${value.toFixed(2)}%`,
   }),
 }))
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', async () => {
   const { Token } = await import('@uniswap/sdk-core')
-  const { buildCurrencyId } = await import('uniswap/src/utils/currencyId')
+  const { nativeOnChain } = await import('uniswap/src/constants/tokens')
+  const { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyIdWithThrow } =
+    await import('uniswap/src/utils/currencyId')
   const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
   const usdcAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+  const wethAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
   const daiCurrencyId = buildCurrencyId(1, daiAddress)
+  const ethCurrencyId = buildNativeCurrencyId(1)
+  const wethCurrencyId = buildWrappedNativeCurrencyIdWithThrow(1)
 
   return {
     useCurrencyInfo: (currencyId: string | undefined) => {
+      if (currencyId === ethCurrencyId) {
+        return {
+          currency: nativeOnChain(1),
+          currencyId,
+          logoUrl: undefined,
+        }
+      }
+
       const isDai = currencyId === daiCurrencyId
-      const address = isDai ? daiAddress : usdcAddress
-      const symbol = isDai ? 'DAI' : 'USDC'
-      const decimals = isDai ? 18 : 6
+      const isWeth = currencyId === wethCurrencyId
+      const address = isDai ? daiAddress : isWeth ? wethAddress : usdcAddress
+      const symbol = isDai ? 'DAI' : isWeth ? 'WETH' : 'USDC'
+      const name = isDai ? 'DAI' : isWeth ? 'Wrapped Ether' : 'USDC'
+      const decimals = isDai || isWeth ? 18 : 6
 
       return {
-        currency: new Token(1, address, decimals, symbol, symbol),
+        currency: new Token(1, address, decimals, symbol, name),
         currencyId,
         logoUrl: undefined,
       }
@@ -111,11 +135,13 @@ function mockEarnQueries({
   vaults,
   positionsLoading = false,
   vaultsLoading = false,
+  lifetimePnlByVaultAddress = {},
 }: {
   positions: DataApiEarnPosition[]
   vaults: DataApiEarnVault[]
   positionsLoading?: boolean
   vaultsLoading?: boolean
+  lifetimePnlByVaultAddress?: Record<string, number>
 }): void {
   mockUseQuery.mockImplementation(
     ({ queryKey, select }: { queryKey?: readonly unknown[]; select?: (data: unknown) => unknown }) => {
@@ -137,8 +163,47 @@ function mockEarnQueries({
           }
         }
         default:
-          return { data: undefined, isError: false, isLoading: false, isSuccess: false }
+          return {
+            data: undefined,
+            isError: false,
+            isLoading: false,
+            isSuccess: false,
+          }
       }
+    },
+  )
+
+  // Match the hook's shape: per-query `select` strips to lifetimePnlUsd, then `combine` aggregates.
+  mockUseQueries.mockImplementation(
+    ({
+      queries,
+      combine,
+    }: {
+      queries: {
+        queryKey?: readonly unknown[]
+        select?: (data: unknown) => unknown
+      }[]
+      combine?: (
+        results: {
+          data: unknown
+          isError: boolean
+          isLoading: boolean
+          isSuccess: boolean
+        }[],
+      ) => unknown
+    }) => {
+      const results = queries.map((query) => {
+        const params = query.queryKey?.[2] as { vaultAddress?: string } | undefined
+        const lifetimePnlUsd = params?.vaultAddress ? lifetimePnlByVaultAddress[params.vaultAddress] : undefined
+        const data = { position: { lifetimePnlUsd } }
+        return {
+          data: query.select ? query.select(data) : data,
+          isError: false,
+          isLoading: false,
+          isSuccess: true,
+        }
+      })
+      return combine ? combine(results) : results
     },
   )
 }
@@ -155,10 +220,17 @@ const DAI_VAULT = createVault({
   symbol: 'DAI',
   vaultAddress: DAI_VAULT_ADDRESS,
 })
+const WETH_VAULT = createVault({
+  address: WETH_ADDRESS,
+  decimals: 18,
+  symbol: 'WETH',
+  vaultAddress: WETH_VAULT_ADDRESS,
+})
 
 describe('PortfolioEarnSection', () => {
   beforeEach(() => {
     mockUseQuery.mockReset()
+    mockUseQueries.mockReset()
   })
 
   it('renders aggregate deposits and opens the vault overview when a row with a position is pressed', () => {
@@ -189,8 +261,31 @@ describe('PortfolioEarnSection', () => {
     expect(screen.getByTestId('earn-vault-modal')).toHaveAttribute('data-initial-view', 'vault')
     expect(screen.getByTestId('earn-vault-modal')).toHaveAttribute(
       'data-vault-id',
-      getEarnVaultId({ chainId: UniverseChainId.Mainnet, vaultAddress: USDC_VAULT_ADDRESS }),
+      getEarnVaultId({
+        chainId: UniverseChainId.Mainnet,
+        vaultAddress: USDC_VAULT_ADDRESS,
+      }),
     )
+  })
+
+  it('renders wrapped-native vault positions as ETH', () => {
+    mockEarnQueries({
+      vaults: [WETH_VAULT],
+      positions: [
+        new DataApiEarnPosition({
+          vault: WETH_VAULT,
+          sharesRaw: '1000000000000000000',
+          currentAssetsRaw: '1000000000000000000',
+          currentAssetsUsd: 3000,
+        }),
+      ],
+    })
+
+    render(<PortfolioEarnSection account={ACCOUNT} />)
+
+    expect(screen.getAllByText('ETH').length).toBeGreaterThan(0)
+    expect(screen.getByText('1 ETH')).toBeInTheDocument()
+    expect(screen.queryByText('WETH')).toBeNull()
   })
 
   it('renders nothing when there are no vaults and queries are settled', () => {
@@ -202,7 +297,12 @@ describe('PortfolioEarnSection', () => {
   })
 
   it('renders skeleton rows while either query is loading', () => {
-    mockEarnQueries({ vaults: [], positions: [], vaultsLoading: true, positionsLoading: true })
+    mockEarnQueries({
+      vaults: [],
+      positions: [],
+      vaultsLoading: true,
+      positionsLoading: true,
+    })
 
     render(<PortfolioEarnSection account={ACCOUNT} />)
 
@@ -229,8 +329,14 @@ describe('PortfolioEarnSection', () => {
       .getAllByTestId(new RegExp(`^${TestID.PortfolioOverviewEarnVaultRowPrefix}`))
       .map((node) => node.getAttribute('data-testid'))
     expect(orderedIds).toEqual([
-      `${TestID.PortfolioOverviewEarnVaultRowPrefix}${getEarnVaultId({ chainId: UniverseChainId.Mainnet, vaultAddress: DAI_VAULT_ADDRESS })}`,
-      `${TestID.PortfolioOverviewEarnVaultRowPrefix}${getEarnVaultId({ chainId: UniverseChainId.Mainnet, vaultAddress: USDC_VAULT_ADDRESS })}`,
+      `${TestID.PortfolioOverviewEarnVaultRowPrefix}${getEarnVaultId({
+        chainId: UniverseChainId.Mainnet,
+        vaultAddress: DAI_VAULT_ADDRESS,
+      })}`,
+      `${TestID.PortfolioOverviewEarnVaultRowPrefix}${getEarnVaultId({
+        chainId: UniverseChainId.Mainnet,
+        vaultAddress: USDC_VAULT_ADDRESS,
+      })}`,
     ])
   })
 
@@ -245,5 +351,33 @@ describe('PortfolioEarnSection', () => {
 
     expect(screen.getByTestId('earn-vault-modal')).toHaveAttribute('data-open', 'true')
     expect(screen.getByTestId('earn-vault-modal')).toHaveAttribute('data-initial-view', 'deposit-amount')
+  })
+
+  it('sums lifetime earnings from per-vault GetEarnPosition responses', () => {
+    mockEarnQueries({
+      vaults: [DAI_VAULT, USDC_VAULT],
+      positions: [
+        new DataApiEarnPosition({
+          vault: USDC_VAULT,
+          sharesRaw: '1000000',
+          currentAssetsRaw: '1000000000',
+          currentAssetsUsd: 1000,
+        }),
+        new DataApiEarnPosition({
+          vault: DAI_VAULT,
+          sharesRaw: '500000000000000000',
+          currentAssetsRaw: '500000000000000000',
+          currentAssetsUsd: 250,
+        }),
+      ],
+      lifetimePnlByVaultAddress: {
+        [USDC_VAULT_ADDRESS]: 12.34,
+        [DAI_VAULT_ADDRESS]: 5.66,
+      },
+    })
+
+    render(<PortfolioEarnSection account={ACCOUNT} />)
+
+    expect(screen.getByTestId(TestID.PortfolioOverviewEarnLifetimeEarnings)).toHaveTextContent('$18.00')
   })
 })

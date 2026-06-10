@@ -2,7 +2,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/gql/assets/constants'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { DEMO_WALLET_ADDRESS, usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
 
@@ -18,7 +18,6 @@ vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 
-const DEMO_WALLET_ADDRESS = '0x8796207d877194d97a2c360c041f13887896FC79'
 const MOCK_SVM_ADDRESS = '7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV'
 
 describe('usePortfolioAddresses', () => {

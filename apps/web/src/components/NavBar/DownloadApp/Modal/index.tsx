@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -10,6 +11,7 @@ import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseU
 import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
+import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useIOSBodyScrollLock } from '~/hooks/useIOSBodyScrollLock'
 import { useModalState } from '~/hooks/useModalState'
 import { useAppSelector } from '~/state/hooks'
@@ -34,6 +36,9 @@ export function GetTheAppModal() {
 
   const [page, setPage] = useAtom(downloadAppModalPageAtom)
   const { isOpen, closeModal } = useModalState(ModalName.GetTheApp)
+  // Keep this fixed bottom sheet on-screen when the Android soft keyboard opens (unitag step). No-op on
+  // iOS/desktop; on Android resizes-content also drives useIOSBodyScrollLock's keyboardHeight to ~0.
+  useAndroidKeyboardViewportFix(isOpen)
 
   // Read `initialPage` through a ref inside the 500ms timeout so the post-close reset uses
   // the recomputed value (after Redux clears `openModal` and `showMobileDownload` flips
@@ -55,7 +60,7 @@ export function GetTheAppModal() {
 
   const media = useMedia()
   const isSheet = media.md
-  const isDismissible = !isEmbeddedWalletEnabled || showMobileDownload
+  const isDismissible = !(isEmbeddedWalletEnabled && !isMobileWeb) || showMobileDownload
 
   const keyboardHeight = useIOSBodyScrollLock(isOpen)
 
@@ -89,7 +94,7 @@ export function GetTheAppModal() {
         isOpen={isOpen}
         onClose={isDismissible ? close : undefined}
         maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
-        p={0}
+        p="$spacing24"
       >
         <Flex pb={keyboardHeight ? `${keyboardHeight}px` : undefined}>{content}</Flex>
       </WebBottomSheet>

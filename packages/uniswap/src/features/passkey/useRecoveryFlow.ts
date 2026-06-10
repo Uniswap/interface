@@ -19,6 +19,7 @@ export enum RecoveryStep {
   EnterPin = 'ENTER_PIN',
   AddPasskey = 'ADD_PASSKEY',
   Recovering = 'RECOVERING',
+  NoWalletFound = 'NO_WALLET_FOUND',
 }
 
 const emailSchema = z.email()
@@ -105,7 +106,8 @@ export function useRecoveryFlow({
       const authMethodId = hashAuthMethodId(providerEmail)
       const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({ authMethodId })
       if (!recoveryConfig.encryptedKeyId) {
-        throw new Error('No recovery data found for this account')
+        setStep(RecoveryStep.NoWalletFound)
+        return
       }
       if (isActive && !isActive()) {
         return
@@ -211,7 +213,8 @@ export function useRecoveryFlow({
         authMethodId: hashAuthMethodId(effectiveEmail),
       })
       if (!recoveryConfig.encryptedKeyId) {
-        throw new Error('No recovery data found for this account')
+        setStep(RecoveryStep.NoWalletFound)
+        return
       }
       setEncryptedKeyId(recoveryConfig.encryptedKeyId)
       if (recoveryConfig.walletAddress) {

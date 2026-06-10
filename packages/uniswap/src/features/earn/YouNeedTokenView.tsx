@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
@@ -33,36 +34,38 @@ export function YouNeedTokenView({
 
   return (
     <Flex gap="$spacing24">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea hoverable onPress={onBack}>
-          <BackArrow color="$neutral2" size="$icon.24" />
-        </TouchableArea>
-        <Flex row alignItems="center" gap="$spacing12">
-          <TouchableArea
-            row
-            alignItems="center"
-            gap="$spacing4"
-            borderWidth="$spacing1"
-            borderColor="$surface3"
-            borderRadius="$rounded12"
-            backgroundColor="$surface1"
-            px="$spacing8"
-            py="$spacing4"
-            hoverStyle={{ backgroundColor: '$surface2' }}
-            onPress={() => {
-              // TODO(CONS-1781): wire Help button to the correct support article.
-            }}
-          >
-            <MessageQuestion color="$neutral1" size="$icon.16" />
-            <Text variant="buttonLabel4" color="$neutral1">
-              {t('common.help')}
-            </Text>
+      {!isMobileApp && (
+        <Flex row alignItems="center" justifyContent="space-between">
+          <TouchableArea hoverable onPress={onBack}>
+            <BackArrow color="$neutral2" size="$icon.24" />
           </TouchableArea>
-          <ModalCloseIcon onClose={onClose} />
+          <Flex row alignItems="center" gap="$spacing12">
+            <TouchableArea
+              row
+              alignItems="center"
+              gap="$spacing4"
+              borderWidth="$spacing1"
+              borderColor="$surface3"
+              borderRadius="$rounded12"
+              backgroundColor="$surface1"
+              px="$spacing8"
+              py="$spacing4"
+              hoverStyle={{ backgroundColor: '$surface2' }}
+              onPress={() => {
+                // TODO(CONS-1781): wire Help button to the correct support article.
+              }}
+            >
+              <MessageQuestion color="$neutral1" size="$icon.16" />
+              <Text variant="buttonLabel4" color="$neutral1">
+                {t('common.help')}
+              </Text>
+            </TouchableArea>
+            <ModalCloseIcon onClose={onClose} />
+          </Flex>
         </Flex>
-      </Flex>
+      )}
 
-      <Flex alignItems="center" gap="$spacing12" pt="$spacing4">
+      <Flex alignItems="center" gap="$spacing12" pt={isMobileApp ? '$spacing16' : '$spacing4'}>
         <TokenLogo
           hideNetworkLogo
           url={currencyInfo?.logoUrl}

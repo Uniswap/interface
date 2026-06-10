@@ -101,8 +101,8 @@ function TokenLinkButton({
 export function TokenDescription() {
   const { t } = useTranslation()
   const trace = useTrace()
-  const { tokenQuery, multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
-    tokenQuery: s.tokenQuery,
+  const { tokenProjectQuery, multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
+    tokenProjectQuery: s.tokenProjectQuery,
     multiChainMap: s.multiChainMap,
     selectedMultichainChainId: s.selectedMultichainChainId,
   }))
@@ -115,7 +115,9 @@ export function TokenDescription() {
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
 
-  const { description, homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
+  // Read About metadata from the lightweight project query so this section paints with the header,
+  // instead of waiting on the heavy market `tokenQuery`.
+  const { description, homepageUrl, twitterName } = tokenProjectQuery.data?.token?.project ?? {}
   const explorerUrl = getExplorerLink({
     chainId: effectiveCurrency.chainId,
     data: displayAddress,

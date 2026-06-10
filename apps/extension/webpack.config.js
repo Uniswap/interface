@@ -10,6 +10,17 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
+const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
+
+// New unified config: read a single apps/extension/.env.new file. Other env sources are
+// ignored. Fail fast so a missing or unreadable file aborts the build instead of
+// silently producing a bundle with empty env values.
+if (USE_NEW_CONFIGS) {
+  const newEnvPath = path.resolve(__dirname, '.env.new')
+  if (!fs.existsSync(newEnvPath)) {
+    throw new Error(`USE_NEW_CONFIGS=true but ${newEnvPath} does not exist`)
+  }
+}
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
@@ -232,6 +243,9 @@ module.exports = (env) => {
       path: path.resolve(__dirname, dir),
       clean: true,
       publicPath: '',
+      // Required: `experiments.outputModule: true` flips webpack's default IIFE wrapper off, leaking
+      // top-level `var t, e; function r;` into the page global from MAIN-world content scripts.
+      iife: true,
       // Web Workers in this extension are constructed with `new Worker(..., { type: 'module' })`
       // (see `src/workers/hashcashWorker.ts`). `workerChunkLoading: 'import'` makes webpack
       // emit native `import()` for any sub-chunks instead of the classic `importScripts(<url>)`
@@ -396,10 +410,18 @@ module.exports = (env) => {
     },
     devtool: 'source-map',
     plugins: [
-      new DotenvPlugin({
-        path: '../../.env',
-        defaults: true,
-      }),
+      new DotenvPlugin(
+        USE_NEW_CONFIGS
+          ? {
+              // When USE_NEW_CONFIGS is on, read only apps/extension/.env.new.
+              path: '.env.new',
+              defaults: false,
+            }
+          : {
+              path: '../../.env',
+              defaults: true,
+            },
+      ),
       new DefinePlugin({
         __DEV__: NODE_ENV === 'development' ? 'true' : 'false',
         'process.env.IS_STATIC': '""',

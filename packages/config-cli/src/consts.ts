@@ -11,5 +11,5 @@ export const OKTA_REVOKE_URL = `${OKTA_ISSUER}/oauth2/v1/revoke`
 
 // TODO: switch each app's destination to its real env file (e.g. apps/web/.env.local,
 // apps/mobile/.env.defaults.local) once the Config Service migration is complete.
-// Using .env.tmp during the migration keeps the old values intact for fallback.
-export const ENV_FILENAME = '.env.tmp'
+// Using .env.new during the migration keeps the old values intact for fallback.
+export const ENV_FILENAME = '.env.new'

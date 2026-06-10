@@ -24,6 +24,7 @@ export enum UniverseChainId {
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
   XLayer = UniswapSDKChainId.XLAYER,
   Linea = UniswapSDKChainId.LINEA,
+  MegaETH = UniswapSDKChainId.MEGAETH,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
   Solana = 501000101,

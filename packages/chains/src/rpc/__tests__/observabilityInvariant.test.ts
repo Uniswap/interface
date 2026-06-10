@@ -270,3 +270,77 @@ describe('observability invariant — error message cardinality is bounded', () 
     expect(errorCtx.error.message).not.toContain('id":99')
   })
 })
+
+// ─────────────────────────────────────────────────────────────────────────
+// Status + JSON-RPC code must reach the observer as structured fields on every
+// path — that's what makes "401 bot-block vs 5xx outage vs JSON-RPC error"
+// answerable in Datadog instead of buried in a free-text message.
+// ─────────────────────────────────────────────────────────────────────────
+describe('observability invariant — structured error fields (httpStatus + rpcErrorCode)', () => {
+  test('viem: non-OK HTTP surfaces ctx.httpStatus (401 — not retried by viem)', async () => {
+    ;(globalThis.fetch as Mock).mockReset()
+    ;(globalThis.fetch as Mock).mockResolvedValue(
+      new Response(JSON.stringify({ message: 'unauthorized' }), {
+        status: 401,
+        headers: { 'content-type': 'application/json' },
+      }),
+    )
+
+    const factory = buildViemFactory({
+      rpcUrl: 'https://gateway/rpc/1',
+      isUniRpc: true,
+      headers: {},
+      credentials: 'include',
+    })
+    const client = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
+
+    await expect(client.getBlockNumber()).rejects.toThrow()
+
+    const ctxs = observer.onError.mock.calls.map((call) => call[0] as { httpStatus?: number })
+    expect(ctxs.some((c) => c.httpStatus === 401)).toBe(true)
+  })
+
+  test('ethers Web3Provider: non-OK HTTP surfaces ctx.httpStatus', async () => {
+    ;(globalThis.fetch as Mock).mockResolvedValueOnce(
+      new Response(JSON.stringify({ message: 'Forbidden' }), {
+        status: 403,
+        headers: { 'content-type': 'application/json' },
+      }),
+    )
+
+    const factory = buildEthersFactory({
+      rpcUrl: 'https://gateway/rpc/1',
+      isUniRpc: true,
+      headers: {},
+      getRequestHeaders: async () => ({}),
+    })
+    const provider = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
+
+    await expect(provider.send('eth_blockNumber', [])).rejects.toThrow()
+
+    const ctx = observer.onError.mock.calls[0]?.[0] as { httpStatus?: number }
+    expect(ctx.httpStatus).toBe(403)
+  })
+
+  test('ethers Web3Provider: JSON-RPC error surfaces ctx.rpcErrorCode', async () => {
+    ;(globalThis.fetch as Mock).mockResolvedValueOnce(
+      new Response(JSON.stringify({ jsonrpc: '2.0', id: 1, error: { code: -32000, message: 'execution reverted' } }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }),
+    )
+
+    const factory = buildEthersFactory({
+      rpcUrl: 'https://gateway/rpc/1',
+      isUniRpc: true,
+      headers: {},
+      getRequestHeaders: async () => ({}),
+    })
+    const provider = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
+
+    await expect(provider.send('eth_blockNumber', [])).rejects.toThrow('execution reverted')
+
+    const ctx = observer.onError.mock.calls[0]?.[0] as { rpcErrorCode?: number }
+    expect(ctx.rpcErrorCode).toBe(-32000)
+  })
+})

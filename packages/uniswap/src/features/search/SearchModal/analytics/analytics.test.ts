@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import {
+  MultichainTokenOption,
   OnchainItemListOptionType,
   TokenOption,
   UnitagOption,
@@ -53,6 +54,48 @@ const MOCK_TOKEN2: TokenOption = {
   },
   quantity: null,
   balanceUSD: undefined,
+}
+
+const MOCK_MULTICHAIN_TOKEN: MultichainTokenOption = {
+  type: OnchainItemListOptionType.MultichainToken,
+  multichainResult: {
+    id: 'usdc',
+    name: 'USD Coin',
+    symbol: 'USDC',
+    logoUrl: 'https://example.com/usdc.png',
+    tokens: [
+      {
+        currency: {
+          chainId: 1,
+          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+          name: 'USD Coin',
+          decimals: 6,
+        } as Token,
+        currencyId: '1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        logoUrl: 'https://example.com/usdc.png',
+      },
+      {
+        currency: {
+          chainId: 130,
+          address: '0x345',
+          name: 'USD Coin',
+          decimals: 6,
+        } as Token,
+        currencyId: '130_0x345',
+        logoUrl: 'https://example.com/usdc.png',
+      },
+    ],
+  },
+  primaryCurrencyInfo: {
+    currency: {
+      chainId: 1,
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      name: 'USD Coin',
+      decimals: 6,
+    } as Token,
+    currencyId: '1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    logoUrl: 'https://example.com/usdc.png',
+  },
 }
 
 describe('sendSearchOptionItemClickedAnalytics', () => {
@@ -130,10 +173,51 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       query: 'test',
       chainId: 1,
       suggestion_type: 'token-suggestion',
+      token_type: 'token',
       total_suggestions: 2,
       query_text: 'test',
       selected_search_result_name: 'Test Token 1',
       selected_search_result_address: '0x123',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    })
+  })
+
+  it('sends multichain token analytics event on web', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<MultichainTokenOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_MULTICHAIN_TOKEN],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'usdc',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_MULTICHAIN_TOKEN,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 1,
+      query: 'usdc',
+      chainId: 1,
+      suggestion_type: 'token-suggestion',
+      token_type: 'multichain_token',
+      total_suggestions: 1,
+      query_text: 'usdc',
+      selected_search_result_name: 'USD Coin',
+      selected_search_result_address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       searchChainFilter: null,
       searchTabFilter: SearchTab.Tokens,
     })

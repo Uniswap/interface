@@ -87,6 +87,11 @@ export function withUTCTimestamp<T extends { timestamp: number }>(entry: T): T &
   return { ...entry, time: entry.timestamp as UTCTimestamp }
 }
 
+/** Current time as lightweight-charts UTCTimestamp (seconds since epoch). */
+export function getCurrentUTCTimestamp(): UTCTimestamp {
+  return (Date.now() / 1000) as UTCTimestamp
+}
+
 /**
  * Custom time formatter used to customize tick mark labels on the time scale.
  * Follows the function signature of lightweight-charts' TickMarkFormatter.

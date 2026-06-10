@@ -72,23 +72,29 @@ function TokenInfo({
   const { formatCurrencyAmount } = useLocalizationContext()
   const { decimalSeparator } = useAppFiatCurrencyInfo()
 
+  const displayAmount = formattedAmount
+    ? replaceSeparators({
+        value: formattedAmount,
+        decimalSeparator: '.',
+        decimalOverride: decimalSeparator,
+      })
+    : formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
+
   return (
     currencyAmount &&
     currencyAmount.greaterThan(0) && (
-      <Flex row justifyContent="space-between">
-        <Flex gap="$gap4">
-          <Flex row gap="$gap8">
-            <Text variant="body1">
-              {formattedAmount
-                ? replaceSeparators({
-                    value: formattedAmount,
-                    decimalSeparator: '.',
-                    decimalOverride: decimalSeparator,
-                  })
-                : formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })}
-            </Text>
-            <Text variant="body1">{currencyAmount.currency.symbol}</Text>
-          </Flex>
+      <Flex row justifyContent="space-between" gap="$gap8">
+        <Flex gap="$gap4" flex={1} minWidth={0}>
+          <MouseoverTooltip text={`${displayAmount} ${currencyAmount.currency.symbol}`} placement="top">
+            <Flex row gap="$gap8" minWidth={0}>
+              <Text variant="body1" numberOfLines={1} ellipsizeMode="tail">
+                {displayAmount}
+              </Text>
+              <Text variant="body1" flexShrink={0}>
+                {currencyAmount.currency.symbol}
+              </Text>
+            </Flex>
+          </MouseoverTooltip>
           <Text variant="body3" color="$neutral2">
             {formatCurrencyAmount({ value: currencyUSDAmount, type: NumberType.FiatTokenPrice })}
           </Text>

@@ -121,7 +121,7 @@ export type PendingTransactionTimeoutProperties = {
 export type AssetDetailsBaseProperties = {
   name?: string
   domain?: string
-  address: string
+  address?: string
   chain?: number
 }
 
@@ -359,6 +359,9 @@ type InterfaceSearchResultSelectionProperties = {
   protocol_version?: string
   fee_tier?: number
   hook_address?: string
+
+  // Token specific properties
+  token_type?: 'token' | 'multichain_token'
 } & ITraceContext
 
 type WrapProperties = {
@@ -896,7 +899,7 @@ export type UniverseEventProperties = {
   }
   [MobileEventName.ExploreSearchResultClicked]: SearchResultContextProperties &
     AssetDetailsBaseProperties & {
-      type: 'collection' | 'token' | 'address'
+      type: 'collection' | 'token' | 'address' | 'multichain_token'
     }
   [MobileEventName.ExploreTokenItemSelected]: AssetDetailsBaseProperties & {
     position: number
@@ -1186,6 +1189,10 @@ export type UniverseEventProperties = {
     | {
         type: 'portfolio'
         wallet_address?: string
+        tokens: boolean
+        tokens_text?: string
+        pools: boolean
+        pools_text?: string
         performance: boolean
         performance_text?: string
         something_else: boolean

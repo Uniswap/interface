@@ -63,9 +63,9 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const isMobileScreen = media.md
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
-  const { currency, tokenQuery, multiChainMap } = useTDPStore((s) => ({
+  const { currency, tokenProjectQuery, multiChainMap } = useTDPStore((s) => ({
     currency: s.currency!,
-    tokenQuery: s.tokenQuery,
+    tokenProjectQuery: s.tokenProjectQuery,
     multiChainMap: s.multiChainMap,
   }))
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
@@ -79,7 +79,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
   const isNative = effectiveCurrency.isNative
-  const tokenLogoUrl = tokenQuery.data?.token?.project?.logoUrl
+  const tokenLogoUrl = tokenProjectQuery.data?.token?.project?.logoUrl
   const tokenLogoSize = getHeaderLogoSize({ isCompact, media })
 
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
@@ -88,7 +88,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     void setModalProps({
       source: 'token-details',
       currency,
-      isMarkedSpam: tokenQuery.data?.token?.project?.isSpam,
+      isMarkedSpam: tokenProjectQuery.data?.token?.project?.isSpam,
       isMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset,
       shouldReportMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined,
     })
@@ -111,14 +111,14 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const { desktopHeaderActions, mobileHeaderActionSections } = useTokenDetailsHeaderActions({
     currency: effectiveCurrency,
-    project: tokenQuery.data?.token?.project,
+    project: tokenProjectQuery.data?.token?.project,
     openReportTokenModal,
     openReportDataIssueModal,
     isMobileScreen,
   })
 
-  const tokenSymbol = tokenQuery.data?.token?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
-  const tokenName = tokenQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  const tokenSymbol = tokenProjectQuery.data?.token?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
+  const tokenName = tokenProjectQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
   const showAddressCopy = getShowAddressCopy({ multichainTokenUxEnabled, isNative, isMultiChainAsset, selectedChainId })
 
   const onBreadcrumbAddressCopied = useEvent(() => {
@@ -216,7 +216,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
       <ReportTokenDataModal
         currency={currency}
-        isMarkedSpam={tokenQuery.data?.token?.project?.isSpam}
+        isMarkedSpam={tokenProjectQuery.data?.token?.project?.isSpam}
         shouldReportMultichainAsset={multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined}
         onReportSuccess={onReportSuccess}
         isOpen={isReportDataIssueModalOpen}

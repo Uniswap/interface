@@ -7,6 +7,7 @@ import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
+import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
 import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -61,7 +62,15 @@ export function PortfolioBalanceHeader({
   const latestChartData = series.length ? series[series.length - 1] : undefined
   const displayedChartData = hoveredData ?? latestChartData
   const zeroPortfolioBalance = isPortfolioZero ? 0 : undefined
-  const balance = hoveredData?.value ?? portfolioTotalBalanceUSD ?? latestChartData?.close ?? zeroPortfolioBalance
+  // `undefined` means server omitted the field (unavailable); `0` is a valid zero.
+  const poolsUnavailable = !!poolsValue && poolsValue.balanceUSD === undefined
+  const fallbackBalanceUSD = poolsUnavailable ? tokensValue?.balanceUSD : undefined
+  const balance =
+    hoveredData?.value ??
+    fallbackBalanceUSD ??
+    portfolioTotalBalanceUSD ??
+    latestChartData?.close ??
+    zeroPortfolioBalance
   const isHovering = !!hoveredData
   const showDelta = !isLoading && !isPortfolioZero && series.length >= 2 && !!displayedChartData
   const shouldTreatAsStablecoin = useMemo(() => {
@@ -71,22 +80,25 @@ export function PortfolioBalanceHeader({
 
   return (
     <Flex gap="$gap8" pb="$spacing4" testID={TestID.PortfolioBalanceHeader}>
-      <BalanceBreakdownPopover tokens={tokensValue} pools={poolsValue}>
-        <Coachmark
-          open={shouldShowCoachmark}
-          onDismiss={dismissCoachmark}
-          placement={coachmarkPlacement}
-          offset={coachmarkOffset}
-          // Intentionally low so the pill scrolls behind the sticky page header.
-          zIndex={zIndexes.default}
-          text={t('portfolio.poolsBalance.coachmark.body')}
-          testID={TestID.PoolsBalanceCoachmark}
-        >
-          <Text variant="heading2" color={isPortfolioZero ? '$neutral3' : '$neutral1'}>
-            {convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
-          </Text>
-        </Coachmark>
-      </BalanceBreakdownPopover>
+      <Flex row alignItems="center" gap="$spacing8">
+        <BalanceBreakdownPopover tokens={tokensValue} pools={poolsValue}>
+          <Coachmark
+            open={shouldShowCoachmark}
+            onDismiss={dismissCoachmark}
+            placement={coachmarkPlacement}
+            offset={coachmarkOffset}
+            // Intentionally low so the pill scrolls behind the sticky page header.
+            zIndex={zIndexes.default}
+            text={t('portfolio.poolsBalance.coachmark.body')}
+            testID={TestID.PoolsBalanceCoachmark}
+          >
+            <Text variant="heading2" color={isPortfolioZero ? '$neutral3' : '$neutral1'}>
+              {convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
+            </Text>
+          </Coachmark>
+        </BalanceBreakdownPopover>
+        {poolsUnavailable && <PoolsUnavailableIndicator />}
+      </Flex>
       {showDelta && (
         <Flex row gap="$gap8" alignItems="center">
           <PriceChartDelta

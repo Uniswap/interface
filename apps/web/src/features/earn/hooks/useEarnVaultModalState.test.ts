@@ -7,6 +7,7 @@ import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalS
 const VAULT_A: EarnVaultInfo = {
   id: 'vault-a',
   currencyId: '1-0xa',
+  displayCurrencyId: '1-0xa',
   vaultAddress: '0xa',
   chainId: UniverseChainId.Mainnet,
   apyPercent: 4,

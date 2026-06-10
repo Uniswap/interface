@@ -64,4 +64,12 @@ export const FilterHeaderRow = styled(Flex, {
 
 export const HeaderCell = styled(Cell, {
   py: '$spacing12',
+
+  variants: {
+    clickable: {
+      true: {
+        cursor: 'pointer',
+      },
+    },
+  } as const,
 })

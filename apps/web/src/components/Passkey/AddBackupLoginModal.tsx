@@ -2,6 +2,7 @@
 import { Code, ConnectError } from '@connectrpc/connect'
 import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { isMobileWeb } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -33,6 +34,7 @@ import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 import { getPrivyConfig } from '~/config'
+import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
@@ -58,6 +60,9 @@ const PASSCODE_LENGTH = 4
 export function AddBackupLoginModal() {
   const { t } = useTranslation()
   const { isOpen, onClose } = useModalState(ModalName.AddBackupLogin)
+  // Keep this fixed bottom sheet on-screen when the Android soft keyboard opens (email/OTP/passcode
+  // steps). No-op on iOS/desktop. See hook for the full explanation.
+  useAndroidKeyboardViewportFix(isOpen)
   const queryClient = useQueryClient()
   const { walletId } = useEmbeddedWalletState()
   const [step, setStep] = useState<Step>(Step.METHOD_SELECT)
@@ -412,7 +417,7 @@ export function AddBackupLoginModal() {
       name={ModalName.AddBackupLogin}
       isModalOpen={isOpen}
       onClose={handleClose}
-      isDismissible={false}
+      isDismissible={isMobileWeb}
       maxWidth={420}
     >
       <Flex gap="$gap24" alignItems="center" width="100%">

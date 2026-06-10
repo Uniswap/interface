@@ -80,8 +80,15 @@ test.describe(
         await page.goto(buildUrl({}))
 
         await page.getByRole('button', { name: 'Collect rewards' }).click()
-        await expect(page.getByText('Collecting rewards')).toBeVisible()
-        await expect(page.getByText('5 UNI')).toBeVisible()
+
+        // Wait for modal to appear
+        const modal = page.getByRole('dialog')
+        await expect(modal).toBeVisible()
+
+        // Check modal title and content
+        await expect(modal.getByText('Collecting rewards')).toBeVisible()
+        // The reward amount in the modal starts with "5 UNI" (may or may not have USD value)
+        await expect(modal.getByText(/5 UNI/)).toBeVisible()
       })
     })
 

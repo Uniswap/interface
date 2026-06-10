@@ -8,6 +8,7 @@ import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { LINEA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/linea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
+import { MEGAETH_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/megaeth'
 import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
 import { POLYGON_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/polygon'
@@ -34,6 +35,8 @@ export const { USDC: USDC_UNICHAIN } = UNICHAIN_CHAIN_INFO.tokens
 export const { USDC: USDC_UNICHAIN_SEPOLIA } = UNICHAIN_SEPOLIA_CHAIN_INFO.tokens
 
 export const { USDC: USDC_LINEA, USDT: USDT_LINEA } = LINEA_CHAIN_INFO.tokens
+
+export const { USDM: USDM_MEGAETH, USDe: USDE_MEGAETH } = MEGAETH_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 
@@ -171,6 +174,14 @@ export const WBTC = new Token(
   8,
   'WBTC',
   'Wrapped BTC',
+)
+
+export const BTC_B_MEGAETH = new Token(
+  UniverseChainId.MegaETH,
+  '0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072',
+  8,
+  'BTC.b',
+  'Bitcoin Avalanche Bridged',
 )
 
 export const MATIC_MAINNET = new Token(

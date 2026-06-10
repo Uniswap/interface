@@ -2,9 +2,11 @@ import { useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { iconSizes } from 'ui/src/theme'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { DappLogoWithWCBadge, LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { CrossChainIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { getDepositWithdrawDisplayCurrencyId } from 'uniswap/src/features/activity/utils/getDepositWithdrawDisplayCurrencyId'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   useCurrencyInfo,
@@ -13,14 +15,9 @@ import {
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
-  AuctionBidTransactionInfo,
-  AuctionClaimedTransactionInfo,
-  AuctionExitedTransactionInfo,
   BridgeTransactionInfo,
-  ClaimUniTransactionInfo,
+  DepositTransactionInfo,
   LiquidityTransactionBaseInfos,
-  LpIncentivesClaimTransactionInfo,
-  MigrateV2LiquidityToV3TransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -30,14 +27,9 @@ import {
   Permit2ApproveTransactionInfo,
   PlanTransactionInfo,
   ReceiveTokenTransactionInfo,
-  RemoveDelegationTransactionInfo,
-  SendCallsTransactionInfo,
   SendTokenTransactionInfo,
-  ToucanBidTransactionInfo,
-  ToucanWithdrawBidAndClaimTokensTransactionInfo,
   TransactionDetails,
   TransactionType,
-  UnknownTransactionInfo,
   WCConfirmInfo,
   WithdrawTransactionInfo,
   WrapTransactionInfo,
@@ -92,6 +84,9 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
     case TransactionType.Receive:
     case TransactionType.Send:
       return <TokenTransferHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    case TransactionType.Deposit:
+    case TransactionType.Withdraw:
+      return <DepositWithdrawHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.Swap:
       return <SwapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.Bridge:
@@ -106,6 +101,16 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
       return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.OffRampSale:
       return <OffRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    default:
+      return <FallbackTransactionDetailsHeaderLogo transactionDetails={transactionDetails} />
+  }
+}
+
+function FallbackTransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element | null {
+  const { typeInfo } = transactionDetails
+
+  // Keep fallback broad so unsupported transaction types share the same unknown/dapp logo path.
+  switch (typeInfo.type) {
     case TransactionType.CreatePool:
     case TransactionType.CreatePair:
     case TransactionType.LiquidityIncrease:
@@ -118,7 +123,6 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
     case TransactionType.LocalOffRamp:
       return null
     // TODO WALL-7056: Implement Remove Delegation Header Logo
-    case TransactionType.Withdraw:
     case TransactionType.SendCalls:
     case TransactionType.RemoveDelegation:
     case TransactionType.ClaimUni:
@@ -131,6 +135,28 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
 
 interface SpecificHeaderLogoProps<T> extends HeaderLogoProps {
   typeInfo: T
+}
+
+function DepositWithdrawCurrencyLogo({
+  transactionDetails,
+  typeInfo,
+}: SpecificHeaderLogoProps<DepositTransactionInfo | WithdrawTransactionInfo>): JSX.Element {
+  const currencyInfo = useCurrencyInfo(
+    getDepositWithdrawDisplayCurrencyId({ chainId: transactionDetails.chainId, typeInfo }),
+  )
+
+  return <CurrencyLogo currencyInfo={currencyInfo} size={TXN_DETAILS_ICON_SIZE} />
+}
+
+function DepositWithdrawHeaderLogo({
+  transactionDetails,
+  typeInfo,
+}: SpecificHeaderLogoProps<DepositTransactionInfo | WithdrawTransactionInfo>): JSX.Element {
+  if (typeInfo.isVault) {
+    return <DepositWithdrawCurrencyLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+  }
+
+  return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
 }
 
 function CrossChainHeaderLogo({
@@ -280,22 +306,9 @@ function WrapHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProp
 function UnknownHeaderLogo({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<
-  | UnknownTransactionInfo
-  | WithdrawTransactionInfo
-  | SendCallsTransactionInfo
-  | Permit2ApproveTransactionInfo
-  | RemoveDelegationTransactionInfo
-  | ClaimUniTransactionInfo
-  | MigrateV2LiquidityToV3TransactionInfo
-  | LpIncentivesClaimTransactionInfo
-  | ToucanBidTransactionInfo
-  | ToucanWithdrawBidAndClaimTokensTransactionInfo
-  | AuctionBidTransactionInfo
-  | AuctionClaimedTransactionInfo
-  | AuctionExitedTransactionInfo
->): JSX.Element {
+}: SpecificHeaderLogoProps<TransactionDetails['typeInfo']>): JSX.Element {
   const colors = useSporeColors()
+
   // Check if dappInfo exists since it may not exist on all transaction types
   return 'dappInfo' in typeInfo && typeInfo.dappInfo?.icon ? (
     <DappLogoWithWCBadge

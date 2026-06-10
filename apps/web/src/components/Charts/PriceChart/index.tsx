@@ -4,6 +4,7 @@ import {
   AreaSeriesPartialOptions,
   BarPrice,
   CandlestickData,
+  CrosshairMode,
   IPriceLine,
   ISeriesApi,
   LineStyle,
@@ -41,6 +42,7 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   timePeriod?: GraphQLApi.HistoryDuration
   hideYAxis?: boolean
   yAxisFormatter?: (price: number) => string
+  sparkline?: boolean
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -164,7 +166,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, yAxisFormatter } = params
+    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, yAxisFormatter, sparkline } = params
     const { min, max } = getCandlestickPriceBounds(data)
 
     // Handles changes in time period
@@ -186,6 +188,10 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         }
 
     super.updateOptions(params, {
+      ...(sparkline && {
+        timeScale: { visible: false },
+        crosshair: { mode: CrosshairMode.Hidden },
+      }),
       localization: {
         locale,
         priceFormatter: (price: BarPrice) => {
@@ -307,6 +313,7 @@ interface PriceChartBodyProps {
   overrideColor?: string
   hideYAxis?: boolean
   yAxisFormatter?: (price: number) => string
+  sparkline?: boolean
   onCrosshairChange?: (crosshairData?: PriceChartData) => void
   /** Optional overlay render prop with access to the chart's current crosshair data. */
   children?: (crosshairData?: PriceChartData) => ReactElement | null
@@ -321,6 +328,7 @@ export function PriceChartBody({
   overrideColor,
   hideYAxis,
   yAxisFormatter,
+  sparkline,
   onCrosshairChange,
   children,
 }: PriceChartBodyProps) {
@@ -328,8 +336,8 @@ export function PriceChartBody({
     <Chart
       Model={PriceChartModel}
       params={useMemo(
-        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter }),
-        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter],
+        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter, sparkline }),
+        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter, sparkline],
       )}
       height={height}
       overrideColor={overrideColor}

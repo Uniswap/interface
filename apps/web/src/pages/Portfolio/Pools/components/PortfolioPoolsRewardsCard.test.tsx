@@ -149,4 +149,14 @@ describe('PortfolioPoolsRewardsCard', () => {
 
     expect(screen.getByTestId('claim-modal-open')).toBeInTheDocument()
   })
+
+  it('hides the Collect button when viewing an external wallet, but still shows the USD value', () => {
+    mockRewards({ totalUnclaimedAmountUni: ONE_UNI })
+    mockUsd('45660000')
+
+    render(<PortfolioPoolsRewardsCard walletAddress={SAMPLE_SEED_ADDRESS_1} isExternalWallet />)
+
+    expect(screen.getByText('$45.66')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Collect' })).not.toBeInTheDocument()
+  })
 })

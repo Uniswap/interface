@@ -1,13 +1,12 @@
 import { memo, useCallback, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, Flex, ScrollView, styled, Text } from 'ui/src'
+import { Flex, ScrollView, styled, Text } from 'ui/src'
 import type { FlexProps, TextProps } from 'ui/src'
-import { Check } from 'ui/src/components/icons/Check'
 import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { NewTag } from 'uniswap/src/components/pill/NewTag'
+import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -18,10 +17,9 @@ import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/con
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ALL_NETWORKS_LABEL } from 'uniswap/src/features/telemetry/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
+import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
-import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 import { ExploreTab } from '~/types/explore'
 
 const NetworkLabel = styled(Flex, {
@@ -225,16 +223,15 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const newChains = useNewChainIds()
 
   const isAllNetworks = chainInfo === null
-  const chainId = isAllNetworks ? undefined : chainInfo.id
-  const isNew = chainId && newChains.includes(chainId)
+  const chainId = isAllNetworks ? null : chainInfo.id
+  const isNew = chainId !== null && newChains.includes(chainId)
 
   const chainName = chainId ? toGraphQLChain(chainId) : t('transaction.network.all')
-
   const isCurrentChain = isAllNetworks ? !currentChainInfo : currentChainInfo?.id === chainId
 
   const handlePress = () => {
     if (!unsupported) {
-      onPress(chainId)
+      onPress(chainId ?? undefined)
     }
     toggleMenu(false)
   }
@@ -255,30 +252,19 @@ const TableNetworkItem = memo(function TableNetworkItem({
         previous_chain_name: currentChainInfo ? currentChainInfo.label : ALL_NETWORKS_LABEL,
       }}
     >
-      <InternalMenuItem
+      <Flex
         data-testid={`${TestID.TokensNetworkFilterOptionPrefix}${chainName.toLowerCase()}`}
-        disabled={unsupported}
+        cursor={unsupported ? 'default' : 'pointer'}
+        opacity={unsupported ? 0.6 : undefined}
         onPress={handlePress}
       >
-        <NetworkLabel>
-          {isAllNetworks ? (
-            <NetworkLogo chainId={null} />
-          ) : (
-            <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={20} />
-          )}
-          <ElementAfterText
-            text={isAllNetworks ? t('transaction.network.all') : chainInfo.label}
-            textProps={{ variant: 'body2', ...EllipsisTamaguiStyle }}
-            element={isNew && !unsupported ? <NewTag /> : undefined}
-          />
-        </NetworkLabel>
-        {/* separate from ElementAfterText as this is placed at the far right of the row, not next to the text */}
-        {unsupported ? (
-          <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge>
-        ) : isCurrentChain ? (
-          <Check size="$icon.16" color="$accent1" />
-        ) : null}
-      </InternalMenuItem>
+        <NetworkOption
+          chainId={chainId}
+          currentlySelected={isCurrentChain}
+          isNew={isNew}
+          trailingElement={unsupported ? <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge> : undefined}
+        />
+      </Flex>
     </Trace>
   )
 })

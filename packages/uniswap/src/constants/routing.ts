@@ -5,6 +5,7 @@ import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   ARB,
   AUSD_MONAD,
+  BTC_B_MEGAETH,
   BUSD_BSC,
   DAI,
   DAI_ARBITRUM_ONE,
@@ -37,6 +38,7 @@ import {
   USDC_XLAYER,
   USDC_ZKSYNC,
   USDC_ZORA,
+  USDE_MEGAETH,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
@@ -45,6 +47,7 @@ import {
   USDT_OPTIMISM,
   USDT_POLYGON,
   USDT0_XLAYER,
+  USDM_MEGAETH,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
@@ -154,6 +157,14 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Linea] as Token,
     USDC_LINEA,
     USDT_LINEA,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.MegaETH]: [
+    nativeOnChain(UniverseChainId.MegaETH),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.MegaETH] as Token,
+    USDM_MEGAETH,
+    USDE_MEGAETH,
+    BTC_B_MEGAETH,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Soneium]: [

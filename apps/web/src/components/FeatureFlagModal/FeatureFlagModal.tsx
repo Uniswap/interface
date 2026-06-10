@@ -21,7 +21,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
 import { buildFlagGroups } from '~/components/FeatureFlagModal/flagGroups'
-import { usePinnedExperiments, usePinnedFeatureFlags } from '~/dev/usePinnedFeatureFlags'
+import { usePinnedExperiments, usePinnedFeatureFlags, usePinnedFlagGroups } from '~/dev/usePinnedFeatureFlags'
 import { useModalState } from '~/hooks/useModalState'
 import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
@@ -123,11 +123,30 @@ const FeatureFlagGroup = memo(function FeatureFlagGroup({
   name,
   children,
 }: PropsWithChildren<{ name: string }>): JSX.Element {
+  const { isPinned, pinGroup, unpinGroup } = usePinnedFlagGroups()
+  const pinned = isPinned(name)
+
+  const onPinPress = useEvent(() => {
+    if (pinned) {
+      unpinGroup(name)
+    } else {
+      pinGroup(name)
+    }
+  })
+
   return (
     <>
-      <CenteredRow key={name}>
+      <TouchableCenteredRow key={name} group="item" onPress={onPinPress} justifyContent="flex-start" gap="$gap8">
         <Text variant="body1">{name}</Text>
-      </CenteredRow>
+        <Flex
+          alignSelf="center"
+          pl="$padding4"
+          opacity={pinned ? 1 : 0}
+          $group-item-hover={{ opacity: pinned ? 1 : 0.6 }}
+        >
+          <Pin size="$icon.16" color={pinned ? '$accent1' : '$neutral2'} />
+        </Flex>
+      </TouchableCenteredRow>
       {children}
     </>
   )
@@ -243,6 +262,7 @@ export function FeatureFlagModal(): JSX.Element {
   const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
   const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
   const [searchQuery, setSearchQuery] = useState('')
+  const { pinnedGroups } = usePinnedFlagGroups()
 
   const removeAllOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
@@ -319,7 +339,13 @@ export function FeatureFlagModal(): JSX.Element {
           {(() => {
             let hasResults = false
 
-            const groups = flagGroups.map((group) => {
+            const pinned = pinnedGroups
+              .map((name) => flagGroups.find((g) => g.name === name))
+              .filter((g): g is (typeof flagGroups)[number] => g !== undefined)
+            const rest = flagGroups.filter((g) => !pinnedGroups.includes(g.name))
+            const sortedFlagGroups = [...pinned, ...rest]
+
+            const groups = sortedFlagGroups.map((group) => {
               const matchingFlags = isSearching
                 ? group.flags.filter(({ flag, label }) => fuzzyMatch(searchQuery, getFeatureFlagName(flag), label))
                 : group.flags

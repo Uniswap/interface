@@ -112,8 +112,8 @@ vi.mock('react-native-reanimated', async () => {
 
 // Mock environment variables
 process.env.EXPO_OS = 'web'
-process.env.REACT_APP_ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
-process.env.REACT_APP_ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
+process.env.ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
+process.env.ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
 
 setupi18n()
 

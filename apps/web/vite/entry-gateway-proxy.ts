@@ -60,7 +60,7 @@ export function createEntryGatewayProxies(ctx: CreateProxyContext): Record<strin
       pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/prod`,
     }),
     [ENTRY_GATEWAY_PROXY_PATH]: createEntryGatewayProxy(ctx, {
-      target: process.env.VITE_BACKEND_URL || getDefaultProxyTarget(),
+      target: process.env.BACKEND_URL || process.env.VITE_BACKEND_URL || getDefaultProxyTarget(),
       pathPrefix: ENTRY_GATEWAY_PROXY_PATH,
     }),
   }

@@ -1,5 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText, Flex, FlexProps, Text } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
@@ -18,11 +18,13 @@ export function NetworkOption({
   currentlySelected,
   isNew,
   borderRadius = '$rounded8',
+  trailingElement,
 }: {
   chainId: UniverseChainId | null
   currentlySelected?: boolean
   isNew: boolean
   borderRadius?: FlexProps['borderRadius']
+  trailingElement?: ReactNode
 }): JSX.Element {
   const { t } = useTranslation()
   const info = chainId && getChainInfo(chainId)
@@ -62,7 +64,8 @@ export function NetworkOption({
     >
       {content}
       <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>
-        {currentlySelected && <CheckmarkCircle color="$neutral1" ml={OPTION_GAP} size="$icon.20" />}
+        {trailingElement ??
+          (currentlySelected && <CheckmarkCircle color="$neutral1" ml={OPTION_GAP} size="$icon.20" />)}
       </Flex>
     </Flex>
   )

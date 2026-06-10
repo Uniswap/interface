@@ -12,7 +12,6 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
-import { noop } from 'utilities/src/react/noop'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export type FavoriteWalletCardProps = {
@@ -77,7 +76,6 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         disabled={isEditing}
         m="$spacing4"
         testID="favorite-wallet-card"
-        onLongPress={noop}
         onPress={(): void => {
           navigate(address)
         }}

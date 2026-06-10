@@ -19,7 +19,7 @@ export function EarnVaultChip({
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(vault.currencyId)
+  const currencyInfo = useCurrencyInfo(vault.displayCurrencyId)
   const currency = currencyInfo?.currency
   const depositedUsd = position?.depositedUsd
   const depositedLabel =

@@ -23,6 +23,13 @@
   "scripts": {
     "start": "bun run src/main.ts",
     "dev": "CONFIG_SERVICE_URL=http://localhost:3000 CONFIG_SERVICE_TOKEN=e2eTest1Token bun run src/main.ts",
+    "login": "bun start login",
+    "logout": "bun start logout",
+    "whoami": "bun start whoami",
+    "view": "bun start view",
+    "pull": "bun start pull",
+    "zip": "bun start zip",
+    "unzip": "bun start unzip",
     "typecheck": "nx typecheck config-cli",
     "check": "nx check config-cli",
     "check:fast": "nx check:fast config-cli",

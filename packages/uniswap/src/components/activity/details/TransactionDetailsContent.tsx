@@ -9,6 +9,7 @@ import { OnRampTransactionDetails } from 'uniswap/src/components/activity/detail
 import { PlanTransactionDetails } from 'uniswap/src/components/activity/details/transactions/PlanTransactionDetails'
 import { SwapTransactionDetails } from 'uniswap/src/components/activity/details/transactions/SwapTransactionDetails'
 import { TransferTransactionDetails } from 'uniswap/src/components/activity/details/transactions/TransferTransactionDetails'
+import { VaultTransactionDetails } from 'uniswap/src/components/activity/details/transactions/VaultTransactionDetails'
 import { WrapTransactionDetails } from 'uniswap/src/components/activity/details/transactions/WrapTransactionDetails'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -37,6 +38,11 @@ export function TransactionDetailsContent({
         return (
           <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
+      case TransactionType.Deposit:
+      case TransactionType.Withdraw:
+        return typeInfo.isVault ? (
+          <VaultTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        ) : null
       case TransactionType.Bridge:
         return <BridgeTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.Swap:

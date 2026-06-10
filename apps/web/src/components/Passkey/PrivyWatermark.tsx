@@ -7,7 +7,8 @@ export function PrivyWatermark(props: FlexProps) {
   const { t } = useTranslation()
   return (
     <Flex row alignItems="center" justifyContent="center" gap="$spacing8" {...props}>
-      <Text variant="body3" color="$neutral3">
+      {/* Inter Regular 13: scoped @font-face in apps/web/index.html */}
+      <Text color="$neutral3" style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: '400', lineHeight: 16 }}>
         {t('onboarding.keyManagement.securedBy')}
       </Text>
       <ExternalLink href="https://www.privy.io/user-help-center" style={{ stroke: 'none' }}>

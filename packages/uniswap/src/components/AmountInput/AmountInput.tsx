@@ -90,6 +90,7 @@ export const AmountInput = forwardRef<Input, Props>(function AmountInputInner(
     text: measurementText,
     maxWidth,
     enabled: adjustWidthToContent,
+    fontSize: adjustWidthToContent ? fontSize : undefined,
     // on mobile, use onLayout to prevent performance stutters
     useLayoutOnly: isMobileApp,
   })

@@ -69,6 +69,11 @@ const getTransactionTitleTable = (): {
     [TransactionStatus.Success]: i18n.t('common.received'),
     [TransactionStatus.Failed]: i18n.t('transaction.status.receive.failed'),
   },
+  [TransactionType.Deposit]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.deposit.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.deposit.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.deposit.failed'),
+  },
   [TransactionType.FiatPurchaseDeprecated]: {
     [TransactionStatus.Pending]: i18n.t('transaction.status.purchase.pending'),
     [TransactionStatus.Success]: i18n.t('common.purchased'),
@@ -263,6 +268,7 @@ export const getCancelledTransactionTitleTable = (): { [key in TransactionType]:
   [TransactionType.NFTTrade]: i18n.t('transaction.status.swap.canceled'),
   [TransactionType.NFTMint]: i18n.t('transaction.status.mint.canceled'),
   [TransactionType.Receive]: i18n.t('transaction.status.receive.canceled'),
+  [TransactionType.Deposit]: i18n.t('transaction.status.deposit.canceled'),
   [TransactionType.FiatPurchaseDeprecated]: i18n.t('transaction.status.purchase.canceled'),
   [TransactionType.LocalOnRamp]: i18n.t('transaction.status.onramp.canceled'),
   [TransactionType.LocalOffRamp]: i18n.t('transaction.status.offramp.canceled'),

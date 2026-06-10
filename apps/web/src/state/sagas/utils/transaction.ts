@@ -119,6 +119,7 @@ export const createUniverseTransaction = ({
     case TransactionType.LocalOffRamp:
     case TransactionType.SendCalls:
     case TransactionType.RemoveDelegation:
+    case TransactionType.Deposit:
     case TransactionType.Withdraw:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:

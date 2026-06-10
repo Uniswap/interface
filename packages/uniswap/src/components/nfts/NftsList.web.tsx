@@ -2,9 +2,10 @@ import { NetworkStatus } from '@apollo/client'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import { isNonPollingRequestInFlight } from '@universe/api'
 import { isMobileWeb } from '@universe/environment'
-import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Loader, styled, Text, View } from 'ui/src'
+import { Flex, Loader, styled, View } from 'ui/src'
+import { NoNfts } from 'ui/src/components/icons/NoNfts'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useContainerWidth } from 'uniswap/src/components/nfts/hooks/useContainerWidth'
@@ -118,6 +119,13 @@ export function NftsList({
     hiddenNftsExpanded,
     hasNextPage,
   })
+  // NftListHeader owns its own local input state (with debounce). Bumping this key remounts the header
+  // so a parent-initiated clear (e.g. the no-results "Clear search" button) actually empties the input.
+  const [headerResetKey, setHeaderResetKey] = useState(0)
+  const clearSearch = useCallback(() => {
+    setSearch('')
+    setHeaderResetKey((prev) => prev + 1)
+  }, [setSearch])
   const showHeader = shownNfts.length !== 0 || isLoadingState || isErrorState
 
   const keyExtractor = (item: NFTItem | string): string =>
@@ -208,10 +216,14 @@ export function NftsList({
     // Show no-results when user has searched and the filtered list is empty (explicit check so we always hit this when filtering yields nothing)
     if (search && filteredShownCount === 0) {
       return (
-        <Flex centered p="$spacing12" width="100%" data-testid={noResultsTestId}>
-          <Text variant="body3" color="$neutral2">
-            {t('common.noResults')}
-          </Text>
+        <Flex py="$spacing40" width="100%">
+          <BaseCard.EmptyState
+            icon={<NoNfts size="$icon.64" color="$neutral3" />}
+            description={t('portfolio.noResults.search.title')}
+            buttonLabel={t('portfolio.noResults.search.clear')}
+            dataTestId={noResultsTestId}
+            onPress={clearSearch}
+          />
         </Flex>
       )
     }
@@ -235,6 +247,7 @@ export function NftsList({
     skeletonContent,
     refetch,
     search,
+    clearSearch,
     t,
   ])
 
@@ -298,6 +311,7 @@ export function NftsList({
     <Flex ref={containerRef} gap="$spacing24">
       {showHeader && (
         <NftListHeader
+          key={headerResetKey}
           isExternalWallet={isExternalWallet}
           SearchInputComponent={SearchInputComponent}
           searchInputTestId={searchInputTestId}

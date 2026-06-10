@@ -6,8 +6,10 @@ import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/use
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
-import { useTDPPriceChartData, type TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
+import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
 import { getDisplayedPricePercentChange } from '~/pages/TokenDetails/components/chart/tdpPriceChartPercentChange'
+import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 
 interface UseTDPPriceChartPanelParams {
   variables: TDPChartQueryVariables
@@ -24,7 +26,7 @@ export function useTDPPriceChartPanel({
   timePeriod,
   currency,
 }: UseTDPPriceChartPanelParams): {
-  priceQuery: ReturnType<typeof useTDPPriceChartData>
+  priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
   showInvalidSkeleton: boolean
   stale: boolean
@@ -36,14 +38,16 @@ export function useTDPPriceChartPanel({
     }
     return chainId ? buildCurrencyId(chainId, variables.address) : undefined
   }, [chainId, variables.address])
-  const spotPriceOverride = useTokenSpotPrice(spotCurrencyId)
-  const currentPriceOverride = variables.multichain ? undefined : spotPriceOverride
+  const preferProjectMarketData = useTDPPreferProjectMarketData()
+  const spotPriceOverride = useTokenSpotPrice(spotCurrencyId, { preferProjectMarketData })
+  const currentPriceOverride = variables.multichain && !preferProjectMarketData ? undefined : spotPriceOverride
 
-  const priceQuery = useTDPPriceChartData({
+  const priceQuery = useTokenPriceChartData({
     variables,
     skip: false,
     priceChartType,
     currentPriceOverride,
+    preferProjectMarketData,
   })
 
   useLayoutEffect(() => {

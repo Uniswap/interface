@@ -25,6 +25,7 @@ type AnimatedNumberProps = {
   disableAnimations?: boolean
   isRightToLeft: boolean
   EndElement?: JSX.Element
+  endElementGap?: number
 }
 
 const AnimatedNumber = ({
@@ -34,6 +35,7 @@ const AnimatedNumber = ({
   shouldFadeDecimals,
   warmLoading,
   EndElement,
+  endElementGap,
 }: AnimatedNumberProps): JSX.Element => {
   const currency = useAppFiatCurrencyInfo()
   const colors = useSporeColors()
@@ -100,7 +102,7 @@ const AnimatedNumber = ({
           </Text>
         </Shine>
         {EndElement && (
-          <Flex height={DIGIT_HEIGHT} justifyContent="center" ml="$spacing4">
+          <Flex height={DIGIT_HEIGHT} justifyContent="center" ml={endElementGap}>
             {EndElement}
           </Flex>
         )}

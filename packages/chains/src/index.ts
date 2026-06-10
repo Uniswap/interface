@@ -53,6 +53,7 @@ export { zeroAddress } from './createZeroAddress'
 // Observability
 export { InstrumentedJsonRpcProvider } from './rpc/observability/InstrumentedJsonRpcProvider'
 export { createObservableTransport } from './rpc/observability/createObservableTransport'
+export { createUniRpcRoutedTransport } from './rpc/createUniRpcRoutedTransport'
 export { extractProviderName } from './rpc/observability/extractProviderName'
 export {
   noopObserver,

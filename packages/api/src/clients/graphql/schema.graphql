@@ -1381,12 +1381,14 @@ type TokenProjectMarket {
   fullyDilutedValuation: Amount
 
   pricePercentChange24h: Amount
+  volume24h: Amount
   priceHigh52w: Amount
   priceLow52w: Amount
 
   priceHistory(duration: HistoryDuration!, maxLength: Int): [TimestampedAmount]
   pricePercentChange(duration: HistoryDuration!): Amount
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
+  volume(duration: HistoryDuration!): Amount
 }
 
 input TokenTradeInput {

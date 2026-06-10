@@ -24,7 +24,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { NumberType } from 'utilities/src/format/types'
-import { noop } from 'utilities/src/react/noop'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type AccountCardItemProps = {
@@ -220,13 +219,7 @@ function AccountCardItemInner({
         await menuActions[e.nativeEvent.index]?.onPress?.()
       }}
     >
-      <TouchableArea
-        pb="$spacing12"
-        pt="$spacing8"
-        px="$spacing24"
-        onLongPress={noop}
-        onPress={(): void => onPress(address)}
-      >
+      <TouchableArea pb="$spacing12" pt="$spacing8" px="$spacing24" onPress={(): void => onPress(address)}>
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
           <Flex fill>
             <AddressDisplay

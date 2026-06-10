@@ -185,3 +185,49 @@ describe('rpcObserver rate limiting', () => {
     expect(getSummaryCall()).toBeUndefined()
   })
 })
+
+describe('rpcObserver structured error fields', () => {
+  beforeEach(() => {
+    mockNow = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => mockNow)
+    resetErrorBuckets()
+    vi.mocked(logger.warn).mockClear()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  function lastWarnPayload(): Record<string, unknown> {
+    const calls = vi.mocked(logger.warn).mock.calls
+    return calls[calls.length - 1]?.[3] as Record<string, unknown>
+  }
+
+  test('logs httpStatus, rpcErrorCode, and errorCategory when present on the context', () => {
+    getRpcObserver().onError({
+      ...makeError(),
+      httpStatus: 401,
+      rpcErrorCode: -32000,
+      errorCategory: 'SERVER_ERROR',
+    })
+
+    expect(lastWarnPayload()).toMatchObject({ httpStatus: 401, rpcErrorCode: -32000, errorCategory: 'SERVER_ERROR' })
+  })
+
+  test('omits the fields entirely when absent — never emits null facets', () => {
+    getRpcObserver().onError(makeError())
+
+    const payload = lastWarnPayload()
+    expect(payload).not.toHaveProperty('httpStatus')
+    expect(payload).not.toHaveProperty('rpcErrorCode')
+    expect(payload).not.toHaveProperty('errorCategory')
+  })
+
+  test('includes httpStatus without rpcErrorCode for a transport-only failure', () => {
+    getRpcObserver().onError({ ...makeError(), httpStatus: 403 })
+
+    const payload = lastWarnPayload()
+    expect(payload.httpStatus).toBe(403)
+    expect(payload).not.toHaveProperty('rpcErrorCode')
+  })
+})

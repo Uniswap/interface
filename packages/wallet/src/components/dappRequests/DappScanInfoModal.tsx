@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { FileListCheck } from 'ui/src/components/icons'
-import { defaultHitslop, zIndexes } from 'ui/src/theme'
+import { defaultHitslop } from 'ui/src/theme'
 import { PoweredByBlockaid } from 'uniswap/src/components/logos/PoweredByBlockaid'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -29,13 +29,7 @@ export function DappScanInfoModal({ isOpen, onClose, title, description }: DappS
   }, [])
 
   return (
-    <Modal
-      backgroundColor={colors.surface1.val}
-      isModalOpen={isOpen}
-      name={ModalName.DappScanInfo}
-      zIndex={zIndexes.overlay} // This is needed to properly display it above modals in the extension
-      onClose={onClose}
-    >
+    <Modal backgroundColor={colors.surface1.val} isModalOpen={isOpen} name={ModalName.DappScanInfo} onClose={onClose}>
       <Flex
         alignItems="center"
         gap="$spacing16"

@@ -2,10 +2,10 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { useEvent } from 'utilities/src/react/hooks'
 import { priceToQ96WithDecimals, q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
-import { useFiatTokenConversion } from '~/features/Toucan/Auction/hooks/useFiatTokenConversion'
 import { evaluateMaxPrice, type MinValuationErrorDetails } from '~/features/Toucan/Auction/utils/evaluateMaxPrice'
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
@@ -84,8 +84,12 @@ export function useBidMaxValuationField({
     skipBlurSnapRef.current = skip
   })
 
-  const { usdPriceOfCurrency, fiatToBidToken, bidTokenToFiat } = useFiatTokenConversion({
-    bidCurrency,
+  const {
+    usdPriceOfCurrency,
+    fiatToToken: fiatToBidToken,
+    tokenToFiat: bidTokenToFiat,
+  } = useFiatTokenConversion({
+    currency: bidCurrency,
   })
 
   const maxValuationCurrencyAmount = tryParseCurrencyAmount(exactMaxValuationAmountToken, bidCurrency)

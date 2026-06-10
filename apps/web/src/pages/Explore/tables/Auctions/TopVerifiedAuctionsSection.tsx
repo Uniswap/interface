@@ -10,9 +10,7 @@ import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/us
 import { auctionCommittedVolumeComparator, useTopAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { AuctionChip } from '~/pages/Explore/tables/Auctions/AuctionChip'
 
-const TWENTY_FOUR_HOURS_MS = 86400000
-const MAX_CHIPS = 8
-const FALLBACK_CHIPS = 4
+const MAX_CHIPS = 4
 
 export function TopVerifiedAuctionsSection() {
   const { t } = useTranslation()
@@ -31,39 +29,24 @@ export function TopVerifiedAuctionsSection() {
   }, [verifiedAuctions])
 
   const verifiedSortedCompletedAuctions = useMemo(() => {
-    const currentTime = Date.now()
+    return verifiedAuctions
+      .filter((enrichedAuction) => {
+        const auction = enrichedAuction.auction
+        return (
+          enrichedAuction.timeRemaining.isCompleted &&
+          !!auction &&
+          !!auction.endBlock &&
+          !!auction.chainId &&
+          enrichedAuction.timeRemaining.endBlockTimestamp !== undefined
+        )
+      })
+      .sort(auctionCommittedVolumeComparator)
+  }, [verifiedAuctions])
 
-    const completedAuctions = verifiedAuctions.filter((enrichedAuction) => {
-      const auction = enrichedAuction.auction
-      const endBlockTimestamp = enrichedAuction.timeRemaining.endBlockTimestamp
-
-      if (
-        !auction ||
-        !auction.endBlock ||
-        !auction.chainId ||
-        !endBlockTimestamp ||
-        !enrichedAuction.timeRemaining.isCompleted
-      ) {
-        return false
-      }
-
-      // For completed auctions, check if completed within 24 hours using the actual end block timestamp
-      const endTime = Number(endBlockTimestamp) * 1000 // Convert to milliseconds
-      const timeSinceCompletion = currentTime - endTime
-
-      if (timeSinceCompletion <= TWENTY_FOUR_HOURS_MS) {
-        return true
-      }
-
-      // if there are no ongoing auctions include auctions that completed over 24 hours ago as well
-      return verifiedSortedOngoingAuctions.length <= 0
-    })
-
-    return completedAuctions.sort(auctionCommittedVolumeComparator)
-  }, [verifiedAuctions, verifiedSortedOngoingAuctions.length])
-
-  const limit = verifiedSortedOngoingAuctions.length > 0 ? MAX_CHIPS : FALLBACK_CHIPS
-  const topVerifiedAuctions = [...verifiedSortedOngoingAuctions, ...verifiedSortedCompletedAuctions].slice(0, limit)
+  const topVerifiedAuctions = useMemo(() => {
+    const remainingSlots = Math.max(0, MAX_CHIPS - verifiedSortedOngoingAuctions.length)
+    return [...verifiedSortedOngoingAuctions, ...verifiedSortedCompletedAuctions.slice(0, remainingSlots)]
+  }, [verifiedSortedOngoingAuctions, verifiedSortedCompletedAuctions])
 
   // Hide section if no verified auctions match criteria
   if (isLoading || topVerifiedAuctions.length === 0) {

@@ -1,6 +1,10 @@
 import { createElement } from 'react'
 import { ApproveSummaryItem } from 'uniswap/src/components/activity/summaries/ApproveSummaryItem'
 import { BridgeSummaryItem } from 'uniswap/src/components/activity/summaries/BridgeSummaryItem'
+import {
+  DepositSummaryItem,
+  WithdrawSummaryItem,
+} from 'uniswap/src/components/activity/summaries/DepositWithdrawSummaryItem'
 import { LiquiditySummaryItem } from 'uniswap/src/components/activity/summaries/LiquiditySummaryItem'
 import { NFTApproveSummaryItem } from 'uniswap/src/components/activity/summaries/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'uniswap/src/components/activity/summaries/NFTMintSummaryItem'
@@ -13,7 +17,6 @@ import { SendSummaryItem } from 'uniswap/src/components/activity/summaries/SendS
 import { SwapSummaryItem } from 'uniswap/src/components/activity/summaries/SwapSummaryItem'
 import { UnknownSummaryItem } from 'uniswap/src/components/activity/summaries/UnknownSummaryItem'
 import { WCSummaryItem } from 'uniswap/src/components/activity/summaries/WCSummaryItem'
-import { WithdrawSummaryItem } from 'uniswap/src/components/activity/summaries/WithdrawSummaryItem'
 import { WrapSummaryItem } from 'uniswap/src/components/activity/summaries/WrapSummaryItem'
 import { SummaryItemProps, SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
 import { isLoadingItem, isSectionHeader, LoadingItem, SectionHeader } from 'uniswap/src/components/activity/utils'
@@ -86,6 +89,9 @@ export function generateActivityItemRenderer({
         break
       case TransactionType.Wrap:
         SummaryItem = WrapSummaryItem
+        break
+      case TransactionType.Deposit:
+        SummaryItem = DepositSummaryItem
         break
       case TransactionType.Withdraw:
         SummaryItem = WithdrawSummaryItem

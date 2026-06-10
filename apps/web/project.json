@@ -48,10 +48,11 @@
     },
     "prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["ajv"],
-      "cache": true,
-      "inputs": [],
-      "outputs": []
+      "dependsOn": ["ajv", "config:pull"]
+    },
+    "config:pull": {
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
+      "options": { "cwd": "{workspaceRoot}" }
     },
     "ajv": {
       "command": "bun run scripts/compile-ajv-validators.js",
@@ -69,14 +70,14 @@
       }
     },
     "anvil:mainnet": {
-      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8545'",
+      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${QUICKNODE_ENDPOINT_NAME:-$REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${QUICKNODE_ENDPOINT_TOKEN:-$REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8545'",
       "options": {
         "cwd": "{projectRoot}"
       },
       "continuous": true
     },
     "anvil:base": {
-      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8546'",
+      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${QUICKNODE_ENDPOINT_NAME:-$REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${QUICKNODE_ENDPOINT_TOKEN:-$REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8546'",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -118,7 +119,7 @@
       }
     },
     "dev:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 IS_E2E_TEST=true vite dev",
+      "command": "SKIP_CSP=1 IS_E2E_TEST=true vite dev",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -133,27 +134,27 @@
       "inputs": ["default", "^production", "!{projectRoot}/build"]
     },
     "build:staging": {
-      "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" VITE_ENABLE_ENTRY_GATEWAY_PROXY=true CLOUDFLARE_ENV=staging vite build --mode staging",
+      "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" ENABLE_ENTRY_GATEWAY_PROXY=true CLOUDFLARE_ENV=staging vite build --mode staging",
       "options": {
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "staging"
     },
     "build:staging:preview": {
-      "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" VITE_ENABLE_ENTRY_GATEWAY_PROXY=true VITE_DISABLE_SOURCEMAP=true CLOUDFLARE_ENV=staging vite build --mode staging",
+      "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" ENABLE_ENTRY_GATEWAY_PROXY=true DISABLE_SOURCEMAP=true CLOUDFLARE_ENV=staging vite build --mode staging",
       "options": {
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "staging"
     },
     "build-vercel": {
-      "command": "DEPLOY_TARGET=vercel VITE_ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=12288\" VITE_DISABLE_SOURCEMAP=true vite build --mode staging && bun scripts/build-vercel.ts",
+      "command": "DEPLOY_TARGET=vercel ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=12288\" DISABLE_SOURCEMAP=true vite build --mode staging && bun scripts/build-vercel.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "build:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 IS_E2E_TEST=true VITE_DISABLE_SOURCEMAP=true nx run web:build:production",
+      "command": "SKIP_CSP=1 IS_E2E_TEST=true DISABLE_SOURCEMAP=true nx run web:build:production",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -177,7 +178,7 @@
       "dependsOn": ["build:staging:preview"]
     },
     "preview:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
+      "command": "SKIP_CSP=1 DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -185,7 +186,7 @@
       "dependsOn": ["build:e2e"]
     },
     "preview:e2e:no-build": {
-      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
+      "command": "SKIP_CSP=1 DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },

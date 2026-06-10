@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useRef } from 'react'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
@@ -8,8 +9,8 @@ import { ONE_DAY_MS } from 'utilities/src/time/time'
 import {
   ActivityFilterType,
   filterTransactionDetailsFromActivityItems,
+  getServerTransactionTypesForFilter,
   getTransactionTypesForFilter,
-  SERVER_FILTER_MAP,
   TimePeriod,
 } from '~/pages/Portfolio/Activity/Filters/utils'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
@@ -93,6 +94,8 @@ export function useActivityFiltering({
   selectedTimePeriod,
   searchText,
 }: UseActivityFilteringParams): UseActivityFilteringResult {
+  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+
   // Determine if we can use server-side filtering (EVM-only wallet)
   // Server-side filtering only works for EVM and will filter out all Solana transactions
   const canUseServerSideFiltering = !!evmAddress && !svmAddress
@@ -102,8 +105,8 @@ export function useActivityFiltering({
     if (!canUseServerSideFiltering || selectedTransactionType === ActivityFilterType.All) {
       return undefined
     }
-    return SERVER_FILTER_MAP[selectedTransactionType as ActivityFilterType]
-  }, [canUseServerSideFiltering, selectedTransactionType])
+    return getServerTransactionTypesForFilter({ filterType: selectedTransactionType, isEarnEnabled })
+  }, [canUseServerSideFiltering, selectedTransactionType, isEarnEnabled])
 
   const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetching, error, dataUpdatedAt } =
     useActivityData({

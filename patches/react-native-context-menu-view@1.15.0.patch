@@ -1,8 +1,28 @@
+diff --git a/node_modules/react-native-context-menu-view/.bun-tag-720d6033c0d8c08e b/.bun-tag-720d6033c0d8c08e
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
-index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..f975490e71a72967b112b7ef973119608d67fc68 100644
+index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..f6b36be7183bc5792276bc0966d32143bee3353e 100644
 --- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
 +++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
-@@ -37,6 +37,8 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
+@@ -1,6 +1,8 @@
+ package com.mpiannucci.reactnativecontextmenu;
+ 
++import android.app.Activity;
+ import android.content.Context;
++import android.content.ContextWrapper;
+ import android.content.res.ColorStateList;
+ import android.content.res.Resources;
+ import android.graphics.Color;
+@@ -25,6 +27,7 @@ import com.facebook.react.bridge.ReadableArray;
+ import com.facebook.react.bridge.ReadableMap;
+ import com.facebook.react.bridge.WritableArray;
+ import com.facebook.react.bridge.WritableMap;
++import com.facebook.react.uimanager.events.NativeGestureUtil;
+ import com.facebook.react.uimanager.events.RCTEventEmitter;
+ import com.facebook.react.views.view.ReactViewGroup;
+ 
+@@ -37,10 +40,14 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
  
      boolean cancelled = true;
  
@@ -11,7 +31,13 @@ index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..f975490e71a72967b112b7ef97311960
      protected boolean dropdownMenuMode = false;
  
      protected boolean disabled = false;
-@@ -61,12 +63,40 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
+ 
++    private boolean suppressChildPressUntilUp = false;
++
+     private GestureDetector gestureDetector;
+ 
+     public ContextMenuView(final Context context) {
+@@ -61,12 +68,41 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
  
              @Override
              public void onLongPress(MotionEvent e) {
@@ -31,6 +57,7 @@ index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..f975490e71a72967b112b7ef97311960
 +
                  if (!dropdownMenuMode && !disabled) {
                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
++                        cancelChildTouchHandling(e);
                          showContextMenu(e.getX(), e.getY());
                      }
                  }
@@ -52,3 +79,51 @@ index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..f975490e71a72967b112b7ef97311960
          });
      }
  
+@@ -85,9 +121,47 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
+     @Override
+     public boolean onTouchEvent(MotionEvent ev) {
+         gestureDetector.onTouchEvent(ev);
++
++        if (suppressChildPressUntilUp
++                && (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL)) {
++            NativeGestureUtil.notifyNativeGestureEnded(this, ev);
++            suppressChildPressUntilUp = false;
++        }
++
+         return true;
+     }
+ 
++    @Override
++    protected void onDetachedFromWindow() {
++        dismissOpenContextMenu();
++        super.onDetachedFromWindow();
++    }
++
++    private void dismissOpenContextMenu() {
++        Context context = getContext();
++        while (context instanceof ContextWrapper) {
++            if (context instanceof Activity) {
++                ((Activity) context).closeContextMenu();
++                return;
++            }
++            context = ((ContextWrapper) context).getBaseContext();
++        }
++    }
++
++    // Prevent child onPress from firing after a long-press opens the native context menu.
++    // Use RN's NativeGestureUtil so JSTouchDispatcher cancels with the correct coalescing key
++    private void cancelChildTouchHandling(MotionEvent e) {
++        suppressChildPressUntilUp = true;
++
++        for (int i = 0; i < getChildCount(); i++) {
++            View child = getChildAt(i);
++            child.setPressed(false);
++            child.cancelLongPress();
++        }
++
++        NativeGestureUtil.notifyNativeGestureStarted(this, e);
++    }
++
+     @Override
+     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+         contextMenu.clear();

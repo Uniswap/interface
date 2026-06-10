@@ -63,8 +63,6 @@ export const DIGIT_HEIGHT = 40 // matches heading2 lineHeight
 export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 
-const ICON_LEFT_MARGIN = 4
-
 // TODO: remove need to manually define width of each character
 const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
   (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize),
@@ -277,6 +275,7 @@ type AnimatedNumberProps = {
   disableAnimations?: boolean
   isRightToLeft: boolean
   EndElement?: JSX.Element
+  endElementGap?: number
 }
 
 interface ReanimatedNumberProps extends AnimatedNumberProps {
@@ -346,6 +345,7 @@ const ReanimatedNumber = ({
   warmLoading,
   isRightToLeft,
   EndElement,
+  endElementGap,
 }: ReanimatedNumberProps): JSX.Element => {
   const prevValue = usePrevious(value)
   const prevBalance = usePrevious(balance)
@@ -437,9 +437,9 @@ const ReanimatedNumber = ({
   const endElementLeft = charsSizes[chars.length - 1] || 0
   const iconAnimatedLeft = useAnimatedStyle(
     () => ({
-      marginLeft: withTiming(endElementLeft + ICON_LEFT_MARGIN),
+      marginLeft: withTiming(endElementLeft + (endElementGap ?? 0)),
     }),
-    [endElementLeft],
+    [endElementLeft, endElementGap],
   )
 
   if (loading) {

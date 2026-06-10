@@ -36,7 +36,7 @@ yarn-error.log*
 .env
 .env.local
 .env.defaults.local
-.env.tmp
+.env.new
 
 # turbo
 .turbo
@@ -101,6 +101,8 @@ CLAUDE.local.md
 
 # argent — skills-lock.json carries per-user absolute paths; the .agents/skills/ tree itself is committed (editor-side .claude/skills/argent-* are symlinks into it)
 skills-lock.json
+# Literal "~" dir created when a tool fails to expand $HOME (e.g. argent mcp-calls.log)
+/~/
 
 # lefthook
 .lefthook/

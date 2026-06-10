@@ -98,10 +98,33 @@ describe('computeTokenMarketStats', () => {
     expect(result.fdv).toBe(2_000_000)
   })
 
-  it('should resolve volume from volume24H then volume on market', () => {
-    expect(computeTokenMarketStats({ market: { volume24H: { value: 100 }, volume: { value: 200 } } }).volume).toBe(100)
-    expect(computeTokenMarketStats({ market: { volume: { value: 200 } } }).volume).toBe(200)
+  it('should resolve volume from volume24H', () => {
+    expect(computeTokenMarketStats({ market: { volume24H: { value: 100 } } }).volume).toBe(100)
+    expect(
+      computeTokenMarketStats({
+        market: { volume24H: { value: 100 } },
+        projectMarket: { volume24H: { value: 300 } },
+      }).volume,
+    ).toBe(100)
     expect(computeTokenMarketStats({ market: {} }).volume).toBeUndefined()
+  })
+
+  it('should use projectMarket price for 52w clamping when project market data is preferred', () => {
+    const result = computeTokenMarketStats({
+      currentPrice: 100,
+      preferProjectMarketData: true,
+      projectMarket: {
+        price: { value: 10 },
+        priceHigh52W: { value: 20 },
+        priceLow52W: { value: 15 },
+        volume24H: { value: 25 },
+      },
+      market: { price: { value: 100 }, volume24H: { value: 5 } },
+    })
+
+    expect(result.high52w).toBe(20)
+    expect(result.low52w).toBe(10)
+    expect(result.volume).toBe(25)
   })
 
   it('should prefer projectMarket 52w then market 52w for raw high/low before clamping', () => {

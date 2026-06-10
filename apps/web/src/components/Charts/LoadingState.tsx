@@ -52,25 +52,29 @@ function ChartSkeletonAxes({
   fillColor,
   tickColor,
   hideYAxis,
+  hideXAxis,
   hidePriceIndicators,
 }: {
   height: number
   fillColor: string
   tickColor: string
   hideYAxis?: boolean
+  hideXAxis?: boolean
   hidePriceIndicators?: boolean
 }) {
   return (
     <g>
       {!hidePriceIndicators && <rect width="180" height="32" rx="4" y="0" fill={fillColor} />}
       {!hidePriceIndicators && <rect width="80" height="13" rx="4" y="48" fill={fillColor} />}
-      <g transform={`translate(0, ${height - 14})`}>
-        <rect width="7%" height="6" rx="3" x="10%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="28.25%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="46.5%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="64.75%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="83%" fill={tickColor} />
-      </g>
+      {!hideXAxis && (
+        <g transform={`translate(0, ${height - 14})`}>
+          <rect width="7%" height="6" rx="3" x="10%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="28.25%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="46.5%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="64.75%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="83%" fill={tickColor} />
+        </g>
+      )}
       {!hideYAxis && (
         <g transform="translate(0, 10)">
           <rect width="24" height="6" rx="3" y={(0 * height) / 5} x="96%" fill={tickColor} />
@@ -171,6 +175,7 @@ export function ChartSkeleton({
   dim,
   chartTransform,
   hideYAxis,
+  hideXAxis,
   hidePriceIndicators,
 }: {
   height: number
@@ -179,6 +184,7 @@ export function ChartSkeleton({
   dim?: boolean
   chartTransform?: string
   hideYAxis?: boolean
+  hideXAxis?: boolean
   hidePriceIndicators?: boolean
 }) {
   const colors = useSporeColors()
@@ -191,12 +197,13 @@ export function ChartSkeleton({
 
   return (
     <Flex row width="100%" alignItems="center" position="relative">
-      <svg width="100%" height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+      <svg width="100%" height={height} viewBox={`0 0 726 ${height}`} xmlns="http://www.w3.org/2000/svg" fill="none">
         <ChartSkeletonAxes
           height={height}
           fillColor={fillColor}
           tickColor={tickColor}
           hideYAxis={hideYAxis}
+          hideXAxis={hideXAxis}
           hidePriceIndicators={hidePriceIndicators}
         />
         <ChartLoadingStateMask id={maskId} type={type} height={height} chartTransform={chartTransform} />

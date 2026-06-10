@@ -66,7 +66,12 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
         onPress: () => setSelectedPeriod(period),
         render: () => (
           <Flex row alignItems="center" py="$spacing8" px="$spacing4">
-            <Text variant="body2" color={period === selectedPeriod ? '$accent1' : '$neutral1'}>
+            <Text
+              allowFontScaling={false}
+              numberOfLines={1}
+              variant="body2"
+              color={period === selectedPeriod ? '$accent1' : '$neutral1'}
+            >
               {getProfitLossPeriodLabel({ period, t, verbose: true })}
             </Text>
           </Flex>
@@ -89,7 +94,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
           pr="$spacing8"
           py="$spacing6"
         >
-          <Text variant="buttonLabel4" color="$neutral1">
+          <Text allowFontScaling={false} numberOfLines={1} variant="buttonLabel4" color="$neutral1">
             {getProfitLossPeriodLabel({ period: selectedPeriod, t, verbose: true })}
           </Text>
           <RotatableChevron color="$neutral2" direction="down" size="$icon.16" />

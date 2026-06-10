@@ -226,14 +226,12 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
         <div
           class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
         >
-          <div
-            class="is_TouchableArea  t_group_true"
-            role="button"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; flex-direction: row; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: var(--t-space-spacing6); justify-content: center; transform: scale(1);"
-            tabindex="0"
+          <button
+            class="is_Button  t_group_item"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 0px 0px 0px 0px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing6); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
           >
             <span
-              class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
               data-disable-theme="true"
             >
               0xb568...0600
@@ -249,7 +247,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
                 fill="currentColor"
               />
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div
@@ -342,14 +340,12 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
         <div
           class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
         >
-          <div
-            class="is_TouchableArea  t_group_true"
-            role="button"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; flex-direction: row; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: var(--t-space-spacing6); justify-content: center; transform: scale(1);"
-            tabindex="0"
+          <button
+            class="is_Button  t_group_item"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 0px 0px 0px 0px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing6); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
           >
             <span
-              class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
               data-disable-theme="true"
             >
               0xb568...0600
@@ -365,7 +361,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
                 fill="currentColor"
               />
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div

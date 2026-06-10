@@ -26,7 +26,7 @@
     "@connectrpc/connect": "1.5.0",
     "@connectrpc/connect-web": "1.5.0",
     "@tanstack/react-query": "5.90.20",
-    "@uniswap/client-data-api": "0.0.78",
+    "@uniswap/client-data-api": "0.0.89",
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-explore": "0.0.18",
     "@uniswap/client-for": "0.1.5",

@@ -100,7 +100,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
             </Flex>
           )}
 
-          <StatsSection tokenQueryData={tokenQueryData} />
+          <StatsSection tokenQueryData={tokenQueryData} isLoading={tokenQuery.loading} />
 
           <TokenDescription />
 

@@ -1,8 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { Flex } from 'ui/src'
+import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
 import { ActivityListEmptyState } from 'uniswap/src/components/activity/ActivityListEmptyState'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -88,13 +91,15 @@ export function useActivityEmptyState({
   // Custom empty state for type/time filtering
   const filterEmptyState = useMemo(() => {
     return (
-      <ActivityListEmptyState
-        description={null}
-        buttonLabel={t('activity.list.noFilterResults.button')}
-        onPress={onClearFilters}
-        title={t('activity.list.noFilterResults.title')}
-        dataTestId={TestID.PortfolioActivityEmptyState}
-      />
+      <Flex py="$spacing40">
+        <BaseCard.EmptyState
+          icon={<NoTransactions size="$icon.64" color="$neutral3" />}
+          description={t('portfolio.noResults.filters.title')}
+          buttonLabel={t('portfolio.noResults.filters.clear')}
+          dataTestId={TestID.PortfolioActivityEmptyState}
+          onPress={onClearFilters}
+        />
+      </Flex>
     )
   }, [onClearFilters, t])
 

@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { base64urlToBase64 } from '@universe/encoding'
+import { isMobileWeb } from '@universe/environment'
 import { connect } from '@wagmi/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +10,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
 import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
 import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
@@ -30,6 +32,7 @@ import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnec
 import { getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
+import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useModalState } from '~/hooks/useModalState'
 import type { RecoverWalletModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
@@ -39,6 +42,9 @@ import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
 export function RecoverWalletModal(): JSX.Element {
   const { t } = useTranslation()
   const { isOpen, onClose } = useModalState(ModalName.RecoverWallet)
+  // Android Chrome shoves this fixed bottom sheet above the viewport when the soft keyboard opens; keep
+  // it on-screen while the modal is open. No-op on iOS/desktop. See hook for the full explanation.
+  useAndroidKeyboardViewportFix(isOpen)
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
   const { setIsConnected, setWalletAddress, setWalletId } = useEmbeddedWalletState()
@@ -48,6 +54,7 @@ export function RecoverWalletModal(): JSX.Element {
 
   const [addPasskeyError, setAddPasskeyError] = useState<string | undefined>()
   const [oauthError, setOauthError] = useState<string | undefined>()
+  const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
 
   const { appId: privyAppId } = getPrivyConfig(false)
   const handleOAuthError = useCallback((err: string) => setOauthError(err), [])
@@ -123,6 +130,11 @@ export function RecoverWalletModal(): JSX.Element {
     onClose()
   })
 
+  const handleCreateAccount = useEvent(() => {
+    handleClose()
+    openGetTheApp()
+  })
+
   const handleAddPasskey = useEvent(async () => {
     setAddPasskeyError(undefined)
     try {
@@ -138,7 +150,7 @@ export function RecoverWalletModal(): JSX.Element {
       name={ModalName.RecoverWallet}
       isModalOpen={isOpen}
       onClose={handleClose}
-      isDismissible={false}
+      isDismissible={isMobileWeb}
       maxWidth={420}
     >
       <Flex gap="$gap24" alignItems="center" width="100%">
@@ -207,6 +219,9 @@ export function RecoverWalletModal(): JSX.Element {
           />
         )}
         {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+        {flow.step === RecoveryStep.NoWalletFound && (
+          <NoWalletFoundStep t={t} handleClose={handleClose} onCreateAccount={handleCreateAccount} />
+        )}
       </Flex>
     </Modal>
   )

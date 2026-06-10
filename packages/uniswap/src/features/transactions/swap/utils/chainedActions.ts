@@ -18,6 +18,7 @@ export const CHAINED_ACTIONS_SUPPORTED_CHAINS: UniverseChainId[] = [
   UniverseChainId.WorldChain,
   UniverseChainId.Zksync,
   UniverseChainId.Zora,
+  UniverseChainId.MegaETH,
   // Testnet EVM chains
   UniverseChainId.Sepolia,
   UniverseChainId.UnichainSepolia,

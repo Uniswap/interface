@@ -11,12 +11,9 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
-import {
-  LP_POSITION_PROTOCOL_VERSIONS,
-  LP_POSITION_STATUS_FILTER_OPTIONS,
-  lpStatusConfig,
-} from '~/features/Liquidity/constants'
+import { LP_POSITION_PROTOCOL_VERSIONS, LP_POSITION_STATUS_FILTER_OPTIONS } from '~/features/Liquidity/constants'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { buildCreatePositionHref, type CreatePositionProtocolVersion } from '~/utils/createPositionRoute'
@@ -38,6 +35,7 @@ type PositionsHeaderProps = {
   showFilters?: boolean
   showTitle?: boolean
   showNetworkFilter?: boolean
+  showCreateButton?: boolean
   stackControlsAt?: 'sm' | 'md'
   selectedChain: UniverseChainId | null
   selectedVersions?: ProtocolVersion[]
@@ -65,6 +63,7 @@ export function PositionsHeader({
   showFilters = true,
   showTitle = true,
   showNetworkFilter = true,
+  showCreateButton = true,
   stackControlsAt = 'sm',
   selectedChain,
   selectedVersions,
@@ -178,6 +177,102 @@ export function PositionsHeader({
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
   const [protocolDropdownOpen, setProtocolDropdownOpen] = useState(false)
 
+  const createPositionControl = useMemo(() => {
+    if (!showCreateButton) {
+      return null
+    }
+
+    if (isAddLiquidityRevamp) {
+      return (
+        <Button
+          variant="default"
+          size="small"
+          icon={<Plus />}
+          fill={false}
+          width={shouldStackControls ? '100%' : undefined}
+          height={shouldStackControls ? '$spacing36' : undefined}
+          justifyContent={shouldLeftAlignCreateButton ? 'flex-start' : undefined}
+          onPress={() => {
+            navigateToCreatePosition()
+          }}
+        >
+          {t('position.new')}
+        </Button>
+      )
+    }
+
+    return (
+      <Flex row alignItems="center" width={shouldStackControls ? '100%' : undefined} $sm={{ width: '100%' }}>
+        <Flex
+          row
+          alignItems="center"
+          gap="$gap8"
+          pl="$padding12"
+          pr="$padding16"
+          py="$padding8"
+          backgroundColor="$neutral1"
+          borderTopLeftRadius="$rounded12"
+          borderBottomLeftRadius="$rounded12"
+          flexGrow={1}
+          flexShrink={1}
+          minWidth={0}
+          justifyContent={shouldLeftAlignCreateButton ? 'flex-start' : undefined}
+          $sm={shouldLeftAlignCreateButton ? undefined : { justifyContent: 'center' }}
+          {...ClickableTamaguiStyle}
+          onPress={() => {
+            navigateToCreatePosition()
+          }}
+        >
+          <Plus size={20} color="$surface1" />
+          <Text color="$surface1" variant="buttonLabel3">
+            {t('common.new')}
+          </Text>
+        </Flex>
+        <Flex alignSelf="stretch" width="$spacing1" backgroundColor="$surface1" />
+        <Dropdown
+          containerStyle={{ width: 'auto' }}
+          isTriggerStyled={false}
+          menuLabel={
+            <Flex
+              centered
+              pl="$padding8"
+              pr="$padding12"
+              py="$padding8"
+              backgroundColor="$neutral1"
+              borderTopRightRadius="$rounded12"
+              borderBottomRightRadius="$rounded12"
+              {...ClickableTamaguiStyle}
+            >
+              <RotatableChevron direction="down" size="$icon.20" color="$surface1" />
+            </Flex>
+          }
+          buttonStyle={{
+            p: 0,
+          }}
+          dropdownStyle={{ width: 160 }}
+          hideChevron={true}
+          isOpen={createDropdownOpen}
+          toggleOpen={() => {
+            setCreateDropdownOpen((prev) => !prev)
+          }}
+          alignRight={media.sm}
+        >
+          {createOptions}
+        </Dropdown>
+      </Flex>
+    )
+  }, [
+    showCreateButton,
+    isAddLiquidityRevamp,
+    shouldStackControls,
+    shouldLeftAlignCreateButton,
+    navigateToCreatePosition,
+    t,
+    createDropdownOpen,
+    createOptions,
+    media.sm,
+  ])
+
   if (!showTitle && !showFilters) {
     return null
   }
@@ -197,81 +292,7 @@ export function PositionsHeader({
       >
         {showFilters && (
           <>
-            {isAddLiquidityRevamp ? (
-              <Button
-                variant="default"
-                size="small"
-                icon={<Plus />}
-                fill={false}
-                width={shouldStackControls ? '100%' : undefined}
-                height={shouldStackControls ? '$spacing36' : undefined}
-                justifyContent={shouldLeftAlignCreateButton ? 'flex-start' : undefined}
-                onPress={() => {
-                  navigateToCreatePosition()
-                }}
-              >
-                {t('position.new')}
-              </Button>
-            ) : (
-              <Flex row alignItems="center" width={shouldStackControls ? '100%' : undefined} $sm={{ width: '100%' }}>
-                <Flex
-                  row
-                  alignItems="center"
-                  gap="$gap8"
-                  pl="$padding12"
-                  pr="$padding16"
-                  py="$padding8"
-                  backgroundColor="$neutral1"
-                  borderTopLeftRadius="$rounded12"
-                  borderBottomLeftRadius="$rounded12"
-                  flexGrow={1}
-                  flexShrink={1}
-                  minWidth={0}
-                  justifyContent={shouldLeftAlignCreateButton ? 'flex-start' : undefined}
-                  $sm={shouldLeftAlignCreateButton ? undefined : { justifyContent: 'center' }}
-                  {...ClickableTamaguiStyle}
-                  onPress={() => {
-                    navigateToCreatePosition()
-                  }}
-                >
-                  <Plus size={20} color="$surface1" />
-                  <Text color="$surface1" variant="buttonLabel3">
-                    {t('common.new')}
-                  </Text>
-                </Flex>
-                <Flex alignSelf="stretch" width="$spacing1" backgroundColor="$surface1" />
-                <Dropdown
-                  containerStyle={{ width: 'auto' }}
-                  isTriggerStyled={false}
-                  menuLabel={
-                    <Flex
-                      centered
-                      pl="$padding8"
-                      pr="$padding12"
-                      py="$padding8"
-                      backgroundColor="$neutral1"
-                      borderTopRightRadius="$rounded12"
-                      borderBottomRightRadius="$rounded12"
-                      {...ClickableTamaguiStyle}
-                    >
-                      <RotatableChevron direction="down" size="$icon.20" color="$surface1" />
-                    </Flex>
-                  }
-                  buttonStyle={{
-                    p: 0,
-                  }}
-                  dropdownStyle={{ width: 160 }}
-                  hideChevron={true}
-                  isOpen={createDropdownOpen}
-                  toggleOpen={() => {
-                    setCreateDropdownOpen((prev) => !prev)
-                  }}
-                  alignRight={media.sm}
-                >
-                  {createOptions}
-                </Dropdown>
-              </Flex>
-            )}
+            {createPositionControl}
             <Flex
               row
               alignItems="center"

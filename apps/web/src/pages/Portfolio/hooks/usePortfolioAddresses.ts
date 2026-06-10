@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 
 // This is the address used for the disconnected demo view. It is only used in the disconnected state for the portfolio page.
-const DEMO_WALLET_ADDRESS = '0x8796207d877194d97a2c360c041f13887896FC79'
+export const DEMO_WALLET_ADDRESS = '0x479732F25203641B3D2A6D596F5175f126486009'
 
 /**
  * Returns portfolio addresses with demo wallet fallback for disconnected state.

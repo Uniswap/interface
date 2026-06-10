@@ -1,6 +1,10 @@
 import { PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { useQuery } from '@tanstack/react-query'
-import { AuctionWithStats, ListTopAuctionsRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { useQueries, useQuery } from '@tanstack/react-query'
+import {
+  AuctionWithStats,
+  GetAuctionRequest,
+  ListTopAuctionsRequest,
+} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -69,28 +73,82 @@ export function useTopAuctions(): {
 
   const { data: topAuctions, isLoading, isError } = useQuery(auctionQueries.listTopAuctions({ params }))
 
+  // Parse verified IDs ("chainId_address") and filter by URL chain when present.
+  // GetAuction is used as a fallback so verified auctions outside the top-N (e.g. not-yet-started
+  // ones with zero bid volume) still surface in the verified section.
+  const verifiedAuctionParams = useMemo<{ chainId: number; address: string }[]>(
+    () =>
+      verifiedAuctionIds
+        .map((id) => {
+          const sepIndex = id.indexOf('_')
+          if (sepIndex < 0) {
+            return undefined
+          }
+          const parsedChainId = Number(id.slice(0, sepIndex))
+          const address = id.slice(sepIndex + 1)
+          if (!Number.isFinite(parsedChainId) || !address) {
+            return undefined
+          }
+          return { chainId: parsedChainId, address }
+        })
+        .filter((p): p is { chainId: number; address: string } => p !== undefined)
+        .filter((p) => !chainId || p.chainId === chainId),
+    [verifiedAuctionIds, chainId],
+  )
+
+  const topAuctionIdSet = useMemo(
+    () =>
+      new Set(
+        (topAuctions?.auctions ?? []).map((a) => a.auction?.auctionId).filter((id): id is string => id !== undefined),
+      ),
+    [topAuctions?.auctions],
+  )
+
+  const missingVerifiedParams = useMemo(
+    () => verifiedAuctionParams.filter((p) => !topAuctionIdSet.has(`${p.chainId}_${p.address}`)),
+    [verifiedAuctionParams, topAuctionIdSet],
+  )
+
+  const missingVerifiedQueries = useQueries({
+    queries: missingVerifiedParams.map((p) => auctionQueries.getAuction({ params: new GetAuctionRequest(p) })),
+  })
+
+  // Merge ListTopAuctions results with any verified auctions fetched individually via GetAuction.
+  // The verified-only entries are appended with empty totalBidVolume so they sort to the end via
+  // auctionCommittedVolumeComparator (USD volume missing/zero).
+  const mergedAuctions = useMemo<AuctionWithStats[]>(() => {
+    const base = topAuctions?.auctions ?? []
+    const extras: AuctionWithStats[] = []
+    for (const q of missingVerifiedQueries) {
+      const auction = q.data?.auctions[0]
+      if (auction) {
+        extras.push(new AuctionWithStats({ auction, totalBidVolume: '' }))
+      }
+    }
+    return extras.length > 0 ? [...base, ...extras] : base
+  }, [topAuctions?.auctions, missingVerifiedQueries])
+
+  const verifiedFallbackLoading = missingVerifiedQueries.some((q) => q.isLoading)
+
   const currencyIds = useMemo(
     () =>
-      (topAuctions?.auctions ?? [])
+      mergedAuctions
         .map((auction) =>
           auction.auction ? buildCurrencyId(auction.auction.chainId, auction.auction.tokenAddress) : undefined,
         )
         .filter((id): id is string => id !== undefined),
-    [topAuctions?.auctions],
+    [mergedAuctions],
   )
   const currencyInfos = useCurrencyInfos(currencyIds, {
-    skip: !topAuctions?.auctions || topAuctions.auctions.length === 0,
+    skip: mergedAuctions.length === 0,
   })
 
   // Extract unique chain IDs from auctions to minimize RPC calls
   const auctionChainIds = useMemo(() => {
-    if (!topAuctions?.auctions) {
-      return new Set<EVMUniverseChainId>()
-    }
     return new Set(
-      topAuctions.auctions.map((a) => a.auction?.chainId).filter((id): id is EVMUniverseChainId => id !== undefined),
+      mergedAuctions.map((a) => a.auction?.chainId).filter((id): id is EVMUniverseChainId => id !== undefined),
     )
-  }, [topAuctions?.auctions])
+  }, [mergedAuctions])
 
   // Fetch current block numbers and timestamps for chains that have auctions
   const blocksByChain = useMultiChainBlockInfo(auctionChainIds)
@@ -103,11 +161,7 @@ export function useTopAuctions(): {
 
   // Build requests for block timestamps - extract endBlock values from auctions
   const blockTimestampRequests = useMemo<BlockTimestampRequest[]>(() => {
-    if (!topAuctions?.auctions) {
-      return []
-    }
-
-    return topAuctions.auctions
+    return mergedAuctions
       .map((auctionWithStats) => {
         const auction = auctionWithStats.auction
         // Only create request if both chainId and endBlock are valid
@@ -134,18 +188,18 @@ export function useTopAuctions(): {
       })
       .flat()
       .filter((req): req is BlockTimestampRequest => req !== null)
-  }, [topAuctions?.auctions])
+  }, [mergedAuctions])
 
   const getBlockTimestamp = useGetBlockTimestamps(blockTimestampRequests, blocksByChain)
 
   const auctionsWithCurrencyInfo = useMemo<EnrichedAuction[]>(() => {
-    if (!topAuctions?.auctions) {
+    if (mergedAuctions.length === 0) {
       return []
     }
 
     const verifiedSet = new Set(verifiedAuctionIds)
 
-    return topAuctions.auctions
+    return mergedAuctions
       .map((auction, index) => {
         const coreAuction = auction.auction
         const currencyInfo = currencyInfos[index]
@@ -193,11 +247,11 @@ export function useTopAuctions(): {
         const chainId = auctionWithInfo.auction?.chainId
         return chainId !== undefined && (isTestnetModeEnabled || !isTestnetChain(chainId))
       })
-  }, [topAuctions?.auctions, verifiedAuctionIds, isTestnetModeEnabled, getBlockTimestamp, currencyInfos, blocksByChain])
+  }, [mergedAuctions, verifiedAuctionIds, isTestnetModeEnabled, getBlockTimestamp, currencyInfos, blocksByChain])
 
   return {
     auctions: auctionsWithCurrencyInfo,
-    isLoading: isLoading || !areBlocksLoaded,
+    isLoading: isLoading || verifiedFallbackLoading || !areBlocksLoaded,
     isError,
   }
 }

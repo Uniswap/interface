@@ -24,7 +24,6 @@ import {
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 interface TokenItemProps {
@@ -115,7 +114,7 @@ export const TokenItem = memo(function TokenItemInner({
 
   return (
     <ContextMenu actions={menuActions} previewBackgroundColor={colors.surface1.val} onPress={onContextMenuPress}>
-      <TouchableArea testID={`token-item-${name}`} onLongPress={noop} onPress={onPress}>
+      <TouchableArea testID={`token-item-${name}`} onPress={onPress}>
         {overlay}
         <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
           <Flex centered row gap="$spacing4">

@@ -1,14 +1,11 @@
 import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
-import { getEntryGatewayUrl } from '@universe/api'
 import {
   createObservableTransport,
-  createRpcConfigResolver,
-  createUniRpcConfigResolver,
+  createUniRpcRoutedTransport,
   createUniRpcTransportFactory,
   getRpcObserver,
 } from '@universe/chains'
 import { isE2eTestEnv, isTestEnv } from '@universe/environment'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -16,7 +13,7 @@ import type { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { logger } from 'utilities/src/logger/logger'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
 import type { Chain } from 'viem'
@@ -111,16 +108,9 @@ function createWagmiConnectors(params: {
     : baseConnectors
 }
 
-const webResolveRpcConfig = createRpcConfigResolver({
-  resolveUniRpcConfig: createUniRpcConfigResolver({
-    getFeatureFlag: () => getFeatureFlag(FeatureFlags.UniRpcEnabled),
-    getEntryGatewayUrl,
-    requestSource: 'uniswap-web',
-    credentials: 'include',
-  }),
-  selectLegacyRpcUrl: selectRpcUrl,
-})
-
+// Cookie-session UniRPC transport factory (web's injected session strategy).
+// The gating decision lives in the shared `defaultResolveRpcConfig` resolver;
+// this only constructs the UniRPC transport once that resolver says to use it.
 const buildWebUniRpcTransport = createUniRpcTransportFactory({
   session: { type: 'cookies' },
 })
@@ -138,40 +128,42 @@ function createWagmiConfig(params: {
     chains: getNonEmptyArrayOrThrow(ORDERED_EVM_CHAINS),
     connectors,
     client({ chain }) {
-      const rpcConfig = webResolveRpcConfig({ chainId: chain.id, rpcType: RPCType.Public })
-      // Branch on the explicit `isUniRpc` flag — header presence used to be
-      // the implicit signal, which would have routed any legacy provider with
-      // static headers through the UniRPC transport by accident.
-      if (rpcConfig?.isUniRpc) {
-        return createClient({
-          chain,
-          batch: { multicall: true },
-          pollingInterval: 12_000,
-          transport: createObservableTransport({
-            baseTransportFactory: buildWebUniRpcTransport({
-              config: { rpcUrl: rpcConfig.rpcUrl, headers: rpcConfig.headers ?? {} },
-            }),
-            observer: getRpcObserver(),
-            meta: { chainId: chain.id, url: rpcConfig.rpcUrl },
-          }),
-        })
-      }
-
+      // wagmi builds this client once per chain and caches it for the session,
+      // so the UniRPC-vs-legacy choice must NOT be snapshotted here: on app
+      // start the gate behind `isUniRpc` is usually still unresolved (Statsig
+      // inits async; a cold load has no cached value), and a snapshot would pin
+      // the chain to the legacy Infura/QuickNode providers for the whole
+      // session even after the gate turns on. createUniRpcRoutedTransport
+      // re-reads the shared resolver per request, so the cached client
+      // self-heals onto UniRPC the moment the gate resolves — same guarantee
+      // ViemClientManager gets by re-resolving per `getViemClient` call.
       return createClient({
         chain,
         batch: { multicall: true },
         pollingInterval: 12_000,
-        transport: fallback(
-          orderedTransportUrls(chain).map((url) =>
+        transport: createUniRpcRoutedTransport({
+          resolveRpcConfig: () => defaultResolveRpcConfig({ chainId: chain.id, rpcType: RPCType.Public }),
+          buildUniRpcTransport: (rpcConfig) =>
             createObservableTransport({
-              baseTransportFactory: http(url, {
-                onFetchResponse: (response) => onFetchResponse(response, chain, url),
+              baseTransportFactory: buildWebUniRpcTransport({
+                config: { rpcUrl: rpcConfig.rpcUrl, headers: rpcConfig.headers ?? {} },
               }),
               observer: getRpcObserver(),
-              meta: { chainId: chain.id, url },
+              meta: { chainId: chain.id, url: rpcConfig.rpcUrl },
             }),
-          ),
-        ),
+          buildLegacyTransport: () =>
+            fallback(
+              orderedTransportUrls(chain).map((url) =>
+                createObservableTransport({
+                  baseTransportFactory: http(url, {
+                    onFetchResponse: (response) => onFetchResponse(response, chain, url),
+                  }),
+                  observer: getRpcObserver(),
+                  meta: { chainId: chain.id, url },
+                }),
+              ),
+            ),
+        }),
       })
     },
   })

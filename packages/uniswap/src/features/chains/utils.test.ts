@@ -35,6 +35,7 @@ describe(fromGraphQLChain, () => {
 
   it('handles supported chain', () => {
     expect(fromGraphQLChain(GraphQLApi.Chain.Arbitrum)).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromGraphQLChain(GraphQLApi.Chain.Megaeth)).toEqual(UniverseChainId.MegaETH)
   })
 
   it('handles unsupported chain', () => {
@@ -58,6 +59,7 @@ describe(fromUniswapWebAppLink, () => {
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Megaeth.toLowerCase())).toEqual(UniverseChainId.MegaETH)
     // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
@@ -72,6 +74,7 @@ describe(toUniswapWebAppLink, () => {
     expect(toUniswapWebAppLink(UniverseChainId.ArbitrumOne)).toEqual(GraphQLApi.Chain.Arbitrum.toLowerCase())
     expect(toUniswapWebAppLink(UniverseChainId.Optimism)).toEqual(GraphQLApi.Chain.Optimism.toLowerCase())
     expect(toUniswapWebAppLink(UniverseChainId.Polygon)).toEqual(GraphQLApi.Chain.Polygon.toLowerCase())
+    expect(toUniswapWebAppLink(UniverseChainId.MegaETH)).toEqual(GraphQLApi.Chain.Megaeth.toLowerCase())
     // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
@@ -133,6 +136,7 @@ describe('getEnabledChains', () => {
         UniverseChainId.Celo,
         UniverseChainId.WorldChain,
         UniverseChainId.Linea,
+        UniverseChainId.MegaETH,
         UniverseChainId.Soneium,
         UniverseChainId.Tempo,
         UniverseChainId.XLayer,
@@ -154,6 +158,7 @@ describe('getEnabledChains', () => {
         GraphQLApi.Chain.Celo,
         GraphQLApi.Chain.Worldchain,
         GraphQLApi.Chain.Linea,
+        GraphQLApi.Chain.Megaeth,
         GraphQLApi.Chain.Soneium,
         GraphQLApi.Chain.Tempo,
         GraphQLApi.Chain.Xlayer,

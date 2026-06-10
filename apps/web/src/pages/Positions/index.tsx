@@ -1,8 +1,9 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -55,6 +56,25 @@ export function Pool() {
 
   const { formattedUsdValue: formattedRewardsUsdValue } = useLpIncentiveRewardsUsdValue(tokenRewards)
 
+  const handleCollectRewards = useCallback(() => {
+    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
+    openModal()
+  }, [openModal])
+
+  const handleChainChange = useCallback(
+    (selectedChain: UniverseChainId | null) => {
+      setChainFilter(selectedChain)
+    },
+    [setChainFilter],
+  )
+
+  const handleClaimSuccess = useCallback(() => {
+    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
+      token_rewards: tokenRewards,
+    })
+    onTransactionSuccess()
+  }, [tokenRewards, onTransactionSuccess])
+
   const {
     visiblePositions,
     hiddenPositions,
@@ -88,10 +108,7 @@ export function Pool() {
           {isLPIncentivesEnabled && (
             <LpIncentiveRewardsCard
               walletAddress={account.address}
-              onCollectRewards={() => {
-                sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
-                openModal()
-              }}
+              onCollectRewards={handleCollectRewards}
               setTokenRewards={setTokenRewards}
               initialHasCollectedRewards={hasCollectedRewards}
             />
@@ -102,9 +119,7 @@ export function Pool() {
               selectedChain={chainFilter}
               selectedVersions={versionFilter}
               selectedStatus={statusFilter}
-              onChainChange={(selectedChain) => {
-                setChainFilter(selectedChain ?? null)
-              }}
+              onChainChange={handleChainChange}
               onVersionChange={toggleVersion}
               onStatusChange={toggleStatus}
             />
@@ -160,13 +175,8 @@ export function Pool() {
       {isLPIncentivesEnabled && (
         <LpIncentiveClaimModal
           isOpen={isModalOpen}
-          onClose={() => closeModal()}
-          onSuccess={() => {
-            sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
-              token_rewards: tokenRewards,
-            })
-            onTransactionSuccess()
-          }}
+          onClose={closeModal}
+          onSuccess={handleClaimSuccess}
           tokenRewards={tokenRewards}
           isPendingTransaction={isPendingTransaction}
           iconUrl={tokenLogo}

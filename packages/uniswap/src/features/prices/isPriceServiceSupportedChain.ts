@@ -19,6 +19,7 @@ const PRICE_SERVICE_SUPPORT: Record<UniverseChainId, boolean> = {
   [UniverseChainId.Base]: true,
   [UniverseChainId.Blast]: true,
   [UniverseChainId.Bnb]: true,
+  [UniverseChainId.MegaETH]: true,
   [UniverseChainId.Monad]: true,
   [UniverseChainId.Optimism]: true,
   [UniverseChainId.Polygon]: true,

@@ -5,33 +5,28 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 
-interface UseFiatTokenConversionParams {
-  bidCurrency: Currency | undefined
-}
-
 interface FiatTokenConversion {
   conversionRate: number
   usdPriceOfCurrency: Price<Currency, Currency> | undefined
-  fiatToBidToken: (fiatAmount: string) => string | null
-  bidTokenToFiat: (tokenAmount: string) => string | null
+  fiatToToken: (fiatAmount: string) => string | null
+  tokenToFiat: (tokenAmount: string) => string | null
 }
 
-export function useFiatTokenConversion({ bidCurrency }: UseFiatTokenConversionParams): FiatTokenConversion {
+export function useFiatTokenConversion({ currency }: { currency: Currency | undefined }): FiatTokenConversion {
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
-  const { price: usdPriceOfCurrency } = useUSDCPrice(bidCurrency)
+  const { price: usdPriceOfCurrency } = useUSDCPrice(currency)
 
-  const fiatToBidToken = useCallback(
+  const fiatToToken = useCallback(
     (fiatAmount: string): string | null => {
-      if (!fiatAmount || !usdPriceOfCurrency || !bidCurrency) {
+      if (!fiatAmount || !usdPriceOfCurrency || !currency) {
         return null
       }
       const parsed = parseFloat(fiatAmount)
       if (!Number.isFinite(parsed) || parsed === 0) {
         return null
       }
-      const chainId = bidCurrency.chainId
-      const stablecoin = getPrimaryStablecoin(chainId)
+      const stablecoin = getPrimaryStablecoin(currency.chainId)
       const usdAmount = (parsed / conversionRate).toFixed(stablecoin.decimals)
       const stablecoinAmount = getCurrencyAmount({
         value: usdAmount,
@@ -44,18 +39,18 @@ export function useFiatTokenConversion({ bidCurrency }: UseFiatTokenConversionPa
       const tokenAmount = usdPriceOfCurrency.invert().quote(stablecoinAmount)
       return tokenAmount.toExact()
     },
-    [usdPriceOfCurrency, bidCurrency, conversionRate],
+    [usdPriceOfCurrency, currency, conversionRate],
   )
 
-  const bidTokenToFiat = useCallback(
+  const tokenToFiat = useCallback(
     (tokenValue: string): string | null => {
-      if (!tokenValue || !usdPriceOfCurrency || !bidCurrency) {
+      if (!tokenValue || !usdPriceOfCurrency || !currency) {
         return null
       }
       const tokenAmount = getCurrencyAmount({
         value: tokenValue,
         valueType: ValueType.Exact,
-        currency: bidCurrency,
+        currency,
       })
       if (!tokenAmount) {
         return null
@@ -64,8 +59,8 @@ export function useFiatTokenConversion({ bidCurrency }: UseFiatTokenConversionPa
       const fiat = parseFloat(usdAmount.toExact()) * conversionRate
       return fiat && Number.isFinite(fiat) ? parseFloat(fiat.toFixed(12)).toString() : null
     },
-    [usdPriceOfCurrency, bidCurrency, conversionRate],
+    [usdPriceOfCurrency, currency, conversionRate],
   )
 
-  return { conversionRate, usdPriceOfCurrency, fiatToBidToken, bidTokenToFiat }
+  return { conversionRate, usdPriceOfCurrency, fiatToToken, tokenToFiat }
 }

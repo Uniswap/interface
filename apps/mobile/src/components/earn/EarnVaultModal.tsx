@@ -1,20 +1,17 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useAppStackNavigation } from 'src/app/navigation/types'
+import type { EarnVaultModalProps } from 'src/components/earn/EarnVaultModalState'
 import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { EarnVaultOverview } from 'uniswap/src/features/earn/EarnVaultOverview'
-import type { EarnPositionInfo, EarnVaultInfo, EarnVaultTab } from 'uniswap/src/features/earn/types'
+import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
+import { EarnAction } from 'uniswap/src/features/earn/types'
+import type { EarnVaultTab } from 'uniswap/src/features/earn/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { noop } from 'utilities/src/react/noop'
-
-// Route param types in AppStackParamList must have only optional fields — the generic
-// ReactNavigationModal wrapper can't narrow ModalName correctly when any entry has a
-// required field, so we mirror the convention used by every other modal in the registry.
-export type EarnVaultModalProps = {
-  vault?: EarnVaultInfo
-  position?: EarnPositionInfo
-}
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function EarnVaultModal({
   vault,
@@ -22,9 +19,49 @@ export function EarnVaultModal({
   isOpen,
   onClose,
 }: EarnVaultModalProps & BaseModalProps): JSX.Element | null {
-  const currencyInfo = useCurrencyInfo(vault?.currencyId)
+  const navigation = useAppStackNavigation()
+  const currencyInfo = useCurrencyInfo(vault?.displayCurrencyId)
   const hasPosition = position !== undefined
   const [selectedTab, setSelectedTab] = useState<EarnVaultTab>(hasPosition ? 'balance' : 'details')
+
+  const walletAddress = useActiveAccountAddress()
+  const { balanceLookupSettled, hasAnyBalanceForUnderlying } = useEarnDepositSources({
+    vault,
+    walletAddress: walletAddress ?? undefined,
+    isOpen,
+  })
+
+  const handleDeposit = useCallback(() => {
+    // Wait for the balance lookup to settle — without this, a tap during the loading window
+    // would silently fall through to the deposit sheet for a user who actually has no balance.
+    if (!vault || !balanceLookupSettled) {
+      return
+    }
+    // Use `replace` (not `navigate` + onClose) so the vault sheet is atomically swapped for
+    // the next modal — calling onClose after navigate is a no-op because the vault has
+    // already lost focus, leaving both sheets stacked.
+    if (!hasAnyBalanceForUnderlying) {
+      navigation.replace(ModalName.EarnYouNeedToken, {
+        currencyId: vault.displayCurrencyId,
+      })
+    } else {
+      navigation.replace(ModalName.EarnDepositAmount, {
+        vault,
+        initialAction: EarnAction.Deposit,
+      })
+    }
+  }, [balanceLookupSettled, hasAnyBalanceForUnderlying, navigation, vault])
+
+  const handleWithdraw = useCallback(() => {
+    if (!vault) {
+      return
+    }
+    navigation.replace(ModalName.EarnDepositAmount, {
+      vault,
+      position,
+      initialAction: EarnAction.Withdraw,
+    })
+  }, [navigation, position, vault])
 
   if (!vault) {
     return null
@@ -46,8 +83,8 @@ export function EarnVaultModal({
           symbol={currencyInfo?.currency.symbol ?? ''}
           onClose={onClose}
           onConnectWallet={noop}
-          onDeposit={noop}
-          onWithdraw={noop}
+          onDeposit={handleDeposit}
+          onWithdraw={handleWithdraw}
         />
       </Flex>
     </Modal>

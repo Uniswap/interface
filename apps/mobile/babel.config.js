@@ -2,9 +2,25 @@
 // This makes process.env.X work in local dev (not just CI where shell env vars are set).
 // Must run before Babel plugins are evaluated.
 const dotenv = require('dotenv')
+const fs = require('fs')
 const path = require('path')
-dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults') })
-dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults.local'), override: true })
+
+const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
+
+if (USE_NEW_CONFIGS) {
+  const newEnvPath = path.resolve(__dirname, '.env.new')
+  if (!fs.existsSync(newEnvPath)) {
+    throw new Error(`USE_NEW_CONFIGS=true but ${newEnvPath} does not exist`)
+  }
+  const result = dotenv.config({ path: newEnvPath, override: true })
+  // Fail fast on bad env file
+  if (result.error) {
+    throw new Error(`Failed to parse ${newEnvPath}: ${result.error.message}`)
+  }
+} else {
+  dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults') })
+  dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults.local'), override: true })
+}
 
 // process.env.APP_ID is used by @universe/config. When that package's
 // getConfig() function is removed, this assignment can be removed.
@@ -15,7 +31,7 @@ const { NODE_ENV } = process.env
 const inProduction = NODE_ENV === 'production'
 
 module.exports = function (api) {
-  api.cache.using(() => process.env.NODE_ENV)
+  api.cache.using(() => `${process.env.NODE_ENV}:${process.env.USE_NEW_CONFIGS}`)
 
   let plugins = inProduction ? ['transform-remove-console'] : []
 
@@ -47,7 +63,7 @@ module.exports = function (api) {
       {
         // ideally use envName here to add a mobile namespace but this doesn't work when sharing with dotenv-webpack
         moduleName: 'react-native-dotenv',
-        path: '../../.env.defaults', // must use this path so this file can be shared with web since dotenv-webpack is less flexible
+        path: USE_NEW_CONFIGS ? './.env.new' : '../../.env.defaults',
         safe: true,
         allowUndefined: false,
       },
