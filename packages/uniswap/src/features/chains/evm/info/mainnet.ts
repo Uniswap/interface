@@ -78,8 +78,12 @@ export const MAINNET_CHAIN_INFO = {
         [RPCType.Public]: {
           http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
         },
+        // Default is handed to wallet-connector rpc maps (WalletConnect/Binance read
+        // rpcUrls.default.http[0] into cookieless in-page HTTP clients), so it must
+        // stay an unkeyed public endpoint — keyed QuickNode/Infura URLs here leak the
+        // key and break connected users when those endpoints are disabled.
         [RPCType.Default]: {
-          http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
         },
         [RPCType.Fallback]: {
           http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
