@@ -2,6 +2,7 @@ import { isAndroid } from '@universe/environment'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText, Flex } from 'ui/src'
+import { Briefcase } from 'ui/src/components/icons/Briefcase'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Heart } from 'ui/src/components/icons/Heart'
@@ -19,6 +20,8 @@ export type SectionHeaderProps = {
   endElement?: JSX.Element
   name?: string
   sectionHeader?: JSX.Element
+  /** Overrides the default section icon (from `getSectionIcon`) when provided. */
+  icon?: JSX.Element
 }
 
 export const SectionHeader = memo(function SectionHeaderInner({
@@ -27,9 +30,9 @@ export const SectionHeader = memo(function SectionHeaderInner({
   endElement,
   name,
   sectionHeader,
+  icon,
 }: SectionHeaderProps): JSX.Element | null {
   const title = useSectionTitle(sectionKey)
-  const icon = getSectionIcon(sectionKey)
 
   if (sectionKey === OnchainItemSectionName.SuggestedTokens) {
     return null
@@ -52,7 +55,7 @@ export const SectionHeader = memo(function SectionHeaderInner({
       testID={`${TestID.SectionHeaderPrefix}${sectionKey}`}
     >
       <Flex row alignItems="center" gap="$spacing8" flex={1}>
-        {icon}
+        {icon ?? getSectionIcon(sectionKey)}
         <ElementAfterText
           text={name ?? title}
           textProps={{ color: '$neutral2', variant: 'subheading2' }}
@@ -95,6 +98,8 @@ function useSectionTitle(section: OnchainItemSectionName): string {
       return t('explore.wallets.favorite.title.default')
     case OnchainItemSectionName.SuggestedTokens: // no suggested tokens header
       return ''
+    case OnchainItemSectionName.Stocks:
+      return t('common.stocks')
     default:
       return section
   }
@@ -123,6 +128,8 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
       return <Person color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.FavoriteWallets:
       return <Heart color="$neutral2" size="$icon.16" />
+    case OnchainItemSectionName.Stocks:
+      return <Briefcase color="$neutral2" size="$icon.16" />
     default:
       return null
   }

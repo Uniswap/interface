@@ -1,5 +1,5 @@
 import { colorsLight } from 'ui/src/theme'
-import { isGrayColor, passesContrast } from 'ui/src/utils/colors'
+import { getRelativeLuminance, isGrayColor, passesContrast, pickContrastPassingTokenColor } from 'ui/src/utils/colors'
 import { describe, expect, it } from 'vitest'
 
 describe('isGrayColor', () => {
@@ -50,5 +50,48 @@ describe('passesContrast', () => {
 
   it('should return false for pure white', () => {
     expect(passesContrast({ color: '#FFFFFF', backgroundColor: backgroundHex, contrastThreshold })).toBe(false)
+  })
+})
+
+describe('getRelativeLuminance', () => {
+  it('should return WCAG luminance for hex', () => {
+    expect(getRelativeLuminance('#FFFFFF')).toBeCloseTo(1, 2)
+    expect(getRelativeLuminance('#000000')).toBeCloseTo(0, 2)
+  })
+
+  it('should return null for unsupported formats', () => {
+    expect(getRelativeLuminance(undefined)).toBeNull()
+    expect(getRelativeLuminance('#abc')).toBeNull()
+  })
+})
+
+describe('pickContrastPassingTokenColor', () => {
+  const lightBg = colorsLight.white
+  const contrastThreshold = 1.95
+
+  it('should prefer a brighter swatch on light background when both pass contrast (dark ring before brand fill)', () => {
+    const picked = pickContrastPassingTokenColor({
+      extractedColors: { detail: '#1a1a1a', primary: '#F3BA2F' },
+      backgroundHex: lightBg,
+      isDarkMode: false,
+    })
+    expect(picked).toBe('#F3BA2F')
+    expect(passesContrast({ color: '#1a1a1a', backgroundColor: lightBg, contrastThreshold })).toBe(true)
+    expect(
+      passesContrast({
+        color: '#F3BA2F',
+        backgroundColor: lightBg,
+        contrastThreshold: 1.45,
+      }),
+    ).toBe(true)
+  })
+
+  it('should keep first passing swatch when no brighter alternative exists on light background', () => {
+    const picked = pickContrastPassingTokenColor({
+      extractedColors: { detail: '#1a1030', primary: '#0f0820' },
+      backgroundHex: lightBg,
+      isDarkMode: false,
+    })
+    expect(picked).toBe('#1a1030')
   })
 })

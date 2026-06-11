@@ -1,3 +1,4 @@
+import { SessionGateSource, type Session } from '@universe/sessions'
 import { logger } from 'utilities/src/logger/logger'
 import { createPublicClient, defineChain, http, PublicClient, Transport, walletActions } from 'viem'
 import { createUniRpcTransportFactory } from './createUniRpcTransport'
@@ -6,6 +7,7 @@ import { createFlashbotsRpcClient } from './FlashbotsRpcClient'
 import { createObservableTransport } from './observability/createObservableTransport'
 import { getRpcObserver } from './observability/rpcObserver'
 import type { RpcConfigResolver } from './resolveRpcConfig'
+import { createSessionGatedTransport } from './session/createSessionGatedTransport'
 import { RPCType, UniverseChainId } from './types'
 import type { ViemChainInfo } from './types'
 
@@ -13,6 +15,12 @@ export interface CreateViemClientFactoryCtx {
   resolveRpcConfig: RpcConfigResolver
   getChainInfo: (chainId: UniverseChainId) => ViemChainInfo
   areAddressesEqual: (a: string, b: string) => boolean
+  /**
+   * Optional per-request session gate. When the getter returns a Session,
+   * UniRPC traffic awaits ready and retries once on 401. When it returns null
+   * (flag off, session not bootstrapped, non-UniRPC traffic), passes through.
+   */
+  getSessionGate?: () => Session | null
 }
 
 interface CreateViemClientInput {
@@ -59,17 +67,26 @@ export function createViemClientFactory(ctx: CreateViemClientFactoryCtx): Create
       if (rpcConfig.isUniRpc) {
         const uniRpcTransportConfig = { rpcUrl: rpcConfig.rpcUrl, headers: rpcConfig.headers ?? {} }
         const { getRequestHeaders } = rpcConfig
-        if (getRequestHeaders) {
-          baseTransport = createUniRpcTransportFactory({
-            session: { type: 'headers', getSessionHeaders: getRequestHeaders },
-          })({ config: uniRpcTransportConfig })
-        } else {
-          // Cookie-based session auth (web). The transport unconditionally
-          // sets credentials: 'include' for the cookies branch.
-          baseTransport = createUniRpcTransportFactory({
-            session: { type: 'cookies' },
-          })({ config: uniRpcTransportConfig })
-        }
+        const uniRpcTransport = getRequestHeaders
+          ? createUniRpcTransportFactory({
+              session: { type: 'headers', getSessionHeaders: getRequestHeaders },
+            })({ config: uniRpcTransportConfig })
+          : createUniRpcTransportFactory({
+              // Cookie-based session auth (web). The transport unconditionally
+              // sets credentials: 'include' for the cookies branch.
+              session: { type: 'cookies' },
+            })({ config: uniRpcTransportConfig })
+
+        // Session gating wraps only the UniRPC path — legacy/Flashbots are
+        // independent of the entry-gateway session. The wrapper is a no-op
+        // when `getSessionGate` returns null (session not bootstrapped).
+        baseTransport = ctx.getSessionGate
+          ? createSessionGatedTransport({
+              baseTransportFactory: uniRpcTransport,
+              getSession: ctx.getSessionGate,
+              source: SessionGateSource.UnirpcViem,
+            })
+          : uniRpcTransport
       } else {
         baseTransport = http(rpcConfig.rpcUrl, {
           fetchOptions: rpcConfig.headers ? { headers: rpcConfig.headers } : undefined,

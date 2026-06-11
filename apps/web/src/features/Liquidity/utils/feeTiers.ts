@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-unnecessary-condition */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -165,7 +166,6 @@ export function getDefaultFeeTiersForChainWithDynamicFeeTier({
   }
 }
 
-/* oxlint-disable typescript/no-unnecessary-condition */
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
@@ -232,7 +232,6 @@ export function getDefaultFeeTiersWithData({
     )
     .sort(sortFeeTiersByTvl)
 }
-/* oxlint-enable typescript/no-unnecessary-condition */
 
 export function isDynamicFeeTier(feeData?: FeeData): feeData is DynamicFeeData {
   return feeData?.isDynamic || feeData?.feeAmount === DYNAMIC_FEE_DATA.feeAmount

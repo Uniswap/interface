@@ -10,7 +10,10 @@ import { computeMaxCost } from 'uniswap/src/features/gas/components/NetworkCostE
 import { GasFieldInput } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldInput'
 import { weiToGwei } from 'uniswap/src/features/gas/components/NetworkCostEditor/gweiToWei'
 import { useGasFieldValidation } from 'uniswap/src/features/gas/components/NetworkCostEditor/useGasFieldValidation'
-import { useRecommendedGasFields } from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
+import {
+  type RecommendedGasFieldValues,
+  useRecommendedGasFields,
+} from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
@@ -31,7 +34,7 @@ function MaxCostRow({
 }): JSX.Element {
   const { t } = useTranslation()
   const { value: maxCostUsd } = useUSDValueOfGasFee(chainId, maxCostWei)
-  const { formatNumberOrString } = useLocalizationContext()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const gasToken = chainId ? getChainGasToken(chainId) : undefined
   const gasTokenAmount =
     maxCostWei && gasToken
@@ -40,6 +43,10 @@ function MaxCostRow({
   const gasTokenAmountFormatted = gasTokenAmount
     ? formatNumberOrString({ value: gasTokenAmount.toExact(), type: NumberType.TokenNonTx })
     : undefined
+  // Format the fiat max cost the same way other gas-fee surfaces do: localized to
+  // the user's fiat currency and capped at 2 decimals (or "<$0.01" below a cent),
+  // rather than the raw full-precision USD string.
+  const maxCostFiatFormatted = convertFiatAmountFormatted(maxCostUsd, NumberType.FiatGasPrice, '—')
 
   return (
     <Flex
@@ -64,7 +71,7 @@ function MaxCostRow({
           </Text>
         )}
         <Text variant="body3" color="$neutral1">
-          {maxCostUsd ? `$${maxCostUsd}` : '—'}
+          {maxCostFiatFormatted}
         </Text>
       </Flex>
     </Flex>
@@ -194,6 +201,10 @@ export interface NetworkCostEditorProps {
   /** Which UI surface mounted this editor — used to attribute the
    *  `CustomGasOverridesApplied` analytics event to the correct flow. */
   surface: 'swap_form' | 'dapp_request'
+  /** Quote-derived recommended baseline, used when `tx` is unavailable (e.g. a
+   *  Permit2-signature swap whose `/swap` is deferred until the user signs).
+   *  Snapshotted by the caller so it doesn't jitter across quote polls. */
+  recommendedFallback?: RecommendedGasFieldValues
 }
 
 /**
@@ -219,10 +230,11 @@ export function NetworkCostEditor({
   onCancel,
   onReset,
   surface,
+  recommendedFallback,
 }: NetworkCostEditorProps): JSX.Element {
   const { t } = useTranslation()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
-  const recommended = useRecommendedGasFields({ tx })
+  const recommended = useRecommendedGasFields({ tx, fallback: recommendedFallback })
   const initialFromTx = useMemo(() => extractGasFieldsFromTx(tx), [tx])
   const usdChainId = tx?.chainId ?? chainId
 

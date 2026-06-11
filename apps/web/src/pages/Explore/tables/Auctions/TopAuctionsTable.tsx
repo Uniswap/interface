@@ -46,9 +46,9 @@ import {
  * Uses bigint comparison to avoid precision loss.
  * Treats 0n as "no data" and sorts it to the end.
  */
-/* oxlint-disable max-params -- sort comparators conventionally take (a, b, direction) */
 const AuctionSortMethods: Record<
   AuctionSortField,
+  // oxlint-disable-next-line max-params -- sort comparators conventionally take (a, b, direction)
   (a: TopAuctionsTableValue, b: TopAuctionsTableValue, sortAscending?: boolean) => number
 > = {
   [AuctionSortField.FDV]: (a, b) => {
@@ -70,6 +70,7 @@ const AuctionSortMethods: Record<
 
   // Sorting by time remaining sorts not completed or not started auction first (sorted by end block timestamp), followed by completed auction (sorted by end block timestamp).
 
+  // oxlint-disable-next-line max-params -- sort comparators conventionally take (a, b, direction)
   [AuctionSortField.TIME_REMAINING]: (a, b, sortAscending = false) => {
     const aMs = a.auction.timeRemaining.endBlockTimestamp
     const bMs = b.auction.timeRemaining.endBlockTimestamp
@@ -109,7 +110,6 @@ const AuctionSortMethods: Record<
     }
   },
 }
-/* oxlint-enable max-params */
 
 /**
  * Sorts auctions using the specified sort method.

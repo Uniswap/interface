@@ -1,7 +1,6 @@
 import { useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
@@ -27,12 +26,9 @@ vi.mock('~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData', () => ({
   useTDPPreferProjectMarketData: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper', () => ({
-  useTokenSpotPrice: vi.fn(),
-}))
-
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenSpotPrice: vi.fn(),
   useTokenMarketStats: vi.fn(),
 }))
 
@@ -40,6 +36,7 @@ const POPULATED_STATS = {
   marketCap: 5_000_000_000,
   fdv: 10_000_000_000,
   volume: 250_000_000,
+  volumeSource: 'market' as const,
   high52w: 12.34,
   low52w: 4.56,
 }
@@ -48,6 +45,7 @@ const EMPTY_STATS = {
   marketCap: undefined,
   fdv: undefined,
   volume: undefined,
+  volumeSource: undefined,
   high52w: undefined,
   low52w: undefined,
 }

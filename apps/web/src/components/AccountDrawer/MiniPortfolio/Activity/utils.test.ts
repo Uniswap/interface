@@ -98,7 +98,7 @@ describe('Nonce storage and extraction', () => {
         },
       },
     }
-    expect(getActivityNonce(activity)).toEqual(BigNumber.from(5))
+    expect(getActivityNonce(activity)).toEqual(5n)
   })
 
   it('should return undefined when options is missing', () => {
@@ -131,7 +131,7 @@ describe('Nonce storage and extraction', () => {
         },
       },
     }
-    expect(getActivityNonce(activity)).toEqual(BigNumber.from(10))
+    expect(getActivityNonce(activity)).toEqual(10n)
   })
 
   it('should return undefined if nonce is null', () => {
@@ -172,7 +172,7 @@ describe('Nonce storage and extraction', () => {
         },
       },
     }
-    expect(getActivityNonce(activity)).toEqual(BigNumber.from(0))
+    expect(getActivityNonce(activity)).toEqual(0n)
   })
 
   it('should return false when one activity has no nonce', () => {

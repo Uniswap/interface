@@ -20,7 +20,7 @@ import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
+import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
@@ -152,7 +152,7 @@ export function WebNavigation(): JSX.Element {
   return (
     <SidebarNavigationProvider>
       <NativeWalletProvider>
-        <TokenPriceProvider>
+        <RemotePriceProvider>
           <WalletUniswapProvider>
             <AccountsStoreContextProvider>
               <NotificationToastWrapper />
@@ -161,7 +161,7 @@ export function WebNavigation(): JSX.Element {
               {isLoggedIn && <ForceUpgradeModal />}
             </AccountsStoreContextProvider>
           </WalletUniswapProvider>
-        </TokenPriceProvider>
+        </RemotePriceProvider>
       </NativeWalletProvider>
     </SidebarNavigationProvider>
   )

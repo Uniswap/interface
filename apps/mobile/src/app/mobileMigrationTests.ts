@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines max-params */
 /**
  * Test helpers for testing migrations run in sequence.
  *
@@ -6,8 +7,6 @@
  *
  * For unit tests of individual migrations, see mobileMigrations.test.ts.
  */
-/* oxlint-disable max-lines */
-/* oxlint-disable max-params */
 import { BigNumber } from '@ethersproject/bignumber'
 import mockdate from 'mockdate'
 import { OLD_DEMO_ACCOUNT_ADDRESS } from 'src/app/mobileMigrations'

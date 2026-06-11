@@ -534,102 +534,6 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $c
   }
 }
 
-query FeedTransactionList($addresses: [String!]!, $chains: [Chain!]!) {
-  portfolios(
-    ownerAddresses: $addresses
-    chains: $chains
-  ) {
-    id
-    ownerAddress
-    assetActivities(
-      pageSize: 30
-      includeBridging: true
-      page: 1
-      chains: $chains
-    ) {
-      id
-      timestamp
-      chain
-      details {
-        ... on TransactionDetails {
-          id
-          to
-          type
-          hash
-          from
-          status
-          assetChanges {
-            __typename
-            ... on TokenTransfer {
-              id
-              asset {
-                id
-                symbol
-                address
-                decimals
-                chain
-                project {
-                  id
-                  isSpam
-                  spamCode
-                }
-              }
-              tokenStandard
-              quantity
-              sender
-              recipient
-              direction
-              transactedValue {
-                currency
-                value
-              }
-            }
-            ... on NftTransfer {
-              id
-              asset {
-                id
-                name
-                isSpam
-                nftContract {
-                  id
-                  chain
-                  address
-                }
-                tokenId
-                image {
-                  id
-                  url
-                }
-                collection {
-                  id
-                  name
-                }
-              }
-              nftStandard
-              sender
-              recipient
-              direction
-            }
-            ... on TokenApproval {
-              id
-              asset {
-                id
-                symbol
-                decimals
-                address
-                chain
-              }
-              tokenStandard
-              approvedAddress
-              quantity
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 query TopTokens(
   $chain: Chain
   $page: Int = 1
@@ -720,6 +624,9 @@ fragment TokenProjectMarketsParts on Token {
       fullyDilutedValuation {
         value
       }
+      volume24H: volume(duration: DAY) {
+        value
+      }
       priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
         value
       }
@@ -736,7 +643,7 @@ fragment TokenProjectMarketsParts on Token {
 fragment TokenMarketParts on Token {
   market(currency: USD) {
     id
-    volume(duration: DAY) {
+    volume24H: volume(duration: DAY) {
       value
     }
     price {

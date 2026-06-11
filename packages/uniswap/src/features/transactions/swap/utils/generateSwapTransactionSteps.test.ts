@@ -5,7 +5,7 @@ import {
   SwapTxAndGasInfo,
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import {

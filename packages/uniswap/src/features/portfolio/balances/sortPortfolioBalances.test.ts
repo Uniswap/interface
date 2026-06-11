@@ -1,6 +1,12 @@
 import type { PortfolioChainBalance } from 'uniswap/src/features/dataApi/types'
-import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
-import { createPortfolioChainBalance } from 'uniswap/src/test/fixtures/dataApi/portfolioMultichainBalances'
+import {
+  sortMultichainBalances,
+  sortPortfolioChainBalances,
+} from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
+import {
+  createPortfolioChainBalance,
+  createPortfolioMultichainBalance,
+} from 'uniswap/src/test/fixtures/dataApi/portfolioMultichainBalances'
 import { describe, expect, it } from 'vitest'
 
 const CHAIN_ID = 1
@@ -14,6 +20,30 @@ const ADDR_0X_DD = '0xdddddddddddddddddddddddddddddddddddddddd'
 const ADDR_0X_EE = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const ADDR_0X_FF = '0xffffffffffffffffffffffffffffffffffffffff'
 const ADDR_0X_99 = '0x9999999999999999999999999999999999999999'
+
+describe(sortMultichainBalances, () => {
+  it('sorts by totalValueUsd descending', () => {
+    const low = createPortfolioMultichainBalance({ id: 'low', totalValueUsd: 5 })
+    const high = createPortfolioMultichainBalance({ id: 'high', totalValueUsd: 500 })
+    const sorted = sortMultichainBalances([low, high], false)
+    expect(sorted.map((b) => b.id)).toEqual(['high', 'low'])
+  })
+
+  it('falls back to per-chain valueUsd when totalValueUsd is missing', () => {
+    const low = createPortfolioMultichainBalance({
+      id: 'low',
+      totalValueUsd: undefined,
+      tokens: [createPortfolioChainBalance({ valueUsd: 12 })],
+    })
+    const high = createPortfolioMultichainBalance({
+      id: 'high',
+      totalValueUsd: 0,
+      tokens: [createPortfolioChainBalance({ valueUsd: 88 })],
+    })
+    const sorted = sortMultichainBalances([low, high], false)
+    expect(sorted.map((b) => b.id)).toEqual(['high', 'low'])
+  })
+})
 
 describe(sortPortfolioChainBalances, () => {
   it('returns the same array instance when at most one token', () => {

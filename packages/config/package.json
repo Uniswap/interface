@@ -16,8 +16,8 @@
     "check": "nx check config",
     "check:fast": "nx check:fast config",
     "check:deps:usage": "nx check:deps:usage config",
-    "format": "nx format config",
-    "format:check": "nx format:check config",
+    "format": "nx run config:format",
+    "format:check": "nx run config:format:check",
     "lint": "nx lint config",
     "lint:fix": "nx lint:fix config",
     "test": "nx test config"

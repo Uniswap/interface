@@ -16,6 +16,19 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
   }
 }
 
+export function getProtocolVersionFromLabel(label: string | null | undefined): ProtocolVersion | undefined {
+  switch (label) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    case 'v4':
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
+}
+
 export function getProtocols(version: ProtocolVersion | undefined): Protocols | undefined {
   switch (version) {
     case ProtocolVersion.V2:
@@ -26,6 +39,19 @@ export function getProtocols(version: ProtocolVersion | undefined): Protocols | 
       return Protocols.V4
     default:
       return undefined
+  }
+}
+
+export function protocolsToProtocolVersion(version: Protocols | undefined): ProtocolVersion {
+  switch (version) {
+    case Protocols.V2:
+      return ProtocolVersion.V2
+    case Protocols.V3:
+      return ProtocolVersion.V3
+    case Protocols.V4:
+      return ProtocolVersion.V4
+    default:
+      return ProtocolVersion.UNSPECIFIED
   }
 }
 

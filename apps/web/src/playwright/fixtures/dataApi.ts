@@ -1,5 +1,4 @@
 import path from 'path'
-/* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- Data API fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
 import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
@@ -106,6 +105,7 @@ export const test = base.extend<DataApiFixture>({
       })
     }
 
+    // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
     await use({ intercept })
   },
 })

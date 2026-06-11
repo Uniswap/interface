@@ -25,6 +25,9 @@ import { BridgedAssetSection } from '~/pages/TokenDetails/components/info/Bridge
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import { TokenDescription } from '~/pages/TokenDetails/components/info/TokenDescription'
 import { TokenPerformance } from '~/pages/TokenDetails/components/performance/TokenPerformance'
+import { MoreWaysToTrade } from '~/pages/TokenDetails/components/rwa/MoreWaysToTrade'
+import { OffHoursLiquidityBanner } from '~/pages/TokenDetails/components/rwa/OffHoursLiquidityBanner'
+import { RelatedTokens } from '~/pages/TokenDetails/components/rwa/RelatedTokens'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
 import { TokenCarousel } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarousel'
@@ -87,6 +90,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <ChartSection />
+          <OffHoursLiquidityBanner />
           {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
 
           {!showBalanceInfo && (
@@ -102,6 +106,8 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
 
           <StatsSection tokenQueryData={tokenQueryData} isLoading={tokenQuery.loading} />
 
+          <MoreWaysToTrade />
+
           <TokenDescription />
 
           <ActivitySection />
@@ -112,6 +118,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
               chainId={chainId}
             />
           )}
+          <RelatedTokens />
         </LeftPanel>
         <RightPanel>
           {/* Swap always visible on desktop (uses display to preserve state) */}

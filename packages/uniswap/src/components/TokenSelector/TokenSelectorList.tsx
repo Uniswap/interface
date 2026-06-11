@@ -1,36 +1,63 @@
-import { memo, useCallback, useState } from 'react'
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import {
   TokenOptionItem as BaseTokenOptionItem,
   TokenContextMenuVariant,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { TokenOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import {
+  OnchainItemListOptionType,
+  RwaTokenOption,
+  TokenOption,
+  TokenSelectorListOption,
+} from 'uniswap/src/components/lists/items/types'
 import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksHorizontalRow'
+import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
+import { OnSelectCurrency, OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CategoryTag } from 'uniswap/src/features/expandableAsset/CategoryTag'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
 import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import {
   useDismissedBridgedAssetWarnings,
   useDismissedTokenWarnings,
 } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { noop } from 'utilities/src/react/noop'
 
-function isHorizontalListTokenItem(data: TokenSelectorOption): data is TokenOption[] {
-  return Array.isArray(data)
+export function isStocksRowItem(data: TokenSelectorListOption): data is RwaTokenOption[] {
+  return Array.isArray(data) && data[0]?.type === OnchainItemListOptionType.Rwa
+}
+
+/** A row shows its category tag (e.g. "Stocks") when it is a classified RWA AND the user holds no balance — per
+ *  design, the balance overrides the tag (both share the row's single right-hand slot). */
+export function shouldShowCategoryTag({
+  rwaCategory,
+  hasBalance,
+}: {
+  rwaCategory?: RwaCategory
+  hasBalance: boolean
+}): boolean {
+  return rwaCategory != null && rwaCategory !== RwaCategory.UNSPECIFIED && !hasBalance
+}
+
+function isHorizontalListTokenItem(data: TokenSelectorListOption): data is TokenOption[] {
+  return Array.isArray(data) && data[0]?.type === OnchainItemListOptionType.Token
 }
 
 const TokenOptionItem = memo(function TokenOptionItemInner({
@@ -132,21 +159,30 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
     onPress()
   }, [onPress, showWarningModal, showBridgedAssetWarningModal, shouldShowBridgedAssetWarningModalOnPress])
 
+  // Balance and the category tag share the row's single right-hand slot; a balance overrides the tag.
+  const { rwaCategory } = tokenOption
+  const hasBalance = Boolean(tokenOption.quantity && tokenOption.quantity !== 0)
+
   return (
     <BaseTokenOptionItem
       option={tokenOption}
       showTokenAddress={showTokenAddress}
       contextMenuVariant={TokenContextMenuVariant.TokenSelector}
+      categoryTag={
+        rwaCategory != null && shouldShowCategoryTag({ rwaCategory, hasBalance }) ? (
+          <CategoryTag category={rwaCategory} />
+        ) : undefined
+      }
       rightElement={
-        tokenOption.quantity && tokenOption.quantity !== 0 ? (
-          <>
+        hasBalance ? (
+          <Flex alignItems="flex-end">
             <Text variant="body1">{balanceText}</Text>
             {quantityText && (
               <Text color="$neutral2" variant="body3">
                 {quantityText}
               </Text>
             )}
-          </>
+          </Flex>
         ) : undefined
       }
       showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
@@ -176,7 +212,8 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
 
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
-  sections?: OnchainItemSection<TokenSelectorOption>[]
+  onSelectRwaToken?: OnSelectRwaToken
+  sections?: OnchainItemSection<TokenSelectorListOption>[]
   chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
@@ -191,6 +228,7 @@ interface TokenSelectorListProps {
 
 function TokenSelectorListInner({
   onSelectCurrency,
+  onSelectRwaToken,
   sections,
   chainFilter,
   showTokenWarnings,
@@ -204,17 +242,32 @@ function TokenSelectorListInner({
 }: TokenSelectorListProps): JSX.Element {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
+  // Tag tokenized-stock (RWA) rows so the inner row renders the category tag. `useRwaIndex` returns an empty
+  // index (and skips the fetch) when the flag is off, so this is a no-op pass-through.
+  const rwaIndex = useRwaIndex(useFeatureFlag(FeatureFlags.RwaUxTokenSelectorCategoryLabels))
+  const taggedSections = useMemo(() => tagRwaTokenSelectorSections({ sections, rwaIndex }), [sections, rwaIndex])
+
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
-  const handleExpand = useEvent((item: TokenSelectorOption) => {
+  const handleExpand = useEvent((item: TokenSelectorListOption) => {
     setExpandedItems((prev) => [...prev, key(item)])
   })
 
-  const isExpandedItem = useEvent((item: TokenOption[]) => {
+  const isExpandedItem = useEvent((item: TokenSelectorListOption) => {
     return expandedItems.includes(key(item))
   })
 
-  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
+  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorListOption>): JSX.Element => {
+    if (isStocksRowItem(item)) {
+      return (
+        <StocksHorizontalRow
+          tokens={item}
+          expanded={isExpandedItem(item)}
+          onSelectRwaToken={onSelectRwaToken ?? noop}
+          onExpand={handleExpand}
+        />
+      )
+    }
     if (isHorizontalListTokenItem(item)) {
       return (
         <HorizontalTokenList
@@ -242,7 +295,7 @@ function TokenSelectorListInner({
   return (
     <SelectorBaseList
       renderItem={renderItem}
-      sections={sections}
+      sections={taggedSections}
       chainFilter={chainFilter}
       refetch={refetch}
       loading={loading}
@@ -256,9 +309,17 @@ function TokenSelectorListInner({
   )
 }
 
-function key(item: TokenSelectorOption): CurrencyId {
+export function key(item: TokenSelectorListOption): string {
+  if (isStocksRowItem(item)) {
+    return item.map((option) => `${option.chainId}-${option.address}`).join('-')
+  }
   if (isHorizontalListTokenItem(item)) {
     return item.map((token) => token.currencyInfo.currencyId).join('-')
+  }
+  // An empty list option (e.g. `[]`) matches neither guard above; return a safe key
+  // rather than dereferencing `currencyInfo` on a non-existent row.
+  if (Array.isArray(item)) {
+    return ''
   }
 
   return item.currencyInfo.currencyId

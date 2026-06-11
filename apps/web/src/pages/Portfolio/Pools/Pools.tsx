@@ -123,12 +123,22 @@ export function PortfolioPools() {
     () => visiblePositions.filter((position) => positionMatchesSearch(position, normalizedSearch)),
     [visiblePositions, normalizedSearch],
   )
+  const filteredHiddenPositions = useMemo(
+    () => hiddenPositions.filter((position) => positionMatchesSearch(position, normalizedSearch)),
+    [hiddenPositions, normalizedSearch],
+  )
   const hasLoadedPositions = !isLoadingPositions && !hasErrorWithoutData
-  const showEmptyState = hasLoadedBalance && totalPoolsCount === 0
+  const showEmptyState =
+    hasLoadedPositions &&
+    visiblePositions.length === 0 &&
+    hiddenPositions.length === 0 &&
+    !normalizedSearch &&
+    !hasModifiedPositionFilters
   const showNoResults =
     hasLoadedPositions &&
     !showEmptyState &&
     filteredVisiblePositions.length === 0 &&
+    filteredHiddenPositions.length === 0 &&
     (!!normalizedSearch || hasModifiedPositionFilters)
 
   const portfolioPoolsUrl = buildPortfolioUrl({
@@ -167,14 +177,14 @@ export function PortfolioPools() {
     return (
       <PositionsListSection
         visiblePositions={filteredVisiblePositions}
-        hiddenPositions={hiddenPositions}
+        hiddenPositions={filteredHiddenPositions}
         hasNextPage={hasNextPage}
         isFetching={isFetching}
         isPlaceholderData={isPlaceholderData}
         loadMorePositions={loadMorePositions}
         showHiddenPositions={showHiddenPositions}
         setShowHiddenPositions={setShowHiddenPositions}
-        hiddenSectionLabel={t('hidden.pools.info.text.button', { numHidden: hiddenPositions.length })}
+        hiddenSectionLabel={t('hidden.pools.info.text.button', { numHidden: filteredHiddenPositions.length })}
         hiddenSectionPadding={{ py: '$spacing12', px: 0 }}
         entryPoint={portfolioPoolsUrl}
         readOnly={isExternalWallet}
@@ -198,7 +208,7 @@ export function PortfolioPools() {
             chainIds={chainId ? [chainId] : undefined}
             endText={
               hasLoadedBalance ? (
-                totalPoolsCount && totalPoolsCount > 0 ? (
+                totalPoolsCount !== undefined ? (
                   <PoolsPositionCountIndicator count={totalPoolsCount} />
                 ) : (
                   <PortfolioBalanceCountIndicator label="-" />

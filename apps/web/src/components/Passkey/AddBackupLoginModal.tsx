@@ -33,10 +33,13 @@ import {
 import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { getPrivyConfig } from '~/config'
 import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 enum Step {
   METHOD_SELECT = 0,
@@ -302,6 +305,11 @@ export function AddBackupLoginModal() {
         old ? { ...old, recoveryMethods: [...old.recoveryMethods, newRecoveryMethod] } : old,
       )
 
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.backupLogin.added') },
+        'backup-login-added-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
       setStep(Step.SUCCESS)
     } catch (signInError) {
       logger.error(signInError, { tags: { file: 'AddBackupLoginModal', function: 'handleSignInWithPasskey' } })

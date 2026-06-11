@@ -32,6 +32,8 @@ export const animations = createAnimations({
   lazy: '500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
   // quick: medium-high stiffness (250), medium damping (20)
   quick: '200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  // quickLong: same easing as `quick` with a longer duration, for transitions where 200ms feels too snappy
+  quickLong: '300ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   // quicker: high stiffness (390), slightly less damping
   quicker: '180ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   // quickishDelayed: like quicker but with delay

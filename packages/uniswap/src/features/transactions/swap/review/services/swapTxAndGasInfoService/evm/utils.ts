@@ -27,11 +27,7 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
   instructionService: EVMSwapInstructionsService
   gasStrategy: GasStrategy
   transactionSettings: TransactionSettings
-  /**
-   * Set true when the upstream quote was built with per-tx gas overrides;
-   * forwarded through `createProcessSwapResponse` so the displayed value
-   * matches what the user explicitly set.
-   */
+  /** Forwarded to `createProcessSwapResponse`: any override → display the tx max cost. */
   hasOverrides?: boolean
 }): GetEVMSwapTransactionRequestInfoFn {
   const { gasStrategy, transactionSettings, instructionService, hasOverrides } = ctx

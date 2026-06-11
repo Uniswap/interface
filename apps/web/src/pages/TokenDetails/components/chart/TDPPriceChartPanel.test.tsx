@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
+import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { TDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/TDPPriceChartPanel'
-import { useTDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/useTDPPriceChartPanel'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/components/Charts/LoadingState', () => ({
@@ -17,8 +17,8 @@ vi.mock('~/components/Charts/LoadingState', () => ({
   },
 }))
 
-vi.mock('~/pages/TokenDetails/components/chart/useTDPPriceChartPanel', () => ({
-  useTDPPriceChartPanel: vi.fn(),
+vi.mock('~/hooks/useTokenPriceChartPanel', () => ({
+  useTokenPriceChartPanel: vi.fn(),
 }))
 
 vi.mock('~/components/Charts/PriceChart', () => ({
@@ -34,7 +34,7 @@ const variables = {
   multichain: false,
 }
 
-const mockedUseTDPPriceChartPanel = vi.mocked(useTDPPriceChartPanel)
+const mockedUseTokenPriceChartPanel = vi.mocked(useTokenPriceChartPanel)
 
 const basePanel = {
   pricePercentChange: undefined as number | undefined,
@@ -43,7 +43,7 @@ const basePanel = {
 
 describe('TDPPriceChartPanel', () => {
   beforeEach(() => {
-    mockedUseTDPPriceChartPanel.mockReturnValue({
+    mockedUseTokenPriceChartPanel.mockReturnValue({
       ...basePanel,
       showInvalidSkeleton: false,
       priceQuery: {
@@ -71,7 +71,7 @@ describe('TDPPriceChartPanel', () => {
   })
 
   it('renders skeleton path when showInvalidSkeleton is true', () => {
-    mockedUseTDPPriceChartPanel.mockReturnValue({
+    mockedUseTokenPriceChartPanel.mockReturnValue({
       ...basePanel,
       showInvalidSkeleton: true,
       priceQuery: {

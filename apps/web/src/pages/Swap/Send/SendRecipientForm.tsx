@@ -18,8 +18,10 @@ import { X } from 'ui/src/components/icons/X'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useRecentTransfersByAddress, TransferCount } from 'uniswap/src/features/send/useRecentTransfersByAddress'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useGroupedRecentTransfers } from '~/features/Swap/hooks/useGroupedRecentTransfers'
 import { RecipientData } from '~/features/Swap/state/send/hooks'
 import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
@@ -185,7 +187,7 @@ const AutocompleteRow = ({
 }
 
 interface AutocompleteFlyoutProps {
-  transfers?: { [address: string]: number }
+  transfers: TransferCount[]
   validatedRecipientData?: RecipientData
   selectRecipient: (recipient: RecipientData) => void
 }
@@ -201,14 +203,21 @@ function AutocompleteFlyout(props: AutocompleteFlyoutProps) {
         <AutocompleteRow
           address={validatedRecipientData.address}
           validatedEnsName={validatedRecipientData.ensName}
-          numberOfTransfers={transfers?.[validatedRecipientData.address] ?? 0}
+          numberOfTransfers={
+            transfers.find((transfer) =>
+              areAddressesEqual({
+                addressInput1: { address: transfer.address, platform: Platform.EVM },
+                addressInput2: { address: validatedRecipientData.address, platform: Platform.EVM },
+              }),
+            )?.count ?? 0
+          }
           selectRecipient={selectRecipient}
         />
       </AutocompletePanel>
     )
   }
 
-  if (!transfers) {
+  if (transfers.length === 0) {
     return null
   }
 
@@ -217,16 +226,14 @@ function AutocompleteFlyout(props: AutocompleteFlyoutProps) {
       <Text variant="body3" color="$neutral2">
         {t('sendRecipientForm.recentAddresses.label')}
       </Text>
-      {Object.keys(transfers)
-        .slice(0, 3)
-        .map((address) => (
-          <AutocompleteRow
-            key={address}
-            address={address}
-            numberOfTransfers={transfers[address]}
-            selectRecipient={selectRecipient}
-          />
-        ))}
+      {transfers.slice(0, 3).map((transfer) => (
+        <AutocompleteRow
+          key={transfer.address}
+          address={transfer.address}
+          numberOfTransfers={transfer.count}
+          selectRecipient={selectRecipient}
+        />
+      ))}
     </AutocompletePanel>
   )
 }
@@ -238,7 +245,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { recipient, validatedRecipientData } = sendState
   const { recipientData } = derivedSendInfo
 
-  const { transfers: recentTransfers } = useGroupedRecentTransfers(account.address)
+  const { transfers: recentTransfers } = useRecentTransfersByAddress(account.address)
 
   const [[isFocusing, isForcingFocus], setFocus] = useState([false, false])
   const handleFocus = useCallback((focus: boolean) => setFocus([focus, false]), [])

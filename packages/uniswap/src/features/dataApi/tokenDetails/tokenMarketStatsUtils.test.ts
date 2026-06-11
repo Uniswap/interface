@@ -109,6 +109,28 @@ describe('computeTokenMarketStats', () => {
     expect(computeTokenMarketStats({ market: {} }).volume).toBeUndefined()
   })
 
+  it('reports volumeSource based on which volume was used', () => {
+    expect(computeTokenMarketStats({ market: { volume24H: { value: 100 } } }).volumeSource).toBe('market')
+    expect(
+      computeTokenMarketStats({
+        preferProjectMarketData: true,
+        projectMarket: { volume24H: { value: 300 } },
+        market: { volume24H: { value: 100 } },
+      }).volumeSource,
+    ).toBe('project')
+    // Project preferred but project volume missing: falls back to Uniswap market volume.
+    expect(
+      computeTokenMarketStats({
+        preferProjectMarketData: true,
+        projectMarket: {},
+        market: { volume24H: { value: 100 } },
+      }).volumeSource,
+    ).toBe('market')
+    expect(
+      computeTokenMarketStats({ preferProjectMarketData: true, projectMarket: {}, market: {} }).volumeSource,
+    ).toBeUndefined()
+  })
+
   it('should use projectMarket price for 52w clamping when project market data is preferred', () => {
     const result = computeTokenMarketStats({
       currentPrice: 100,
@@ -161,6 +183,7 @@ describe('computeTokenMarketStats', () => {
       marketCap: undefined,
       fdv: undefined,
       volume: undefined,
+      volumeSource: undefined,
       high52w: undefined,
       low52w: undefined,
     })

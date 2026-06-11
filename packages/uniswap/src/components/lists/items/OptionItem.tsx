@@ -1,5 +1,5 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
-import { memo, useCallback } from 'react'
+import { memo, ReactNode, useCallback } from 'react'
 import { Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
@@ -20,6 +20,8 @@ export interface OptionItemProps {
   title: string | JSX.Element
   subtitle?: JSX.Element
   rightElement?: JSX.Element
+  /** Persistent category pill (e.g. "Stocks") rendered before `rightElement`, independent of hover. */
+  categoryTag?: ReactNode
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
@@ -39,6 +41,7 @@ function OptionItemInner({
   title,
   subtitle,
   rightElement,
+  categoryTag,
   badge,
   titleProps,
   onPress,
@@ -145,8 +148,9 @@ function OptionItemInner({
             </Flex>
           </Flex>
 
-          {rightElement && (
-            <Flex grow alignItems="flex-end" justifyContent="center">
+          {(categoryTag || rightElement) && (
+            <Flex row grow alignItems="center" justifyContent="flex-end" gap="$spacing8">
+              {categoryTag}
               {rightElement}
             </Flex>
           )}

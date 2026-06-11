@@ -90,7 +90,7 @@ import { flexStyles, ImageSettingsProvider, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
-import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
+import { useCurrentAppearanceSetting, useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
@@ -98,7 +98,7 @@ import { mapLanguageToLocale } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
-import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
+import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -362,7 +362,7 @@ function AppOuter(): JSX.Element | null {
                       <NavigationContainer>
                         <MobileWalletNavigationProvider>
                           <NativeWalletProvider>
-                            <TokenPriceProvider>
+                            <RemotePriceProvider>
                               <WalletUniswapProvider>
                                 <AccountsStoreContextProvider>
                                   <DataUpdaters />
@@ -375,7 +375,7 @@ function AppOuter(): JSX.Element | null {
                                   <NotificationToastWrapper />
                                 </AccountsStoreContextProvider>
                               </WalletUniswapProvider>
-                            </TokenPriceProvider>
+                            </RemotePriceProvider>
                           </NativeWalletProvider>
                         </MobileWalletNavigationProvider>
                       </NavigationContainer>
@@ -395,6 +395,7 @@ function AppInner(): JSX.Element {
   const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
+  const selectedColorScheme = useSelectedColorScheme()
   const allowAnalytics = useSelector(selectAllowAnalytics)
 
   // handles AppsFlyer enable/disable based on the allow analytics toggle
@@ -418,10 +419,10 @@ function AppInner(): JSX.Element {
   }, [dispatch])
 
   useEffect(() => {
-    // TODO: This is a temporary solution (it should be replaced with Appearance.setColorScheme
-    // after updating RN to 0.72.0 or higher)
+    // Re-fire on resolved scheme too: when the setting is "system", an OS theme flip
+    // changes selectedColorScheme but not themeSetting, and the native side must re-sync.
     NativeModules['ThemeModule'].setColorScheme(themeSetting)
-  }, [themeSetting])
+  }, [themeSetting, selectedColorScheme])
 
   useLogMissingMnemonic()
   useLogUnexpectedOnboardingReset()

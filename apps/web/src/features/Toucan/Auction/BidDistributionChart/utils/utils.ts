@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines -- TODO(Toucan): refactor/ split into smaller modules */
 import { formatUnits } from '~/chains'
 import {
   CHART_CONSTRAINTS,
@@ -20,7 +21,6 @@ import { BidDistributionData, BidTokenInfo, OptimisticBid, UserBid } from '~/fea
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import type { ChartMode } from '~/features/Toucan/ToucanChart/renderer'
 
-/* oxlint-disable max-lines -- TODO(Toucan): refactor/ split into smaller modules */
 /**
  * Represents a single bar in the distribution chart
  */

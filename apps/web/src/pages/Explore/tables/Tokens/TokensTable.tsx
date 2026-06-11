@@ -10,7 +10,7 @@ import { Flex, Text, useMedia } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -38,6 +38,7 @@ import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTable
 import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
 import { TokenStat } from '~/types/explore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const VOLUME_INFO_ICON_WIDTH = 16
 
@@ -159,7 +160,10 @@ export function TokenTable({
               address: unwrappedToken.address,
               chain: toGraphQLChain(chainId ?? defaultChainId),
               chainUrlParam: chainFilter,
-              chainQueryParam: chainFilter,
+              chainQueryParam:
+                multichainTokenUxEnabled && !chainFilter && mcToken.chainTokens.length > 1
+                  ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE
+                  : undefined,
             }),
             analytics: {
               elementName: ElementName.TokensTableRow,
@@ -185,6 +189,7 @@ export function TokenTable({
       defaultChainId,
       filterString,
       formatPercent,
+      multichainTokenUxEnabled,
       sparklines,
       timePeriod,
       tokenSortRank,

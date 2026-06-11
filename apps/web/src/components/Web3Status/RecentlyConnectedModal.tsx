@@ -1,5 +1,4 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useUpdateAtom } from 'jotai/utils'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -23,12 +22,12 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent, useOnClickOutside } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { StatusIcon } from '~/components/StatusIcon'
-import { passkeySignInPendingAtom, showEmbeddedLoginViewAtom } from '~/components/WalletModal/EmbeddedWalletModal'
 import { useRecentConnectorId } from '~/connection/constants'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface RecentlyConnectedModalUIProps {
@@ -269,8 +268,8 @@ export function RecentlyConnectedModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const recentConnectorId = useRecentConnectorId()
   const accountDrawer = useAccountDrawer()
-  const setShowLoginView = useUpdateAtom(showEmbeddedLoginViewAtom)
-  const setPasskeySignInPending = useUpdateAtom(passkeySignInPendingAtom)
+  const setShowLoginView = useEmbeddedWalletLoginViewStore((s) => s.setShowLoginView)
+  const setPasskeySignInPending = useEmbeddedWalletLoginViewStore((s) => s.setPasskeySignInPending)
   const { signInWithPasskeyAsync } = useSignInWithPasskey({
     onSuccess: () => {
       setPasskeySignInPending(false)

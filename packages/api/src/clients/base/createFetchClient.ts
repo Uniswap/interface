@@ -5,16 +5,38 @@ import type {
   FetchClientContext,
   StandardFetchOptions,
 } from '@universe/api/src/clients/base/types'
+import { requireSessionFetch } from '@universe/sessions'
+import { logger, type Logger } from 'utilities/src/logger/logger'
 
 export function createFetchClient({
   baseUrl,
   getBaseUrl,
   getHeaders,
   getSessionService,
+  getSession,
+  source = 'fetch',
+  getLogger = (): Logger => logger,
   defaultOptions = {},
 }: FetchClientContext): FetchClient {
   // Helper to resolve the base URL - prefers getBaseUrl for dynamic resolution
   const resolveBaseUrl = (): string => getBaseUrl?.() ?? baseUrl ?? ''
+
+  // Resolve `x-session-id` *per underlying request* so the gate's post-recovery
+  // retry carries the freshly-recovered id, not the stale one captured before
+  // the first attempt. Web uses cookies (no header); mobile sends the header.
+  const sessionIdFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    const sessionState = await getSessionService().getSessionState()
+    const headers = new Headers(init?.headers)
+    if (sessionState?.sessionId) {
+      headers.set('x-session-id', sessionState.sessionId)
+    }
+    return fetch(input, { ...init, headers })
+  }
+
+  // No-op when getSession returns null; awaits ready + retries once on 401 otherwise.
+  const doFetch = requireSessionFetch({ getSession: getSession ?? ((): null => null), source, getLogger })(
+    sessionIdFetch,
+  )
 
   return {
     get context() {
@@ -24,6 +46,7 @@ export function createFetchClient({
           getBaseUrl,
           getHeaders,
           getSessionService,
+          getSession,
           defaultOptions,
         }
       }
@@ -31,21 +54,17 @@ export function createFetchClient({
 
     get fetch() {
       return async <T = Response>(path: string, options: StandardFetchOptions): Promise<T> => {
-        const sessionService = getSessionService()
-        const sessionState = await sessionService.getSessionState()
-
         const additionalHeaders = getHeaders?.() ?? {}
 
+        // `x-session-id` is injected by `sessionIdFetch` per attempt — not here —
+        // so it stays correct across the gate's recover-and-retry.
         const headers = new Headers({
           // oxlint-disable-next-line typescript-eslint/no-misused-spread
           ...additionalHeaders,
           // oxlint-disable-next-line typescript-eslint/no-misused-spread
           ...options?.headers,
         })
-        if (sessionState?.sessionId) {
-          headers.set('x-session-id', sessionState.sessionId)
-        }
-        return fetch(`${resolveBaseUrl()}${path}`, {
+        return doFetch(`${resolveBaseUrl()}${path}`, {
           ...defaultOptions,
           ...options,
           headers,

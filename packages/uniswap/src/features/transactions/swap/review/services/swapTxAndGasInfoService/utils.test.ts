@@ -494,4 +494,95 @@ describe('createProcessSwapResponse', () => {
       expect(result.gasFeeResult.displayValue).toBe('1150')
     })
   })
+
+  // With overrides applied, the displayed network cost should be the tx max
+  // cost (maxFeePerGas * gasLimit) so it matches the editor's "Max cost" row,
+  // rather than the gas-service estimate (which prices the current base fee).
+  describe('max cost display', () => {
+    const swapQuote = { gasFee: '1000', route: [] } as TradingApi.ClassicQuote
+
+    it('sets displayValue to maxFeePerGas * gasLimit from the swap tx when hasOverrides is true', () => {
+      const response = {
+        requestId: '123',
+        transactions: [
+          {
+            to: '0x123',
+            data: '0x456',
+            from: '0x123',
+            value: '0',
+            chainId: 1,
+            maxFeePerGas: '100000000000', // 100 GWEI
+            gasLimit: '21000',
+          },
+        ],
+      } as const satisfies SwapData
+
+      const process = createProcessSwapResponse({ gasStrategy: DEFAULT_GAS_STRATEGY, hasOverrides: true })
+      const result = process({
+        response,
+        error: null,
+        swapQuote,
+        isSwapLoading: false,
+        permitData: undefined,
+        swapRequestParams: undefined,
+        isRevokeNeeded: false,
+      })
+
+      // `value` stays the estimate; `displayValue` is the max cost (100e9 * 21000).
+      expect(result.gasFeeResult.value).toBe('1000')
+      expect(result.gasFeeResult.displayValue).toBe('2100000000000000')
+    })
+
+    it('keeps the estimate-based displayValue when hasOverrides is false', () => {
+      const response = {
+        requestId: '123',
+        transactions: [
+          {
+            to: '0x123',
+            data: '0x456',
+            from: '0x123',
+            value: '0',
+            chainId: 1,
+            maxFeePerGas: '100000000000',
+            gasLimit: '21000',
+          },
+        ],
+      } as const satisfies SwapData
+
+      const process = createProcessSwapResponse({ gasStrategy: DEFAULT_GAS_STRATEGY, hasOverrides: false })
+      const result = process({
+        response,
+        error: null,
+        swapQuote,
+        isSwapLoading: false,
+        permitData: undefined,
+        swapRequestParams: undefined,
+        isRevokeNeeded: false,
+      })
+
+      // No overrides → not the max cost; displayValue derives from the estimate.
+      expect(result.gasFeeResult.displayValue).not.toBe('2100000000000000')
+    })
+
+    it('falls back to the estimate-based display when the tx carries no gas fields', () => {
+      const response = {
+        requestId: '123',
+        transactions: [{ to: '0x123', data: '0x456', from: '0x123', value: '0', chainId: 1 }],
+      } as const satisfies SwapData
+
+      const process = createProcessSwapResponse({ gasStrategy: DEFAULT_GAS_STRATEGY, hasOverrides: true })
+      const result = process({
+        response,
+        error: null,
+        swapQuote,
+        isSwapLoading: false,
+        permitData: undefined,
+        swapRequestParams: undefined,
+        isRevokeNeeded: false,
+      })
+
+      // Max cost can't be computed (no maxFeePerGas/gasLimit) → falls back to the estimate.
+      expect(result.gasFeeResult.displayValue).toBe('1000')
+    })
+  })
 })

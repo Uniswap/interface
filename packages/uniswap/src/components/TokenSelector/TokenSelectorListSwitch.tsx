@@ -5,7 +5,7 @@ import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelect
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
-import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectRwaToken, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -31,6 +31,7 @@ interface TokenSelectorListSwitchProps {
   debouncedParsedSearchFilter: string | null
   debouncedSearchFilter: string | null
   parsedChainFilter: UniverseChainId | null
+  onSelectRwaToken?: OnSelectRwaToken
 }
 
 export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
@@ -48,6 +49,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
   debouncedParsedSearchFilter,
   debouncedSearchFilter,
   parsedChainFilter,
+  onSelectRwaToken,
 }: TokenSelectorListSwitchProps): JSX.Element | null {
   if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
     return (
@@ -95,7 +97,9 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           addresses={addresses}
           chainFilter={chainFilter}
           renderedInModal={renderedInModal}
+          variation={variation}
           onSelectCurrency={onSelectCurrency}
+          onSelectRwaToken={onSelectRwaToken}
         />
       )
     case TokenSelectorVariation.SwapOutput:
@@ -105,7 +109,9 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           addresses={addresses}
           chainFilter={chainFilter}
           renderedInModal={renderedInModal}
+          variation={variation}
           onSelectCurrency={onSelectCurrency}
+          onSelectRwaToken={onSelectRwaToken}
         />
       )
     default:

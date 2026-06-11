@@ -10,6 +10,7 @@ import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTok
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { RWAMatch } from 'uniswap/src/features/rwa/rwaMatch'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -24,11 +25,13 @@ import { DesktopHeaderActions } from '~/components/StickyCollapsibleHeader/Heade
 import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/MobileHeaderActions'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useModalState } from '~/hooks/useModalState'
+import { RWAIssuerHeaderDetails } from '~/pages/TokenDetails/components/header/RWAIssuerHeaderDetails'
 import { TokenDetailsNetworkFilter } from '~/pages/TokenDetails/components/header/TokenDetailsNetworkFilter'
 import { useTokenDetailsHeaderActions } from '~/pages/TokenDetails/components/header/useTokenDetailsHeaderActions'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
@@ -56,6 +59,23 @@ function getShowAddressCopy({
   return !!selectedChainId && !isNative
 }
 
+function getRWAHeaderIdentity({
+  rwaMatch,
+  fallbackName,
+  fallbackLogoUrl,
+}: {
+  rwaMatch?: RWAMatch
+  fallbackName: string
+  fallbackLogoUrl?: string
+}): { name: string; logoUrl?: string } {
+  if (rwaMatch) {
+    // Use the token's own logo (like every other asset), not the shared canonical RWA asset icon.
+    return { name: rwaMatch.asset.name || rwaMatch.asset.symbol, logoUrl: fallbackLogoUrl }
+  }
+  return { name: fallbackName, logoUrl: fallbackLogoUrl }
+}
+
+// eslint-disable-next-line complexity
 export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -76,10 +96,10 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     useTDPSelectedMultichainChain()
 
   const effectiveCurrency = useTDPEffectiveCurrency()
+  const rwaMatch = useRWATokenDetailsMatch()
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
   const isNative = effectiveCurrency.isNative
-  const tokenLogoUrl = tokenProjectQuery.data?.token?.project?.logoUrl
   const tokenLogoSize = getHeaderLogoSize({ isCompact, media })
 
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
@@ -118,7 +138,13 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   })
 
   const tokenSymbol = tokenProjectQuery.data?.token?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
-  const tokenName = tokenProjectQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  const fallbackTokenName = tokenProjectQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  // Matched RWAs show the underlying asset name from listRwas, but keep the token's own logo.
+  const { name: tokenName, logoUrl: tokenLogoUrl } = getRWAHeaderIdentity({
+    rwaMatch,
+    fallbackName: fallbackTokenName,
+    fallbackLogoUrl: tokenProjectQuery.data?.token?.project?.logoUrl,
+  })
   const showAddressCopy = getShowAddressCopy({ multichainTokenUxEnabled, isNative, isMultiChainAsset, selectedChainId })
 
   const onBreadcrumbAddressCopied = useEvent(() => {
@@ -142,7 +168,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
           url={tokenLogoUrl}
           symbol={effectiveCurrency.symbol ?? undefined}
           name={effectiveCurrency.name ?? undefined}
-          chainId={!multichainTokenUxEnabled ? effectiveCurrency.chainId : null}
+          chainId={!multichainTokenUxEnabled || !isMultiChainAsset ? effectiveCurrency.chainId : null}
           size={tokenLogoSize}
           transition={HEADER_TRANSITION}
         />
@@ -170,7 +196,8 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             )}
           </Flex>
           {!media.sm && (
-            <Flex row alignItems="stretch" gap="$spacing6">
+            <Flex row alignItems="center" gap="$spacing6">
+              <RWAIssuerHeaderDetails rwaMatch={rwaMatch} />
               <TokenDetailsNetworkFilter
                 chainIds={multichainChainIds}
                 selectedChainId={selectedChainId}

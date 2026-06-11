@@ -1,9 +1,11 @@
+import { ZERO_PERCENT } from '@uniswap/router-sdk'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { getTradeInputTax, getTradeOutputTax } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
@@ -28,27 +30,34 @@ export function useFeeOnTransferAmounts(
     const { input: inputCurrencyInfo, output: outputCurrencyInfo } = currencies
 
     const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
-    const tradeHasFeeToken = acceptedTrade?.inputTax?.greaterThan(0) || acceptedTrade?.outputTax?.greaterThan(0)
 
-    if (!acceptedTrade || !tradeHasFeeToken || acceptedTrade.indicative || isBridge(acceptedTrade)) {
+    if (!acceptedTrade || acceptedTrade.indicative || isBridge(acceptedTrade)) {
       return undefined
     }
 
-    const usdTaxAmountIn = usdAmountIn?.multiply(acceptedTrade.inputTax).toExact()
-    const usdTaxAmountOut = usdAmountOut?.multiply(acceptedTrade.outputTax).toExact()
+    const inputTax = getTradeInputTax(acceptedTrade) ?? ZERO_PERCENT
+    const outputTax = getTradeOutputTax(acceptedTrade) ?? ZERO_PERCENT
+    const tradeHasFeeToken = inputTax.greaterThan(0) || outputTax.greaterThan(0)
+
+    if (!tradeHasFeeToken) {
+      return undefined
+    }
+
+    const usdTaxAmountIn = usdAmountIn?.multiply(inputTax).toExact()
+    const usdTaxAmountOut = usdAmountOut?.multiply(outputTax).toExact()
 
     const formattedUsdTaxAmountIn = convertFiatAmountFormatted(usdTaxAmountIn, NumberType.FiatTokenQuantity)
     const formattedUsdTaxAmountOut = convertFiatAmountFormatted(usdTaxAmountOut, NumberType.FiatTokenQuantity)
 
-    const taxAmountIn = inputCurrencyAmount?.multiply(acceptedTrade.inputTax)
-    const taxAmountOut = outputCurrencyAmount?.multiply(acceptedTrade.outputTax)
+    const taxAmountIn = inputCurrencyAmount?.multiply(inputTax)
+    const taxAmountOut = outputCurrencyAmount?.multiply(outputTax)
     const formattedAmountIn = formatCurrencyAmount({ value: taxAmountIn, type: NumberType.TokenTx })
     const formattedAmountOut = formatCurrencyAmount({ value: taxAmountOut, type: NumberType.TokenTx })
 
     return {
       inputTokenInfo: {
         currencyInfo: inputCurrencyInfo,
-        fee: acceptedTrade.inputTax,
+        fee: inputTax,
         tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? t('token.symbol.input.fallback'),
         formattedUsdAmount: formattedUsdTaxAmountIn,
         formattedAmount: formattedAmountIn,
@@ -56,7 +65,7 @@ export function useFeeOnTransferAmounts(
       },
       outputTokenInfo: {
         currencyInfo: outputCurrencyInfo,
-        fee: acceptedTrade.outputTax,
+        fee: outputTax,
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? t('token.symbol.output.fallback'),
         formattedUsdAmount: formattedUsdTaxAmountOut,
         formattedAmount: formattedAmountOut,

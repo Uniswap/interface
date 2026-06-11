@@ -1,3 +1,4 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
 import { type PromiseClient } from '@connectrpc/connect'
 import { type LiquidityService as V1LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
 import type {
@@ -22,6 +23,8 @@ import type {
   DecreasePositionResponse,
   IncreasePositionRequest,
   IncreasePositionResponse,
+  ListPoolsRequest,
+  ListPoolsResponse,
   LPApprovalRequest,
   LPApprovalResponse,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
@@ -59,6 +62,7 @@ export interface V2LiquidityServiceClient {
   createPosition: (params: CreatePositionRequest) => Promise<CreatePositionResponse>
   decreasePosition: (params: DecreasePositionRequest) => Promise<DecreasePositionResponse>
   increasePosition: (params: IncreasePositionRequest) => Promise<IncreasePositionResponse>
+  listPools: (params: PartialMessage<ListPoolsRequest>) => Promise<ListPoolsResponse>
 }
 
 export function createV2LiquidityServiceClient({
@@ -71,5 +75,6 @@ export function createV2LiquidityServiceClient({
     createPosition: (params) => rpcClient.createPosition(params),
     decreasePosition: (params) => rpcClient.decreasePosition(params),
     increasePosition: (params) => rpcClient.increasePosition(params),
+    listPools: (params) => rpcClient.listPools(params),
   }
 }

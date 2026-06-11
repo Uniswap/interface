@@ -18,11 +18,22 @@
 # Nx targets would either be a no-op on CI or risk shadowing Fastlane's values.
 # Local-dev wrapping keeps the shared release pipeline 1:1 with what CI runs.
 #
+# Stale-code defenses (release variants embed JS in the APK, so a stale build
+# silently tests old code). Both layers are handled here; see the
+# argent-react-native-app-workflow skill for symptom/detection details:
+#   1. Exports EXPO_LOCAL_NO_BUILD_CACHE so app.config.ts drops the EAS build
+#      cache and `expo run:android` does a real build instead of reinstalling a
+#      fingerprint-matched APK.
+#   2. Deletes the gradle createBundle<Variant>JsAndAssets outputs (on by
+#      default) so gradle re-bundles instead of reusing a stale, UP-TO-DATE
+#      index.android.bundle. Pass --no-clean-js to skip for native-only rebuilds.
+#
 # Usage:
 #   bash apps/mobile/scripts/runAndroidLocal.sh           # defaults to beta
 #   bash apps/mobile/scripts/runAndroidLocal.sh beta
 #   bash apps/mobile/scripts/runAndroidLocal.sh dev
 #   bash apps/mobile/scripts/runAndroidLocal.sh prod
+#   bash apps/mobile/scripts/runAndroidLocal.sh dev --no-clean-js
 #
 # Or via the bun shortcuts:
 #   bun mobile android:beta:release:local
@@ -31,7 +42,19 @@
 
 set -uo pipefail
 
-VARIANT="${1:-beta}"
+VARIANT="beta"
+CLEAN_JS=1
+for arg in "$@"; do
+  case "$arg" in
+    --clean-js)    CLEAN_JS=1 ;;
+    --no-clean-js) CLEAN_JS=0 ;;
+    dev|beta|prod) VARIANT="$arg" ;;
+    *)
+      echo "ERROR: Unknown argument '$arg'. Valid: dev|beta|prod, --clean-js, --no-clean-js." >&2
+      exit 1
+      ;;
+  esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MOBILE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -98,6 +121,22 @@ export ANDROID_KEYSTORE_ALIAS="$KEYSTORE_ALIAS_VAL"
 export ANDROID_KEY_PASSWORD="$KEY_PASSWORD_VAL"
 
 export EXPO_ANDROID_LAUNCH_ACTIVITY="$APP_ID/com.uniswap.MainActivity"
+
+# Force a real build instead of an EAS cache reinstall (see header note 1).
+export EXPO_LOCAL_NO_BUILD_CACHE=1
+
+# Force a JS re-bundle (see header note 2). gradle's createBundle<Variant>JsAndAssets
+# misses monorepo JS edits and stays UP-TO-DATE, so the APK keeps a stale bundle.
+if [ "$CLEAN_JS" -eq 1 ]; then
+  # devRelease -> DevRelease (gradle task name capitalizes the first letter).
+  TASK_VARIANT="$(printf '%s' "${EXPO_VARIANT:0:1}" | tr '[:lower:]' '[:upper:]')${EXPO_VARIANT:1}"
+  BUNDLE_TASK="createBundle${TASK_VARIANT}JsAndAssets"
+  echo "→ Clearing stale JS bundle outputs for $BUNDLE_TASK (pass --no-clean-js to skip)"
+  rm -rf \
+    "$ANDROID_DIR/app/build/generated/assets/$BUNDLE_TASK" \
+    "$ANDROID_DIR/app/build/generated/res/$BUNDLE_TASK" \
+    "$ANDROID_DIR/app/build/intermediates/assets/$EXPO_VARIANT"
+fi
 
 echo "→ Building $EXPO_VARIANT (app id: $APP_ID)"
 echo

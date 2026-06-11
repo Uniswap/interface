@@ -26,6 +26,9 @@ import { TokensAllocationChart } from '~/pages/Portfolio/Tokens/Table/TokensAllo
 import { TokensTable } from '~/pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from '~/pages/Portfolio/Tokens/utils/filterTokensBySearch'
 
+// Disabled until polished in future projects
+const SHOW_TOKEN_ALLOCATION_CHART = false
+
 const TokenCountIndicator = memo(({ count }: { count: number }) => {
   const { t } = useTranslation()
 
@@ -179,7 +182,8 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
 
           {hasTokens || loading ? (
             <>
-              {multichainTokenUxEnabled && (
+              {/* oxlint-disable-next-line typescript/no-unnecessary-condition */}
+              {SHOW_TOKEN_ALLOCATION_CHART && (
                 <Trace section={SectionName.PortfolioTokensTab} element={ElementName.TokensAllocationChart}>
                   <TokensAllocationChart tokenData={tokenData || []} />
                 </Trace>

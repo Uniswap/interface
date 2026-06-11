@@ -4,6 +4,9 @@ export type Interceptors = NonNullable<ConnectTransportOptions['interceptors']>
 import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
 import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 import { isWebApp } from '@universe/environment'
+import type { Session } from '@universe/sessions'
+import { requireSessionInterceptor } from '@universe/sessions'
+import { logger, type Logger } from 'utilities/src/logger/logger'
 
 interface SessionTransportOptions {
   getSessionId?: () => Promise<string | null>
@@ -12,6 +15,20 @@ interface SessionTransportOptions {
   getHeaders?: () => object
   /** Additional interceptors (run after the built-in header injection interceptor) */
   interceptors?: Interceptors
+  /**
+   * Optional session gate. When the getter returns a Session, calls are
+   * gated with await-ready + retry-once on 401. Returning null (not
+   * bootstrapped) passes through. The interceptor always skips the
+   * SessionService itself to avoid a recovery deadlock.
+   */
+  getSession?: () => Session | null
+  /**
+   * Telemetry identifier for the gate's emitted events. Defaults to
+   * `'connect-rpc'` in `createTransport`, so it's always populated even when
+   * `getSession` is set — no separate enforcement needed.
+   */
+  source?: string
+  getLogger?: () => Logger
   options?: Partial<ConnectTransportOptions>
 }
 
@@ -23,7 +40,17 @@ interface SessionTransportOptions {
  * Otherwise, you can use the getTransport util.
  */
 function createTransport(ctx: SessionTransportOptions): ReturnType<typeof createConnectTransport> {
-  const { getSessionId, getDeviceId, getBaseUrl, getHeaders, interceptors: extraInterceptors, options } = ctx
+  const {
+    getSessionId,
+    getDeviceId,
+    getBaseUrl,
+    getHeaders,
+    interceptors: extraInterceptors,
+    getSession,
+    source = 'connect-rpc',
+    getLogger = (): Logger => logger,
+    options,
+  } = ctx
 
   const transportOptions: ConnectTransportOptions = {
     baseUrl: getBaseUrl(),
@@ -50,6 +77,7 @@ function createTransport(ctx: SessionTransportOptions): ReturnType<typeof create
 
         return next(request)
       },
+      ...(getSession ? [requireSessionInterceptor({ getSession, source, getLogger })] : []),
       ...(extraInterceptors ?? []),
     ],
     ...options,
@@ -65,6 +93,9 @@ function getTransport(ctx: {
   getBaseUrl: () => string
   getHeaders?: () => object
   interceptors?: Interceptors
+  getSession?: () => Session | null
+  source?: string
+  getLogger?: () => Logger
   options?: Partial<ConnectTransportOptions>
 }): ReturnType<typeof createConnectTransport> {
   return createTransport({
@@ -85,6 +116,9 @@ function getTransport(ctx: {
     },
     getHeaders: ctx.getHeaders,
     interceptors: ctx.interceptors,
+    getSession: ctx.getSession,
+    source: ctx.source,
+    getLogger: ctx.getLogger,
     options: ctx.options,
   })
 }

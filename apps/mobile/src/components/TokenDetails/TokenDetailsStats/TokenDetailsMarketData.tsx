@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { StatsRow } from 'src/components/TokenDetails/TokenDetailsStats/StatsRow'
+import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { ChartBar, ChartPie, ChartPyramid, GlobeFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
@@ -49,6 +50,7 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
   const [showVolumeInfo, setShowVolumeInfo] = useState(false)
+  const preferProjectMarketData = useTokenDetailsPreferProjectMarketData()
 
   const { data: screenData } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
@@ -120,7 +122,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     token.address,
   ])
 
-  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId, { aggregatedData })
+  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId, {
+    aggregatedData,
+    preferProjectMarketData,
+  })
 
   const hasLimitedVolumeData = chainId === UniverseChainId.Tempo
 

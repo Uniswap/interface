@@ -7,6 +7,7 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniswapContext, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useIsRWAGeoBlocked } from 'uniswap/src/features/rwa/useIsRWAGeoBlocked'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
@@ -19,6 +20,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { useCurrency } from '~/hooks/Tokens'
 import { Swap } from '~/pages/Swap'
+import { RWAGeoBlockedCard } from '~/pages/TokenDetails/components/swap/RWAGeoBlockedCard'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPSwapCurrency } from '~/pages/TokenDetails/hooks/useTDPSwapCurrency'
 import { useUserPreservedCurrencies } from '~/pages/TokenDetails/hooks/useUserPreservedCurrencies'
@@ -47,6 +49,7 @@ export function TDPSwapComponent() {
   )
 
   const currencyInfo = useCurrencyInfo(currencyId(currency))
+  const isRWAGeoBlocked = useIsRWAGeoBlocked(currency)
 
   const { inputCurrency, outputCurrency } = useSwapInitialCurrencies(swapCurrency)
 
@@ -167,8 +170,12 @@ export function TDPSwapComponent() {
           />
         </UniswapContext.Provider>
       </div>
-      <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
-      {currencyInfo && (
+      {isRWAGeoBlocked ? (
+        <RWAGeoBlockedCard tokenSymbol={currency.symbol} />
+      ) : (
+        <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
+      )}
+      {currencyInfo && !isRWAGeoBlocked && (
         // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
         <TokenWarningModal
           currencyInfo0={currencyInfo}

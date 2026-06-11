@@ -1,6 +1,16 @@
 import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
-import React, { CSSProperties, Fragment, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  CSSProperties,
+  Fragment,
+  Key,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
@@ -12,6 +22,11 @@ import {
   OnchainItemListProps,
   SectionRowInfo,
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
+import {
+  getRowsStructuralSignature,
+  getSectionHeaderRowKey,
+  getSectionItemRowKey,
+} from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
@@ -47,6 +62,16 @@ function isSectionHeader<T extends OnchainItemListOption>(
 function isHorizontalTokenRowInfo<T extends OnchainItemListOption>(rowInfo: OnchainItemListData<T>): boolean {
   const isHeader = isSectionHeader(rowInfo)
   return !isHeader && isArray(rowInfo.item)
+}
+
+function isDynamicHeightRowInfo<T extends OnchainItemListOption>(rowInfo: OnchainItemListData<T>): boolean {
+  if (isHorizontalTokenRowInfo(rowInfo)) {
+    return true
+  }
+  // Rows that opt into dynamic height via `rowLayout` (e.g. expandable collections) are measured at runtime;
+  // fixed rows are not. Keeping fixed rows off the dynamic path avoids a needless ResizeObserver +
+  // per-commit getBoundingClientRect.
+  return !isSectionHeader(rowInfo) && !isArray(rowInfo.item) && rowInfo.item.rowLayout?.dynamicHeight === true
 }
 
 export function OnchainItemList<T extends OnchainItemListOption>({
@@ -95,9 +120,10 @@ export function OnchainItemList<T extends OnchainItemListOption>({
             endElement: section.endElement,
             sectionHeader: section.sectionHeader,
             sectionHeaderHeight: section.sectionHeaderHeight,
+            icon: section.icon,
           },
           key: section.sectionKey,
-          measurementKey: `section-${section.sectionKey}`,
+          measurementKey: getSectionHeaderRowKey(section.sectionKey),
           renderSectionHeader,
         }
         rowIndex += 1
@@ -112,7 +138,11 @@ export function OnchainItemList<T extends OnchainItemListOption>({
             section,
             index,
             key: keyExtractor?.(item, index),
-            measurementKey: `item-${section.sectionKey}-${keyExtractor?.(item, index) ?? index}`,
+            measurementKey: getSectionItemRowKey({
+              sectionKey: section.sectionKey,
+              itemKey: keyExtractor?.(item, index),
+              index,
+            }),
             renderItem,
             expanded: expandedItems?.includes(keyExtractor?.(item, index) ?? '') ?? false,
           }
@@ -124,6 +154,30 @@ export function OnchainItemList<T extends OnchainItemListOption>({
       return rows
     }, [])
   }, [sections, renderSectionHeader, keyExtractor, renderItem, expandedItems])
+
+  // Signature of the row SET (ordered keys, excluding heights/expanded state): changes on insert/remove/reorder
+  // (clear recents, tab/filter, refetch) but not on expand/collapse. On change, react-window's index-keyed offset
+  // cache is stale — reset from 0; per-key heights survive, so offsets rebuild correctly. SWAP-2781 / SWAP-2785.
+  const structuralSignature = useMemo(
+    () => getRowsStructuralSignature(items.map((item) => item.measurementKey)),
+    [items],
+  )
+
+  // Latest-value ref (not a double-exec guard): lets the signature-keyed effect prune without adding `items` to
+  // its deps — `items` identity also changes on expand/collapse, which must NOT trigger a reset.
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+
+  useLayoutEffect(() => {
+    // Drop heights for rows that left so the map can't grow unbounded.
+    const presentKeys = new Set(itemsRef.current.map((item) => item.measurementKey))
+    for (const measurementKey of Object.keys(rowHeightMap.current)) {
+      if (!presentKeys.has(measurementKey)) {
+        delete rowHeightMap.current[measurementKey]
+      }
+    }
+    ref.current?.resetAfterIndex(0)
+  }, [structuralSignature])
 
   // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
@@ -164,6 +218,18 @@ export function OnchainItemList<T extends OnchainItemListOption>({
         }
 
         return HORIZONTAL_TOKEN_ROW_HEIGHT
+      }
+
+      if (isDynamicHeightRowInfo(item)) {
+        if (measuredHeight) {
+          return measuredHeight
+        }
+        // Pre-measurement fallback: use the row's own computed layout so first-paint offsets are ~right until the
+        // ResizeObserver reports the real height.
+        if (!isArray(item.item) && item.item.rowLayout) {
+          return item.expanded ? item.item.rowLayout.expandedHeightPx : item.item.rowLayout.collapsedHeightPx
+        }
+        return ITEM_ROW_HEIGHT
       }
 
       return ITEM_ROW_HEIGHT
@@ -346,7 +412,7 @@ function RowInner<T extends OnchainItemListOption>({
     measurementKey: itemData.measurementKey,
     updateRowHeight,
     itemKey: itemData.key,
-    needsDynamicHeight: isHorizontalTokenRowInfo(itemData),
+    needsDynamicHeight: isDynamicHeightRowInfo(itemData),
   })
 
   const item = useMemo((): JSX.Element | null => {
@@ -362,7 +428,9 @@ function RowInner<T extends OnchainItemListOption>({
       key={itemData.measurementKey}
       grow
       alignItems="center"
-      justifyContent={isSectionHeader(itemData) ? 'flex-start' : 'center'}
+      // Top-align headers and dynamic-height rows (e.g. animating RWA collections): react-window updates cell
+      // height async, so centering would re-offset the growing content each frame. Fixed-height rows center.
+      justifyContent={isSectionHeader(itemData) || isDynamicHeightRowInfo(itemData) ? 'flex-start' : 'center'}
       style={style}
     >
       <Flex ref={rowRef} width="100%">

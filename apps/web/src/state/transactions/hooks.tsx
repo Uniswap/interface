@@ -1,5 +1,4 @@
 /* oxlint-disable typescript/no-unnecessary-condition */
-import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import type { Token } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -18,6 +17,7 @@ import type {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
+  LIQUIDITY_TRANSACTION_TYPES,
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
@@ -322,7 +322,7 @@ function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000
 }
 
-function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | undefined {
+function usePendingApprovalAmount(token?: Token, spender?: string): bigint | undefined {
   const allTransactions = useAllTransactionsByChain()
   return useMemo(() => {
     if (typeof token?.address !== 'string' || typeof spender !== 'string') {
@@ -341,7 +341,7 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
         isTransactionRecent(tx) &&
         tx.typeInfo.approvalAmount !== undefined
       ) {
-        return BigNumber.from(tx.typeInfo.approvalAmount)
+        return BigInt(tx.typeInfo.approvalAmount)
       }
     }
     return undefined
@@ -350,7 +350,7 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
 
 // returns whether a token has a pending approval transaction
 export function useHasPendingApproval(token?: Token, spender?: string): boolean {
-  return usePendingApprovalAmount(token, spender)?.gt(0) ?? false
+  return (usePendingApprovalAmount(token, spender) ?? 0n) > 0n
 }
 
 export function useHasPendingPermit2Approval(token?: Token, spender?: string): boolean {
@@ -375,7 +375,7 @@ export function useHasPendingPermit2Approval(token?: Token, spender?: string): b
 }
 
 export function useHasPendingRevocation(token?: Token, spender?: string): boolean {
-  return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
+  return usePendingApprovalAmount(token, spender) === 0n
 }
 
 function isPendingTransactionRecent(tx: TransactionDetails): boolean {
@@ -414,18 +414,7 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
     () =>
       Object.values(allTransactions).filter(
         (tx): tx is PendingTransactionDetails =>
-          tx.from === account.address &&
-          isPendingTx(tx) &&
-          (
-            [
-              TransactionType.LiquidityIncrease,
-              TransactionType.LiquidityDecrease,
-              TransactionType.CreatePool,
-              TransactionType.CreatePair,
-              TransactionType.MigrateLiquidityV3ToV4,
-              TransactionType.CollectFees,
-            ] as TransactionType[]
-          ).includes(tx.typeInfo.type),
+          tx.from === account.address && isPendingTx(tx) && LIQUIDITY_TRANSACTION_TYPES.includes(tx.typeInfo.type),
       ),
     [account.address, allTransactions],
   )

@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
@@ -55,21 +54,20 @@ export function useAllFeeTierPoolData({
 
   return useMemo(() => {
     const liquiditySum = poolData?.pools.reduce(
-      (sum, pool) => BigNumber.from(pool.totalLiquidityUsd.split('.')[0] ?? '0').add(sum),
-      BigNumber.from(0),
+      (sum, pool) => BigInt(pool.totalLiquidityUsd.split('.')[0] ?? '0') + sum,
+      0n,
     )
 
     const feeTierData: Record<string, FeeTierData> = {}
-    if (poolData && liquiditySum && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1) {
+    if (poolData && liquiditySum !== undefined && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1) {
       for (const pool of poolData.pools) {
         const key = getFeeTierKey({ feeTier: pool.fee, tickSpacing: pool.tickSpacing, isDynamicFee: pool.isDynamicFee })
         if (!key) {
           continue
         }
         const totalLiquidityUsdTruncated = Number(pool.totalLiquidityUsd.split('.')[0] ?? '0')
-        const percentage = liquiditySum.isZero()
-          ? new Percent(0, 100)
-          : new Percent(totalLiquidityUsdTruncated, liquiditySum.toString())
+        const percentage =
+          liquiditySum === 0n ? new Percent(0, 100) : new Percent(totalLiquidityUsdTruncated, liquiditySum.toString())
         // oxlint-disable-next-line typescript/no-unnecessary-condition
         if (feeTierData[key]) {
           feeTierData[key].totalLiquidityUsd += totalLiquidityUsdTruncated

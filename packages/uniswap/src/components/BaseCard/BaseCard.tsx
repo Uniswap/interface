@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { RotateRight } from 'ui/src/components/icons/RotateRight'
 import { opacify } from 'ui/src/theme'
 
 export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 } as const
@@ -134,6 +135,7 @@ type ErrorStateProps = {
   description?: string
   onRetry?: () => void
   retryButtonLabel?: string
+  retryEnabled?: boolean
   icon?: ReactNode
   alternativeButtonLabel?: string
   onAlternativePress?: () => void
@@ -146,6 +148,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
     description = t('common.card.error.description'),
     retryButtonLabel,
     onRetry,
+    retryEnabled,
     icon,
     alternativeButtonLabel,
     onAlternativePress,
@@ -168,9 +171,12 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
       <Flex alignItems="center" gap="$spacing16">
         {retryButtonLabel ? (
           <TouchableArea onPress={onRetry}>
-            <Text color="$accent1" variant="buttonLabel2">
-              {retryButtonLabel}
-            </Text>
+            <Flex centered row gap="$spacing8">
+              {retryEnabled ? <RotateRight color="$accent1" size="$icon.16" /> : null}
+              <Text color="$accent1" variant="buttonLabel3">
+                {retryButtonLabel}
+              </Text>
+            </Flex>
           </TouchableArea>
         ) : null}
         {alternativeButtonLabel ? (

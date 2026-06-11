@@ -1,15 +1,15 @@
-import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
+import { v3PoolStateAbi } from '@universe/chains'
+import { ensure0xHex } from '@universe/encoding'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
-import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { decodeFunctionResult, encodeFunctionData, toBigInt } from '~/chains'
 import {
   PositionInfo,
   useCachedPositions,
@@ -27,33 +27,36 @@ function createPositionInfo({
   owner,
   chainId,
   details,
-  slot0,
+  sqrtPriceX96,
+  tick,
   tokenA,
   tokenB,
 }: {
   owner: string
   chainId: UniverseChainId
   details: PositionDetails
-  slot0: any
+  sqrtPriceX96: bigint
+  tick: number
   tokenA: Token
   tokenB: Token
 }): PositionInfo {
-  /* Instantiates a Pool with a hardcoded 0 liqudity value since the sdk only uses this value for swap state and this avoids an RPC fetch */
-  const pool = new Pool(tokenA, tokenB, details.fee, slot0.sqrtPriceX96.toString(), 0, slot0.tick)
+  // Instantiates a Pool with a hardcoded 0 liqudity value since the sdk
+  // only uses this value for swap state and this avoids an RPC fetch.
+  const pool = new Pool(tokenA, tokenB, details.fee, sqrtPriceX96.toString(), 0, tick)
   const position = new Position({
     pool,
     liquidity: details.liquidity.toString(),
     tickLower: details.tickLower,
     tickUpper: details.tickUpper,
   })
-  const inRange = slot0.tick >= details.tickLower && slot0.tick < details.tickUpper
-  const closed = details.liquidity.eq(0)
+  const inRange = tick >= details.tickLower && tick < details.tickUpper
+  const closed = details.liquidity === 0n
   return { owner, chainId, pool, position, details, inRange, closed }
 }
 
 type FeeAmounts = [BigNumber, BigNumber]
 
-const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
+const MAX_UINT128 = (1n << 128n) - 1n
 
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
@@ -119,21 +122,41 @@ export function useMultiChainPositions(account: string): UseMultiChainPositionsD
 
   const fetchPositionDetails = useCallback(async (pm: NonfungiblePositionManager, positionIds: BigNumber[]) => {
     const callData = positionIds.map((id) => pm.interface.encodeFunctionData('positions', [id]))
-    return (await pm.callStatic.multicall(callData)).map(
-      (positionBytes, index) =>
-        ({
-          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-          ...pm.interface.decodeFunctionResult('positions', positionBytes),
-          tokenId: positionIds[index],
-        }) as unknown as PositionDetails,
-    )
+    return (await pm.callStatic.multicall(callData)).map((positionBytes, index) => {
+      // Assertion is roughly the same as before, just happening at decoded
+      // now, and return is "enforced" through satisfies. pm comes from
+      // another Uniswap package so we accomodate `BigNumber` still.
+      const decoded = pm.interface.decodeFunctionResult('positions', positionBytes) as unknown as {
+        nonce: BigNumber
+        operator: string
+        token0: string
+        token1: string
+        fee: number
+        tickLower: number
+        tickUpper: number
+        liquidity: BigNumber
+        feeGrowthInside0LastX128: BigNumber
+        feeGrowthInside1LastX128: BigNumber
+        tokensOwed0: BigNumber
+        tokensOwed1: BigNumber
+      }
+      return {
+        ...decoded,
+        tokenId: toBigInt(positionIds[index]),
+        nonce: toBigInt(decoded.nonce),
+        liquidity: toBigInt(decoded.liquidity),
+        feeGrowthInside0LastX128: toBigInt(decoded.feeGrowthInside0LastX128),
+        feeGrowthInside1LastX128: toBigInt(decoded.feeGrowthInside1LastX128),
+        tokensOwed0: toBigInt(decoded.tokensOwed0),
+        tokensOwed1: toBigInt(decoded.tokensOwed1),
+      } satisfies PositionDetails
+    })
   }, [])
 
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
     // oxlint-disable-next-line max-params
     async (positionDetails: PositionDetails[], chainId: UniverseChainId, multicall: UniswapInterfaceMulticall) => {
-      const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as UniswapV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
         chainId,
@@ -160,7 +183,7 @@ export function useMultiChainPositions(account: string): UseMultiChainPositionsD
         poolPairs.push([tokenA, tokenB])
         calls.push({
           target: poolAddress,
-          callData: poolInterface.encodeFunctionData('slot0'),
+          callData: encodeFunctionData({ abi: v3PoolStateAbi, functionName: 'slot0' }),
           gasLimit: DEFAULT_GAS_LIMIT,
         })
       }, [])
@@ -168,13 +191,18 @@ export function useMultiChainPositions(account: string): UseMultiChainPositionsD
       // oxlint-disable-next-line max-params
       return (await multicall.callStatic.multicall(calls)).returnData.reduce((acc: PositionInfo[], result, i) => {
         if (result.success) {
-          const slot0 = poolInterface.decodeFunctionResult('slot0', result.returnData)
+          const [sqrtPriceX96, tick] = decodeFunctionResult({
+            abi: v3PoolStateAbi,
+            functionName: 'slot0',
+            data: ensure0xHex(result.returnData),
+          })
           acc.push(
             createPositionInfo({
               owner: account,
               chainId,
               details: positionDetails[i],
-              slot0,
+              sqrtPriceX96,
+              tick,
               tokenA: poolPairs[i][0],
               tokenB: poolPairs[i][1],
             }),

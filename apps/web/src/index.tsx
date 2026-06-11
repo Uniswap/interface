@@ -41,7 +41,6 @@ import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { getLogger } from 'utilities/src/logger/logger'
@@ -106,7 +105,11 @@ const provideSessionInitService = () => {
   if (getIsTurnstileSolverEnabled()) {
     solvers.set(
       ChallengeType.TURNSTILE,
-      createTurnstileSolver({ performanceTracker, getLogger, onSolveCompleted: onTurnstileSolveCompleted }),
+      createTurnstileSolver({
+        performanceTracker,
+        getLogger,
+        onSolveCompleted: onTurnstileSolveCompleted,
+      }),
     )
   } else {
     solvers.set(ChallengeType.TURNSTILE, createTurnstileMockSolver())
@@ -165,7 +168,7 @@ function Updaters() {
   return (
     <>
       <Helmet>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
+        <link rel="canonical" href={getCanonicalUrl(location.pathname, location.search)} />
       </Helmet>
       {ListsUpdater && <ListsUpdater />}
       {ApplicationUpdater && <ApplicationUpdater />}
@@ -268,31 +271,29 @@ const RootApp = (): JSX.Element => {
                               <ConnectWalletMutationProvider>
                                 <WebAccountsStoreProvider>
                                   <WebUniswapProvider>
-                                    <TokenPriceProvider>
-                                      <GraphqlProviders>
-                                        <LivePricesProvider>
-                                          <LocalizationContextProvider>
-                                            <BlockNumberProvider>
-                                              <Updaters />
-                                              <ThemeProvider>
-                                                <TamaguiProvider>
-                                                  <PortalProvider>
-                                                    <WebNotificationServiceManager />
-                                                    <ThemedGlobalStyle />
-                                                    <App />
-                                                    {AgentationLazy && isDevEnv() && (
-                                                      <Suspense fallback={null}>
-                                                        <AgentationLazy />
-                                                      </Suspense>
-                                                    )}
-                                                  </PortalProvider>
-                                                </TamaguiProvider>
-                                              </ThemeProvider>
-                                            </BlockNumberProvider>
-                                          </LocalizationContextProvider>
-                                        </LivePricesProvider>
-                                      </GraphqlProviders>
-                                    </TokenPriceProvider>
+                                    <GraphqlProviders>
+                                      <LivePricesProvider>
+                                        <LocalizationContextProvider>
+                                          <BlockNumberProvider>
+                                            <Updaters />
+                                            <ThemeProvider>
+                                              <TamaguiProvider>
+                                                <PortalProvider>
+                                                  <WebNotificationServiceManager />
+                                                  <ThemedGlobalStyle />
+                                                  <App />
+                                                  {AgentationLazy && isDevEnv() && (
+                                                    <Suspense fallback={null}>
+                                                      <AgentationLazy />
+                                                    </Suspense>
+                                                  )}
+                                                </PortalProvider>
+                                              </TamaguiProvider>
+                                            </ThemeProvider>
+                                          </BlockNumberProvider>
+                                        </LocalizationContextProvider>
+                                      </LivePricesProvider>
+                                    </GraphqlProviders>
                                   </WebUniswapProvider>
                                 </WebAccountsStoreProvider>
                               </ConnectWalletMutationProvider>

@@ -4,7 +4,16 @@ import { getUniquePositionId } from 'uniswap/src/features/visibility/utils'
 import { type CurrencyId } from 'uniswap/src/types/currency'
 
 export type Visibility = { isVisible: boolean }
-export type PositionKeyToVisibility = Record<string, Visibility>
+// chainId/poolId/tokenId feed the PoolRef include/exclude overrides on the modifier.
+// tokenId becomes PoolRef.positionId so V3/V4 positions in the same pool can be
+// discriminated; V2 has no tokenId so the BE falls back to pool-level matching.
+// Fields are optional: legacy persisted entries lack them, parsePositionId recovers from the key.
+export type PositionVisibility = Visibility & {
+  chainId?: UniverseChainId
+  poolId?: string
+  tokenId?: string
+}
+export type PositionKeyToVisibility = Record<string, PositionVisibility>
 export type CurrencyIdToVisibility = Record<CurrencyId, Visibility>
 export type NFTKeyToVisibility = Record<string, Visibility>
 export type ActivityIdToVisibility = Record<string, Visibility>
@@ -40,7 +49,7 @@ export const slice = createSlice({
       }>,
     ) => {
       const positionId = getUniquePositionId({ poolId, tokenId, chainId })
-      state.positions[positionId] = { isVisible }
+      state.positions[positionId] = { isVisible, chainId, poolId, tokenId }
     },
     setTokenVisibility: (
       state,

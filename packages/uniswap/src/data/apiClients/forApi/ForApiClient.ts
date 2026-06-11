@@ -6,7 +6,9 @@ import {
   provideSessionService,
   reinitializeSession,
 } from '@universe/api'
+import { tryProvideSession } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { SessionGateSource } from '@universe/sessions'
 import { getForApiUrl } from 'uniswap/src/constants/urls'
 import { getForApiHeaders } from 'uniswap/src/features/fiatOnRamp/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -50,6 +52,8 @@ const ForApiFetchClient = createFetchClient({
       getBaseUrl: getForApiUrl,
       getIsSessionServiceEnabled: () => getFeatureFlag(FeatureFlags.ForSessionsEnabled),
     }),
+  getSession: tryProvideSession,
+  source: SessionGateSource.FetchFor,
   // On web the session lives in an HttpOnly cookie set on the entry-gateway domain.
   // FOR requests go to entry-gateway.backend-prod.api.uniswap.org (same host as Plan
   // / Chained Actions), but from a different origin than app.uniswap.org. Without

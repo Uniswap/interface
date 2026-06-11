@@ -14,6 +14,7 @@ export type EarnVaultModalVaultData = {
   selectedDepositSource: EarnDepositSourceOption | undefined
   setSelectedDepositSourceCurrencyId: (currencyId: string) => void
   symbol: string
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
   vault: EarnVaultInfo | null
 }
 

@@ -78,12 +78,7 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'UniswapX',
-      flags: [
-        { flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' },
-        { flag: FeatureFlags.UniswapXPriorityOrdersBase, label: 'UniswapX Priority Orders (on Base)' },
-        { flag: FeatureFlags.UniswapXPriorityOrdersUnichain, label: 'UniswapX Priority Orders (on Unichain)' },
-        { flag: FeatureFlags.ArbitrumDutchV3, label: 'Enable Dutch V3 on Arbitrum' },
-      ],
+      flags: [{ flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' }],
     },
     {
       name: 'LP',
@@ -92,6 +87,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
+        { flag: FeatureFlags.LpIncentivesTablesColumn, label: 'Enable LP Reward APR Column' },
       ],
     },
     {
@@ -166,7 +162,26 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'RWA',
-      flags: [{ flag: FeatureFlags.RWACoinGeckoData, label: 'Enable RWA CoinGecko Data' }],
+      flags: [
+        { flag: FeatureFlags.RwaGeoblocked, label: 'Geo-block RWA tokens (treat region as restricted)' },
+        { flag: FeatureFlags.RWACoinGeckoData, label: 'Enable RWA CoinGecko Data' },
+        { flag: FeatureFlags.RWATdp, label: 'Enable RWA TDP' },
+        { flag: FeatureFlags.RWATdpRelatedTokens, label: 'Enable RWA TDP Related Tokens' },
+        { flag: FeatureFlags.RWATdpSiblings, label: 'Enable RWA TDP More Ways to Trade (Siblings)' },
+        { flag: FeatureFlags.RWAUX, label: 'Enable RWA UX' },
+        { flag: FeatureFlags.RWAUXExplore, label: 'Enable RWA UX Explore (table)' },
+        { flag: FeatureFlags.RWAUXExploreCarousel, label: 'Enable RWA UX Explore (carousel)' },
+        { flag: FeatureFlags.RwaUxTokenSelector, label: 'Enable Stocks section in Token Selector' },
+        {
+          flag: FeatureFlags.RwaUxTokenSelectorCategoryLabels,
+          label: 'Show category labels (e.g. Stocks) on token rows in Token Selector',
+        },
+        { flag: FeatureFlags.RwaUxSearch, label: 'Enable Stocks in Search' },
+        {
+          flag: FeatureFlags.RwaUxSearchTop24hSection,
+          label: 'Enable "Stocks by 24H volume" search section (requires Stocks in Search)',
+        },
+      ],
     },
     { name: 'Experiments', flags: [] },
     {

@@ -58,8 +58,8 @@
     "check": "nx check @universe/mycelium",
     "check:fast": "nx check:fast @universe/mycelium",
     "check:deps:usage": "nx check:deps:usage @universe/mycelium",
-    "format": "nx format @universe/mycelium",
-    "format:check": "nx format:check @universe/mycelium",
+    "format": "nx run @universe/mycelium:format",
+    "format:check": "nx run @universe/mycelium:format:check",
     "lint": "nx lint @universe/mycelium",
     "lint:fix": "nx lint:fix @universe/mycelium"
   },

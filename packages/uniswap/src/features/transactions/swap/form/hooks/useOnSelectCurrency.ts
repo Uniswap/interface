@@ -7,6 +7,7 @@ import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/trading
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
@@ -24,20 +25,22 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-export function useOnSelectCurrency({
+export function useOnSelectTradeableAsset({
   onSelect,
 }: {
   onSelect?: () => void
 }): ({
-  currency,
+  tradeableAsset,
   field,
   allowCrossChainPair,
   isPreselectedAsset,
+  selectedCurrency,
 }: {
-  currency: Currency
+  tradeableAsset: TradeableAsset
   field: CurrencyField
   allowCrossChainPair: boolean
-  isPreselectedAsset: boolean
+  isPreselectedAsset?: boolean
+  selectedCurrency?: Currency
 }) => void {
   const { onCurrencyChange } = useTransactionModalContext()
   const { output, input, exactCurrencyField, filteredChainIds, updateSwapForm } = useSwapFormStore((s) => ({
@@ -59,22 +62,18 @@ export function useOnSelectCurrency({
 
   return useEvent(
     ({
-      currency,
+      tradeableAsset,
       field,
       allowCrossChainPair,
-      isPreselectedAsset,
+      isPreselectedAsset = false,
+      selectedCurrency,
     }: {
-      currency: Currency
+      tradeableAsset: TradeableAsset
       field: CurrencyField
       allowCrossChainPair: boolean
-      isPreselectedAsset: boolean
+      isPreselectedAsset?: boolean
+      selectedCurrency?: Currency
     }) => {
-      const tradeableAsset: TradeableAsset = {
-        address: currencyAddress(currency),
-        chainId: currency.chainId,
-        type: AssetType.Currency,
-      }
-
       const newState: Partial<SwapFormState> = {}
 
       if (field === CurrencyField.OUTPUT) {
@@ -97,38 +96,33 @@ export function useOnSelectCurrency({
           : false)
 
       // swap order if tokens are the same
-      if (otherFieldTradeableAsset && areCurrencyIdsEqual(currencyId(currency), currencyId(otherFieldTradeableAsset))) {
+      if (
+        otherFieldTradeableAsset &&
+        areCurrencyIdsEqual(currencyId(tradeableAsset), currencyId(otherFieldTradeableAsset))
+      ) {
         const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? input : output
         // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
         newState.exactCurrencyField =
           exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
-      } else if (otherFieldTradeableAsset && currency.chainId !== otherFieldTradeableAsset.chainId && !isBridgePair) {
-        const otherCurrencyInNewChain = otherFieldTokenProjects.data?.find(
-          (project) => project.currency.chainId === currency.chainId,
-        )
-
+      } else if (
+        otherFieldTradeableAsset &&
+        tradeableAsset.chainId !== otherFieldTradeableAsset.chainId &&
+        !isBridgePair
+      ) {
         // if new token chain changes, try to find the other token's match on the new chain
-        const otherTradeableAssetInNewChain: TradeableAsset | undefined = otherCurrencyInNewChain && {
-          address: currencyAddress(otherCurrencyInNewChain.currency),
-          chainId: otherCurrencyInNewChain.currency.chainId,
-          type: AssetType.Currency,
-        }
-
-        newState[otherField] =
-          otherTradeableAssetInNewChain &&
-          otherCurrencyInNewChain &&
-          !areCurrencyIdsEqual(currencyId(currency), otherCurrencyInNewChain.currencyId)
-            ? otherTradeableAssetInNewChain
-            : undefined
+        newState[otherField] = resolveOtherFieldOnChainChange({
+          tradeableAsset,
+          otherFieldTokenProjects,
+        })
       }
 
       if (!isBridgePair) {
         const newFilteredChainIds = { ...filteredChainIds }
 
-        newFilteredChainIds[CurrencyField.INPUT] = currency.chainId
-        newFilteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+        newFilteredChainIds[CurrencyField.INPUT] = tradeableAsset.chainId
+        newFilteredChainIds[CurrencyField.OUTPUT] = tradeableAsset.chainId
 
         newState.filteredChainIds = newFilteredChainIds
       }
@@ -143,12 +137,12 @@ export function useOnSelectCurrency({
       // TODO(WEB-6230): This value is not what we want here, as it breaks bridging in the interface's TDP.
       //                 Instead, what we want is the `Currency` object from `newState[otherField] || otherFieldTradeableAsset`.
       const todoFixMeOtherCurrency = otherFieldTokenProjects.data?.find(
-        (project) => project.currency.chainId === currency.chainId,
+        (project) => project.currency.chainId === tradeableAsset.chainId,
       )
 
       const currencyState: { inputCurrency?: Currency; outputCurrency?: Currency } = {
-        inputCurrency: CurrencyField.INPUT === field ? currency : todoFixMeOtherCurrency?.currency,
-        outputCurrency: CurrencyField.OUTPUT === field ? currency : todoFixMeOtherCurrency?.currency,
+        inputCurrency: CurrencyField.INPUT === field ? selectedCurrency : todoFixMeOtherCurrency?.currency,
+        outputCurrency: CurrencyField.OUTPUT === field ? selectedCurrency : todoFixMeOtherCurrency?.currency,
       }
 
       onSelect?.()
@@ -157,6 +151,62 @@ export function useOnSelectCurrency({
       onCurrencyChange?.(currencyState, isBridgePair)
     },
   )
+}
+
+export function useOnSelectCurrency({
+  onSelect,
+}: {
+  onSelect?: () => void
+}): ({
+  currency,
+  field,
+  allowCrossChainPair,
+  isPreselectedAsset,
+}: {
+  currency: Currency
+  field: CurrencyField
+  allowCrossChainPair: boolean
+  isPreselectedAsset: boolean
+}) => void {
+  const selectTradeableAsset = useOnSelectTradeableAsset({ onSelect })
+  return useEvent(({ currency, field, allowCrossChainPair, isPreselectedAsset }) =>
+    selectTradeableAsset({
+      tradeableAsset: { address: currencyAddress(currency), chainId: currency.chainId, type: AssetType.Currency },
+      field,
+      allowCrossChainPair,
+      isPreselectedAsset,
+      selectedCurrency: currency,
+    }),
+  )
+}
+
+/**
+ * When the newly-selected token changes chain, try to find the other field's matching token on the
+ * new chain. Returns the matching token as a `TradeableAsset`, or `undefined` if there's no match
+ * (or the match would collide with the newly-selected token).
+ */
+function resolveOtherFieldOnChainChange({
+  tradeableAsset,
+  otherFieldTokenProjects,
+}: {
+  tradeableAsset: TradeableAsset
+  otherFieldTokenProjects: { data?: CurrencyInfo[] }
+}): TradeableAsset | undefined {
+  const otherCurrencyInNewChain = otherFieldTokenProjects.data?.find(
+    (project) => project.currency.chainId === tradeableAsset.chainId,
+  )
+
+  const otherTradeableAssetInNewChain: TradeableAsset | undefined = otherCurrencyInNewChain && {
+    address: currencyAddress(otherCurrencyInNewChain.currency),
+    chainId: otherCurrencyInNewChain.currency.chainId,
+    type: AssetType.Currency,
+  }
+
+  return otherTradeableAssetInNewChain &&
+    otherCurrencyInNewChain &&
+    !areCurrencyIdsEqual(currencyId(tradeableAsset), otherCurrencyInNewChain.currencyId)
+    ? otherTradeableAssetInNewChain
+    : undefined
 }
 
 /**

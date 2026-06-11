@@ -21,7 +21,7 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
 
   const isSectionVisible = !!earnData.earnVault && !!earnData.earnPosition && earnData.userHasEarnPosition
 
-  const { balanceLookupSettled, hasAnyBalanceForUnderlying } = useEarnDepositSources({
+  const { balanceLookupSettled, hasSupportedBalanceForUnderlying } = useEarnDepositSources({
     vault: earnData.earnVault,
     walletAddress: activeAddress,
     isOpen: isSectionVisible,
@@ -33,7 +33,7 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
         return
       }
 
-      if (!hasAnyBalanceForUnderlying) {
+      if (!hasSupportedBalanceForUnderlying) {
         navigation.navigate(ModalName.EarnYouNeedToken, {
           currencyId: vault.displayCurrencyId,
         })
@@ -42,7 +42,7 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
 
       navigateToEarnVault({ vault, position, initialAction: EarnAction.Deposit })
     },
-    [balanceLookupSettled, hasAnyBalanceForUnderlying, navigation, navigateToEarnVault],
+    [balanceLookupSettled, hasSupportedBalanceForUnderlying, navigation, navigateToEarnVault],
   )
 
   if (!isSectionVisible || !earnData.earnVault || !earnData.earnPosition) {

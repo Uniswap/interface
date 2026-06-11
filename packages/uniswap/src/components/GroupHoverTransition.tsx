@@ -9,6 +9,8 @@ interface GroupHoverTransitionProps {
   transition?: string
   useGroupItemHover?: boolean
   widthMode?: 'content' | 'container'
+  /** When set, drives the slide from this flag instead of $group-hover (scoped row hover). */
+  isHovered?: boolean
 }
 
 /**
@@ -25,6 +27,7 @@ function _GroupHoverTransition({
   transition = 'transform 0.1s ease-in-out',
   useGroupItemHover = false,
   widthMode = 'content',
+  isHovered,
 }: GroupHoverTransitionProps): JSX.Element {
   if (!showTransition) {
     return (
@@ -39,6 +42,23 @@ function _GroupHoverTransition({
   // Use widthMode='container' when the parent sets the width and the content needs to adapt.
   const wrapperProps =
     widthMode === 'container' ? ({ width: '100%', minWidth: 0 } as const) : ({ minWidth: 'max-content' } as const)
+
+  if (isHovered !== undefined) {
+    return (
+      <Flex position="relative" overflow="hidden" height={height} {...wrapperProps}>
+        <Flex
+          alignItems="flex-start"
+          transition={transition}
+          flexDirection="column"
+          y={isHovered ? -height : 0}
+          height={height * 2}
+        >
+          {defaultContent}
+          {hoverContent}
+        </Flex>
+      </Flex>
+    )
+  }
 
   return (
     <Flex position="relative" overflow="hidden" height={height} {...wrapperProps}>

@@ -13,6 +13,8 @@ pre-commit:
       env:
         CI: "true"
         FORCE_COLOR: "0"
+        # Skip remote config fetching during pre-commit
+        SKIP_CONFIG_PULL: "true"
       run: TERM=dumb bun g:check:fast
       fail_text: "If this is a fresh git worktree, run 'bun install' first — fast-checks needs node_modules/."
       stage_fixed: true

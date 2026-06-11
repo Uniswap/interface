@@ -1,4 +1,6 @@
+import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 
@@ -10,10 +12,24 @@ export enum OnchainItemListOptionType {
   WalletByAddress = 'WalletByAddress',
   ENSAddress = 'ENSAddress',
   Unitag = 'Unitag',
+  Rwa = 'Rwa',
+  RwaCollection = 'RwaCollection',
+}
+
+/** Variable-height row descriptor read by the list primitives. Absent → fixed-height row.
+ *  Web measures dynamic rows at runtime (ResizeObserver); native uses the px estimates for overrideItemLayout. */
+export interface DynamicRowLayout {
+  /** Web: measure height at runtime instead of using the fixed row height. */
+  dynamicHeight: boolean
+  /** Native FlashList cell-size estimates. */
+  collapsedHeightPx: number
+  expandedHeightPx: number
 }
 
 export interface BaseOption {
   type: OnchainItemListOptionType
+  /** Optional variable-height row layout, read by the list primitives without a domain type-narrow. */
+  rowLayout?: DynamicRowLayout
 }
 
 export interface TokenOption extends BaseOption {
@@ -22,6 +38,28 @@ export interface TokenOption extends BaseOption {
   quantity: number | null // float representation of balance, returned by data-api
   balanceUSD: Maybe<number>
   isUnsupported?: boolean
+  /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
+  rwaCategory?: RwaCategory
+}
+
+export interface RwaTokenOption extends BaseOption {
+  type: OnchainItemListOptionType.Rwa
+  chainId: UniverseChainId
+  address: string
+  symbol: string
+  name: string
+  logoUrl?: string
+}
+
+/** A tokenized stock rendered as an expandable collection (multi-issuer) via ExpandableAssetGroup. */
+export interface RwaCollectionOption extends BaseOption {
+  type: OnchainItemListOptionType.RwaCollection
+  rwa: Rwa
+  /** Renders the category pill on each row (category derived from the carried `rwa`). False for the no-query
+   *  section, where the header conveys the category. */
+  showCategoryTag?: boolean
+  /** Shows the issuer count on the collapsed subline (no-query section only). */
+  showTokenCount?: boolean
 }
 
 export interface MultichainTokenOption extends BaseOption {
@@ -30,6 +68,8 @@ export interface MultichainTokenOption extends BaseOption {
   primaryCurrencyInfo: CurrencyInfo
   /** From recent search history: open TDP with this `?chain=` when present. */
   tdpChainFilter?: UniverseChainId
+  /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
+  rwaCategory?: RwaCategory
 }
 
 export interface PoolOption extends BaseOption {
@@ -64,11 +104,14 @@ export interface UnitagOption extends BaseOption {
 }
 
 // Union of item types for different list use cases
-export type MobileExploreSearchModalOption = TokenOption | MultichainTokenOption | WalletOption
-export type WebSearchModalOption = TokenOption | MultichainTokenOption | PoolOption | WalletOption
+export type MobileExploreSearchModalOption = TokenOption | MultichainTokenOption | WalletOption | RwaCollectionOption
+export type WebSearchModalOption = TokenOption | MultichainTokenOption | PoolOption | WalletOption | RwaCollectionOption
 export type SearchModalOption = MobileExploreSearchModalOption | WebSearchModalOption
 
 export type TokenSelectorOption = TokenOption | TokenOption[]
 
 // All item types combined
-export type OnchainItemListOption = TokenSelectorOption | SearchModalOption
+export type OnchainItemListOption = TokenSelectorOption | SearchModalOption | RwaTokenOption[]
+
+// Options renderable by the swap token-selector list (token rows/pills + the stocks row)
+export type TokenSelectorListOption = TokenSelectorOption | RwaTokenOption[]

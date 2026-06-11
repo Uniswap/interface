@@ -3,11 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
 
 interface TokenDetailsNetworkFilterProps {
   chainIds: UniverseChainId[]
@@ -28,6 +30,13 @@ export function TokenDetailsNetworkFilter({
 }: TokenDetailsNetworkFilterProps) {
   const { t } = useTranslation()
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
+  const activeAddresses = useActiveAddresses()
+  const tieredNetworkOptions = useNetworkSelectorOptions({
+    addresses: activeAddresses,
+    chainIds,
+    enabled: isNetworkFilterV2Enabled,
+  })
 
   if (!multichainTokenUxEnabled || chainIds.length <= 1) {
     return null
@@ -42,6 +51,8 @@ export function TokenDetailsNetworkFilter({
           size="xsmall"
           tracePage={InterfacePageName.TokenDetailsPage}
           transition={HEADER_TRANSITION}
+          showSearch={isNetworkFilterV2Enabled}
+          tieredOptions={isNetworkFilterV2Enabled ? tieredNetworkOptions : undefined}
           isTriggerStyled={false}
           customTrigger={
             <Flex row alignItems="center" gap="$spacing6">

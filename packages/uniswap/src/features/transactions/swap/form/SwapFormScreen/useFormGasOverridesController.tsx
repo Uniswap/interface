@@ -1,10 +1,14 @@
 import { type TransactionRequest } from '@ethersproject/providers'
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AutoGasTooltipModal } from 'uniswap/src/features/gas/components/AutoGasTooltipModal'
 import { CrosschainNotSupportedModal } from 'uniswap/src/features/gas/components/CrosschainNotSupportedModal'
 import { NetworkCostEditorModal } from 'uniswap/src/features/gas/components/NetworkCostEditor/NetworkCostEditorModal'
+import {
+  getRecommendedGasFieldsFromQuoteGas,
+  type RecommendedGasFieldValues,
+} from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import { useGasChipDispatch } from 'uniswap/src/features/gas/hooks/useGasChipDispatch'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import {
@@ -12,6 +16,8 @@ import {
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { useEvent } from 'utilities/src/react/hooks'
 
 type OpenModal = 'editor' | 'auto-tooltip' | 'crosschain' | undefined
@@ -53,6 +59,21 @@ export function useFormGasOverridesController({
   const { setGasOverrides } = useTransactionSettingsActions()
   const { dispatch } = useGasChipDispatch({ isCrossChain })
 
+  // Quote-derived recommended baseline, used when no populated swap tx is
+  // available to estimate against (e.g. a Permit2-signature swap on the form,
+  // whose `/swap` is deferred until the user signs). Snapshotted on open below.
+  const quoteResponse = useSwapFormStoreDerivedSwapInfo((s) => s.trade.trade?.quote)
+  const recommendedFallback = useMemo<RecommendedGasFieldValues | undefined>(() => {
+    if (!quoteResponse || !isClassic(quoteResponse)) {
+      return undefined
+    }
+    const classicQuote = quoteResponse.quote
+    return getRecommendedGasFieldsFromQuoteGas({
+      gasUseEstimate: classicQuote.gasUseEstimate,
+      gasEstimate: classicQuote.gasEstimates?.[0],
+    })
+  }, [quoteResponse])
+
   const [openModal, setOpenModal] = useState<OpenModal>(undefined)
   /** Snapshot of `tx` captured when the editor opens. `/swap` polls every few
    *  seconds — if we forwarded the live `tx` straight through, the editor's
@@ -63,6 +84,11 @@ export function useFormGasOverridesController({
    *  the live network that aggressively. Re-captured on each open so a fresh
    *  open after a long idle picks up the latest tx. */
   const [editorTx, setEditorTx] = useState<TransactionRequest | undefined>(undefined)
+  /** Snapshot of the quote-derived fallback, captured alongside `editorTx` so the
+   *  editor's baseline is stable across quote polls while open. */
+  const [editorRecommendedFallback, setEditorRecommendedFallback] = useState<RecommendedGasFieldValues | undefined>(
+    undefined,
+  )
 
   const onPress = useEvent((): void => {
     const action = dispatch()
@@ -72,6 +98,7 @@ export function useFormGasOverridesController({
         break
       case 'editor':
         setEditorTx(tx)
+        setEditorRecommendedFallback(recommendedFallback)
         setOpenModal('editor')
         break
       case 'crosschain-not-supported':
@@ -110,6 +137,7 @@ export function useFormGasOverridesController({
         tx={editorTx}
         chainId={chainId}
         initialOverrides={gasOverrides}
+        recommendedFallback={editorRecommendedFallback}
         surface="swap_form"
         onSave={onSaveOverrides}
         onCancel={onCloseModal}

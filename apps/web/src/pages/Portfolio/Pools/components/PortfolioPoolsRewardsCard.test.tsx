@@ -3,7 +3,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
 import { useLpIncentives } from '~/features/Liquidity/hooks/useLpIncentives'
 import { PortfolioPoolsRewardsCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsRewardsCard'
@@ -14,7 +14,7 @@ vi.mock('uniswap/src/data/rest/getPoolsRewards', () => ({
   useGetPoolsRewards: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPriceWrapper', () => ({
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
   useUSDCValue: vi.fn(),
 }))
 

@@ -1,5 +1,5 @@
-import { isExtensionApp, isMobileApp } from '@universe/environment'
 /* oxlint-disable max-lines */
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import dayjs from 'dayjs'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'

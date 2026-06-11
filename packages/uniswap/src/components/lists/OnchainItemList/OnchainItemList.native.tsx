@@ -8,6 +8,7 @@ import {
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
+import { getSectionHeaderRowKey, getSectionItemRowKey } from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const TOKEN_ITEM_SIZE = 64
@@ -20,6 +21,7 @@ export const OnchainItemList = memo(function OnchainItemListInner({
   renderItem,
   renderSectionHeader,
   sections,
+  expandedItems,
   renderedInModal,
   contentContainerStyle,
 }: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
@@ -37,8 +39,8 @@ export const OnchainItemList = memo(function OnchainItemListInner({
   }, [sectionListRef])
 
   const data = useMemo(() => {
-    return processSectionsToRows(sections)
-  }, [sections])
+    return processSectionsToRows({ sections, expandedItems, keyExtractor })
+  }, [sections, expandedItems, keyExtractor])
 
   // TODO(WALL-5889): fix sticky header indices (prevent duplicates)
   // const stickyHeaderIndices: number[] = useMemo(() => {
@@ -61,18 +63,40 @@ export const OnchainItemList = memo(function OnchainItemListInner({
     [renderItem, renderSectionHeader],
   )
 
-  const getItemType = useCallback((item: ProcessedRow): string => item.type, [])
+  const getItemType = useCallback((row: ProcessedRow): string => {
+    // Only multi-issuer (expandable) rows are dynamic-height. Typing fixed-height single-issuer rows as dynamic
+    // fragments the recycle pool and breaks RecyclerListView's type-based height reuse for neighboring rows.
+    if (
+      row.type === ProcessedRowType.Item &&
+      !Array.isArray(row.data.item) &&
+      row.data.item.rowLayout?.dynamicHeight === true
+    ) {
+      return 'item-dynamic-height'
+    }
+    return row.type
+  }, [])
+
+  const overrideItemLayout = useCallback((layout: { size?: number }, row: ProcessedRow): void => {
+    if (row.type !== ProcessedRowType.Item || Array.isArray(row.data.item) || !row.data.item.rowLayout) {
+      return
+    }
+    const { rowLayout } = row.data.item
+    layout.size = row.data.expanded ? rowLayout.expandedHeightPx : rowLayout.collapsedHeightPx
+  }, [])
 
   const makeKey = useCallback(
-    (item: ProcessedRow, index: number): string => {
-      if (!keyExtractor) {
-        return String(index)
-      }
+    // Section-scoped, position-independent keys (mirrors web). A `-${index}` suffix would re-key every row below
+    // an added/removed Recents section, forcing a relayout that under-estimates content height (SWAP-2787).
+    (item: ProcessedRow): string => {
       switch (item.type) {
         case ProcessedRowType.Header:
-          return `${item.data.section.sectionKey}-header-${index}`
+          return getSectionHeaderRowKey(item.data.section.sectionKey)
         case ProcessedRowType.Item:
-          return `${keyExtractor(item.data.item, index)}-${index}`
+          return getSectionItemRowKey({
+            sectionKey: item.data.section.sectionKey,
+            itemKey: keyExtractor?.(item.data.item, item.data.index),
+            index: item.data.index,
+          })
         default:
           return ''
       }
@@ -93,6 +117,8 @@ export const OnchainItemList = memo(function OnchainItemListInner({
       keyboardDismissMode="on-drag"
       renderItem={renderFlashListItem}
       getItemType={getItemType}
+      overrideItemLayout={overrideItemLayout}
+      extraData={expandedItems}
       showsVerticalScrollIndicator={false}
       drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
       // TODO(WALL-5889): fix sticky header indices (prevent duplicates)

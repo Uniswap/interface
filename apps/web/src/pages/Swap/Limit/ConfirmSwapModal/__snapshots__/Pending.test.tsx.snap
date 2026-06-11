@@ -94,10 +94,12 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
-              color="neutral2"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0x123"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               View on Explorer
@@ -207,10 +209,12 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
-              color="neutral2"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0x123"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               View on Explorer
@@ -597,10 +601,12 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
-              color="neutral2"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0x1234"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               View on Explorer

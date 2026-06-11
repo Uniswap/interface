@@ -1,3 +1,4 @@
+/* oxlint-disable jest/expect-expect -- testTradeLineItems calls expect via render+toMatchSnapshot */
 import '~/test-utils/tokens/mocks'
 import { SwapLineItem, SwapLineItemType } from '~/features/Swap/SwapLineItem'
 import { InterfaceTrade } from '~/state/routing/types'
@@ -46,7 +47,6 @@ function testTradeLineItems(trade: InterfaceTrade, props: Partial<typeof lineIte
   expect(asFragment()).toMatchSnapshot()
 }
 
-/* oxlint-disable jest/expect-expect */ // allow expect inside testTradeLineItems
 describe('SwapLineItem.tsx', () => {
   beforeEach(() => {
     vi.spyOn(console, 'info').mockImplementation(() => {})

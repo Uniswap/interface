@@ -1,14 +1,12 @@
 import { TradingApi } from '@universe/api'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
-import { createGetSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { createGetV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import {
-  createGetProtocolsForChain,
-  createGetUniswapXPriorityOrderFlag,
-  createProtocolFilter,
+  DEFAULT_PROTOCOL_OPTIONS,
+  filterProtocols,
   FrontendSupportedProtocol,
+  useProtocols,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { renderHook } from 'uniswap/src/test/test-utils'
 import type { Mock } from 'vitest'
 
 vi.mock('@universe/gating', async (importOriginal) => {
@@ -16,34 +14,14 @@ vi.mock('@universe/gating', async (importOriginal) => {
   return {
     ...actual,
     useFeatureFlag: vi.fn(),
-    getFeatureFlag: vi.fn(),
   }
 })
 
-vi.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled', () => ({
-  useV4SwapEnabled: vi.fn(),
-  createGetV4SwapEnabled: vi.fn(),
-}))
-
-vi.mock('uniswap/src/contexts/UniswapContext', () => ({
-  useUniswapContextSelector: vi.fn(),
-}))
-
-vi.mock('uniswap/src/features/chains/hooks/useSupportedChainId', () => ({
-  createGetSupportedChainId: vi.fn(),
-}))
-
-vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  useEnabledChains: vi.fn(),
-}))
-
-const mockGetFeatureFlag = getFeatureFlag as Mock
-const mockCreateGetV4SwapEnabled = createGetV4SwapEnabled as Mock
-const mockCreateGetSupportedChainId = createGetSupportedChainId as Mock
+const mockUseFeatureFlag = useFeatureFlag as Mock
 
 describe('protocols', () => {
   const allProtocols: FrontendSupportedProtocol[] = [
-    TradingApi.ProtocolItems.UNISWAPX_V2,
+    TradingApi.ProtocolItems.UNISWAPX_LATEST,
     TradingApi.ProtocolItems.V4,
     TradingApi.ProtocolItems.V3,
     TradingApi.ProtocolItems.V2,
@@ -53,315 +31,59 @@ describe('protocols', () => {
     vi.clearAllMocks()
   })
 
-  describe('createProtocolFilter', () => {
-    it('returns all protocols when everything is enabled', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      const result = protocolFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toEqual(allProtocols)
-    })
-
-    it('filters out UniswapX when uniswapXEnabled is false', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => false,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      const result = protocolFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
-    })
-
-    it('filters out UniswapX when chain is not in LAUNCHED_UNISWAPX_CHAINS and no special conditions', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      // Polygon is not in LAUNCHED_UNISWAPX_CHAINS
-      const result = protocolFilter(allProtocols, UniverseChainId.Polygon)
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
-    })
-
-    it('keeps UniswapX when priority orders are allowed', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => true,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      // Even though Base is not in LAUNCHED_UNISWAPX_CHAINS, priority orders allow it
-      const result = protocolFilter(allProtocols, UniverseChainId.Base)
-      expect(result).toEqual(allProtocols)
-    })
-
-    it('keeps UniswapX and replaces V2 with V3 on Arbitrum when Dutch V3 is enabled', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => true,
-      })
-
-      const result = protocolFilter(allProtocols, UniverseChainId.ArbitrumOne)
-      expect(result).toEqual([
-        TradingApi.ProtocolItems.UNISWAPX_V3, // V2 replaced with V3
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
-      ])
-    })
-
-    it('filters out V4 when not supported', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => false,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      const result = protocolFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toEqual([
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
-      ])
-    })
-
-    it('handles empty protocol list', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      const result = protocolFilter([], UniverseChainId.Mainnet)
-      expect(result).toEqual([])
-    })
-
-    it('handles undefined chainId', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => true,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      const result = protocolFilter(allProtocols, undefined)
-      // When chainId is undefined, uniswapXAllowedForChain is false
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
-    })
-
-    it('verifies duplicate filtering logic does not cause issues', () => {
-      const protocolFilter = createProtocolFilter({
-        getUniswapXEnabled: () => false,
-        getPriorityOrderFlag: () => false,
-        getV4Enabled: () => true,
-        getArbitrumDutchV3Enabled: () => false,
-      })
-
-      // Start with duplicate UNISWAPX_V2 entries
-      const protocolsWithDuplicates: FrontendSupportedProtocol[] = [
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
-      ]
-
-      const result = protocolFilter(protocolsWithDuplicates, UniverseChainId.Mainnet)
-      // Both duplicates should be filtered out
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3])
-    })
+  it('defaults to UniswapX latest, V4, V3, and V2', () => {
+    expect(DEFAULT_PROTOCOL_OPTIONS).toEqual(allProtocols)
   })
 
-  describe('createGetUniswapXPriorityOrderFlag', () => {
-    it('returns true for Base with UniswapXPriorityOrdersBase flag enabled', () => {
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: (flag) => flag === FeatureFlags.UniswapXPriorityOrdersBase,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(UniverseChainId.Base)).toBe(true)
-    })
-
-    it('returns true for Optimism with UniswapXPriorityOrdersOptimism flag enabled', () => {
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: (flag) => flag === FeatureFlags.UniswapXPriorityOrdersOptimism,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(UniverseChainId.Optimism)).toBe(true)
-    })
-
-    it('returns true for Unichain with UniswapXPriorityOrdersUnichain flag enabled', () => {
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: (flag) => flag === FeatureFlags.UniswapXPriorityOrdersUnichain,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(UniverseChainId.Unichain)).toBe(true)
-    })
-
-    it('returns false when chainId is undefined', () => {
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: () => true,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(undefined)).toBe(false)
-    })
-
-    it('returns false for chains not in the priority orders map', () => {
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: () => true,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(UniverseChainId.Mainnet)).toBe(false)
-      expect(getUniswapXPriorityOrderFlag(UniverseChainId.Polygon)).toBe(false)
-    })
-
-    it('returns false when chainId is undefined without checking flags', () => {
-      const mGetFeatureFlag = vi.fn(() => true)
-      const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-        getFeatureFlag: mGetFeatureFlag,
-      })
-
-      expect(getUniswapXPriorityOrderFlag(undefined)).toBe(false)
-      // Should not check any flags when chainId is undefined
-      expect(mGetFeatureFlag).not.toHaveBeenCalled()
-    })
+  it('preserves selected protocols when UniswapX is enabled', () => {
+    expect(filterProtocols(allProtocols, true)).toEqual(allProtocols)
   })
 
-  describe('createGetProtocolsForChain', () => {
-    beforeEach(() => {
-      // Default mock implementations
-      mockGetFeatureFlag.mockReturnValue(false)
-      mockCreateGetV4SwapEnabled.mockReturnValue(() => true)
-      mockCreateGetSupportedChainId.mockReturnValue({
-        getSupportedChainId: (chainId?: number) => chainId as UniverseChainId | undefined,
-      })
-    })
+  it('filters only UniswapX latest when UniswapX is disabled', () => {
+    expect(filterProtocols(allProtocols, false)).toEqual([
+      TradingApi.ProtocolItems.V4,
+      TradingApi.ProtocolItems.V3,
+      TradingApi.ProtocolItems.V2,
+    ])
+  })
 
-    it('creates a working filter function', () => {
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.Mainnet, UniverseChainId.Polygon],
-      })
+  it('does not add UniswapX latest when the user toggled it off', () => {
+    const selectedProtocols: FrontendSupportedProtocol[] = [
+      TradingApi.ProtocolItems.V4,
+      TradingApi.ProtocolItems.V3,
+      TradingApi.ProtocolItems.V2,
+    ]
 
-      expect(typeof getProtocolsFilter).toBe('function')
+    expect(filterProtocols(selectedProtocols, true)).toEqual(selectedProtocols)
+  })
 
-      const result = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(Array.isArray(result)).toBe(true)
-    })
+  it('does not filter V4 when UniswapX is disabled', () => {
+    const selectedProtocols: FrontendSupportedProtocol[] = [
+      TradingApi.ProtocolItems.UNISWAPX_LATEST,
+      TradingApi.ProtocolItems.V4,
+    ]
 
-    it('correctly combines feature flags', () => {
-      mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => {
-        if (flag === FeatureFlags.UniswapX) {
-          return true
-        }
-        if (flag === FeatureFlags.ArbitrumDutchV3) {
-          return true
-        }
-        return false
-      })
+    expect(filterProtocols(selectedProtocols, false)).toEqual([TradingApi.ProtocolItems.V4])
+  })
 
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.ArbitrumOne],
-      })
+  it('uses the global UniswapX feature flag in the hook path', () => {
+    mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.UniswapX)
 
-      const result = getProtocolsFilter(allProtocols, UniverseChainId.ArbitrumOne)
-      // Should have UNISWAPX_V3 instead of V2 due to ArbitrumDutchV3 flag
-      expect(result).toContain(TradingApi.ProtocolItems.UNISWAPX_V3)
-      expect(result).not.toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
-    })
+    const { result } = renderHook(() => useProtocols(allProtocols))
 
-    it('handles missing getIsUniswapXSupported (uses feature flag only)', () => {
-      mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => {
-        return flag === FeatureFlags.UniswapX
-      })
+    expect(result.current).toEqual(allProtocols)
+    expect(mockUseFeatureFlag).toHaveBeenCalledWith(FeatureFlags.UniswapX)
+  })
 
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.Mainnet],
-        // No getIsUniswapXSupported provided
-      })
+  it('filters UniswapX latest in the hook path when the global flag is disabled', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
 
-      const result = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
-    })
+    const { result } = renderHook(() => useProtocols(allProtocols))
 
-    it('handles present getIsUniswapXSupported (combines with feature flag)', () => {
-      mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => {
-        return flag === FeatureFlags.UniswapX // Feature flag is enabled
-      })
-
-      const getIsUniswapXSupported = vi.fn(() => false) // But chain support says no
-
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.Mainnet],
-        getIsUniswapXSupported,
-      })
-
-      const result = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      // Should not contain UniswapX because chain support returned false
-      expect(result).not.toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
-      expect(getIsUniswapXSupported).toHaveBeenCalledWith(UniverseChainId.Mainnet)
-    })
-
-    it('correctly creates V4 swap enabled checker', () => {
-      const mockGetV4SwapAllowed = vi.fn((chainId?: number) => chainId === UniverseChainId.Mainnet)
-      mockCreateGetV4SwapEnabled.mockReturnValue(mockGetV4SwapAllowed)
-
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.Mainnet, UniverseChainId.Polygon],
-      })
-
-      // Test Mainnet (V4 allowed)
-      const mainnetResult = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(mainnetResult).toContain(TradingApi.ProtocolItems.V4)
-
-      // Test Polygon (V4 not allowed)
-      const polygonResult = getProtocolsFilter(allProtocols, UniverseChainId.Polygon)
-      expect(polygonResult).not.toContain(TradingApi.ProtocolItems.V4)
-    })
-
-    it('returns expected protocols for various chain/flag combinations', () => {
-      // Setup: UniswapX enabled, no special flags
-      mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => {
-        return flag === FeatureFlags.UniswapX
-      })
-      mockCreateGetV4SwapEnabled.mockReturnValue(() => true)
-
-      const getProtocolsFilter = createGetProtocolsForChain({
-        getEnabledChains: () => [UniverseChainId.Mainnet, UniverseChainId.Base],
-        getIsUniswapXSupported: () => true,
-      })
-
-      // Mainnet should have all protocols (it's in LAUNCHED_UNISWAPX_CHAINS)
-      const mainnetResult = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(mainnetResult).toEqual(allProtocols)
-
-      // Base should not have UniswapX (not in LAUNCHED_UNISWAPX_CHAINS and no priority flag)
-      mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => {
-        if (flag === FeatureFlags.UniswapX) {
-          return true
-        }
-        if (flag === FeatureFlags.UniswapXPriorityOrdersBase) {
-          return false
-        }
-        return false
-      })
-
-      const baseResult = getProtocolsFilter(allProtocols, UniverseChainId.Base)
-      expect(baseResult).toEqual([
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
-      ])
-    })
+    expect(result.current).toEqual([
+      TradingApi.ProtocolItems.V4,
+      TradingApi.ProtocolItems.V3,
+      TradingApi.ProtocolItems.V2,
+    ])
   })
 })

@@ -42,6 +42,7 @@ import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCap
 import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
@@ -173,7 +174,12 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       const url = getTokenDetailsURL({
         address: currencyIdToAddress(currencyId),
         chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
-        chainQueryParam: chainFilter ? getChainUrlParam(chainFilter) : undefined,
+        chainQueryParam:
+          chainFilter === null
+            ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE
+            : chainFilter !== undefined && chainFilter !== tokenChainId
+              ? getChainUrlParam(chainFilter)
+              : undefined,
       })
       navigate(url)
       closeSearchModal()

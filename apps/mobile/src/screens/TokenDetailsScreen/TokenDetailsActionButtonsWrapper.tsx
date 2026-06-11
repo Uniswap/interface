@@ -104,7 +104,10 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
     const { currency: highestBalanceFiatCurrency } = useIsSupportedFiatOnRampCurrency(highestBalanceCurrencyId)
 
-    const { chainId: highestTvlChainId, address: highestTvlAddress } = useHighestTvlChain({ currencyId })
+    const { chainId: highestTvlChainId, address: highestTvlAddress } = useHighestTvlChain({
+      currencyId,
+      accountAddress: activeAddress,
+    })
 
     const onPressSwap = useEvent((currencyField: CurrencyField) => {
       if (isBlocked) {

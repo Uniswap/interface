@@ -1,7 +1,6 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Dispatch, SetStateAction, useMemo } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import { AnimatePresence, Flex, HeightAnimator, Text, TouchableArea, useMedia } from 'ui/src'
@@ -14,6 +13,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/Breadcru
 import { Container, PageLayout } from '~/features/Liquidity/Create/Container'
 import { EditSelectTokensStep } from '~/features/Liquidity/Create/EditStep'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
+import { usePoolProgressSteps } from '~/features/Liquidity/Create/hooks/usePoolProgressSteps'
 import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
 import { SelectTokensStep } from '~/features/Liquidity/Create/SelectTokenStep'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
@@ -23,10 +23,7 @@ import {
   PoolProgressIndicatorHeader,
   SIDEBAR_WIDTH,
 } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
-import {
-  DEFAULT_PRICE_RANGE_STATE,
-  useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 const WIDTH = {
   positionCard: 720,
@@ -128,7 +125,6 @@ export function FormWrapper({
 }) {
   const { t } = useTranslation()
   const media = useMedia()
-  const { setStep, creatingPoolOrPair, protocolVersion, step, setPriceRangeState } = useCreateLiquidityContext()
   const navigate = useNavigate()
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const { pathname } = useLocation()
@@ -144,57 +140,7 @@ export function FormWrapper({
     <Text color={isTrailingBreadcrumbEmphasized ? '$neutral1' : '$neutral2'}>{title || fallbackTrailingLabel}</Text>
   )
 
-  const poolProgressSteps = useMemo(() => {
-    const createStep = ({
-      label,
-      stepEnum,
-      onPress,
-    }: {
-      label: string
-      stepEnum: PositionFlowStep
-      onPress?: () => void
-    }) => ({
-      label,
-      active: step === stepEnum,
-      // This relies on the ordering of PositionFlowStep enum values matching the actual order in the form.
-      onPress: () => {
-        onPress?.()
-
-        if (stepEnum < step) {
-          setStep(stepEnum)
-        }
-      },
-    })
-
-    if (isMigration) {
-      return [
-        createStep({ label: t('migrate.selectFeeTier'), stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER }),
-        createStep({ label: t('migrate.setRange'), stepEnum: PositionFlowStep.PRICE_RANGE }),
-      ]
-    }
-
-    if (protocolVersion === ProtocolVersion.V2) {
-      if (creatingPoolOrPair) {
-        return [
-          createStep({ label: t(`position.step.select`), stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER }),
-          createStep({ label: t('position.step.price'), stepEnum: PositionFlowStep.PRICE_RANGE }),
-        ]
-      }
-      return [
-        createStep({ label: t('position.step.select'), stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER }),
-        createStep({ label: t('position.step.deposit'), stepEnum: PositionFlowStep.DEPOSIT }),
-      ]
-    }
-
-    return [
-      createStep({
-        label: t('position.step.select'),
-        stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
-        onPress: () => setPriceRangeState(DEFAULT_PRICE_RANGE_STATE),
-      }),
-      createStep({ label: t('position.step.range'), stepEnum: PositionFlowStep.PRICE_RANGE }),
-    ]
-  }, [creatingPoolOrPair, protocolVersion, setStep, step, t, setPriceRangeState, isMigration])
+  const poolProgressSteps = usePoolProgressSteps({ isMigration })
 
   return (
     <PageLayout mt="$spacing24">

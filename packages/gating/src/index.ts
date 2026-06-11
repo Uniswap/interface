@@ -7,6 +7,8 @@ export type {
   GasStrategies,
   GasStrategyType,
   GasStrategyWithConditions,
+  RWAIssuerLogo,
+  RWAIssuerLogosMap,
   UwULinkAllowlist,
   UwULinkAllowlistItem,
 } from '@universe/gating/src/configs'
@@ -31,6 +33,7 @@ export {
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
   OutageBannerChainIdConfigKey,
+  RWAIssuerLogosConfigKey,
   SwapConfigKey,
   SyncTransactionSubmissionChainIdsConfigKey,
   UwuLinkConfigKey,

@@ -39,6 +39,31 @@ export const DataRow = styled(TableRowBase, {
         opacity: 0.6,
       },
     },
+    embeddedInExpandableGroup: {
+      true: {
+        backgroundColor: 'transparent',
+        hoverStyle: {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+    embeddedInIssuerPanel: {
+      true: {
+        backgroundColor: 'transparent',
+        hoverStyle: {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+    // Defined last so the selected fill wins over the v2/embedded hover backgrounds when both apply.
+    selected: {
+      true: {
+        backgroundColor: '$surface3',
+        hoverStyle: {
+          backgroundColor: '$surface3',
+        },
+      },
+    },
   },
 })
 

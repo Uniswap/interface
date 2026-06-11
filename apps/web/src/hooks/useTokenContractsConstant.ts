@@ -1,5 +1,5 @@
-import { erc20Abi } from 'viem'
 import { useReadContracts } from 'wagmi'
+import { erc20Abi } from '~/chains'
 import { assume0xAddress } from '~/utils/wagmi'
 
 export function useTokenContractsConstant(

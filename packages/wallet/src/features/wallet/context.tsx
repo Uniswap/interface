@@ -1,4 +1,5 @@
 /* oxlint-disable typescript/no-unnecessary-condition typescript/explicit-function-return-type */
+import { tryProvideSession } from '@universe/api'
 import type { ViemClientManager } from '@universe/chains'
 import { Signer } from 'ethers'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
@@ -13,7 +14,10 @@ import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
-const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
+const createProvider = createEthersProviderFactory({
+  resolveRpcConfig: defaultResolveRpcConfig,
+  getSessionGate: tryProvideSession,
+})
 
 interface WalletContextValue {
   // Manages contracts

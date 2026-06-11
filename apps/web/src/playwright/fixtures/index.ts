@@ -7,11 +7,8 @@ import { test as dataApiTest } from '~/playwright/fixtures/dataApi'
 import { test as graphqlTest } from '~/playwright/fixtures/graphql'
 import { test as tradingApiTest } from '~/playwright/fixtures/tradingApi'
 
-/* oxlint-disable no-restricted-imports -- playwright re-export needed for test framework */
-// oxlint-disable-next-line no-restricted-syntax no-restricted-imports -- biome-parity: oxlint is stricter here
+// oxlint-disable-next-line no-restricted-syntax no-restricted-imports -- playwright re-export needed for test framework; biome-parity: oxlint is stricter here
 export * from '@playwright/test'
-
-/* oxlint-enable no-restricted-imports */
 
 // Configuration interface for test fixtures
 interface TestConfig {

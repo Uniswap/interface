@@ -11,7 +11,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 import { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
@@ -25,12 +25,7 @@ import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
 import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
-import {
-  DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
-  DISPLAYS,
-  getTimePeriodFromDisplay,
-  TimePeriodDisplay,
-} from '~/features/Explore/constants'
+import { getPillTimeSelectorOptions, ORDERED_TIMES } from '~/features/Explore/timeLabels'
 import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
@@ -226,20 +221,22 @@ export function ChartSection(props: ChartSectionProps) {
   // BE does not support hourly price data for pools
   const filteredTimeOptions = useMemo(() => {
     if (activeQuery.chartType === ChartType.PRICE) {
-      const filtered = DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
       if (timePeriod === TimePeriod.HOUR) {
         setTimePeriod(TimePeriod.DAY)
       }
       return {
-        options: filtered,
-        selected: DISPLAYS[timePeriod],
+        options: getPillTimeSelectorOptions(
+          t,
+          ORDERED_TIMES.filter((period) => period !== TimePeriod.HOUR),
+        ),
+        selected: timePeriod,
       }
     }
     return {
-      options: DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
-      selected: DISPLAYS[timePeriod],
+      options: getPillTimeSelectorOptions(t),
+      selected: timePeriod,
     }
-  }, [activeQuery.chartType, timePeriod, setTimePeriod])
+  }, [activeQuery.chartType, timePeriod, setTimePeriod, t])
 
   const isV2Pool = props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2
 
@@ -287,12 +284,11 @@ export function ChartSection(props: ChartSectionProps) {
               fullWidth={media.md}
               options={filteredTimeOptions.options}
               selectedOption={filteredTimeOptions.selected}
-              onSelectOption={(option) => {
-                const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
-                if (time === timePeriod) {
+              onSelectOption={(option: TimePeriod) => {
+                if (option === timePeriod) {
                   refitChartContent?.()
                 } else {
-                  setTimePeriod(time)
+                  setTimePeriod(option)
                 }
               }}
             />

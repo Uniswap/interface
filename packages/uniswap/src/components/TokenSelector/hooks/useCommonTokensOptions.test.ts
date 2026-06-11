@@ -74,6 +74,13 @@ const baseCommonToken = new Token(
   'USDC',
   'USD Coin',
 )
+const megaEthCommonToken = new Token(
+  UniverseChainId.MegaETH,
+  '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7',
+  18,
+  'USDM',
+  'USDM',
+)
 const unichainUsdtToken = new Token(
   UniverseChainId.Unichain,
   '0x588ce4f028d8e7b53b687865d6a67b3a54c75518',
@@ -88,6 +95,7 @@ const arbitrumCurrencyInfo = makeCurrencyInfo({ token: arbitrumToken })
 const lineaCommonCurrencyInfo = makeCurrencyInfo({ token: lineaCommonToken })
 const xLayerCommonCurrencyInfo = makeCurrencyInfo({ token: xLayerCommonToken })
 const baseCommonCurrencyInfo = makeCurrencyInfo({ token: baseCommonToken })
+const megaEthCommonCurrencyInfo = makeCurrencyInfo({ token: megaEthCommonToken })
 const unichainUsdtCurrencyInfo = makeCurrencyInfo({ token: unichainUsdtToken })
 
 const allCommonBaseCurrencies = [
@@ -97,6 +105,7 @@ const allCommonBaseCurrencies = [
   lineaCommonCurrencyInfo,
   xLayerCommonCurrencyInfo,
   baseCommonCurrencyInfo,
+  megaEthCommonCurrencyInfo,
   unichainUsdtCurrencyInfo,
 ]
 
@@ -176,6 +185,35 @@ const baseCurrencies = [
   makeCurrencyInfo({ token: baseCbBtcToken }),
 ]
 
+// MegaETH-specific quick-select currencies
+const megaEthUsdmToken = new Token(
+  UniverseChainId.MegaETH,
+  '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7',
+  18,
+  'USDM',
+  'USDM',
+)
+const megaEthUsdeToken = new Token(
+  UniverseChainId.MegaETH,
+  '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34',
+  18,
+  'USDe',
+  'USDe',
+)
+const megaEthBtcBToken = new Token(
+  UniverseChainId.MegaETH,
+  '0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072',
+  8,
+  'BTC.b',
+  'Bitcoin Avalanche Bridged',
+)
+
+const megaEthCurrencies = [
+  makeCurrencyInfo({ token: megaEthUsdmToken }),
+  makeCurrencyInfo({ token: megaEthUsdeToken }),
+  makeCurrencyInfo({ token: megaEthBtcBToken }),
+]
+
 // --- Mock helpers ---
 
 const defaultGqlResult = {
@@ -217,6 +255,9 @@ function setupDefaultMocks({
   baseData = baseCurrencies,
   baseError,
   baseLoading = false,
+  megaEthData = megaEthCurrencies,
+  megaEthError,
+  megaEthLoading = false,
 }: {
   chainFilter: UniverseChainId | null
   commonBase?: CurrencyInfo[] | null
@@ -231,6 +272,9 @@ function setupDefaultMocks({
   baseData?: CurrencyInfo[]
   baseError?: Error
   baseLoading?: boolean
+  megaEthData?: CurrencyInfo[]
+  megaEthError?: Error
+  megaEthLoading?: boolean
 }): void {
   mockUseAllCommonBaseCurrencies.mockReturnValue({
     data: commonBase === null ? undefined : (commonBase ?? allCommonBaseCurrencies),
@@ -239,7 +283,7 @@ function setupDefaultMocks({
     refetch: vi.fn(),
   })
 
-  // useCurrencyInfosWithLoading is called three times: first for XLayer, then for Linea, then for Base.
+  // useCurrencyInfosWithLoading is called four times: first for XLayer, then for Linea, then for Base, then for MegaETH.
   // Each call receives { skip: true } when the chain doesn't match.
   mockUseCurrencyInfosWithLoading
     .mockReturnValueOnce(
@@ -256,6 +300,11 @@ function setupDefaultMocks({
       chainFilter === UniverseChainId.Base
         ? { data: baseData, error: baseError, loading: baseLoading, refetch: vi.fn() }
         : { ...skippedResult, loading: baseLoading },
+    )
+    .mockReturnValueOnce(
+      chainFilter === UniverseChainId.MegaETH
+        ? { data: megaEthData, error: megaEthError, loading: megaEthLoading, refetch: vi.fn() }
+        : { ...skippedResult, loading: megaEthLoading },
     )
 }
 
@@ -289,6 +338,28 @@ describe(useCommonTokensOptions, () => {
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Linea, lineaUsdtToken.address))
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Linea, lineaWbtcToken.address))
       expect(result.current.data).toHaveLength(lineaCurrencies.length)
+    })
+
+    it('returns MegaETH-specific tokens when chainFilter is MegaETH', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.MegaETH })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.MegaETH,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      // Should return MegaETH currencies, not common base
+      const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.MegaETH, megaEthUsdmToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.MegaETH, megaEthUsdeToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.MegaETH, megaEthBtcBToken.address))
+      expect(result.current.data).toHaveLength(megaEthCurrencies.length)
     })
 
     it('returns XLayer-specific tokens when chainFilter is XLayer', async () => {
@@ -346,7 +417,7 @@ describe(useCommonTokensOptions, () => {
         expect(result.current.loading).toBe(false)
       })
 
-      // Should return only Mainnet tokens from common base (not Linea, XLayer, or Unichain)
+      // Should return only Mainnet tokens from common base (not Linea, MegaETH, XLayer, or Unichain)
       const chainIds = result.current.data?.map((opt) => opt.currencyInfo.currency.chainId) ?? []
       expect(chainIds.every((id) => id === UniverseChainId.Mainnet)).toBe(true)
       expect(result.current.data).toHaveLength(2) // mainnetToken1 and mainnetToken2
@@ -428,6 +499,23 @@ describe(useCommonTokensOptions, () => {
 
       expect(result.current.data).toEqual([])
     })
+
+    it('returns empty array when MegaETH currencies are empty', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.MegaETH, megaEthData: [] })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.MegaETH,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.data).toEqual([])
+    })
   })
 
   describe('error handling', () => {
@@ -484,6 +572,24 @@ describe(useCommonTokensOptions, () => {
 
       expect(result.current.error).toBeTruthy()
     })
+
+    it('returns error when MegaETH currencies fetch fails and chainFilter is MegaETH', async () => {
+      const megaEthError = new Error('MegaETH fetch failed')
+      setupDefaultMocks({ chainFilter: UniverseChainId.MegaETH, megaEthData: [], megaEthError })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.MegaETH,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.error).toBeTruthy()
+    })
   })
 
   describe('loading state', () => {
@@ -520,6 +626,19 @@ describe(useCommonTokensOptions, () => {
         useCommonTokensOptions({
           portfolioData: makePortfolioData(),
           chainFilter: UniverseChainId.Linea,
+        }),
+      )
+
+      expect(result.current.loading).toBe(true)
+    })
+
+    it('is loading when MegaETH currencies are loading', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.MegaETH, megaEthLoading: true })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.MegaETH,
         }),
       )
 

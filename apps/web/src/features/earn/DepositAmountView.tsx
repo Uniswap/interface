@@ -1,7 +1,6 @@
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { Button, Flex, Text, useDynamicFontSizing } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   getEarnAmountValidation,
@@ -16,6 +15,7 @@ import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { DepositTokenSelector } from '~/features/earn/DepositTokenSelector'
+import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import {
@@ -38,6 +38,7 @@ interface DepositAmountViewProps {
   depositSourceOptions: EarnDepositSourceOption[]
   selectedDepositSource: EarnDepositSourceOption | undefined
   onSelectDepositSource: (currencyId: string) => void
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
   initialAmount?: string
   onBack: () => void
   onClose: () => void
@@ -49,6 +50,7 @@ export function DepositAmountView({
   depositSourceOptions,
   selectedDepositSource,
   onSelectDepositSource,
+  unsupportedDepositSourceOptions,
   initialAmount = '',
   onBack,
   onClose,
@@ -176,7 +178,7 @@ export function DepositAmountView({
 
   const ctaLabel = isOverBalance ? t('explore.earn.deposit.insufficientBalance') : t('common.button.review')
   const apyLabel = t('explore.earn.vault.rateValue', {
-    apy: formatPercent(vault.apyPercent),
+    apy: formatPercent(vault.apyPercent, 2),
   })
 
   const scaledInputWidth = useMemo(
@@ -227,15 +229,7 @@ export function DepositAmountView({
 
   return (
     <Flex gap="$spacing16">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea onPress={onBack} hoverable>
-          <BackArrow color="$neutral2" size="$icon.24" />
-        </TouchableArea>
-        <Text variant="body2" color="$neutral1">
-          {t('explore.earn.deposit.title')}
-        </Text>
-        <ModalCloseIcon onClose={onClose} />
-      </Flex>
+      <EarnAmountViewHeader title={t('explore.earn.deposit.title')} onBack={onBack} onClose={onClose} />
 
       <Flex gap="$spacing4">
         <Flex
@@ -298,10 +292,11 @@ export function DepositAmountView({
         </Flex>
 
         <DepositTokenSelector
-          apyLabel={apyLabel}
+          displayBalanceInFiat={inputInFiat}
           options={depositSourceOptions}
           selectedSourceCurrencyId={selectedDepositSource?.currencyInfo.currencyId ?? vault.currencyId}
           onSelectSourceCurrency={onSelectDepositSource}
+          unsupportedOptions={unsupportedDepositSourceOptions}
         />
       </Flex>
 

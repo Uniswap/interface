@@ -73,6 +73,25 @@ export const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? 
 
 export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 
+// Liquidity service uses dedicated backend-{env} hosts. Dev and staging builds both use the staging
+// backend (consistent with the entry gateway + websocket URLs, which collapse dev → staging to avoid
+// localhost CORS); prod uses the prod backend. An explicit override always wins.
+const STAGING_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-staging.api.uniswap.org'
+const PROD_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-prod.api.uniswap.org'
+
+function getLiquidityServiceUrl(): string {
+  if (config.liquidityServiceUrlOverride) {
+    return config.liquidityServiceUrlOverride
+  }
+  if (isE2eTestEnv()) {
+    return PROD_LIQUIDITY_SERVICE_URL
+  }
+  if (isDevEnv() || isBetaEnv()) {
+    return STAGING_LIQUIDITY_SERVICE_URL
+  }
+  return PROD_LIQUIDITY_SERVICE_URL
+}
+
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
@@ -125,6 +144,8 @@ export const uniswapUrls = {
     ),
     recoveryPhraseForgotten: createHelpArticleUrl('11306367118349'),
     revokeExplainer: createHelpArticleUrl('15724901841037-How-to-revoke-a-token-approval'),
+    rwaOffHours: createHelpArticleUrl('46572002944013'),
+    rwaRegionRestriction: createHelpArticleUrl('46373846019981'),
     supportedNetworks: createHelpArticleUrl('14569415293325'),
     swapFeeInfo: createHelpArticleUrl('20131678274957'),
     passkeysInfo: createHelpArticleUrl('35522111260173'),
@@ -214,7 +235,7 @@ export const uniswapUrls = {
   forApiUrl:
     config.forApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' }),
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.TradingApi }),
-  liquidityServiceUrl: config.liquidityServiceUrlOverride || 'https://liquidity.backend-prod.api.uniswap.org',
+  liquidityServiceUrl: getLiquidityServiceUrl(),
 
   // Merkl Docs for LP Incentives
   merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',

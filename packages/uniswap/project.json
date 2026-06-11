@@ -3,17 +3,14 @@
   "targets": {
     "prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["contracts"],
-      "cache": true,
-      "inputs": [],
-      "outputs": []
+      "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
     },
     "build": {
       "command": "tsc -b",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["prepare", "^build", "contracts", "graphql:generate"]
+      "dependsOn": ["prepare", "^build", "graphql:generate"]
     },
     "contracts:compile:abi": {
       "command": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
@@ -25,21 +22,13 @@
       "outputs": ["{projectRoot}/src/abis/types/*.ts", "{projectRoot}/src/abis/types/factories"]
     },
     "contracts:compile:v3": {
-      "command": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+      "command": "xargs typechain --target ethers-v5 --out-dir src/abis/types/v3 < src/abis/v3-type-filepaths.txt",
       "options": {
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["{projectRoot}/package.json"],
+      "inputs": ["{projectRoot}/package.json", "{projectRoot}/src/abis/v3-type-filepaths.txt"],
       "outputs": ["{projectRoot}/src/abis/types/v3/**"]
-    },
-    "contracts": {
-      "command": "echo \"Compiling contracts...\"",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "cache": true,
-      "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
     },
     "check:deps:usage": {},
     "typecheck": {},

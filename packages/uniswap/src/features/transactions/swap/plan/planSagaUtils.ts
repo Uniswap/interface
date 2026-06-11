@@ -31,7 +31,11 @@ import {
 } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { ValidatedTradeInput } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ChainedActionTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  createChainedActionTrade,
+  type ChainedActionTrade,
+  type Trade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { signalSwapModalClosed } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
@@ -377,11 +381,17 @@ export function buildTradeFromPlanResponse({
     validatedInput,
     slippageTolerance,
   } satisfies TransformPlanParams)
-  return new ChainedActionTrade({
+  const trade = createChainedActionTrade({
     quote: adaptedQuote,
     currencyIn: validatedInput.currencyIn,
     currencyOut: validatedInput.currencyOut,
   })
+
+  if (!trade) {
+    throw new PlanValidationError('Unable to build chained trade from plan response')
+  }
+
+  return trade
 }
 
 export function getWalletExecutionContext(

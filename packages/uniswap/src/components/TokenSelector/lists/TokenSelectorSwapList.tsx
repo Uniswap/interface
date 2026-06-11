@@ -3,18 +3,25 @@ import { isMobileApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { Flex } from 'ui/src'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { TokenSelectorListOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
+import { useRwaTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useRwaTokenOptions'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import {
+  OnSelectCurrency,
+  OnSelectRwaToken,
+  TokenSectionsHookProps,
+  TokenSelectorVariation,
+} from 'uniswap/src/components/TokenSelector/types'
 import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -25,11 +32,12 @@ import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRece
 // Matches the default 40px section header plus the single-line outage banner and spacing on web.
 const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104
 
-function useTokenSectionsForSwap({
+export function useTokenSectionsForSwap({
   addresses,
   chainFilter,
   oppositeSelectedToken,
-}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorOption>[]> {
+  variation,
+}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorListOption>[]> {
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
@@ -114,6 +122,18 @@ function useTokenSectionsForSwap({
     options: suggestedSectionOptions,
   })
 
+  const stocksEnabled = useFeatureFlag(FeatureFlags.RwaUxTokenSelector)
+  const shouldShowStocks = stocksEnabled && variation === TokenSelectorVariation.SwapOutput && !isTestnetModeEnabled
+  // Gate the RWA query so it isn't fetched unless the Stocks section will actually render.
+  const rwaTokenOptions = useRwaTokenOptions({ chainFilter, enabled: shouldShowStocks })
+  const stocksSectionOptions = useMemo(() => [rwaTokenOptions], [rwaTokenOptions])
+  const memoizedNewTag = useMemo(() => <NewTag />, [])
+  const stocksSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.Stocks,
+    options: stocksSectionOptions,
+    rightElement: memoizedNewTag,
+  })
+
   const isPortfolioOutage = !!portfolioTokenOptions && !!portfolioTokenOptionsError
 
   const portfolioOutageSectionHeader = useMemo(() => {
@@ -175,6 +195,7 @@ function useTokenSectionsForSwap({
 
     return [
       ...(suggestedSection ?? []),
+      ...(shouldShowStocks ? (stocksSection ?? []) : []),
       ...(bridgingSection ?? []),
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
@@ -188,6 +209,8 @@ function useTokenSectionsForSwap({
     portfolioSection,
     trendingSection,
     suggestedSection,
+    stocksSection,
+    shouldShowStocks,
     bridgingSection,
     recentSection,
     favoriteSection,
@@ -208,12 +231,15 @@ function useTokenSectionsForSwap({
 
 function TokenSelectorSwapListInner({
   onSelectCurrency,
+  onSelectRwaToken,
   addresses,
   chainFilter,
   oppositeSelectedToken,
   renderedInModal,
+  variation,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
+  onSelectRwaToken?: OnSelectRwaToken
   chainFilter: UniverseChainId | null
   renderedInModal: boolean
 }): JSX.Element {
@@ -226,6 +252,7 @@ function TokenSelectorSwapListInner({
     addresses,
     chainFilter,
     oppositeSelectedToken,
+    variation,
   })
 
   const hasError = Boolean(error)
@@ -242,6 +269,7 @@ function TokenSelectorSwapListInner({
         showTokenWarnings={true}
         renderedInModal={renderedInModal}
         onSelectCurrency={onSelectCurrency}
+        onSelectRwaToken={onSelectRwaToken}
       />
     </Flex>
   )

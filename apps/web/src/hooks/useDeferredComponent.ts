@@ -4,7 +4,6 @@ import { logger } from 'utilities/src/logger/logger'
 export function useDeferredComponent<T extends React.ComponentType<any>>(importFn: () => Promise<{ default: T }>) {
   const [Component, setComponent] = useState<T | null>(null)
 
-  /* oxlint-disable react/exhaustive-deps -- Only runs once on mount to set up deferred loading */
   useEffect(() => {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(
@@ -38,6 +37,7 @@ export function useDeferredComponent<T extends React.ComponentType<any>>(importF
         }
       }, 1)
     }
+    /* oxlint-disable-next-line react-hooks/exhaustive-deps -- Only runs once on mount to set up deferred loading */
   }, [])
 
   return Component

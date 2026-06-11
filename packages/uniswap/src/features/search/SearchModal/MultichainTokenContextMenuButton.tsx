@@ -31,6 +31,7 @@ import { useDelayedMenuClose } from 'uniswap/src/features/search/SearchModal/hoo
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { TDPView } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -171,7 +172,11 @@ function MultichainTokenContextMenuButtonInner({
     currency: bestCurrency.currency,
     closeMenu: handleCloseMenu,
     actions: MULTICHAIN_ACTIONS,
-    shareCurrencyInfo: { currencyId: primaryCurrencyInfo.currencyId, chainId: primaryCurrencyInfo.currency.chainId },
+    shareCurrencyInfo: {
+      currencyId: primaryCurrencyInfo.currencyId,
+      chainId: primaryCurrencyInfo.currency.chainId,
+      tdpView: isSingleChain ? TDPView.Chain : TDPView.Aggregate,
+    },
   })
 
   const allMenuItems = useMemo(() => {

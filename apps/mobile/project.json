@@ -248,6 +248,12 @@
         "cwd": "{projectRoot}"
       }
     },
+    "ios:signing:local": {
+      "command": "bun run scripts/setupLocalDeviceSigning.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "ios:smol": {
       "command": "bunx expo run:ios --device=\"iPhone SE (3rd generation)\"",
       "options": {
@@ -338,7 +344,7 @@
       "dependsOn": ["config:pull"]
     },
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
       "options": { "cwd": "{workspaceRoot}" }
     },
     "unicons": {

@@ -182,12 +182,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   const expandOnPrimaryClick = multichainRowExpansionEnabled && parentBalance.tokens.length > 1
 
   const tokenBalanceItem = (
-    <TokenBalanceItem
-      isHidden={parentBalance.isHidden ?? false}
-      isLoading={isWarmLoading}
-      currencyInfo={parentCurrencyInfo}
-      portfolioBalance={parentBalance}
-    />
+    <TokenBalanceItem isLoading={isWarmLoading} currencyInfo={parentCurrencyInfo} portfolioBalance={parentBalance} />
   )
 
   if (expandOnPrimaryClick) {

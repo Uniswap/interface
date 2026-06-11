@@ -20,7 +20,10 @@ import { useMultichainSearchTokens, useSearchTokens } from 'uniswap/src/features
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
+import { applyRwaGroupingToSearchOptions } from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
+import { useRwaSearchIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaSearchIndex'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { noop } from 'utilities/src/react/noop'
 
@@ -40,6 +43,10 @@ export function useSectionsForSearchResults({
   // Token search results
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const useMultichainPath = multichainTokenUxEnabled && chainFilter === null
+
+  // RWA (tokenized stock) grouping
+  const rwaIndex = useRwaSearchIndex()
+  const isAddressSearch = isAddressTokenSearchQuery(searchFilter)
 
   const skipTokenSearch = !searchFilter || (activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All)
 
@@ -111,14 +118,21 @@ export function useSectionsForSearchResults({
   )
 
   // Organized sections
-  const tokenOptions: SearchModalOption[] = isPoolAddressSearch
-    ? []
-    : useMultichainPath
-      ? (multichainSearchOptions ?? [])
-      : (tokenSearchResults ?? [])
+  const tokenOptions: SearchModalOption[] = useMemo(
+    () => (isPoolAddressSearch ? [] : useMultichainPath ? (multichainSearchOptions ?? []) : (tokenSearchResults ?? [])),
+    [isPoolAddressSearch, useMultichainPath, multichainSearchOptions, tokenSearchResults],
+  )
+  const groupedTokenOptions = useMemo(
+    () =>
+      rwaIndex.rwas.length
+        ? applyRwaGroupingToSearchOptions({ options: tokenOptions, index: rwaIndex, isAddressSearch, chainFilter })
+        : tokenOptions,
+    [rwaIndex, tokenOptions, isAddressSearch, chainFilter],
+  )
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
-    options: activeTab === SearchTab.All ? tokenOptions.slice(0, NUMBER_OF_RESULTS_ALL_TAB) : tokenOptions,
+    options:
+      activeTab === SearchTab.All ? groupedTokenOptions.slice(0, NUMBER_OF_RESULTS_ALL_TAB) : groupedTokenOptions,
   })
 
   const poolSearchOptions = usePoolSearchResultsToPoolOptions(searchResultPools ?? [])

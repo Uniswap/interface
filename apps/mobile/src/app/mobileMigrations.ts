@@ -1,5 +1,5 @@
-// Type information currently gets lost after a migration
 /* oxlint-disable max-lines */
+// Type information currently gets lost after a migration
 
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'

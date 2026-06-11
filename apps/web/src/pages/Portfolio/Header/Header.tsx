@@ -2,6 +2,8 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, useMedia } from 'ui/src'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
@@ -86,6 +88,14 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
   const hasConnectedAddresses = Boolean(activeAddresses.evmAddress || activeAddresses.svmAddress)
   const showShareButton = !showDemoView && (isExternalWallet || hasConnectedAddresses)
 
+  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
+  const { chains: enabledChains } = useEnabledChains()
+  const tieredNetworkOptions = useNetworkSelectorOptions({
+    addresses: activeAddresses,
+    chainIds: enabledChains,
+    enabled: isNetworkFilterV2Enabled,
+  })
+
   const { error: portfolioError, dataUpdatedAt: portfolioDataUpdatedAt } = usePortfolioData({
     evmAddress: activeAddresses.evmAddress,
     svmAddress: activeAddresses.svmAddress,
@@ -154,6 +164,8 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
               size={buttonSize}
               tracePage={getPageNameFromTab(tab)}
               transition={HEADER_TRANSITION}
+              showSearch={isNetworkFilterV2Enabled}
+              tieredOptions={isNetworkFilterV2Enabled ? tieredNetworkOptions : undefined}
             />
           </Flex>
         </Flex>

@@ -15,7 +15,8 @@ import {
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import type { Account, Hash, PublicClient, SignableMessage } from 'viem'
+import type { Account, PublicClient } from 'viem'
+import type { Hash, SignableMessage } from '~/chains'
 import { getEmbeddedWalletState, setChainId } from '~/state/embeddedWallet/store'
 
 export type Listener = (payload: any) => void

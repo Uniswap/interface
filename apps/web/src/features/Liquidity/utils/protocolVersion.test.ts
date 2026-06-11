@@ -1,7 +1,11 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { describe, expect, it } from 'vitest'
-import { getProtocolStatusLabel, getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
+import {
+  getProtocolStatusLabel,
+  getProtocolVersionFromLabel,
+  getProtocolVersionLabel,
+} from '~/features/Liquidity/utils/protocolVersion'
 
 describe('getProtocolVersionLabel', () => {
   it('returns correct label for V2', () => {
@@ -15,6 +19,23 @@ describe('getProtocolVersionLabel', () => {
   })
   it('returns undefined for unknown version', () => {
     expect(getProtocolVersionLabel(999 as ProtocolVersion)).toBeUndefined()
+  })
+})
+
+describe('getProtocolVersionFromLabel', () => {
+  it('returns correct version for v2', () => {
+    expect(getProtocolVersionFromLabel('v2')).toBe(ProtocolVersion.V2)
+  })
+  it('returns correct version for v3', () => {
+    expect(getProtocolVersionFromLabel('v3')).toBe(ProtocolVersion.V3)
+  })
+  it('returns correct version for v4', () => {
+    expect(getProtocolVersionFromLabel('v4')).toBe(ProtocolVersion.V4)
+  })
+  it('returns undefined for unknown, null, or undefined labels', () => {
+    expect(getProtocolVersionFromLabel('v5')).toBeUndefined()
+    expect(getProtocolVersionFromLabel(null)).toBeUndefined()
+    expect(getProtocolVersionFromLabel(undefined)).toBeUndefined()
   })
 })
 

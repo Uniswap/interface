@@ -1,17 +1,22 @@
-/* oxlint-disable no-new */
-import { TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  createUnwrapTrade,
+  createWrapTrade,
+  getWorstExecutionPrice,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 
 const mockBaseQuote = {
   chainId: 1,
   input: {
     amount: '1000000000000000000',
+    maximumAmount: '1000000000000000000',
     token: ETH.address,
   },
   output: {
     amount: '1000000000000000000',
+    minimumAmount: '1000000000000000000',
     token: WETH.address,
     recipient: '0xAAAA44272dc658575Ba38f43C438447dDED45358',
   },
@@ -48,26 +53,25 @@ const mockBaseArgs = {
 }
 
 describe('WrapTrade', () => {
-  it('should accept WrapQuoteResponse for WrapTrade constructor', () => {
-    const trade = new WrapTrade({
+  it('should accept WrapQuoteResponse for WrapTrade factory', () => {
+    const trade = createWrapTrade({
       ...mockBaseArgs,
       quote: mockWrapQuote,
     })
 
-    expect(trade).toBeInstanceOf(WrapTrade)
-    expect(trade.routing).toBe(TradingApi.Routing.WRAP)
-    expect(trade.quote).toBe(mockWrapQuote)
+    expect(trade?.routing).toBe(TradingApi.Routing.WRAP)
+    expect(trade?.quote).toBe(mockWrapQuote)
   })
 
   // oxlint-disable-next-line jest/expect-expect -- suppressed
   it('should raise a ts error for invalid routing types', () => {
-    new WrapTrade({
+    createWrapTrade({
       ...mockBaseArgs,
       // @ts-expect-error - Invalid quote should not be accepted
       quote: { ...mockWrapQuote, routing: TradingApi.Routing.UNWRAP },
     })
 
-    new WrapTrade({
+    createWrapTrade({
       ...mockBaseArgs,
       // @ts-expect-error - Invalid quote should not be accepted
       quote: { ...mockWrapQuote, routing: TradingApi.Routing.BRIDGE },
@@ -76,29 +80,47 @@ describe('WrapTrade', () => {
 })
 
 describe('UnwrapTrade', () => {
-  it('should accept UnwrapQuoteResponse for UnwrapTrade constructor', () => {
-    const trade = new UnwrapTrade({
+  it('should accept UnwrapQuoteResponse for UnwrapTrade factory', () => {
+    const trade = createUnwrapTrade({
       ...mockBaseArgs,
       quote: mockUnwrapQuote,
     })
 
-    expect(trade).toBeInstanceOf(UnwrapTrade)
-    expect(trade.routing).toBe(TradingApi.Routing.UNWRAP)
-    expect(trade.quote).toBe(mockUnwrapQuote)
+    expect(trade?.routing).toBe(TradingApi.Routing.UNWRAP)
+    expect(trade?.quote).toBe(mockUnwrapQuote)
   })
 
   // oxlint-disable-next-line jest/expect-expect -- suppressed
   it('should raise a ts error for invalid routing types', () => {
-    new UnwrapTrade({
+    createUnwrapTrade({
       ...mockBaseArgs,
       // @ts-expect-error - Invalid quote should not be accepted
       quote: { ...mockUnwrapQuote, routing: TradingApi.Routing.WRAP },
     })
 
-    new UnwrapTrade({
+    createUnwrapTrade({
       ...mockBaseArgs,
       // @ts-expect-error - Invalid quote should not be accepted
       quote: { ...mockUnwrapQuote, routing: TradingApi.Routing.BRIDGE },
     })
+  })
+})
+
+describe(getWorstExecutionPrice, () => {
+  it('derives price from max input and min output amounts', () => {
+    const trade = {
+      inputAmount: CurrencyAmount.fromRawAmount(ETH, '100'),
+      outputAmount: CurrencyAmount.fromRawAmount(WETH, '200'),
+      maxAmountIn: CurrencyAmount.fromRawAmount(ETH, '110'),
+      minAmountOut: CurrencyAmount.fromRawAmount(WETH, '190'),
+    }
+
+    const price = getWorstExecutionPrice(trade)
+
+    expect(price.baseCurrency).toBe(ETH)
+    expect(price.quoteCurrency).toBe(WETH)
+    expect(price.scalar.numerator.toString()).toBe('1000000000000000000')
+    expect(price.numerator.toString()).toBe('190')
+    expect(price.denominator.toString()).toBe('110')
   })
 })

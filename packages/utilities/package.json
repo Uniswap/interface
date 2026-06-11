@@ -60,8 +60,8 @@
     "check-promise-version": "nx check-promise-version utilities",
     "test": "nx test utilities",
     "typecheck": "nx typecheck utilities",
-    "format": "nx format utilities",
-    "format:check": "nx format:check utilities",
+    "format": "nx run utilities:format",
+    "format:check": "nx run utilities:format:check",
     "lint": "nx lint utilities",
     "lint:fix": "nx lint:fix utilities"
   },

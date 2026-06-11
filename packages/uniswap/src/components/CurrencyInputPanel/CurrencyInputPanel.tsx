@@ -1,7 +1,6 @@
 import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
 //! tamagui-ignore
 // tamagui-ignore
-/* oxlint-disable complexity */
 import { forwardRef, memo, useCallback } from 'react'
 import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
 import {
@@ -23,6 +22,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
+    // oxlint-disable-next-line complexity -- long-lived component covering many input modes
     function CurrencyInputPanelInner(props, forwardedRef): JSX.Element {
       const {
         autoFocus,

@@ -1,5 +1,13 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ExplorerDataType, getExplorerLink, getFiatOnRampURL } from 'uniswap/src/utils/linking'
+import {
+  ExplorerDataType,
+  getExplorerLink,
+  getFiatOnRampURL,
+  getTokenDetailsURL,
+  getTokenUrl,
+  TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
+  TDPView,
+} from 'uniswap/src/utils/linking'
 
 describe(getExplorerLink, () => {
   it('handles different link cases', () => {
@@ -81,5 +89,37 @@ describe(getFiatOnRampURL, () => {
 
   it('omits unset params from the query string', () => {
     expect(getFiatOnRampURL({ currencyCode: 'ETH' })).toEqual('/buy?currencyCode=ETH')
+  })
+})
+
+describe(getTokenDetailsURL, () => {
+  it('returns aggregate multichain TDP URL when requested', () => {
+    expect(
+      getTokenDetailsURL({
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        chain: UniverseChainId.Mainnet,
+        tdpView: TDPView.Aggregate,
+      }),
+    ).toEqual(
+      `/explore/tokens/ethereum/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48?chain=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`,
+    )
+  })
+})
+
+describe(getTokenUrl, () => {
+  it('returns a chain-specific token URL by default', () => {
+    expect(getTokenUrl(`${UniverseChainId.Base}-0x4200000000000000000000000000000000000006`)).toEqual(
+      'https://app.uniswap.org/explore/tokens/base/0x4200000000000000000000000000000000000006',
+    )
+  })
+
+  it('preserves mobile UTM tags on chain-specific token URLs', () => {
+    expect(
+      getTokenUrl(`${UniverseChainId.Base}-0x4200000000000000000000000000000000000006`, {
+        addMobileUTMTags: true,
+      }),
+    ).toEqual(
+      'https://app.uniswap.org/explore/tokens/base/0x4200000000000000000000000000000000000006?utm_medium=mobile&utm_source=share-tdp',
+    )
   })
 })

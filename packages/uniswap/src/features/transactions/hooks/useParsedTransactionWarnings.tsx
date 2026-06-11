@@ -47,8 +47,16 @@ export function useFormattedWarnings(warnings: Warning[]): ParsedWarnings {
   }, [warnings])
 }
 
+// RWA geo-blocking has its own dedicated banner (RWAGeoBlockedCard), so it must not also render as
+// an inline form/review warning (which would show a title-less alert icon).
+function isInlineDisplayableWarning(warning: Warning): boolean {
+  return warning.type !== WarningLabel.RWAGeoBlocked
+}
+
 function getReviewScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
-  const reviewWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+  const reviewWarning = warnings.find(
+    (warning) => warning.severity >= WarningSeverity.Medium && isInlineDisplayableWarning(warning),
+  )
 
   if (!reviewWarning) {
     return undefined
@@ -70,7 +78,9 @@ function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreen
     }
   }
 
-  const formWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  const formWarning = warnings.find(
+    (warning) => warning.severity >= WarningSeverity.Low && isInlineDisplayableWarning(warning),
+  )
 
   if (!formWarning) {
     return undefined

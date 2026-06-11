@@ -10,7 +10,12 @@ import {
   ValidatedSwapTxContext,
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { BridgeTrade, ClassicTrade, UniswapXTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type {
+  BridgeTrade,
+  ClassicTrade,
+  UniswapXTrade,
+  WrapTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'

@@ -14,11 +14,9 @@ import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import type { FlexProps } from 'ui/src'
-import { Button, DropdownButton, Flex, Shine, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Search } from 'ui/src/components/icons/Search'
-import { iconSizes } from 'ui/src/theme'
-import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -45,6 +43,7 @@ import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/C
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
 import { DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
+import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
 import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { HookModal } from '~/features/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
@@ -67,52 +66,6 @@ interface WrappedNativeWarning {
   wrappedToken: Currency
   nativeToken: Currency
   swapUrlParams: string
-}
-
-export const CurrencySelector = ({
-  loading,
-  currencyInfo,
-  onPress,
-  placeholder,
-  emphasis = 'primary',
-}: {
-  loading?: boolean
-  currencyInfo: Maybe<CurrencyInfo>
-  onPress: () => void
-  placeholder?: string
-  emphasis?: 'primary' | 'tertiary'
-}) => {
-  const { t } = useTranslation()
-  const currency = currencyInfo?.currency
-  const emptyTextColor = emphasis === 'tertiary' ? '$neutral2' : '$surface1'
-
-  return loading ? (
-    <Shine width="100%">
-      <Flex backgroundColor="$surface3" borderRadius="$rounded16" height={50} />
-    </Shine>
-  ) : (
-    <DropdownButton
-      emphasis={currencyInfo ? undefined : emphasis}
-      onPress={onPress}
-      elementPositioning="grouped"
-      isExpanded={false}
-      icon={
-        currency ? (
-          <TokenLogo
-            size={iconSizes.icon24}
-            chainId={currency.chainId}
-            name={currency.name}
-            symbol={currency.symbol}
-            url={currencyInfo.logoUrl}
-          />
-        ) : undefined
-      }
-    >
-      <DropdownButton.Text color={currency ? '$neutral1' : emptyTextColor}>
-        {currency ? currency.symbol : (placeholder ?? t('fiatOnRamp.button.chooseToken'))}
-      </DropdownButton.Text>
-    </DropdownButton>
-  )
 }
 
 const DEFAULT_ADDRESSES: string[] = [] // this has to be a const to prevent a rerender loop

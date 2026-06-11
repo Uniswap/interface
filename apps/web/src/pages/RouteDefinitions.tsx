@@ -21,7 +21,6 @@ import { SwapPage } from '~/pages/Swap'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
 const AddLiquidity = lazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
-const AddLiquidityPool = lazy(() => import('~/pages/AddLiquidity/AddLiquidityPool'))
 const CreatePosition = lazy(() => import('~/pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('~/pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('~/pages/AddLiquidityV2/redirects'))
@@ -304,14 +303,10 @@ export const routes: RouteDefinition[] = [
     enabled: (args) => Boolean(args.isAddLiquidityRevampEnabled),
   }),
   createRouteDefinition({
-    path: '/positions/add/:chainName/:poolAddress',
-    getElement: () => <AddLiquidityPool />,
-    getTitle: getPositionPageTitle,
-    getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
-    enabled: (args) => Boolean(args.isAddLiquidityRevampEnabled),
-  }),
-  createRouteDefinition({
     path: '/positions/add',
+    // Nested path is optional: bare `/positions/add` browses pools; AddLiquidity reads the
+    // optional `:chainName/:poolAddress` segments from `useParams`, so one definition covers both.
+    nestedPaths: [':chainName/:poolAddress'],
     getElement: () => <AddLiquidity />,
     getTitle: getPositionPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,

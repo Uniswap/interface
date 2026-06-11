@@ -4,7 +4,7 @@ import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { GasEstimate, TradingApi } from '@universe/api'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ACROSS_DAPP_INFO, isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
@@ -198,10 +198,17 @@ export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined 
     return undefined
   }
 
-  if (trade.routes.every((r) => r.protocol === Protocol.V2)) {
+  const route = trade.quote.quote.route ?? []
+  const protocols = new Set(route.flatMap((hops) => hops.map((hop) => hop.type)))
+
+  // TODO(SWAP-2724): Update to properly extract from newer routing response types
+  if (protocols.size === 0) {
+    return undefined
+  }
+  if (protocols.size === 1 && protocols.has('v2-pool')) {
     return Protocol.V2
   }
-  if (trade.routes.every((r) => r.protocol === Protocol.V3)) {
+  if (protocols.size === 1 && protocols.has('v3-pool')) {
     return Protocol.V3
   }
   return Protocol.MIXED

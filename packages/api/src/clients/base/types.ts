@@ -1,4 +1,5 @@
-import type { SessionService } from '@universe/sessions'
+import type { Session, SessionService } from '@universe/sessions'
+import type { Logger } from 'utilities/src/logger/logger'
 
 export type StandardFetchOptions = Parameters<typeof fetch>[1]
 
@@ -12,6 +13,15 @@ export interface FetchClientContext {
   getBaseUrl?: () => string
   getHeaders?: () => HeadersInit
   getSessionService: () => SessionService
+  /**
+   * Optional session gate. When the getter returns a Session, fetch calls
+   * are gated with await-ready + retry-once on 401. Returning null (not
+   * bootstrapped) passes through.
+   */
+  getSession?: () => Session | null
+  /** Telemetry identifier for the gate's emitted events. */
+  source?: string
+  getLogger?: () => Logger
   defaultOptions?: Omit<StandardFetchOptions, 'headers'>
 }
 

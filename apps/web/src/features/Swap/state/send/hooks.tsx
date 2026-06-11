@@ -21,6 +21,7 @@ import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { useCreateTransferTransaction } from '~/utils/transfer'
+
 export interface RecipientData {
   address: string
   ensName?: string

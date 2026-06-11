@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { erc20Abi } from 'viem'
 import { useReadContract } from 'wagmi'
+import { erc20Abi } from '~/chains'
 import { assume0xAddress } from '~/utils/wagmi'
 
 interface UseTotalSupplyResult {

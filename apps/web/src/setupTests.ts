@@ -558,7 +558,9 @@ vi.mock('./components/Table/TableSizeProvider', () => ({
     height: 768,
     top: 0,
     left: 0,
+    rowContentMinWidthPx: 0,
   })),
+  useTableRowContentMinWidthPx: vi.fn(() => 0),
   TableSizeProvider: ({ children }: { children: JSX.Element }) => {
     return React.createElement(React.Fragment, {}, children)
   },

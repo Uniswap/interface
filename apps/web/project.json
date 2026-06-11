@@ -51,7 +51,7 @@
       "dependsOn": ["ajv", "config:pull"]
     },
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
       "options": { "cwd": "{workspaceRoot}" }
     },
     "ajv": {
@@ -131,7 +131,7 @@
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "production",
-      "inputs": ["default", "^production", "!{projectRoot}/build"]
+      "inputs": ["production", "^production", "!{projectRoot}/build"]
     },
     "build:staging": {
       "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" ENABLE_ENTRY_GATEWAY_PROXY=true CLOUDFLARE_ENV=staging vite build --mode staging",
@@ -159,7 +159,7 @@
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "production",
-      "inputs": ["default", "^production", "!{projectRoot}/build"]
+      "inputs": ["production", "^production", "!{projectRoot}/build"]
     },
     "preview": {
       "command": "vite preview --port 3000 --outDir build/client",

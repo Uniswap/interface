@@ -16,7 +16,7 @@ import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components
 function useTokenSectionsForSend({
   addresses,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenOption>[]> {
+}: Omit<TokenSectionsHookProps, 'variation'>): GqlResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
   const portfolioData = usePortfolioBalancesForAddressById(addresses)
   const {
@@ -118,7 +118,7 @@ function TokenSelectorSendListInner({
   onSelectCurrency,
   onEmptyActionPress,
   renderedInModal,
-}: TokenSectionsHookProps & {
+}: Omit<TokenSectionsHookProps, 'variation'> & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
   renderedInModal: boolean

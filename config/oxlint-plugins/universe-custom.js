@@ -1049,6 +1049,127 @@ const importBoundary = {
   },
 }
 
+// ── no-direct-viem-ethers-import ───────────────────────────────────────
+// Routes viem/ethers/@ethersproject consumers through `@universe/chains`.
+// Allowlist below names every file that imports these directly today.
+
+const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
+  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel.ts',
+  'apps/web/src/connection/EmbeddedWalletConnector.ts',
+  'apps/web/src/connection/EmbeddedWalletProvider.ts',
+  'apps/web/src/connection/rejectableConnector.ts',
+  'apps/web/src/connection/wagmiConfig.ts',
+  'apps/web/src/constants/providers.ts',
+  'apps/web/src/features/accounts/store/updater.tsx',
+  'apps/web/src/features/Swap/hooks/useSendCallback.ts',
+  'apps/web/src/features/Swap/state/send/hooks.tsx',
+  'apps/web/src/features/Toucan/Auction/BidForm/BidReviewModal/useBidPermit2Flow.ts',
+  'apps/web/src/hooks/useContract.ts',
+  'apps/web/src/hooks/useEthersProvider.ts',
+  'apps/web/src/hooks/useEthersSigner.ts',
+  'apps/web/src/hooks/useSelectChain.ts',
+  'apps/web/src/hooks/useSwapCallback.tsx',
+  'apps/web/src/hooks/useTokenAllowance.ts',
+  'apps/web/src/hooks/useTransactionDeadline.ts',
+  'apps/web/src/hooks/useTransactionGasFee.ts',
+  'apps/web/src/hooks/useUniswapXSwapCallback.ts',
+  'apps/web/src/hooks/useUniversalRouter.ts',
+  'apps/web/src/lib/utils/resolveENSContentHash.ts',
+  'apps/web/src/pages/PoolDetails/Pools/hooks/useContractMultichain.tsx',
+  'apps/web/src/pages/PoolDetails/Pools/hooks/useMultiChainPositions.tsx',
+  'apps/web/src/playwright/anvil/anvil-manager.ts',
+  'apps/web/src/playwright/anvil/utils.ts',
+  'apps/web/src/playwright/fixtures/anvil.ts',
+  'apps/web/src/rpc/AppJsonRpcProvider.ts',
+  'apps/web/src/rpc/ConfiguredJsonRpcProvider.ts',
+  'apps/web/src/state/activity/polling/batch.ts',
+  'apps/web/src/state/claim/hooks.ts',
+  'apps/web/src/state/logs/slice.ts',
+  'apps/web/src/state/logs/updater.ts',
+  'apps/web/src/state/logs/utils.ts',
+  'apps/web/src/state/routing/types.ts',
+  'apps/web/src/state/routing/utils.ts',
+  'apps/web/src/state/sagas/transactions/5792.ts',
+  'apps/web/src/state/sagas/transactions/cancelOrderSaga.ts',
+  'apps/web/src/state/sagas/transactions/cancelPlanStepSaga.ts',
+  'apps/web/src/state/sagas/transactions/utils.ts',
+  'apps/web/src/state/transactions/hooks.tsx',
+  'apps/web/src/state/transactions/types.ts',
+  'apps/web/src/utils/transfer.ts',
+  'apps/web/src/utils/walletMeta.ts',
+])
+
+/**
+ * Checks if an import is directly viem/ethers.
+ * Matching what we consider to be a banned source.
+ */
+function isDirectViemEthersSource(source) {
+  if (typeof source !== 'string') {
+    return false
+  }
+  return (
+    source === 'viem' ||
+    source.startsWith('viem/') ||
+    source === 'ethers' ||
+    source.startsWith('ethers/') ||
+    source.startsWith('@ethersproject/')
+  )
+}
+
+/**
+ * Checks if a path is in the direct viem/ethers allow
+ * list. We only allow what's currently existing.
+ */
+function isDirectViemEthersAllowlisted(physicalPath) {
+  for (const allowed of DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST) {
+    if (physicalPath === allowed || physicalPath.endsWith('/' + allowed)) {
+      return true
+    }
+  }
+  return false
+}
+
+// TODO: Replace this custom rule with `no-restricted-imports`
+// when most of the remaining exceptions have been migrated.
+// We can use that rule w/ single-line disabling comments.
+const noDirectViemEthersImport = {
+  meta: {
+    type: 'problem',
+    docs: { description: 'Disallow direct viem/ethers imports; route through @universe/chains.' },
+    schema: [],
+    messages: {},
+  },
+  create(context) {
+    const fn = context.filename ?? context.getFilename?.()
+    if (typeof fn !== 'string' || fn === '<input>' || fn === '<text>') {
+      return {}
+    }
+    const physicalPath = fn.split('\\').join('/')
+    if (isDirectViemEthersAllowlisted(physicalPath)) {
+      return {}
+    }
+    function reportIfDirect(node, source) {
+      if (isDirectViemEthersSource(source)) {
+        context.report({
+          node,
+          message: 'Import from `@universe/chains` instead, not viem/ethers directly.',
+        })
+      }
+    }
+    return {
+      ImportDeclaration(node) {
+        reportIfDirect(node, node.source?.value)
+      },
+      ImportExpression(node) {
+        if (node.source?.type !== 'Literal' || typeof node.source.value !== 'string') {
+          return
+        }
+        reportIfDirect(node.source, node.source.value)
+      },
+    }
+  },
+}
+
 // ── Plugin export ──────────────────────────────────────────────────────
 
 const plugin = {
@@ -1062,6 +1183,7 @@ const plugin = {
     'no-redux-modals': noReduxModals,
     'no-relative-import-paths': noRelativeImportPaths,
     'import-boundary': importBoundary,
+    'no-direct-viem-ethers-import': noDirectViemEthersImport,
     'no-nested-component-definitions': noNestedComponentDefinitions,
     'jsx-prop-order': jsxPropOrder,
     'enum-member-naming': enumMemberNaming,

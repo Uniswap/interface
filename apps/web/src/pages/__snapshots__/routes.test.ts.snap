@@ -179,15 +179,9 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/positions/add/:chainName/:poolAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
+    "nestedPaths": [
+      ":chainName/:poolAddress",
+    ],
     "path": "/positions/add",
   },
   {

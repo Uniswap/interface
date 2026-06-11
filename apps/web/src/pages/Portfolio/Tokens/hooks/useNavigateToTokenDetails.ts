@@ -5,6 +5,7 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 /**
  * `Currency` is `NativeCurrency | Token`; `keyof Currency` omits `address` (native has no address), so
@@ -14,11 +15,11 @@ export type TokenDetailsNavigationInput = Currency | { chainId: number; address:
 
 export function useNavigateToTokenDetails(): (
   currency: Maybe<TokenDetailsNavigationInput>,
-  chainFilter?: UniverseChainId,
+  chainFilter?: UniverseChainId | null,
 ) => void {
   const navigate = useNavigate()
 
-  return useEvent((currency: Maybe<TokenDetailsNavigationInput>, chainFilter?: UniverseChainId) => {
+  return useEvent((currency: Maybe<TokenDetailsNavigationInput>, chainFilter?: UniverseChainId | null) => {
     if (!currency) {
       return
     }
@@ -26,7 +27,12 @@ export function useNavigateToTokenDetails(): (
     const url = getTokenDetailsURL({
       address: currency.isNative ? null : currency.address,
       chain: toGraphQLChain(currency.chainId),
-      chainQueryParam: chainFilter ? getChainUrlParam(chainFilter) : undefined,
+      chainQueryParam:
+        chainFilter === null
+          ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE
+          : chainFilter !== undefined && chainFilter !== currency.chainId
+            ? getChainUrlParam(chainFilter)
+            : undefined,
     })
     navigate(url)
   })

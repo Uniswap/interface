@@ -1,5 +1,5 @@
 import type { MutableRefObject, RefObject } from 'react'
-import { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import type { TextInputProps } from 'react-native'
 import { AnimatePresence, type ButtonProps, Flex, type FlexProps, useMedia } from 'ui/src'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
@@ -246,7 +246,7 @@ function SwapFormDecimalPadContent({
   )
 }
 
-export function SwapFormDecimalPad(): JSX.Element {
+export const SwapFormDecimalPad = memo(function SwapFormDecimalPad(): JSX.Element {
   const {
     decimalPadRef,
     inputSelectionRef,
@@ -276,4 +276,4 @@ export function SwapFormDecimalPad(): JSX.Element {
       onDecimalPadTriggerInputShake={onDecimalPadTriggerInputShake}
     />
   )
-}
+})

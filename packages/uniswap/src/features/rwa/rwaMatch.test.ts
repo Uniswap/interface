@@ -14,10 +14,14 @@ const TSLA_TOKEN: RWAToken = {
   chainId: MAINNET_CHAIN_ID,
   address: TSLA_MAINNET_ADDRESS,
   issuer: 'ondo',
+  name: 'Ondo',
+  symbol: 'TSLA.on',
+  logoUrl: 'https://example.com/tsla-ondo.png',
 }
 
 const TSLA_ASSET: RWAAsset = {
   symbol: 'TSLA',
+  name: 'Tesla',
   icon: 'https://example.com/tesla.png',
   tokens: [TSLA_TOKEN],
 }
@@ -74,12 +78,16 @@ describe(findRWAMatch, () => {
     const rwaWhitelist: RWAWhitelist = [
       {
         symbol: 'TSLA',
+        name: 'Tesla',
         icon: 'https://example.com/tesla.png',
         tokens: [
           {
             chainId: SOLANA_CHAIN_ID,
             address: TSLA_SOLANA_ADDRESS,
             issuer: 'ondo',
+            name: 'Ondo',
+            symbol: 'TSLA.on',
+            logoUrl: 'https://example.com/tsla-ondo.png',
           },
         ],
       },

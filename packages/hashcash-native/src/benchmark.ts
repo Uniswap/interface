@@ -1,10 +1,10 @@
+/* oxlint-disable no-console -- dev only file */
 /**
  * Hashcash Benchmark Utility
  *
  * Compares native vs JS hashcash implementation performance.
  * Run this in your app to measure the speedup from native code.
  */
-/* oxlint-disable no-console -- dev only file */
 
 import { HashcashNative } from './index'
 

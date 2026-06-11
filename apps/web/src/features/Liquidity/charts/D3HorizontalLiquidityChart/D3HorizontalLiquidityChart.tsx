@@ -6,6 +6,7 @@ import { Flex, useSporeColors } from 'ui/src'
 import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
 import { TickTooltipContent } from '~/features/Liquidity/charts/ActiveLiquidityChart/TickTooltip'
 import { useHorizontalLiquidityChartInteractions } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/hooks/useHorizontalLiquidityChartInteractions'
+import type { HorizontalLiquidityScaleSmoothing } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/types'
 import {
   useHorizontalLiquidityChartSelector,
   useHorizontalLiquidityChartStoreActions,
@@ -51,6 +52,8 @@ function D3HorizontalLiquidityChartInner({
   const chartId = useId()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
+  // Ephemeral height-scale easing state; a ref so it survives the per-frame renderer re-init.
+  const liquidityScaleSmoothingRef = useRef<HorizontalLiquidityScaleSmoothing>({})
   const [chartWidth, setChartWidth] = useState(0)
   const [hoveredY, setHoveredY] = useState<number | undefined>(undefined)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
@@ -122,6 +125,11 @@ function D3HorizontalLiquidityChartInner({
     () => () => {
       if (drawRafRef.current !== undefined) {
         cancelAnimationFrame(drawRafRef.current)
+      }
+      const smoothing = liquidityScaleSmoothingRef.current
+      if (smoothing.settleFrameId !== undefined) {
+        cancelAnimationFrame(smoothing.settleFrameId)
+        smoothing.settleFrameId = undefined
       }
     },
     [],
@@ -249,6 +257,16 @@ function D3HorizontalLiquidityChartInner({
 
     const g = svg.append('g')
 
+    // New data/dimensions: drop any in-flight height-scale easing so the first draw snaps to the
+    // fresh target instead of animating from the previous scale.
+    const smoothing = liquidityScaleSmoothingRef.current
+    if (smoothing.settleFrameId !== undefined) {
+      cancelAnimationFrame(smoothing.settleFrameId)
+    }
+    smoothing.displayedMaxLiquidity = undefined
+    smoothing.lastFrameTimeMs = undefined
+    smoothing.settleFrameId = undefined
+
     const renderingContext = {
       chartId,
       colors,
@@ -263,6 +281,7 @@ function D3HorizontalLiquidityChartInner({
       quoteCurrency,
       priceInverted,
       protocolVersion,
+      liquidityScaleSmoothing: smoothing,
     }
 
     initializeRenderers({ g, context: renderingContext })

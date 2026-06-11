@@ -7,6 +7,10 @@ import { SwipeableCardProps } from 'ui/src/components/swipeablecards/props'
 const screenWidth = Dimensions.get('window').width
 const panXOffsetThreshold = screenWidth / 4
 
+/** Slop (points): horizontal swipe must exceed this before pan activates;
+ * Resolves a conflict between onboarding card stack and home screen vertical list scroll. */
+const PAN_ACTIVATION_SLOP_PX = 2
+
 export function SwipeableCard({
   children,
   stackIndex,
@@ -20,6 +24,8 @@ export function SwipeableCard({
   const panOffset = useSharedValue(0)
   const pan = Gesture.Pan()
     .enabled(!disableSwipe)
+    .activeOffsetX([-PAN_ACTIVATION_SLOP_PX, PAN_ACTIVATION_SLOP_PX])
+    .failOffsetY([-PAN_ACTIVATION_SLOP_PX, PAN_ACTIVATION_SLOP_PX])
     .onChange((event) => {
       panOffset.value = event.translationX
     })

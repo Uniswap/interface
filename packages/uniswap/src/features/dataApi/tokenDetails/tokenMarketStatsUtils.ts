@@ -7,6 +7,8 @@ export interface TokenMarketStats {
   marketCap: number | undefined
   fdv: number | undefined
   volume: number | undefined
+  // 'project' = CoinGecko, aggregated across networks; 'market' = Uniswap fallback.
+  volumeSource: 'project' | 'market' | undefined
   high52w: number | undefined
   low52w: number | undefined
 }
@@ -54,6 +56,14 @@ export function computeTokenMarketStats(params: {
   const marketCap = projectMarket?.marketCap?.value ?? undefined
   const fdv = projectMarket?.fullyDilutedValuation?.value ?? undefined
   const volume = preferProjectMarketData ? (projectMarketVolume ?? marketVolume) : marketVolume
+  let volumeSource: TokenMarketStats['volumeSource']
+  if (preferProjectMarketData && projectMarketVolume !== undefined) {
+    volumeSource = 'project'
+  } else if (volume !== undefined) {
+    volumeSource = 'market'
+  } else {
+    volumeSource = undefined
+  }
   const rawHigh52w = projectMarket?.priceHigh52W?.value ?? market?.priceHigh52W?.value ?? undefined
   const rawLow52w = projectMarket?.priceLow52W?.value ?? market?.priceLow52W?.value ?? undefined
   const { high52w, low52w } = clamp52wWithCurrentPrice({
@@ -61,5 +71,5 @@ export function computeTokenMarketStats(params: {
     rawHigh: rawHigh52w,
     rawLow: rawLow52w,
   })
-  return { marketCap, fdv, volume, high52w, low52w }
+  return { marketCap, fdv, volume, volumeSource, high52w, low52w }
 }

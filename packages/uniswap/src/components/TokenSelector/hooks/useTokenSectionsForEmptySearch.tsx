@@ -13,7 +13,7 @@ import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRece
 export function useTokenSectionsForEmptySearch({
   addresses,
   chainFilter,
-}: Omit<TokenSectionsHookProps, 'oppositeSelectedToken'>): GqlResult<OnchainItemSection<TokenOption>[]> {
+}: Omit<TokenSectionsHookProps, 'oppositeSelectedToken' | 'variation'>): GqlResult<OnchainItemSection<TokenOption>[]> {
   const portfolioData = usePortfolioBalancesForAddressById(addresses)
   const { data: trendingTokenOptions, loading } = useTrendingTokensOptions({ chainFilter, portfolioData })
 

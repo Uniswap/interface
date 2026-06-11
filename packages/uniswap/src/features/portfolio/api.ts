@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
-import { SharedQueryClient } from '@universe/api'
+import { SharedQueryClient, tryProvideSession } from '@universe/api'
 import { DynamicConfigs, getDynamicConfigValue, SyncTransactionSubmissionChainIdsConfigKey } from '@universe/gating'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
@@ -25,7 +25,10 @@ import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currenc
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
+const createProvider = createEthersProviderFactory({
+  resolveRpcConfig: defaultResolveRpcConfig,
+  getSessionGate: tryProvideSession,
+})
 
 export type BalanceLookupParams = {
   currencyAddress: Address

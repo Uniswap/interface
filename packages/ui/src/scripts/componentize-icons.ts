@@ -1,7 +1,8 @@
 /* oxlint-disable no-console -- misc script, so it's okay */
 /* oxlint-disable typescript/no-explicit-any -- misc script, so it's okay */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path, { join } from 'node:path'
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
@@ -17,6 +18,31 @@ import uppercamelcase from 'uppercamelcase'
 interface DirectoryPair {
   input: string
   output: string
+}
+
+const TAG_MAP: Record<string, string> = {
+  svg: 'Svg',
+  circle: 'Circle',
+  ellipse: 'Ellipse',
+  g: 'G',
+  // Source SVGs use the camelCase form. The kebab-case keys are kept for safety in case
+  // a future cheerio upgrade ever serializes these tags in kebab-case form.
+  linearGradient: 'LinearGradient',
+  radialGradient: 'RadialGradient',
+  'linear-gradient': 'LinearGradient',
+  'radial-gradient': 'RadialGradient',
+  path: 'Path',
+  line: 'Line',
+  polygon: 'Polygon',
+  polyline: 'Polyline',
+  rect: 'Rect',
+  symbol: 'Symbol',
+  text: 'Text',
+  use: 'Use',
+  defs: 'Defs',
+  stop: 'Stop',
+  clipPath: 'ClipPath',
+  mask: 'Mask',
 }
 
 // Main Loop
@@ -37,47 +63,48 @@ async function run(): Promise<void> {
     },
   ]
 
-  for (const dirPair of svgDirPairs) {
-    await createSVGComponents(dirPair, skipExisting)
-  }
+  await Promise.all(svgDirPairs.map((dirPair) => createSVGComponents(dirPair, skipExisting)))
 }
 
 // Logic Functions
 
 async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): Promise<void> {
   // Ensure output directory exists
-  mkdirSync(dirs.output, { recursive: true })
+  await mkdir(dirs.output, { recursive: true })
 
+  const fileNames = (await readdir(dirs.input)).filter((name: string) => name.endsWith('.svg')).sort()
+
+  // Parse + write every SVG in parallel; libuv handles the disk fanout fine for a few hundred files.
+  await Promise.all(
+    fileNames.map(async (fileName) => {
+      const className = generateClassName(fileName)
+      const outputPath = path.join(dirs.output, `${className}.tsx`)
+
+      if (skipExisting && existsSync(outputPath)) {
+        return
+      }
+
+      const inputPath = join(dirs.input, fileName)
+      const svg = await readFile(inputPath, 'utf-8')
+      const element = generateSVGComponentString(svg, fileName)
+      if (element) {
+        console.log(`🦄 ${fileName}`)
+        await writeFile(outputPath, element, 'utf-8')
+      }
+    }),
+  )
+
+  // Build the index file from the sorted SVG list so output is deterministic regardless of
+  // the order in which the parallel writes above resolved.
   let indexFile = ``
-  const fileNames = readdirSync(dirs.input)
-    .filter((name: string) => name.endsWith('.svg'))
-    .sort()
-
   for (const fileName of fileNames) {
-    const className = generateClassName(fileName)
-    const inputPath = join(dirs.input, fileName)
-    const outputPath = path.join(dirs.output, `${className}.tsx`)
-
-    // Add to index file even if it exists
-    indexFile += `\nexport * from './${className}'`
-
-    if (skipExisting && existsSync(outputPath)) {
-      continue
-    }
-
-    // Generate and write file (without formatting)
-    const svg = readFileSync(inputPath, 'utf-8')
-    const element = generateSVGComponentString(svg, fileName)
-    if (element) {
-      console.log(`🦄 ${fileName}`)
-      writeFileSync(outputPath, element, 'utf-8')
-    }
+    indexFile += `\nexport * from './${generateClassName(fileName)}'`
   }
 
   // Also export hand-written components that exist in the output directory
   // but don't have corresponding SVG sources (e.g. multi-color logos)
   const generatedClassNames = new Set(fileNames.map(generateClassName))
-  const existingComponents = readdirSync(dirs.output)
+  const existingComponents = (await readdir(dirs.output))
     .filter((name: string) => name.endsWith('.tsx'))
     .map((name: string) => path.basename(name, '.tsx'))
     .filter((name: string) => !generatedClassNames.has(name))
@@ -92,7 +119,7 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
   // Write index file (without formatting)
   console.log('Writing index file...')
   const indexPath = join(dirs.output, 'exported.ts')
-  writeFileSync(indexPath, indexFile, 'utf-8')
+  await writeFile(indexPath, indexFile, 'utf-8')
 }
 
 // Core SVG File Generation
@@ -113,106 +140,67 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
   const attribsOfInterest: Record<string, any> = {}
 
-  Object.keys(svgAttribs).forEach((key) => {
+  for (const key of Object.keys(svgAttribs)) {
     if (!['height', 'width', 'viewBox', 'fill', 'stroke-width', 'stroke-linecap', 'stroke-linejoin'].includes(key)) {
       attribsOfInterest[key] = svgAttribs[key]
     }
-  })
+  }
 
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
   $('*').each((_, el: any) => {
-    Object.keys(el.attribs).forEach((x) => {
-      if (x.includes('-')) {
-        $(el).attr(camelcase(x), el.attribs[x]).removeAttr(x)
+    const a = el.attribs
+    for (const k of Object.keys(a)) {
+      if (k.includes('-')) {
+        a[camelcase(k)] = a[k]
+        delete a[k]
       }
-      if (x === 'stroke') {
-        $(el).attr(x, 'currentColor')
+      if (k === 'stroke') {
+        a[k] = 'currentColor'
       }
-    })
-
-    // For every element that is NOT svg ...
-    if (el.name !== 'svg') {
-      Object.keys(attribsOfInterest).forEach((key) => {
-        $(el).attr(camelcase(key), attribsOfInterest[key])
-      })
     }
 
     if (el.name === 'svg') {
-      $(el).attr('otherProps', '...')
+      a.otherProps = '...'
+    } else {
+      for (const key of Object.keys(attribsOfInterest)) {
+        a[camelcase(key)] = attribsOfInterest[key]
+      }
     }
   })
 
-  const parsedSvgToReact = $('svg')
-    .toString()
+  const rawSerialized = $('svg').toString()
+  // Capture first explicit fill color before we rewrite all fills to currentColor.
+  const defaultFill = rawSerialized.match(/fill="(#[a-z0-9]+)"/i)?.[1]
+
+  // Track which react-native-svg components actually appear in the output so we can emit
+  // a tight import list. Without this, format:generated needs 3 oxlint passes just to
+  // prune the kitchen-sink import block — emitting only-used imports lets us drop it.
+  const usedComponents = new Set<string>()
+
+  const parsedSvgToReact = rawSerialized
     .replace(/ class="[^"]+"/g, '')
     .replace(/ version="[^"]+"/g, '')
     .replace(/width="[0-9]+"/, '')
     .replace(/height="[0-9]+"/, '')
-    .replace('<svg', '<Svg')
-    .replace('</svg', '</Svg')
-    .replace(/<circle/g, '<Circle')
-    .replace(/<\/circle/g, '</Circle')
-    .replace(/<ellipse/g, '<Ellipse')
-    .replace(/<\/ellipse/g, '</Ellipse')
-    .replace(/<g/g, '<G')
-    .replace(/<\/g/g, '</G')
-    .replace(/<linear-gradient/g, '<LinearGradient')
-    .replace(/<\/linear-gradient/g, '</LinearGradient')
-    .replace(/<radial-gradient/g, '<RadialGradient')
-    .replace(/<\/radial-gradient/g, '</RadialGradient')
-    .replace(/<path/g, '<Path')
-    .replace(/<\/path/g, '</Path')
-    .replace(/<line/g, '<Line')
-    .replace(/<\/line/g, '</Line')
-    .replace(/<polygon/g, '<Polygon')
-    .replace(/<\/polygon/g, '</Polygon')
-    .replace(/<polyline/g, '<Polyline')
-    .replace(/<\/polyline/g, '</Polyline')
-    .replace(/<rect/g, '<Rect')
-    .replace(/<\/rect/g, '</Rect')
-    .replace(/<symbol/g, '<Symbol')
-    .replace(/<\/symbol/g, '</Symbol')
-    .replace(/<text/g, '<Text')
-    .replace(/<\/text/g, '</Text')
-    .replace(/<use/g, '<Use')
-    .replace(/<\/use/g, '</Use')
-    .replace(/<defs/g, '<Defs')
-    .replace(/<\/defs/g, '</Defs')
-    .replace(/<stop/g, '<Stop')
-    .replace(/<\/stop/g, '</Stop')
-    .replace(/<clipPath/g, '<ClipPath')
-    .replace(/<\/clipPath/g, '</ClipPath')
-    .replace(/<mask/g, '<Mask')
-    .replace(/<\/mask/g, '</Mask')
+    .replace(/<(\/?)([a-zA-Z-]+)(?=[\s>/])/g, (m, slash, tag) => {
+      const mapped = TAG_MAP[tag]
+      if (!mapped) {
+        return m
+      }
+      usedComponents.add(mapped)
+      return `<${slash}${mapped}`
+    })
     .replace(/px/g, '')
     .replace(/style="mask-type:luminance"/g, "style={{ maskType: 'luminance' }}")
+    .replace(/fill="(#[a-z0-9]+)"/gi, 'fill="currentColor"')
+    .replace(/xmlns:xlink="http:\/\/www\.w3\.org\/1999\/xlink"/g, '')
+    .replace(/xlink:href/g, 'xlinkHref')
 
-  const foundFills = Array.from(parsedSvgToReact.matchAll(/fill="(#[a-z0-9]+)"/gi)).flat()
-  const defaultFill = foundFills[1]
+  const importList = [...usedComponents].sort().join(',\n')
 
   return `
-import React, { memo, forwardRef } from 'react'
-import PropTypes from 'prop-types'
 import {
-Svg,
-SvgProps,
-Ellipse,
-G,
-LinearGradient,
-RadialGradient,
-Line,
-Mask,
-Path,
-Polygon,
-Polyline,
-Rect,
-Symbol,
-Use,
-Defs,
-Stop,
-ClipPath,
-Text,
-Circle,
+${importList}
 } from 'react-native-svg'
 
 // oxlint-disable-next-line universe-custom/no-relative-import-paths
@@ -226,9 +214,6 @@ getIcon: (props) => (
 ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 })
 `
-    .replace(/fill="(#[a-z0-9]+)"/gi, `fill="currentColor"`)
-    .replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
-    .replaceAll(`xlink:href`, 'xlinkHref')
 }
 
 // Helpers
@@ -239,4 +224,7 @@ function generateClassName(fileName: string): string {
 
 // This must be at the end to run all code
 
-run().catch(() => undefined)
+run().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})

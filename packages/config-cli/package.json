@@ -34,8 +34,8 @@
     "check": "nx check config-cli",
     "check:fast": "nx check:fast config-cli",
     "check:deps:usage": "nx check:deps:usage config-cli",
-    "format": "nx format config-cli",
-    "format:check": "nx format:check config-cli",
+    "format": "nx run config-cli:format",
+    "format:check": "nx run config-cli:format:check",
     "lint": "nx lint config-cli",
     "lint:fix": "nx lint:fix config-cli",
     "test": "nx test config-cli"

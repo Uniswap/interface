@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { curveCardinal, scaleLinear } from 'd3'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Skeleton, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Skeleton, Text, useSporeColors } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -241,7 +241,16 @@ export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolD
   )
 }
 
-export function PoolInfoCard({ poolData, loading }: { poolData?: PoolData; loading?: boolean }) {
+export function PoolInfoCard({
+  poolData,
+  loading,
+  onAddLiquidity,
+}: {
+  poolData?: PoolData
+  loading?: boolean
+  onAddLiquidity?: () => void
+}) {
+  const { t } = useTranslation()
   const currency0 = useMemo(() => (poolData ? gqlToCurrency(poolData.token0) : undefined), [poolData])
   const currency1 = useMemo(() => (poolData ? gqlToCurrency(poolData.token1) : undefined), [poolData])
 
@@ -281,6 +290,11 @@ export function PoolInfoCard({ poolData, loading }: { poolData?: PoolData; loadi
       </Flex>
 
       <PoolStatsContent poolData={poolData} />
+      {onAddLiquidity && (
+        <Button variant="branded" emphasis="primary" fill={false} onPress={onAddLiquidity}>
+          <Button.Text>{t('common.addLiquidity')}</Button.Text>
+        </Button>
+      )}
     </Flex>
   )
 }

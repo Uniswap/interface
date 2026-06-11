@@ -51,13 +51,13 @@ describe('processSectionsToRows', () => {
     row.type === ProcessedRowType.Item
 
   it('processes an empty array of sections', () => {
-    const result = processSectionsToRows([])
+    const result = processSectionsToRows({ sections: [] })
     expect(result).toEqual([])
   })
 
   it('processes a single section with one item', () => {
     const section = createMockTokenSection(OnchainItemSectionName.YourTokens, [mockTokenOption], 'Your Tokens')
-    const result = processSectionsToRows([section])
+    const result = processSectionsToRows({ sections: [section] })
 
     expect(result).toHaveLength(2) // Header + 1 Item
 
@@ -84,7 +84,7 @@ describe('processSectionsToRows', () => {
       createMockTokenSection(OnchainItemSectionName.TrendingTokens, [mockTokenOption], 'Trending Tokens'),
     ]
 
-    const result = processSectionsToRows(sections)
+    const result = processSectionsToRows({ sections })
 
     expect(result).toHaveLength(5) // (Header + 2 Items) + (Header + 1 Item)
 
@@ -130,7 +130,7 @@ describe('processSectionsToRows', () => {
       endElement,
     }
 
-    const result = processSectionsToRows([section])
+    const result = processSectionsToRows({ sections: [section] })
     const [header] = result
 
     if (!header || !isHeaderRow(header)) {
@@ -149,7 +149,7 @@ describe('processSectionsToRows', () => {
       sectionHeaderHeight: 104,
     }
 
-    const [header] = processSectionsToRows([section])
+    const [header] = processSectionsToRows({ sections: [section] })
 
     if (!header || !isHeaderRow(header)) {
       throw new Error('Expected header to be defined and of type Header')
@@ -168,7 +168,7 @@ describe('processSectionsToRows', () => {
     }))
 
     const section = createMockTokenSection(OnchainItemSectionName.YourTokens, tokens)
-    const result = processSectionsToRows([section])
+    const result = processSectionsToRows({ sections: [section] })
     const items = result.filter(isItemRow)
 
     items.forEach((item, index) => {
@@ -183,7 +183,7 @@ describe('processSectionsToRows', () => {
     const section = createMockTokenSection(OnchainItemSectionName.YourTokens, [mockTokenOption])
     delete section.name // Remove the name property
 
-    const result = processSectionsToRows([section])
+    const result = processSectionsToRows({ sections: [section] })
     const [header] = result
 
     if (!header || !isHeaderRow(header)) {

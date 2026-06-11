@@ -1,5 +1,3 @@
-// TODO(MOB-203): reduce component complexity
-/* oxlint-disable complexity */
 import { BigNumber } from '@ethersproject/bignumber'
 import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi } from '@universe/api'
@@ -40,6 +38,7 @@ interface TokenMovementParseOptions {
   isVault?: boolean
 }
 
+// oxlint-disable-next-line complexity -- TODO(MOB-203): reduce complexity
 export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
 ): ConfirmedSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {

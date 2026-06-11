@@ -1,21 +1,30 @@
 import { Transport } from '@connectrpc/connect'
 import { ConnectTransportOptions } from '@connectrpc/connect-web'
 import { getEntryGatewayUrl, getTransport } from '@universe/api'
+import { tryProvideSession } from '@universe/api'
 import { isWebApp, Environment } from '@universe/environment'
+import { SessionGateSource, type Session } from '@universe/sessions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 
 export function createConnectTransportWithDefaults({
   options = {},
   getBaseUrlOverride,
+  getSession,
+  source,
 }: {
   options?: Partial<ConnectTransportOptions>
   getBaseUrlOverride?: () => string
+  getSession?: () => Session | null
+  /** Telemetry identifier for the gate's emitted events. */
+  source?: string
 }): Transport {
   return getTransport({
     getBaseUrl: getBaseUrlOverride ?? ((): string => uniswapUrls.apiBaseUrlV2),
     getHeaders: () => BASE_UNISWAP_HEADERS,
     options,
+    getSession,
+    source,
   })
 }
 
@@ -52,11 +61,18 @@ export const dataApiPostTransport = createConnectTransportWithDefaults({
 
 /**
  * ConnectRPC transport for services behind the entry-gateway (sessions-authenticated).
+ *
+ * Gated via `getSessionGate`: when the session is bootstrapped, every call
+ * awaits session ready and retries once on 401. When the session isn't
+ * available yet, passes through. The SessionService itself is excluded
+ * inside the gate to avoid a recovery deadlock.
  */
 export const entryGatewayPostTransport = createConnectTransportWithDefaults({
   // Web uses cookies (credentials: 'include'), while mobile/extension use session headers (via getTransport interceptor).
   options: isWebApp ? { credentials: 'include' } : undefined,
   getBaseUrlOverride: getEntryGatewayUrl,
+  getSession: tryProvideSession,
+  source: SessionGateSource.ConnectRpcEntryGateway,
 })
 
 /**
@@ -68,4 +84,6 @@ export const entryGatewayProdPostTransport = createConnectTransportWithDefaults(
   // Web uses cookies (credentials: 'include'), while mobile/extension use session headers (via getTransport interceptor).
   options: isWebApp ? { credentials: 'include' } : undefined,
   getBaseUrlOverride: () => getEntryGatewayUrl({ env: Environment.Production }),
+  getSession: tryProvideSession,
+  source: SessionGateSource.ConnectRpcEntryGatewayProd,
 })

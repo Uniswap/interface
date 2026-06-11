@@ -19,6 +19,7 @@ import { CrosschainSwapsPromoBanner } from 'uniswap/src/components/TokenSelector
 import { useClipboardCheck } from 'uniswap/src/components/TokenSelector/hooks/useClipboardCheck'
 import { useTokenSelectionHandler } from 'uniswap/src/components/TokenSelector/hooks/useTokenSelectionHandler'
 import { TokenSelectorListSwitch } from 'uniswap/src/components/TokenSelector/TokenSelectorListSwitch'
+import type { OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
 import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { UnsupportedChainedActionsBanner } from 'uniswap/src/components/TokenSelector/UnsupportedChainedActionsBanner'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
@@ -67,6 +68,7 @@ export interface TokenSelectorProps {
     allowCrossChainPair: boolean
     isPreselectedAsset: boolean
   }) => void
+  onSelectRwaToken?: OnSelectRwaToken
 }
 
 function TokenSelectorNetworkFilter({
@@ -98,6 +100,7 @@ export function TokenSelectorContent({
   onClose,
   onSelectChain,
   onSelectCurrency,
+  onSelectRwaToken,
   renderedInModal,
 }: Omit<TokenSelectorProps, 'isModalOpen'> & {
   renderedInModal: boolean
@@ -250,6 +253,7 @@ export function TokenSelectorContent({
                   debouncedSearchFilter={debouncedSearchFilter}
                   parsedChainFilter={parsedChainFilter}
                   onSelectCurrency={onSelectCurrencyCallback}
+                  onSelectRwaToken={onSelectRwaToken}
                   onSendEmptyActionPress={onSendEmptyActionPress}
                 />
               </>

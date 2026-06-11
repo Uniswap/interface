@@ -8,7 +8,7 @@ import {
   useFormattedDateTime,
   useLocalizedDayjs,
 } from 'uniswap/src/features/language/localizedDayjs'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 import { DetailLineItem, LineItemData } from '~/components/DetailLineItem'
 import { LoadingRow } from '~/components/Loader/styled'
@@ -129,7 +129,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => (
           <>
-            {t('common.fee')} {trade.swapFee && `(${formatPercent(trade.swapFee.percent.toSignificant())})`}
+            {t('common.fee')} {trade.swapFee && `(${formatPercent(trade.swapFee.percent.toSignificant(), 2)})`}
           </>
         ),
         TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,

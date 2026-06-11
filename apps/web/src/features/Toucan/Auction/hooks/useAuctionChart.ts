@@ -20,7 +20,6 @@ export function useAuctionChart({ enabled = true }: { enabled?: boolean } = {}) 
   const containerRef = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<IChartApi | null>(null)
 
-  /* oxlint-disable react-hooks/exhaustive-deps -- colors excluded: initial values used at creation, second effect handles theme updates via applyOptions */
   useEffect(() => {
     const container = containerRef.current
     if (!container || !enabled) {
@@ -73,8 +72,8 @@ export function useAuctionChart({ enabled = true }: { enabled?: boolean } = {}) 
       newChart.remove()
       setChart(null)
     }
+    /* oxlint-disable-next-line react-hooks/exhaustive-deps -- colors excluded: initial values used at creation, second effect handles theme updates via applyOptions */
   }, [enabled])
-  /* oxlint-enable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     if (!chart) {

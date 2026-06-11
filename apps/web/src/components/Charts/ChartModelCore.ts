@@ -274,7 +274,14 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
       handleScale: { mouseWheel: false, pinch: true, axisPressedMouseMove: false },
     }
 
-    this.api.applyOptions({ ...defaultOptions, ...nonDefaultChartOptions })
+    this.api.applyOptions({
+      ...defaultOptions,
+      ...nonDefaultChartOptions,
+      timeScale: {
+        ...defaultOptions.timeScale,
+        ...nonDefaultChartOptions?.timeScale,
+      },
+    })
   }
 
   /** Updates visible range to fit all data from all series. */

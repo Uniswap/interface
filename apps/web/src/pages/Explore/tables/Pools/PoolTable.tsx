@@ -1,5 +1,4 @@
-/* oxlint-disable typescript/no-unnecessary-condition */
-/* oxlint-disable max-lines */
+/* oxlint-disable typescript/no-unnecessary-condition max-lines */
 
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper, Row } from '@tanstack/react-table'
@@ -305,6 +304,7 @@ export function PoolsTable({
   maxWidth,
   maxHeight,
   hiddenColumns,
+  hideIndex,
   forcePinning,
   getLink,
   linkState,
@@ -316,12 +316,14 @@ export function PoolsTable({
   maxWidth?: number
   maxHeight?: number
   hiddenColumns?: PoolSortFields[]
+  hideIndex?: boolean
   forcePinning?: boolean
   getLink?: (pool: PoolLinkData) => string
   linkState?: { entryPoint?: string }
 }) {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isLPIncentivesTablesColumnEnabled = useFeatureFlag(FeatureFlags.LpIncentivesTablesColumn)
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const { formatPercent, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
@@ -386,7 +388,7 @@ export function PoolsTable({
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     const filteredColumns = [
-      !media.lg
+      !media.lg && !hideIndex
         ? columnHelper.accessor((row) => row.index, {
             id: 'index',
             size: 60,
@@ -422,7 +424,7 @@ export function PoolsTable({
       }),
       columnHelper.accessor((row) => row.protocolVersion, {
         id: 'protocolVersion',
-        size: 80,
+        size: 68,
         header: () => (
           <HeaderCell justifyContent="flex-end">
             <Text variant="body3" color="$neutral2">
@@ -496,7 +498,7 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled
+      !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled && isLPIncentivesTablesColumnEnabled
         ? columnHelper.accessor((row) => row.rewardApr, {
             id: PoolSortFields.RewardApr,
             size: 120,
@@ -602,7 +604,9 @@ export function PoolsTable({
   }, [
     media.lg,
     hiddenColumns,
+    hideIndex,
     isLPIncentivesEnabled,
+    isLPIncentivesTablesColumnEnabled,
     showLoadingSkeleton,
     t,
     sortMethod,

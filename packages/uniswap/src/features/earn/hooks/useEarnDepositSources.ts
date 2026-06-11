@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import type { EarnDepositSourceOption, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { getEarnDepositSourceOptions } from 'uniswap/src/features/earn/utils'
+import { getEarnDepositSourceOptions, getEarnDepositSourceOptionsBySupport } from 'uniswap/src/features/earn/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
@@ -19,11 +19,15 @@ type UseEarnDepositSourcesResult = {
   balanceLookupHasData: boolean
   balanceLookupSettled: boolean
   depositSourceOptions: EarnDepositSourceOption[]
+  /** Includes unsupported-chain balances; use this only for informational UI. */
   hasAnyBalanceForUnderlying: boolean
+  /** Supported chains only; use this to decide whether the user can enter the deposit flow. */
+  hasSupportedBalanceForUnderlying: boolean
   projectCurrencyIds: string[]
   selectedDepositSource: EarnDepositSourceOption | undefined
   selectedDepositSourceCurrencyId: string | undefined
   setSelectedDepositSourceCurrencyId: (currencyId: string) => void
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
 }
 
 export function useEarnDepositSources({
@@ -47,7 +51,7 @@ export function useEarnDepositSources({
     skip: shouldSkipLookups || !walletAddress,
   })
 
-  const depositSourceOptions = useMemo<EarnDepositSourceOption[]>(() => {
+  const allDepositSourceOptions = useMemo<EarnDepositSourceOption[]>(() => {
     if (!vault) {
       return []
     }
@@ -58,6 +62,10 @@ export function useEarnDepositSources({
       vault,
     })
   }, [portfolio.data, projectCurrencyIds, vault])
+  const { supportedDepositSourceOptions: depositSourceOptions, unsupportedDepositSourceOptions } = useMemo(
+    () => getEarnDepositSourceOptionsBySupport(allDepositSourceOptions),
+    [allDepositSourceOptions],
+  )
 
   // `initialSourceCurrencyId` seeds the initial pick once on mount. Callers that need to re-seed
   // (e.g. navigating back from the review sheet with a different source) trigger a fresh mount via
@@ -108,10 +116,12 @@ export function useEarnDepositSources({
     balanceLookupHasData,
     balanceLookupSettled,
     depositSourceOptions,
-    hasAnyBalanceForUnderlying: depositSourceOptions.length > 0,
+    hasAnyBalanceForUnderlying: allDepositSourceOptions.length > 0,
+    hasSupportedBalanceForUnderlying: depositSourceOptions.length > 0,
     projectCurrencyIds,
     selectedDepositSource,
     selectedDepositSourceCurrencyId,
     setSelectedDepositSourceCurrencyId,
+    unsupportedDepositSourceOptions,
   }
 }

@@ -59,6 +59,22 @@ export type HorizontalLiquidityRenderingContext = {
   quoteCurrency: Maybe<Currency>
   priceInverted: boolean
   protocolVersion: ProtocolVersion
+  /** Ephemeral state for smoothing the liquidity height-scale during scroll (see HorizontalLiquidityBarsRenderer). */
+  liquidityScaleSmoothing: HorizontalLiquidityScaleSmoothing
+}
+
+/**
+ * Ephemeral, view-only state used to low-pass the liquidity height-scale while scrolling.
+ * Lives on a stable ref (not in the store) so it survives the per-frame renderer re-init,
+ * without triggering React re-renders. See HorizontalLiquidityBarsRenderer for how it's applied.
+ */
+export type HorizontalLiquidityScaleSmoothing = {
+  /** Eased max-liquidity currently driving bar heights; undefined until the first draw / after reset. */
+  displayedMaxLiquidity?: number
+  /** Timestamp (ms) of the previous draw, for frame-rate-independent easing. */
+  lastFrameTimeMs?: number
+  /** Pending requestAnimationFrame id for the post-scroll settle loop. */
+  settleFrameId?: number
 }
 
 export type { Renderer }

@@ -7,6 +7,7 @@ import {
   type GasStrategy,
   type TransactionEip1559FeeParams,
   type TransactionLegacyFeeParams,
+  tryProvideSession,
 } from '@universe/api'
 import {
   DynamicConfigs,
@@ -30,7 +31,10 @@ import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveR
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { type Prettify } from 'viem'
 
-const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
+const createProvider = createEthersProviderFactory({
+  resolveRpcConfig: defaultResolveRpcConfig,
+  getSessionGate: tryProvideSession,
+})
 
 export enum GasSpeed {
   Normal = 'normal',

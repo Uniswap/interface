@@ -26,7 +26,7 @@ import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/w
 
 export function PortfolioChartDetailsScreen(): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
-  const displayName = useDisplayName(activeAccount.address, { includeUnitagSuffix: true })
+  const displayName = useDisplayName(activeAccount.address)
   const { chains } = useEnabledChains()
   const insets = useAppInsets()
   const queryClient = useQueryClient()
@@ -107,8 +107,8 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
           borderWidth="$spacing1"
         />
         <DisplayNameText
-          includeUnitagSuffix
           displayName={displayName}
+          unitagIconSize={iconSizes.icon16}
           flexShrink={1}
           textProps={{ ellipsizeMode: 'tail', numberOfLines: 1, variant: 'body3' }}
         />

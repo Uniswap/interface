@@ -1,6 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { isWebPlatform } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -19,6 +20,7 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/hooks/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/hooks/useToggleFavoriteCallback'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -27,7 +29,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress, currencyId, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { getTokenDetailsURL, type TDPView } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -49,7 +51,7 @@ export interface UseSearchTokenMenuItemsParams {
   closeMenu: () => void
   actions: TokenContextMenuAction[]
   /** Override the currency used for the share URL (e.g. for multichain "All networks" link). */
-  shareCurrencyInfo?: { currencyId: string; chainId: UniverseChainId }
+  shareCurrencyInfo?: { currencyId: string; chainId: UniverseChainId; tdpView?: TDPView }
   /** Override the copy address item entirely (e.g. for multichain address list transition). */
   copyAddressOverride?: {
     onPress: () => void | Promise<void>
@@ -77,23 +79,29 @@ export function useSearchTokenMenuItems({
     useUniswapContext()
   const dispatch = useDispatch()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const [copiedAddress, setCopiedAddress] = useState(false)
   const [copiedUrl, setCopiedUrl] = useState(false)
   const trace = useTrace()
 
   const id = currencyId(currency)
+  const tdpChainFilter = multichainTokenUxEnabled && isUniverseChainId(currency.chainId) ? currency.chainId : undefined
 
   const onNavigateToTokenDetails = useCallback(() => {
     if (isTestnetModeEnabled) {
       return
     }
     closeMenu()
-    navigateToTokenDetails(id)
+    if (tdpChainFilter === undefined) {
+      navigateToTokenDetails(id)
+    } else {
+      navigateToTokenDetails(id, tdpChainFilter)
+    }
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
       ...trace,
     })
-  }, [isTestnetModeEnabled, closeMenu, navigateToTokenDetails, id, trace])
+  }, [isTestnetModeEnabled, closeMenu, navigateToTokenDetails, id, tdpChainFilter, trace])
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(currencyAddress(currency))
@@ -143,6 +151,7 @@ export function useSearchTokenMenuItems({
         getTokenDetailsURL({
           address: currencyIdToAddress(shareId),
           chain: shareChain,
+          tdpView: shareCurrencyInfo?.tdpView,
         })
       await setClipboard(url)
       setCopiedUrl(true)
@@ -154,7 +163,7 @@ export function useSearchTokenMenuItems({
       handleShareToken({ currencyId: shareId })
       closeMenu()
     }
-  }, [closeMenu, handleShareToken, shareId, shareChain])
+  }, [closeMenu, handleShareToken, shareId, shareChain, shareCurrencyInfo?.tdpView])
 
   const copyAddressItem: MenuOptionItem | undefined = useMemo(() => {
     if (!actions.includes(TokenContextMenuAction.CopyAddress)) {

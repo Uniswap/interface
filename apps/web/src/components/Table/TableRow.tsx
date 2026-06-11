@@ -25,29 +25,55 @@ interface TableCellProps<T extends RowData> {
   v2?: boolean
   /** Passed so memo re-renders when row expansion toggles (cell reference may not change). */
   isExpanded?: boolean
+  embeddedInExpandableGroup?: boolean
+  embeddedInIssuerPanel?: boolean
+  extendedPinnedColumnDivider?: boolean
+  selected?: boolean
 }
 
 function TableCellComponent<T extends RowData>({
   cell,
   v2 = true,
   isExpanded: _isExpanded,
+  embeddedInExpandableGroup,
+  embeddedInIssuerPanel,
+  extendedPinnedColumnDivider,
+  selected,
 }: TableCellProps<T>): JSX.Element {
   const isPinned = cell.column.getIsPinned()
   const isFirstPinnedColumn = isPinned && cell.column.getIsFirstColumn('left')
   const colors = useSporeColors()
-  const { background, ...positionStyles } = getCommonPinningStyles({ column: cell.column, colors, v2, isHeader: false })
+  const { background, ...positionStyles } = getCommonPinningStyles({
+    column: cell.column,
+    colors,
+    v2,
+    isHeader: false,
+    embeddedInExpandableGroup,
+    hidePinnedColumnBorder: extendedPinnedColumnDivider,
+  })
 
   const overflowVisible = Boolean((cell.column.columnDef.meta as TableColumnMeta | undefined)?.overflowVisible)
 
+  // Pinned cells paint their own opaque background, so they must echo the row's selected fill
+  // ($surface3) — otherwise only the unpinned part of a selected row would be highlighted.
+  // Unpinned cells stay transparent and let the selected DataRow background show through.
   return (
     <CellContainer
       style={positionStyles}
-      backgroundColor={background}
+      backgroundColor={selected && isPinned ? '$surface3' : background}
       borderTopLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
       borderBottomLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
       overflow={overflowVisible ? 'visible' : 'hidden'}
       $group-hover={{
-        backgroundColor: isPinned && v2 ? '$surface1Hovered' : 'unset',
+        backgroundColor: selected
+          ? isPinned
+            ? '$surface3'
+            : 'unset'
+          : isPinned && v2 && embeddedInExpandableGroup
+            ? '$surface2Hovered'
+            : isPinned && v2 && !embeddedInIssuerPanel
+              ? '$surface1Hovered'
+              : 'unset',
       }}
     >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -67,6 +93,9 @@ interface TableRowProps<T extends RowData> {
   /** Passed so memo re-renders when expansion toggles (row reference may not change). */
   isExpanded?: boolean
   dimmed?: boolean
+  embeddedInExpandableGroup?: boolean
+  embeddedInIssuerPanel?: boolean
+  extendedPinnedColumnDivider?: boolean
 }
 
 function TableRowComponent<T extends RowData>({
@@ -78,16 +107,21 @@ function TableRowComponent<T extends RowData>({
   subRowHeight: propSubRowHeight,
   isExpanded: _isExpanded,
   dimmed,
+  embeddedInExpandableGroup,
+  embeddedInIssuerPanel,
+  extendedPinnedColumnDivider,
 }: TableRowProps<T>): JSX.Element {
   const analyticsContext = useTrace()
   const rowOriginal = row.original as {
     linkState: LinkProps['state']
     testId: string
+    selected?: boolean
     analytics?: {
       elementName: ElementName
       properties: Record<string, unknown>
     }
   }
+  const selected = rowOriginal.selected ?? false
   const { pathname } = useLocation()
   const navState = { ...rowOriginal.linkState, from: pathname }
 
@@ -102,9 +136,23 @@ function TableRowComponent<T extends RowData>({
       : (propRowHeight ?? ROW_HEIGHT_DESKTOP)
   }, [row.depth, propSubRowHeight, tableWidth, propCompactRowHeight, propRowHeight])
 
+  /** Shell owns background when expanded; collapsed parent uses `DataRow` hover (full scroll width). */
+  const embeddedInExpandableShell = embeddedInExpandableGroup && _isExpanded === true
+
   const cells = row
     .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} v2={v2} isExpanded={_isExpanded} />)
+    .map((cell: Cell<T, unknown>) => (
+      <TableCell<T>
+        key={cell.id}
+        cell={cell}
+        v2={v2}
+        isExpanded={_isExpanded}
+        embeddedInExpandableGroup={embeddedInExpandableShell}
+        embeddedInIssuerPanel={embeddedInIssuerPanel}
+        extendedPinnedColumnDivider={extendedPinnedColumnDivider}
+        selected={selected}
+      />
+    ))
 
   const rowContent = (
     <Trace
@@ -115,15 +163,30 @@ function TableRowComponent<T extends RowData>({
         ...analyticsContext,
       }}
     >
-      <Flex group>
+      <Flex {...(embeddedInIssuerPanel ? {} : { group: true })}>
         {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
           <TableRowLink to={rowOriginal.link} state={navState} data-testid={rowTestId}>
-            <DataRow height={rowHeight} v2={v2} dimmed={dimmed}>
+            <DataRow
+              height={rowHeight}
+              v2={v2}
+              dimmed={dimmed}
+              selected={selected}
+              embeddedInExpandableGroup={embeddedInExpandableShell}
+              embeddedInIssuerPanel={embeddedInIssuerPanel}
+            >
               {cells}
             </DataRow>
           </TableRowLink>
         ) : (
-          <DataRow height={rowHeight} data-testid={rowTestId} v2={v2} dimmed={dimmed}>
+          <DataRow
+            height={rowHeight}
+            data-testid={rowTestId}
+            v2={v2}
+            dimmed={dimmed}
+            selected={selected}
+            embeddedInExpandableGroup={embeddedInExpandableShell}
+            embeddedInIssuerPanel={embeddedInIssuerPanel}
+          >
             {cells}
           </DataRow>
         )}

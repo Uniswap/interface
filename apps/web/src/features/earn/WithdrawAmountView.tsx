@@ -1,13 +1,13 @@
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { Button, Flex, Text, useDynamicFontSizing } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEarnAmountValidation, getEarnFiatPercentageInput } from 'uniswap/src/features/earn/amount'
-import { WITHDRAW_DESTINATION_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/utils'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -19,6 +19,13 @@ import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { EARN_SELECTOR_DROPDOWN_MAX_HEIGHT } from '~/features/earn/constants'
+import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
+import {
+  getWithdrawDestinationBalanceUsd,
+  getWithdrawDestinationChainIds,
+} from '~/features/earn/withdrawDestinationChains'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import {
@@ -59,13 +66,25 @@ export function WithdrawAmountView({
   const { convertFiatAmount, convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const fiatCurrency = useAppFiatCurrency()
   const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const withdrawDestinationChainIds = useMemo(
+    () => getWithdrawDestinationChainIds({ isTestnetModeEnabled }),
+    [isTestnetModeEnabled],
+  )
+  const fallbackChainId = withdrawDestinationChainIds[0] ?? initialChainId
 
   // availableBalance is USD; convert to local fiat to match percent/over-balance/input.
   const availableBalanceLocal = convertFiatAmount(availableBalance).amount
 
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
-  const [chainId, setChainId] = useState<UniverseChainId>(initialChainId)
+  const [selectedChainId, setSelectedChainId] = useState<UniverseChainId>(initialChainId)
+  const chainId = withdrawDestinationChainIds.includes(selectedChainId) ? selectedChainId : fallbackChainId
+  const activeAddresses = useActiveAddresses()
+  const tieredNetworkOptions = useNetworkSelectorOptions({
+    addresses: activeAddresses,
+    chainIds: withdrawDestinationChainIds,
+  })
   const destinationCurrencyId = getEarnVaultWithdrawDestinationCurrencyId({
     vault,
     destinationChainId: chainId,
@@ -150,7 +169,11 @@ export function WithdrawAmountView({
     inputAmount: parsedAmount,
   })
 
-  const balanceLabel = `${convertFiatAmountFormatted(availableBalance, NumberType.FiatStandard)} ${t(
+  const selectedDestinationBalanceUsd = getWithdrawDestinationBalanceUsd({
+    chainId,
+    tieredNetworkOptions,
+  })
+  const balanceLabel = `${convertFiatAmountFormatted(selectedDestinationBalanceUsd ?? 0, NumberType.FiatStandard)} ${t(
     'explore.earn.deposit.available',
   )}`
 
@@ -197,7 +220,7 @@ export function WithdrawAmountView({
 
   const handleNetworkChange = useCallback((next: UniverseChainId | undefined) => {
     if (next) {
-      setChainId(next)
+      setSelectedChainId(next)
     }
   }, [])
 
@@ -206,15 +229,7 @@ export function WithdrawAmountView({
 
   return (
     <Flex gap="$spacing16">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea onPress={onBack} hoverable>
-          <BackArrow color="$neutral2" size="$icon.24" />
-        </TouchableArea>
-        <Text variant="body2" color="$neutral1">
-          {t('explore.earn.withdraw.title')}
-        </Text>
-        <ModalCloseIcon onClose={onClose} />
-      </Flex>
+      <EarnAmountViewHeader title={t('explore.earn.withdraw.title')} onBack={onBack} onClose={onClose} />
 
       <Flex gap="$spacing4">
         <Flex
@@ -305,7 +320,7 @@ export function WithdrawAmountView({
           </Flex>
           <Text variant="body3" color="$accent1">
             {t('explore.earn.vault.rateValue', {
-              apy: formatPercent(vault.apyPercent),
+              apy: formatPercent(vault.apyPercent, 2),
             })}
           </Text>
         </Flex>
@@ -326,13 +341,15 @@ export function WithdrawAmountView({
             {t('explore.earn.withdraw.to')}
           </Text>
           <NetworkFilter
-            networks={WITHDRAW_DESTINATION_CHAIN_IDS}
+            networks={withdrawDestinationChainIds}
             currentChainId={chainId}
             isTriggerStyled={false}
             showMultichainOption={false}
             position="right"
-            // Trigger sits near the bottom of the modal; flip the menu upward so it stays inside.
-            forceFlipUp
+            positionFixed
+            showSearch
+            tieredOptions={tieredNetworkOptions}
+            dropdownStyle={{ maxHeight: EARN_SELECTOR_DROPDOWN_MAX_HEIGHT }}
             onPress={handleNetworkChange}
             customTrigger={
               <Flex row alignItems="center" gap="$spacing6">

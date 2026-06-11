@@ -1,97 +1,86 @@
-import { Pool, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { ChainId } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import type { ListPoolsResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import { PoolSortBy, PoolSummary } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { type Currency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { PoolSortFields, PoolTableSortState } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
-import { useBackendSortedTopPools } from '~/features/Explore/state/topPools/useBackendSortedTopPools'
+import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
+import { useInfiniteLoadMore } from '~/features/Explore/state/hooks/useInfiniteLoadMore'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
-import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
+import { getProtocolVersionLabel, protocolsToProtocolVersion } from '~/features/Liquidity/utils/protocolVersion'
 import { PoolStat } from '~/types/explore'
 
 /**
- * Convert a Pool from the ListPools endpoint to a PoolStat for display in the pool table.
- * Token metadata is resolved via CurrencyInfo lookup keyed by currencyId.
+ * Maps the table's sort field to the ListPools endpoint's PoolSortBy.
+ * The endpoint only supports TVL / 1-day volume / APR; unsupported fields fall back to TVL.
  */
-function convertListPoolToPoolStat({
-  pool,
-  currencyInfoMap,
-}: {
-  pool: Pool
-  currencyInfoMap: Map<string, CurrencyInfo>
-}): PoolStat {
-  const chainId = pool.chainId as UniverseChainId
-  const chainName = toGraphQLChain(chainId)
-  const tvl = parseFloat(pool.totalLiquidityUsd) || 0
-
-  const token0Info = currencyInfoMap.get(buildCurrencyId(chainId, pool.token0))
-  const token1Info = currencyInfoMap.get(buildCurrencyId(chainId, pool.token1))
-
-  const makeTokenInfo = (address: string, info?: CurrencyInfo) => ({
-    chain: chainName,
-    address: address || undefined,
-    symbol: info?.currency.symbol,
-    name: info?.currency.name,
-    decimals: info?.currency.decimals,
-    logo: info?.logoUrl ?? undefined,
-  })
-
-  // The API returns apr as a float (e.g. 0.125 for 12.5%)
-  // Convert to Percent for compatibility with the table's formatPercent usage
-  const aprPercent = pool.apr ? new Percent(Math.round(pool.apr * 10000), 10000) : new Percent(0)
-
-  return {
-    id: pool.poolId,
-    chain: chainName,
-    protocolVersion: getProtocolVersionLabel(pool.protocolVersion),
-    token0: makeTokenInfo(pool.token0, token0Info),
-    token1: makeTokenInfo(pool.token1, token1Info),
-    totalLiquidity: { value: tvl },
-    volume1Day: undefined,
-    volume30Day: undefined,
-    apr: aprPercent,
-    boostedApr: pool.boostedApr || undefined,
-    feeTier: {
-      feeAmount: pool.fee,
-      tickSpacing: pool.tickSpacing || DEFAULT_TICK_SPACING,
-      isDynamic: pool.isDynamicFee,
-    },
-    volOverTvl: undefined,
-    hookAddress: pool.hooks?.address,
-  } as PoolStat
-}
-
-function sortListPools(pools: PoolStat[], sortState: PoolTableSortState): PoolStat[] {
-  return [...pools].sort((a, b) => {
-    const desc = sortState.sortDirection === OrderDirection.Desc
-    const tvlA = a.totalLiquidity?.value ?? 0
-    const tvlB = b.totalLiquidity?.value ?? 0
-
-    switch (sortState.sortBy) {
-      case PoolSortFields.Apr: {
-        const diff = a.apr.greaterThan(b.apr) ? 1 : a.apr.lessThan(b.apr) ? -1 : 0
-        return desc ? -diff : diff
-      }
-      case PoolSortFields.RewardApr:
-        return desc ? (b.boostedApr ?? 0) - (a.boostedApr ?? 0) : (a.boostedApr ?? 0) - (b.boostedApr ?? 0)
-      default:
-        // Default to TVL sort (also handles TVL sort field)
-        return desc ? tvlB - tvlA : tvlA - tvlB
-    }
-  })
+const poolSortFieldToSortBy: Partial<Record<PoolSortFields, PoolSortBy>> = {
+  [PoolSortFields.TVL]: PoolSortBy.TVL_USD,
+  [PoolSortFields.Volume24h]: PoolSortBy.VOLUME_USD,
+  [PoolSortFields.Apr]: PoolSortBy.APR,
 }
 
 /**
- * Hook that provides pool data for the AddLiquidity page.
+ * Convert a PoolSummary from the liquidity ListPools endpoint to a PoolStat for the pool table.
+ * Token metadata (symbol/name/decimals/logo) is provided inline by the endpoint via token0/token1Metadata.
+ */
+function convertPoolSummaryToPoolStat(pool: PoolSummary): PoolStat {
+  const chainId = pool.chainId as UniverseChainId
+  const chainName = toGraphQLChain(chainId)
+
+  // The API returns apr as a float (e.g. 0.125 for 12.5%); convert to Percent for the table's formatPercent.
+  const aprPercent = pool.apr ? new Percent(Math.round(pool.apr * 10000), 10000) : new Percent(0)
+
+  return {
+    id: pool.poolIdentifier,
+    chain: chainName,
+    protocolVersion: getProtocolVersionLabel(protocolsToProtocolVersion(pool.protocolVersion)),
+    token0: {
+      chain: chainName,
+      address: pool.token0Address || undefined,
+      symbol: pool.token0Metadata?.symbol,
+      name: pool.token0Metadata?.name,
+      decimals: pool.token0Metadata?.decimals,
+      logo: pool.token0Metadata?.logoUrl,
+    },
+    token1: {
+      chain: chainName,
+      address: pool.token1Address || undefined,
+      symbol: pool.token1Metadata?.symbol,
+      name: pool.token1Metadata?.name,
+      decimals: pool.token1Metadata?.decimals,
+      logo: pool.token1Metadata?.logoUrl,
+    },
+    totalLiquidity: { value: pool.tvlUsd },
+    volume1Day: { value: pool.volumeUsd1d },
+    volume30Day: undefined,
+    apr: aprPercent,
+    boostedApr: undefined,
+    feeTier: {
+      feeAmount: pool.feeTier,
+      tickSpacing: pool.tickSpacing || DEFAULT_TICK_SPACING,
+      isDynamic: pool.feeTier === DYNAMIC_FEE_AMOUNT,
+    },
+    volOverTvl: undefined,
+    hookAddress: pool.hookAddress,
+  } as PoolStat
+}
+
+/**
+ * Hook that provides pool data for the AddLiquidity page using the liquidity ListPools endpoint.
  *
- * - No tokens selected: uses useBackendSortedTopPools directly with filters passed explicitly
- * - One or two tokens selected: uses the ListPools endpoint filtered by token addresses
+ * A single endpoint serves both cases:
+ * - No tokens selected: top pools across the selected chain (or all enabled chains).
+ * - One or two tokens selected: pools filtered by a single token (matches either side) or a token pair.
+ *
+ * Sorting and cursor pagination are handled by the backend; search (filterString) is applied client-side.
  */
 export function useAddLiquidityPools({
   currency0,
@@ -109,99 +98,83 @@ export function useAddLiquidityPools({
   pools: PoolStat[] | undefined
   isLoading: boolean
   isError: boolean
-  loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
+  loadMore: ({ onComplete }: { onComplete?: () => void }) => void
   hasNextPage: boolean
 } {
+  const enabledChains = useEnabledChains()
+
   const hasTokenFilter = Boolean(currency0 || currency1)
-
-  // Path 1: No tokens selected — use backend-sorted top pools with filters passed explicitly
-  const topPoolsResult = useBackendSortedTopPools({
-    sortState,
-    chainId,
-    filterString,
-    enabled: !hasTokenFilter,
-  })
-
-  // Path 2: Tokens selected — use ListPools endpoint
-  // Derive chainId from selected currencies if not explicitly set
+  // Token addresses are chain-specific, so a token filter must target a single chain.
   const effectiveChainId = chainId ?? currency0?.chainId ?? currency1?.chainId
 
   const token0Address = currency0 ? getTokenOrZeroAddress(currency0) : undefined
   const token1Address = currency1 ? getTokenOrZeroAddress(currency1) : undefined
 
-  const listPoolsResult = useGetPoolsByTokens(
-    {
-      chainId: effectiveChainId,
-      token0: token0Address ?? '',
-      token1: token1Address ?? '',
-      protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
-    },
-    hasTokenFilter && effectiveChainId !== undefined,
+  // Both tokens → pair filter; one token → single-token filter (matches either side); none → no token filter.
+  const tokenParams =
+    currency0 && currency1
+      ? { token0Address, token1Address }
+      : (token0Address ?? token1Address)
+        ? { tokenAddress: token0Address ?? token1Address }
+        : {}
+
+  // ChainId enum values equal the numeric chain ids, so UniverseChainId values map directly.
+  const chainIds = (effectiveChainId ? [effectiveChainId] : enabledChains.chains).map((id) => id as ChainId)
+
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    liquidityQueries.listPools({
+      params: {
+        chainIds,
+        ...tokenParams,
+        sortBy: poolSortFieldToSortBy[sortState.sortBy] ?? PoolSortBy.TVL_USD,
+        ascending: sortState.sortDirection === OrderDirection.Asc,
+        limit: EXPLORE_API_PAGE_SIZE,
+      },
+      enabled: !hasTokenFilter || effectiveChainId !== undefined,
+    }),
   )
 
-  // Collect all unique token addresses from the ListPools response for batch CurrencyInfo lookup.
-  // This resolves token metadata (symbol, name, logo) for all pool tokens including
-  // tokens not in the filter (important for single-token filtering).
-  const tokenCurrencyIds = useMemo(() => {
-    if (!listPoolsResult.data?.pools) {
-      return []
-    }
-    const ids = new Set<string>()
-    for (const pool of listPoolsResult.data.pools) {
-      const poolChainId = pool.chainId as UniverseChainId
-      if (pool.token0) {
-        ids.add(buildCurrencyId(poolChainId, pool.token0))
-      }
-      if (pool.token1) {
-        ids.add(buildCurrencyId(poolChainId, pool.token1))
-      }
-    }
-    return Array.from(ids)
-  }, [listPoolsResult.data?.pools])
+  const infiniteData = data as InfiniteData<ListPoolsResponse> | undefined
+  const allPools = useMemo(
+    () => infiniteData?.pages.flatMap((page: ListPoolsResponse) => page.pools),
+    [infiniteData?.pages],
+  )
 
-  const currencyInfoResults = useCurrencyInfos(tokenCurrencyIds, { skip: !hasTokenFilter })
-
-  const currencyInfoMap = useMemo(() => {
-    const map = new Map<string, CurrencyInfo>()
-    for (let i = 0; i < tokenCurrencyIds.length; i++) {
-      const info = currencyInfoResults[i]
-      if (info) {
-        map.set(tokenCurrencyIds[i]!, info)
-      }
-    }
-    return map
-  }, [tokenCurrencyIds, currencyInfoResults])
-
-  const listPoolsConverted = useMemo(() => {
-    if (!hasTokenFilter || !listPoolsResult.data?.pools) {
+  const pools = useMemo(() => {
+    if (!allPools) {
       return undefined
     }
-    const converted = listPoolsResult.data.pools
-      .map((pool: Pool) => convertListPoolToPoolStat({ pool, currencyInfoMap }))
-      .filter(
-        (pool) =>
-          !filterString ||
-          pool.token0?.symbol?.toLowerCase().includes(filterString.toLowerCase()) ||
-          pool.token1?.symbol?.toLowerCase().includes(filterString.toLowerCase()),
-      )
-    return sortListPools(converted, sortState)
-  }, [hasTokenFilter, listPoolsResult.data?.pools, currencyInfoMap, sortState, filterString])
-
-  if (hasTokenFilter) {
-    return {
-      pools: listPoolsConverted,
-      isLoading: listPoolsResult.isLoading,
-      isError: listPoolsResult.isError,
-      loadMore: undefined,
-      hasNextPage: false,
+    const converted = allPools.map(convertPoolSummaryToPoolStat)
+    if (!filterString) {
+      return converted
     }
-  }
+    const lowercaseFilter = filterString.toLowerCase()
+    return converted.filter((pool) => {
+      const poolName = `${pool.token0?.symbol ?? ''}/${pool.token1?.symbol ?? ''}`
+      const searchableValues: (string | undefined)[] = [
+        pool.token0?.symbol,
+        pool.token1?.symbol,
+        pool.token0?.address,
+        pool.token1?.address,
+        pool.id,
+        poolName,
+      ]
+      return searchableValues.some((value) => value?.toLowerCase().includes(lowercaseFilter))
+    })
+  }, [allPools, filterString])
+
+  const loadMore = useInfiniteLoadMore({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    dataLength: pools?.length ?? 0,
+  })
 
   return {
-    pools: topPoolsResult.topPools,
-    isLoading: topPoolsResult.isLoading,
-    isError: topPoolsResult.isError,
-    loadMore: topPoolsResult.loadMore,
-    hasNextPage: topPoolsResult.hasNextPage,
+    pools,
+    isLoading,
+    isError: !!error,
+    loadMore,
+    hasNextPage,
   }
 }

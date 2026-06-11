@@ -28,6 +28,8 @@ type TokenBalanceListContextState = {
   isPortfolioBalancesLoading: boolean
   isWarmLoading: boolean
   rows: Array<TokenBalanceListRow>
+  /** Row ids in the hidden-tokens section (hide fiat USD; still show token quantity). */
+  hiddenBalanceRowIds: Set<string>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   toggleExpanded: (currencyId: string) => void
   onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
@@ -101,6 +103,11 @@ export function TokenBalanceListContextProvider({
     isPortfolioBalancesLoading,
   })
 
+  const hiddenBalanceRowIds = useMemo(
+    () => new Set(sortedDataForList?.hiddenBalances.map((balance) => balance.id) ?? []),
+    [sortedDataForList?.hiddenBalances],
+  )
+
   const state = useMemo<TokenBalanceListContextState>(
     (): TokenBalanceListContextState => ({
       balancesById: balancesByIdForList,
@@ -108,6 +115,7 @@ export function TokenBalanceListContextProvider({
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
+      hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,
@@ -127,6 +135,7 @@ export function TokenBalanceListContextProvider({
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
+      hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,

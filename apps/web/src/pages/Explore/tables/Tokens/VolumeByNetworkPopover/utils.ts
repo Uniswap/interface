@@ -67,11 +67,11 @@ export type VolumePopoverTokenDetailsInput = { chainId: number; address: string 
 
 export type NavigateVolumePopoverToTokenDetails = (
   currency: VolumePopoverTokenDetailsInput,
-  chainFilter?: UniverseChainId,
+  chainFilter?: UniverseChainId | null,
 ) => void
 
 /**
- * Opens TDP for the given chain's deployment of a multichain token, optionally setting the chain query param.
+ * Opens TDP for the given chain's deployment of a multichain token, optionally setting aggregate multichain state.
  */
 export function navigateVolumePopoverToTokenDetails({
   navigateToTokenDetails,
@@ -82,7 +82,7 @@ export function navigateVolumePopoverToTokenDetails({
   navigateToTokenDetails: NavigateVolumePopoverToTokenDetails
   mcToken: MultichainToken | undefined
   chainId: UniverseChainId
-  chainQueryFilter?: UniverseChainId
+  chainQueryFilter?: UniverseChainId | null
 }): void {
   const deployment = mcToken?.chainTokens.find((ct) => ct.chainId === chainId)
   if (!deployment) {

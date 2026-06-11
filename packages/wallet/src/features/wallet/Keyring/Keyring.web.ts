@@ -1,5 +1,4 @@
-/* oxlint-disable max-params */
-/* oxlint-disable max-lines */
+/* oxlint-disable max-params max-lines */
 import { HDKey } from '@scure/bip32'
 import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { Signature, utils, Wallet } from 'ethers'

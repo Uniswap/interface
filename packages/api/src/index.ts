@@ -337,7 +337,15 @@ export { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 export { useIsSessionInitialized } from '@universe/api/src/hooks/useIsSessionInitialized'
 
 // Session Transport (pure factory, no platform detection)
-export { createSessionTransport, type CreateSessionTransportOptions } from '@universe/api/src/session'
+export {
+  bootstrapSession,
+  createSessionTransport,
+  type CreateSessionTransportOptions,
+  provideSession,
+  tryProvideSession,
+  useSession,
+  useSessionReady,
+} from '@universe/api/src/session'
 export { createWithSessionRetry } from '@universe/api/src/session/createWithSessionRetry'
 
 export type {

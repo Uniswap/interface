@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { MemoryRouter, useSearchParams } from 'react-router'
+import { MemoryRouter, useLocation, useSearchParams } from 'react-router'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
@@ -10,6 +10,7 @@ import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { mocked } from '~/test-utils/mocked'
 import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
+import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
@@ -46,8 +47,14 @@ const TWO_CHAINS: MultichainTokenEntry[] = [
 const ONE_CHAIN: MultichainTokenEntry[] = [{ chainId: UniverseChainId.Mainnet, address: '0x111', isNative: false }]
 
 function UrlSearchSnapshot(): JSX.Element {
+  const location = useLocation()
   const [params] = useSearchParams()
-  return <div data-testid="url-search">{params.toString()}</div>
+  return (
+    <>
+      <div data-testid="url-path">{location.pathname}</div>
+      <div data-testid="url-search">{params.toString()}</div>
+    </>
+  )
 }
 
 interface HarnessProps {
@@ -69,6 +76,7 @@ function Harness({ store, initialPath }: HarnessProps): JSX.Element {
 describe('TDPChainSearchParamSync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    window.history.replaceState(null, '', '/')
     mocked(useMultichainTokenEntries).mockReturnValue([])
     mocked(useFeatureFlag).mockImplementation((flag) => {
       return flag === FeatureFlags.MultichainTokenUx
@@ -102,19 +110,21 @@ describe('TDPChainSearchParamSync', () => {
     })
   })
 
-  it('writes validated chain from URL into the store when multichain UX is on and token is a multi-chain asset', async () => {
+  it('normalizes a legacy chain query param to the selected network deployment path', async () => {
     mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
 
     const store = createTDPStore(createPendingTDPState())
 
-    render(<Harness store={store} initialPath="/token?chain=base" />)
+    const { getByTestId } = render(<Harness store={store} initialPath="/token?chain=base&foo=bar" />)
 
     await waitFor(() => {
       expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Base)
+      expect(getByTestId('url-path').textContent).toBe('/explore/tokens/base/0x222')
+      expect(getByTestId('url-search').textContent).toBe('foo=bar')
     })
   })
 
-  it('does not strip chain param while multichain token entries are still loading, then applies URL selection', async () => {
+  it('does not strip legacy chain param while multichain token entries are still loading, then normalizes it', async () => {
     const entries: { current: MultichainTokenEntry[] } = { current: [] }
     mocked(useMultichainTokenEntries).mockImplementation(() => entries.current)
 
@@ -130,7 +140,22 @@ describe('TDPChainSearchParamSync', () => {
     await waitFor(() => {
       expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Base)
     })
-    expect(getByTestId('url-search').textContent).toContain('chain=base')
+    expect(getByTestId('url-search').textContent).toBe('')
+  })
+
+  it('keeps chain=multichain as the aggregate multichain view', async () => {
+    mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
+
+    const store = createTDPStore(createPendingTDPState({ selectedMultichainChainId: UniverseChainId.Base }))
+
+    const { getByTestId } = render(
+      <Harness store={store} initialPath={`/token?${CHAIN_SEARCH_PARAM}=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`} />,
+    )
+
+    await waitFor(() => {
+      expect(getByTestId('url-search').textContent).toBe(`${CHAIN_SEARCH_PARAM}=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`)
+      expect(store.getState().selectedMultichainChainId).toBeUndefined()
+    })
   })
 
   it('removes chain param when it is not a valid chain for the token', async () => {
@@ -142,7 +167,7 @@ describe('TDPChainSearchParamSync', () => {
 
     await waitFor(() => {
       expect(getByTestId('url-search').textContent).toBe('')
-      expect(store.getState().selectedMultichainChainId).toBeUndefined()
+      expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Mainnet)
     })
   })
 
@@ -155,11 +180,11 @@ describe('TDPChainSearchParamSync', () => {
 
     await waitFor(() => {
       expect(getByTestId('url-search').textContent).toBe('')
-      expect(store.getState().selectedMultichainChainId).toBeUndefined()
+      expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Mainnet)
     })
   })
 
-  it('clears store selection when URL has no chain param', async () => {
+  it('selects the path chain when URL has no chain param', async () => {
     mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
 
     const store = createTDPStore(
@@ -171,7 +196,24 @@ describe('TDPChainSearchParamSync', () => {
     render(<Harness store={store} initialPath="/token" />)
 
     await waitFor(() => {
-      expect(store.getState().selectedMultichainChainId).toBeUndefined()
+      expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Mainnet)
+    })
+  })
+
+  it('does not reset selection after selector shallowly replaces the browser URL', async () => {
+    mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
+    window.history.replaceState(null, '', '/explore/tokens/base/0x222')
+
+    const store = createTDPStore(
+      createPendingTDPState({
+        selectedMultichainChainId: UniverseChainId.Base,
+      }),
+    )
+
+    render(<Harness store={store} initialPath="/explore/tokens/ethereum/0x111" />)
+
+    await waitFor(() => {
+      expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Base)
     })
   })
 })

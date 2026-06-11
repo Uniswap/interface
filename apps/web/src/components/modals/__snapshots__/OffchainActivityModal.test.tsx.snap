@@ -90,7 +90,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -210,7 +210,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -280,9 +280,12 @@ exports[`OrderContent > should render without error, filled order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               0xad...6564
@@ -388,7 +391,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -508,7 +511,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -597,9 +600,12 @@ exports[`OrderContent > should render without error, limit order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               0xad...6564
@@ -643,9 +649,12 @@ exports[`OrderContent > should render without error, limit order 1`] = `
           data-disable-theme="true"
         >
           <a
-            class="sc-lgpSej fQmHjr"
+            class="is_Anchor font_body  is_Anchor "
+            data-disable-theme="true"
             href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
             rel="noopener noreferrer"
+            role="link"
+            style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
             target="_blank"
           >
             Learn more
@@ -750,7 +759,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -870,7 +879,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         </div>
       </div>
       <div
-        class="sc-kcLKEh ksmAaZ"
+        class="sc-eqYatC dPmagY"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -959,9 +968,12 @@ exports[`OrderContent > should render without error, open order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="sc-lgpSej fQmHjr"
+              class="is_Anchor font_body  is_Anchor "
+              data-disable-theme="true"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
+              role="link"
+              style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-medium); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               target="_blank"
             >
               0xad...6564

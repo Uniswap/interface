@@ -55,3 +55,8 @@ export type EarnDepositSourceOption = {
   /** Undefined when the portfolio query could not price the balance. */
   balanceUsd: number | undefined
 }
+
+export type EarnDepositSourceOptionsBySupport = {
+  supportedDepositSourceOptions: EarnDepositSourceOption[]
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
+}

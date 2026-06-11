@@ -94,7 +94,7 @@
       "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
     },
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\"; fi",
       "options": { "cwd": "{workspaceRoot}" }
     },
     "snapshots": {
@@ -176,7 +176,7 @@
           "BUILD_NUM": "0"
         }
       },
-      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "inputs": ["sourceFiles"],
       "outputs": ["{projectRoot}/.output/chrome-mv3"],
       "cache": true,
       "dependsOn": ["^build", "prepare"]
@@ -186,7 +186,7 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "inputs": ["sourceFiles"],
       "outputs": ["{projectRoot}/build"],
       "cache": true,
       "dependsOn": ["^build", "prepare"]

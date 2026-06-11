@@ -56,9 +56,10 @@ export function EarnVaultModal({
     balanceLookupHasData,
     balanceLookupSettled,
     depositSourceOptions,
-    hasAnyBalanceForUnderlying,
+    hasSupportedBalanceForUnderlying,
     selectedDepositSource,
     setSelectedDepositSourceCurrencyId,
+    unsupportedDepositSourceOptions,
   } = useEarnDepositSources({
     vault,
     walletAddress: evmAccount?.address,
@@ -108,17 +109,17 @@ export function EarnVaultModal({
     }
   }, [position, startWithdraw])
 
-  // Gate the deposit CTA on the user holding the underlying somewhere; if they don't,
+  // Gate the deposit CTA on the user holding the underlying on a supported chain; if they don't,
   // route to the "You need {symbol}" view instead of opening the deposit amount input.
   // Wait for both the portfolio and token-project queries to resolve — otherwise users
   // with a balance would be briefly misrouted while data is loading.
   const handleDeposit = useCallback(() => {
-    if (isConnected && balanceLookupHasData && !hasAnyBalanceForUnderlying) {
+    if (isConnected && balanceLookupHasData && !hasSupportedBalanceForUnderlying) {
       startNeedToken()
       return
     }
     startDeposit()
-  }, [balanceLookupHasData, hasAnyBalanceForUnderlying, isConnected, startDeposit, startNeedToken])
+  }, [balanceLookupHasData, hasSupportedBalanceForUnderlying, isConnected, startDeposit, startNeedToken])
 
   // Apply the same deposit guard when an external entry point opens the modal directly to
   // DepositAmount (e.g. the token details "Deposit" shortcut). Without this, users with an
@@ -129,11 +130,11 @@ export function EarnVaultModal({
       flow.view === EarnVaultView.DepositAmount &&
       isConnected &&
       balanceLookupHasData &&
-      !hasAnyBalanceForUnderlying
+      !hasSupportedBalanceForUnderlying
     ) {
       startNeedToken()
     }
-  }, [balanceLookupHasData, flow.view, hasAnyBalanceForUnderlying, isConnected, isOpen, startNeedToken])
+  }, [balanceLookupHasData, flow.view, hasSupportedBalanceForUnderlying, isConnected, isOpen, startNeedToken])
 
   const handleSwapForToken = useCallback(() => {
     if (!currencyIdForSwap) {
@@ -189,6 +190,7 @@ export function EarnVaultModal({
           selectedDepositSource,
           setSelectedDepositSourceCurrencyId,
           symbol,
+          unsupportedDepositSourceOptions,
           vault,
         }}
       />
@@ -213,6 +215,7 @@ function EarnVaultModalContent({
     selectedDepositSource,
     setSelectedDepositSourceCurrencyId,
     symbol,
+    unsupportedDepositSourceOptions,
     vault,
   } = vaultData
   const tokenColor = useColor(currencyInfo?.currency)
@@ -280,6 +283,7 @@ function EarnVaultModalContent({
           depositSourceOptions={depositSourceOptions}
           selectedDepositSource={selectedDepositSource}
           onSelectDepositSource={setSelectedDepositSourceCurrencyId}
+          unsupportedDepositSourceOptions={unsupportedDepositSourceOptions}
           initialAmount={flow.amount}
           onBack={onBackToVault}
           onClose={onClose}

@@ -3,7 +3,7 @@ import { TradingApi } from '@universe/api'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { buildTradeFromPlanResponse } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
-import { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 const INPUT_TOKEN = UNI[UniverseChainId.Mainnet]
@@ -31,14 +31,19 @@ function createMockPlanStep(slippage = 0.5): TradingApi.PlanStep {
 }
 
 function createChainedTrade(outputAmount: string): ChainedActionTrade {
-  return new ChainedActionTrade({
+  const trade = createChainedActionTrade({
     quote: {
       routing: TradingApi.Routing.CHAINED,
       requestId: 'test-request',
       permitData: null,
       quote: {
-        input: { amount: INPUT_AMOUNT, token: INPUT_TOKEN.address },
-        output: { amount: outputAmount, token: OUTPUT_TOKEN.address, recipient: '0xrecipient' },
+        input: { amount: INPUT_AMOUNT, maximumAmount: INPUT_AMOUNT, token: INPUT_TOKEN.address },
+        output: {
+          amount: outputAmount,
+          minimumAmount: outputAmount,
+          token: OUTPUT_TOKEN.address,
+          recipient: '0xrecipient',
+        },
         swapper: '0xswapper',
         tokenInChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
         tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
@@ -56,6 +61,12 @@ function createChainedTrade(outputAmount: string): ChainedActionTrade {
     currencyIn: INPUT_TOKEN,
     currencyOut: OUTPUT_TOKEN,
   })
+
+  if (!trade) {
+    throw new Error('Expected test chained trade to be created')
+  }
+
+  return trade
 }
 
 function createPlanResponse(expectedOutput: string): TradingApi.PlanResponse {

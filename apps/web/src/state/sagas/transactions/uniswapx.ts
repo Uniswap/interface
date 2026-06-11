@@ -88,7 +88,6 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
   } catch (error) {
     sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
-      // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
       ...formatSwapSignedAnalyticsEventProperties(analyticsParams),
       detail: error.message,
     })

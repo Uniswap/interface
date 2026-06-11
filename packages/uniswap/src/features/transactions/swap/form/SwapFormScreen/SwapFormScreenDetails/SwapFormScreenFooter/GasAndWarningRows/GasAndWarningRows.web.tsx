@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
@@ -8,7 +9,7 @@ import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/ho
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
-export function GasAndWarningRows(): JSX.Element {
+export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element {
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const address = useActiveAddress(chainId)
 
@@ -50,4 +51,4 @@ export function GasAndWarningRows(): JSX.Element {
       </Flex>
     </>
   )
-}
+})

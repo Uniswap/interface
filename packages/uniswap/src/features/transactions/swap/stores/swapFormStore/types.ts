@@ -28,7 +28,6 @@ export type SwapFormState = {
   /** The time when the transaction hash was received (interface only) */
   txHashReceivedTime?: number
   hideFooter?: boolean
-  hideSettings?: boolean
   prefilledCurrencies?: TradeableAsset[]
   isPrefilled?: boolean
 }

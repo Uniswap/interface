@@ -6,9 +6,11 @@ import {
   provideSessionService,
   reinitializeSession,
 } from '@universe/api'
+import { tryProvideSession } from '@universe/api'
 import type { PlanEndpoints } from '@universe/api/src/clients/trading/createTradingApiClient'
 import { getConfig } from '@universe/config'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { SessionGateSource } from '@universe/sessions'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getFeatureFlaggedHeaders } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { logger } from 'utilities/src/logger/logger'
@@ -46,6 +48,8 @@ const entryGatewayTradingFetchClientWithSession = createFetchClient({
       // Sessions are currently required for plans, so this is enabled by default. The flag exists as a safety net to disable sessions for plan if needed.
       getIsSessionServiceEnabled: () => !getFeatureFlag(FeatureFlags.DisableSessionsForPlan),
     }),
+  getSession: tryProvideSession,
+  source: SessionGateSource.FetchTrading,
   defaultOptions: {
     credentials: 'include',
   },

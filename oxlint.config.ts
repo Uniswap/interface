@@ -950,6 +950,7 @@ export default defineConfig({
                 { allowSameFolder: false, rootDir: 'src' },
               ],
               'universe-custom/import-boundary': 'error' as const,
+              'universe-custom/no-direct-viem-ethers-import': 'error' as const,
             },
           },
         ]
@@ -1026,10 +1027,6 @@ export default defineConfig({
               {
                 name: 'styled-components',
                 message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
-              },
-              {
-                name: 'ethers',
-                message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
               },
               {
                 name: 'ui/src/components/icons',
@@ -1295,6 +1292,7 @@ export default defineConfig({
           'universe-custom/no-unwrapped-t': 'off',
           'universe-custom/custom-map-sort': 'off',
           'universe-custom/no-hex-string-casting': 'off',
+          'universe-custom/no-direct-viem-ethers-import': 'off',
           'security/detect-non-literal-regexp': 'off',
           'eslint-js/no-restricted-syntax': 'off',
           '@jambit/typed-redux-saga/use-typed-effects': 'off',

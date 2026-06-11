@@ -30,6 +30,7 @@ export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' 
   hideFooter?: boolean
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
+  onCurrencyPanelsLayout?: (height: number) => void
 }
 
 function useSwapFlowOnClose({
@@ -61,7 +62,13 @@ function useSwapFlowOnClose({
   })
 }
 
-export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionModalProps }: SwapFlowProps): JSX.Element {
+export function SwapFlow({
+  settings,
+  onSubmitSwap,
+  tokenColor,
+  onCurrencyPanelsLayout,
+  ...transactionModalProps
+}: SwapFlowProps): JSX.Element {
   const transactionSettingsContext = useGetTransactionSettingsContextValue()
   const swapDependenciesStore = useSwapDependenciesStoreBase()
   const swapFormStore = useSwapFormStoreBase()
@@ -89,7 +96,12 @@ export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionMod
           <SwapTxStoreContextProvider>
             <SwapDependenciesStoreContext.Provider value={swapDependenciesStore}>
               <ActivePlanUpdater />
-              <CurrentScreen settings={settings} tokenColor={tokenColor} onSubmitSwap={onSubmitSwap} />
+              <CurrentScreen
+                settings={settings}
+                tokenColor={tokenColor}
+                onSubmitSwap={onSubmitSwap}
+                onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+              />
             </SwapDependenciesStoreContext.Provider>
           </SwapTxStoreContextProvider>
         </SwapFormStoreContext.Provider>

@@ -13,13 +13,22 @@ export type RWAMatch = {
 
 type RWACandidateInput = RWACandidate | null | undefined
 
-function normalizeRWAAddress(address: string): string {
+export function normalizeRWAAddress(address: string): string {
   const trimmedAddress = address.trim()
   return isAddress(trimmedAddress, { strict: false }) ? getAddress(trimmedAddress) : trimmedAddress
 }
 
-function rwaTokensMatch(token: RWAToken, candidate: RWACandidateInput): boolean {
-  if (!candidate || !candidate.chainId || !candidate.address || token.chainId !== candidate.chainId) {
+export function rwaTokenMatchesCandidate(token: RWACandidate, candidate: RWACandidateInput): boolean {
+  if (
+    !candidate ||
+    token.chainId === null ||
+    token.chainId === undefined ||
+    !token.address ||
+    candidate.chainId === null ||
+    candidate.chainId === undefined ||
+    !candidate.address ||
+    token.chainId !== candidate.chainId
+  ) {
     return false
   }
 
@@ -38,7 +47,7 @@ function findMatchForCandidate({
   }
 
   for (const asset of rwaWhitelist) {
-    const token = asset.tokens.find((rwaToken) => rwaTokensMatch(rwaToken, candidate))
+    const token = asset.tokens.find((rwaToken) => rwaTokenMatchesCandidate(rwaToken, candidate))
     if (token) {
       return { asset, token }
     }

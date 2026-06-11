@@ -1,20 +1,16 @@
-import { type Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { TradeType } from '@uniswap/sdk-core'
 import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  createBridgeTrade,
+  createClassicTrade as createClassicTradeFromQuote,
+  type BridgeTrade,
+  type ClassicTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 
-// oxlint-disable-next-line jest/no-export -- suppressed
-export const mockPool = new Pool(
-  UNI[UniverseChainId.Mainnet],
-  WBTC,
-  FeeAmount.HIGH,
-  '2437312313659959819381354528',
-  '10272714736694327408',
-  -69633,
-)
+const INPUT_TOKEN = UNI[UniverseChainId.Mainnet]
 
 const createClassicTrade = ({
   tradeType,
@@ -24,22 +20,69 @@ const createClassicTrade = ({
   tradeType: TradeType
   inputAmount: number
   outputAmount: number
-}): ClassicTrade =>
-  new ClassicTrade({
-    quote: { quote: {} } as ClassicQuoteResponse,
-    v4Routes: [],
-    v3Routes: [
-      {
-        routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
-        inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], inputAmount),
-        outputAmount: CurrencyAmount.fromRawAmount(WBTC, outputAmount),
+}): ClassicTrade => {
+  const trade = createClassicTradeFromQuote({
+    quote: {
+      requestId: '123',
+      routing: TradingApi.Routing.CLASSIC,
+      permitData: null,
+      quote: {
+        input: {
+          amount: inputAmount.toString(),
+          maximumAmount: inputAmount.toString(),
+          token: INPUT_TOKEN.address,
+        },
+        output: {
+          amount: outputAmount.toString(),
+          minimumAmount: outputAmount.toString(),
+          token: WBTC.address,
+          recipient: '0xrecipient',
+        },
+        swapper: '0xswapper',
+        route: [],
       },
-    ],
-    v2Routes: [],
-    mixedRoutes: [],
+    } as ClassicQuoteResponse,
+    currencyIn: INPUT_TOKEN,
+    currencyOut: WBTC,
     tradeType,
     deadline: Date.now() + 60 * 30 * 1000,
   })
+
+  if (!trade) {
+    throw new Error('Expected test classic trade to be created')
+  }
+
+  return trade
+}
+
+function createBridgeTestTrade(inputAmount: string, outputAmount: string): BridgeTrade {
+  const trade = createBridgeTrade({
+    quote: {
+      quote: {
+        input: {
+          amount: inputAmount,
+          maximumAmount: inputAmount,
+        },
+        output: {
+          amount: outputAmount,
+          minimumAmount: outputAmount,
+        },
+      },
+      requestId: '123',
+      routing: TradingApi.Routing.BRIDGE,
+      permitData: null,
+    },
+    currencyIn: INPUT_TOKEN,
+    currencyOut: WBTC,
+    tradeType: TradeType.EXACT_INPUT,
+  })
+
+  if (!trade) {
+    throw new Error('Expected test bridge trade to be created')
+  }
+
+  return trade
+}
 
 describe(requireAcceptNewTrade, () => {
   describe('ClassicTrade', () => {
@@ -81,88 +124,20 @@ describe(requireAcceptNewTrade, () => {
   })
 
   describe('BridgeTrade', () => {
-    const oldTrade = new BridgeTrade({
-      quote: {
-        quote: {
-          input: {
-            amount: '1000',
-          },
-          output: {
-            amount: '990',
-          },
-        },
-        requestId: '123',
-        routing: TradingApi.Routing.BRIDGE,
-        permitData: null,
-      },
-      currencyIn: UNI[UniverseChainId.Mainnet],
-      currencyOut: WBTC,
-      tradeType: TradeType.EXACT_INPUT,
-    })
+    const oldTrade = createBridgeTestTrade('1000', '990')
 
     it('returns false when output amount is within threshold', () => {
-      const newTrade = new BridgeTrade({
-        quote: {
-          quote: {
-            input: {
-              amount: '1000',
-            },
-            output: {
-              amount: '981',
-            },
-          },
-          requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
-          permitData: null,
-        },
-        currencyIn: UNI[UniverseChainId.Mainnet],
-        currencyOut: WBTC,
-        tradeType: TradeType.EXACT_INPUT,
-      })
+      const newTrade = createBridgeTestTrade('1000', '981')
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
     })
 
     it('returns true when output amount is below threshold', () => {
-      const newTrade = new BridgeTrade({
-        quote: {
-          quote: {
-            input: {
-              amount: '1000',
-            },
-            output: {
-              amount: '979',
-            },
-          },
-          requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
-          permitData: null,
-        },
-        currencyIn: UNI[UniverseChainId.Mainnet],
-        currencyOut: WBTC,
-        tradeType: TradeType.EXACT_INPUT,
-      })
+      const newTrade = createBridgeTestTrade('1000', '979')
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(true)
     })
 
     it('returns false when new trade is better', () => {
-      const newTrade = new BridgeTrade({
-        quote: {
-          quote: {
-            input: {
-              amount: '1000',
-            },
-            output: {
-              amount: '1001',
-            },
-          },
-          requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
-          permitData: null,
-        },
-        currencyIn: UNI[UniverseChainId.Mainnet],
-        currencyOut: WBTC,
-        tradeType: TradeType.EXACT_INPUT,
-      })
+      const newTrade = createBridgeTestTrade('1000', '1001')
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
     })
   })

@@ -35,33 +35,24 @@
         "cwd": "{projectRoot}"
       }
     },
-    "tradingapi:generate:openapi": {
-      "command": "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --useOptions --exportServices true --exportModels true",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "cache": true,
-      "inputs": ["{projectRoot}/src/clients/trading/api.json"],
-      "outputs": ["{projectRoot}/src/clients/trading/__generated__"]
-    },
     "tradingapi:generate": {
-      "command": "bun ./scripts/modifyTradingApiTypes.mts",
+      "executor": "nx:run-commands",
       "options": {
+        "commands": [
+          "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --useOptions --exportServices true --exportModels true",
+          "bun ./scripts/modifyTradingApiTypes.mts"
+        ],
+        "parallel": false,
         "cwd": "{projectRoot}"
       },
       "cache": true,
       "inputs": [
+        "dependencies",
+        "{projectRoot}/src/clients/trading/api.json",
         "{projectRoot}/scripts/modifyTradingApiTypes.mts",
-        "{projectRoot}/src/clients/trading/types.ts",
-        {
-          "runtime": "bun -v"
-        },
-        {
-          "dependentTasksOutputFiles": "**/*.ts"
-        }
+        "{projectRoot}/src/clients/trading/types.ts"
       ],
-      "outputs": ["{projectRoot}/src/clients/trading/__generated__/models"],
-      "dependsOn": ["tradingapi:generate:openapi"]
+      "outputs": ["{projectRoot}/src/clients/trading/__generated__"]
     },
     "graphql:schema": {
       "command": "gh auth status >/dev/null 2>&1 || { echo 'Error: gh CLI is not installed or not authenticated. Run `gh auth login` first.' >&2; exit 1; } && SCHEMA=$(gh api repos/Uniswap/data-api-graphql/contents/graphql/schema.graphql --jq '.content') || { echo 'Error: Failed to fetch schema. Ensure you have access to Uniswap/data-api-graphql.' >&2; exit 1; } && echo '# To update this file, run `bun api graphql:schema`' > ./src/clients/graphql/schema.graphql && echo \"$SCHEMA\" | base64 -d | grep -v '^#' >> ./src/clients/graphql/schema.graphql",
@@ -70,17 +61,17 @@
       }
     },
     "graphql:generate": {
-      "command": "bun ./scripts/generate-graphql-types.ts && bun ./scripts/fixGraphQLApiTypes.mts",
+      "command": "bun ./scripts/generate-graphql-types.ts",
       "options": {
         "cwd": "{projectRoot}"
       },
       "cache": true,
       "inputs": [
+        "dependencies",
         "{projectRoot}/src/clients/graphql/schema.graphql",
         "{projectRoot}/src/**/*.graphql",
         "{projectRoot}/src/**/*.gql",
         "{projectRoot}/scripts/generate-graphql-types.ts",
-        "{projectRoot}/scripts/fixGraphQLApiTypes.mts",
         "{workspaceRoot}/apps/mobile/src/**/*.graphql",
         "{workspaceRoot}/apps/extension/src/**/*.graphql",
         "{workspaceRoot}/packages/wallet/src/**/*.graphql",

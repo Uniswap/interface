@@ -15,6 +15,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPortfolioBalanceDisplayQuantity } from 'uniswap/src/features/portfolio/balances/getPortfolioBalanceDisplayQuantity'
 import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
 import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -22,7 +23,8 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
 /**
- * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.
+ * IMPORTANT: if you modify the UI of this component, update `TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT`
+ * and the corresponding Skeleton component.
  */
 
 /** When set (e.g. mobile portfolio), wraps the row in {@link TokenBalanceItemContextMenu}. */
@@ -36,11 +38,16 @@ interface TokenBalanceItemProps {
   portfolioBalance?: PortfolioMultichainBalance
   isLoading?: boolean
   padded?: boolean
-  isHidden: boolean
   contextMenuActions?: TokenBalanceItemContextMenuConfig
 }
 
 const MULTICHAIN_BALANCES_SLOT_HEIGHT = 20
+
+/**
+ * Estimated row height for list virtualization (FlatList `getItemLayout`, scroll windowing).
+ * Update when `TokenBalanceItem` layout changes (logo, padding, or text lines).
+ */
+export const TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT = 64
 
 /**
  * If you add any props to this component, make sure you use the react-devtools profiler to confirm that this doesn't break the memoization.
@@ -51,13 +58,12 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   portfolioBalance,
   isLoading,
   padded,
-  isHidden,
   contextMenuActions,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken } =
+  const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
     useTokenBalanceListContext()
 
   // Ensure items rerender when theme is switched
@@ -67,15 +73,14 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   const symbol = portfolioBalance?.symbol ?? currency.symbol
   const logoUrl = portfolioBalance?.logoUrl ?? currencyInfo.logoUrl
   const shortenedSymbol = getSymbolDisplayText(symbol)
-  const isSpam = portfolioBalance
-    ? portfolioBalance.tokens.length > 0 && portfolioBalance.tokens.every((token) => token.currencyInfo.isSpam === true)
-    : currencyInfo.isSpam
 
   const showBalancesHoverTransition = Boolean(
     isExtensionApp && multichainRowExpansionEnabled && portfolioBalance && portfolioBalance.tokens.length > 1,
   )
 
   const isMultichainRowExpanded = Boolean(portfolioBalance && expandedCurrencyIds.has(portfolioBalance.id))
+
+  const isHiddenSectionRow = Boolean(portfolioBalance && hiddenBalanceRowIds.has(portfolioBalance.id))
 
   const multichainChainIds = useMemo((): UniverseChainId[] => {
     if (!portfolioBalance) {
@@ -158,7 +163,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
         </Flex>
       </Flex>
 
-      {isSpam === true && isHidden ? null : (
+      {isHiddenSectionRow ? null : (
         <TokenBalanceRightSideColumn
           isLoading={isLoading}
           currencyId={currencyInfo.currencyId}
@@ -269,7 +274,7 @@ function TokenBalanceQuantity({
     svmAddress,
   })
 
-  const quantity = portfolioBalance?.totalAmount ?? restTokenBalance.data?.quantity
+  const quantity = getPortfolioBalanceDisplayQuantity(portfolioBalance) ?? restTokenBalance.data?.quantity
 
   return (
     <Text color="$neutral2" numberOfLines={1} variant={isWebPlatform ? 'body3' : 'body2'}>

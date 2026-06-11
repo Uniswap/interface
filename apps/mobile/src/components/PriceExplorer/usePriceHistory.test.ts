@@ -5,6 +5,7 @@ import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHisto
 import { renderHookWithProviders } from 'src/test/render'
 import { USDC, USDC_ARBITRUM, USDC_BASE, USDC_OPTIMISM, USDC_POLYGON } from 'uniswap/src/constants/tokens'
 import {
+  amount,
   getLatestPrice,
   priceHistory,
   SAMPLE_CURRENCY_ID_1,
@@ -46,6 +47,23 @@ const createUsdcTokenProjectWithMatchingPriceHistory = (
   ...usdcTokenProject({ priceHistory: history }),
   tokens: [
     token({ sdkToken: USDC, market: tokenMarket({ priceHistory: history }) }),
+    token({ sdkToken: USDC_POLYGON }),
+    token({ sdkToken: USDC_ARBITRUM }),
+    token({ sdkToken: USDC_BASE, market: tokenMarket() }),
+    token({ sdkToken: USDC_OPTIMISM }),
+  ],
+})
+
+const createUsdcTokenProjectWithPriceHistories = ({
+  projectHistory,
+  tokenHistory,
+}: {
+  projectHistory: GraphQLApi.TimestampedAmount[]
+  tokenHistory: GraphQLApi.TimestampedAmount[]
+}): GraphQLApi.TokenProject => ({
+  ...usdcTokenProject({ priceHistory: projectHistory }),
+  tokens: [
+    token({ sdkToken: USDC, market: tokenMarket({ priceHistory: tokenHistory }) }),
     token({ sdkToken: USDC_POLYGON }),
     token({ sdkToken: USDC_ARBITRUM }),
     token({ sdkToken: USDC_BASE, market: tokenMarket() }),
@@ -207,6 +225,76 @@ describe(useTokenPriceHistory, () => {
       })
 
       expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(history))
+    })
+
+    it('prefers project market price history and spot price when requested', async () => {
+      const projectHistory = [timestampedAmount({ value: 10 }), timestampedAmount({ value: 12 })]
+      const tokenHistory = [timestampedAmount({ value: 20 }), timestampedAmount({ value: 24 })]
+      const project = createUsdcTokenProjectWithPriceHistories({ projectHistory, tokenHistory })
+      const { resolvers } = queryResolvers({
+        tokenProjects: () => [project],
+      })
+      const { result } = renderHookWithProviders(
+        () => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, preferProjectMarketData: true }),
+        { resolvers },
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+        expect(result.current.error).toBe(false)
+      })
+
+      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(projectHistory))
+      expect(result.current.data?.spot).toEqual({
+        value: expect.objectContaining({ value: project.markets?.[0]?.price?.value }),
+        relativeChange: expect.objectContaining({ value: project.markets?.[0]?.pricePercentChange24h?.value }),
+      })
+    })
+
+    it('keeps 1D percent change project-first while default price and history use token market data', async () => {
+      const projectHistory = [timestampedAmount({ value: 10 }), timestampedAmount({ value: 12 })]
+      const tokenHistory = [timestampedAmount({ value: 20 }), timestampedAmount({ value: 24 })]
+      const projectPercentChange24h = amount({ value: 12 })
+      const tokenPercentChange24h = amount({ value: 24 })
+      const project = {
+        ...createUsdcTokenProjectWithPriceHistories({ projectHistory, tokenHistory }),
+        markets: [
+          {
+            ...tokenProjectMarket({ priceHistory: projectHistory }),
+            pricePercentChange24h: projectPercentChange24h,
+          },
+        ],
+        tokens: [
+          token({
+            sdkToken: USDC,
+            market: {
+              ...tokenMarket({ priceHistory: tokenHistory }),
+              pricePercentChange24h: tokenPercentChange24h,
+            },
+          }),
+          token({ sdkToken: USDC_POLYGON }),
+          token({ sdkToken: USDC_ARBITRUM }),
+          token({ sdkToken: USDC_BASE, market: tokenMarket() }),
+          token({ sdkToken: USDC_OPTIMISM }),
+        ],
+      }
+      const { resolvers } = queryResolvers({
+        tokenProjects: () => [project],
+      })
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+        resolvers,
+      })
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+        expect(result.current.error).toBe(false)
+      })
+
+      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(tokenHistory))
+      expect(result.current.data?.spot).toEqual({
+        value: expect.objectContaining({ value: project.tokens[0]?.market?.price?.value }),
+        relativeChange: expect.objectContaining({ value: projectPercentChange24h.value }),
+      })
     })
 
     it('filters out invalid price history entries', async () => {

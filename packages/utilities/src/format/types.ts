@@ -41,6 +41,7 @@ export enum NumberType {
   PortfolioBalance = 'portfolio-balance',
 
   Percentage = 'percentage',
+  PercentageTwoDecimals = 'percentage-two-decimals',
   PercentageOneDecimal = 'percentage-one-decimal',
   PercentageThreeDecimals = 'percentage-three-decimals',
   PercentageFourDecimals = 'percentage-four-decimals',
@@ -61,6 +62,7 @@ export type PercentNumberDecimals = 1 | 2 | 3 | 4
 export type PercentNumberType = Extract<
   NumberType,
   | NumberType.Percentage
+  | NumberType.PercentageTwoDecimals
   | NumberType.PercentageOneDecimal
   | NumberType.PercentageThreeDecimals
   | NumberType.PercentageFourDecimals

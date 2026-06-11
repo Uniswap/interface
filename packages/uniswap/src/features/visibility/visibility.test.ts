@@ -54,14 +54,14 @@ describe('visibility slice', () => {
       const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: false })
       const newState = visibilityReducer(initialState, action)
 
-      expect(newState.positions[positionId]?.isVisible).toBe(false)
+      expect(newState.positions[positionId]).toEqual({ isVisible: false, chainId, poolId, tokenId })
       expect(getUniquePositionId).toHaveBeenCalledWith({ poolId, tokenId, chainId })
     })
 
     it('should toggle visibility from false to true', () => {
       const initialState: VisibilityState = {
         positions: {
-          [positionId]: { isVisible: false },
+          [positionId]: { isVisible: false, chainId, poolId, tokenId },
         },
         tokens: {},
         nfts: {},
@@ -71,13 +71,13 @@ describe('visibility slice', () => {
       const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: true })
       const newState = visibilityReducer(initialState, action)
 
-      expect(newState.positions[positionId]?.isVisible).toBe(true)
+      expect(newState.positions[positionId]).toEqual({ isVisible: true, chainId, poolId, tokenId })
     })
 
     it('should toggle visibility from true to false', () => {
       const initialState: VisibilityState = {
         positions: {
-          [positionId]: { isVisible: true },
+          [positionId]: { isVisible: true, chainId, poolId, tokenId },
         },
         tokens: {
           [tokenId]: { isVisible: true },
@@ -89,7 +89,17 @@ describe('visibility slice', () => {
       const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: false })
       const newState = visibilityReducer(initialState, action)
 
-      expect(newState.positions[positionId]?.isVisible).toBe(false)
+      expect(newState.positions[positionId]).toEqual({ isVisible: false, chainId, poolId, tokenId })
+    })
+
+    it('should persist tokenId as undefined for V2 positions', () => {
+      const initialState: VisibilityState = makeEmptyVisibilityState()
+
+      const action = setPositionVisibility({ poolId, tokenId: undefined, chainId, isVisible: false })
+      const newState = visibilityReducer(initialState, action)
+
+      expect(newState.positions[positionId]).toEqual({ isVisible: false, chainId, poolId, tokenId: undefined })
+      expect(getUniquePositionId).toHaveBeenCalledWith({ poolId, tokenId: undefined, chainId })
     })
   })
 
@@ -101,8 +111,8 @@ describe('visibility slice', () => {
       const state: any = {
         visibility: {
           positions: {
-            [positionId1]: { isVisible: true },
-            [positionId2]: { isVisible: false },
+            [positionId1]: { isVisible: true, chainId: 1, poolId: '0xpool1' },
+            [positionId2]: { isVisible: false, chainId: 1, poolId: '0xpool2' },
           },
           tokens: {},
         },
@@ -110,8 +120,8 @@ describe('visibility slice', () => {
 
       const result = selectPositionsVisibility(state)
       expect(result).toEqual({
-        [positionId1]: { isVisible: true },
-        [positionId2]: { isVisible: false },
+        [positionId1]: { isVisible: true, chainId: 1, poolId: '0xpool1' },
+        [positionId2]: { isVisible: false, chainId: 1, poolId: '0xpool2' },
       })
     })
 

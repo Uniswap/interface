@@ -6,12 +6,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { getTimePeriodLabel, ORDERED_TIMES, SOLANA_ORDERED_TIMES } from '~/features/Explore/constants'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+import { getTimePeriodLabel, ORDERED_TIMES, SOLANA_ORDERED_TIMES } from '~/features/Explore/timeLabels'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 // TODO: change this to reflect data pipeline

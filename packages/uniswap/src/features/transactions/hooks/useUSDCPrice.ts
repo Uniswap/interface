@@ -1,84 +1,85 @@
-import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { parseUnits } from '@ethersproject/units'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { normalizeToken, usePrice } from '@universe/prices'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin, isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
-import { isClassic, isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isRemotePriceServiceSupportedChain } from 'uniswap/src/features/prices/isRemotePriceServiceSupportedChain'
+import { useSolanaUSDCPrice } from 'uniswap/src/features/transactions/hooks/useSolanaUSDCPrice'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { logger } from 'utilities/src/logger/logger'
 
-const SONEIUM_AMOUNT_OVERRIDE = 30
-const DEFAULT_STABLECOIN_AMOUNT_OUT = 1000
-function getStablecoinAmountOut(chainId: UniverseChainId): CurrencyAmount<Token> {
-  const primaryStablecoin = getPrimaryStablecoin(chainId)
+const MAX_TINY_PRICE_SCALING_DECIMALS = 36
 
-  if (chainId === UniverseChainId.Soneium) {
-    const amount = SONEIUM_AMOUNT_OVERRIDE * Math.pow(10, primaryStablecoin.decimals)
-    return CurrencyAmount.fromRawAmount(primaryStablecoin, amount)
-  }
-
-  const amount = DEFAULT_STABLECOIN_AMOUNT_OUT * Math.pow(10, primaryStablecoin.decimals)
-  return CurrencyAmount.fromRawAmount(primaryStablecoin, amount)
-}
-
-/**
- * Returns the price in USDC of the input currency
- * @param currency currency to compute the USDC price of
- */
 export function useUSDCPrice(
   currency?: Currency,
   pollInterval: PollingInterval = PollingInterval.Fast,
-): {
-  price: Price<Currency, Currency> | undefined
-  isLoading: boolean
-} {
-  const chainId = currency?.chainId
+): { price: Price<Currency, Currency> | undefined; isLoading: boolean } {
+  const { chainId, address } = currency ? normalizeToken(currency) : { chainId: undefined, address: undefined }
 
-  const quoteAmount = useMemo(
-    () => (isUniverseChainId(chainId) ? getStablecoinAmountOut(chainId) : undefined),
-    [chainId],
-  )
-  const stablecoin = quoteAmount?.currency
-
-  // avoid requesting quotes for stablecoin input
+  const isRemoteSupported = chainId !== undefined && isRemotePriceServiceSupportedChain(chainId)
+  const stablecoin = useMemo(() => (isUniverseChainId(chainId) ? getPrimaryStablecoin(chainId) : undefined), [chainId])
   const currencyIsStablecoin = Boolean(
     stablecoin && currency && areCurrencyIdsEqual(currencyId(currency), currencyId(stablecoin)),
   )
-  const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { trade, isLoading } = useTrade({
-    amountSpecified,
-    otherCurrency: currency,
-    tradeType: TradeType.EXACT_OUTPUT,
-    pollInterval,
-    isUSDQuote: true,
+  // Remote pricing no-ops when disabled or when the input is the chain's primary stablecoin.
+  const livePrice = usePrice({
+    chainId: isRemoteSupported && !currencyIsStablecoin ? chainId : undefined,
+    address: isRemoteSupported && !currencyIsStablecoin ? address : undefined,
   })
 
-  return useMemo(() => {
-    if (!stablecoin) {
+  const solanaResult = useSolanaUSDCPrice(currency, pollInterval)
+
+  const remoteResult = useMemo(() => {
+    if (!currency || !stablecoin || !isUniverseChainId(chainId)) {
       return { price: undefined, isLoading: false }
     }
 
     if (currencyIsStablecoin) {
-      // handle stablecoin
       return { price: new Price(stablecoin, stablecoin, '1', '1'), isLoading: false }
     }
 
-    if (trade && isJupiter(trade) && currency) {
-      // Convert the string amounts to JSBI.BigInt values
-      const inputAmount = JSBI.BigInt(trade.quote.quote.inAmount)
-      const outputAmount = JSBI.BigInt(trade.quote.quote.outAmount)
-      return { price: new Price(currency, stablecoin, inputAmount, outputAmount), isLoading }
+    if (livePrice === undefined || !Number.isFinite(livePrice)) {
+      return { price: undefined, isLoading: false }
     }
 
-    if (!trade || !isClassic(trade) || !trade.routes[0] || !currency) {
-      return { price: undefined, isLoading }
-    }
+    try {
+      // Parse human-readable amounts: 1 unit of token, and livePrice (USD per token) in stablecoin.
+      // Truncate price to stablecoin decimals so parseUnits doesn't throw (e.g. USDC has 6 decimals).
+      const getQuoteAmountRaw = (price: number): string =>
+        parseUnits(
+          truncateToMaxDecimals({
+            value: convertScientificNotationToNumber(price.toString()),
+            maxDecimals: stablecoin.decimals,
+          }),
+          stablecoin.decimals,
+        ).toString()
 
-    const { numerator, denominator } = trade.routes[0].midPrice
-    return { price: new Price(currency, stablecoin, denominator, numerator), isLoading }
-  }, [currency, stablecoin, currencyIsStablecoin, trade, isLoading])
+      let baseAmountRaw = parseUnits('1', currency.decimals).toString()
+      let quoteAmountRaw = getQuoteAmountRaw(livePrice)
+
+      if (quoteAmountRaw === '0' && livePrice > 0) {
+        baseAmountRaw = parseUnits(`1${'0'.repeat(MAX_TINY_PRICE_SCALING_DECIMALS)}`, currency.decimals).toString()
+        quoteAmountRaw = getQuoteAmountRaw(livePrice * 10 ** MAX_TINY_PRICE_SCALING_DECIMALS)
+      }
+
+      const baseAmount = CurrencyAmount.fromRawAmount(currency, baseAmountRaw)
+      const quoteAmount = CurrencyAmount.fromRawAmount(stablecoin, quoteAmountRaw)
+
+      return {
+        price: quoteAmountRaw === '0' ? undefined : new Price({ baseAmount, quoteAmount }),
+        isLoading: false,
+      }
+    } catch (error) {
+      logger.debug('useUSDCPrice', 'remoteResult', 'parse price failed', { error, livePrice })
+      return { price: undefined, isLoading: false }
+    }
+  }, [currency, stablecoin, chainId, currencyIsStablecoin, livePrice])
+
+  return isRemoteSupported ? remoteResult : solanaResult
 }
 
 export function useUSDCValue(
@@ -93,16 +94,13 @@ export function useUSDCValue(
     }
     try {
       return price.quote(currencyAmount)
-    } catch (_error) {
+    } catch (error) {
+      logger.debug('useUSDCPrice', 'useUSDCValue', 'price.quote failed', { error })
       return null
     }
   }, [currencyAmount, price])
 }
 
-/**
- * @param currencyAmount
- * @returns Returns fiat value of the currency amount, and loading status of the currency<->stable quote
- */
 export function useUSDCValueWithStatus(
   currencyAmount: CurrencyAmount<Currency> | undefined | null,
   pollInterval: PollingInterval = PollingInterval.Fast,
@@ -118,11 +116,9 @@ export function useUSDCValueWithStatus(
     }
     try {
       return { value: price.quote(currencyAmount), isLoading }
-    } catch (_error) {
-      return {
-        value: null,
-        isLoading: false,
-      }
+    } catch (error) {
+      logger.debug('useUSDCPrice', 'useUSDCValueWithStatus', 'price.quote failed', { error })
+      return { value: null, isLoading: false }
     }
   }, [currencyAmount, isLoading, price])
 }

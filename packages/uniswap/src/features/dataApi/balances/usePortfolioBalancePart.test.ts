@@ -271,6 +271,8 @@ describe(usePortfolioBalancePart, () => {
       address: '0x123',
       includeOverrides: [],
       excludeOverrides: [],
+      poolIncludeOverrides: [],
+      poolExcludeOverrides: [],
       includeSmallBalances: true,
       includeSpamTokens: true,
     }

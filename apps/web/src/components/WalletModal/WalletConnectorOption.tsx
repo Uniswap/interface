@@ -7,7 +7,6 @@ import { Passkey } from 'ui/src/components/icons/Passkey'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
-import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -27,11 +26,9 @@ function RecentBadge() {
   const { t } = useTranslation()
 
   return (
-    <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
-      <Text variant="body4" color="$accent1">
-        {t('common.recent')}
-      </Text>
-    </Badge>
+    <Text variant="body4" color="$accent1">
+      {t('common.recent')}
+    </Text>
   )
 }
 

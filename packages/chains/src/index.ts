@@ -1,30 +1,19 @@
-// Chain types (canonical source of truth)
 export { UniverseChainId, RPCType } from './rpc/types'
 export type { RpcChainInfo, ViemChainInfo } from './rpc/types'
-
-// RPC config types
 export type { RpcConfig, FlashbotsConfig, RpcUrlSelectorCtx, RpcUrlSelector } from './rpc/rpcUrlSelector'
 export type { RpcConfigResolver, RpcConfigResolverInput } from './rpc/resolveRpcConfig'
 export type { UniRpcConfig } from './rpc/getUniRpcConfig'
 export type { CreateEthersProvider } from './rpc/createEthersProvider'
 export type { CreateViemClient, CreateViemClientFactoryCtx } from './rpc/createViemClient'
-export type { SessionStrategy } from './rpc/createUniRpcTransport'
-export type { EthersSignTypedDataParams } from './createSignTypedData'
-
-// Transactions
-export { createTransactions } from './createTransactions'
-
-// Config factories
+export type { EthersSignTypedDataParams } from './transactions/createSignTypedData'
+export { createTransactions } from './transactions/createTransactions'
 export { createUniRpcConfigResolver } from './rpc/getUniRpcConfig'
 export { createRpcConfigResolver } from './rpc/resolveRpcConfig'
 export { createRpcUrlSelector } from './rpc/rpcUrlSelector'
-
-// Provider factories
 export { createEthersProviderFactory } from './rpc/createEthersProvider'
 export { createViemClientFactory } from './rpc/createViemClient'
 export { createUniRpcTransportFactory } from './rpc/createUniRpcTransport'
 export { ViemClientManager } from './rpc/ViemClientManager'
-// Flashbots
 export { FlashbotsRpcProvider } from './rpc/FlashbotsRpcProvider'
 export { createFlashbotsRpcClient, createFlashbotsTransport } from './rpc/FlashbotsRpcClient'
 export {
@@ -41,19 +30,15 @@ export {
   MAX_ATTEMPTS,
 } from './rpc/FlashbotsCommon'
 export type { FlashbotsReceipt, SignerInfo } from './rpc/FlashbotsCommon'
-
-// Utilities
-export { createUtilities } from './createUtilities'
-export type { Utilities } from './createUtilities'
-export { createIsAddress } from './createIsAddress'
-export { createNamehash } from './createNamehash'
-export { createParseUnits } from './createParseUnits'
-export { zeroAddress } from './createZeroAddress'
-
-// Observability
+export { createUtilities } from './utilities/createUtilities'
+export { createIsAddress } from './utilities/createIsAddress'
+export { createNamehash } from './utilities/createNamehash'
+export { createParseUnits } from './utilities/createParseUnits'
+export { zeroAddress } from './utilities/createZeroAddress'
 export { InstrumentedJsonRpcProvider } from './rpc/observability/InstrumentedJsonRpcProvider'
 export { createObservableTransport } from './rpc/observability/createObservableTransport'
 export { createUniRpcRoutedTransport } from './rpc/createUniRpcRoutedTransport'
+export { createSessionGatedTransport } from './rpc/session/createSessionGatedTransport'
 export { extractProviderName } from './rpc/observability/extractProviderName'
 export {
   noopObserver,
@@ -68,3 +53,6 @@ export type {
   RpcErrorContext,
   RpcObserver,
 } from './rpc/observability/rpcObserver'
+export type { Abi, Address, Block, Hash, SignableMessage } from './types'
+export { erc20Abi, erc20Abi_bytes32, erc721Abi } from './types'
+export { v3PoolStateAbi, type V3PoolStateAbi } from './abis/v3PoolStateAbi'

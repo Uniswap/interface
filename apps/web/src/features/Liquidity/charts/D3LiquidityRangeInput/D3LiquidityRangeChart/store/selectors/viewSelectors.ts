@@ -61,7 +61,7 @@ export const useLiquidityChartStorePriceDifferences = ():
       const maxPriceDiffNum = ((maxPrice - currentPrice) / currentPrice) * 100
 
       const formatDiff = (diff: number) => {
-        const formatted = formatPercent(diff)
+        const formatted = formatPercent(diff, 2)
         return diff >= 0 ? `+${formatted}` : formatted
       }
 

@@ -13,6 +13,13 @@ import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress 
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
+export const TDP_MULTICHAIN_CHAIN_QUERY_VALUE = 'multichain'
+
+export enum TDPView {
+  Chain = 'chain',
+  Aggregate = 'aggregate',
+}
+
 /**
  * Checks whether a URI uses an allowed external scheme (http or https).
  * Uses the URL API for case-insensitive protocol parsing.
@@ -219,17 +226,20 @@ export function getOpenseaLink({
  * @param chain the chain of the token
  * @param chainUrlParam the chain URL parameter
  * @param inputAddress the input address
+ * @param tdpView whether the URL should open the chain-specific or aggregate TDP view
  */
 export function getTokenDetailsURL({
   address,
   chain,
   chainUrlParam,
   inputAddress,
+  tdpView,
 }: {
   address: string
   chain?: number
   chainUrlParam?: string
   inputAddress?: string | null
+  tdpView?: TDPView
 }): string {
   if (!chain) {
     return '/not-found'
@@ -237,11 +247,19 @@ export function getTokenDetailsURL({
   const chainInfo = toGraphQLChain(chain)
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
-  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
+  const adjustedInputAddress =
+    inputAddress && isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
   const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
-  return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
+  const params = new URLSearchParams()
+  if (adjustedInputAddress) {
+    params.set('inputCurrency', adjustedInputAddress)
+  }
+  if (tdpView === TDPView.Aggregate) {
+    params.set('chain', TDP_MULTICHAIN_CHAIN_QUERY_VALUE)
+  }
+  const query = params.toString()
+  return `/explore/tokens/${chainName}/${adjustedAddress}${query ? `?${query}` : ''}`
 }
 
 type FiatOnRampURLParams = {
@@ -299,11 +317,22 @@ export function getPortfolioUrl(walletAddress: string): string {
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
-export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
+type GetTokenUrlOptions = {
+  addMobileUTMTags?: boolean
+}
+
+export function getTokenUrl(
+  currencyId: string,
+  optionsOrAddMobileUTMTags: GetTokenUrlOptions | boolean = false,
+): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return undefined
   }
+  const options =
+    typeof optionsOrAddMobileUTMTags === 'boolean'
+      ? { addMobileUTMTags: optionsOrAddMobileUTMTags }
+      : optionsOrAddMobileUTMTags
   const network = toUniswapWebAppLink(chainId)
   try {
     let tokenAddress = currencyIdToGraphQLAddress(currencyId)
@@ -313,7 +342,14 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
       tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
     }
     const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
-    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
+    const params = new URLSearchParams()
+    if (options.addMobileUTMTags) {
+      for (const [key, value] of new URLSearchParams(UTM_TAGS_MOBILE)) {
+        params.set(key, value)
+      }
+    }
+    const query = params.toString()
+    return query ? `${tokenUrl}?${query}` : tokenUrl
   } catch {
     return undefined
   }

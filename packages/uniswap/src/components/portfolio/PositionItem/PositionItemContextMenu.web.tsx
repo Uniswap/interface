@@ -1,7 +1,6 @@
 import { isExtensionApp } from '@universe/environment'
 import { memo, PropsWithChildren, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { TouchableArea } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Eye } from 'ui/src/components/icons/Eye'
@@ -13,8 +12,8 @@ import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/Contex
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { PositionItemContextMenuProps } from 'uniswap/src/components/portfolio/PositionItem/PositionItemContextMenu'
 import { useReportPositionAction } from 'uniswap/src/features/positions/hooks/useReportPositionAction'
+import { useTogglePositionVisibility } from 'uniswap/src/features/positions/hooks/useTogglePositionVisibility'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export const PositionItemContextMenu = memo(function PositionItemContextMenu({
@@ -27,9 +26,9 @@ export const PositionItemContextMenu = memo(function PositionItemContextMenu({
   onPoolInfoPress,
 }: PropsWithChildren<PositionItemContextMenuProps>): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu, toggle } = useBooleanState(false)
-  const reportPosition = useReportPositionAction({ onSuccess: onReportSuccess })
+  const reportPosition = useReportPositionAction({ onSuccess: onReportSuccess, showReportedNotification: true })
+  const togglePositionVisibility = useTogglePositionVisibility()
 
   const menuActions = useMemo((): MenuOptionItem[] => {
     const externalLinkTrailing = <ExternalLink color="$neutral3" size="$icon.16" />
@@ -62,14 +61,7 @@ export const PositionItemContextMenu = memo(function PositionItemContextMenu({
     items.push({
       onPress: () => {
         closeMenu()
-        dispatch(
-          setPositionVisibility({
-            poolId: positionInfo.poolId,
-            tokenId: positionInfo.tokenId,
-            chainId: positionInfo.chainId,
-            isVisible: !isVisible,
-          }),
-        )
+        togglePositionVisibility({ position: positionInfo, isVisible })
       },
       label: isVisible ? t('position.hide') : t('position.unhide'),
       Icon: isVisible ? EyeOff : Eye,
@@ -88,7 +80,7 @@ export const PositionItemContextMenu = memo(function PositionItemContextMenu({
     }
 
     return items
-  }, [closeMenu, dispatch, isVisible, onManagePress, onPoolInfoPress, positionInfo, reportPosition, t])
+  }, [closeMenu, isVisible, onManagePress, onPoolInfoPress, positionInfo, reportPosition, togglePositionVisibility, t])
 
   const suppressNativeContextMenu = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault()

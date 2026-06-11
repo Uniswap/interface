@@ -295,7 +295,6 @@ describe('persistence migration integration (dehydrate → persist → restore �
       ['GetPortfolio', { evmAddress: '0xabc' }, {}],
       ['GetPortfolioChart', {}, {}],
       ['ListPositions', {}],
-      ['ListPositions', 'infinite', {}],
       ['GetPosition', {}],
       ['ListTransactions', 'abc', {}, false],
       ['GetWalletProfitLoss'],

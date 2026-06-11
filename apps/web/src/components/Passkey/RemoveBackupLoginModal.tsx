@@ -9,10 +9,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { getRecoveryMethodLabel } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useModalState } from '~/hooks/useModalState'
 import type { RemoveBackupLoginModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 export function RemoveBackupLoginModal() {
   const { t } = useTranslation()
@@ -34,6 +37,11 @@ export function RemoveBackupLoginModal() {
       return await deleteRecoveryMethod(walletId)
     },
     onSuccess: () => {
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.backupLogin.deleted') },
+        'backup-login-deleted-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
       queryClient.invalidateQueries({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
       onClose()
     },

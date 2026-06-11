@@ -17,6 +17,7 @@ import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { computeMaxCostFromTx } from 'uniswap/src/features/gas/components/NetworkCostEditor/computeMaxCost'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -216,10 +217,11 @@ export function createProcessSwapResponse({
 }: {
   gasStrategy: GasStrategy
   /**
-   * Set true when the upstream quote was built with per-tx gas overrides so
-   * `convertGasFeeToDisplayValue` short-circuits the limit-inflation
-   * adjustment — the gas service has already honored the user's explicit
-   * `gasLimit` top-level without inflation.
+   * Set true when any user gas override is applied. The swap's `displayValue`
+   * then becomes the tx max cost (`maxFeePerGas × gasLimit`) so the Network cost
+   * row matches the editor's "Max cost"; `value` stays the estimate. Falls back
+   * to the raw estimate when the tx has no resolved gas fields (e.g. batched
+   * 5792 calls).
    */
   hasOverrides?: boolean
 }) {
@@ -242,10 +244,19 @@ export function createProcessSwapResponse({
     isRevokeNeeded: boolean
     permitsDontNeedSignature?: boolean
   }): TransactionRequestInfo {
+    // Read the same tx the editor pre-fills from (`transactions[0]`); with
+    // overrides applied, show its max cost (`maxFeePerGas × gasLimit`) so the row
+    // stays in sync. Falls back to the estimate below when it has no gas fields.
+    const swapTx = response?.transactions[0]
+    const maxCostDisplayValue = hasOverrides
+      ? computeMaxCostFromTx({ maxFeePerGas: swapTx?.maxFeePerGas, gasLimit: swapTx?.gasLimit })
+      : undefined
+
     // We use the gasFee estimate from quote, as its more accurate
     const swapGasFee = {
       value: swapQuote?.gasFee,
-      displayValue: convertGasFeeToDisplayValue({ gasFee: swapQuote?.gasFee, gasStrategy, hasOverrides }),
+      displayValue:
+        maxCostDisplayValue ?? convertGasFeeToDisplayValue({ gasFee: swapQuote?.gasFee, gasStrategy, hasOverrides }),
     }
 
     // This is a case where simulation fails on backend, meaning txn is expected to fail

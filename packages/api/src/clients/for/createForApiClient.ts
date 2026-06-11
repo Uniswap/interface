@@ -121,9 +121,6 @@ export function createForApiClient(ctx: ForApiClientContext): ForApiClient {
     client,
     method: 'post',
     url: '/SupportedTokens',
-    transformRequest: async ({ params }) => ({
-      params: { ...params, isSolanaEnabled: true },
-    }),
   })
 
   // POST /SupportedFiatCurrencies

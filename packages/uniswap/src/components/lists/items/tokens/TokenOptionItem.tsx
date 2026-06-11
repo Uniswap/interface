@@ -238,6 +238,8 @@ export interface TokenOptionItemProps {
   networkCount?: number
   hideNetworkLogo?: boolean
   rightElement?: JSX.Element
+  /** Persistent category pill (e.g. "Stocks") rendered before `rightElement`. */
+  categoryTag?: OptionItemProps['categoryTag']
   showDisabled?: boolean
   modalInfo?: OptionItemProps['modalInfo']
   focusedRowControl?: FocusedRowControl
@@ -264,6 +266,7 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     networkCount,
     hideNetworkLogo,
     rightElement,
+    categoryTag,
     showDisabled,
     modalInfo,
     focusedRowControl,
@@ -323,6 +326,7 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         ) : undefined
       }
       rightElement={rightElement}
+      categoryTag={categoryTag}
       disabled={showDisabled}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       modalInfo={modalInfo}

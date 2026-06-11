@@ -14,24 +14,21 @@
   },
   "targetDefaults": {
     "prepare": {
-      "inputs": ["dependencies"],
-      "cache": true,
-      "outputs": []
+      "cache": true
     },
     "config:pull": {
       "cache": true,
       "inputs": [
         { "env": "USE_NEW_CONFIGS" },
         { "env": "CONFIG_ENV" },
-        "{workspaceRoot}/packages/config-cli/src/**/*",
-        "{workspaceRoot}/packages/config-cli/package.json",
-        { "runtime": "node -e \"const d=new Date();console.log(d.toISOString().slice(0,13)+'-'+Math.floor(d.getMinutes()/10))\"" }
+        { "env": "SKIP_CONFIG_PULL" },
+        { "runtime": "date -u +%Y-%m-%dT%H" }
       ],
       "outputs": ["{projectRoot}/.env.new"]
     },
     "build": {
       "dependsOn": ["^prepare", "prepare", "^build"],
-      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "inputs": ["sourceFiles"],
       "outputs": [
         "{workspaceRoot}/dist/out-tsc/{projectRoot}",
         "{projectRoot}/dist",
@@ -43,7 +40,7 @@
     },
     "build:production": {
       "dependsOn": ["prepare"],
-      "inputs": ["dependencies", "default"],
+      "inputs": ["dependencies", "production"],
       "outputs": ["{projectRoot}/build"],
       "cache": true
     },
@@ -98,47 +95,46 @@
       "cache": true
     },
     "format:check": {
-      "command": "oxfmt --check --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
+      "command": "oxfmt --check --threads=2 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
       "options": {
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["default", "lintConfig", "{workspaceRoot}/.oxfmtrc.json"]
+      "inputs": ["formattableFiles", "lintConfig"]
     },
     "format": {
-      "command": "oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
+      "command": "oxfmt --threads=2 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "cache": false
+      "cache": true,
+      "inputs": ["formattableFiles", "lintConfig"]
     },
     "lint:oxlint": {
-      "command": "oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
+      "command": "oxlint --threads=2 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": true,
-      "inputs": ["default", "lintConfig"]
+      "inputs": ["sourceFiles", "lintConfig"]
     },
     "lint:oxlint:fix": {
-      "command": "oxlint --fix --threads=4 -c oxlint.config.ts {projectRoot}",
+      "command": "oxlint --fix --threads=2 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": false
     },
     "lint:oxlint:fast": {
-      "command": "ENABLE_FAST_LINT=true oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
+      "command": "ENABLE_FAST_LINT=true oxlint --threads=2 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": true,
-      "inputs": ["default", "lintConfig"]
+      "inputs": ["sourceFiles", "lintConfig"]
     },
     "lint:typeaware-custom": {
       "dependsOn": ["prepare"],
       "cache": true,
-      "inputs": ["default", "lintConfig", "{workspaceRoot}/config/oxlint-plugins/typeaware-custom.ts"]
+      "inputs": ["sourceFiles", "lintConfig", "{workspaceRoot}/config/oxlint-plugins/typeaware-custom.ts"]
     },
     "lint": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "lint:oxlint", "lint:typeaware-custom"],
-      "inputs": ["default"],
-      "cache": true
+      "dependsOn": ["prepare", "lint:oxlint", "lint:typeaware-custom"]
     },
     "lint:fix": {
       "executor": "nx:noop",
@@ -147,13 +143,11 @@
     },
     "check": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "format", "typecheck", "lint", "check:circular", "check:deps:usage"],
-      "cache": true
+      "dependsOn": ["prepare", "format", "typecheck", "lint", "check:circular", "check:deps:usage"]
     },
     "check:fast": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "format", "typecheck", "lint:oxlint:fast"],
-      "cache": true
+      "dependsOn": ["prepare", "format", "typecheck", "lint:oxlint:fast"]
     },
     "check:circular": {
       "inputs": ["sourceFiles"],
@@ -164,13 +158,7 @@
       "options": {
         "cwd": "{workspaceRoot}"
       },
-      "inputs": [
-        "sourceFiles",
-        "{projectRoot}/package.json",
-        "{workspaceRoot}/knip.json",
-        "{workspaceRoot}/package.json",
-        "{workspaceRoot}/bun.lock"
-      ],
+      "inputs": ["sourceFiles", "{workspaceRoot}/knip.json", "{workspaceRoot}/bun.lock"],
       "cache": true
     },
     "test": {
@@ -215,23 +203,13 @@
         "{projectRoot}/graphql/__generated__/**"
       ],
       "cache": true
-    },
-    "vite:build:production": {
-      "dependsOn": ["prepare"],
-      "inputs": ["dependencies", "sourceFiles"],
-      "outputs": ["{projectRoot}/dist"],
-      "cache": true
-    },
-    "@nx/js:tsc": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
     }
   },
   "namedInputs": {
-    "default": ["sharedGlobals", "{projectRoot}/**/*"],
     "production": [
-      "default",
+      "dependencies",
+      "tsConfig",
+      "{projectRoot}/**/*",
       "!{projectRoot}/**/*.spec.tsx",
       "!{projectRoot}/**/*.spec.ts",
       "!{projectRoot}/**/*.test.tsx",
@@ -241,18 +219,28 @@
       "!{projectRoot}/**/*.stories.tsx",
       "!{projectRoot}/**/*.stories.ts"
     ],
-    "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json"],
     "lintConfig": ["{workspaceRoot}/.oxfmtrc.json", "{workspaceRoot}/oxlint.config.ts"],
     "mobileGlobals": ["{workspaceRoot}/metro.config.*", "{workspaceRoot}/Gemfile*"],
     "sourceFiles": [
-      "sharedGlobals",
+      "dependencies",
+      "tsConfig",
       "{projectRoot}/**/*.ts",
       "{projectRoot}/**/*.tsx",
+      "{projectRoot}/**/*.cts",
+      "{projectRoot}/**/*.mts",
       "{projectRoot}/**/*.js",
-      "{projectRoot}/**/*.jsx"
+      "{projectRoot}/**/*.jsx",
+      "{projectRoot}/**/*.cjs",
+      "{projectRoot}/**/*.mjs"
+    ],
+    "formattableFiles": [
+      "sourceFiles",
+      "{projectRoot}/**/*.json",
+      "{projectRoot}/**/*.jsonc",
+      "{projectRoot}/**/*.json5"
     ],
     "dependencies": ["{workspaceRoot}/package.json", "{projectRoot}/package.json"],
-    "tsConfig": ["{projectRoot}/tsconfig*.json"]
+    "tsConfig": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json", "{projectRoot}/tsconfig*.json"]
   },
   "workspaceLayout": {
     "appsDir": "apps",
@@ -261,7 +249,7 @@
   "sync": {
     "applyChanges": true
   },
-  "parallel": 10,
+  "parallel": 6,
   "defaultProject": "@universe/web",
   "generators": {
     "@nx/js:library": {

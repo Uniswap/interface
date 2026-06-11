@@ -101,7 +101,7 @@ export const DropdownMenuSheetItem = ({
       onPressOut={stopPressEventPropagation}
       onPress={handlePress}
     >
-      <Flex shrink flexDirection={flexDirection} alignItems="center">
+      <Flex grow shrink minWidth={0} flexDirection={flexDirection} alignItems="center">
         {icon && <Flex flexShrink={0}>{icon}</Flex>}
         {icon && <Spacer size="$spacing8" />}
         {/* Allow text to ellipsize and not overflow the container, because of the padding */}
@@ -123,7 +123,7 @@ export const DropdownMenuSheetItem = ({
           )}
         </Flex>
       </Flex>
-      <Flex grow flexShrink={0} alignItems="flex-end">
+      <Flex flexShrink={0} alignItems="flex-end">
         {actionType === 'external-link' && (
           <ExternalLink
             size={isMobileApp ? (subheader ? '$icon.20' : '$icon.16') : subheader ? '$icon.16' : '$icon.12'}

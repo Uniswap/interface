@@ -663,6 +663,16 @@ export type LiquidityTransactionBaseInfos =
   | MigrateV3LiquidityToV4TransactionInfo
   | CollectFeesTransactionInfo
 
+/** Runtime list of `LiquidityTransactionBaseInfos`; keep in sync with the union above. */
+export const LIQUIDITY_TRANSACTION_TYPES: TransactionType[] = [
+  TransactionType.LiquidityIncrease,
+  TransactionType.LiquidityDecrease,
+  TransactionType.CreatePair,
+  TransactionType.CreatePool,
+  TransactionType.MigrateLiquidityV3ToV4,
+  TransactionType.CollectFees,
+]
+
 export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LPIncentivesClaimRewards
   tokenAddress: string

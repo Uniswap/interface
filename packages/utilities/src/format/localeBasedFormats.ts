@@ -392,6 +392,32 @@ const TwoDecimalsPercentages: FormatCreator = {
   },
 }
 
+function isWholePercentValue(value: number, twoDecimals: Intl.NumberFormat): boolean {
+  const fraction = twoDecimals.formatToParts(value).find((part) => part.type === 'fraction')
+  return fraction === undefined || /^0+$/.test(fraction.value)
+}
+
+/** Shows whole percentages without decimals but keeps two decimals otherwise. */
+const WholeOrTwoDecimalsPercentages: FormatCreator = {
+  createFormat: (locale, _currencyCode): Intl.NumberFormat => {
+    const noDecimals = getNumberFormat({
+      name: 'NoDecimalPercentages',
+      locale,
+      props: { notation: 'standard', style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0 },
+    })
+    const twoDecimals = getNumberFormat({
+      name: 'TwoDecimalsPercentages',
+      locale,
+      props: { notation: 'standard', style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 },
+    })
+    return {
+      format(value: number): string {
+        return isWholePercentValue(value, twoDecimals) ? noDecimals.format(value) : twoDecimals.format(value)
+      },
+    } as Intl.NumberFormat
+  },
+}
+
 export interface FormatCreator {
   /**
    * Creates a Intl.NumberFormat based off of locale and currency
@@ -608,17 +634,19 @@ export const portfolioBalanceFormatter: Formatter = {
   defaultFormat: TwoDecimalsCurrency,
 }
 
+const percentagesFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: WholeOrTwoDecimalsPercentages }],
+  defaultFormat: WholeOrTwoDecimalsPercentages,
+}
+
+const percentagesTwoDecimalsFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: TwoDecimalsPercentages }],
+  defaultFormat: TwoDecimalsPercentages,
+}
+
 const percentagesOneDecimalFormatter: Formatter = {
   rules: [{ upperBound: Infinity, formatter: OneDecimalPercentages }],
   defaultFormat: OneDecimalPercentages,
-}
-
-const percentagesFormatter: Formatter = {
-  rules: [
-    { upperBound: 0.01, formatter: TwoDecimalsPercentages },
-    { upperBound: Infinity, formatter: NoTrailingTwoDecimalsPercentages },
-  ],
-  defaultFormat: NoTrailingTwoDecimalsPercentages,
 }
 
 const percentagesThreeDecimalsFormatter: Formatter = {
@@ -667,6 +695,7 @@ export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
   [NumberType.PortfolioBalance]: portfolioBalanceFormatter,
   [NumberType.Percentage]: percentagesFormatter,
+  [NumberType.PercentageTwoDecimals]: percentagesTwoDecimalsFormatter,
   [NumberType.PercentageOneDecimal]: percentagesOneDecimalFormatter,
   [NumberType.PercentageThreeDecimals]: percentagesThreeDecimalsFormatter,
   [NumberType.PercentageFourDecimals]: percentagesFourDecimalsFormatter, // update to use 4 decimals

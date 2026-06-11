@@ -107,6 +107,8 @@ const commonTranslations: Record<string, string> = {
   'unitags.claim.error.unavailable': 'Username unavailable',
   'common.today': 'Today',
   'common.yesterday': 'Yesterday',
+  'common.stocks': 'Stocks',
+  'common.etfs': 'ETFs',
   // Storage settings translations
   'settings.setting.storage.clearAccountHistory.title': 'Clear account history',
   'settings.setting.storage.clearAccountHistory.subtitle': 'Clear your account history',

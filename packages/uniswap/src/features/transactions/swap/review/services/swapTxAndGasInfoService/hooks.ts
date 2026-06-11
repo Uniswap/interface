@@ -89,12 +89,8 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   // tx is unavailable here; this service-level hook runs before individual
   // tx requests are resolved. Recommended falls back to undefined for full overrides.
   const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
-  // Only treat as "overrides" for the display path when the user explicitly
-  // set `gasLimit`. The backend skips its `limitInflationFactor` (1.15x) only
-  // for an explicit top-level `gasLimit`; partial overrides (maxBaseFee or
-  // priority only) still get the inflated auto-probed limit, so the display
-  // should keep its inflation backoff in that case.
-  const hasOverrides = gasOverrides?.gasLimit !== undefined
+  // Any user gas override → display the tx max cost (matches the editor's "Max cost").
+  const hasOverrides = gasOverrides !== undefined
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,

@@ -31,7 +31,7 @@ vi.mock('@tanstack/react-query', async () => {
 })
 const useQueryMock = vi.mocked(useQuery)
 
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPriceWrapper', () => ({
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
   useUSDCValue: (currencyAmount: CurrencyAmount<Currency> | undefined | null) => {
     if (!currencyAmount) {
       return null

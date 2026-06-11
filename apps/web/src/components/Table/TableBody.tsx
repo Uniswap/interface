@@ -1,6 +1,6 @@
 import { CellContext, flexRender, Row, RowData } from '@tanstack/react-table'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import { forwardRef, useCallback, useMemo, useRef } from 'react'
+import { forwardRef, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, styled, Text, useSporeColors } from 'ui/src'
 import { WifiError } from 'ui/src/components/icons/WifiError'
@@ -12,6 +12,7 @@ import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getComm
 import { CellContainer, DataRow, TableRowBase } from '~/components/Table/styled'
 import { TableRow } from '~/components/Table/TableRow'
 import { useTableSize } from '~/components/Table/TableSizeProvider'
+import { TableTopLevelRow } from '~/components/Table/TableTopLevelRow'
 import { TableBodyProps } from '~/components/Table/types'
 
 const ROW_GAP_PX = 2
@@ -27,11 +28,15 @@ function TableBodyInner<T extends RowData>(
     error,
     v2,
     rowWrapper,
+    topLevelRowWrapper,
+    subRowsWrapper,
+    renderUnifiedExpandableRow,
     loadingRowsCount = 20,
     rowHeight: propRowHeight,
     compactRowHeight: propCompactRowHeight,
     subRowHeight: propSubRowHeight,
     hasPinnedColumns = false,
+    extendedPinnedColumnDivider = false,
     dimmed,
     virtualized = false,
   }: TableBodyProps<T>,
@@ -42,6 +47,7 @@ function TableBodyInner<T extends RowData>(
   const colors = useSporeColors()
   const isOffline = useIsOffline()
   const { t } = useTranslation()
+
   const skeletonRowHeight = useMemo(
     () =>
       tableWidth <= breakpoints.lg
@@ -51,12 +57,15 @@ function TableBodyInner<T extends RowData>(
   )
 
   const numericRowGap = !hasPinnedColumns ? ROW_GAP_PX : 0
-  const estimateSize = useCallback(() => skeletonRowHeight + numericRowGap, [skeletonRowHeight, numericRowGap])
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  // Container swaps between states so the forwarded ref must re-point whenever a different branches mounts
+  const topLevelRows = useMemo(() => rows.filter((row) => row.depth === 0), [rows])
+
+  const flatEstimateSize = useCallback(() => skeletonRowHeight + numericRowGap, [skeletonRowHeight, numericRowGap])
+
+  const [scrollMargin, setScrollMargin] = useState(0)
+
   const setContainerRef = useCallback(
     (node: HTMLDivElement | null) => {
-      containerRef.current = node
+      setScrollMargin(node?.offsetTop ?? 0)
       if (typeof ref === 'function') {
         ref(node)
       } else if (ref) {
@@ -65,26 +74,106 @@ function TableBodyInner<T extends RowData>(
     },
     [ref],
   )
-  const scrollMargin = containerRef.current?.offsetTop ?? 0
-  const rowVirtualizer = useWindowVirtualizer({
+
+  const flatRowVirtualizer = useWindowVirtualizer({
     count: virtualized ? rows.length : 0,
-    estimateSize,
+    estimateSize: flatEstimateSize,
     overscan: 5,
     scrollMargin,
   })
 
-  const renderRow = (row: Row<T>) => (
-    <TableRow<T>
-      row={row}
-      v2={v2}
-      rowWrapper={rowWrapper}
-      rowHeight={propRowHeight}
-      compactRowHeight={propCompactRowHeight}
-      subRowHeight={propSubRowHeight}
-      isExpanded={row.getCanExpand() ? row.getIsExpanded() : undefined}
-      dimmed={dimmed}
-    />
+  const renderTableRow = useCallback(
+    (row: Row<T>) => {
+      const embeddedInExpandableGroup = Boolean(renderUnifiedExpandableRow && row.subRows.length > 0)
+      const embeddedInIssuerPanel = Boolean(renderUnifiedExpandableRow && row.depth > 0)
+      const activeRowWrapper = embeddedInExpandableGroup && row.getCanExpand() ? undefined : rowWrapper
+
+      return (
+        <TableRow<T>
+          row={row}
+          v2={v2}
+          rowWrapper={activeRowWrapper}
+          rowHeight={propRowHeight}
+          compactRowHeight={propCompactRowHeight}
+          subRowHeight={propSubRowHeight}
+          isExpanded={row.getCanExpand() ? row.getIsExpanded() : undefined}
+          dimmed={dimmed}
+          embeddedInExpandableGroup={embeddedInExpandableGroup}
+          embeddedInIssuerPanel={embeddedInIssuerPanel}
+          extendedPinnedColumnDivider={extendedPinnedColumnDivider}
+        />
+      )
+    },
+    [
+      v2,
+      rowWrapper,
+      renderUnifiedExpandableRow,
+      propRowHeight,
+      propCompactRowHeight,
+      propSubRowHeight,
+      dimmed,
+      extendedPinnedColumnDivider,
+    ],
   )
+
+  const renderSubRows = useCallback(
+    (row: Row<T>, rowGap: string | undefined) => {
+      const subRows = row.subRows
+      if (subRows.length === 0) {
+        return null
+      }
+
+      const subRowElements = subRows.map((subRow) => (
+        <TableRow<T>
+          key={subRow.id}
+          row={subRow}
+          v2={v2}
+          rowWrapper={rowWrapper}
+          rowHeight={propRowHeight}
+          compactRowHeight={propCompactRowHeight}
+          subRowHeight={propSubRowHeight}
+          dimmed={dimmed}
+          extendedPinnedColumnDivider={extendedPinnedColumnDivider}
+        />
+      ))
+      const subRowsContent = subRowsWrapper ? subRowsWrapper(row, <>{subRowElements}</>) : <>{subRowElements}</>
+
+      return (
+        <HeightAnimator open={row.getIsExpanded()} animation="quick" unmountChildrenWhenCollapsed>
+          <Flex gap={rowGap} paddingTop={rowGap}>
+            {subRowsContent}
+          </Flex>
+        </HeightAnimator>
+      )
+    },
+    [
+      v2,
+      rowWrapper,
+      subRowsWrapper,
+      propRowHeight,
+      propCompactRowHeight,
+      propSubRowHeight,
+      dimmed,
+      extendedPinnedColumnDivider,
+    ],
+  )
+
+  const renderTopLevelRow = useCallback(
+    (row: Row<T>, rowGapValue: string | undefined) => (
+      <TableTopLevelRow
+        row={row}
+        isExpanded={row.getIsExpanded()}
+        rowGap={rowGapValue}
+        renderTableRow={renderTableRow}
+        renderSubRows={renderSubRows}
+        topLevelRowWrapper={topLevelRowWrapper}
+        renderUnifiedExpandableRow={renderUnifiedExpandableRow}
+      />
+    ),
+    [renderTableRow, renderSubRows, topLevelRowWrapper, renderUnifiedExpandableRow],
+  )
+
+  const rowGap = !hasPinnedColumns ? '$spacing2' : undefined
 
   if (isOffline && rows.length === 0) {
     return (
@@ -108,7 +197,13 @@ function TableBodyInner<T extends RowData>(
               {table.getAllColumns().map((column, columnIndex) => (
                 <CellContainer
                   key={`skeleton-row-${rowIndex}-column-${columnIndex}`}
-                  style={getCommonPinningStyles({ column, colors, v2, isHeader: false })}
+                  style={getCommonPinningStyles({
+                    column,
+                    colors,
+                    v2,
+                    isHeader: false,
+                    hidePinnedColumnBorder: extendedPinnedColumnDivider,
+                  })}
                 >
                   {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
                 </CellContainer>
@@ -131,13 +226,10 @@ function TableBodyInner<T extends RowData>(
     )
   }
 
-  const topLevelRows = rows.filter((row) => row.depth === 0)
-  const rowGap = !hasPinnedColumns ? '$spacing2' : undefined
-
   if (virtualized) {
-    const virtualItems = rowVirtualizer.getVirtualItems()
+    const virtualItems = flatRowVirtualizer.getVirtualItems()
     return (
-      <Flex ref={setContainerRef} position="relative" style={{ height: rowVirtualizer.getTotalSize() }}>
+      <Flex ref={setContainerRef} position="relative" style={{ height: flatRowVirtualizer.getTotalSize() }}>
         {virtualItems.map((virtualRow) => {
           const row = rows[virtualRow.index]!
           return (
@@ -153,7 +245,7 @@ function TableBodyInner<T extends RowData>(
                 willChange: 'transform',
               }}
             >
-              {renderRow(row)}
+              {renderTableRow(row)}
             </Flex>
           )
         })}
@@ -163,33 +255,11 @@ function TableBodyInner<T extends RowData>(
 
   return (
     <Flex ref={setContainerRef} position="relative" gap={rowGap}>
-      {topLevelRows.map((row) => {
-        const subRows = row.subRows
-        const hasSubRows = subRows.length > 0
-        return (
-          <Flex key={row.id} width="100%">
-            {renderRow(row)}
-            {hasSubRows && (
-              <HeightAnimator open={row.getIsExpanded()} animation="quick" unmountChildrenWhenCollapsed>
-                <Flex gap={rowGap} paddingTop={rowGap}>
-                  {subRows.map((subRow) => (
-                    <TableRow<T>
-                      key={subRow.id}
-                      row={subRow}
-                      v2={v2}
-                      rowWrapper={rowWrapper}
-                      rowHeight={propRowHeight}
-                      compactRowHeight={propCompactRowHeight}
-                      subRowHeight={propSubRowHeight}
-                      dimmed={dimmed}
-                    />
-                  ))}
-                </Flex>
-              </HeightAnimator>
-            )}
-          </Flex>
-        )
-      })}
+      {topLevelRows.map((row) => (
+        <Flex key={row.id} width="100%">
+          {renderTopLevelRow(row, rowGap)}
+        </Flex>
+      ))}
     </Flex>
   )
 }

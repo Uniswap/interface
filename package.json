@@ -91,6 +91,7 @@
     "@tamagui/static@1.136.1": "Fixes applying styles (e.g. with hoverStyle) for buttons on web production builds.",
     "@expo/config-plugins@54.0.2": "Allows overriding Xcode build configuration via EXPO_BUILD_CONFIGURATION env var for 'expo start' interactive mode. Fixes bundle ID resolution when using variable substitution ($(BUNDLE_ID_SUFFIX)) in Xcode project.",
     "@expo/cli@54.0.16": "Fixes issue with not launching the correct activity on android, so we pass EXPO_ANDROID_LAUNCH_ACTIVITY env var.",
+    "@expo/metro-config@54.0.9": "Fixes 'TypeError: Invalid URL' on every Fast Refresh in HMR serializer fork (build/serializer/fork/hmrJSBundle.js). Expo's fork calls 'new URL(options.clientUrl)' where clientUrl is a legacy Node url.Url object (from url.parse); Url doesn't override toString, so WHATWG URL coerces it to '[object Object]' and throws. Upstream Metro avoids this by passing url.format(options.clientUrl). Patch round-trips via node:url format() at both call sites (also fixes a sibling .toString() in prepareModule that was silently producing '[object Object]' sourceUrls in dev source maps). Should be upstreamed.",
     "@react-native-community/slider@5.1.1": "Issue with importing fabric code: https://github.com/callstack/react-native-slider/issues/744",
     "zod@4.3.6": "Enables jitless mode by default to avoid CSP unsafe-eval violations in browser extension content scripts. See https://github.com/colinhacks/zod/issues/4461",
     "@ethersproject/providers@5.7.2": "ENS v2 support adapted from @ensdomains/ethers-patch-v5 with tunneling batch gateway",
@@ -282,6 +283,7 @@
     "zod@4.3.6": "patches/zod@4.3.6.patch",
     "@manypkg/get-packages@1.1.3": "patches/@manypkg%2Fget-packages@1.1.3.patch",
     "@ethersproject/providers@5.7.2": "patches/@ethersproject%2Fproviders@5.7.2.patch",
-    "nx@22.5.4": "patches/nx@22.5.4.patch"
+    "nx@22.5.4": "patches/nx@22.5.4.patch",
+    "@expo/metro-config@54.0.9": "patches/@expo%2Fmetro-config@54.0.9.patch"
   }
 }

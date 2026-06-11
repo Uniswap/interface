@@ -29,7 +29,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
  * ║                                                                           ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
-export function GasAndWarningRows(): JSX.Element {
+export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const isShort = useMedia().short
 
@@ -143,7 +143,7 @@ export function GasAndWarningRows(): JSX.Element {
       </Flex>
     </>
   )
-}
+})
 
 // We want to optimize the swap flow as much as possible, so we split this up into its own component in order to memoize it.
 // If you modify this component, make sure you don't pass complex objects as props that would change on every render.

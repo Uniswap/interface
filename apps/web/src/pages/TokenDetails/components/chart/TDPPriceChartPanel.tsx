@@ -5,8 +5,8 @@ import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart } from '~/components/Charts/PriceChart'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
+import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
-import { useTDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/useTDPPriceChartPanel'
 
 interface TDPPriceChartPanelProps {
   variables: TDPChartQueryVariables
@@ -28,7 +28,7 @@ export function TDPPriceChartPanel({
   currency,
 }: TDPPriceChartPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const { priceQuery, pricePercentChange, showInvalidSkeleton, stale } = useTDPPriceChartPanel({
+  const { priceQuery, pricePercentChange, showInvalidSkeleton, stale } = useTokenPriceChartPanel({
     variables,
     priceChartType,
     setDisableCandlestickUI,

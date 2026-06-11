@@ -7,10 +7,9 @@ import {
   BridgeTrade,
   ChainedActionTrade,
   ClassicTrade,
-  PriorityOrderTrade,
+  getTradeInputTax,
+  getTradeOutputTax,
   UniswapXTrade,
-  UniswapXV2Trade,
-  UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -60,6 +59,83 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   return undefined
 }
 
+type UniversalSwapFlowTrade = ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
+
+function isUniversalSwapFlowTrade(trade: InterfaceTrade | UniversalSwapFlowTrade): trade is UniversalSwapFlowTrade {
+  return 'routing' in trade
+}
+
+function getUniversalQuoteId(trade: UniversalSwapFlowTrade): string | undefined {
+  return 'quoteId' in trade.quote.quote ? trade.quote.quote.quoteId : undefined
+}
+
+type CommonAnalyticsTrade = InterfaceTrade | UniversalSwapFlowTrade
+
+function getAnalyticsQuoteId(trade: CommonAnalyticsTrade): string | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return getUniversalQuoteId(trade)
+  }
+  return isUniswapXTrade(trade) ? trade.quoteId : undefined
+}
+
+function getAnalyticsRequestId(trade: CommonAnalyticsTrade): string | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return trade.quote.requestId
+  }
+  return isSubmittableTrade(trade) ? trade.requestId : undefined
+}
+
+function getAnalyticsQuoteBlockNumber(trade: CommonAnalyticsTrade): string | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return isClassic(trade) ? trade.quote.quote.blockNumber : undefined
+  }
+  return isClassicTrade(trade) ? (trade.blockNumber ?? undefined) : undefined
+}
+
+function getPriceImpactBasisPoints(trade: CommonAnalyticsTrade): number | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return isClassic(trade) && trade.priceImpact ? formatPercentInBasisPointsNumber(trade.priceImpact) : undefined
+  }
+  return isClassicTrade(trade) ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined
+}
+
+function getAnalyticsEstimatedNetworkFeeUsd(trade: CommonAnalyticsTrade): string | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return isClassic(trade) ? trade.quote.quote.gasFeeUSD : undefined
+  }
+  return getEstimatedNetworkFee(trade)?.toString()
+}
+
+function getMinimumOutputAfterSlippage(trade: CommonAnalyticsTrade, allowedSlippage: Percent): string | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return isClassic(trade) ? trade.minAmountOut.toSignificant(6) : undefined
+  }
+  return isClassicTrade(trade) ? trade.minimumAmountOut(allowedSlippage).toSignificant(6) : undefined
+}
+
+function getOutputDetectedTax(trade: CommonAnalyticsTrade): number | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    const outputTax = getTradeOutputTax(trade)
+    return outputTax ? formatPercentNumber(outputTax) : undefined
+  }
+  return formatPercentNumber(trade.outputTax)
+}
+
+function getInputDetectedTax(trade: CommonAnalyticsTrade): number | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    const inputTax = getTradeInputTax(trade)
+    return inputTax ? formatPercentNumber(inputTax) : undefined
+  }
+  return formatPercentNumber(trade.inputTax)
+}
+
+function getAnalyticsOffchainOrderType(trade: CommonAnalyticsTrade): OffchainOrderType | undefined {
+  if (isUniversalSwapFlowTrade(trade)) {
+    return tradeRoutingToOffchainOrderType(trade.routing)
+  }
+  return isUniswapXTrade(trade) ? trade.offchainOrderType : undefined
+}
+
 function tradeRoutingToOffchainOrderType(routing: TradingApi.Routing): OffchainOrderType | undefined {
   switch (routing) {
     case TradingApi.Routing.DUTCH_V2:
@@ -87,67 +163,35 @@ export function formatCommonPropertiesForTrade({
   batchId?: string
   includedPermitTransactionStep?: boolean
 }): SwapTradeBaseProperties {
-  const isUniversalSwapFlow =
-    trade instanceof ClassicTrade ||
-    trade instanceof UniswapXV2Trade ||
-    trade instanceof UniswapXV3Trade ||
-    trade instanceof PriorityOrderTrade ||
-    trade instanceof BridgeTrade ||
-    trade instanceof ChainedActionTrade
+  const isUniversalSwapFlow = isUniversalSwapFlowTrade(trade)
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
     type: trade.tradeType,
-    ura_quote_id: isUniversalSwapFlow ? trade.quote.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
-    ura_request_id: isUniversalSwapFlow
-      ? trade.quote.requestId
-      : isSubmittableTrade(trade)
-        ? trade.requestId
-        : undefined,
-    ura_quote_block_number: isUniversalSwapFlow
-      ? isClassic(trade)
-        ? trade.quote.quote.blockNumber
-        : undefined
-      : isClassicTrade(trade)
-        ? (trade.blockNumber ?? undefined)
-        : undefined,
+    ura_quote_id: getAnalyticsQuoteId(trade),
+    ura_request_id: getAnalyticsRequestId(trade),
+    ura_quote_block_number: getAnalyticsQuoteBlockNumber(trade),
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    price_impact_basis_points:
-      trade instanceof ClassicTrade || (!isUniversalSwapFlow && isClassicTrade(trade))
-        ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
-        : undefined,
+    price_impact_basis_points: getPriceImpactBasisPoints(trade),
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
     chain_id_in: trade.inputAmount.currency.chainId,
     chain_id_out: trade.outputAmount.currency.chainId,
-    estimated_network_fee_usd: isUniversalSwapFlow
-      ? trade instanceof ClassicTrade
-        ? trade.quote.quote.gasFeeUSD
-        : undefined
-      : getEstimatedNetworkFee(trade)?.toString(),
-    minimum_output_after_slippage:
-      trade instanceof ClassicTrade
-        ? trade.minAmountOut.toSignificant(6)
-        : !isUniversalSwapFlow && isClassicTrade(trade)
-          ? trade.minimumAmountOut(allowedSlippage).toSignificant(6)
-          : undefined,
+    estimated_network_fee_usd: getAnalyticsEstimatedNetworkFeeUsd(trade),
+    minimum_output_after_slippage: getMinimumOutputAfterSlippage(trade, allowedSlippage),
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: isUniversalSwapFlow ? undefined : getQuoteMethod(trade),
     fee_usd: outputFeeFiatValue,
-    token_out_detected_tax: formatPercentNumber(trade.outputTax),
-    token_in_detected_tax: formatPercentNumber(trade.inputTax),
-    offchain_order_type: isUniversalSwapFlow
-      ? tradeRoutingToOffchainOrderType(trade.routing)
-      : isUniswapXTrade(trade)
-        ? trade.offchainOrderType
-        : undefined,
+    token_out_detected_tax: getOutputDetectedTax(trade),
+    token_in_detected_tax: getInputDetectedTax(trade),
+    offchain_order_type: getAnalyticsOffchainOrderType(trade),
     transactionOriginType: TransactionOriginType.Internal,
     is_batch: isBatched,
     batch_id: batchId,
@@ -190,8 +234,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...planAnalyticsToSnakeCase(planAnalytics),
-  // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-  ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
+  ...('routing' in trade ? getRouteAnalyticsData(trade) : undefined),
   ...formatCommonPropertiesForTrade({
     trade,
     allowedSlippage,

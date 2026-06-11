@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -39,6 +40,8 @@ export function createGetFeatureFlaggedChainIds(ctx: {
     filterChainIdsByFeatureFlag({
       [UniverseChainId.Linea]: ctx.getLineaStatus(),
       [UniverseChainId.MegaETH]: ctx.getMegaETHStatus(),
+      // Solana is only supported on web — mobile and extension do not support SVM wallets
+      [UniverseChainId.Solana]: isWebApp,
       [UniverseChainId.Tempo]: ctx.getTempoStatus(),
       [UniverseChainId.XLayer]: ctx.getXLayerStatus(),
     })

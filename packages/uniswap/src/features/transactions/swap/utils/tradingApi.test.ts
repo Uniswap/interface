@@ -2,7 +2,7 @@ import { TradingApi } from '@universe/api'
 import { useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { useProtocols } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useQuoteRoutingParams } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import type { Mock } from 'vitest'
@@ -18,12 +18,12 @@ vi.mock('uniswap/src/features/transactions/swap/utils/protocols', async (importO
   const actual = await importOriginal<typeof import('uniswap/src/features/transactions/swap/utils/protocols')>()
   return {
     ...actual,
-    useProtocolsForChain: vi.fn((protocols) => protocols),
+    useProtocols: vi.fn((protocols) => protocols),
   }
 })
 
 const mockUseFeatureFlag = useFeatureFlag as Mock
-const mockUseProtocolsForChain = useProtocolsForChain as Mock
+const mockUseProtocols = useProtocols as Mock
 
 describe('useQuoteRoutingParams', () => {
   const tokenInChainId = UniverseChainId.Mainnet
@@ -37,7 +37,7 @@ describe('useQuoteRoutingParams', () => {
   beforeEach(() => {
     // Reset mocks before each test
     mockUseFeatureFlag.mockClear()
-    mockUseProtocolsForChain.mockImplementation((protocols) => protocols) // Reset to default mock behavior
+    mockUseProtocols.mockImplementation((protocols) => protocols) // Reset to default mock behavior
   })
 
   it('should return only V2, V3, V4 protocols for USD quotes and no hooksOptions', () => {
@@ -70,6 +70,31 @@ describe('useQuoteRoutingParams', () => {
     })
   })
 
+  it('should pass through UniswapX latest when selected and enabled', () => {
+    const selectedProtocols: FrontendSupportedProtocol[] = [
+      TradingApi.ProtocolItems.UNISWAPX_LATEST,
+      TradingApi.ProtocolItems.V4,
+      TradingApi.ProtocolItems.V3,
+      TradingApi.ProtocolItems.V2,
+    ]
+    mockUseProtocols.mockImplementation(() => selectedProtocols)
+
+    const { result } = renderHook(() =>
+      useQuoteRoutingParams({
+        selectedProtocols,
+        tokenInChainId,
+        tokenOutChainId,
+        isV4HookPoolsEnabled: true,
+      }),
+    )
+
+    expect(mockUseProtocols).toHaveBeenCalledWith(selectedProtocols)
+    expect(result.current).toEqual({
+      protocols: selectedProtocols,
+      hooksOptions: TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE,
+    })
+  })
+
   describe('when V4 Hooks are enabled', () => {
     describe('and isV4HookPoolsEnabled is true', () => {
       const isV4HookPoolsEnabled = true
@@ -80,7 +105,7 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
+        mockUseProtocols.mockImplementation(() => selectedProtocols)
 
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
@@ -91,7 +116,7 @@ describe('useQuoteRoutingParams', () => {
           }),
         )
 
-        expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+        expect(mockUseProtocols).toHaveBeenCalledWith(selectedProtocols)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
           hooksOptions: TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE,
@@ -108,7 +133,7 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Original protocols without V4
+        mockUseProtocols.mockImplementation(() => selectedProtocols) // Original protocols without V4
 
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
@@ -119,7 +144,7 @@ describe('useQuoteRoutingParams', () => {
           }),
         )
 
-        expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+        expect(mockUseProtocols).toHaveBeenCalledWith(selectedProtocols)
         expect(result.current).toEqual({
           protocols: expectedProtocols, // V4 is added
           hooksOptions: TradingApi.HooksOptions.V4_HOOKS_ONLY,
@@ -136,7 +161,7 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
+        mockUseProtocols.mockImplementation(() => selectedProtocols)
 
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
@@ -147,7 +172,7 @@ describe('useQuoteRoutingParams', () => {
           }),
         )
 
-        expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+        expect(mockUseProtocols).toHaveBeenCalledWith(selectedProtocols)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
           hooksOptions: TradingApi.HooksOptions.V4_NO_HOOKS,
@@ -159,7 +184,7 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V2,
           TradingApi.ProtocolItems.V3,
         ]
-        mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
+        mockUseProtocols.mockImplementation(() => selectedProtocols)
 
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
@@ -170,7 +195,7 @@ describe('useQuoteRoutingParams', () => {
           }),
         )
 
-        expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+        expect(mockUseProtocols).toHaveBeenCalledWith(selectedProtocols)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
           hooksOptions: TradingApi.HooksOptions.V4_NO_HOOKS,

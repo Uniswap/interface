@@ -1,5 +1,4 @@
 /* oxlint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import type { Currency } from '@uniswap/sdk-core'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
@@ -282,7 +281,7 @@ async function parseApproval({
     title: getActivityTitle({
       type: TransactionType.Approve,
       status,
-      alternate: BigNumber.from(approval.approvalAmount).eq(0), // use alternate if it's a revoke
+      alternate: BigInt(approval.approvalAmount!) === 0n, // use alternate if it's a revoke
     }),
     descriptor,
     currencies: [currency],

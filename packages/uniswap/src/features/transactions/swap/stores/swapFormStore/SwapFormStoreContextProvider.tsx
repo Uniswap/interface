@@ -96,13 +96,11 @@ function SwapFormStoreContextProviderInitializer({
 function SwapFormStoreContextProviderBase({
   children,
   hideFooter,
-  hideSettings,
   prefilledState,
   initialStateToUse,
   initialDerivedSwapInfo,
 }: PropsWithChildren<{
   hideFooter?: boolean
-  hideSettings?: boolean
   prefilledState?: SwapFormState
   initialStateToUse: SwapFormState
   initialDerivedSwapInfo: DerivedSwapInfo
@@ -113,7 +111,6 @@ function SwapFormStoreContextProviderBase({
   const [{ store, cleanup }] = useState(() =>
     createSwapFormStore({
       hideFooter,
-      hideSettings,
       initialState: initialStateToUse,
       derivedSwapInfo: initialDerivedSwapInfo,
       dependenciesForSideEffect: {
@@ -159,7 +156,6 @@ function SwapFormStoreContextProviderBase({
       selectingCurrencyField: s.selectingCurrencyField,
       txId: s.txId,
       hideFooter,
-      hideSettings,
     })),
   )
 
@@ -285,7 +281,6 @@ function SwapFormStoreContextProviderBase({
       derivedSwapInfo,
       dangerouslyGetLatestDerivedSwapInfo,
       hideFooter,
-      hideSettings,
       prefilledCurrencies,
       isSelectingCurrencyFieldPrefilled,
       isMax: maybeUpdatedIsMax,
@@ -294,7 +289,6 @@ function SwapFormStoreContextProviderBase({
       derivedSwapInfo,
       dangerouslyGetLatestDerivedSwapInfo,
       hideFooter,
-      hideSettings,
       prefilledCurrencies,
       isSelectingCurrencyFieldPrefilled,
       maybeUpdatedIsMax,
@@ -314,11 +308,9 @@ function SwapFormStoreContextProviderBase({
 export const SwapFormStoreContextProvider = ({
   children,
   hideFooter,
-  hideSettings,
   prefilledState,
 }: PropsWithChildren<{
   hideFooter?: boolean
-  hideSettings?: boolean
   prefilledState?: SwapFormState
 }>): JSX.Element => {
   // Get default state for store initialization
@@ -339,7 +331,6 @@ export const SwapFormStoreContextProvider = ({
   return (
     <SwapFormStoreContextProviderBase
       hideFooter={hideFooter}
-      hideSettings={hideSettings}
       prefilledState={prefilledState}
       initialStateToUse={initialStateToUse}
       initialDerivedSwapInfo={initialDerivedSwapInfo}

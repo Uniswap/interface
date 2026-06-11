@@ -1,11 +1,7 @@
-/**
- * Session Transport
- *
- * Pure factory functions for creating session-aware transports.
- * These have no platform detection - the caller provides all configuration.
- */
-
 export {
   type CreateSessionTransportOptions,
   createSessionTransport,
 } from '@universe/api/src/session/createSessionTransport'
+
+export { bootstrapSession, provideSession, tryProvideSession } from '@universe/api/src/session/provideSession'
+export { useSession, useSessionReady } from '@universe/api/src/session/hooks/useSession'

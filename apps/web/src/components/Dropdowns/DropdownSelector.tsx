@@ -35,6 +35,8 @@ export function DropdownSelector({
   containerStyle,
   alignRight = false,
   allowFlip,
+  forceFlipUp,
+  matchTriggerWidth,
   positionFixed,
   buttonStyle,
 }: DropdownSelectorProps) {
@@ -65,6 +67,8 @@ export function DropdownSelector({
       tooltipText={tooltipText}
       containerStyle={containerStyle}
       allowFlip={allowFlip}
+      forceFlipUp={forceFlipUp}
+      matchTriggerWidth={matchTriggerWidth}
       positionFixed={positionFixed}
       dropdownStyle={{ minWidth: 200, ...dropdownStyle }}
     >

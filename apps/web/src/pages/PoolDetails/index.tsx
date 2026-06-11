@@ -130,7 +130,6 @@ export function PoolDetailsPage() {
     protocolVersion: poolData?.protocolVersion,
   })
 
-  // oxlint-disable react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
   const waterfallDefault = useMemo(() => {
     if (!unwrappedTokens[0] || !unwrappedTokens[1]) {
       return false
@@ -138,8 +137,8 @@ export function PoolDetailsPage() {
     const currA = gqlToCurrency(unwrappedTokens[0])
     const currB = gqlToCurrency(unwrappedTokens[1])
     return Boolean(currA && currB && shouldReverseForWaterfall(currA, currB))
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
   }, [poolData?.token0, poolData?.token1, chainInfo?.id, poolData?.protocolVersion])
-  // oxlint-enable react-hooks/exhaustive-deps
 
   const [userFlipCount, setUserFlipCount] = useState(0)
   const toggleReversed = () => setUserFlipCount((n) => n + 1)

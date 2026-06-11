@@ -1,11 +1,8 @@
 /* oxlint-disable max-lines */
 import { useQueryClient } from '@tanstack/react-query'
 import { Protocol } from '@uniswap/router-sdk'
-import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool } from '@uniswap/v3-sdk'
-import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { TradingApi } from '@universe/api'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
@@ -22,7 +19,8 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { getTradeInputTax, getTradeOutputTax } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -39,6 +37,16 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 // Use TradingApi namespace for enums
 
 type ProtocolVersion = 'V2' | 'V3' | 'V4' | 'unknown'
+
+type V2PoolInRoute = TradingApi.V2PoolInRoute & { type: 'v2-pool' }
+type V3PoolInRoute = TradingApi.V3PoolInRoute & { type: 'v3-pool' }
+type V4PoolInRoute = TradingApi.V4PoolInRoute & { type: 'v4-pool' }
+type ApiPoolInRoute = V2PoolInRoute | V3PoolInRoute | V4PoolInRoute
+type ClassicQuoteRoute = ClassicQuoteResponse['quote']['route']
+type RouteAnalyticsInput = {
+  routing?: TradingApi.Routing
+  quote?: unknown
+}
 
 export interface RouteInfo {
   poolAddress: string
@@ -65,33 +73,43 @@ const DEFAULT_RESULT = {
   jupiterUsed: false,
 }
 
-function getPoolAddress(pool: Pair | V3Pool | V4Pool): Address | undefined {
-  if (pool instanceof Pair) {
-    return Pair.getAddress(pool.token0, pool.token1)
-  } else if (pool instanceof V3Pool) {
-    return V3Pool.getAddress(pool.token0, pool.token1, pool.fee)
-  } else if (pool instanceof V4Pool) {
-    return pool.poolId
+function asApiPool(
+  pool: TradingApi.V2PoolInRoute | TradingApi.V3PoolInRoute | TradingApi.V4PoolInRoute,
+): ApiPoolInRoute {
+  if (pool.type === 'v2-pool' || pool.type === 'v3-pool' || pool.type === 'v4-pool') {
+    return pool as ApiPoolInRoute
   }
-  return undefined
+  throw new Error(`Unknown pool type: ${pool.type}`)
 }
 
-function getClassicPoolProtocol(pool: Pair | V3Pool | V4Pool): ProtocolVersion | undefined {
-  if (pool instanceof Pair) {
-    return 'V2'
-  } else if (pool instanceof V3Pool) {
-    return 'V3'
-  } else if (pool instanceof V4Pool) {
-    return 'V4'
-  }
-  return undefined
+function getPoolAddress(pool: ApiPoolInRoute): Address | undefined {
+  return 'address' in pool ? pool.address : undefined
 }
 
-/**
- * Loops through all routes and returns an array of pools combinations.
- */
-function getRoutings(routes: ClassicTrade['routes']): Array<Array<Pair | V3Pool | V4Pool>> {
-  return routes.map((route) => route.pools)
+function getClassicPoolProtocol(pool: ApiPoolInRoute): ProtocolVersion {
+  switch (pool.type) {
+    case 'v2-pool':
+      return 'V2'
+    case 'v3-pool':
+      return 'V3'
+    case 'v4-pool':
+      return 'V4'
+    default:
+      throw new Error(`Unknown pool type: ${(pool as { type: string }).type}`)
+  }
+}
+
+function getClassicQuoteRoute(quote: unknown): ClassicQuoteRoute | undefined {
+  if (!quote || typeof quote !== 'object' || !('quote' in quote)) {
+    return undefined
+  }
+
+  const quoteData = (quote as { quote?: unknown }).quote
+  if (!quoteData || typeof quoteData !== 'object' || !('route' in quoteData)) {
+    return undefined
+  }
+
+  return (quoteData as { route?: ClassicQuoteRoute }).route
 }
 
 /**
@@ -179,40 +197,41 @@ function isNonBridgeCrossChainSwap(trade: Trade): boolean {
  * @param trade The trade object containing route information
  * @returns Structured route data for analytics or undefined if route data is not available
  */
-export function getRouteAnalyticsData({
-  routing,
-  routes,
-}: {
-  routing?: TradingApi.Routing
-  routes?: ClassicTrade['routes']
-}): SwapRoutesAnalyticsData | undefined {
+export function getRouteAnalyticsData({ routing, quote }: RouteAnalyticsInput): SwapRoutesAnalyticsData | undefined {
   if (!routing) {
     return undefined
   }
 
   // For classic trades, we can extract detailed route information
-  if (isClassic({ routing }) && routes) {
-    const routings = getRoutings(routes)
-    const paths = routings.map((route) =>
-      route.map((pool) => ({
-        poolAddress: getPoolAddress(pool) ?? 'unknown',
-        version: getClassicPoolProtocol(pool) ?? 'unknown',
-      })),
-    )
-    // Determine which versions are used
-    const v2Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V2))
-    const v3Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V3))
-    const v4Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V4))
-    const poolsCount = paths.reduce((acc, path) => acc + path.length, 0)
+  const classicQuoteRoute = getClassicQuoteRoute(quote)
+  if (isClassic({ routing }) && classicQuoteRoute) {
+    try {
+      const paths = classicQuoteRoute.map((route) =>
+        route.map((rawPool) => {
+          const pool = asApiPool(rawPool)
+          return {
+            poolAddress: getPoolAddress(pool) ?? 'unknown',
+            version: getClassicPoolProtocol(pool),
+          }
+        }),
+      )
+      // Determine which versions are used
+      const v2Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V2))
+      const v3Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V3))
+      const v4Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V4))
+      const poolsCount = paths.reduce((acc, path) => acc + path.length, 0)
 
-    return {
-      poolsCount,
-      paths,
-      v2Used,
-      v3Used,
-      v4Used,
-      uniswapXUsed: false,
-      jupiterUsed: false,
+      return {
+        poolsCount,
+        paths,
+        v2Used,
+        v3Used,
+        v4Used,
+        uniswapXUsed: false,
+        jupiterUsed: false,
+      }
+    } catch (_error) {
+      return DEFAULT_RESULT
     }
   }
 
@@ -250,7 +269,7 @@ function getFeeUsd({
   currencyInAmountUSD,
   currencyOutAmountUSD,
 }: {
-  trade: Trade<Currency, Currency, TradeType>
+  trade: Trade
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
 }): number | undefined {
@@ -385,7 +404,7 @@ export function getBaseTradeAnalyticsProperties({
   priceSource,
 }: {
   formatter: LocalizationContextState
-  trade: Trade<Currency, Currency, TradeType>
+  trade: Trade
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
   portfolioBalanceUsd?: number
@@ -401,6 +420,8 @@ export function getBaseTradeAnalyticsProperties({
   priceSource?: PriceSourceTag
 }) {
   const portionAmount = trade.swapFee?.amount
+  const inputTax = getTradeInputTax(trade)
+  const outputTax = getTradeOutputTax(trade)
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -449,8 +470,8 @@ export function getBaseTradeAnalyticsProperties({
     minimum_output_after_slippage: trade.minAmountOut.toSignificant(6),
     token_in_amount_max: trade.maxAmountIn.toExact(),
     token_out_amount_min: trade.minAmountOut.toExact(),
-    token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
-    token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
+    token_in_detected_tax: inputTax ? parseFloat(inputTax.toFixed(2)) : undefined,
+    token_out_detected_tax: outputTax ? parseFloat(outputTax.toFixed(2)) : undefined,
     simulation_failure_reasons: getAnalyticsSimulationFailures(trade),
     ...getRouteAnalyticsData(trade),
     is_batch: isBatched,

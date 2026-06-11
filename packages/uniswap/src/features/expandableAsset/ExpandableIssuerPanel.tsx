@@ -1,0 +1,124 @@
+import type { ReactNode } from 'react'
+import { Flex, TouchableArea } from 'ui/src'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX,
+  EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX,
+  EXPANDABLE_ASSET_ISSUER_ROW_SEARCH_HEIGHT_PX,
+} from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
+import { ExpandableIssuerIdentity } from 'uniswap/src/features/expandableAsset/ExpandableIssuerIdentity'
+import type { ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+/**
+ * Inner `$surface1` block; issuer sub-rows (or table sub-row slots) render as children inside it.
+ *
+ * - `table` (default): keeps `gap/px/py="$spacing4"`. The table aligns issuer columns with the parent
+ *   row by bleeding rows outward by `EXPANDABLE_ASSET_INNER_PADDING_X_PX` (`IssuerTableRowHoverProvider`),
+ *   and sizes the expand animation via `getExpandableIssuerPanelHeightPx({ variant: 'table' })`.
+ * - `search`: transparent, `$surface5`-bordered, rounded, clipped block with a 2px gap
+ *   (`EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX`) between rows. Each row paints its own `$surface1` fill, so the gaps
+ *   reveal the `$surface2` shell behind the panel (per Figma). Issuer rows carry their own `px="$spacing8"` indent.
+ */
+export function ExpandableIssuerPanelContainer({
+  children,
+  variant = 'table',
+}: {
+  children: ReactNode
+  variant?: ExpandableAssetGroupVariant
+}): JSX.Element {
+  if (variant === 'search') {
+    return (
+      <Flex
+        borderColor="$surface5"
+        borderWidth="$spacing1"
+        borderRadius="$rounded12"
+        width="100%"
+        gap={EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX}
+        overflow="hidden"
+      >
+        {children}
+      </Flex>
+    )
+  }
+
+  return (
+    <Flex
+      backgroundColor="$surface1"
+      borderRadius="$rounded12"
+      width="100%"
+      gap="$spacing4"
+      px="$spacing4"
+      py="$spacing4"
+    >
+      {children}
+    </Flex>
+  )
+}
+
+type ExpandableIssuerRowsProps = {
+  asset: Rwa
+  enabledChainIds: readonly UniverseChainId[]
+  variant: ExpandableAssetGroupVariant
+  onIssuerPress?: (issuer: IssuerToken) => void
+}
+
+/** Issuer sub-rows inside the inner `$surface1` container (nested under `$surface2`). */
+export function ExpandableIssuerRows({
+  asset,
+  enabledChainIds,
+  variant,
+  onIssuerPress,
+}: ExpandableIssuerRowsProps): JSX.Element {
+  return (
+    <ExpandableIssuerPanelContainer variant={variant}>
+      {asset.issuerTokens.map((issuer) => {
+        const issuerRow = (
+          <ExpandableIssuerIdentity asset={asset} issuer={issuer} enabledChainIds={enabledChainIds} variant={variant} />
+        )
+
+        return (
+          <Flex
+            key={issuer.issuer}
+            group="item"
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor={variant === 'search' ? '$surface1' : undefined}
+            hoverStyle={variant === 'search' ? { backgroundColor: '$surface1Hovered' } : undefined}
+            height={
+              variant === 'search'
+                ? EXPANDABLE_ASSET_ISSUER_ROW_SEARCH_HEIGHT_PX
+                : EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX
+            }
+            overflow="hidden"
+            width="100%"
+            px={variant === 'search' ? '$spacing8' : undefined}
+          >
+            {onIssuerPress ? (
+              <TouchableArea
+                width="100%"
+                pressStyle={{ scale: 1 }}
+                {...(variant === 'search'
+                  ? {
+                      accessibilityRole: 'button' as const,
+                      // Scope by ticker so a common issuer slug (e.g. "ondo") doesn't collide across collections.
+                      testID: `${TestID.SearchRwaIssuerPrefix}${asset.symbol}-${issuer.issuer}`,
+                    }
+                  : {})}
+                onPress={(event) => {
+                  event.stopPropagation()
+                  onIssuerPress(issuer)
+                }}
+              >
+                <Flex width="100%">{issuerRow}</Flex>
+              </TouchableArea>
+            ) : (
+              issuerRow
+            )}
+          </Flex>
+        )
+      })}
+    </ExpandableIssuerPanelContainer>
+  )
+}

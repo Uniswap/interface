@@ -168,7 +168,7 @@ function useLimitOrderTrade({
   swapFee,
 }: {
   state: LimitState
-  trade?: Trade<Currency, Currency, TradeType> | null
+  trade?: Trade | null
   inputCurrency?: Currency
   parsedAmounts: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   outputAmount?: CurrencyAmount<Currency>
@@ -279,7 +279,7 @@ function useMarketPriceAndFee(
         return undefined
       }
 
-      const referencePrice = tradeB.routes[0]?.midPrice
+      const referencePrice = tradeB.executionPrice
       // reconstruct Price object using correct currency between ETH or WETH
       return new Price(inputCurrency, outputCurrency, referencePrice.denominator, referencePrice.numerator)
     }
@@ -290,7 +290,7 @@ function useMarketPriceAndFee(
         return undefined
       }
 
-      const referencePrice = tradeA.routes[0]?.midPrice
+      const referencePrice = tradeA.executionPrice
       return new Price(inputCurrency, outputCurrency, referencePrice.denominator, referencePrice.numerator)
     }
 
@@ -303,15 +303,8 @@ function useMarketPriceAndFee(
       return undefined
     }
 
-    const priceA = tradeA.routes[0]?.midPrice
-    const priceB = tradeB.routes[0]?.midPrice
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
-    if (!priceA || !priceB) {
-      return undefined
-    }
-
     // Combine spot prices of A -> ETH and ETH -> B to get a price for A -> B
-    return priceA.multiply(priceB)
+    return tradeA.executionPrice.multiply(tradeB.executionPrice)
   }, [inputCurrency, outputCurrency, skip, tradeA, tradeB])
 
   const feesEnabled = useFeatureFlag(FeatureFlags.LimitsFees)

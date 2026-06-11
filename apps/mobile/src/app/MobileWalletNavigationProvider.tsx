@@ -78,7 +78,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
 
 function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
   return useCallback(async ({ currencyId }: ShareTokenArgs): Promise<void> => {
-    const url = getTokenUrl(currencyId, true)
+    const url = getTokenUrl(currencyId, { addMobileUTMTags: true })
 
     if (!url) {
       logger.error(new Error('Failed to get token URL'), {

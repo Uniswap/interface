@@ -3,7 +3,7 @@ import { getPublicClient } from '@wagmi/core'
 import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { Block } from 'viem'
+import type { Block } from '~/chains'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { estimateFutureBlockTimestamp } from '~/utils/estimateFutureBlockTimestamp'
 

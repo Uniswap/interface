@@ -1,14 +1,15 @@
-import { type Currency, CurrencyAmount, type Token, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { CurrencyAmount, type Token, TradeType } from '@uniswap/sdk-core'
 import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import {
   ApprovalAction,
-  ClassicTrade,
+  createClassicTrade,
+  createUniswapXV2Trade,
+  type ClassicTrade,
   type TokenApprovalInfo,
   type TradeWithStatus,
-  UniswapXV2Trade,
+  type UniswapXV2Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
@@ -23,36 +24,39 @@ export const createMockCurrencyAmount = (token: Token, amount: string): Currency
 export const createMockTradeWithStatus = (
   inputAmount: CurrencyAmount<Token>,
   outputAmount: CurrencyAmount<Token>,
-): TradeWithStatus =>
-  createEmptyTradeWithStatus({
-    trade: new ClassicTrade({
-      quote: { quote: {} } as ClassicQuoteResponse,
-      tradeType: TradeType.EXACT_INPUT,
-      deadline: TWENTY_MINUTES_FROM_NOW,
-      v2Routes: [],
-      v3Routes: [
-        {
-          routev3: new Route<Currency, Currency>(
-            [
-              new Pool(
-                inputAmount.currency,
-                outputAmount.currency,
-                FeeAmount.HIGH,
-                '2437312313659959819381354528',
-                '10272714736694327408',
-                -69633,
-              ),
-            ],
-            inputAmount.currency,
-            outputAmount.currency,
-          ),
-          inputAmount,
-          outputAmount,
+): TradeWithStatus => {
+  const trade = createClassicTrade({
+    quote: {
+      requestId: '1',
+      routing: TradingApi.Routing.CLASSIC,
+      permitData: null,
+      quote: {
+        input: {
+          amount: inputAmount.quotient.toString(),
+          maximumAmount: inputAmount.quotient.toString(),
+          token: inputAmount.currency.address,
         },
-      ],
-      v4Routes: [],
-      mixedRoutes: [],
-    }),
+        output: {
+          amount: outputAmount.quotient.toString(),
+          minimumAmount: outputAmount.quotient.toString(),
+          token: outputAmount.currency.address,
+          recipient: '0xAAAA44272dc658575Ba38f43C438447dDED45358',
+        },
+        swapper: '0xAAAA44272dc658575Ba38f43C438447dDED45358',
+      },
+    } as ClassicQuoteResponse,
+    currencyIn: inputAmount.currency,
+    currencyOut: outputAmount.currency,
+    tradeType: TradeType.EXACT_INPUT,
+    deadline: TWENTY_MINUTES_FROM_NOW,
+  })
+
+  if (!trade) {
+    throw new Error('Expected mock trade to be created')
+  }
+
+  return createEmptyTradeWithStatus({
+    trade,
     indicativeTrade: undefined,
     isIndicativeLoading: false,
     isLoading: false,
@@ -60,6 +64,7 @@ export const createMockTradeWithStatus = (
     gasEstimate: createGasEstimate(),
     quoteHash: '',
   })
+}
 
 export function createMockDerivedSwapInfo({
   inputCurrency,
@@ -139,6 +144,17 @@ export const createMockUniswapXQuote = (inputToken: string, outputToken: string)
   encodedOrder: '0x000',
   orderId: '0xbbb',
   orderInfo: createMockUniswapXOrder(inputToken, outputToken),
+  input: {
+    amount: '44000',
+    maximumAmount: '49000',
+    token: inputToken,
+  },
+  output: {
+    amount: '100000000',
+    minimumAmount: '100000000',
+    token: outputToken,
+    recipient: '0x123',
+  },
   slippageTolerance: 0.5,
   quoteId: '123',
   classicGasUseEstimateUSD: '10',
@@ -237,7 +253,7 @@ export const createMockPermitData = (token: string): TradingApi.NullablePermit =
 })
 
 export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: Token): UniswapXV2Trade => {
-  return new UniswapXV2Trade({
+  const trade = createUniswapXV2Trade({
     currencyIn: inputCurrency,
     currencyOut: outputCurrency,
     tradeType: TradeType.EXACT_INPUT,
@@ -248,6 +264,12 @@ export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: To
       permitData: createMockPermitData(inputCurrency.address),
     },
   })
+
+  if (!trade) {
+    throw new Error('Expected mock UniswapX trade to be created')
+  }
+
+  return trade
 }
 
 export const createMockTokenApprovalInfo = (overrides = {}): TokenApprovalInfo => ({

@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import type { Address } from '~/chains'
 
 /**
  * Used to cast a `string` to the viem `Address` type, or cast `string | undefined` to `Address | undefined`.

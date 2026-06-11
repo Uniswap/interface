@@ -1,10 +1,10 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -18,6 +18,24 @@ import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDP
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 
 const STATS_GAP = '$gap20'
+
+function getVolumeDescription({
+  t,
+  isProjectVolume,
+  chainId,
+}: {
+  t: TFunction
+  isProjectVolume: boolean
+  chainId: UniverseChainId
+}): string {
+  if (isProjectVolume) {
+    return t('stats.volume.1d.description.coingecko')
+  }
+  if (chainId === UniverseChainId.Tempo) {
+    return t('stats.volume.1d.description.tempo')
+  }
+  return t('stats.volume.1d.description')
+}
 
 export const StatWrapper = ({
   tableRow = false,
@@ -152,6 +170,8 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
     ? tokenQueryData?.market?.volume24H?.value
     : filteredDeploymentMarket?.volume24H?.value
   const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
+  // Guard against the second fallback below: `volume` can drop to the Uniswap value even when `stats.volumeSource` is 'project'.
+  const isProjectVolume = stats.volumeSource === 'project' && volume === stats.volume
   const tvl = showAggregatedStats
     ? tokenQueryData?.market?.totalValueLocked?.value
     : filteredDeploymentMarket?.totalValueLocked?.value
@@ -192,11 +212,11 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
           <Stat
             testID={TestID.TokenDetailsStatsVolume24h}
             value={volume}
-            description={
-              effectiveCurrency.chainId === UniverseChainId.Tempo
-                ? t('stats.volume.1d.description.tempo')
-                : t('stats.volume.1d.description')
-            }
+            description={getVolumeDescription({
+              t,
+              isProjectVolume,
+              chainId: effectiveCurrency.chainId,
+            })}
             title={t('stats.volume.1d')}
           />
           <Stat

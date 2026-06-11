@@ -1,14 +1,25 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useReportPositionAction } from 'uniswap/src/features/positions/hooks/useReportPositionAction'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { mockSubmitPoolSpamReport, mockDispatch } = vi.hoisted(() => ({
+const {
+  mockSubmitPoolSpamReport,
+  mockDispatch,
+  mockUseActiveAddresses,
+  mockUsePoolPositionCacheUpdater,
+  mockUpdatePoolBalancesCache,
+} = vi.hoisted(() => ({
   mockSubmitPoolSpamReport: vi.fn(),
   mockDispatch: vi.fn(),
+  mockUseActiveAddresses: vi.fn(),
+  mockUsePoolPositionCacheUpdater: vi.fn(),
+  mockUpdatePoolBalancesCache: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/reporting/reports', async (importOriginal) => ({
@@ -19,6 +30,15 @@ vi.mock('uniswap/src/features/reporting/reports', async (importOriginal) => ({
 vi.mock('react-redux', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-redux')>()),
   useDispatch: () => mockDispatch,
+}))
+
+vi.mock('uniswap/src/features/accounts/store/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/accounts/store/hooks')>()),
+  useActiveAddresses: mockUseActiveAddresses,
+}))
+
+vi.mock('uniswap/src/features/dataApi/balances/poolPositionCacheUpdater', () => ({
+  usePoolPositionCacheUpdater: mockUsePoolPositionCacheUpdater,
 }))
 
 // ---------- Test fixtures ----------
@@ -40,6 +60,8 @@ const positionInfo = (overrides: Partial<PositionInfo> = {}): PositionInfo =>
 describe('useReportPositionAction', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseActiveAddresses.mockReturnValue({ evmAddress: '0xuser', svmAddress: undefined })
+    mockUsePoolPositionCacheUpdater.mockReturnValue(mockUpdatePoolBalancesCache)
   })
 
   it('fires submitPoolSpamReport with values derived from the position', () => {
@@ -82,6 +104,44 @@ describe('useReportPositionAction', () => {
 
     expect(mockSubmitPoolSpamReport).toHaveBeenCalledTimes(1)
     expect(mockDispatch).not.toHaveBeenCalled()
+  })
+
+  it('pushes a "Reported" notification when showReportedNotification is set', () => {
+    const { result } = renderHookWithProviders(() => useReportPositionAction({ showReportedNotification: true }))
+
+    result.current({ position: positionInfo(), isVisible: true })
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      pushNotification({ type: AppNotificationType.Success, title: 'common.reported' }),
+    )
+  })
+
+  it('does not push a notification by default', () => {
+    const { result } = renderHookWithProviders(() => useReportPositionAction())
+
+    result.current({ position: positionInfo(), isVisible: true })
+
+    expect(mockDispatch).not.toHaveBeenCalledWith(
+      pushNotification({ type: AppNotificationType.Success, title: 'common.reported' }),
+    )
+  })
+
+  it('optimistically subtracts from the Pools cache when hiding a currently-visible position', () => {
+    const { result } = renderHookWithProviders(() => useReportPositionAction())
+    const position = positionInfo()
+
+    result.current({ position, isVisible: true })
+
+    expect(mockUpdatePoolBalancesCache).toHaveBeenCalledTimes(1)
+    expect(mockUpdatePoolBalancesCache).toHaveBeenCalledWith(true, position)
+  })
+
+  it('does not touch the Pools cache when the position is already hidden', () => {
+    const { result } = renderHookWithProviders(() => useReportPositionAction())
+
+    result.current({ position: positionInfo(), isVisible: false })
+
+    expect(mockUpdatePoolBalancesCache).not.toHaveBeenCalled()
   })
 
   it('invokes onSuccess with the input after the side effects fire', () => {

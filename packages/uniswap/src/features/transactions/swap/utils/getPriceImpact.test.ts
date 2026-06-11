@@ -26,25 +26,17 @@ const isClassicMock = isClassic as unknown as Mock
 const isUniswapXMock = isUniswapX as unknown as Mock
 const getSwapFeeUsdFromDerivedSwapInfoMock = getSwapFeeUsdFromDerivedSwapInfo as unknown as Mock
 
-// Minimal ClassicTrade mock
-class ClassicTradeMock {
-  priceImpact: Percent
-  constructor(priceImpact: Percent) {
-    this.priceImpact = priceImpact
-  }
-}
+const createClassicTradeMock = (priceImpact: Percent): Trade =>
+  ({
+    priceImpact,
+  }) as Trade
 
-// Minimal UniswapXTrade mock
-class UniswapXTradeMock {
-  quote: unknown
-  constructor(quote: unknown) {
-    this.quote = quote
-  }
-}
+const createUniswapXTradeMock = (quote: unknown): Trade =>
+  ({
+    quote,
+  }) as Trade
 
-// Minimal ChainedActionTrade mock — the real class declares `priceImpact: undefined`,
-// so `getPriceImpact` does not read it on this branch (it falls back to USD values).
-class ChainedActionTradeMock {}
+const createChainedActionTradeMock = (): Trade => ({}) as Trade
 
 describe('getPriceImpact', () => {
   const mockPercent = (value: number): Percent => {
@@ -113,7 +105,7 @@ describe('getPriceImpact', () => {
   it('returns trade.priceImpact for classic trades', () => {
     // Arrange
     const priceImpact = mockPercent(7)
-    const trade = new ClassicTradeMock(priceImpact) as unknown as Trade
+    const trade = createClassicTradeMock(priceImpact)
     isClassicMock.mockReturnValue(true)
     isUniswapXMock.mockReturnValue(false)
     const derivedSwapInfo = makeDerivedSwapInfo(trade)
@@ -125,7 +117,7 @@ describe('getPriceImpact', () => {
 
   it('returns calculated price impact for UniswapX trades', () => {
     // Arrange
-    const trade = new UniswapXTradeMock({ quote: { classicGasUseEstimateUSD: '100' } }) as unknown as Trade
+    const trade = createUniswapXTradeMock({ quote: { classicGasUseEstimateUSD: '100' } })
     isClassicMock.mockReturnValue(false)
     isUniswapXMock.mockReturnValue(true)
     const inputUSD = mockCurrencyAmount('1000')
@@ -158,7 +150,7 @@ describe('getPriceImpact', () => {
 
   it('returns undefined for UniswapX trade with missing USD values', () => {
     // Arrange
-    const trade = new UniswapXTradeMock({ quote: { classicGasUseEstimateUSD: '100' } }) as unknown as Trade
+    const trade = createUniswapXTradeMock({ quote: { classicGasUseEstimateUSD: '100' } })
     isClassicMock.mockReturnValue(false)
     isUniswapXMock.mockReturnValue(true)
     const derivedSwapInfo = makeDerivedSwapInfo(trade, {
@@ -175,7 +167,7 @@ describe('getPriceImpact', () => {
 
   it('returns undefined for UniswapX trade with missing classicGasEstimateUSD', () => {
     // Arrange
-    const trade = new UniswapXTradeMock({ quote: {} }) as unknown as Trade
+    const trade = createUniswapXTradeMock({ quote: {} })
     isClassicMock.mockReturnValue(false)
     isUniswapXMock.mockReturnValue(true)
     const inputUSD = mockCurrencyAmount('1000')
@@ -194,7 +186,7 @@ describe('getPriceImpact', () => {
 
   it('returns USD-based price impact for chained trades with valid USD values', () => {
     // Arrange
-    const trade = new ChainedActionTradeMock() as unknown as Trade
+    const trade = createChainedActionTradeMock()
     isClassicMock.mockReturnValue(false)
     isUniswapXMock.mockReturnValue(false)
     isChainedMock.mockReturnValue(true)
@@ -216,7 +208,7 @@ describe('getPriceImpact', () => {
 
   it('returns undefined for chained trade with missing USD values', () => {
     // Arrange
-    const trade = new ChainedActionTradeMock() as unknown as Trade
+    const trade = createChainedActionTradeMock()
     isClassicMock.mockReturnValue(false)
     isUniswapXMock.mockReturnValue(false)
     isChainedMock.mockReturnValue(true)

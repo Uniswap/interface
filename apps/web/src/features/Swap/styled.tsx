@@ -8,14 +8,16 @@ export const PageWrapper = styled(Flex, {
   pt: '$spacing60',
   px: '$spacing8',
   pb: '$spacing40',
-  width: '100%',
-  maxWidth: PAGE_WRAPPER_MAX_WIDTH,
   $lg: {
     pt: '$spacing48',
   },
   $md: {
     pt: '$spacing20',
   },
+})
+
+export const SwapModuleWrapper = styled(Flex, {
+  width: PAGE_WRAPPER_MAX_WIDTH,
 })
 
 export const ArrowWrapper = styled(Flex, {

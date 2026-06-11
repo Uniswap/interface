@@ -20,7 +20,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
   const token0 = pool.token0 ? gqlToCurrency(unwrapToken(chainId, pool.token0)) : undefined
   const token1 = pool.token1 ? gqlToCurrency(unwrapToken(chainId, pool.token1)) : undefined
 
-  const formattedApr = pool.boostedApr ? formatPercent(pool.boostedApr) : null
+  const formattedApr = pool.boostedApr ? formatPercent(pool.boostedApr, 2) : null
 
   return (
     <Flex
@@ -51,7 +51,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
       </Flex>
       <Flex alignItems="flex-end" gap="$gap4">
         <Text variant="body2" color="$neutral2">
-          {formatPercent(pool.apr.toFixed(3))} {t('pool.apr')}
+          {formatPercent(pool.apr.toFixed(3), 2)} {t('pool.apr')}
         </Text>
         {formattedApr && <LPIncentiveRewardsBadge formattedRewardApr={formattedApr} />}
       </Flex>

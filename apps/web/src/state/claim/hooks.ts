@@ -226,7 +226,7 @@ export function useClaimCallback(address: string | null | undefined): {
     return distributorContract.estimateGas.claim(...args, {}).then((estimatedGasLimit) => {
       // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
       return distributorContract
-        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit.toBigInt()) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.ClaimUni,

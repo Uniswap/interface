@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { getWarningIcon, getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -25,6 +26,7 @@ type InlineWarningCardProps = {
   analyticsProperties?: Record<string, unknown>
   Icon?: GeneratedIcon
   heroIcon?: boolean
+  inlineLearnMore?: boolean
 }
 
 export function InlineWarningCard({
@@ -42,6 +44,7 @@ export function InlineWarningCard({
   descriptionTestId,
   analyticsProperties,
   Icon,
+  inlineLearnMore,
 }: InlineWarningCardProps): JSX.Element | null {
   const { t } = useTranslation()
   const [checkedFallback, setCheckedFallback] = useState(false)
@@ -85,26 +88,42 @@ export function InlineWarningCard({
     />
   ) : null
 
-  const descriptionElement = (
-    <Flex gap="$spacing2">
+  const onPressLearnMore = async (e: { stopPropagation: () => void }): Promise<void> => {
+    e.stopPropagation()
+    if (learnMoreUrl) {
+      await openUri({ uri: learnMoreUrl })
+    }
+  }
+
+  const inlineDescriptionElement = (description || learnMoreUrl) && (
+    <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
+      {description}
+      {description && learnMoreUrl ? ' ' : ''}
+      {learnMoreUrl && (
+        <LearnMoreLink onlyUseText url={learnMoreUrl} textVariant="buttonLabel3" textColor="$neutral1" />
+      )}
+    </Text>
+  )
+
+  const stackedDescriptionElement = (
+    <>
       {description && (
         <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
           {description}
         </Text>
       )}
       {learnMoreUrl && (
-        <TouchableArea
-          onPress={async (e) => {
-            e.stopPropagation()
-            await openUri({ uri: learnMoreUrl })
-          }}
-        >
+        <TouchableArea onPress={onPressLearnMore}>
           <Text color="$neutral1" variant="body3">
             {t('common.button.learn')}
           </Text>
         </TouchableArea>
       )}
-    </Flex>
+    </>
+  )
+
+  const descriptionElement = (
+    <Flex gap="$spacing2">{inlineLearnMore ? inlineDescriptionElement : stackedDescriptionElement}</Flex>
   )
 
   return (

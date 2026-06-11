@@ -1,3 +1,4 @@
+import { requireSessionFetch, SessionGateSource, type Session } from '@universe/sessions'
 import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { logger } from 'utilities/src/logger/logger'
 import { SignerInfo } from './FlashbotsCommon'
@@ -12,6 +13,12 @@ import { HEADER_RESOLVE_TIMEOUT_MS, withTimeout } from './withTimeout'
 
 interface CreateEthersProviderFactoryCtx {
   resolveRpcConfig: RpcConfigResolver
+  /**
+   * Optional per-request session gate. When the getter returns a Session,
+   * UniRPC traffic awaits ready and retries once on 401. When null, passes
+   * through.
+   */
+  getSessionGate?: () => Session | null
 }
 
 interface CreateEthersProviderInput {
@@ -37,8 +44,18 @@ function createJsonRpcFetchFunc(config: {
   headers?: Record<string, string>
   getRequestHeaders: () => Promise<Record<string, string>>
   observer: RpcObserver
+  getSessionGate?: () => Session | null
 }): ethersProviders.JsonRpcFetchFunc {
   let nextId = 1
+  // No-op when getSessionGate returns null (not bootstrapped); awaits ready
+  // and retries once on 401 otherwise. Emits SessionGate.* events to DD.
+  const getSession = config.getSessionGate ?? ((): null => null)
+  const doFetch = requireSessionFetch({
+    getSession,
+    source: SessionGateSource.UnirpcEthers,
+    getLogger: (): typeof logger => logger,
+  })(fetch)
+
   return async (method: string, params?: Array<unknown>): Promise<unknown> => {
     const requestId = generateRequestId()
     const ctx = {
@@ -60,7 +77,7 @@ function createJsonRpcFetchFunc(config: {
         timeoutMs: HEADER_RESOLVE_TIMEOUT_MS,
         label: 'getRequestHeaders',
       })
-      const response = await fetch(config.rpcUrl, {
+      const response = await doFetch(config.rpcUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,6 +158,7 @@ export function createEthersProviderFactory(ctx: CreateEthersProviderFactoryCtx)
             headers: rpcConfig.headers,
             getRequestHeaders: rpcConfig.getRequestHeaders,
             observer: getRpcObserver(),
+            getSessionGate: ctx.getSessionGate,
           }),
           input.chainId,
         )

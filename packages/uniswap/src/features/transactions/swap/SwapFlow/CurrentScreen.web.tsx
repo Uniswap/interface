@@ -19,10 +19,12 @@ export function CurrentScreen({
   settings,
   onSubmitSwap,
   tokenColor,
+  onCurrencyPanelsLayout,
 }: {
   settings: TransactionSettingConfig[]
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
+  onCurrencyPanelsLayout?: (height: number) => void
 }): JSX.Element {
   const { screen } = useTransactionModalContext()
 
@@ -32,7 +34,12 @@ export function CurrentScreen({
   return (
     <>
       <Trace logImpression section={SectionName.SwapForm}>
-        <SwapFormScreen settings={settings} hideContent={false} tokenColor={tokenColor} />
+        <SwapFormScreen
+          settings={settings}
+          hideContent={false}
+          tokenColor={tokenColor}
+          onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+        />
       </Trace>
 
       {/*

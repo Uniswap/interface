@@ -88,16 +88,37 @@ describe('useWalletPositions', () => {
     it('disables the underlying query when account is empty', () => {
       renderHookWithProviders(() => useWalletPositions({ account: '' }))
 
-      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(
-        expect.any(Object),
-        true, // skipQuery=true (second arg = disabled)
-      )
+      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(expect.any(Object), {
+        disabled: true,
+        refetchInterval: undefined,
+      })
     })
 
     it('enables the underlying query when account is provided', () => {
       renderHookWithProviders(() => useWalletPositions({ account: ACCOUNT }))
 
-      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(expect.any(Object), false)
+      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(expect.any(Object), {
+        disabled: false,
+        refetchInterval: undefined,
+      })
+    })
+
+    it('disables the underlying query when `disabled` is true even with an account', () => {
+      renderHookWithProviders(() => useWalletPositions({ account: ACCOUNT, disabled: true }))
+
+      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(expect.any(Object), {
+        disabled: true,
+        refetchInterval: undefined,
+      })
+    })
+
+    it('forwards `pollInterval` to the underlying query as `refetchInterval`', () => {
+      renderHookWithProviders(() => useWalletPositions({ account: ACCOUNT, pollInterval: 60_000 }))
+
+      expect(mockUseGetPositionsInfiniteQuery).toHaveBeenCalledWith(expect.any(Object), {
+        disabled: false,
+        refetchInterval: 60_000,
+      })
     })
   })
 

@@ -8,7 +8,7 @@ import { AdaptiveWebPopoverContent, Popover, TouchableArea, useIsTouchDevice } f
 import { useShadowPropsMedium } from 'ui/src/theme/shadows'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
@@ -21,7 +21,6 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 interface TokenHoverCardProps {
   token: GraphQLApi.Token
@@ -120,10 +119,9 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
     const url = getTokenDetailsURL({
       address: unwrappedToken.address,
       chain: token.chain,
-      chainQueryParam: getChainUrlParam(chainId),
     })
     navigate(url)
-  }, [unwrappedToken.address, token.chain, chainId, navigate])
+  }, [unwrappedToken.address, token.chain, navigate])
 
   if (isTouchDevice || !currencyInfo || !isDataLivelinessUIEnabled) {
     return <>{children}</>

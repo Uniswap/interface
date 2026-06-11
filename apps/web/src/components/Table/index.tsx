@@ -12,6 +12,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
 import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getCommonPinningStyles'
+import { TablePinnedColumnOverlay } from '~/components/Table/PinnedColumns/TablePinnedColumnOverlay'
 import { usePinnedColumns } from '~/components/Table/PinnedColumns/usePinnedColumns'
 import { CellContainer, TableRowBase } from '~/components/Table/styled'
 import { TableBody } from '~/components/Table/TableBody'
@@ -64,7 +65,7 @@ const TableBodyContainer = styled(Flex, {
         borderBottomWidth: 0,
       },
     },
-  },
+  } as const,
 })
 
 const HiddenTableScrollContainer = styled(Flex, {
@@ -199,6 +200,9 @@ export function Table<T extends RowData>({
   scrollGroup = 'table-sync',
   getRowId,
   rowWrapper,
+  topLevelRowWrapper,
+  subRowsWrapper,
+  renderUnifiedExpandableRow,
   loadingRowsCount = 20,
   rowHeight,
   compactRowHeight,
@@ -286,7 +290,15 @@ export function Table<T extends RowData>({
     headerHeight,
   })
 
-  const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
+  const rowContentMinWidthPx = useMemo(
+    () => table.getAllLeafColumns().reduce((sum, column) => sum + column.getSize(), 0),
+    [table],
+  )
+
+  const tableSize = useMemo(
+    () => ({ width, height, top, left, rowContentMinWidthPx }),
+    [width, height, top, left, rowContentMinWidthPx],
+  )
   const computedBodyMaxHeight = useMemo(() => {
     if (!maxHeight) {
       return 'unset' as const
@@ -297,8 +309,14 @@ export function Table<T extends RowData>({
     return computeBodyMaxHeight({ bodyHeight, itemHeight, hasPinnedColumns })
   }, [maxHeight, hideHeader, headerHeight, rowHeight, compactRowHeight, hasPinnedColumns])
 
+  const extendedPinnedColumnDivider = hasPinnedColumns && v2
+  const pinnedColumnOverlayLeftPx = table.getLeftTotalSize()
+
   const content = (
     <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+      {extendedPinnedColumnDivider ? (
+        <TablePinnedColumnOverlay leftPx={pinnedColumnOverlayLeftPx} color={colors.surface3.val} />
+      ) : null}
       <>
         <TableHead $isSticky={isSticky} $top={headerHeight} mb={v2 && !hasPinnedColumns ? '$spacing2' : undefined}>
           {hasPinnedColumns && (
@@ -316,6 +334,7 @@ export function Table<T extends RowData>({
                       colors,
                       v2,
                       isHeader: true,
+                      hidePinnedColumnBorder: extendedPinnedColumnDivider,
                     })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -345,11 +364,15 @@ export function Table<T extends RowData>({
             error={error}
             v2={v2}
             rowWrapper={rowWrapper}
+            topLevelRowWrapper={topLevelRowWrapper}
+            subRowsWrapper={subRowsWrapper}
+            renderUnifiedExpandableRow={renderUnifiedExpandableRow}
             loadingRowsCount={loadingRowsCount}
             rowHeight={rowHeight}
             compactRowHeight={compactRowHeight}
             subRowHeight={subRowHeight}
             hasPinnedColumns={hasPinnedColumns}
+            extendedPinnedColumnDivider={extendedPinnedColumnDivider}
             virtualized={virtualized}
             // @ts-ignore
             table={table}
@@ -404,6 +427,7 @@ export function Table<T extends RowData>({
                   compactRowHeight={compactRowHeight}
                   subRowHeight={subRowHeight}
                   hasPinnedColumns={hasPinnedColumns}
+                  extendedPinnedColumnDivider={extendedPinnedColumnDivider}
                   dimmed={true}
                 />
               </HiddenTableScrollContainer>

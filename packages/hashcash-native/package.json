@@ -41,8 +41,8 @@
     "specs": "nx specs hashcash-native",
     "codegen": "nx codegen hashcash-native",
     "codegen:clean": "nx codegen:clean hashcash-native",
-    "format": "nx format hashcash-native",
-    "format:check": "nx format:check hashcash-native",
+    "format": "nx run hashcash-native:format",
+    "format:check": "nx run hashcash-native:format:check",
     "lint": "nx lint hashcash-native",
     "lint:fix": "nx lint:fix hashcash-native"
   },

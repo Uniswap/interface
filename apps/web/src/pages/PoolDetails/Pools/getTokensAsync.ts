@@ -1,13 +1,13 @@
-import { Interface } from '@ethersproject/abi'
 import { Token } from '@uniswap/sdk-core'
-import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
+import { erc20Abi, erc20Abi_bytes32 } from '@universe/chains'
+import { ensure0xHex } from '@universe/encoding'
+import ERC20_ABI_JSON from 'uniswap/src/abis/erc20.json'
 import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { decodeFunctionResult, encodeFunctionData } from '~/chains'
 import { INTERNAL_JSON_RPC_ERROR_CODE } from '~/constants/misc'
 import { arrayToSlices } from '~/utils/arrays'
 import { buildCurrencyKey, CurrencyKey, currencyKey } from '~/utils/currencyKey'
@@ -17,8 +17,8 @@ export type Call = { target: string; callData: string; gasLimit: number }
 type CallResult = { success: boolean; returnData: string }
 export const DEFAULT_GAS_LIMIT = 1_000_000
 
-const Erc20 = new Interface(ERC20_ABI) as Erc20Interface
-const Erc20Bytes32 = new Interface(ERC20_ABI) as Erc20Bytes32Interface // Used for tokens that return bytes32 for name/symbol rather than string
+const ERC20_ABI = ERC20_ABI_JSON as unknown as typeof erc20Abi
+const ERC20_ABI_BYTES = ERC20_ABI_JSON as unknown as typeof erc20Abi_bytes32
 
 // TODO(WEB-1760): cartcrom - adapt support for multi-function multi-interface multicalls into redux-multicall to remove than this custom cache/chunking logic
 // Infura rejects calls with gas costs > 10x the current block gas limit; in such case we split the call into 2 chunks
@@ -45,16 +45,38 @@ function tryParseToken({ address, chainId, data }: { address: string; chainId: U
     const [nameData, symbolData, decimalsData, nameDataBytes32, symbolDataBytes32] = data
 
     const name = nameData.success
-      ? (Erc20.decodeFunctionResult('name', nameData.returnData)[0] as string)
+      ? (decodeFunctionResult({
+          abi: ERC20_ABI,
+          functionName: 'name',
+          data: ensure0xHex(nameData.returnData),
+        }) as string)
       : nameDataBytes32.success
-        ? (Erc20Bytes32.decodeFunctionResult('name', nameDataBytes32.returnData)[0] as string)
+        ? (decodeFunctionResult({
+            abi: ERC20_ABI_BYTES,
+            functionName: 'name',
+            data: ensure0xHex(nameDataBytes32.returnData),
+          }) as string)
         : undefined
     const symbol = symbolData.success
-      ? (Erc20.decodeFunctionResult('symbol', symbolData.returnData)[0] as string)
+      ? (decodeFunctionResult({
+          abi: ERC20_ABI,
+          functionName: 'symbol',
+          data: ensure0xHex(symbolData.returnData),
+        }) as string)
       : symbolDataBytes32.success
-        ? (Erc20Bytes32.decodeFunctionResult('symbol', symbolDataBytes32.returnData)[0] as string)
+        ? (decodeFunctionResult({
+            abi: ERC20_ABI_BYTES,
+            functionName: 'symbol',
+            data: ensure0xHex(symbolDataBytes32.returnData),
+          }) as string)
         : undefined
-    const decimals = decimalsData.success ? parseInt(decimalsData.returnData) : DEFAULT_ERC20_DECIMALS
+    const decimals = decimalsData.success
+      ? (decodeFunctionResult({
+          abi: ERC20_ABI,
+          functionName: 'decimals',
+          data: ensure0xHex(decimalsData.returnData),
+        }) as number)
+      : DEFAULT_ERC20_DECIMALS
 
     return new Token(chainId, address, decimals, symbol, name)
   } catch (error) {
@@ -90,11 +112,11 @@ const createCalls = (target: string, callData: string[]): Call[] =>
 
 function createCallsForToken(address: string) {
   return createCalls(address, [
-    Erc20.encodeFunctionData('name'),
-    Erc20.encodeFunctionData('symbol'),
-    Erc20.encodeFunctionData('decimals'),
-    Erc20Bytes32.encodeFunctionData('name'),
-    Erc20Bytes32.encodeFunctionData('symbol'),
+    encodeFunctionData({ abi: ERC20_ABI, functionName: 'name' }),
+    encodeFunctionData({ abi: ERC20_ABI, functionName: 'symbol' }),
+    encodeFunctionData({ abi: ERC20_ABI, functionName: 'decimals' }),
+    encodeFunctionData({ abi: ERC20_ABI_BYTES, functionName: 'name' }),
+    encodeFunctionData({ abi: ERC20_ABI_BYTES, functionName: 'symbol' }),
   ])
 }
 

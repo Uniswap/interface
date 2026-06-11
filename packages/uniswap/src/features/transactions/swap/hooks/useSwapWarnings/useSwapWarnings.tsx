@@ -17,6 +17,7 @@ import { getPriceImpactWarning } from 'uniswap/src/features/transactions/swap/ho
 import { getSwapWarningFromError } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getSwapWarningFromError'
 import { getTokenBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getTokenBlockedWarning'
 import { useParsedActivePlanWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useParsedActivePlanWarnings'
+import { useRWAGeoBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useRWAGeoBlockedWarning'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
@@ -102,6 +103,8 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
+  const rwaGeoBlockedWarning = useRWAGeoBlockedWarning(derivedSwapInfo.currencies)
+
   const gasWarning = useTransactionGasWarning({
     accountAddress,
     derivedInfo: derivedSwapInfo,
@@ -109,8 +112,12 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
   })
 
   const allWarnings = useMemo(() => {
-    return !gasWarning ? swapWarnings : [...swapWarnings, gasWarning]
-  }, [gasWarning, swapWarnings])
+    const warnings = rwaGeoBlockedWarning ? [rwaGeoBlockedWarning, ...swapWarnings] : [...swapWarnings]
+    if (gasWarning) {
+      warnings.push(gasWarning)
+    }
+    return warnings
+  }, [gasWarning, swapWarnings, rwaGeoBlockedWarning])
 
   return useFormattedWarnings(allWarnings)
 }

@@ -3,12 +3,11 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
 import { TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import type { PositionItemContextMenuProps } from 'uniswap/src/components/portfolio/PositionItem/PositionItemContextMenu'
 import { useReportPositionAction } from 'uniswap/src/features/positions/hooks/useReportPositionAction'
-import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
+import { useTogglePositionVisibility } from 'uniswap/src/features/positions/hooks/useTogglePositionVisibility'
 import { noop } from 'utilities/src/react/noop'
 
 type NativeMenuAction = {
@@ -26,8 +25,8 @@ export function PositionItemContextMenu({
   onRowPress,
 }: PropsWithChildren<PositionItemContextMenuProps>): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const reportPosition = useReportPositionAction({ onSuccess: onReportSuccess })
+  const reportPosition = useReportPositionAction({ onSuccess: onReportSuccess, showReportedNotification: true })
+  const togglePositionVisibility = useTogglePositionVisibility()
 
   const menuActions = useMemo<NativeMenuAction[]>(() => {
     const actionList: NativeMenuAction[] = [
@@ -35,15 +34,7 @@ export function PositionItemContextMenu({
         label: isVisible ? t('position.hide') : t('position.unhide'),
         systemIcon: isVisible ? 'eye.slash' : 'eye',
         destructive: false,
-        onPress: () =>
-          dispatch(
-            setPositionVisibility({
-              poolId: positionInfo.poolId,
-              tokenId: positionInfo.tokenId,
-              chainId: positionInfo.chainId,
-              isVisible: !isVisible,
-            }),
-          ),
+        onPress: () => togglePositionVisibility({ position: positionInfo, isVisible }),
       },
     ]
     if (!positionInfo.isHidden) {
@@ -55,7 +46,7 @@ export function PositionItemContextMenu({
       })
     }
     return actionList
-  }, [dispatch, isVisible, positionInfo, reportPosition, t])
+  }, [isVisible, positionInfo, reportPosition, togglePositionVisibility, t])
 
   const actions = useMemo<ContextMenuAction[]>(
     () =>

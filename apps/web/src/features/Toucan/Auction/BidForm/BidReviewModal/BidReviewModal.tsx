@@ -483,7 +483,7 @@ export function BidReviewModal({
             </Text>
           </Flex>
 
-          {preparationError ? (
+          {preparationError && !showFlowError ? (
             <Flex
               row
               gap="$spacing12"

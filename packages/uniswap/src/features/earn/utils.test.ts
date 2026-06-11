@@ -17,6 +17,7 @@ import {
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import {
   getEarnDepositSourceOptions,
+  getEarnDepositSourceOptionsBySupport,
   getEarnVaultDepositSourceCurrencyIds,
   getEarnVaultDisplayCurrencyId,
   getEarnPositionInfo,
@@ -417,6 +418,34 @@ describe('earn API mappers', () => {
     })
 
     expect(options.map((option) => option.id)).toEqual([mainnetNativeCurrencyId, baseWrappedCurrencyId])
+  })
+
+  it('splits deposit source options by chained-actions chain support', () => {
+    const vault = createSharedVault()
+    const mainnetCurrencyId = vault.currencyId
+    const polygonCurrencyId = buildCurrencyId(UniverseChainId.Polygon, USDC_ADDRESS)
+
+    const options = getEarnDepositSourceOptions({
+      vault,
+      tokenProjectCurrencyIds: [polygonCurrencyId],
+      portfolioBalances: {
+        [mainnetCurrencyId]: createBalanceWithCurrencyId({
+          currencyId: mainnetCurrencyId,
+          quantity: 1,
+          balanceUSD: 1,
+        }),
+        [polygonCurrencyId]: createBalanceWithCurrencyId({
+          currencyId: polygonCurrencyId,
+          quantity: 2,
+          balanceUSD: 2,
+        }),
+      },
+    })
+
+    expect(getEarnDepositSourceOptionsBySupport(options)).toEqual({
+      supportedDepositSourceOptions: [expect.objectContaining({ id: mainnetCurrencyId })],
+      unsupportedDepositSourceOptions: [expect.objectContaining({ id: polygonCurrencyId })],
+    })
   })
 
   it('treats zero USD balances as unpriced and orders them by token quantity', () => {

@@ -554,16 +554,22 @@ describe('AddBackupLoginModal', () => {
       render(<AddBackupLoginModal />)
       await goToSetPasscodeStep()
 
-      const inputs = document.querySelectorAll('input[inputmode="numeric"]')
-      expect(inputs[0]).toHaveAttribute('type', 'password')
+      // Inputs stay type="text" so Android keeps the numeric keypad on toggle; the masked/shown
+      // state is signalled by fontSize (28px masked vs 20px shown — see DigitInputRow.web.tsx).
+      // CSS masking via -webkit-text-security isn't observable in jsdom.
+      const inputs = document.querySelectorAll<HTMLInputElement>('input[inputmode="numeric"]')
+      expect(inputs[0]).toHaveAttribute('type', 'text')
+      expect(inputs[0]!.style.fontSize).toBe('28px')
 
       fireEvent.click(screen.getByText('Show'))
-      const updatedInputs = document.querySelectorAll('input[inputmode="numeric"]')
+      const updatedInputs = document.querySelectorAll<HTMLInputElement>('input[inputmode="numeric"]')
       expect(updatedInputs[0]).toHaveAttribute('type', 'text')
+      expect(updatedInputs[0]!.style.fontSize).toBe('20px')
 
       fireEvent.click(screen.getByText('Hide'))
-      const hiddenInputs = document.querySelectorAll('input[inputmode="numeric"]')
-      expect(hiddenInputs[0]).toHaveAttribute('type', 'password')
+      const hiddenInputs = document.querySelectorAll<HTMLInputElement>('input[inputmode="numeric"]')
+      expect(hiddenInputs[0]).toHaveAttribute('type', 'text')
+      expect(hiddenInputs[0]!.style.fontSize).toBe('28px')
     })
 
     it('navigates back from set passcode to passcode intro', async () => {

@@ -13,6 +13,7 @@ import { useLiquidityChartInteractions } from '~/features/Liquidity/charts/D3Liq
 import { useResponsiveDimensions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/hooks/useResponsiveDimensions'
 import { useChartPriceState } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
 import { useChartViewState } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
+import type { LiquidityScaleSmoothing } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useLiquidityChartStoreActions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import {
   priceToY,
@@ -53,6 +54,9 @@ export const D3LiquidityRangeChart = ({
   const chartId = useId()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const timescaleSvgRef = useRef<SVGSVGElement | null>(null)
+  // Stable, view-only state for easing the liquidity width-scale during scroll. Stored on a ref so
+  // it survives the per-frame renderer re-init without going through React/store state.
+  const liquidityScaleSmoothingRef = useRef<LiquidityScaleSmoothing>({})
 
   const { priceRangeState } = useLiquidityUrlState()
 
@@ -122,6 +126,7 @@ export const D3LiquidityRangeChart = ({
       tickToY: ({ tick, tickAlignment }: { tick: number; tickAlignment?: TickAlignment }) =>
         tickToY({ tick, tickScale, tickSpacing, tickAlignment }),
       yToTick: (y: number) => yToTick({ y, tickScale }),
+      liquidityScaleSmoothing: liquidityScaleSmoothingRef.current,
     }
 
     // Initialize renderers with the g element and context, and separate timescale context
@@ -174,6 +179,21 @@ export const D3LiquidityRangeChart = ({
     })
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [priceData.dataHash, migratingPosition, reset])
+
+  // Reset the liquidity width-scale smoothing when the underlying data changes (so a new pool's
+  // bars don't animate from the previous pool's scale) and cancel any pending settle frame on
+  // data change / unmount.
+  useEffect(() => {
+    const smoothing = liquidityScaleSmoothingRef.current
+    smoothing.displayedMaxLiquidity = undefined
+    smoothing.lastFrameTimeMs = undefined
+    return () => {
+      if (smoothing.settleFrameId !== undefined) {
+        cancelAnimationFrame(smoothing.settleFrameId)
+        smoothing.settleFrameId = undefined
+      }
+    }
+  }, [priceData.dataHash])
 
   return (
     <Flex opacity={dimensions.isInitialized ? 1 : 0} animation="fast" flexDirection="column">

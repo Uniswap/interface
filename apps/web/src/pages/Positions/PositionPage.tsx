@@ -1,5 +1,4 @@
 /* oxlint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
@@ -41,7 +40,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -92,12 +91,12 @@ const BodyWrapper = styled(Main, {
   },
 })
 
-function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
+function parseTokenId(tokenId: string | undefined): bigint | undefined {
   if (!tokenId) {
     return undefined
   }
   try {
-    return BigNumber.from(tokenId)
+    return BigInt(tokenId)
   } catch {
     return undefined
   }

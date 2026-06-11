@@ -20,9 +20,12 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 type AddPasskeyStep = 'verify' | 'choose'
 
@@ -68,8 +71,20 @@ export function AddPasskeyModal() {
         walletId: walletId ?? undefined,
       })
     },
+    onSuccess: () => {
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.passkey.added') },
+        'passkey-added-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
+    },
     onError: (error) => {
       logger.error(error, { tags: { file: 'AddPasskeyModal', function: 'registerAuthenticator' } })
+      popupRegistry.addPopup(
+        { type: PopupType.Error, error: t('notification.passkey.add.failed') },
+        'passkey-add-error',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
     },
     onSettled: () => {
       resetListAuthenticators(queryClient, walletId)

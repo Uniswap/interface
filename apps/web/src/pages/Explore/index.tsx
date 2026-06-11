@@ -21,6 +21,11 @@ import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/stat
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { AuctionVerificationFilter as AuctionVerificationFilterComponent } from '~/pages/Explore/AuctionVerificationFilter'
+import {
+  EXPLORE_STICKY_SCROLL_OFFSET_PX,
+  EXPLORE_TOKEN_SECTION_ID,
+} from '~/pages/Explore/categories/useExploreCategory'
+import { ExploreAssetShelfSection, ExploreCategoryTablesOrPage } from '~/pages/Explore/ExploreAssetsIntegration'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { ProtocolFilter } from '~/pages/Explore/ProtocolFilter'
@@ -132,11 +137,15 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     return key
   }, [initialTab, Pages])
 
+  const isExploreTableEnabled = useFeatureFlag(FeatureFlags.RWAUXExplore)
+  const isExploreCarouselEnabled = useFeatureFlag(FeatureFlags.RWAUXExploreCarousel)
+
   // scroll to tab navbar on initial page mount only
+  // skip when the asset shelf is shown — the shelf is the hero content and shouldn't be scrolled past
   useEffect(() => {
-    if (tabNavRef.current && initialTab) {
+    if (tabNavRef.current && initialTab && !(isExploreCarouselEnabled && initialTab === ExploreTab.Tokens)) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
+      window.scrollTo({ top: offsetTop - EXPLORE_STICKY_SCROLL_OFFSET_PX, behavior: 'smooth' })
     }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [])
@@ -176,6 +185,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { isTestnetModeEnabled } = useEnabledChains()
   const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
   const showEarnSection = isEarnEnabled && !isTestnetModeEnabled
+  const showAssetShelf = isExploreCarouselEnabled
+  const showExploreCategoryTables = isExploreTableEnabled && currentKey === ExploreTab.Tokens
 
   useEffect(() => {
     // We only support the Tokens tab on Solana; redirect if the current tab is not the Tokens tab on Solana.
@@ -216,8 +227,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 <EarnVaultsSection />
               </Flex>
             )}
+            {showAssetShelf && <ExploreAssetShelfSection />}
             <Flex
               ref={tabNavRef}
+              id={EXPLORE_TOKEN_SECTION_ID}
               row
               maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
               mt={isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
@@ -296,10 +309,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                     </Button>
                   </Flex>
                 )}
-                {currentKey !== ExploreTab.Toucan && <TableNetworkFilter />}
-                {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
+                {currentKey !== ExploreTab.Toucan && !showExploreCategoryTables && <TableNetworkFilter />}
+                {currentKey === ExploreTab.Tokens && !showExploreCategoryTables && <VolumeTimeFrameSelector />}
                 {currentKey === ExploreTab.Pools && <ProtocolFilter />}
-                {currentKey !== ExploreTab.Toucan && <SearchBar tab={currentKey} />}
+                {currentKey !== ExploreTab.Toucan && !showExploreCategoryTables && <SearchBar tab={currentKey} />}
               </Flex>
             </Flex>
             {currentKey === ExploreTab.Toucan && <TopVerifiedAuctionsSection />}
@@ -331,7 +344,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 </Flex>
               </Flex>
             )}
-            <Page />
+            <ExploreCategoryTablesOrPage showExploreCategoryTables={showExploreCategoryTables} page={<Page />} />
           </Flex>
         </ExploreTablesFilterStoreContextProvider>
       </ExploreContextProvider>

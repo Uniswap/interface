@@ -239,7 +239,7 @@ export function EarnDepositAmountContent({
   })
   const ctaLabel = getCtaLabel({ isOverBalance, hasAmount, t })
   const apyLabel = t('explore.earn.vault.rateValue', {
-    apy: formatPercent(vault.apyPercent),
+    apy: formatPercent(vault.apyPercent, 2),
   })
   const shouldShowDepositSourceSelector = !isWithdrawing && depositSourceOptions.length > 1
 

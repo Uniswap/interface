@@ -1,6 +1,6 @@
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-import { Address, erc20Abi } from 'viem'
 import { useReadContract } from 'wagmi'
+import { type Address, erc20Abi } from '~/chains'
 // Since v2 positions are ERC20s, when they are closed, the liquidity token is burned.
 // Should do on-chain lookup to check account's balanceOf on the liquidity token to check for ownership
 // To check position ownership on V3 positions, should use owner from GetPositions query (positionInfo.owner)instead of on-chain call

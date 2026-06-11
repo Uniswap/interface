@@ -14,8 +14,8 @@ import {
   parseAsDepositState,
   parseAsFeeData,
   parseAsHookAddress,
-  parseAsPositionFlowStep,
   parseAsPriceRangeState,
+  parseAsStep,
 } from '~/features/Liquidity/parsers/urlParsers'
 import { getIsBrowserPage, MatchType, PageType } from '~/hooks/useIsPage'
 import type { DepositState } from '~/types/liquidity'
@@ -76,11 +76,7 @@ export function useLiquidityUrlState() {
   // Step uses push history for browser navigation
   const [historyState, setHistoryState] = useQueryState(
     'step',
-    parseAsPositionFlowStep.withDefault(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER).withOptions({
-      history: 'push',
-      clearOnDefault: false,
-      shallow: false,
-    }),
+    parseAsStep.withDefault(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER),
   )
 
   // Other params use replace history

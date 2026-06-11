@@ -1,6 +1,4 @@
 import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
-import { atom, useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -27,19 +25,15 @@ import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { setOpenModal } from '~/state/application/reducer'
-
-// TODO: [INFRA-1559] Replace Jotai atoms with Zustand store
-/** Shared atom so RecentlyConnectedModal can trigger the login view in the account drawer */
-export const showEmbeddedLoginViewAtom = atom(false)
-/** Shared atom so the login view shows a loading state when passkey sign-in is triggered externally */
-export const passkeySignInPendingAtom = atom(false)
+import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
 
 export function EmbeddedWalletConnectionsModal(): JSX.Element {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
-  const [showLoginView, setShowLoginView] = useAtom(showEmbeddedLoginViewAtom)
+  const showLoginView = useEmbeddedWalletLoginViewStore((s) => s.showLoginView)
+  const setShowLoginView = useEmbeddedWalletLoginViewStore((s) => s.setShowLoginView)
 
   const handleCreateAccount = useEvent(() => {
     accountDrawer.close()
@@ -47,7 +41,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
   })
 
   const { signInWithPasskeyAsync, isPending: isPasskeyPending } = useSignInWithPasskey()
-  const isExternalPasskeyPending = useAtomValue(passkeySignInPendingAtom)
+  const isExternalPasskeyPending = useEmbeddedWalletLoginViewStore((s) => s.passkeySignInPending)
   const isPasskeyLoading = isPasskeyPending || isExternalPasskeyPending
 
   const handlePasskeyLogin = useEvent(() => signInWithPasskeyAsync())

@@ -2,11 +2,13 @@ import { Token } from '@uniswap/sdk-core'
 import {
   MultichainTokenOption,
   OnchainItemListOptionType,
+  RwaCollectionOption,
   TokenOption,
   UnitagOption,
   WalletOption,
 } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
@@ -95,6 +97,32 @@ const MOCK_MULTICHAIN_TOKEN: MultichainTokenOption = {
     } as Token,
     currencyId: '1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     logoUrl: 'https://example.com/usdc.png',
+  },
+}
+
+const MOCK_RWA_COLLECTION: RwaCollectionOption = {
+  type: OnchainItemListOptionType.RwaCollection,
+  showCategoryTag: true,
+  showTokenCount: false,
+  rwa: {
+    symbol: 'TSLA',
+    name: 'Tesla',
+    logoUrl: '',
+    priceUsd: 0,
+    volume24hUsd: 0,
+    sparkline1d: { points: [] },
+    issuerTokens: [
+      {
+        symbol: 'TSLAON',
+        name: 'Tesla',
+        logoUrl: '',
+        issuer: 'ondo',
+        priceUsd: 0,
+        volume24hUsd: 0,
+        sparkline1d: { points: [] },
+        chainTokens: [{ chainId: 1, address: '0xaaa' }],
+      },
+    ],
   },
 }
 
@@ -218,6 +246,86 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       query_text: 'usdc',
       selected_search_result_name: 'USD Coin',
       selected_search_result_address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    })
+  })
+
+  it('sends rwa collection analytics event on web, keyed on the tapped issuer (NavbarResultSelected)', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<RwaCollectionOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_RWA_COLLECTION],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'tesla',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_RWA_COLLECTION,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+      // A different issuer than issuerTokens[0] (address 0xaaa) was tapped: analytics must reflect 0xbbb.
+      rwaSelection: { chainId: UniverseChainId.Mainnet, address: '0xbbb' },
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 1,
+      query: 'tesla',
+      chainId: UniverseChainId.Mainnet,
+      suggestion_type: 'token-suggestion',
+      token_type: 'token',
+      total_suggestions: 1,
+      query_text: 'tesla',
+      selected_search_result_name: 'Tesla',
+      selected_search_result_address: '0xbbb',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    })
+  })
+
+  it('sends rwa collection analytics event on mobile (ExploreSearchResultClicked)', () => {
+    mockPlatformState.isMobileApp = true
+
+    const mockSection: OnchainItemSection<RwaCollectionOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_RWA_COLLECTION],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'tesla',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_RWA_COLLECTION,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+      rwaSelection: { chainId: UniverseChainId.Mainnet, address: '0xbbb' },
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 1,
+      query: 'tesla',
+      name: 'Tesla',
+      chain: UniverseChainId.Mainnet,
+      address: '0xbbb',
+      type: 'token',
       searchChainFilter: null,
       searchTabFilter: SearchTab.Tokens,
     })

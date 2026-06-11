@@ -40,14 +40,8 @@ import { isZero } from 'uniswap/src/utils/number'
  * or the crosschain-not-supported modal. (The auto-tooltip branch is
  * unreachable here because Auto-mode users see `<GasInfoRow>` upstream, but
  * the controller hook is generic across web + native and keeps that branch.)
- *
- * UniswapX trades render the static `<UniswapXFee>` display without a tap
- * handler. `txRequests` is undefined for UniswapX, so opening the editor
- * would yield no recommended baseline and any saved overrides would carry
- * into the next EVM swap.
  */
-export function GasInfoRowWithCustomGasEnabled({ gasInfo }: { gasInfo: GasInfo }): JSX.Element | null {
-  const { t } = useTranslation()
+export function GasInfoRowWithCustomGasEnabled({ gasInfo }: { gasInfo: GasInfo }): JSX.Element {
   const { txRequests, isUniswapXTrade } = useSwapTxStore((s) => ({
     txRequests: isUniswapX(s) ? undefined : 'txRequests' in s ? s.txRequests : undefined,
     isUniswapXTrade: isUniswapX(s),
@@ -57,25 +51,62 @@ export function GasInfoRowWithCustomGasEnabled({ gasInfo }: { gasInfo: GasInfo }
   const { hasOverrides, hasWarning } = useGasOverridesWarningState({ tx, gasOverrides })
   const { onPress, modals } = useFormGasOverridesController({ tx, chainId: gasInfo.chainId })
 
-  // Render `{modals}` even when the chip itself is hidden so an already-open
-  // editor sheet survives transient `!fiatPriceFormatted` states (e.g. a
-  // /swap refetch on a new query key, or an error→retry). Without this, the
-  // modal subtree unmounts mid-edit — re-presenting the bottom sheet on
-  // remount, wiping `useFieldState`'s typed input + `isDirty` flags, and
-  // disabling Save / hiding Reset. See SWAP-2688.
+  // `{modals}` and `<CustomGasChip>` are two fixed-position siblings. The open
+  // editor sheet inside `{modals}` holds the user's in-progress input
+  // (`useFieldState`), which React discards if it remounts the subtree — so the
+  // modal must keep a stable position across quote polls and EVM↔UniswapX trade
+  // changes. Isolating the chip's no-fiat / UniswapX / normal render states
+  // inside `<CustomGasChip>` is what guarantees that: the chip is a single
+  // stable-typed sibling here, so its internal branches can never shift
+  // `{modals}` out of index 0 (React reconciles a keyless Fragment's children
+  // by position).
+  return (
+    <>
+      {modals}
+
+      <CustomGasChip
+        gasInfo={gasInfo}
+        isUniswapXTrade={isUniswapXTrade}
+        hasOverrides={hasOverrides}
+        hasWarning={hasWarning}
+        onPress={onPress}
+      />
+    </>
+  )
+}
+
+/**
+ * The tappable gas chip itself. Encapsulating its render states behind a stable
+ * component boundary keeps the sibling `{modals}` at a fixed position in the
+ * parent (see the note in `GasInfoRowWithCustomGasEnabled`). Returning `null`
+ * or switching between the UniswapX/normal layouts only re-renders this
+ * component's own subtree — it never reorders the parent's children.
+ */
+function CustomGasChip({
+  gasInfo,
+  isUniswapXTrade,
+  hasOverrides,
+  hasWarning,
+  onPress,
+}: {
+  gasInfo: GasInfo
+  isUniswapXTrade: boolean
+  hasOverrides: boolean
+  hasWarning: boolean
+  onPress: () => void
+}): JSX.Element | null {
+  const { t } = useTranslation()
+
   if (!gasInfo.fiatPriceFormatted) {
-    return <>{modals}</>
+    return null
   }
 
   const uniswapXSavings = gasInfo.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
   const isGasFeeFree = gasInfo.gasFee.value !== undefined && isZero(gasInfo.gasFee.value)
-  const showAutoPill = !hasOverrides
-  const showWarning = hasOverrides && hasWarning
-  const amountColor = showWarning ? '$statusWarning' : gasInfo.isHighRelativeToValue ? '$statusCritical' : '$neutral2'
 
   // UniswapX trades have no editable EVM tx (txRequests is forced to undefined
-  // above), so opening the editor would yield no recommended baseline and any
-  // saved overrides would carry into the next EVM swap. Render the static
+  // upstream), so opening the editor would yield no recommended baseline and
+  // any saved overrides would carry into the next EVM swap. Render the static
   // UniswapX fee display without a tap handler.
   if (isUniswapXTrade) {
     return uniswapXSavings ? (
@@ -92,42 +123,43 @@ export function GasInfoRowWithCustomGasEnabled({ gasInfo }: { gasInfo: GasInfo }
     ) : null
   }
 
+  const showAutoPill = !hasOverrides
+  const showWarning = hasOverrides && hasWarning
+  const amountColor = showWarning ? '$statusWarning' : gasInfo.isHighRelativeToValue ? '$statusCritical' : '$neutral2'
+
   return (
-    <>
-      <TouchableArea testID="gas-info-row-custom-gas" onPress={onPress}>
-        <Flex
-          centered
-          row
-          gap="$spacing4"
-          animation="quick"
-          enterStyle={{ opacity: 0 }}
-          opacity={gasInfo.isLoading ? 0.6 : 1}
-        >
-          <Gas color={amountColor} size="$icon.16" />
-          {showWarning && (
-            <AlertTriangleFilled testID="gas-info-row-custom-gas-warning-icon" color="$statusWarning" size="$icon.16" />
-          )}
-          <Text color={amountColor} variant="body3">
-            {gasInfo.fiatPriceFormatted}
-          </Text>
-          {showAutoPill && (
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
-              <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
-                {t('common.auto')}
-              </Text>
-            </Flex>
-          )}
-          {hasOverrides && (
-            <RotatableChevron
-              testID="gas-info-row-custom-gas-chevron"
-              color="$neutral3"
-              direction="right"
-              size="$icon.16"
-            />
-          )}
-        </Flex>
-      </TouchableArea>
-      {modals}
-    </>
+    <TouchableArea testID="gas-info-row-custom-gas" onPress={onPress}>
+      <Flex
+        centered
+        row
+        gap="$spacing4"
+        animation="quick"
+        enterStyle={{ opacity: 0 }}
+        opacity={gasInfo.isLoading ? 0.6 : 1}
+      >
+        <Gas color={amountColor} size="$icon.16" />
+        {showWarning && (
+          <AlertTriangleFilled testID="gas-info-row-custom-gas-warning-icon" color="$statusWarning" size="$icon.16" />
+        )}
+        <Text color={amountColor} variant="body3">
+          {gasInfo.fiatPriceFormatted}
+        </Text>
+        {showAutoPill && (
+          <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
+            <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
+              {t('common.auto')}
+            </Text>
+          </Flex>
+        )}
+        {hasOverrides && (
+          <RotatableChevron
+            testID="gas-info-row-custom-gas-chevron"
+            color="$neutral3"
+            direction="right"
+            size="$icon.16"
+          />
+        )}
+      </Flex>
+    </TouchableArea>
   )
 }

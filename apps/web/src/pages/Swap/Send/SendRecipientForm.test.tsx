@@ -1,7 +1,7 @@
 import { DAI } from 'uniswap/src/constants/tokens'
+import * as useRecentTransfersByAddress from 'uniswap/src/features/send/useRecentTransfersByAddress'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
-import * as UseGroupedRecentTransfers from '~/features/Swap/hooks/useGroupedRecentTransfers'
 import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
 import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
 import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
@@ -170,8 +170,8 @@ describe('SendRecipientForm', () => {
   it('should blur recipient input when clicking outside', async () => {
     // With an empty recipient, the flyout only opens when there are recent transfers; dismissal (and blur)
     // runs from controlled Popover `onOpenChange(false)`, which does not fire if the popover never opened.
-    const groupedSpy = vi.spyOn(UseGroupedRecentTransfers, 'useGroupedRecentTransfers').mockReturnValue({
-      transfers: { '0x1111111111111111111111111111111111111111': 1 },
+    const groupedSpy = vi.spyOn(useRecentTransfersByAddress, 'useRecentTransfersByAddress').mockReturnValue({
+      transfers: [{ address: '0x1111111111111111111111111111111111111111', count: 1 }],
       loading: false,
     })
     try {

@@ -63,5 +63,5 @@ export type GasFeeResult = {
   gasEstimate?: GasEstimate
 }
 
-// TODO(WALL-6421): Remove this type once GasFeeResult shape is decoupled from state fields
+// TODO(WALL-6421): Remove this type once GasFeeResult shape is decoupled from state fields.
 export type GasFeeResultWithoutState = Omit<GasFeeResult, 'isLoading' | 'error'>

@@ -19,11 +19,7 @@ export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
 
   return (
     <SwapTransactionSettingsStoreContextProvider>
-      <SwapFormStoreContextProvider
-        prefilledState={props.prefilledState}
-        hideSettings={props.hideHeader}
-        hideFooter={props.hideFooter}
-      >
+      <SwapFormStoreContextProvider prefilledState={props.prefilledState} hideFooter={props.hideFooter}>
         <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
           <SwapFlow {...props} settings={SETTINGS} />
         </SwapDependenciesStoreContextProvider>

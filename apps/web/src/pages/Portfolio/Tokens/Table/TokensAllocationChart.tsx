@@ -27,9 +27,10 @@ function useExtractedTokenColors(tokenData: TokenData[]): string[] {
   )
 
   // Snapshot with value-based deps so reference is stable when colors/loading unchanged
-  /* oxlint-disable react/exhaustive-deps -- intentional value-based deps for stable snapshots */
   const resultsSnapshot = useMemo(
     () => results.map((r) => ({ tokenColor: r.tokenColor, tokenColorLoading: r.tokenColorLoading })),
+
+    /* oxlint-disable react-hooks/exhaustive-deps -- intentional value-based deps for stable snapshots */
     [gray, results.map((r) => `${r.tokenColor ?? ''}-${r.tokenColorLoading}`).join('|')],
   )
 
@@ -47,7 +48,6 @@ function useExtractedTokenColors(tokenData: TokenData[]): string[] {
       }),
     [gray, tokenData.length, resultsSnapshot],
   )
-  /* oxlint-enable react/exhaustive-deps */
 }
 
 // Generate portfolio breakdown from tokens data

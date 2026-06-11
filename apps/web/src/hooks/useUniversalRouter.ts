@@ -125,10 +125,10 @@ export function useUniversalRouterSwapCallback({
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      let gasLimit: BigNumber
+      let gasLimit: bigint
       try {
         const gasEstimate = await provider.estimateGas(tx)
-        gasLimit = calculateGasMargin(gasEstimate)
+        gasLimit = calculateGasMargin(gasEstimate.toBigInt())
       } catch (gasError) {
         sendAnalyticsEvent(SwapEventName.SwapEstimateGasCallFailed, {
           ...formatCommonPropertiesForTrade({ trade, allowedSlippage: options.slippageTolerance }),
@@ -159,7 +159,6 @@ export function useUniversalRouterSwapCallback({
         }
       })()
       sendAnalyticsEvent(SwapEventName.SwapSigned, {
-        // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
         ...formatSwapSignedAnalyticsEventProperties({
           trade,
           allowedSlippage: options.slippageTolerance,

@@ -25,7 +25,7 @@ export function EarnVaultModal({
   const [selectedTab, setSelectedTab] = useState<EarnVaultTab>(hasPosition ? 'balance' : 'details')
 
   const walletAddress = useActiveAccountAddress()
-  const { balanceLookupSettled, hasAnyBalanceForUnderlying } = useEarnDepositSources({
+  const { balanceLookupSettled, hasSupportedBalanceForUnderlying } = useEarnDepositSources({
     vault,
     walletAddress: walletAddress ?? undefined,
     isOpen,
@@ -40,7 +40,7 @@ export function EarnVaultModal({
     // Use `replace` (not `navigate` + onClose) so the vault sheet is atomically swapped for
     // the next modal — calling onClose after navigate is a no-op because the vault has
     // already lost focus, leaving both sheets stacked.
-    if (!hasAnyBalanceForUnderlying) {
+    if (!hasSupportedBalanceForUnderlying) {
       navigation.replace(ModalName.EarnYouNeedToken, {
         currencyId: vault.displayCurrencyId,
       })
@@ -50,7 +50,7 @@ export function EarnVaultModal({
         initialAction: EarnAction.Deposit,
       })
     }
-  }, [balanceLookupSettled, hasAnyBalanceForUnderlying, navigation, vault])
+  }, [balanceLookupSettled, hasSupportedBalanceForUnderlying, navigation, vault])
 
   const handleWithdraw = useCallback(() => {
     if (!vault) {

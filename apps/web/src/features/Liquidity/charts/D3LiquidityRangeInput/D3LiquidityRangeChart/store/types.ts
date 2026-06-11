@@ -61,6 +61,20 @@ export type ChartState = {
 
 export type { AnimateParams } from '~/features/Liquidity/charts/D3LiquidityChartShared/store/createChartActions'
 
+/**
+ * Ephemeral, view-only state used to low-pass the liquidity width-scale while scrolling.
+ * Lives on a stable ref (not in the store) so it survives the per-frame renderer re-init,
+ * without triggering React re-renders. See LiquidityBarsRenderer for how it's applied.
+ */
+export type LiquidityScaleSmoothing = {
+  /** Eased max-liquidity currently driving bar widths; undefined until the first draw / after reset. */
+  displayedMaxLiquidity?: number
+  /** Timestamp (ms) of the previous draw, for frame-rate-independent easing. */
+  lastFrameTimeMs?: number
+  /** Pending requestAnimationFrame id for the post-scroll settle loop. */
+  settleFrameId?: number
+}
+
 export type RenderingContext = {
   /** Unique ID per chart instance, used to namespace SVG IDs (clipPath, gradient) so multiple charts don't collide */
   chartId: string
@@ -83,6 +97,8 @@ export type RenderingContext = {
   priceToY: ({ price, tickAlignment }: { price: number; tickAlignment?: TickAlignment }) => number
   tickToY: ({ tick, tickAlignment }: { tick: number; tickAlignment?: TickAlignment }) => number
   yToTick: (y: number) => number
+  /** Ephemeral state for smoothing the liquidity width-scale during scroll (see LiquidityBarsRenderer). */
+  liquidityScaleSmoothing: LiquidityScaleSmoothing
 }
 
 export enum DefaultPriceStrategy {

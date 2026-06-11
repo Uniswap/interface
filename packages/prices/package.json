@@ -26,8 +26,8 @@
     "check": "nx check prices",
     "check:fast": "nx check:fast prices",
     "check:deps:usage": "nx check:deps:usage prices",
-    "format": "nx format prices",
-    "format:check": "nx format:check prices",
+    "format": "nx run prices:format",
+    "format:check": "nx run prices:format:check",
     "lint": "nx lint prices",
     "lint:fix": "nx lint:fix prices"
   },

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Accordion, Flex } from 'ui/src'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
@@ -6,7 +7,7 @@ import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 
-export function SwapFormScreenDetails(): JSX.Element {
+export const SwapFormScreenDetails = memo(function SwapFormScreenDetails(): JSX.Element {
   const { tokenColor, showFooter } = useSwapFormScreenStore((state) => ({
     tokenColor: state.tokenColor,
     showFooter: state.showFooter,
@@ -34,4 +35,4 @@ export function SwapFormScreenDetails(): JSX.Element {
       </Accordion.Item>
     </Accordion>
   )
-}
+})

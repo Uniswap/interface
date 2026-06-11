@@ -14,7 +14,9 @@ export interface SwapTxAndGasInfoService<T extends Trade = Trade> {
   getSwapTxAndGasInfo: (ctx: SwapTxAndGasInfoParameters<T>) => Promise<SwapTxAndGasInfo>
 }
 
-export type RoutingServicesMap = { [K in TradingApi.Routing]: SwapTxAndGasInfoService<Trade & { routing: K }> }
+export type RoutingServicesMap = {
+  [K in TradingApi.Routing]: SwapTxAndGasInfoService<Extract<Trade, { routing: K }>>
+}
 
 export function createSwapTxAndGasInfoService(ctx: { services: RoutingServicesMap }): SwapTxAndGasInfoService<Trade> {
   function getServiceForTrade<T extends Trade>(trade: T): SwapTxAndGasInfoService<T> {

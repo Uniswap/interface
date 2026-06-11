@@ -20,16 +20,92 @@ export type PriceNumberOfDigits = {
   right: number
 }
 
+type TokenPriceHistoryProject = NonNullable<NonNullable<GraphQLApi.TokenPriceHistoryQuery['tokenProjects']>[number]>
+type TokenPriceHistoryMarket =
+  | NonNullable<NonNullable<TokenPriceHistoryProject['markets']>[number]>
+  | NonNullable<TokenPriceHistoryProject['tokens'][number]['market']>
+type TokenPriceHistoryEntries = TokenPriceHistoryMarket['priceHistory']
+type ConvertFiatAmount = ReturnType<typeof useLocalizationContext>['convertFiatAmount']
+
+function resolvePriceHistorySources({
+  currencyId,
+  lastPrice,
+  preferProjectMarketData,
+  priceData,
+}: {
+  currencyId: string
+  lastPrice: number | undefined
+  preferProjectMarketData: boolean
+  priceData: GraphQLApi.TokenPriceHistoryQuery | undefined
+}): {
+  price: number | undefined
+  priceHistory: TokenPriceHistoryEntries
+  pricePercentChange24h: number
+} {
+  const project = priceData?.tokenProjects?.[0]
+  const projectMarket = project?.markets?.[0]
+  const currentChain = toGraphQLChain(currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet)
+  const tokenMarket = project?.tokens.find((token) => token.chain === currentChain)?.market
+  const primaryMarket = preferProjectMarketData ? projectMarket : tokenMarket
+  const fallbackMarket = preferProjectMarketData ? tokenMarket : projectMarket
+
+  return {
+    price: primaryMarket?.price?.value ?? fallbackMarket?.price?.value ?? lastPrice,
+    priceHistory: primaryMarket?.priceHistory ?? fallbackMarket?.priceHistory,
+    pricePercentChange24h:
+      projectMarket?.pricePercentChange24h?.value ?? tokenMarket?.pricePercentChange24h?.value ?? 0,
+  }
+}
+
+function calculatePriceChange(priceHistory: TokenPriceHistoryEntries): number | undefined {
+  if (!priceHistory || priceHistory.length === 0) {
+    return undefined
+  }
+  const openPrice = priceHistory[0]?.value
+  const closePrice = priceHistory[priceHistory.length - 1]?.value
+  if (openPrice === undefined || closePrice === undefined || openPrice === 0) {
+    return undefined
+  }
+  return ((closePrice - openPrice) / openPrice) * 100
+}
+
+function getNumberOfDigits({
+  convertFiatAmount,
+  lastNumberOfDigits,
+  price,
+  priceHistory,
+}: {
+  convertFiatAmount: ConvertFiatAmount
+  lastNumberOfDigits: PriceNumberOfDigits
+  price: number | undefined
+  priceHistory: TokenPriceHistoryEntries
+}): PriceNumberOfDigits {
+  const maxPriceInHistory = maxBy(priceHistory, 'value')?.value
+  if (!maxPriceInHistory && price === undefined) {
+    return lastNumberOfDigits
+  }
+
+  const maxPrice = Math.max(maxPriceInHistory || 0, price || 0)
+  const convertedMaxValue = convertFiatAmount(maxPrice).amount
+
+  return {
+    left: String(convertedMaxValue).split('.')[0]?.length || 10,
+    right: Number(String(convertedMaxValue.toFixed(16)).split('.')[0]) > 0 ? 2 : 16,
+  }
+}
+
 /**
  * @returns Token price history for requested duration
  */
 export function useTokenPriceHistory({
   currencyId,
   initialDuration = GraphQLApi.HistoryDuration.Day,
+  preferProjectMarketData = false,
   skip = false,
 }: {
   currencyId: string
   initialDuration?: GraphQLApi.HistoryDuration
+  preferProjectMarketData?: boolean
   skip?: boolean
 }): Omit<
   GqlResult<{
@@ -66,40 +142,15 @@ export function useTokenPriceHistory({
     skip,
   })
 
-  // Data source strategy for multi-chain tokens:
-  // - Use PER-CHAIN data (token.market) for price and price history to show the correct chain-specific view
-  // - Fallback to AGGREGATED data (project.markets) when per-chain history is unavailable
-  // - Continue using aggregated 24hr change for consistency across platforms
-  // Note: TokenProjectMarket is aggregated across chains, TokenMarket is per-chain
-  const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
-
-  // We need to find the specific token for the chain we're viewing
-  const currentChain = toGraphQLChain(currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet)
-  const currentChainToken = priceData?.tokenProjects?.[0]?.tokens.find((token) => token.chain === currentChain)
-  const onChainData = currentChainToken?.market
-
-  // Use per-chain price to ensure correct price on each chain (e.g., USDC on Ethereum vs Polygon)
-  const price = onChainData?.price?.value ?? offChainData?.price?.value ?? lastPrice.current
+  const { price, priceHistory, pricePercentChange24h } = resolvePriceHistorySources({
+    currencyId,
+    lastPrice: lastPrice.current,
+    preferProjectMarketData,
+    priceData,
+  })
   lastPrice.current = price
 
-  // Prefer per-chain price history so multi-chain tokens render the correct chart for the selected chain
-  const priceHistory = onChainData?.priceHistory ?? offChainData?.priceHistory
-
-  const pricePercentChange24h =
-    offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
-
-  // Calculate percentage change from price history for the selected duration
-  const calculatedPriceChange = useMemo(() => {
-    if (!priceHistory || priceHistory.length === 0) {
-      return undefined
-    }
-    const openPrice = priceHistory[0]?.value
-    const closePrice = priceHistory[priceHistory.length - 1]?.value
-    if (openPrice === undefined || closePrice === undefined || openPrice === 0) {
-      return undefined
-    }
-    return ((closePrice - openPrice) / openPrice) * 100
-  }, [priceHistory])
+  const calculatedPriceChange = useMemo(() => calculatePriceChange(priceHistory), [priceHistory])
 
   // Use API's 24hr change for 1d, calculated change for other durations
   const priceChange = duration === GraphQLApi.HistoryDuration.Day ? pricePercentChange24h : calculatedPriceChange
@@ -136,19 +187,12 @@ export function useTokenPriceHistory({
   )
 
   const numberOfDigits = useMemo(() => {
-    const maxPriceInHistory = maxBy(priceHistory, 'value')?.value
-    // If there is neither max price in history nor current price, return last number of digits
-    if (!maxPriceInHistory && price === undefined) {
-      return lastNumberOfDigits.current
-    }
-
-    const maxPrice = Math.max(maxPriceInHistory || 0, price || 0)
-    const convertedMaxValue = convertFiatAmount(maxPrice).amount
-
-    const newNumberOfDigits = {
-      left: String(convertedMaxValue).split('.')[0]?.length || 10,
-      right: Number(String(convertedMaxValue.toFixed(16)).split('.')[0]) > 0 ? 2 : 16,
-    }
+    const newNumberOfDigits = getNumberOfDigits({
+      convertFiatAmount,
+      lastNumberOfDigits: lastNumberOfDigits.current,
+      price,
+      priceHistory,
+    })
     lastNumberOfDigits.current = newNumberOfDigits
 
     return newNumberOfDigits

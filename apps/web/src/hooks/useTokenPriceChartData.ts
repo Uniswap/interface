@@ -4,6 +4,7 @@ import { useMemo, useReducer } from 'react'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { TimePeriod } from '~/appGraphql/data/util'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   ChartQueryResult,
@@ -256,4 +257,29 @@ export function useTokenPriceChartData({
     variables.chain,
     variables.multichain,
   ])
+}
+
+export function getCalculatedPricePercentChange(entries: PriceChartData[]): number | undefined {
+  if (!entries.length) {
+    return undefined
+  }
+  const openPrice = entries[0].close
+  const closePrice = entries[entries.length - 1].close
+  if (!openPrice || !closePrice || openPrice === 0) {
+    return undefined
+  }
+  return ((closePrice - openPrice) / openPrice) * 100
+}
+
+export function getDisplayedPricePercentChange({
+  timePeriod,
+  priceChange24h,
+  entries,
+}: {
+  timePeriod: TimePeriod
+  priceChange24h: number | undefined
+  entries: PriceChartData[]
+}): number | undefined {
+  const calculated = getCalculatedPricePercentChange(entries)
+  return timePeriod === TimePeriod.DAY ? priceChange24h : calculated
 }

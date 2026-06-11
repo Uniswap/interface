@@ -13,6 +13,7 @@ import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensi
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
+import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, SegmentedControl, Text } from 'ui/src'
 import { useLayoutAnimationOnChange } from 'ui/src/animations'
@@ -105,10 +106,12 @@ export const PriceExplorer = memo(function PriceExplorerInner(): JSX.Element {
 const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Element {
   const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
+  const preferProjectMarketData = useTokenDetailsPreferProjectMarketData()
 
   const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory({
     currencyId,
     initialDuration: GraphQLApi.HistoryDuration.Day,
+    preferProjectMarketData,
     skip: !isScreenNavigationReady,
   })
 

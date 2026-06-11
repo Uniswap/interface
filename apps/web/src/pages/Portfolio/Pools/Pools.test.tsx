@@ -215,6 +215,19 @@ describe('PortfolioPools', () => {
     expect(PositionsListSection).toHaveBeenCalled()
   })
 
+  it('should not strand the user in the empty state when the aggregate count is 0 but hidden positions still exist', () => {
+    mocked(useWalletPositionsWeb).mockReturnValue(
+      createWalletPositionsResult({ visiblePositions: [], hiddenPositions: [MOCK_POSITION] }),
+    )
+    mockTotalPoolsCount(0)
+
+    render(<PortfolioPools />)
+
+    expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+    expect(screen.getByText('0 positions')).toBeInTheDocument()
+    expect(PositionsListSection).toHaveBeenCalled()
+  })
+
   it('should route to the add liquidity flow when the revamp flag is enabled', () => {
     mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AddLiquidityRevamp)
 

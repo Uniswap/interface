@@ -1,5 +1,4 @@
 import path from 'path'
-/* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- GraphQL fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
 import { Mocks } from '~/playwright/mocks/mocks'
@@ -88,10 +87,12 @@ export const test = base.extend<GraphqlFixture>({
       }
     })
 
+    // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
     await use({ intercept, waitForResponse })
   },
   // Intercept long running graphql requests here:
   interceptLongRunning: [
+    // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
     async ({ graphql }, use) => {
       graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.test_wallet)
       await use(undefined)

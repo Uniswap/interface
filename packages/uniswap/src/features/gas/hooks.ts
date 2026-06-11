@@ -24,7 +24,7 @@ import { getActiveGasStrategy, hasSufficientGasBalance } from 'uniswap/src/featu
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -52,11 +52,9 @@ export function useActiveGasStrategy(chainId: number | undefined, type: GasStrat
  * We use the `displayLimitInflationFactor` to calculate the display value, which can be
  * different from the `limitInflationFactor` so that the gas fee displayed is more accurate.
  *
- * When `hasOverrides` is true, the upstream quote was built with per-tx gas overrides
- * (`urgency.overrides.{maxFeePerGas, maxPriorityFeePerGas, gasLimit}`). In that case the
- * gas service has already used the user's explicit `gasLimit` top-level without inflation,
- * so backing it out a second time would understate the displayed max cost — short-circuit
- * and return the raw `gasFee` as the display value.
+ * When `hasOverrides` is true the user applied gas overrides, so the raw `gasFee`
+ * is returned without the inflation backoff (deflating it would understate the
+ * displayed cost). Callers that show the full max cost handle that separately.
  */
 export function convertGasFeeToDisplayValue({
   gasFee,

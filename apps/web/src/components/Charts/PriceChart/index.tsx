@@ -41,6 +41,7 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
   timePeriod?: GraphQLApi.HistoryDuration
   hideYAxis?: boolean
+  hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
 }
@@ -166,7 +167,8 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, yAxisFormatter, sparkline } = params
+    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, hideXAxis, yAxisFormatter, sparkline } =
+      params
     const { min, max } = getCandlestickPriceBounds(data)
 
     // Handles changes in time period
@@ -188,8 +190,10 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         }
 
     super.updateOptions(params, {
+      timeScale: {
+        visible: !sparkline && !hideXAxis,
+      },
       ...(sparkline && {
-        timeScale: { visible: false },
         crosshair: { mode: CrosshairMode.Hidden },
       }),
       localization: {
@@ -312,6 +316,7 @@ interface PriceChartBodyProps {
   timePeriod?: GraphQLApi.HistoryDuration
   overrideColor?: string
   hideYAxis?: boolean
+  hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
   onCrosshairChange?: (crosshairData?: PriceChartData) => void
@@ -327,6 +332,7 @@ export function PriceChartBody({
   timePeriod,
   overrideColor,
   hideYAxis,
+  hideXAxis,
   yAxisFormatter,
   sparkline,
   onCrosshairChange,
@@ -336,8 +342,8 @@ export function PriceChartBody({
     <Chart
       Model={PriceChartModel}
       params={useMemo(
-        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter, sparkline }),
-        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter, sparkline],
+        () => ({ data, type, stale, timePeriod, hideYAxis, hideXAxis, yAxisFormatter, sparkline }),
+        [data, stale, type, timePeriod, hideYAxis, hideXAxis, yAxisFormatter, sparkline],
       )}
       height={height}
       overrideColor={overrideColor}

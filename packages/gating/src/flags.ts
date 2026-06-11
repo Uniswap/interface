@@ -1,12 +1,11 @@
+/* oxlint-disable typescript/prefer-enum-initializers -- preserve the order */
 import { isWebApp } from '@universe/environment'
 import { logger } from 'utilities/src/logger/logger'
 
-// only disable for this enum
 /**
  * Feature flag names.
  * Add in alphabetical order for each section to decrease probability of merge conflicts.
  */
-/* oxlint-disable typescript/prefer-enum-initializers -- preserve the order */
 export enum FeatureFlags {
   // Shared
   AllowUniswapXOnlyRoutesInSwapSettings,
@@ -26,6 +25,7 @@ export enum FeatureFlags {
   ForUrlMigration,
   GasFeeOverrides,
   HashcashSolverEnabled,
+  RwaGeoblocked,
   Linea,
   MegaETH,
   MultichainTokenUx,
@@ -35,6 +35,14 @@ export enum FeatureFlags {
   PortionFields,
   ProfitLoss,
   RWACoinGeckoData,
+  RWATdp,
+  RWAUX,
+  RWAUXExplore,
+  RWAUXExploreCarousel,
+  RwaUxTokenSelector,
+  RwaUxTokenSelectorCategoryLabels,
+  RwaUxSearch,
+  RwaUxSearchTop24hSection,
   RandomizeQuotePolling,
   SessionsPerformanceTrackingEnabled,
   SessionsServiceEnabled,
@@ -84,8 +92,11 @@ export enum FeatureFlags {
   LiquidityBatchedTransactions,
   LpIncentives,
   LpPdpDepthChart,
+  LpIncentivesTablesColumn,
   NoUniswapInterfaceFeesNotification,
   PortfolioDefiTab,
+  RWATdpRelatedTokens,
+  RWATdpSiblings,
   TDPTokenCarousel,
   ToucanAuctionKYC,
   ToucanLaunchAuction,
@@ -101,7 +112,6 @@ export enum FeatureFlags {
 // Add in alphabetical order to decrease probability of merge conflicts.
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings, 'allow_uniswapx_only_routes_in_swap_settings'],
-  [FeatureFlags.ArbitrumDutchV3, 'uniswapx_dutchv3_orders_arbitrum'],
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
   [FeatureFlags.CentralizedPrices, 'centralized_prices'],
   [FeatureFlags.ChainedActions, 'enable_chained_actions'],
@@ -127,7 +137,16 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.ProfitLoss, 'profit_loss'],
   [FeatureFlags.RWACoinGeckoData, 'rwa_coingecko_data'],
+  [FeatureFlags.RWATdp, 'rwa_tdp'],
+  [FeatureFlags.RWAUX, 'rwa_ux'],
+  [FeatureFlags.RWAUXExplore, 'rwa_ux_explore'],
+  [FeatureFlags.RWAUXExploreCarousel, 'rwa_ux_explore_carousel'],
   [FeatureFlags.RandomizeQuotePolling, 'randomize_quote_polling'],
+  [FeatureFlags.RwaGeoblocked, 'rwa_geo_blocked'],
+  [FeatureFlags.RwaUxSearch, 'rwa_ux_search'],
+  [FeatureFlags.RwaUxSearchTop24hSection, 'rwa_ux_search_top_24h_section'],
+  [FeatureFlags.RwaUxTokenSelector, 'rwa_ux_token_selector'],
+  [FeatureFlags.RwaUxTokenSelectorCategoryLabels, 'rwa_ux_token_selector_category_labels'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
   [FeatureFlags.SessionsPerformanceTrackingEnabled, 'sessions_performance_tracking_enabled'],
   [FeatureFlags.SessionsServiceEnabled, 'sessions_service_enabled'],
@@ -142,9 +161,6 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UnirouteEnabled, 'uniroute_rollout'],
   [FeatureFlags.UniswapWrapped2025, 'uniswap_wrapped_2025'],
   [FeatureFlags.UniswapX, 'uniswapx'],
-  [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
-  [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
-  [FeatureFlags.UniswapXPriorityOrdersUnichain, 'uniswapx_priority_orders_unichain'],
   [FeatureFlags.UseUniversalRouterVersion211, 'use_ur_version_2.1.1'],
   [FeatureFlags.ViemEnabled, 'viem_enabled'],
   [FeatureFlags.ViemProviderEnabled, 'viem_provider_enabled'],
@@ -162,9 +178,12 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.LiquidityBatchedTransactions, 'liquidity_batched_transactions'],
   [FeatureFlags.LpIncentives, 'lp_incentives'],
+  [FeatureFlags.LpIncentivesTablesColumn, 'lp_incentives_tables_column'],
   [FeatureFlags.LpPdpDepthChart, 'lp_pdp_depth_chart'],
   [FeatureFlags.NoUniswapInterfaceFeesNotification, 'no_uniswap_interface_fees_notification'],
   [FeatureFlags.PortfolioDefiTab, 'portfolio_defi_tab'],
+  [FeatureFlags.RWATdpRelatedTokens, 'rwa_tdp_related_tokens'],
+  [FeatureFlags.RWATdpSiblings, 'rwa_tdp_siblings'],
   [FeatureFlags.TDPTokenCarousel, 'tdp_token_carousel'],
   [FeatureFlags.ToucanAuctionKYC, 'toucan_auction_kyc'],
   [FeatureFlags.ToucanLaunchAuction, 'toucan_launch_auction'],

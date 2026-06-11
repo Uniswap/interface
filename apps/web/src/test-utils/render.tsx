@@ -2,6 +2,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
 import { RenderHookOptions, RenderOptions, render, renderHook } from '@testing-library/react'
+import { SharedQueryClient } from '@universe/api'
+import { PriceServiceProvider } from '@universe/prices'
 import { ComponentType, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
@@ -53,8 +55,10 @@ function CommonTestProviders({ children }: PropsWithChildren) {
             <MockedBlockNumberProvider>
               <ThemeProvider>
                 <TamaguiProvider>
-                  <WebAccountsStoreUpdater />
-                  <MockedMismatchProvider>{children}</MockedMismatchProvider>
+                  <PriceServiceProvider queryClient={SharedQueryClient}>
+                    <WebAccountsStoreUpdater />
+                    <MockedMismatchProvider>{children}</MockedMismatchProvider>
+                  </PriceServiceProvider>
                 </TamaguiProvider>
               </ThemeProvider>
             </MockedBlockNumberProvider>

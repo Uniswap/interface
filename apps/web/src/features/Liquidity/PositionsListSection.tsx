@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Flex, type FlexProps, Text, useMedia } from 'ui/src'
 import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpandoRow'
+import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getPositionKey } from 'uniswap/src/features/positions/utils'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
-import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
 
 function getPositionCardLinkTarget({
   position,

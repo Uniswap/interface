@@ -4,13 +4,13 @@ import '~/tracing'
 // We intentionally import this to ensure that the WalletConnect provider is bundled as an entrypoint chunk,
 // because it will always be requested anyway and we don't want to have a waterfall request pattern.
 import * as WalletConnect from '@walletconnect/ethereum-provider'
-/* oxlint-disable typescript/no-unnecessary-condition */
 // note the reason for the setupi18n function is to avoid webpack tree shaking the file out
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import { setupWagmiAutoConnect } from '~/components/Web3Provider/wagmiAutoConnect'
 import { setupTurnstileCSPErrorFilter } from '~/utils/setupTurnstileCSPErrorFilter'
 import { setupVitePreloadErrorHandler } from '~/utils/setupVitePreloadErrorHandler'
 
+// oxlint-disable-next-line typescript/no-unnecessary-condition -- `import *` namespace is always truthy
 if (WalletConnect) {
   console.debug('WalletConnect is defined')
 }

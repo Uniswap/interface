@@ -11,7 +11,9 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Minus } from 'ui/src/components/icons/Minus'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { usePoolPositionCacheUpdater } from 'uniswap/src/features/dataApi/balances/poolPositionCacheUpdater'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
@@ -41,6 +43,8 @@ export function useLiquidityPositionDropdownOptions({
   const navigate = useNavigate()
   const account = useAccount()
   const selectChain = useSelectChain()
+  const activeAddresses = useActiveAddresses()
+  const updatePoolBalancesCache = usePoolPositionCacheUpdater(activeAddresses.evmAddress, activeAddresses.svmAddress)
   const reportPositionHandler = useReportPositionHandler({ position: liquidityPosition, isVisible })
 
   return useMemo(() => {
@@ -136,6 +140,12 @@ export function useLiquidityPositionDropdownOptions({
     if (showVisibilityOption) {
       options.push({
         onPress: () => {
+          // Optimistic header update: modifier is excluded from the GetWalletBalances cache key,
+          // so the state change below would not naturally refetch — the cache writer bridges
+          // the visual gap until the next poll reconciles with the new modifier.
+          // Note: current `isVisible` becomes the post-toggle `hidden` value (the user is
+          // transitioning from "visible=true" to "hidden=true", so they match).
+          updatePoolBalancesCache(isVisible, liquidityPosition)
           dispatch(
             setPositionVisibility({
               poolId: liquidityPosition.poolId,
@@ -172,6 +182,7 @@ export function useLiquidityPositionDropdownOptions({
     navigate,
     showVisibilityOption,
     selectChain,
+    updatePoolBalancesCache,
     t,
   ])
 }

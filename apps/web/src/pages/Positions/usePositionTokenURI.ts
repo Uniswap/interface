@@ -1,6 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ensure0xHex } from '@universe/encoding'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { Erc721 } from 'uniswap/src/abis/types/Erc721'
@@ -10,7 +10,7 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from '~/hooks/useContract'
 
-type TokenId = number | JSBI | BigNumber
+type TokenId = number | JSBI | bigint
 
 const STARTS_WITH = 'data:application/json;base64,'
 
@@ -56,7 +56,7 @@ export function usePositionTokenURI({
     persistableQueryOptions({
       queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],
       queryFn: async () => {
-        const input = tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)
+        const input = typeof tokenId === 'bigint' ? ensure0xHex(tokenId.toString(16)) : tokenId?.toString(16)
         if (!input) {
           return null
         }

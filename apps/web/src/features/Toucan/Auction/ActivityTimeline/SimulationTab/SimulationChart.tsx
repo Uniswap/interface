@@ -381,7 +381,6 @@ export function SimulationChart({ maxTokenPrice, expectedFinalPrice, budget, tok
   const outbidSeriesRef = useRef<ISeriesApi<'Area'> | null>(null)
   const thresholdSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
 
-  /* oxlint-disable react-hooks/exhaustive-deps -- colors excluded: initial values used at creation, separate effect handles theme updates via applyOptions */
   // Create series and subscribe to crosshair — only when chart instance changes
   useEffect(() => {
     if (!chart) {
@@ -458,8 +457,8 @@ export function SimulationChart({ maxTokenPrice, expectedFinalPrice, budget, tok
       outbidSeriesRef.current = null
       thresholdSeriesRef.current = null
     }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- colors excluded: initial values used at creation, separate effect handles theme updates via applyOptions
   }, [chart])
-  /* oxlint-enable react-hooks/exhaustive-deps */
 
   // Update series colors on theme change without tearing down series
   useEffect(() => {

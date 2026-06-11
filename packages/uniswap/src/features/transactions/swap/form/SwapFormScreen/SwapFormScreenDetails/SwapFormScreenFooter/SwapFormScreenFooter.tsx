@@ -1,4 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
+import { memo } from 'react'
 import { AnimatePresence, Flex, useIsShortMobileDevice } from 'ui/src'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { ExactOutputUnavailableWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/ExactOutputUnavailableWarningRow'
@@ -9,7 +10,7 @@ import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/S
  *            is able to properly calculate the correct height and it does not change its height when the gas and
  *            warning rows are shown/hidden, or when moving from the review screen back to the form screen.
  */
-export function SwapFormScreenFooter(): JSX.Element | null {
+export const SwapFormScreenFooter = memo(function SwapFormScreenFooter(): JSX.Element | null {
   const isShortMobileDevice = useIsShortMobileDevice()
   const {
     outputTokenHasBuyTax,
@@ -62,4 +63,4 @@ export function SwapFormScreenFooter(): JSX.Element | null {
       {showGasAndWarningRows && <GasAndWarningRows />}
     </Flex>
   )
-}
+})

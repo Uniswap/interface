@@ -1,6 +1,12 @@
 import { GraphQLApi } from '@universe/api'
+import { TimePeriod } from '~/appGraphql/data/util'
+import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
-import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
+import {
+  getCalculatedPricePercentChange,
+  getDisplayedPricePercentChange,
+  useTokenPriceChartData,
+} from '~/hooks/useTokenPriceChartData'
 import { renderHook } from '~/test-utils/render'
 
 const { mockUseTokenPriceQuery, mockUseTokenPriceHistoryQuery } = vi.hoisted(() => {
@@ -238,5 +244,45 @@ describe('useTokenPriceChartData', () => {
     expect(result.current.loading).toBe(false)
     expect(result.current.dataQuality).toBe(DataQuality.VALID)
     expect(result.current.entries[0].value).toBe(9)
+  })
+})
+
+function point(time: number, close: number): PriceChartData {
+  return { time: time as PriceChartData['time'], value: close, open: close, high: close, low: close, close }
+}
+
+describe('getCalculatedPricePercentChange', () => {
+  it('returns undefined for empty entries', () => {
+    expect(getCalculatedPricePercentChange([])).toBeUndefined()
+  })
+
+  it('returns undefined when open close is zero', () => {
+    expect(getCalculatedPricePercentChange([point(1, 0), point(2, 1), point(3, 2)])).toBeUndefined()
+  })
+
+  it('returns percent change from first to last close', () => {
+    expect(getCalculatedPricePercentChange([point(1, 100), point(2, 110), point(3, 150)])).toBe(50)
+  })
+})
+
+describe('getDisplayedPricePercentChange', () => {
+  it('uses 24h change for DAY period', () => {
+    expect(
+      getDisplayedPricePercentChange({
+        timePeriod: TimePeriod.DAY,
+        priceChange24h: 5,
+        entries: [point(1, 100), point(2, 200)],
+      }),
+    ).toBe(5)
+  })
+
+  it('uses calculated change for non-DAY periods', () => {
+    expect(
+      getDisplayedPricePercentChange({
+        timePeriod: TimePeriod.WEEK,
+        priceChange24h: 99,
+        entries: [point(1, 100), point(2, 150), point(3, 400)],
+      }),
+    ).toBe(300)
   })
 })

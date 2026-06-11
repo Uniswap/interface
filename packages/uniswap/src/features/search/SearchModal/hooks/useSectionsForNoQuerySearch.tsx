@@ -1,17 +1,24 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG, GqlResult } from '@universe/api'
 import { isMobileApp, isWebApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { TrendUp } from 'ui/src/components/icons/TrendUp'
 import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
-import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
+import type { SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { useFavoriteWalletOptions } from 'uniswap/src/components/lists/items/wallets/useFavoriteWalletOptions'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/TokenSelector/hooks/useMultichainSearchResultsToOptions'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
+import { useListRankedRwasQuery } from 'uniswap/src/data/rest/listRankedRwas'
+import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
+import { mapRankedRwaList } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import {
@@ -21,7 +28,14 @@ import {
 } from 'uniswap/src/features/search/SearchModal/constants'
 import { useMultichainTrendingTokenRankings } from 'uniswap/src/features/search/SearchModal/hooks/useMultichainTrendingTokenRankings'
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
+import { optionChainAddresses } from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
+import { buildNoQueryRwaCollectionOptions } from 'uniswap/src/features/search/SearchModal/stocks/noQueryStocks'
+import { findRwaForToken } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
+import { useRwaSearchIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaSearchIndex'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+
+// Stable element identity so the stocks section memo (and the sibling memoizedNewTag) isn't busted every render.
+const STOCKS_SECTION_ICON = <TrendUp color="$neutral2" size="$icon.16" />
 
 export function useSectionsForNoQuerySearch({
   chainFilter,
@@ -30,15 +44,39 @@ export function useSectionsForNoQuerySearch({
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
+  const { t } = useTranslation()
+  const rwaEnabled = useFeatureFlag(FeatureFlags.RwaUxSearch)
+  // The "Stocks by 24H volume" section is gated by its own child flag, AND-ed with the parent
+  // `rwa_ux_search` flag — it only renders when both are on. Grouping/recents-tagging stay on the parent.
+  const topRwaSectionEnabled = useFeatureFlag(FeatureFlags.RwaUxSearchTop24hSection)
+  const stocksSectionEnabled = rwaEnabled && topRwaSectionEnabled
+  const rwaIndex = useRwaSearchIndex()
+
   const recentlySearchedOptions: SearchModalOption[] = useRecentlySearchedOptions({
     chainFilter,
     activeTab,
     numberOfRecentSearchResults: NUMBER_OF_RESULTS_SHORT,
   })
 
+  // Tag recently-searched tokens that are tokenized stocks so they render the category tag. Recents stay individual
+  // token rows (no collection roll-up); reuse the query-state extraction + lookup so the two paths can't drift.
+  const taggedRecentlySearchedOptions = useMemo(() => {
+    if (!rwaEnabled || !rwaIndex.rwas.length) {
+      return recentlySearchedOptions
+    }
+    return recentlySearchedOptions.map((option) => {
+      const match = optionChainAddresses(option)
+        .map((ca) => findRwaForToken(rwaIndex, ca))
+        .find(Boolean)
+      return match
+        ? ({ ...option, rwaCategory: getRwaTagCategory({ categories: match.rwa.categories }) } as SearchModalOption)
+        : option
+    })
+  }, [rwaEnabled, rwaIndex, recentlySearchedOptions])
+
   const recentSearchSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.RecentSearches,
-    options: recentlySearchedOptions,
+    options: taggedRecentlySearchedOptions,
     endElement: <ClearRecentSearchesButton />,
   })
 
@@ -85,6 +123,34 @@ export function useSectionsForNoQuerySearch({
     options: trendingTokenOptions.slice(0, numberOfTrendingTokens),
   })
 
+  // Top tokenized stocks for the empty (no-query) state. Loading/error are non-blocking: the section is simply
+  // omitted when empty, and the error never surfaces as the modal's error. The shelf uses the app's default
+  // enabled-chains policy (testnet-aware) and intentionally does not mirror the grouping index's includeTestnets.
+  const chainIds = chainFilter != null ? [chainFilter] : []
+  const { data: rankedRwaData } = useListRankedRwasQuery({
+    category: RwaCategory.STOCKS,
+    chainIds,
+    includeSparkline1d: false,
+    enabled: stocksSectionEnabled,
+  })
+  const stockOptions = useMemo(
+    () =>
+      rankedRwaData
+        ? buildNoQueryRwaCollectionOptions({
+            rwas: mapRankedRwaList({ response: rankedRwaData, category: RwaCategory.STOCKS }),
+          })
+        : [],
+    [rankedRwaData],
+  )
+  const memoizedNewTag = useMemo(() => <NewTag />, [])
+  const stocksSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.Stocks,
+    name: t('tokens.selector.section.stocks'),
+    options: stockOptions,
+    rightElement: memoizedNewTag,
+    icon: STOCKS_SECTION_ICON,
+  })
+
   // Load trending pools by 24H volume
   const numberOfTrendingPools = activeTab === SearchTab.All ? NUMBER_OF_RESULTS_SHORT : NUMBER_OF_RESULTS_LONG
   const poolQueryVariables = useMemo(
@@ -122,7 +188,11 @@ export function useSectionsForNoQuerySearch({
 
     switch (activeTab) {
       case SearchTab.Tokens:
-        sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? [])]
+        sections = [
+          ...(recentSearchSection ?? []),
+          ...(stocksSectionEnabled ? (stocksSection ?? []) : []),
+          ...(trendingTokenSection ?? []),
+        ]
         return {
           data: sections,
           loading: loadingTokens,
@@ -147,12 +217,17 @@ export function useSectionsForNoQuerySearch({
         if (isWebPlatform) {
           sections = [
             ...(recentSearchSection ?? []),
+            ...(stocksSectionEnabled ? (stocksSection ?? []) : []),
             ...(trendingTokenSection ?? []),
             ...(trendingPoolSection ?? []),
             ...(favoriteWalletsSection ?? []),
           ]
         } else {
-          sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? [])]
+          sections = [
+            ...(recentSearchSection ?? []),
+            ...(stocksSectionEnabled ? (stocksSection ?? []) : []),
+            ...(trendingTokenSection ?? []),
+          ]
         }
 
         return {
@@ -173,6 +248,8 @@ export function useSectionsForNoQuerySearch({
     recentSearchSection,
     refetchPools,
     refetchTokens,
+    stocksSectionEnabled,
+    stocksSection,
     tokensError,
     trendingPoolSection,
     trendingTokenSection,
