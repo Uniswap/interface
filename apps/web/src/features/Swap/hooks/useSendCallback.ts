@@ -14,7 +14,7 @@ import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyAddress, currencyId, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/hooks/useAccount'
-import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { useEthersProvider } from '~/hooks/useEthersProvider'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { useTransactionAdder } from '~/state/transactions/hooks'
 import { toReadableError, UserRejectedRequestError } from '~/utils/errors'
@@ -34,8 +34,7 @@ export function useSendCallback({
   const account = useAccount()
   const accountRef = useRef(account)
   accountRef.current = account
-  // Sends a transaction via the wallet, so this must be the connector-backed provider.
-  const provider = useEthersWeb3Provider({ chainId: account.chainId })
+  const provider = useEthersProvider({ chainId: account.chainId })
   const providerRef = useRef(provider)
   providerRef.current = provider
 

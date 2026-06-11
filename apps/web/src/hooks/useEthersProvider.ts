@@ -2,6 +2,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { useMemo } from 'react'
 import type { Chain, Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
 
 const providers = new WeakMap<Client, Web3Provider>()
 
@@ -34,19 +35,18 @@ export function clientToProvider(client?: Client<Transport, Chain>, chainId?: nu
   }
 }
 
-/**
- * READ-ONLY provider — always backed by the app's own transport (UniRPC), never the
- * connected wallet. Reads must not route through connector providers: connector SDKs
- * serve them from `chain.rpcUrls.default` via cookieless HTTP clients, which bypasses
- * UniRPC sessions/observability and breaks when the legacy endpoints are disabled.
- * Do not call `.getSigner()` on this — for signing use `useEthersWeb3Provider` or `useEthersSigner`.
- */
+/** Hook to convert a viem Client to an ethers.js Provider with a default disconnected Network fallback. */
 export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
+  const account = useAccount()
+  const { data: client } = useConnectorClient({ chainId })
   const disconnectedClient = useClient({ chainId })
-  return useMemo(() => clientToProvider(disconnectedClient, chainId), [chainId, disconnectedClient])
+  return useMemo(
+    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : (client ?? disconnectedClient), chainId),
+    [account.chainId, chainId, client, disconnectedClient],
+  )
 }
 
-/** Hook to convert the connected wallet's viem Client to an ethers.js Provider, for signing flows. */
+/** Hook to convert a connected viem Client to an ethers.js Provider. */
 export function useEthersWeb3Provider({ chainId }: { chainId?: number } = {}) {
   const { data: client } = useConnectorClient({ chainId })
   return useMemo(() => clientToProvider(client, chainId), [chainId, client])
