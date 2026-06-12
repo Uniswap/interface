@@ -73,6 +73,11 @@ export function getQuicknodeChainIdPathSuffix(chainId: UniverseChainId): string 
 }
 
 export function getQuicknodeEndpointUrl(chainId: UniverseChainId): string {
+  // Removable once uni-rpc supports Solana.
+  if (chainId === UniverseChainId.Solana) {
+    return 'https://shy-billowing-silence.solana-mainnet.quiknode.pro/b1e68aaa03e903c651dbeb18276dd99eaaf4304e/'
+  }
+
   const quicknodeChainId = getQuicknodeChainId(chainId)
 
   return `https://${config.quicknodeEndpointName}${quicknodeChainId ? `.${quicknodeChainId}` : ''}.quiknode.pro/${config.quicknodeEndpointToken}${getQuicknodeChainIdPathSuffix(chainId)}`
