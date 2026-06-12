@@ -87,9 +87,11 @@ export function withUTCTimestamp<T extends { timestamp: number }>(entry: T): T &
   return { ...entry, time: entry.timestamp as UTCTimestamp }
 }
 
-/** Current time as lightweight-charts UTCTimestamp (seconds since epoch). */
+/** Current time as lightweight-charts UTCTimestamp (whole seconds since epoch). */
 export function getCurrentUTCTimestamp(): UTCTimestamp {
-  return (Date.now() / 1000) as UTCTimestamp
+  // lightweight-charts requires integer UTCTimestamps; Date.now() is millisecond-precision,
+  // so floor to whole seconds to avoid fractional times in the chart series.
+  return Math.floor(Date.now() / 1000) as UTCTimestamp
 }
 
 /**

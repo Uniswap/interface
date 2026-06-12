@@ -36,6 +36,27 @@ function toPriceChartData(ohlc: GraphQLApi.CandlestickOhlcFragment): PriceChartD
   return { time, value: close.value, open: open.value, high: high.value, low: low.value, close: close.value }
 }
 
+/**
+ * Enforces the strictly-ascending timestamps lightweight-charts requires. Upstream price history
+ * (e.g. CoinGecko) occasionally returns a duplicate trailing timestamp; a zero time delta breaks
+ * the curved line/area interpolation and paints a spurious diagonal line and filled wedge across
+ * the chart. Duplicates collapse to the latest value; any out-of-order point is dropped.
+ */
+export function toStrictlyAscendingByTime(entries: PriceChartData[]): PriceChartData[] {
+  const result: PriceChartData[] = []
+  let lastTime: number | undefined
+  for (const entry of entries) {
+    if (lastTime === undefined || entry.time > lastTime) {
+      result.push(entry)
+      lastTime = entry.time
+    } else if (entry.time === lastTime) {
+      result[result.length - 1] = entry
+    }
+    // entry.time < lastTime (out of order) -> drop
+  }
+  return result
+}
+
 const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
 
 export function useTokenPriceChartData({
@@ -208,6 +229,11 @@ export function useTokenPriceChartData({
         entries = combinedEntries
       }
     }
+
+    // Sanitize timestamps before appending: drop duplicate/out-of-order points so the chart's
+    // curved interpolation doesn't break, and so the granularity calc below isn't poisoned by a
+    // zero delta between two identical trailing timestamps.
+    entries = toStrictlyAscendingByTime(entries)
 
     // Append current price to end of array to ensure data freshness and that each time period ends with same price
     if (currentPrice && entries.length > 1) {

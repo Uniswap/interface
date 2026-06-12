@@ -5,6 +5,7 @@ import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/util
 import {
   getCalculatedPricePercentChange,
   getDisplayedPricePercentChange,
+  toStrictlyAscendingByTime,
   useTokenPriceChartData,
 } from '~/hooks/useTokenPriceChartData'
 import { renderHook } from '~/test-utils/render'
@@ -245,6 +246,33 @@ describe('useTokenPriceChartData', () => {
     expect(result.current.dataQuality).toBe(DataQuality.VALID)
     expect(result.current.entries[0].value).toBe(9)
   })
+
+  it('produces strictly ascending timestamps when CoinGecko returns a duplicate trailing timestamp', () => {
+    // Upstream CoinGecko history can end with two points at the same second. lightweight-charts
+    // requires strictly-ascending times; a zero delta breaks curved-line interpolation and paints
+    // a spurious diagonal line/wedge across the chart.
+    mockUseTokenPriceHistoryQuery.mockReturnValue(
+      makeCoinGeckoResult([
+        priceHistoryEntry(1000, 20),
+        priceHistoryEntry(2000, 21),
+        priceHistoryEntry(3000, 22),
+        priceHistoryEntry(3000, 22),
+      ]),
+    )
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    const times = result.current.entries.map((entry) => entry.time)
+    for (let i = 1; i < times.length; i++) {
+      expect(times[i]).toBeGreaterThan(times[i - 1])
+    }
+  })
 })
 
 function point(time: number, close: number): PriceChartData {
@@ -284,5 +312,23 @@ describe('getDisplayedPricePercentChange', () => {
         entries: [point(1, 100), point(2, 150), point(3, 400)],
       }),
     ).toBe(300)
+  })
+})
+
+describe('toStrictlyAscendingByTime', () => {
+  it('collapses duplicate timestamps, keeping the latest value', () => {
+    const result = toStrictlyAscendingByTime([point(1000, 10), point(2000, 11), point(3000, 12), point(3000, 13)])
+    expect(result.map((entry) => entry.time)).toEqual([1000, 2000, 3000])
+    expect(result[result.length - 1].value).toBe(13)
+  })
+
+  it('drops out-of-order timestamps', () => {
+    const result = toStrictlyAscendingByTime([point(1000, 10), point(3000, 12), point(2000, 11)])
+    expect(result.map((entry) => entry.time)).toEqual([1000, 3000])
+  })
+
+  it('leaves already-ascending data untouched', () => {
+    const entries = [point(1000, 10), point(2000, 11), point(3000, 12)]
+    expect(toStrictlyAscendingByTime(entries)).toEqual(entries)
   })
 })
