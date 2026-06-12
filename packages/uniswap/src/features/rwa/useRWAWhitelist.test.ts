@@ -1,3 +1,4 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { toRWAWhitelistFromDataApi } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -91,7 +92,7 @@ describe('toRWAWhitelistFromDataApi', () => {
     expect(whitelist).toEqual([])
   })
 
-  it('logs an error when an issuer token has no issuerData entry', () => {
+  it('logs an error when a non-empty issuer token has no issuerData entry', () => {
     toRWAWhitelistFromDataApi([
       {
         symbol: 'GOOGL',
@@ -104,7 +105,66 @@ describe('toRWAWhitelistFromDataApi', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       expect.any(Error),
-      expect.objectContaining({ tags: { file: 'useRWAWhitelist.ts', function: 'toRWAToken' } }),
+      expect.objectContaining({
+        tags: { file: 'resolveRwaIssuerDisplay.ts', function: 'resolveRwaIssuerDisplay' },
+      }),
     )
+  })
+
+  it('carries the asset display category resolved from `categories`', () => {
+    const whitelist = toRWAWhitelistFromDataApi([
+      {
+        symbol: 'GOOGL',
+        name: 'GOOGL',
+        logoUrl: 'https://example.com/googl.png',
+        categories: [RwaCategory.STOCKS],
+        issuerTokens: [{ chainId: MAINNET_CHAIN_ID, address: '0xondo', issuer: 'ondo' }],
+        issuerData: {
+          ondo: { name: 'Ondo', symbol: 'GOOGL.on', logoUrl: 'https://example.com/ondo.png' },
+        },
+      },
+    ])
+
+    expect(whitelist[0]?.category).toBe(RwaCategory.STOCKS)
+  })
+
+  it('defaults category to UNSPECIFIED when `categories` is absent', () => {
+    const whitelist = toRWAWhitelistFromDataApi([
+      {
+        symbol: 'GOOGL',
+        name: 'GOOGL',
+        logoUrl: 'https://example.com/googl.png',
+        issuerTokens: [{ chainId: MAINNET_CHAIN_ID, address: '0xondo', issuer: 'ondo' }],
+        issuerData: {
+          ondo: { name: 'Ondo', symbol: 'GOOGL.on', logoUrl: 'https://example.com/ondo.png' },
+        },
+      },
+    ])
+
+    expect(whitelist[0]?.category).toBe(RwaCategory.UNSPECIFIED)
+  })
+
+  it('uses asset-level display for an empty-issuer token without logging or dropping it', () => {
+    const whitelist = toRWAWhitelistFromDataApi([
+      {
+        symbol: 'GOLD',
+        name: 'Gold',
+        logoUrl: 'https://example.com/gold.png',
+        issuerTokens: [{ chainId: MAINNET_CHAIN_ID, address: '0xgold', issuer: '' }],
+        issuerData: {},
+      },
+    ])
+
+    expect(whitelist[0]?.tokens).toEqual([
+      {
+        chainId: MAINNET_CHAIN_ID,
+        address: '0xgold',
+        issuer: 'unknown',
+        name: 'Gold',
+        symbol: 'GOLD',
+        logoUrl: 'https://example.com/gold.png',
+      },
+    ])
+    expect(logger.error).not.toHaveBeenCalled()
   })
 })

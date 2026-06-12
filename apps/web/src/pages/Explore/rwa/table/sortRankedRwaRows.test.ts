@@ -1,3 +1,4 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { mapRankedRwa } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
 import { makeRankedRwa } from 'uniswap/src/data/rest/rwa/rankedRwaTestHelpers'
 import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
@@ -10,17 +11,31 @@ function makeStock(
     volume24hUsd,
     priceUsd = 1,
     priceChange1hPct,
+    priceDeviationPct,
+    issuerTokens,
   }: {
     volume24hUsd: number
     priceUsd?: number
     priceChange1hPct?: number
+    priceDeviationPct?: number
+    issuerTokens?: Array<{
+      symbol: string
+      name: string
+      issuer: string
+      priceUsd: number
+      volume24hUsd: number
+      priceChange1hPct?: number
+      chainTokens: Array<{ chainId: number; address: string }>
+    }>
   },
 ): Rwa {
-  const rwa = mapRankedRwa(
-    makeRankedRwa({
+  const rwa = mapRankedRwa({
+    token: makeRankedRwa({
       symbol,
+      priceUsd,
       priceChange1hPct,
-      issuerTokens: [
+      priceDeviationPct,
+      issuerTokens: issuerTokens ?? [
         {
           symbol,
           name: symbol,
@@ -34,7 +49,8 @@ function makeStock(
         },
       ],
     }),
-  )
+    category: RwaCategory.STOCKS,
+  })
   if (!rwa) {
     throw new Error('failed to build Rwa test fixture')
   }
@@ -76,5 +92,36 @@ describe('sortRankedRwaRows', () => {
     ]
     const sorted = sortRankedRwaRows(rows, { sortMethod: StocksSortMethod.HOUR_CHANGE, sortAscending: true })
     expect(sorted.map((row) => row.symbol)).toEqual(['AAPL', 'NVDA', 'TSLA'])
+  })
+
+  it('sorts multi-issuer price ranges by the minimum issuer price', () => {
+    const rows = [
+      makeStock('TSLA', {
+        volume24hUsd: 100,
+        priceUsd: 250,
+        priceDeviationPct: 0.5,
+        issuerTokens: [
+          {
+            symbol: 'TSLAON',
+            name: 'Tesla (Ondo)',
+            issuer: 'ondo',
+            priceUsd: 250,
+            volume24hUsd: 60,
+            chainTokens: [{ chainId: 8453, address: '0xondo' }],
+          },
+          {
+            symbol: 'TSLAb',
+            name: 'Tesla (Backed)',
+            issuer: 'backed',
+            priceUsd: 248,
+            volume24hUsd: 40,
+            chainTokens: [{ chainId: 8453, address: '0xbacked' }],
+          },
+        ],
+      }),
+      makeStock('AAPL', { volume24hUsd: 100, priceUsd: 249 }),
+    ]
+    const sorted = sortRankedRwaRows(rows, { sortMethod: StocksSortMethod.PRICE, sortAscending: true })
+    expect(sorted.map((row) => row.symbol)).toEqual(['TSLA', 'AAPL'])
   })
 })

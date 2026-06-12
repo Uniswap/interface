@@ -75,7 +75,7 @@ export function applyRwaGroupingToSearchOptions({
 
     const rwa = chainFilter ? filterRwaToChain(match.rwa, chainFilter) : match.rwa
     if (rwa.issuerTokens.length >= 2) {
-      stockItems.push(buildRwaCollectionOption({ rwa, showCategoryTag: true, showTokenCount: false }))
+      stockItems.push(buildRwaCollectionOption({ rwa, showCategoryTag: true }))
     } else {
       // single issuer on-chain -> tagged token
       stockItems.push({

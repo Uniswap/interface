@@ -24,7 +24,7 @@ export function MoreWaysToTrade(): JSX.Element | null {
     return null
   }
 
-  const companyName = rwaMatch.asset.name || rwaMatch.asset.symbol
+  const companyName = rwaMatch.asset.name
   const useExpando = otherIssuerTokens.length > COLLAPSED_VISIBLE_COUNT
   const visibleTokens =
     useExpando && !isExpanded ? otherIssuerTokens.slice(0, COLLAPSED_VISIBLE_COUNT) : otherIssuerTokens

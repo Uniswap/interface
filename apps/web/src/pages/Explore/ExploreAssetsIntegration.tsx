@@ -4,7 +4,7 @@ import { AssetShelf } from '~/pages/Explore/rwa/shelf/AssetShelf'
 
 export function ExploreAssetShelfSection(): JSX.Element {
   return (
-    <Flex mt="$spacing32">
+    <Flex mt="$spacing48" mb="$spacing48" $md={{ mt: '$spacing32' }}>
       <AssetShelf />
     </Flex>
   )

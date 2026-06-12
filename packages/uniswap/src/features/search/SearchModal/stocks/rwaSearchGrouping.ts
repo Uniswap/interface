@@ -1,4 +1,5 @@
 import { OnchainItemListOptionType, type RwaCollectionOption } from 'uniswap/src/components/lists/items/types'
+import { resolveRwaIssuerDisplay } from 'uniswap/src/data/rest/rwa/resolveRwaIssuerDisplay'
 import {
   PREFERRED_RWA_CHAIN_ID,
   type IssuerToken,
@@ -7,7 +8,6 @@ import {
 } from 'uniswap/src/data/rest/rwa/types'
 import { getExpandableSearchRowHeightPx } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { normalizeRWAAddress } from 'uniswap/src/features/rwa/rwaMatch'
-import { logger } from 'utilities/src/logger/logger'
 
 export type RwaSearchIndexEntry = { rwa: Rwa; issuer: IssuerToken }
 export type RwaSearchIndex = { rwas: Rwa[]; byChainAddress: Map<string, RwaSearchIndexEntry> }
@@ -30,14 +30,8 @@ export function buildRwaFromListRwasAsset(asset: ListRwasAssetSource): Rwa | und
     if (!token.chainId || !token.address) {
       continue
     }
-    const data = asset.issuerData[token.issuer]
+    const data = resolveRwaIssuerDisplay({ asset, token })
     if (!data) {
-      // The data-api contract guarantees an issuerData entry for every issuer in issuerTokens; if one is missing
-      // we can't render the issuer, so report it (matching the whitelist path) and drop it.
-      logger.error(new Error('RWA issuer token is missing its issuerData entry'), {
-        tags: { file: 'rwaSearchGrouping.ts', function: 'buildRwaFromListRwasAsset' },
-        extra: { issuer: token.issuer, chainId: token.chainId, address: token.address },
-      })
       continue
     }
     let issuer = issuerBySlug.get(token.issuer)
@@ -116,18 +110,15 @@ export function findRwaForToken(
 export function buildRwaCollectionOption({
   rwa,
   showCategoryTag,
-  showTokenCount,
 }: {
   rwa: Rwa
   showCategoryTag: boolean
-  showTokenCount: boolean
 }): RwaCollectionOption {
   const issuerCount = rwa.issuerTokens.length
   return {
     type: OnchainItemListOptionType.RwaCollection,
     rwa,
     showCategoryTag,
-    showTokenCount,
     rowLayout: {
       dynamicHeight: issuerCount > 1,
       collapsedHeightPx: getExpandableSearchRowHeightPx({ issuerCount, expanded: false }),

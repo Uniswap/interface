@@ -2,7 +2,10 @@ import type { Row } from '@tanstack/react-table'
 import { useCallback } from 'react'
 import { Flex } from 'ui/src'
 import { ExpandableIssuerPanelContainer } from 'uniswap/src/features/expandableAsset'
-import { getExpandableIssuerPanelHeightPx } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
+import {
+  EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX,
+  getExpandableIssuerPanelHeightPx,
+} from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { useTableRowContentMinWidthPx } from '~/components/Table/TableSizeProvider'
 import type { RenderUnifiedExpandableRow } from '~/components/Table/types'
 import { ExpandableTableRowContainer, IssuerTableRowHoverProvider } from '~/pages/Explore/rwa/expandable'
@@ -29,8 +32,10 @@ export function useExpandableAssetTableExpandableRow(): {
       )
     }
 
+    // Match the expandable shell's vertical padding so flat rows occupy the same 72px slot
+    // as collapsed expandable rows (consistent row rhythm across Stocks/ETFs/Commodities).
     return (
-      <Flex group width="100%">
+      <Flex group py={EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX} width="100%">
         {content}
       </Flex>
     )

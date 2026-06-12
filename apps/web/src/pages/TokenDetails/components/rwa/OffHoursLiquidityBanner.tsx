@@ -20,7 +20,7 @@ export function OffHoursLiquidityBanner(): JSX.Element | null {
     <InlineWarningCard
       severity={WarningSeverity.Low}
       Icon={Clock}
-      description={t('tdp.rwa.offHours.warning', { ticker: rwaMatch.asset.symbol })}
+      description={t('tdp.rwa.offHours.warning', { name: rwaMatch.asset.name })}
       learnMoreUrl={uniswapUrls.helpArticleUrls.rwaOffHours}
       inlineLearnMore
       descriptionTestId={TestID.TokenDetailsRWAOffHoursBanner}

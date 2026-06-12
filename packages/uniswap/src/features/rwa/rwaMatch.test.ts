@@ -1,3 +1,4 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { findRWAMatch } from 'uniswap/src/features/rwa/rwaMatch'
 import type { RWAAsset, RWAWhitelist, RWAToken } from 'uniswap/src/features/rwa/types'
 
@@ -24,6 +25,7 @@ const TSLA_ASSET: RWAAsset = {
   name: 'Tesla',
   icon: 'https://example.com/tesla.png',
   tokens: [TSLA_TOKEN],
+  category: RwaCategory.STOCKS,
 }
 
 const RWA_WHITELIST: RWAWhitelist = [TSLA_ASSET]
@@ -80,6 +82,7 @@ describe(findRWAMatch, () => {
         symbol: 'TSLA',
         name: 'Tesla',
         icon: 'https://example.com/tesla.png',
+        category: RwaCategory.STOCKS,
         tokens: [
           {
             chainId: SOLANA_CHAIN_ID,

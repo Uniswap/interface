@@ -98,6 +98,22 @@ describe('ExpandableIssuerIdentity network badge', () => {
     expect(queryAllByTestId(`network-logo-${UniverseChainId.ArbitrumOne}`)).toHaveLength(1)
   })
 
+  it('uses issuer token name as primary text for flat single-issuer table rows', () => {
+    const rwa = rwaWithIssuerChains([{ chainId: UniverseChainId.Base, address: '0xbase' }])
+    const issuer = rwa.issuerTokens[0]!
+    const { getByText, queryByText } = render(
+      <ExpandableIssuerIdentity
+        asset={rwa}
+        issuer={issuer}
+        enabledChainIds={ENABLED_CHAINS}
+        variant="table"
+        useIssuerNameAsPrimary
+      />,
+    )
+    expect(getByText(issuer.name)).toBeTruthy()
+    expect(queryByText(rwa.name)).toBeNull()
+  })
+
   it('shows the network badge for a multi-network issuer in the Explore table when a network filter is active', () => {
     const rwa = rwaWithIssuerChains([
       { chainId: UniverseChainId.Base, address: '0xbase' },

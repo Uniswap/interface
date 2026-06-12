@@ -1,14 +1,15 @@
+import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+
 export type RWAIssuer = string
 
 export type RWAToken = {
   chainId: number
   address: string
   issuer: RWAIssuer
-  // Display data for this specific tokenized asset (e.g. an `XX.on` token), sourced from the
-  // data-api `Rwa.issuerData` map keyed by issuer. All tokens for the same issuer share these
-  // values across chains, which is why they are keyed by issuer rather than by chain/address.
-  // Required: tokens whose issuer has no `issuerData` entry are dropped during mapping
-  // (see `toRWAWhitelistFromDataApi`), so a constructed `RWAToken` always carries display data.
+  // Display data for this specific tokenized asset (e.g. an `XX.on` token), resolved per token by
+  // `resolveRwaIssuerDisplay`: from the data-api `Rwa.issuerData` map (keyed by issuer), or asset-level
+  // name/symbol/logoUrl for issuer-less entries (e.g. commodities). Always populated — a non-empty issuer
+  // missing its `issuerData` entry is dropped during mapping.
   name: string
   symbol: string
   logoUrl: string
@@ -19,6 +20,9 @@ export type RWAAsset = {
   name: string
   icon: string
   tokens: RWAToken[]
+  // Display category (stocks/etfs/commodities) from the data-API `categories`, resolved via
+  // `getRwaTagCategory`. UNSPECIFIED when the backend hasn't classified the asset.
+  category: RwaCategory
 }
 
 export type RWAWhitelist = RWAAsset[]

@@ -70,7 +70,7 @@ function getRWAHeaderIdentity({
 }): { name: string; logoUrl?: string } {
   if (rwaMatch) {
     // Use the token's own logo (like every other asset), not the shared canonical RWA asset icon.
-    return { name: rwaMatch.asset.name || rwaMatch.asset.symbol, logoUrl: fallbackLogoUrl }
+    return { name: rwaMatch.asset.name, logoUrl: fallbackLogoUrl }
   }
   return { name: fallbackName, logoUrl: fallbackLogoUrl }
 }

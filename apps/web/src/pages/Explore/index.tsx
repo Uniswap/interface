@@ -118,6 +118,9 @@ const HeaderTab = styled(Text, {
   },
 })
 
+/** Vertical gap between explore hero sections on mWeb only (carousel ↔ tabs, tabs ↔ category table). */
+const EXPLORE_SECTION_MWEB_GAP = '$spacing20'
+
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
   const media = useMedia()
@@ -233,9 +236,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               id={EXPLORE_TOKEN_SECTION_ID}
               row
               maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-              mt={isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
+              mt={showAssetShelf ? '$none' : isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
               mx="auto"
               mb="$spacing4"
+              $md={{
+                mb: EXPLORE_SECTION_MWEB_GAP,
+              }}
               alignItems="center"
               justifyContent="space-between"
               width="100%"
@@ -293,27 +299,29 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   )
                 })}
               </Flex>
-              <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
-                {currentKey === ExploreTab.Pools && (
-                  <Flex row>
-                    <Button
-                      size="small"
-                      icon={<Plus />}
-                      onPress={() =>
-                        navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
-                          state: { entryPoint: '/explore/pools' },
-                        })
-                      }
-                    >
-                      {media.sm ? t('common.new') : t('pool.newPosition.title')}
-                    </Button>
-                  </Flex>
-                )}
-                {currentKey !== ExploreTab.Toucan && !showExploreCategoryTables && <TableNetworkFilter />}
-                {currentKey === ExploreTab.Tokens && !showExploreCategoryTables && <VolumeTimeFrameSelector />}
-                {currentKey === ExploreTab.Pools && <ProtocolFilter />}
-                {currentKey !== ExploreTab.Toucan && !showExploreCategoryTables && <SearchBar tab={currentKey} />}
-              </Flex>
+              {!showExploreCategoryTables && (
+                <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+                  {currentKey === ExploreTab.Pools && (
+                    <Flex row>
+                      <Button
+                        size="small"
+                        icon={<Plus />}
+                        onPress={() =>
+                          navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
+                            state: { entryPoint: '/explore/pools' },
+                          })
+                        }
+                      >
+                        {media.sm ? t('common.new') : t('pool.newPosition.title')}
+                      </Button>
+                    </Flex>
+                  )}
+                  {currentKey !== ExploreTab.Toucan && <TableNetworkFilter />}
+                  {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
+                  {currentKey === ExploreTab.Pools && <ProtocolFilter />}
+                  {currentKey !== ExploreTab.Toucan && <SearchBar tab={currentKey} />}
+                </Flex>
+              )}
             </Flex>
             {currentKey === ExploreTab.Toucan && <TopVerifiedAuctionsSection />}
             {currentKey === ExploreTab.Toucan && (

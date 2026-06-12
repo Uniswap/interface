@@ -10,12 +10,12 @@ const EMPTY_INDEX: RwaSearchIndex = { rwas: [], byChainAddress: new Map() }
 
 /** Builds the all-chains RWA grouping index from the `ListRwas` response, gated by `enabled`.
  *  Shared by `useRwaSearchIndex` (RwaUxSearch) and the token selector (RwaUxTokenSelectorCategoryLabels).
- *  The `ListRwas` cache entry is shared with `useRWAWhitelist`, which fetches under a *different* flag
- *  (RWACoinGeckoData) — so the cache can be primed while this caller's flag is off. The `enabled` guard in the
- *  memo (not just on the query) keeps the returned index empty when the flag is off, so callers may gate on
- *  `rwas.length` / `byChainAddress.size` alone without leaking the feature. */
+ *  Requests `includeCommodities: true` so commodities are tagged — this gives the index its own `ListRwas`
+ *  cache entry (it sends `true`; `useRWAWhitelist` / `useIsRWAGeoBlocked` omit it, proto-default `false`).
+ *  The `enabled` guard in the memo (not just the query) keeps the index empty when the flag is off, so callers
+ *  may gate on `rwas.length` / `byChainAddress.size` alone without leaking the feature. */
 export function useRwaIndex(enabled: boolean): RwaSearchIndex {
   const { chains: chainIds } = useEnabledChains({ includeTestnets: true })
-  const { data } = useListRwasQuery({ chainIds, enabled })
+  const { data } = useListRwasQuery({ chainIds, includeCommodities: true, enabled })
   return useMemo(() => (enabled && data?.rwas ? buildRwaSearchIndex(data.rwas) : EMPTY_INDEX), [enabled, data?.rwas])
 }

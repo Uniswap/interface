@@ -1,4 +1,4 @@
-import { deriveRwaAggregates } from 'uniswap/src/data/rest/rwa/rwaMetrics'
+import { deriveRwaAggregates, getRwaPriceSortValue } from 'uniswap/src/data/rest/rwa/rwaMetrics'
 import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
 import { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 
@@ -6,7 +6,7 @@ function getSortValue(rwa: Rwa, sortMethod: StocksSortMethod): number | undefine
   const metrics = deriveRwaAggregates(rwa)
   switch (sortMethod) {
     case StocksSortMethod.PRICE:
-      return metrics.priceUsd
+      return getRwaPriceSortValue(rwa)
     case StocksSortMethod.HOUR_CHANGE:
       return metrics.priceChange1hPct
     case StocksSortMethod.DAY_CHANGE:

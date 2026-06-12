@@ -33,3 +33,38 @@ export function getIssuerCount(rwa: Rwa): number {
 export function getNetworkCount(issuer: IssuerToken): number {
   return issuer.chainTokens.length
 }
+
+export type RwaPriceDisplay =
+  | { kind: 'single'; priceUsd: number }
+  | {
+      kind: 'range'
+      priceUsd: number
+      minPriceUsd: number
+      maxPriceUsd: number
+      priceDeviationPct: number
+    }
+
+export function getIssuerPriceDisplay(issuer: IssuerToken): RwaPriceDisplay {
+  return { kind: 'single', priceUsd: issuer.priceUsd }
+}
+
+export function getRwaPriceDisplay(rwa: Rwa): RwaPriceDisplay {
+  if (rwa.priceDeviationPct !== undefined && rwa.priceDeviationPct > 0 && rwa.issuerTokens.length > 1) {
+    const prices = rwa.issuerTokens.map((issuer) => issuer.priceUsd)
+    return {
+      kind: 'range',
+      priceUsd: rwa.priceUsd,
+      minPriceUsd: Math.min(...prices),
+      maxPriceUsd: Math.max(...prices),
+      priceDeviationPct: rwa.priceDeviationPct,
+    }
+  }
+
+  return { kind: 'single', priceUsd: rwa.priceUsd }
+}
+
+/** Sort key for ranked parent rows: minimum price when a range applies. */
+export function getRwaPriceSortValue(rwa: Rwa): number {
+  const display = getRwaPriceDisplay(rwa)
+  return display.kind === 'range' ? display.minPriceUsd : display.priceUsd
+}

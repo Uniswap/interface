@@ -1,3 +1,4 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { RWAAsset, RWAToken } from 'uniswap/src/features/rwa/types'
 import { TDPBreadcrumb } from '~/pages/TokenDetails/components/header/TDPBreadcrumb'
@@ -72,6 +73,7 @@ const TSLA_ASSET: RWAAsset = {
   name: 'Tesla',
   icon: 'https://example.com/tesla.png',
   tokens: [TSLA_TOKEN],
+  category: RwaCategory.STOCKS,
 }
 
 function mockTDPStore(currency: TokenFromList): void {

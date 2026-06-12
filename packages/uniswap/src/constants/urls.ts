@@ -144,6 +144,7 @@ export const uniswapUrls = {
     ),
     recoveryPhraseForgotten: createHelpArticleUrl('11306367118349'),
     revokeExplainer: createHelpArticleUrl('15724901841037-How-to-revoke-a-token-approval'),
+    rwaExploreDisclaimer: createHelpArticleUrl('46577159640589'),
     rwaOffHours: createHelpArticleUrl('46572002944013'),
     rwaRegionRestriction: createHelpArticleUrl('46373846019981'),
     supportedNetworks: createHelpArticleUrl('14569415293325'),

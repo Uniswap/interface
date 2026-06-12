@@ -20,8 +20,10 @@ import { getExpandableAssetTokenColumnSize } from '~/pages/Explore/rwa/table/exp
 import {
   expandableAssetRowHasMultipleIssuers,
   getExpandableAssetRowMetrics,
+  getExpandableAssetRowPriceDisplay,
   type ExpandableAssetTableRow,
 } from '~/pages/Explore/rwa/table/expandableAssetTableRowUtils'
+import { RwaPriceCell } from '~/pages/Explore/rwa/table/RwaPriceCell'
 import { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 
 function safeAccessorGetValue<T>(getValue: (() => T | undefined) | undefined): T | undefined {
@@ -87,6 +89,7 @@ export function useExpandableAssetTableColumns({
           }
           const row = info.row.original
           const isExpanded = info.row.getIsExpanded()
+          const isFlatIssuerRow = row.type === 'issuer' && info.row.depth === 0
           const description =
             row.type === 'parent' ? (
               <ExpandableParentAssetIdentity
@@ -102,6 +105,7 @@ export function useExpandableAssetTableColumns({
                 enabledChainIds={enabledChainIds}
                 variant="table"
                 hasNetworkFilter={hasNetworkFilter}
+                useIssuerNameAsPrimary={isFlatIssuerRow}
               />
             )
           return (
@@ -115,15 +119,22 @@ export function useExpandableAssetTableColumns({
           )
         },
       }),
-      columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).priceUsd, {
+      columnHelper.display({
         id: 'price',
         maxSize: 140,
         header: createMetricHeader(StocksSortMethod.PRICE),
         cell: (info) => {
-          const value = safeAccessorGetValue(info.getValue)
+          if (!hasRow<ExpandableAssetTableRow>(info)) {
+            return <Cell loading={showLoadingSkeleton} justifyContent="flex-end" />
+          }
+          const priceDisplay = getExpandableAssetRowPriceDisplay(info.row.original)
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
-              <TableText>{convertFiatAmountFormatted(value, NumberType.FiatTokenPrice)}</TableText>
+              <RwaPriceCell
+                priceDisplay={priceDisplay}
+                convertFiatAmountFormatted={convertFiatAmountFormatted}
+                formatPercent={formatPercent}
+              />
             </Cell>
           )
         },

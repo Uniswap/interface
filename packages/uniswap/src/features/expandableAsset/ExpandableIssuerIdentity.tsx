@@ -21,6 +21,8 @@ export type ExpandableIssuerIdentityProps = {
   variant?: ExpandableAssetGroupVariant
   /** When true (Explore network filter active), multichain issuers show a network badge on the logo. */
   hasNetworkFilter?: boolean
+  /** Flat single-issuer table row: show issuer token name instead of grouped asset name. */
+  useIssuerNameAsPrimary?: boolean
 }
 
 export function ExpandableIssuerIdentity({
@@ -29,6 +31,7 @@ export function ExpandableIssuerIdentity({
   enabledChainIds,
   variant = 'table',
   hasNetworkFilter = false,
+  useIssuerNameAsPrimary = false,
 }: ExpandableIssuerIdentityProps): JSX.Element {
   const { t } = useTranslation()
   const issuerTableRowHovered = useContext(IssuerTableRowHoverContext)
@@ -87,7 +90,7 @@ export function ExpandableIssuerIdentity({
       <Flex flex={1} minWidth={0}>
         <Flex row alignItems="baseline" gap="$spacing6" minWidth={0}>
           <Text variant={variant === 'search' ? 'body1' : 'body2'} color="$neutral1" numberOfLines={1} flexShrink={1}>
-            {asset.name}
+            {useIssuerNameAsPrimary ? issuer.name : asset.name}
           </Text>
           <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
             {formatIssuerLabel(issuer.issuer)}

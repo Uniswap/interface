@@ -1,5 +1,10 @@
 import { pickPrimaryChainToken } from 'uniswap/src/data/rest/rwa/pickPrimaryChainToken'
-import { deriveRwaAggregates } from 'uniswap/src/data/rest/rwa/rwaMetrics'
+import {
+  deriveRwaAggregates,
+  getIssuerPriceDisplay,
+  getRwaPriceDisplay,
+  type RwaPriceDisplay,
+} from 'uniswap/src/data/rest/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -21,22 +26,33 @@ export function buildExpandableAssetTableRows(
   assets: Rwa[],
   enabledChainIds: readonly UniverseChainId[],
 ): ExpandableAssetTableRow[] {
-  return assets.map((asset): ExpandableAssetTableRow => {
-    const hasMultipleIssuers = asset.issuerTokens.length > 1
-    const subRows: ExpandableAssetTableRow[] | undefined = hasMultipleIssuers
-      ? asset.issuerTokens.map((issuer) => ({
+  return assets.flatMap((asset): ExpandableAssetTableRow[] => {
+    const soleIssuer = asset.issuerTokens.length === 1 ? asset.issuerTokens[0] : undefined
+    if (soleIssuer) {
+      return [
+        {
           type: 'issuer',
           asset,
-          issuer,
-          link: linkForIssuer(issuer, enabledChainIds),
-        }))
-      : undefined
-    return {
-      type: 'parent',
-      asset,
-      subRows,
-      link: hasMultipleIssuers ? undefined : linkForIssuer(asset.issuerTokens[0], enabledChainIds),
+          issuer: soleIssuer,
+          link: linkForIssuer(soleIssuer, enabledChainIds),
+        },
+      ]
     }
+
+    const subRows = asset.issuerTokens.map((issuer) => ({
+      type: 'issuer' as const,
+      asset,
+      issuer,
+      link: linkForIssuer(issuer, enabledChainIds),
+    }))
+
+    return [
+      {
+        type: 'parent',
+        asset,
+        subRows,
+      },
+    ]
   })
 }
 
@@ -70,6 +86,13 @@ export type ExpandableAssetRowMetrics = {
   marketCapUsd?: number
   volume24hUsd: number
   sparkline: Rwa['sparkline1d']
+}
+
+export function getExpandableAssetRowPriceDisplay(row: ExpandableAssetTableRow): RwaPriceDisplay {
+  if (row.type === 'parent') {
+    return getRwaPriceDisplay(row.asset)
+  }
+  return getIssuerPriceDisplay(row.issuer)
 }
 
 export function getExpandableAssetRowMetrics(row: ExpandableAssetTableRow): ExpandableAssetRowMetrics {

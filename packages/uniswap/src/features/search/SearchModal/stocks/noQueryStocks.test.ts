@@ -45,8 +45,6 @@ describe('buildNoQueryRwaCollectionOptions', () => {
     const options = buildNoQueryRwaCollectionOptions({ rwas: [rwa('SOLO', 1), rwa('MULTI', 3)] })
     // Single-issuer → tagged token row; multi-issuer → expandable ticker (header conveys the category).
     expect(options.map((o) => o.showCategoryTag)).toEqual([true, false])
-    // The issuer count is requested for both; it only renders on the expandable (multi-issuer) parent identity.
-    expect(options.every((o) => o.showTokenCount)).toBe(true)
   })
 
   it('a single-issuer shelf row carries a renderable category tag', () => {

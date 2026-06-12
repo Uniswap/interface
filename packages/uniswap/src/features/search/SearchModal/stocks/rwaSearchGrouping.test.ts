@@ -8,6 +8,7 @@ import {
   findRwaForToken,
   getRwaCollectionKey,
 } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
+import { logger } from 'utilities/src/logger/logger'
 
 const MAINNET = 1
 const BNB = 56
@@ -75,7 +76,7 @@ describe('buildRwaSearchIndex', () => {
 describe('buildRwaCollectionOption', () => {
   it('wraps a Rwa as a RwaCollection option', () => {
     const { rwas } = buildRwaSearchIndex([TSLA])
-    const option = buildRwaCollectionOption({ rwa: rwas[0]!, showCategoryTag: true, showTokenCount: false })
+    const option = buildRwaCollectionOption({ rwa: rwas[0]!, showCategoryTag: true })
     expect(option.type).toBe(OnchainItemListOptionType.RwaCollection)
     expect(option.rwa.symbol).toBe('TSLA')
   })
@@ -133,5 +134,51 @@ describe('getRwaCollectionKey', () => {
     const a = buildRwaSearchIndex([nvdaWithIssuerOrder([alphaToken])]).rwas[0]!
     const b = buildRwaSearchIndex([nvdaWithIssuerOrder([betaToken])]).rwas[0]!
     expect(getRwaCollectionKey({ rwa: a })).not.toBe(getRwaCollectionKey({ rwa: b }))
+  })
+})
+
+describe('buildRwaFromListRwasAsset empty issuer (commodity)', () => {
+  beforeEach(() => {
+    vi.spyOn(logger, 'error').mockImplementation(() => undefined)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('synthesizes an issuer from asset-level display for an empty-issuer token, without logging', () => {
+    const rwa = buildRwaFromListRwasAsset({
+      symbol: 'GOLD',
+      name: 'Gold',
+      logoUrl: 'https://example.com/gold.png',
+      issuerTokens: [{ chainId: MAINNET, address: '0xGold', issuer: '' }],
+      issuerData: {},
+    })
+
+    expect(rwa?.issuerTokens).toHaveLength(1)
+    const issuer = rwa!.issuerTokens[0]!
+    expect(issuer.issuer).toBe('')
+    expect(issuer.name).toBe('Gold')
+    expect(issuer.symbol).toBe('GOLD')
+    expect(issuer.logoUrl).toBe('https://example.com/gold.png')
+    expect(issuer.chainTokens).toEqual([{ chainId: MAINNET, address: '0xGold' }])
+    expect(logger.error).not.toHaveBeenCalled()
+  })
+
+  it('logs an error and drops a non-empty issuer token with no issuerData entry', () => {
+    buildRwaFromListRwasAsset({
+      symbol: 'X',
+      name: 'X',
+      logoUrl: '',
+      issuerTokens: [{ chainId: MAINNET, address: '0xddd', issuer: 'mystery' }],
+      issuerData: {},
+    })
+
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({
+        tags: { file: 'resolveRwaIssuerDisplay.ts', function: 'resolveRwaIssuerDisplay' },
+      }),
+    )
   })
 })

@@ -58,8 +58,6 @@ export interface RwaCollectionOption extends BaseOption {
   /** Renders the category pill on each row (category derived from the carried `rwa`). False for the no-query
    *  section, where the header conveys the category. */
   showCategoryTag?: boolean
-  /** Shows the issuer count on the collapsed subline (no-query section only). */
-  showTokenCount?: boolean
 }
 
 export interface MultichainTokenOption extends BaseOption {

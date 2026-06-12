@@ -116,6 +116,8 @@ export enum ElementName {
   ExploreAuctionsTab = 'explore-auctions-tab',
   ExploreBanner = 'explore-banner',
   ExplorePoolsTab = 'explore-pools-tab',
+  ExploreRwaCategoryView = 'category-view',
+  ExploreRwaStocksCarousel = 'stocks-carousel',
   ExploreSearchInput = 'explore_search_input',
   ExploreTokensTab = 'explore-tokens-tab',
   ExploreTransactionsTab = 'explore-transactions-tab',

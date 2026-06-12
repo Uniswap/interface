@@ -57,7 +57,7 @@
     "@typechain/ethers-v5": "7.2.0",
     "@types/poisson-disk-sampling": "2.2.4",
     "@uniswap/analytics-events": "2.43.0",
-    "@uniswap/client-data-api": "0.0.102",
+    "@uniswap/client-data-api": "0.0.105",
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-explore": "0.0.18",
     "@uniswap/client-liquidity": "1.0.4",

@@ -1,7 +1,14 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { mapRankedRwa } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
 import { makeRankedRwa } from 'uniswap/src/data/rest/rwa/rankedRwaTestHelpers'
-import { deriveRwaAggregates, getIssuerCount, getNetworkCount } from 'uniswap/src/data/rest/rwa/rwaMetrics'
+import {
+  deriveRwaAggregates,
+  getIssuerCount,
+  getIssuerPriceDisplay,
+  getNetworkCount,
+  getRwaPriceDisplay,
+  getRwaPriceSortValue,
+} from 'uniswap/src/data/rest/rwa/rwaMetrics'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function makeMappedRwa() {
@@ -78,5 +85,64 @@ describe('getNetworkCount', () => {
   it('returns chain token count', () => {
     const ondo = makeMappedRwa().issuerTokens.find((issuer) => issuer.issuer === 'ondo')!
     expect(getNetworkCount(ondo)).toBe(2)
+  })
+})
+
+describe('getRwaPriceDisplay', () => {
+  it('returns a range when priceDeviationPct is positive and multiple issuers exist', () => {
+    const rwa = makeMappedRwa()
+    rwa.priceDeviationPct = 0.21
+
+    expect(getRwaPriceDisplay(rwa)).toEqual({
+      kind: 'range',
+      priceUsd: rwa.priceUsd,
+      minPriceUsd: 247.9,
+      maxPriceUsd: 248.42,
+      priceDeviationPct: 0.21,
+    })
+  })
+
+  it('returns a scalar price when priceDeviationPct is zero', () => {
+    const rwa = makeMappedRwa()
+    rwa.priceDeviationPct = 0
+
+    expect(getRwaPriceDisplay(rwa)).toEqual({
+      kind: 'single',
+      priceUsd: rwa.priceUsd,
+    })
+  })
+
+  it('returns a scalar price for single-issuer assets even when deviation is set', () => {
+    const rwa = mapRankedRwa({
+      token: makeRankedRwa({ priceDeviationPct: 1.5 }),
+      category: RwaCategory.STOCKS,
+    })
+    if (!rwa) {
+      throw new Error('expected mapped rwa')
+    }
+
+    expect(getRwaPriceDisplay(rwa)).toEqual({
+      kind: 'single',
+      priceUsd: rwa.priceUsd,
+    })
+  })
+})
+
+describe('getIssuerPriceDisplay', () => {
+  it('always returns a scalar issuer price', () => {
+    const issuer = makeMappedRwa().issuerTokens[0]!
+    expect(getIssuerPriceDisplay(issuer)).toEqual({
+      kind: 'single',
+      priceUsd: issuer.priceUsd,
+    })
+  })
+})
+
+describe('getRwaPriceSortValue', () => {
+  it('uses the minimum issuer price when a range applies', () => {
+    const rwa = makeMappedRwa()
+    rwa.priceDeviationPct = 0.21
+
+    expect(getRwaPriceSortValue(rwa)).toBe(247.9)
   })
 })

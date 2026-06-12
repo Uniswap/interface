@@ -39,9 +39,12 @@ export type Rwa = {
   marketCapUsd?: number
   volume24hUsd: number
   sparkline1d: RwaSparkline
+  /** Max % deviation across issuer prices from parent priceUsd; ranked API only. */
+  priceDeviationPct?: number
   /** Ordered by liquidity (highest first per API contract). */
   issuerTokens: IssuerToken[]
-  /** Per-asset RWA categories from the `ListRwas` endpoint, or the request category stamped onto ranked rows. Drives the tag. */
+  /** Per-asset RWA categories from the `ListRwas` endpoint (pre-sorted by the backend's display order), or the
+   *  request category stamped onto ranked rows. The tag uses the first entry (see `getRwaTagCategory`). */
   categories?: RwaCategory[]
 }
 

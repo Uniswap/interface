@@ -1,12 +1,9 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 
-/** When an asset has multiple categories, the highest-priority present wins, so the tag is stable regardless of
- *  backend array order. */
-const RWA_CATEGORY_TAG_PRIORITY: readonly RwaCategory[] = [RwaCategory.STOCKS, RwaCategory.ETFS]
-
-/** Picks the tag category from an RWA's `categories` by `RWA_CATEGORY_TAG_PRIORITY`; returns UNSPECIFIED when none
- *  are classified, so no tag renders. */
+/** Returns an RWA's tag category: the first non-UNSPECIFIED entry of `categories`, which the backend
+ *  pre-sorts by display priority (COMMODITIES, ETFS, STOCKS). Returns UNSPECIFIED when nothing is classified,
+ *  so no tag renders. A future backend category with no `CategoryTag` case renders no tag until that case is
+ *  added, so ship the two together. */
 export function getRwaTagCategory({ categories }: { categories?: RwaCategory[] }): RwaCategory {
-  const present = new Set(categories)
-  return RWA_CATEGORY_TAG_PRIORITY.find((category) => present.has(category)) ?? RwaCategory.UNSPECIFIED
+  return categories?.find((category) => category !== RwaCategory.UNSPECIFIED) ?? RwaCategory.UNSPECIFIED
 }

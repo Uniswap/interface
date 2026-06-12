@@ -25,6 +25,7 @@ export function mapRankedRwa({ token, category }: { token: RankedRwa; category: 
     marketCapUsd: token.marketCapUsd,
     volume24hUsd: token.volume24hUsd,
     sparkline1d: mapRwaSparkline(token.sparkline1d),
+    priceDeviationPct: token.priceDeviationPct,
     issuerTokens,
     // Stamp the request category: ListRankedRwas is queried per-category and its rows carry none.
     categories: [category],

@@ -5,6 +5,7 @@ import { ASSET_SHELF_CARD_GAP } from '~/pages/Explore/rwa/shelf/assetCardConstan
 import { AssetCardSkeletonRow } from '~/pages/Explore/rwa/shelf/AssetCardSkeleton'
 import { CarouselEdgeFade } from '~/pages/Explore/rwa/shelf/CarouselEdgeFade'
 import { CarouselScrollButtonOverlay } from '~/pages/Explore/rwa/shelf/CarouselScrollButtonOverlay'
+import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
 
 export function AssetShelfCarousel({
   featured,
@@ -21,6 +22,7 @@ export function AssetShelfCarousel({
   cardWidth,
   fadeWidth,
   showArrowButtons,
+  onAssetClick,
 }: {
   featured: ExploreStockShelfItem[]
   isLoading: boolean
@@ -36,6 +38,7 @@ export function AssetShelfCarousel({
   cardWidth: number
   fadeWidth: number
   showArrowButtons: boolean
+  onAssetClick?: AssetCardClickHandler
 }): JSX.Element {
   const colors = useSporeColors()
 
@@ -69,7 +72,13 @@ export function AssetShelfCarousel({
           }}
         >
           {featured.map((item) => (
-            <AssetCard key={item.rwa.symbol} rwa={item.rwa} issuer={item.issuer} cardWidth={cardWidth} />
+            <AssetCard
+              key={item.rwa.symbol}
+              rwa={item.rwa}
+              issuer={item.issuer}
+              cardWidth={cardWidth}
+              onAssetClick={onAssetClick}
+            />
           ))}
         </div>
       )}

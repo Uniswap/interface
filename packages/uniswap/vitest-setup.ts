@@ -109,6 +109,7 @@ const commonTranslations: Record<string, string> = {
   'common.yesterday': 'Yesterday',
   'common.stocks': 'Stocks',
   'common.etfs': 'ETFs',
+  'common.commodities': 'Commodities',
   // Storage settings translations
   'settings.setting.storage.clearAccountHistory.title': 'Clear account history',
   'settings.setting.storage.clearAccountHistory.subtitle': 'Clear your account history',

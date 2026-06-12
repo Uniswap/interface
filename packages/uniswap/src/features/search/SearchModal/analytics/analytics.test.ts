@@ -103,7 +103,6 @@ const MOCK_MULTICHAIN_TOKEN: MultichainTokenOption = {
 const MOCK_RWA_COLLECTION: RwaCollectionOption = {
   type: OnchainItemListOptionType.RwaCollection,
   showCategoryTag: true,
-  showTokenCount: false,
   rwa: {
     symbol: 'TSLA',
     name: 'Tesla',

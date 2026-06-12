@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import {
-  EXPANDABLE_ASSET_TABLE_ROW_HEIGHT,
+  EXPANDABLE_ASSET_TABLE_ROW_SLOT_HEIGHT,
   RWA_TABLE_INITIAL_OVERSCAN_ROWS,
   RWA_TABLE_MAX_ROWS,
 } from '~/pages/Explore/rwa/table/expandableAssetTableConstants'
@@ -25,7 +25,7 @@ export function useRwaTablePagination(totalRowCount: number): {
   // Rows needed to fill the viewport, plus a small buffer. Used both for the
   // initial render and as the per-scroll page size.
   const pageSize = useMemo(
-    () => Math.ceil(fullHeight / EXPANDABLE_ASSET_TABLE_ROW_HEIGHT) + RWA_TABLE_INITIAL_OVERSCAN_ROWS,
+    () => Math.ceil(fullHeight / EXPANDABLE_ASSET_TABLE_ROW_SLOT_HEIGHT) + RWA_TABLE_INITIAL_OVERSCAN_ROWS,
     [fullHeight],
   )
 

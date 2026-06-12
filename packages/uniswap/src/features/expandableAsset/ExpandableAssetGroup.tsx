@@ -24,8 +24,6 @@ type ExpandableAssetGroupProps = {
   onParentPress?: () => void
   /** Renders the category pill on the row. False for the no-query section (header conveys it). */
   showCategoryTag?: boolean
-  /** Shows the issuer count next to the symbol on the collapsed subline (no-query section only). */
-  showTokenCount?: boolean
   /** Keyboard list-nav control (web) for the row's focus highlight + Enter-to-activate. */
   focusedRowControl?: FocusedRowControl
   /** testID applied to the row's touchable. */
@@ -40,7 +38,6 @@ export function ExpandableAssetGroup({
   onIssuerPress,
   onParentPress,
   showCategoryTag = true,
-  showTokenCount = false,
   focusedRowControl,
   testID,
 }: ExpandableAssetGroupProps): ReactNode {
@@ -67,13 +64,7 @@ export function ExpandableAssetGroup({
   const identity = soleIssuer ? (
     <ExpandableIssuerIdentity asset={asset} issuer={soleIssuer} enabledChainIds={enabledChainIds} variant="search" />
   ) : (
-    <ExpandableParentAssetIdentity
-      asset={asset}
-      canExpand={canExpand}
-      isExpanded={isExpanded}
-      variant="search"
-      showTokenCount={showTokenCount}
-    />
+    <ExpandableParentAssetIdentity asset={asset} canExpand={canExpand} isExpanded={isExpanded} variant="search" />
   )
 
   // Identity + category tag + chevron. The identity flexes (minWidth 0) so it shrinks and truncates instead of

@@ -1,10 +1,7 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getRWACandidatesFromCurrency } from 'uniswap/src/features/rwa/rwaCandidates'
-import { useRWAMatch } from 'uniswap/src/features/rwa/useRWAMatch'
+import { useIsRWAGeoBlocked } from 'uniswap/src/features/rwa/useIsRWAGeoBlocked'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -14,28 +11,22 @@ import { CurrencyField } from 'uniswap/src/types/currency'
  */
 export function useRWAGeoBlockedWarning(currencies: DerivedSwapInfo['currencies']): Warning | undefined {
   const { t } = useTranslation()
-  const isGeoblockEnabled = useFeatureFlag(FeatureFlags.RwaGeoblocked)
+  const inputCurrency = currencies[CurrencyField.INPUT]?.currency
+  const outputCurrency = currencies[CurrencyField.OUTPUT]?.currency
 
-  const candidates = useMemo(() => {
-    if (!isGeoblockEnabled) {
-      return []
-    }
-    return [currencies[CurrencyField.INPUT], currencies[CurrencyField.OUTPUT]]
-      .filter((currencyInfo): currencyInfo is CurrencyInfo => Boolean(currencyInfo))
-      .flatMap((currencyInfo) => getRWACandidatesFromCurrency(currencyInfo.currency))
-  }, [isGeoblockEnabled, currencies])
-
-  const rwaMatch = useRWAMatch({ candidates, enabled: isGeoblockEnabled && candidates.length > 0 })
+  const isInputRWAGeoBlocked = useIsRWAGeoBlocked(inputCurrency)
+  const isOutputRWAGeoBlocked = useIsRWAGeoBlocked(outputCurrency)
 
   return useMemo(() => {
-    if (!isGeoblockEnabled || !rwaMatch) {
+    if (!isInputRWAGeoBlocked && !isOutputRWAGeoBlocked) {
       return undefined
     }
+
     return {
       type: WarningLabel.RWAGeoBlocked,
       severity: WarningSeverity.Blocked,
       action: WarningAction.DisableReview,
       buttonText: t('swap.warning.rwaGeoBlocked.button'),
     }
-  }, [isGeoblockEnabled, rwaMatch, t])
+  }, [isInputRWAGeoBlocked, isOutputRWAGeoBlocked, t])
 }

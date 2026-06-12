@@ -969,6 +969,12 @@ export type UniverseEventProperties = {
     chain_id?: UniverseChainId
     multichainTokenRowState?: 'open' | 'close'
     chain_name?: string
+    /** ElementName.ExploreRwaCategoryView — selected Explore category tab (popular/stocks/commodities/etfs) */
+    tab?: string
+    /** ElementName.ExploreRwaStocksCarousel — clicked RWA asset on the Explore stocks carousel */
+    token_address?: string
+    token_symbol?: string
+    token_list_length?: number
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
     /** Token details */
@@ -1217,6 +1223,17 @@ export type UniverseEventProperties = {
     blockaidSellFeePercent?: number
     attackType?: string
     protectionResult?: string
+  }
+  [UniswapEventName.RWATokenDetailsViewed]: ITraceContext & {
+    tokenAddress?: string
+    tokenSymbol?: string
+    chainId?: UniverseChainId
+    /** True when the matched RWA is categorized as a tokenized stock (vs. ETF/commodity). */
+    stocks: boolean
+    /** Issuer of the matched RWA token (e.g. ondo, dinari, xstocks). */
+    issuer?: string
+    /** True when the user is geo-blocked from trading this RWA. */
+    geogated: boolean
   }
   [UniswapEventName.ContextMenuClosed]: ITraceContext
   [UniswapEventName.ContextMenuItemClicked]: ITraceContext & {

@@ -16,6 +16,11 @@ describe('CategoryTag', () => {
     expect(queryByText('ETFs')).not.toBeNull()
   })
 
+  it('renders the Commodities tag', () => {
+    const { queryByText } = render(<CategoryTag category={RwaCategory.COMMODITIES} />)
+    expect(queryByText('Commodities')).not.toBeNull()
+  })
+
   it('renders no tag for a category without a mapping (e.g. UNSPECIFIED)', () => {
     const { queryByText } = render(<CategoryTag category={RwaCategory.UNSPECIFIED} />)
     expect(queryByText('Stocks')).toBeNull()

@@ -17,7 +17,6 @@ export function buildNoQueryRwaCollectionOptions({
       // A single-issuer stock renders as a token row, so it carries its category tag; multi-issuer rows are
       // expandable tickers whose category is conveyed by the section header.
       showCategoryTag: rwa.issuerTokens.length === 1,
-      showTokenCount: true,
     }),
   )
 }

@@ -1,12 +1,16 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { Flex } from 'ui/src'
 import { useExploreStocks } from 'uniswap/src/data/rest/rwa/useExploreStocks'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
 import { AssetShelfCarousel } from '~/pages/Explore/rwa/shelf/AssetShelfCarousel'
 import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
+import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
 import { useAssetShelfCarouselLayout } from '~/pages/Explore/rwa/shelf/useAssetShelfCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/pages/Explore/rwa/shelf/useHorizontalSnapCarousel'
 import { ExploreTab } from '~/types/explore'
@@ -35,6 +39,15 @@ export function AssetShelf(): JSX.Element | null {
     })
   })
 
+  const onAssetClick = useEvent(({ tokenAddress, tokenSymbol }: Parameters<AssetCardClickHandler>[0]): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.ExploreRwaStocksCarousel,
+      token_address: tokenAddress,
+      token_symbol: tokenSymbol,
+      token_list_length: featured.length,
+    })
+  })
+
   if (!isLoading && featured.length === 0) {
     return null
   }
@@ -58,6 +71,7 @@ export function AssetShelf(): JSX.Element | null {
           cardWidth={cardWidth}
           fadeWidth={fadeWidth}
           showArrowButtons={showArrowButtons}
+          onAssetClick={onAssetClick}
         />
       </Flex>
     </Flex>

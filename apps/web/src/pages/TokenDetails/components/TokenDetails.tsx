@@ -5,6 +5,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
+import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -32,6 +33,7 @@ import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
 import { TokenCarousel } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarousel'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
 export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const media = useMedia()
@@ -70,6 +72,14 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
 
   const chainLabel = getChainLabel(chainId)
   const isTDPTokenCarouselEnabled = useFeatureFlag(FeatureFlags.TDPTokenCarousel)
+
+  const rwaMatch = useRWATokenDetailsMatch()
+  useLogRWATokenDetailsViewed({
+    rwaMatch,
+    tokenAddress: address,
+    tokenSymbol: currency.symbol,
+    chainId: currency.chainId,
+  })
 
   return (
     <Trace

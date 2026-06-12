@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-native'
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
@@ -68,6 +69,7 @@ describe(useTokenDetailsPreferProjectMarketData, () => {
         symbol: 'RWA',
         name: 'RWA Asset',
         icon: 'https://example.com/rwa.png',
+        category: RwaCategory.STOCKS,
         tokens: [
           {
             chainId: UniverseChainId.Polygon,

@@ -18,9 +18,15 @@ import {
   ASSET_CARD_SPARKLINE_WIDTH,
   assetCardShellProps,
 } from '~/pages/Explore/rwa/shelf/assetCardConstants'
+import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
 import { AssetSparkline } from '~/pages/Explore/rwa/table/AssetSparkline'
 
-export function AssetCard({ rwa, issuer, cardWidth }: ExploreStockShelfItem & { cardWidth: number }): JSX.Element {
+export function AssetCard({
+  rwa,
+  issuer,
+  cardWidth,
+  onAssetClick,
+}: ExploreStockShelfItem & { cardWidth: number; onAssetClick?: AssetCardClickHandler }): JSX.Element {
   const navigate = useNavigate()
   const { chains: enabledChainIds } = useEnabledChains()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
@@ -35,6 +41,7 @@ export function AssetCard({ rwa, issuer, cardWidth }: ExploreStockShelfItem & { 
     if (!primaryChain?.address) {
       return
     }
+    onAssetClick?.({ tokenAddress: primaryChain.address, tokenSymbol: rwa.symbol })
     navigate(
       getTokenDetailsURL({
         address: primaryChain.address,

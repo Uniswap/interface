@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
+import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
+import { resolveRwaIssuerDisplay } from 'uniswap/src/data/rest/rwa/resolveRwaIssuerDisplay'
 import {
   PREFERRED_RWA_CHAIN_ID,
   type ListRwasAssetSource,
-  type ListRwasIssuerData,
   type ListRwasTokenSource,
 } from 'uniswap/src/data/rest/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { RWAAsset, RWAIssuer, RWAToken, RWAWhitelist } from 'uniswap/src/features/rwa/types'
-import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_RWA_WHITELIST: RWAWhitelist = []
 
@@ -18,26 +18,18 @@ function fromDataApiIssuer(issuer: string): RWAIssuer {
 }
 
 function toRWAToken({
+  asset,
   token,
-  issuerData,
 }: {
+  asset: Pick<ListRwasAssetSource, 'symbol' | 'name' | 'logoUrl' | 'issuerData'>
   token: ListRwasTokenSource
-  issuerData: Record<string, ListRwasIssuerData>
 }): RWAToken | undefined {
   if (!token.chainId || !token.address) {
     return undefined
   }
 
-  // `issuerData` is keyed by the raw issuer string from the data-api response — the same value
-  // carried on each issuer token — so look it up before normalizing the issuer for the domain model.
-  const tokenData = issuerData[token.issuer]
+  const tokenData = resolveRwaIssuerDisplay({ asset, token })
   if (!tokenData) {
-    // Should never happen: the data-api contract guarantees an `issuerData` entry for every issuer
-    // present in `issuerTokens`. If one is missing we can't render the token, so report it and drop it.
-    logger.error(new Error('RWA issuer token is missing its issuerData entry'), {
-      tags: { file: 'useRWAWhitelist.ts', function: 'toRWAToken' },
-      extra: { issuer: token.issuer, chainId: token.chainId, address: token.address },
-    })
     return undefined
   }
 
@@ -71,7 +63,7 @@ function toRWAAssetFromDataApi(rwa: ListRwasAssetSource): RWAAsset | undefined {
 
   const tokens = selectPreferredTokenPerIssuer(
     rwa.issuerTokens
-      .map((token) => toRWAToken({ token, issuerData: rwa.issuerData }))
+      .map((token) => toRWAToken({ asset: rwa, token }))
       .filter((token): token is RWAToken => token !== undefined),
   )
   if (!tokens.length) {
@@ -83,6 +75,7 @@ function toRWAAssetFromDataApi(rwa: ListRwasAssetSource): RWAAsset | undefined {
     name: rwa.name,
     icon: rwa.logoUrl,
     tokens,
+    category: getRwaTagCategory({ categories: rwa.categories }),
   }
 }
 

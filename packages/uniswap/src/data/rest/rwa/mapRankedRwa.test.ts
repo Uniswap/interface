@@ -33,6 +33,14 @@ describe('mapRankedRwa', () => {
     ).toBeNull()
   })
 
+  it('maps priceDeviationPct from ranked rows', () => {
+    const rwa = mapRankedRwa({
+      token: makeRankedRwa({ priceDeviationPct: 0.42 }),
+      category: RwaCategory.STOCKS,
+    })
+    expect(rwa?.priceDeviationPct).toBe(0.42)
+  })
+
   it('stamps the request category onto the mapped Rwa', () => {
     expect(mapRankedRwa({ token: makeRankedRwa(), category: RwaCategory.STOCKS })?.categories).toEqual([
       RwaCategory.STOCKS,

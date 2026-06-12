@@ -381,7 +381,6 @@ export const SearchModalList = memo(function SearchModalListInner({
             enabledChainIds={enabledChainIds}
             isExpanded={Boolean(expanded)}
             showCategoryTag={item.showCategoryTag ?? true}
-            showTokenCount={item.showTokenCount ?? false}
             focusedRowControl={{ rowIndex, setFocusedRowIndex, focusedRowIndex }}
             testID={`${TestID.SearchRwaCollectionPrefix}${rwa.symbol}`}
             onToggle={() => toggleExpanded(getRwaCollectionKey({ rwa }))}

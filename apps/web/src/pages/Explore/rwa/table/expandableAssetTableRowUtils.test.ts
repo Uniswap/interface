@@ -81,11 +81,12 @@ describe('buildExpandableAssetTableRows', () => {
     expect(tsla?.type === 'parent' && tsla.subRows).toHaveLength(3)
   })
 
-  it('omits subRows for single-issuer assets', () => {
+  it('emits a flat issuer row for single-issuer assets', () => {
     const rows = makeMultiIssuerRows()
-    const aapl = rows.find((row) => row.type === 'parent' && row.asset.symbol === 'AAPL')
-    expect(aapl?.type === 'parent' && aapl.subRows).toBeUndefined()
-    expect(aapl?.type === 'parent' && aapl.link).toBeDefined()
+    const aapl = rows.find((row) => row.type === 'issuer' && row.asset.symbol === 'AAPL')
+    expect(aapl?.type).toBe('issuer')
+    expect(aapl?.type === 'issuer' && aapl.link).toBeDefined()
+    expect(rows.some((row) => row.type === 'parent' && row.asset.symbol === 'AAPL')).toBe(false)
   })
 
   it('getExpandableAssetSubRows returns issuer children for parent rows only', () => {
