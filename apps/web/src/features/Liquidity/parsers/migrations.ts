@@ -1,6 +1,6 @@
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import type { FeeData } from 'uniswap/src/features/positions/types'
-import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
+import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 
 interface ParsedParams {
   // Current params
@@ -40,7 +40,14 @@ function migrateFee(params: ParsedParams): UrlMigrationResult | null {
   // Migrate feeTier + isDynamic to fee object
   if (params.feeTier) {
     const feeTierNumber = Number(params.feeTier)
-    const tickSpacing = TICK_SPACINGS[feeTierNumber as FeeAmount] || TICK_SPACINGS[FeeAmount.MEDIUM]
+    // For standard V3 fee tiers, use the canonical tick spacing from the v3-sdk.
+    // For non-standard (e.g. custom V4) fee tiers, fall back to the formula
+    // tickSpacing = max(round(2 * feeAmount / 100), 1) used elsewhere in the SDK.
+    // The previous fallback (`|| TICK_SPACINGS[FeeAmount.MEDIUM]`) silently coerced
+    // every unrecognized fee tier to 60, which caused legacy links to non-standard
+    // pools (e.g. feeTier=1000) to land on the create-position page with a wrong
+    // tick spacing, fracturing liquidity into a parallel non-existent pool.
+    const tickSpacing = TICK_SPACINGS[feeTierNumber as FeeAmount] ?? calculateTickSpacingFromFeeAmount(feeTierNumber)
 
     updates.fee = {
       feeAmount: feeTierNumber,
