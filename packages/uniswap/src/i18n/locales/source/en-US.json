@@ -2673,6 +2673,8 @@
   "toucan.auction.tokenLaunchedBanner.availableToTrade": "{{tokenName}} available to trade",
   "toucan.auction.tokenLaunchedBanner.failedHeading": "{{tokenName}} failed to launch",
   "toucan.auction.tokenLaunchedBanner.failedSubheading": "This auction did not reach the minimum sale threshold and failed to launch.",
+  "toucan.auction.tokenLaunchedBanner.restrictedHeading": "The auction has ended and a pool has been created.",
+  "toucan.auction.tokenLaunchedBanner.restrictedSubheading": "Trading is restricted until TGE",
   "toucan.auction.tokenLaunchedBanner.tradeNow": "Trade now",
   "toucan.auction.totalSupply": "Total Supply",
   "toucan.auction.twitter": "Twitter",

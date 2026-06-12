@@ -7,12 +7,14 @@ import { logger } from 'utilities/src/logger/logger'
 import { TokenLaunchedBannerInner } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerInner'
 import { TokenLaunchedBannerSkeleton } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerSkeleton'
 import { TokenLaunchFailedBannerContent } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchFailedBannerContent'
+import { TokenRestrictedBannerContent } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenRestrictedBannerContent'
 import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerColorData'
 import { useTokenLaunchedBannerPriceData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerPriceData'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 
 interface TokenLaunchedBannerProps {
   tokenName: string
@@ -47,6 +49,10 @@ export function TokenLaunchedBanner({
   const chainId = auctionDetails?.chainId
   const auctionAddress = auctionDetails?.address
 
+  const tradingRestrictedUntilTge = Boolean(
+    tokenAddress && chainId && getAuctionMetadata({ chainId, tokenAddress })?.tradingRestrictedUntilTge,
+  )
+
   const { bannerGradient, accentColor } = useTokenLaunchedBannerColorData({
     tokenColor: isGraduated ? tokenColor : colors.statusCritical.val,
     tokenColorLoading,
@@ -61,18 +67,18 @@ export function TokenLaunchedBanner({
   } = useTokenLaunchedBannerPriceData({
     tokenAddress,
     chainId,
-    skip: !isGraduated || !tokenAddress || !chainId,
+    skip: !isGraduated || tradingRestrictedUntilTge || !tokenAddress || !chainId,
   })
 
   // Fetch bid token info (needed for clearing price fallback conversion to USD)
   const { bidTokenInfo, loading: bidTokenLoading } = useBidTokenInfo({
     bidTokenAddress,
     chainId,
-    skip: !isGraduated || !bidTokenAddress || !chainId,
+    skip: !isGraduated || tradingRestrictedUntilTge || !bidTokenAddress || !chainId,
   })
 
   // Fetch clearing price history for chart fallback (only when GraphQL price fails)
-  const needsFallback = isGraduated && !priceLoading && (!priceData || priceError)
+  const needsFallback = isGraduated && !tradingRestrictedUntilTge && !priceLoading && (!priceData || priceError)
   const { data: clearingPriceResponse, isLoading: clearingHistoryLoading } = useQuery(
     auctionQueries.getClearingPriceHistory({
       params: new GetClearingPriceHistoryRequest({
@@ -140,6 +146,10 @@ export function TokenLaunchedBanner({
       return <TokenLaunchedBannerSkeleton />
     }
     return <TokenLaunchFailedBannerContent tokenName={tokenName} bannerGradient={bannerGradient} />
+  }
+
+  if (tradingRestrictedUntilTge) {
+    return <TokenRestrictedBannerContent bannerGradient={bannerGradient} accentColor={accentColor} />
   }
 
   // Show loading skeleton while data is being fetched

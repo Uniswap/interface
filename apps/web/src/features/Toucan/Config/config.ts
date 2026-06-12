@@ -54,6 +54,7 @@ export interface AuctionMetadataOverride {
   logoUrl?: string
   tokenName?: string
   tokenSymbol?: string
+  tradingRestrictedUntilTge?: boolean
 }
 
 /**
@@ -87,6 +88,7 @@ const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
   },
   '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': {
     logoUrl: '/images/logos/strato-token-launch-logo.jpeg',
+    tradingRestrictedUntilTge: true,
   },
 }
 
