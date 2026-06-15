@@ -78,8 +78,14 @@ export const MAINNET_CHAIN_INFO = {
         [RPCType.Public]: {
           http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
         },
+        // Default feeds the wallet-connector rpc maps (WalletConnect/Binance read
+        // rpcUrls.default.http[0] from a cookieless in-page client), so it must be an
+        // unkeyed endpoint that is CORS- and CSP-allowed. Keyed QuickNode/Infura URLs
+        // leak the key into third-party traffic; rpc.ankr.com now returns "Unauthorized"
+        // for anonymous reads. *.drpc.org is on the CSP allowlist and serves these
+        // chains unauthenticated.
         [RPCType.Default]: {
-          http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          http: ['https://eth.drpc.org', 'https://eth-mainnet.public.blastapi.io'],
         },
         [RPCType.Fallback]: {
           http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],

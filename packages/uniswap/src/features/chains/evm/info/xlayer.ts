@@ -65,7 +65,8 @@ export const XLAYER_CHAIN_INFO = {
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
-    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
+    [RPCType.Default]: { http: ['https://xlayer.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
   },
   tokens,

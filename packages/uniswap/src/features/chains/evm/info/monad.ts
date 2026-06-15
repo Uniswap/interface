@@ -59,7 +59,8 @@ export const MONAD_CHAIN_INFO = {
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Monad],
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
-    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
+    [RPCType.Default]: { http: ['https://monad.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
   },
   wrappedNativeCurrency: {

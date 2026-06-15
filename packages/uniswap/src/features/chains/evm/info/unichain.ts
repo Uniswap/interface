@@ -125,8 +125,9 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
     [RPCType.Public]: {
       http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
     },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
     [RPCType.Default]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
+      http: ['https://unichain-sepolia.drpc.org'],
     },
     [RPCType.Interface]: {
       http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
