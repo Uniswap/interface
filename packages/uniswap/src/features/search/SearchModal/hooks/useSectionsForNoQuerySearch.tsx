@@ -17,7 +17,6 @@ import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/Toke
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useListRankedRwasQuery } from 'uniswap/src/data/rest/listRankedRwas'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
 import { mapRankedRwaList } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
@@ -31,6 +30,7 @@ import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchMo
 import { optionChainAddresses } from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
 import { buildNoQueryRwaCollectionOptions } from 'uniswap/src/features/search/SearchModal/stocks/noQueryStocks'
 import { findRwaForToken } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
+import { tagOptionAsRwa } from 'uniswap/src/features/search/SearchModal/stocks/tagOptionAsRwa'
 import { useRwaSearchIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaSearchIndex'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 
@@ -68,9 +68,7 @@ export function useSectionsForNoQuerySearch({
       const match = optionChainAddresses(option)
         .map((ca) => findRwaForToken(rwaIndex, ca))
         .find(Boolean)
-      return match
-        ? ({ ...option, rwaCategory: getRwaTagCategory({ categories: match.rwa.categories }) } as SearchModalOption)
-        : option
+      return match ? tagOptionAsRwa({ option, match }) : option
     })
   }, [rwaEnabled, rwaIndex, recentlySearchedOptions])
 
@@ -80,8 +78,7 @@ export function useSectionsForNoQuerySearch({
     endElement: <ClearRecentSearchesButton />,
   })
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const isMultichainPath = multichainTokenUxEnabled && chainFilter === null
+  const isMultichainPath = chainFilter === null
 
   const numberOfTrendingTokens =
     activeTab === SearchTab.All

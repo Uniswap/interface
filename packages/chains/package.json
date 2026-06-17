@@ -11,7 +11,7 @@
     "@ethersproject/providers": "5.7.2",
     "@ethersproject/units": "5.7.0",
     "@ethersproject/web": "5.7.1",
-    "@uniswap/sdk-core": "7.15.0",
+    "@uniswap/sdk-core": "7.17.0",
     "@universe/encoding": "workspace:^",
     "@universe/sessions": "workspace:^",
     "ethers": "5.7.2",

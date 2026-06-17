@@ -88,7 +88,6 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
           data={positions}
           loading={showLoading}
           error={false}
-          v2={true}
           rowWrapper={rowWrapper}
           rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
           compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}

@@ -81,9 +81,11 @@ const rwaArrayRow: RwaTokenOption[] = [
 ]
 
 describe('tagRwaTokenSelectorSections', () => {
-  it('tags a matching single token row with its category', () => {
+  it('tags a matching single token row with its category, clean name, and issuer slug', () => {
     const out = tagRwaTokenSelectorSections({ sections: [section([token(MAINNET, '0xa', 'TSLAON')])], rwaIndex: index })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
+    expect((out?.[0]?.data[0] as TokenOption).rwaName).toBe('Tesla')
+    expect((out?.[0]?.data[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
   })
 
   it('threads a non-STOCKS category from the index through to the row', () => {

@@ -2,12 +2,12 @@ import type { Currency } from '@uniswap/sdk-core'
 import { useLayoutEffect, useMemo } from 'react'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { usePreferProjectMarketDataForCurrency } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getDisplayedPricePercentChange, type TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
-import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 
 export interface UseTokenPriceChartPanelParams {
   variables: TokenPriceChartQueryVariables
@@ -16,6 +16,8 @@ export interface UseTokenPriceChartPanelParams {
   currency: Currency
   setDisableCandlestickUI?: (disable: boolean) => void
   skip?: boolean
+  /** When omitted, derives RWA preference from the chart currency (no TDP store required). */
+  preferProjectMarketData?: boolean
 }
 
 export function useTokenPriceChartPanel({
@@ -25,6 +27,7 @@ export function useTokenPriceChartPanel({
   timePeriod,
   currency,
   skip = false,
+  preferProjectMarketData: preferProjectMarketDataOverride,
 }: UseTokenPriceChartPanelParams): {
   priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
@@ -38,7 +41,8 @@ export function useTokenPriceChartPanel({
     }
     return chainId ? buildCurrencyId(chainId, variables.address) : undefined
   }, [chainId, variables.address])
-  const preferProjectMarketData = useTDPPreferProjectMarketData()
+  const defaultPreferProjectMarketData = usePreferProjectMarketDataForCurrency(currency)
+  const preferProjectMarketData = preferProjectMarketDataOverride ?? defaultPreferProjectMarketData
   const spotPriceOverride = useTokenSpotPrice(spotCurrencyId, { preferProjectMarketData })
   const currentPriceOverride = variables.multichain && !preferProjectMarketData ? undefined : spotPriceOverride
 

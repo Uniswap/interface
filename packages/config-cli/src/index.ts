@@ -10,7 +10,7 @@ import { whoami } from './commands/whoami'
 import { zip } from './commands/zip'
 import { createAuthService } from './services/auth'
 import { createKeychainService } from './services/keychain'
-import { createOktaClient } from './services/okta'
+import { createOktaClient } from './services/oktaClient'
 import { appVars } from './vars'
 
 export const cli = Cli.create('config-cli', {

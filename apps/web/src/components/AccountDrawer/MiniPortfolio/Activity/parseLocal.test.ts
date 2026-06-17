@@ -2,6 +2,7 @@ import '~/test-utils/tokens/mocks'
 import type { Token } from '@uniswap/sdk-core'
 import { TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -195,6 +196,88 @@ describe('parseLocalActivity', () => {
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Pending)]?.title).toEqual('Swapping')
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Success)]?.title).toEqual('Swapped')
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Failed)]?.title).toEqual('Swap failed')
+  })
+
+  it('shows the auction token ticker in the submitted bid descriptor', async () => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+    const auctionContractAddress = '0xffdab1083fcbbcee300000000000000000000000'
+
+    const details = {
+      typeInfo: {
+        type: TransactionType.ToucanBid,
+        amountRaw: '10000000000000000',
+        maxPriceQ96: '1',
+        auctionContractAddress,
+        bidTokenAddress: ZERO_ADDRESS,
+        auctionTokenAddress: MockDAI.address,
+        requestId: 'request-id',
+      },
+      ...mockCommonFields({ id: '0xtoucan_bid', account: mockAccount1, status: TransactionStatus.Success }),
+    } as InterfaceTransactionDetails
+
+    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+
+    expect(result).toMatchObject({
+      descriptor: '0.010 ETH bid on DAI',
+      title: 'Bid submitted',
+    })
+    expect(result?.descriptor).not.toContain(auctionContractAddress)
+  })
+
+  describe('auction launch', () => {
+    const predictedTokenAddress = '0xffdab1083fcbbcee300000000000000000000000'
+    const baseTypeInfo = {
+      type: TransactionType.AuctionLaunch,
+      requestId: 'request-id',
+      predictedAuctionAddress: '0xaaaab1083fcbbcee300000000000000000000000',
+      predictedTokenAddress,
+    }
+
+    it('shows the launched token name and logo captured at submit time', async () => {
+      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+      const details = {
+        typeInfo: {
+          ...baseTypeInfo,
+          tokenName: 'My New Token',
+          tokenSymbol: 'MNT',
+          tokenLogoUrl: 'https://gateway.pinata.cloud/ipfs/some-cid',
+        },
+        ...mockCommonFields({ id: '0xauction_launch', account: mockAccount1, status: TransactionStatus.Success }),
+      } as InterfaceTransactionDetails
+
+      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+
+      expect(result).toMatchObject({
+        title: 'Auction launched',
+        descriptor: 'My New Token',
+        logos: ['https://gateway.pinata.cloud/ipfs/some-cid'],
+        fallbackSymbols: ['MNT'],
+      })
+    })
+
+    it('falls back to symbol then shortened token address when metadata is missing', async () => {
+      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+      const symbolOnly = {
+        typeInfo: { ...baseTypeInfo, tokenSymbol: 'MNT' },
+        ...mockCommonFields({
+          id: '0xauction_launch_symbol',
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails
+      const symbolResult = await transactionToActivity({ details: symbolOnly, formatNumber: formatNumberOrString })
+      expect(symbolResult).toMatchObject({ descriptor: 'MNT', fallbackSymbols: ['MNT'] })
+
+      const bare = {
+        typeInfo: baseTypeInfo,
+        ...mockCommonFields({ id: '0xauction_launch_bare', account: mockAccount1, status: TransactionStatus.Success }),
+      } as InterfaceTransactionDetails
+      const bareResult = await transactionToActivity({ details: bare, formatNumber: formatNumberOrString })
+      expect(bareResult?.descriptor).toContain('0x')
+      expect(bareResult?.descriptor).not.toEqual(predictedTokenAddress)
+    })
   })
 
   describe('UniswapX Orders', () => {

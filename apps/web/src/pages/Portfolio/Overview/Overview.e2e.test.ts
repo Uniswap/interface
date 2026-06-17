@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test'
 import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
@@ -59,6 +60,11 @@ async function goToPortfolioOverview({
   const query = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   await page.goto(`${path}?${query}`)
   await Promise.all(waits)
+
+  if (!externalAddress) {
+    // Demo view wraps content in a pointer-blocking overlay; wait for wallet auto-connect before interacting.
+    await expect(page.getByTestId(TestID.DemoWalletDisplay)).not.toBeVisible()
+  }
 }
 
 test.describe(
@@ -274,10 +280,7 @@ test.describe(
 
       test('should filter overview data by network', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        const ethereumOption = getVisibleDropdownElementByTestId(
-          page,
-          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
-        )
+        const ethereumOption = getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`)
         await ethereumOption.waitFor({ state: 'visible' })
         await ethereumOption.click()
         await page.waitForURL(/chain=ethereum/)
@@ -285,18 +288,18 @@ test.describe(
 
       test('should preserve chain filter when navigating to tokens tab', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        const ethereumOption = getVisibleDropdownElementByTestId(
-          page,
-          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
-        )
+        const ethereumOption = getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`)
         await ethereumOption.waitFor({ state: 'visible' })
         await ethereumOption.click()
         await page.waitForURL(/chain=ethereum/)
 
-        // Wait for View all tokens link to re-render with chain param (href is on the <a>, test id is on the child Button)
-        const viewAllTokensLink = page.locator(`a:has([data-testid="${TestID.PortfolioOverviewViewAllTokens}"])`)
-        await expect(viewAllTokensLink).toHaveAttribute('href', /chain=ethereum/)
-        await viewAllTokensLink.click()
+        const viewAllTokensButton = page.getByTestId(TestID.PortfolioOverviewViewAllTokens)
+        // href is on the wrapping <a>; test id is on the child Button (same pattern as Mini Tokens Table tests).
+        await expect(page.locator(`a:has([data-testid="${TestID.PortfolioOverviewViewAllTokens}"])`)).toHaveAttribute(
+          'href',
+          /chain=ethereum/,
+        )
+        await viewAllTokensButton.click()
         await expect(page).toHaveURL(/chain=ethereum/)
         await expect(page).toHaveURL(/\/portfolio\/tokens/)
       })

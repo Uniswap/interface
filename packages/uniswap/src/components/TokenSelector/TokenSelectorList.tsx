@@ -21,7 +21,9 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksHorizontalRow'
 import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
+import { useTokenSelectorHoverConfig } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { OnSelectCurrency, OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
+import { formatIssuerLabel } from 'uniswap/src/data/rest/rwa/formatIssuerDisplaySymbol'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -166,6 +168,8 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
   return (
     <BaseTokenOptionItem
       option={tokenOption}
+      displayName={tokenOption.rwaName}
+      issuerLabel={tokenOption.rwaIssuerSlug ? formatIssuerLabel(tokenOption.rwaIssuerSlug) : undefined}
       showTokenAddress={showTokenAddress}
       contextMenuVariant={TokenContextMenuVariant.TokenSelector}
       categoryTag={
@@ -241,6 +245,7 @@ function TokenSelectorListInner({
   renderedInModal,
 }: TokenSelectorListProps): JSX.Element {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const wrapTokenRow = useTokenSelectorHoverConfig()
 
   // Tag tokenized-stock (RWA) rows so the inner row renders the category tag. `useRwaIndex` returns an empty
   // index (and skips the fetch) when the flag is off, so this is a no-op pass-through.
@@ -280,7 +285,7 @@ function TokenSelectorListInner({
         />
       )
     }
-    return (
+    const tokenRow = (
       <TokenOptionItem
         index={index}
         section={section as OnchainItemSection<TokenOption>}
@@ -290,6 +295,7 @@ function TokenSelectorListInner({
         onSelectCurrency={onSelectCurrency}
       />
     )
+    return wrapTokenRow ? wrapTokenRow(tokenRow, item.currencyInfo) : tokenRow
   })
 
   return (

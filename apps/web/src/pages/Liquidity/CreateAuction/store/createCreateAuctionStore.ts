@@ -13,6 +13,7 @@ import {
   updateCommittedPostAuctionLiquidity,
 } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import { rebaseAuctionTokenAmounts } from '~/pages/Liquidity/CreateAuction/store/rebaseAuctionTokenAmounts'
+import { revokeCreateNewTokenBlobPreviewIfNeeded } from '~/pages/Liquidity/CreateAuction/store/revokeCreateNewTokenBlobPreviewIfNeeded'
 import {
   type CustomPriceRangePreset,
   CreateAuctionStep,
@@ -88,7 +89,8 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             }))
           },
           setTokenMode: (mode) => {
-            set(() => {
+            set((state) => {
+              revokeCreateNewTokenBlobPreviewIfNeeded(state.tokenForm)
               if (mode === TokenMode.CREATE_NEW) {
                 return { tokenForm: DEFAULT_CREATE_AUCTION_STATE.tokenForm }
               }
@@ -484,7 +486,10 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set({ tokenColor })
           },
           reset: () => {
-            set(DEFAULT_CREATE_AUCTION_STATE)
+            set((state) => {
+              revokeCreateNewTokenBlobPreviewIfNeeded(state.tokenForm)
+              return DEFAULT_CREATE_AUCTION_STATE
+            })
           },
         },
       }),

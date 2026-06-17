@@ -1,12 +1,16 @@
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { describe, expect, it } from 'vitest'
+import { minimumAuctionSupplyDeposit } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import {
   CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   MAX_CUSTOM_PRICE_RANGE_ENTRIES,
+  type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
   UNBOUNDED_TIER_ID,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
   addCustomPriceRangePreset,
+  amountToPercent,
   createDefaultCustomPriceRangeEntry,
   createNextBoundedTier,
   expandCompactNumberInput,
@@ -21,9 +25,17 @@ import {
   isValidPartialPercentInput,
   parseCompactNumberInput,
   isValidPartialSignedPercentInput,
+  percentOfSoldToLiquidityFromDepositAndLiquidityAmount,
+  postAuctionLiquidityTokenAmountFromDepositedAndUiPercent,
   removeCustomPriceRangeEntry,
   updateCustomPriceRangeLiquidityPercent,
 } from '~/pages/Liquidity/CreateAuction/utils'
+
+const TEST_TOKEN = new Token(1, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap')
+const single = (percent: number): PostAuctionLiquidityAllocation => ({
+  type: PostAuctionLiquidityAllocationType.SINGLE,
+  percent,
+})
 
 describe('formatCompactNumberInput', () => {
   it('uses the next suffix when rounding would show 1000 of the smaller unit', () => {
@@ -280,7 +292,7 @@ describe('getMaxTieredPostAuctionLiquidityEffectivePercent', () => {
   it('handles three tiers with decreasing percentages', () => {
     // Tier 1: ≤$1M at 60% → lpAccum=600k, r_eff=60%
     // Tier 2: ≤$10M at 40% → lpAccum=600k+3.6M=4.2M, r_eff=42%
-    // Tier 3: ≤$50M at 20% → lpAccum=4.2M+8M=12.2M, r_eff=24.4%
+    // Tier 3: ≤$50M at 20% in UI (clamped to 25%) → lpAccum=4.2M+10M=14.2M, r_eff=28.4%
     // Max = 60% at tier 1
     const result = getMaxTieredPostAuctionLiquidityEffectivePercent({
       type: PostAuctionLiquidityAllocationType.TIERED,
@@ -354,7 +366,7 @@ describe('getPostAuctionLiquidityPreviewPercent', () => {
     ).toBe(50)
   })
 
-  it('returns 0 when tiered allocation has no positive effective LP rate', () => {
+  it('floors sub-minimum tier percents when computing the tiered preview percent', () => {
     expect(
       getPostAuctionLiquidityPreviewPercent({
         type: PostAuctionLiquidityAllocationType.TIERED,
@@ -363,7 +375,7 @@ describe('getPostAuctionLiquidityPreviewPercent', () => {
           { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 0 },
         ],
       }),
-    ).toBe(0)
+    ).toBe(25)
   })
 
   it('clamps sub-minimum effective tiered rate up to the UI minimum', () => {
@@ -387,7 +399,7 @@ describe('createNextBoundedTier', () => {
       { id: 'tier-1', raiseMilestone: '1m', percent: 20 },
       { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 20 },
     ])
-    expect(next).toMatchObject({ id: 'tier-2', raiseMilestone: '10m', percent: 20 })
+    expect(next).toMatchObject({ id: 'tier-2', raiseMilestone: '10m', percent: 25 })
   })
 
   it('picks the next id from the max existing tier-N suffix', () => {
@@ -495,5 +507,66 @@ describe('inputExceedsCurrencyPrecision', () => {
   it('rejects any decimal input on a zero-decimal currency', () => {
     expect(inputExceedsCurrencyPrecision('1.5', 0)).toBe(true)
     expect(inputExceedsCurrencyPrecision('1', 0)).toBe(false)
+  })
+})
+
+describe('amountToPercent', () => {
+  it('computes the percentage for whole-unit amounts', () => {
+    const total = CurrencyAmount.fromRawAmount(TEST_TOKEN, 5)
+    const part = CurrencyAmount.fromRawAmount(TEST_TOKEN, 3)
+    expect(amountToPercent(total, part)).toBe(60)
+  })
+
+  it('returns 0 when the total is exactly zero', () => {
+    const zero = CurrencyAmount.fromRawAmount(TEST_TOKEN, 0)
+    const part = CurrencyAmount.fromRawAmount(TEST_TOKEN, 1)
+    expect(amountToPercent(zero, part)).toBe(0)
+  })
+
+  // Regression: a sub-unit total (e.g. half a base unit from an LP split) floors to 0 base
+  // units. Dividing the floored integers would be a divide-by-zero; the exact-fraction path
+  // must survive it.
+  it('does not divide by zero for sub-unit amounts', () => {
+    const halfUnit = postAuctionLiquidityTokenAmountFromDepositedAndUiPercent(
+      CurrencyAmount.fromRawAmount(TEST_TOKEN, 1),
+      100,
+    ) // 0.5 base units
+    expect(() => amountToPercent(halfUnit, halfUnit)).not.toThrow()
+    expect(amountToPercent(halfUnit, halfUnit)).toBe(100)
+  })
+})
+
+describe('percentOfSoldToLiquidityFromDepositAndLiquidityAmount', () => {
+  // Reproduces the crash: a 1-base-unit deposit at 100% LP splits into a 0.5-unit reserve and a
+  // 0.5-unit sold leg; deriving the slider percent from those must not throw.
+  it('does not crash when the deposit is a single base unit', () => {
+    const deposit = CurrencyAmount.fromRawAmount(TEST_TOKEN, 1)
+    const reserve = postAuctionLiquidityTokenAmountFromDepositedAndUiPercent(deposit, 100)
+    expect(() => percentOfSoldToLiquidityFromDepositAndLiquidityAmount(deposit, reserve)).not.toThrow()
+    expect(percentOfSoldToLiquidityFromDepositAndLiquidityAmount(deposit, reserve)).toBe(100)
+  })
+})
+
+describe('minimumAuctionSupplyDeposit', () => {
+  it('requires 2 base units at a 100% LP allocation (reserve and sold each floor to 1)', () => {
+    expect(minimumAuctionSupplyDeposit(TEST_TOKEN, single(100)).quotient.toString()).toBe('2')
+  })
+
+  it('scales the minimum up as the LP percent shrinks', () => {
+    expect(minimumAuctionSupplyDeposit(TEST_TOKEN, single(50)).quotient.toString()).toBe('3')
+    expect(minimumAuctionSupplyDeposit(TEST_TOKEN, single(25)).quotient.toString()).toBe('5')
+    expect(minimumAuctionSupplyDeposit(TEST_TOKEN, single(10)).quotient.toString()).toBe('11')
+  })
+
+  it('keeps both the LP reserve and sold legs at >= 1 base unit at the minimum', () => {
+    const allocation = single(25)
+    const min = minimumAuctionSupplyDeposit(TEST_TOKEN, allocation)
+    const reserve = postAuctionLiquidityTokenAmountFromDepositedAndUiPercent(min, 25)
+    expect(reserve.quotient.toString()).toBe('1')
+    expect(min.subtract(reserve).quotient.toString()).toBe('4')
+  })
+
+  it('falls back to a single base unit when there is no LP reserve', () => {
+    expect(minimumAuctionSupplyDeposit(TEST_TOKEN, single(0)).quotient.toString()).toBe('1')
   })
 })

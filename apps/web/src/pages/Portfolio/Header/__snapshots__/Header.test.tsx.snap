@@ -26,6 +26,11 @@ exports[`PortfolioHeader > connected user > should render header for own wallet 
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
           >
             <div
+              data-testid="more-menu"
+            >
+              More Menu Mock
+            </div>
+            <div
               data-testid="share-button"
             >
               Share Button Mock
@@ -81,6 +86,11 @@ exports[`PortfolioHeader > connected user > should render header in expanded sta
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
           >
             <div
+              data-testid="more-menu"
+            >
+              More Menu Mock
+            </div>
+            <div
               data-testid="share-button"
             >
               Share Button Mock
@@ -135,6 +145,11 @@ exports[`PortfolioHeader > external wallet view > should render header with shar
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
           >
+            <div
+              data-testid="more-menu"
+            >
+              More Menu Mock
+            </div>
             <div
               data-testid="share-button"
             >

@@ -4,7 +4,7 @@ import { useQueryState, useQueryStates } from 'nuqs'
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { Button, Flex, SpinningLoader, Text, useMedia } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, TouchableArea, useMedia } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Plus } from 'ui/src/components/icons/Plus'
@@ -22,6 +22,7 @@ import { gqlToCurrency } from '~/appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { PageLayout } from '~/features/Liquidity/Create/Container'
+import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
@@ -36,6 +37,7 @@ import {
   SIDEBAR_WIDTH,
 } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
 import { getProtocolVersionFromLabel, gqlToRestProtocolVersion } from '~/features/Liquidity/utils/protocolVersion'
+import { type FlowState, resolveAddLiquidityRenderGuard } from '~/pages/AddLiquidity/addLiquidityRenderGuard'
 import { PoolBrowser } from '~/pages/AddLiquidity/PoolBrowser'
 import {
   CreateLiquidityContextProvider,
@@ -47,12 +49,12 @@ import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/pool
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
-const WIDTH = {
-  content: 720,
-  sidebar: SIDEBAR_WIDTH,
+function resolveSelectedProtocolVersion(poolData: PoolData | undefined, fallback: ProtocolVersion): ProtocolVersion {
+  if (!poolData) {
+    return fallback
+  }
+  return gqlToRestProtocolVersion(poolData.protocolVersion) ?? ProtocolVersion.V4
 }
-
-type FlowState = 'browse' | 'poolSelected' | 'form'
 
 export default function AddLiquidity(): JSX.Element {
   return (
@@ -75,19 +77,16 @@ function AddLiquidityContent(): JSX.Element {
   const chainIdFromUrl = useChainIdFromUrlParam()
   const chainInfo = chainIdFromUrl ? getChainInfo(chainIdFromUrl) : undefined
 
-  // --- Step from URL query param (present in State 3 only) ---
+  // --- Step from URL query param (present in the form state) ---
   const [flowStep] = useQueryState('step', parseAsStep)
 
-  // Derive the current state from URL
+  // No pool in the route → browse the table; pool present → the position form.
   const flowState: FlowState = useMemo(() => {
     if (!poolAddress) {
       return 'browse'
     }
-    if (flowStep !== null) {
-      return 'form'
-    }
-    return 'poolSelected'
-  }, [poolAddress, flowStep])
+    return 'form'
+  }, [poolAddress])
 
   // --- Pool data (fetched when poolAddress is present) ---
   const { data: poolData, loading: poolLoading } = usePoolData({
@@ -104,9 +103,16 @@ function AddLiquidityContent(): JSX.Element {
   const urlHook = liquidityUrlState.hook ?? undefined
   const urlProtocolVersion = getProtocolVersionFromLabel(liquidityUrlState.protocolVersion) ?? ProtocolVersion.V4
 
+  const location = useLocation()
   const handleBack = useCallback(() => {
-    navigate('/positions/add')
-  }, [navigate])
+    // Pop to the stored browse entry (filters intact) rather than pushing a fresh URL that the form's
+    // nuqs hooks would rewrite and strip the filters from. No in-app history → fall back to the table.
+    if (location.state && (location.state as { from?: string }).from) {
+      navigate(-1)
+    } else {
+      navigate('/positions/add')
+    }
+  }, [navigate, location.state])
 
   const browseSteps = useMemo(
     () => [
@@ -116,16 +122,28 @@ function AddLiquidityContent(): JSX.Element {
     [t],
   )
 
-  // --- Redirect guards ---
-  if (poolAddress && !chainIdFromUrl) {
+  // A pool route with no `step` isn't a valid form state — send it back to the table.
+  if (poolAddress && flowStep === null) {
     return <Navigate to="/positions/add" replace />
   }
 
-  if (poolAddress && !poolLoading && !poolData && !urlToken0 && !urlToken1) {
+  // --- Redirect / loading guards ---
+  const renderGuard = resolveAddLiquidityRenderGuard({
+    poolAddress,
+    chainIdFromUrl,
+    flowState,
+    poolLoading,
+    poolData: poolData ?? undefined,
+    urlToken0,
+    urlToken1,
+    currenciesLoading: liquidityUrlState.loadingA || liquidityUrlState.loadingB,
+  })
+
+  if (renderGuard === 'redirect') {
     return <Navigate to="/positions/add" replace />
   }
 
-  if (poolAddress && poolLoading && !urlToken0 && !urlToken1) {
+  if (renderGuard === 'loading') {
     return (
       <Flex width="100%" minHeight={400} centered>
         <SpinningLoader size={40} />
@@ -148,7 +166,9 @@ function AddLiquidityContent(): JSX.Element {
         <Flex row justifyContent="space-between" alignItems="center" width="100%" mb="$spacing12">
           <Flex row alignItems="center" gap="$spacing8" grow>
             {flowState === 'form' && (
-              <BackArrow size="$icon.24" color="$neutral1" cursor="pointer" onPress={handleBack} />
+              <TouchableArea onPress={handleBack}>
+                <BackArrow size="$icon.24" color="$neutral1" />
+              </TouchableArea>
             )}
             <Text variant="heading3">{t('addLiquidity.choosePool')}</Text>
           </Flex>
@@ -166,19 +186,16 @@ function AddLiquidityContent(): JSX.Element {
         <Flex row gap="$spacing20" justifyContent="space-between" width="100%" mt="$spacing16">
           {/* Left sidebar — hidden on mobile */}
           {!media.xl && (
-            <Flex width={WIDTH.sidebar} alignSelf="flex-start">
+            <Flex width={SIDEBAR_WIDTH} alignSelf="flex-start">
               {flowState === 'browse' && <PoolProgressIndicator steps={browseSteps} />}
-              {flowState === 'poolSelected' && (
-                <PoolSelectedSidebar poolData={poolData ?? undefined} poolLoading={poolLoading} />
-              )}
               {flowState === 'form' && <PoolInfoCard poolData={poolData ?? undefined} loading={poolLoading} />}
             </Flex>
           )}
 
-          {/* Right content */}
-          <Flex flex={1} maxWidth={WIDTH.content} mb="$spacing28" $xl={{ maxWidth: '100%' }}>
+          {/* Right content — fills the available width within the page's max-width */}
+          <Flex flex={1} mb="$spacing28">
             {flowState !== 'form' ? (
-              <PoolBrowser />
+              <PoolBrowserPane browseSteps={browseSteps} />
             ) : (
               <AddLiquidityFormContent
                 chainId={chainIdFromUrl!}
@@ -198,17 +215,14 @@ function AddLiquidityContent(): JSX.Element {
   )
 }
 
-function PoolSelectedSidebar({ poolData, poolLoading }: { poolData?: PoolData; poolLoading: boolean }) {
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const handleAddLiquidity = useCallback(() => {
-    const params = new URLSearchParams(location.search)
-    params.set('step', String(PositionFlowStep.PRICE_RANGE))
-    navigate(`${location.pathname}?${params.toString()}`, { replace: false })
-  }, [navigate, location])
-
-  return <PoolInfoCard poolData={poolData} loading={poolLoading} onAddLiquidity={handleAddLiquidity} />
+function PoolBrowserPane({ browseSteps }: { browseSteps: { label: string; active: boolean }[] }) {
+  const media = useMedia()
+  return (
+    <>
+      {media.xl && <PoolProgressIndicatorHeader steps={browseSteps} />}
+      <PoolBrowser />
+    </>
+  )
 }
 
 function AddLiquidityFormContent({
@@ -230,9 +244,7 @@ function AddLiquidityFormContent({
   urlHook?: string
   initialFlowStep: PositionFlowStep
 }) {
-  const protocolVersion = poolData
-    ? (gqlToRestProtocolVersion(poolData.protocolVersion) ?? ProtocolVersion.V4)
-    : urlProtocolVersion
+  const protocolVersion = resolveSelectedProtocolVersion(poolData, urlProtocolVersion)
 
   const { token0, token1 } = useMemo(() => {
     if (poolData) {
@@ -282,11 +294,14 @@ function AddLiquidityFormContent({
         >
           <CreatePositionTxContextProvider>
             {media.xl && <FormProgressIndicatorHeader />}
-            <AddLiquidityPoolForm
-              currencyInputs={currencyInputs}
-              setCurrencyInputs={setCurrencyInputs}
-              poolData={poolData}
-            />
+            {/* gap matches the legacy FormWrapper so the pool-info card and the form steps don't touch */}
+            <Flex gap="$spacing24">
+              <AddLiquidityPoolForm
+                currencyInputs={currencyInputs}
+                setCurrencyInputs={setCurrencyInputs}
+                poolData={poolData}
+              />
+            </Flex>
             <SharedCreateModals />
           </CreatePositionTxContextProvider>
         </CreateLiquidityContextProvider>
@@ -310,19 +325,10 @@ function AddLiquidityPoolForm({
     step,
     setStep,
   } = useCreateLiquidityContext()
-  const v2Selected = protocolVersion === ProtocolVersion.V2
 
   const handleContinue = useCallback(() => {
-    if (v2Selected) {
-      if (step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER && creatingPoolOrPair) {
-        setStep(PositionFlowStep.PRICE_RANGE)
-      } else {
-        setStep(PositionFlowStep.DEPOSIT)
-      }
-    } else {
-      setStep(step + 1)
-    }
-  }, [creatingPoolOrPair, step, v2Selected, setStep])
+    setStep(getNextFlowStep({ currentStep: step, protocolVersion, creatingPoolOrPair: Boolean(creatingPoolOrPair) }))
+  }, [creatingPoolOrPair, step, protocolVersion, setStep])
 
   return (
     <FormStepsWrapper

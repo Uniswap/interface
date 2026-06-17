@@ -12,6 +12,7 @@ import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banne
 import { useTokenLaunchedBannerPriceData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerPriceData'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
+import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDurationRemaining'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
@@ -21,6 +22,8 @@ interface TokenLaunchedBannerProps {
   tokenColor?: string
   totalSupply?: string
   auctionTokenDecimals?: number
+  isTradeAvailable: boolean
+  tradeAvailabilityBlock: number | undefined
 }
 
 /**
@@ -34,6 +37,8 @@ export function TokenLaunchedBanner({
   tokenColor,
   totalSupply,
   auctionTokenDecimals = 18,
+  isTradeAvailable,
+  tradeAvailabilityBlock,
 }: TokenLaunchedBannerProps) {
   const colors = useSporeColors()
   const { isGraduated, auctionDetails, checkpointData, tokenColorLoading } = useAuctionStore((state) => ({
@@ -48,6 +53,10 @@ export function TokenLaunchedBanner({
   const bidTokenAddress = auctionDetails?.currency
   const chainId = auctionDetails?.chainId
   const auctionAddress = auctionDetails?.address
+  const tradeAvailabilityDurationRemaining = useDurationRemaining(
+    chainId,
+    isTradeAvailable ? undefined : tradeAvailabilityBlock,
+  )
 
   const tradingRestrictedUntilTge = Boolean(
     tokenAddress && chainId && getAuctionMetadata({ chainId, tokenAddress })?.tradingRestrictedUntilTge,
@@ -158,8 +167,9 @@ export function TokenLaunchedBanner({
     return <TokenLaunchedBannerSkeleton />
   }
 
-  // Don't render if no data available (neither primary nor fallback)
-  if (!effectivePriceData) {
+  // Don't render a tradeable banner if no data is available (neither primary nor fallback).
+  // Pre-trade banners should still render because their purpose is status, not price discovery.
+  if (isTradeAvailable && !effectivePriceData) {
     logger.warn('TokenLaunchedBanner', 'TokenLaunchedBanner', 'No price data available (primary or fallback)', {
       hasPriceData: !!priceData,
       hasFallbackPriceData: !!fallbackPriceData,
@@ -179,10 +189,16 @@ export function TokenLaunchedBanner({
       tokenColor={tokenColor}
       totalSupply={totalSupply}
       auctionTokenDecimals={auctionTokenDecimals}
-      priceData={{
-        currentTickValue: effectivePriceData.currentTickValue,
-        priceSeries: effectiveChartSeries ?? [],
-      }}
+      isTradeAvailable={isTradeAvailable}
+      tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
+      priceData={
+        effectivePriceData
+          ? {
+              currentTickValue: effectivePriceData.currentTickValue,
+              priceSeries: effectiveChartSeries ?? [],
+            }
+          : undefined
+      }
       bannerGradient={bannerGradient}
       accentColor={accentColor}
     />

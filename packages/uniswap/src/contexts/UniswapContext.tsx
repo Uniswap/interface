@@ -9,6 +9,7 @@ import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type NavigateToNftItemArgs = {
@@ -32,7 +33,7 @@ interface UniswapContextValue {
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address; recipient?: Address }) => void
   navigateToReceive: () => void
-  navigateToTokenDetails: (currencyId: string, chainFilter?: UniverseChainId | null) => void
+  navigateToTokenDetails: (currencyId: string, chainSelection?: TdpChainSelection) => void
   navigateToExternalProfile: (args: { address: Address }) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void

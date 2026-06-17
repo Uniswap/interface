@@ -1,4 +1,3 @@
-import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ProfitLossRow } from 'uniswap/src/components/ProfitLoss/ProfitLossRow'
@@ -11,7 +10,6 @@ interface TokenProfitLossProps {
   realizedReturnPercent?: number
   totalReturn?: number
   isLoading?: boolean
-  headerRight?: ReactNode
   title?: string
 }
 
@@ -23,7 +21,6 @@ export function TokenProfitLoss({
   realizedReturnPercent,
   totalReturn,
   isLoading,
-  headerRight,
   title,
 }: TokenProfitLossProps): JSX.Element {
   const { t } = useTranslation()
@@ -34,7 +31,6 @@ export function TokenProfitLoss({
         <Text variant="subheading2" color="$neutral2">
           {title ?? t('pnl.title')}
         </Text>
-        {headerRight}
       </Flex>
       <Flex gap="$gap12">
         <ProfitLossRow label={t('pnl.averageCost')} value={averageCost} isLoading={isLoading} />

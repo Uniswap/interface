@@ -11,6 +11,7 @@ interface NetworkFilterDropdownContentProps {
   selectedChain: UniverseChainId | null
   tieredOptions?: TieredNetworkOptions
   includeAllNetworks?: boolean
+  allNetworksChainIds?: UniverseChainId[]
   isOpen: boolean
   onPressChain: (chainId: UniverseChainId | null) => void
   maxHeight?: number
@@ -23,6 +24,7 @@ export function NetworkFilterDropdownContent({
   selectedChain,
   tieredOptions,
   includeAllNetworks,
+  allNetworksChainIds,
   isOpen,
   onPressChain,
   maxHeight,
@@ -60,6 +62,7 @@ export function NetworkFilterDropdownContent({
             selectedChain={selectedChain}
             showAllNetworks={showAllNetworks}
             tieredOptions={filteredTieredOptions}
+            allNetworksChainIds={allNetworksChainIds}
             onPressChain={onPressChain}
           />
         </Flex>

@@ -6,6 +6,12 @@ vi.mock('@privy-io/react-auth', () => ({
   usePrivy: vi.fn(),
 }))
 
+// `useMaybePrivy` only calls the (mocked) `usePrivy` when Privy is configured, so mark it configured here.
+vi.mock('~/config', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/config')>()),
+  getPrivyConfig: () => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' }),
+}))
+
 vi.mock('~/components/Passkey/OAuthRedirectContext', () => ({
   useAssertOAuthRedirectRouter: vi.fn(),
 }))

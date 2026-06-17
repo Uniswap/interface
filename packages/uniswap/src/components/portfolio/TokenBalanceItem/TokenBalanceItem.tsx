@@ -1,5 +1,4 @@
 import { isExtensionApp, isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, useIsDarkMode } from 'ui/src'
@@ -61,7 +60,6 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   contextMenuActions,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { isTestnetModeEnabled } = useEnabledChains()
   const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
     useTokenBalanceListContext()
@@ -133,7 +131,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
           symbol={symbol}
           url={logoUrl ?? undefined}
           networkCount={portfolioBalance?.tokens.length}
-          alwaysShowNetworkLogo={multichainTokenUxEnabled && portfolioBalance?.tokens.length === 1}
+          alwaysShowNetworkLogo={portfolioBalance?.tokens.length === 1}
         />
         <Flex shrink alignItems="flex-start">
           <Text ellipsizeMode="tail" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>

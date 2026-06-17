@@ -71,6 +71,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Mainnet
     case GraphQLApi.Chain.Arbitrum:
       return UniverseChainId.ArbitrumOne
+    case GraphQLApi.Chain.Arc:
+      return UniverseChainId.Arc
     case GraphQLApi.Chain.Avalanche:
       return UniverseChainId.Avalanche
     case GraphQLApi.Chain.Base:
@@ -91,6 +93,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Optimism
     case GraphQLApi.Chain.Polygon:
       return UniverseChainId.Polygon
+    case GraphQLApi.Chain.Robinhood:
+      return UniverseChainId.Robinhood
     case GraphQLApi.Chain.EthereumSepolia:
       return UniverseChainId.Sepolia
     case GraphQLApi.Chain.Unichain:
@@ -126,6 +130,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Mainnet
     case GraphQLApi.Chain.Arbitrum.toLowerCase():
       return UniverseChainId.ArbitrumOne
+    case GraphQLApi.Chain.Arc.toLowerCase():
+      return UniverseChainId.Arc
     case GraphQLApi.Chain.Avalanche.toLowerCase():
       return UniverseChainId.Avalanche
     case GraphQLApi.Chain.Base.toLowerCase():
@@ -146,6 +152,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Optimism
     case GraphQLApi.Chain.Polygon.toLowerCase():
       return UniverseChainId.Polygon
+    case GraphQLApi.Chain.Robinhood.toLowerCase():
+      return UniverseChainId.Robinhood
     case GraphQLApi.Chain.EthereumSepolia.toLowerCase():
       return UniverseChainId.Sepolia
     case GraphQLApi.Chain.Unichain.toLowerCase():
@@ -172,6 +180,7 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
 
 const CHAIN_ID_TO_UNISWAP_WEB_APP_LINK: Partial<Record<UniverseChainId, string>> = {
   [UniverseChainId.ArbitrumOne]: GraphQLApi.Chain.Arbitrum.toLowerCase(),
+  [UniverseChainId.Arc]: GraphQLApi.Chain.Arc.toLowerCase(),
   [UniverseChainId.Avalanche]: GraphQLApi.Chain.Avalanche.toLowerCase(),
   [UniverseChainId.Base]: GraphQLApi.Chain.Base.toLowerCase(),
   [UniverseChainId.Blast]: GraphQLApi.Chain.Blast.toLowerCase(),
@@ -183,6 +192,7 @@ const CHAIN_ID_TO_UNISWAP_WEB_APP_LINK: Partial<Record<UniverseChainId, string>>
   [UniverseChainId.Monad]: GraphQLApi.Chain.Monad.toLowerCase(),
   [UniverseChainId.Optimism]: GraphQLApi.Chain.Optimism.toLowerCase(),
   [UniverseChainId.Polygon]: GraphQLApi.Chain.Polygon.toLowerCase(),
+  [UniverseChainId.Robinhood]: GraphQLApi.Chain.Robinhood.toLowerCase(),
   [UniverseChainId.Sepolia]: GraphQLApi.Chain.EthereumSepolia.toLowerCase(),
   [UniverseChainId.Soneium]: GraphQLApi.Chain.Soneium.toLowerCase(),
   [UniverseChainId.Tempo]: GraphQLApi.Chain.Tempo.toLowerCase(),

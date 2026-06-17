@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { isWarmLoadingStatus } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -53,8 +52,6 @@ export function TokenBalanceListContextProvider({
   isExternalProfile: boolean
   onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
 }>): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   const {
     data: sortedData,
     balancesById,
@@ -67,7 +64,7 @@ export function TokenBalanceListContextProvider({
     evmAddress: evmOwner,
     svmAddress: svmOwner,
     pollInterval: PollingInterval.KindaFast,
-    requestMultichainFromBackend: multichainTokenUxEnabled,
+    requestMultichainFromBackend: true,
   })
 
   const { isTestnetModeEnabled } = useEnabledChains()

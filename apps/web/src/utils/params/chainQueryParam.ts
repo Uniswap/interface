@@ -1,9 +1,35 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from 'uniswap/src/utils/linking'
+import {
+  TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
+  type TdpChainSelection,
+  TdpChainSelectionType,
+} from 'uniswap/src/utils/linking'
 import { getChainIdFromChainUrlParam, getChainUrlParam, isChainUrlParam } from '~/utils/params/chainParams'
 
 export const CHAIN_SEARCH_PARAM = 'chain'
 export { TDP_MULTICHAIN_CHAIN_QUERY_VALUE }
+
+/**
+ * Resolves the `?chain=` query value for a TDP navigation from a `TdpChainSelection` and the token's own chain:
+ * - `multichain` selection -> the multichain query value
+ * - `chain` selection that differs from the token's own chain -> that network's url param
+ * - otherwise (same chain, or no selection) -> `undefined` (path-only URL)
+ */
+export function getTdpChainQueryParam({
+  selection,
+  tokenChainId,
+}: {
+  selection: TdpChainSelection | undefined
+  tokenChainId: number | null | undefined
+}): string | undefined {
+  if (!selection) {
+    return undefined
+  }
+  if (selection.type === TdpChainSelectionType.Multichain) {
+    return TDP_MULTICHAIN_CHAIN_QUERY_VALUE
+  }
+  return selection.chainId !== tokenChainId ? getChainUrlParam(selection.chainId) : undefined
+}
 
 export type TDPChainSearchParam =
   | { type: 'absent' }

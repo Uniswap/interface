@@ -1,58 +1,12 @@
-import { Provider } from '@ethersproject/abstract-provider'
-import { Contract } from '@ethersproject/contracts'
-import { namehash } from '~/chains'
+import type { JsonRpcProvider } from '@ethersproject/providers'
+import { ensure0xHex } from '@universe/encoding'
+import { type Address, createContract, ensPublicResolverAbi, ensRegistrarAbi, namehash } from '~/chains'
 import { safeNamehash } from '~/utils/safeNamehash'
 
-const REGISTRAR_ABI = [
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'node',
-        type: 'bytes32',
-      },
-    ],
-    name: 'resolver',
-    outputs: [
-      {
-        name: 'resolverAddress',
-        type: 'address',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-]
-const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e' as const
 
-const RESOLVER_ABI = [
-  {
-    constant: true,
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: 'node',
-        type: 'bytes32',
-      },
-    ],
-    name: 'contenthash',
-    outputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-]
-
-// cache the resolver contracts since most of them are the public resolver
-function resolverContract(resolverAddress: string, provider: Provider): Contract {
-  return new Contract(resolverAddress, RESOLVER_ABI, provider)
+function resolverContract(resolverAddress: Address, provider: JsonRpcProvider) {
+  return createContract({ address: resolverAddress, abi: ensPublicResolverAbi, provider })
 }
 
 /**
@@ -60,10 +14,13 @@ function resolverContract(resolverAddress: string, provider: Provider): Contract
  * @param ensName to resolve
  * @param provider provider to use to fetch the data
  */
-export async function resolveENSContentHash(ensName: string, provider: Provider): Promise<string> {
-  const ensRegistrarContract = new Contract(REGISTRAR_ADDRESS, REGISTRAR_ABI, provider)
+export async function resolveENSContentHash(ensName: string, provider: JsonRpcProvider): Promise<string> {
   const hash = safeNamehash(namehash, ensName)
-  const resolverAddress = await ensRegistrarContract.resolver(hash)
-  // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-  return resolverContract(resolverAddress, provider).contenthash(hash)
+  if (!hash) {
+    throw new Error(`Invalid ENS name: ${ensName}`)
+  }
+  const node = ensure0xHex(hash)
+  const registrar = createContract({ address: REGISTRAR_ADDRESS, abi: ensRegistrarAbi, provider })
+  const resolverAddress = await registrar.read.resolver([node])
+  return resolverContract(resolverAddress, provider).read.contenthash([node])
 }

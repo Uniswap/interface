@@ -18,7 +18,7 @@ function PaginationSkeletonRowInner(): JSX.Element {
   })
 
   return (
-    <DataRow v2={true} height={PORTFOLIO_TABLE_ROW_HEIGHT}>
+    <DataRow height={PORTFOLIO_TABLE_ROW_HEIGHT}>
       {skeletonTable.getAllColumns().map((column) => (
         <CellContainer key={column.id} style={getColumnSizingStyles(column)}>
           {flexRender(column.columnDef.cell, {} as CellContext<TransactionDetails, any>)}

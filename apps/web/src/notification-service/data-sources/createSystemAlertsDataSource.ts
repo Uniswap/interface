@@ -9,7 +9,7 @@ import { DynamicConfigs, getDynamicConfigValue, OutageBannerChainIdConfigKey } f
 import { createNotificationDataSource } from '@universe/notifications/src/notification-data-source/implementations/createNotificationDataSource'
 import { type NotificationDataSource } from '@universe/notifications/src/notification-data-source/NotificationDataSource'
 import { capitalize } from 'tsafe'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_MS_BEFORE_WARNING } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -191,7 +191,7 @@ function checkOutage(ctx: {
       chainId: outage.chainId,
       chainName,
       version: outage.version?.toString(),
-      helpUrl: uniswapUrls.helpArticleUrls.subgraphDowntime,
+      helpUrl: UniswapHelpUrls.articles.subgraphDowntime,
     }),
   }
 }

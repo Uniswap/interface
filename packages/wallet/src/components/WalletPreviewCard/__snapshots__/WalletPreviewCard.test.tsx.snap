@@ -259,7 +259,6 @@ exports[`renders wallet preview card 1`] = `
                 "borderTopLeftRadius": 999999,
                 "borderTopRightRadius": 999999,
                 "flexDirection": "row",
-                "gap": 4,
                 "marginTop": 0,
                 "paddingBottom": 0,
                 "paddingLeft": 0,

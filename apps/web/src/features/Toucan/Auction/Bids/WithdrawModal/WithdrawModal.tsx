@@ -5,7 +5,7 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -119,7 +119,7 @@ export function WithdrawModal({
   const isSubmitting = submissionStatus !== 'idle'
   const isWaitingForWallet = submissionStatus === 'waitingForWallet'
 
-  const helpLink = uniswapUrls.helpArticleUrls.toucanWithdrawHelp
+  const helpLink = UniswapHelpUrls.articles.toucanWithdrawHelp
 
   const modalTitle = t('toucan.withdraw.title')
 

@@ -17,6 +17,11 @@ const APM_PREFIX = 'trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService'
 const feHost = `entry-gateway.backend-${env}.api.uniswap.org`
 const feRecoverySearch = `@type:resource @application.name:Web @resource.url_host:${feHost} @resource.url:(*ecovery* OR *OprfEvaluate* OR *DecryptionResult*)`
 
+// APM spans carry the real end-user `@http.client_ip` (X-Forwarded-For) for the
+// security-sensitive RPCs — used for the abuse / brute-force-by-IP top list.
+const svcPath = 'uniswap.privyembeddedwallet.v1.EmbeddedWalletService'
+const securityIpSearch = `service:privy-embedded-wallet env:${env} resource_name:("POST /${svcPath}/OprfEvaluate" OR "POST /${svcPath}/ExportSeedPhrase" OR "POST /${svcPath}/ExportSeedPhraseWithRecovery")`
+
 /**
  * Recovery / OPRF flow for the privy-embedded-wallet service (PIN-based wallet
  * recovery). Isolates the recovery funnel as its own group — the Service
@@ -29,13 +34,9 @@ const feRecoverySearch = `@type:resource @application.name:Web @resource.url_hos
  *     (status / auth / reason / rate_limited) that APM can't express.
  *   - Web RUM resource events for the client-side mirror of the same flow.
  *
- * Recovery is low-volume in prod (OprfEvaluate ~single digits/30d); staging
- * carries the bulk of the test traffic. Several custom metrics
- * (`recovery_execute`, `export_seed_phrase_with_recovery`, `get_recovery_config`,
- * `check_recovery_availability`) have tag configuration disabled in prod and
- * can't be filtered by env/status, so those steps are tracked via APM
- * (`.hits`/`.errors`) instead. Only `oprf_evaluate`, `recovery_setup`, and
- * `recovery_decryption_failed` expose tag-filterable status splits.
+ * Recovery is low-volume in prod (staging carries the test traffic). Some custom
+ * metrics have tag config disabled in prod, so those steps fall back to APM
+ * `.hits`/`.errors`; only oprf_evaluate / recovery_setup / recovery_decryption_failed expose status splits.
  */
 export const privyEmbeddedWalletRecoveryOprfDashboard: DashboardDefinition = {
   id: 'privy-embedded-wallet_recovery_oprf',
@@ -408,7 +409,8 @@ export const privyEmbeddedWalletRecoveryOprfDashboard: DashboardDefinition = {
       layout: { x: 0, y: 20, width: 6, height: 4 },
       definition: {
         timeseriesDefinition: {
-          title: 'Web — Recovery Client Errors by Endpoint (RUM, 4xx/5xx)',
+          // Grouped by status code (not filtered to 4xx/5xx) so it always shows the thin recovery volume and surfaces 401/429/5xx when they occur.
+          title: 'Web — Recovery Calls by Status Code (RUM)',
           showLegend: true,
           requests: [
             {
@@ -418,10 +420,10 @@ export const privyEmbeddedWalletRecoveryOprfDashboard: DashboardDefinition = {
                   eventQuery: {
                     dataSource: 'rum',
                     name: 'query1',
-                    search: { query: `${feRecoverySearch} @resource.status_code:[400 TO 599]` },
+                    search: { query: feRecoverySearch },
                     computes: [{ aggregation: 'count' }],
                     groupBies: [
-                      { facet: '@resource.url_path_group', limit: 10, sort: { aggregation: 'count', order: 'desc' } },
+                      { facet: '@resource.status_code', limit: 10, sort: { aggregation: 'count', order: 'desc' } },
                     ],
                   },
                 },
@@ -462,6 +464,32 @@ export const privyEmbeddedWalletRecoveryOprfDashboard: DashboardDefinition = {
               ],
               style: { palette: 'purple', lineType: 'solid', lineWidth: 'normal' },
               displayType: 'line',
+            },
+          ],
+        },
+      },
+    },
+    // Row 7: security — abuse / brute-force by caller IP. Real end-user IP via XFF
+    // on APM spans; spans are sampled, so treat counts as ranking, not exact totals.
+    {
+      layout: { x: 0, y: 24, width: 6, height: 4 },
+      definition: {
+        toplistDefinition: {
+          title: 'Security-Sensitive Calls by Client IP (OPRF / Export, APM spans)',
+          requests: [
+            {
+              formulas: [{ formulaExpression: 'query1', limit: { count: 15, order: 'desc' } }],
+              queries: [
+                {
+                  eventQuery: {
+                    dataSource: 'spans',
+                    name: 'query1',
+                    search: { query: securityIpSearch },
+                    computes: [{ aggregation: 'count' }],
+                    groupBies: [{ facet: '@http.client_ip', limit: 15, sort: { aggregation: 'count', order: 'desc' } }],
+                  },
+                },
+              ],
             },
           ],
         },

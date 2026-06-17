@@ -1,14 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, UniversalImageResizeMode } from 'ui/src'
 import { Globe } from 'ui/src/components/icons/Globe'
 import { XTwitter } from 'ui/src/components/icons/XTwitter'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import {
-  EditButton,
-  SectionHeader,
-} from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchStepPrimitives'
+import { SectionHeader } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchStepPrimitives'
 import { TokenMode, type TokenFormState } from '~/pages/Liquidity/CreateAuction/types'
+import { resolveCreateNewTokenDisplayImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveCreateNewTokenDisplayImageSrc'
 import { stripTrailingSlashesFromWebsiteUrl } from '~/pages/Liquidity/CreateAuction/websiteLink'
 
 const TOKEN_LOGO_SIZE = 60
@@ -45,11 +43,12 @@ export function ReviewLaunchTokenInfoSection({
       <Flex row alignItems="center" gap="$spacing16">
         {tokenForm.mode === TokenMode.CREATE_NEW ? (
           <TokenLogo
-            url={tokenForm.imageUrl || null}
+            url={resolveCreateNewTokenDisplayImageSrc(tokenForm.localImagePreviewUri, tokenForm.imageUrl) ?? null}
             symbol={tokenForm.symbol}
             name={tokenForm.name}
             chainId={tokenForm.network}
             size={TOKEN_LOGO_SIZE}
+            imageResizeMode={UniversalImageResizeMode.Cover}
           />
         ) : (
           <CurrencyLogo currencyInfo={tokenForm.existingTokenCurrencyInfo ?? null} size={TOKEN_LOGO_SIZE} />
@@ -62,7 +61,6 @@ export function ReviewLaunchTokenInfoSection({
             {tokenSymbol}
           </Text>
         </Flex>
-        <EditButton onPress={onEditTokenInfo} />
       </Flex>
 
       {description ? (

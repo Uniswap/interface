@@ -17,6 +17,7 @@ interface NetworkFilterContentProps {
   onPressChain: (chainId: UniverseChainId | null) => void
   chainIds: UniverseChainId[]
   showAllNetworks: boolean
+  allNetworksChainIds?: UniverseChainId[]
 }
 
 interface SelectableNetworkOptionProps {
@@ -24,6 +25,7 @@ interface SelectableNetworkOptionProps {
   selectedChain: UniverseChainId | null
   newChains: UniverseChainId[]
   onPressChain: (chainId: UniverseChainId | null) => void
+  allNetworksChainIds?: UniverseChainId[]
 }
 
 function SectionHeader({ title }: { title: string }): JSX.Element {
@@ -50,6 +52,7 @@ function SelectableNetworkOption({
   selectedChain,
   newChains,
   onPressChain,
+  allNetworksChainIds,
 }: SelectableNetworkOptionProps): JSX.Element {
   const handlePress = useEvent((): void => {
     onPressChain(chainId)
@@ -64,6 +67,7 @@ function SelectableNetworkOption({
     >
       <NetworkOption
         chainId={chainId}
+        chainIds={chainId === null ? allNetworksChainIds : undefined}
         currentlySelected={selectedChain === chainId}
         isNew={chainId !== null && newChains.includes(chainId)}
         borderRadius="$rounded16"
@@ -79,6 +83,7 @@ export function NetworkFilterContent({
   onPressChain,
   chainIds,
   showAllNetworks,
+  allNetworksChainIds,
 }: NetworkFilterContentProps): JSX.Element {
   const { t } = useTranslation()
   const newChains = useNewChainIds()
@@ -100,6 +105,7 @@ export function NetworkFilterContent({
             chainId={null}
             selectedChain={selectedChain}
             newChains={newChains}
+            allNetworksChainIds={allNetworksChainIds}
             onPressChain={onPressChain}
           />
         )}
@@ -128,6 +134,7 @@ export function NetworkFilterContent({
           chainId={null}
           selectedChain={selectedChain}
           newChains={newChains}
+          allNetworksChainIds={allNetworksChainIds}
           onPressChain={onPressChain}
         />
       )}

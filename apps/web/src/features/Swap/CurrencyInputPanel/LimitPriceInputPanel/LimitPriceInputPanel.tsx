@@ -26,9 +26,9 @@ import { LimitPriceInputLabel } from '~/features/Swap/CurrencyInputPanel/LimitPr
 import { useCurrentPriceAdjustment } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
-import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
-import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
-import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
+import type { CurrencyState } from '~/features/Swap/state/types'
+import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
+import { useLimitContext } from '~/pages/Swap/Limit/state/LimitContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 
 const PRICE_ADJUSTMENT_PRESETS = [1, 5, 10]

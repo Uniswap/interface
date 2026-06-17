@@ -31,7 +31,7 @@ import { extensionNotificationStore } from 'src/notification-service/notificatio
 import { getNotificationTelemetry } from 'src/notification-service/notification-telemetry/getNotificationTelemetry'
 import { createExtensionLocalTriggerDataSource } from 'src/notification-service/triggers/createExtensionLocalTriggerDataSource'
 import { getReduxStore } from 'src/store/store'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
@@ -141,7 +141,7 @@ function provideExtensionNotificationService(ctx: {
     // Handle explore paths by opening in web interface
     if (url.startsWith('/explore/')) {
       focusOrCreateUniswapInterfaceTab({
-        url: `${uniswapUrls.requestOriginUrl}${url}`,
+        url: `${UniswapStaticUrls.requestOriginUrl}${url}`,
       }).catch((error) => {
         getLogger().error(error, {
           tags: {

@@ -7,6 +7,7 @@ import {
   AUSD_MONAD,
   BTC_B_MEGAETH,
   BUSD_BSC,
+  CIRBTC_ARC,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_AVALANCHE,
@@ -14,12 +15,14 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
+  EURC_ARC,
   nativeOnChain,
   OP,
   PATHUSD_TEMPO,
   PORTAL_ETH_CELO,
   UNI,
   USDC_ARBITRUM,
+  USDC_ARC,
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
@@ -39,6 +42,7 @@ import {
   USDC_ZKSYNC,
   USDC_ZORA,
   USDE_MEGAETH,
+  USDG_ROBINHOOD,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
@@ -48,15 +52,17 @@ import {
   USDT_POLYGON,
   USDT0_XLAYER,
   USDM_MEGAETH,
+  USYC_ARC,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
+  WETH_ARC,
   WETH_AVALANCHE,
   WETH_POLYGON,
   WRAPPED_NATIVE_CURRENCY,
 } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
@@ -167,6 +173,14 @@ export const COMMON_BASES: ChainCurrencyList = {
     BTC_B_MEGAETH,
   ].map(buildPartialCurrencyInfo),
 
+  [UniverseChainId.Robinhood]: [
+    nativeOnChain(UniverseChainId.Robinhood),
+    USDG_ROBINHOOD,
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Robinhood] as Token,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Arc]: [USDC_ARC, EURC_ARC, CIRBTC_ARC, WETH_ARC, USYC_ARC].map(buildPartialCurrencyInfo),
+
   [UniverseChainId.Soneium]: [
     nativeOnChain(UniverseChainId.Soneium),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Soneium] as Token,
@@ -262,7 +276,7 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
   }
 
   return networkName
-    ? `${uniswapUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/assets/${address}/logo.png`
+    ? `${UniswapStaticUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/assets/${address}/logo.png`
     : undefined
 }
 

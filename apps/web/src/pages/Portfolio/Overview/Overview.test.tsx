@@ -111,10 +111,6 @@ vi.mock('~/pages/Portfolio/Overview/PortfolioPerformance', () => ({
   PortfolioPerformance: () => <div data-testid="portfolio-performance" />,
 }))
 
-vi.mock('~/pages/Portfolio/Overview/StatsTiles', () => ({
-  OverviewStatsTiles: () => <div data-testid="overview-stats-tiles" />,
-}))
-
 describe('PortfolioOverview', () => {
   beforeEach(() => {
     mockPortfolioPoolsBalancesEnabled.value = true

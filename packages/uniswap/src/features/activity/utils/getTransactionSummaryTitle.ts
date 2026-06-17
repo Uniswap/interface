@@ -283,6 +283,14 @@ function getTransactionTypeVerbs(
         pending: t('transaction.status.withdrawBid.pending'),
         failed: t('transaction.status.withdrawBid.failed'),
       }
+    case TransactionType.AuctionLaunch:
+      return {
+        success: t('toucan.createAuction.transaction.success'),
+        pending: t('toucan.createAuction.transaction.pending'),
+        failed: t('toucan.createAuction.transaction.failed'),
+        canceling: t('toucan.createAuction.transaction.canceling'),
+        canceled: t('toucan.createAuction.transaction.canceled'),
+      }
     case TransactionType.CreatePair:
       return {
         success: t('transaction.status.createPair.success'),

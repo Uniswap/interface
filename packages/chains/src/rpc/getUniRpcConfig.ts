@@ -9,7 +9,10 @@ export interface UniRpcConfig {
 }
 
 interface UniRpcConfigResolverCtx {
-  getFeatureFlag: () => boolean
+  // Chain-aware so callers can decide per chain (e.g. always-on for UniRPC-only
+  // chains, flag-gated otherwise). The chain-specific policy lives in the caller,
+  // not in this generic primitive.
+  getFeatureFlag: (chainId: UniverseChainId) => boolean
   getEntryGatewayUrl: () => string
   requestSource: string
   getRequestHeaders?: () => Promise<Record<string, string>>
@@ -30,7 +33,7 @@ interface UniRpcConfigResolverInput {
  * @example
  * ```ts
  * const resolveUniRpcConfig = createUniRpcConfigResolver({
- *   getFeatureFlag: () => getFeatureFlag(FeatureFlags.UniRpcEnabled),
+ *   getFeatureFlag: (chainId) => getFeatureFlag(FeatureFlags.UniRpcEnabled),
  *   getEntryGatewayUrl,
  * })
  *
@@ -43,7 +46,7 @@ interface UniRpcConfigResolverInput {
 export function createUniRpcConfigResolver(ctx: UniRpcConfigResolverCtx) {
   return (input: UniRpcConfigResolverInput): UniRpcConfig | null => {
     try {
-      if (!ctx.getFeatureFlag()) {
+      if (!ctx.getFeatureFlag(input.chainId)) {
         return null
       }
 

@@ -28,7 +28,10 @@ import {
   SlippageTooLowError,
   UnknownSimulationError,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import type {
+  SwapData,
+  SwapRequestParams,
+} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import type {
@@ -59,16 +62,26 @@ import type { ValidatedTransactionRequest } from 'uniswap/src/features/transacti
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
-export interface TransactionRequestInfo {
-  txRequests: providers.TransactionRequest[] | undefined
+export type TransactionRequestInfo = {
   permitData?: TradingApi.NullablePermit
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: TradingApi.CreateSwapRequest | undefined
   includesDelegation?: boolean
-  paymasterService?: TradingApi.PaymasterServiceCapability
-}
+  requestUniswapGasSponsorship?: boolean
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
+} & (
+  | {
+      txRequests?: never
+      unsignedUserOperation?: RpcUserOperation<'0.8'>
+    }
+  | {
+      txRequests: providers.TransactionRequest[] | undefined
+      unsignedUserOperation?: never
+    }
+)
 
 export function processWrapResponse({
   gasFeeResult,
@@ -114,7 +127,7 @@ export function createPrepareSwapRequestParams({
     transactionSettings: TransactionSettings
     alreadyApproved: boolean
     overrideSimulation?: boolean
-  }): TradingApi.CreateSwapRequest {
+  }): SwapRequestParams {
     const isBridgeTrade = swapQuoteResponse.routing === TradingApi.Routing.BRIDGE
     const permitData = swapQuoteResponse.permitData
 
@@ -139,6 +152,7 @@ export function createPrepareSwapRequestParams({
       simulateTransaction: shouldSimulateTxn,
       deadline,
       refreshGasPrice: true,
+      sponsorshipInfo: swapQuoteResponse.sponsorshipInfo,
     }
 
     if (shouldUseUrgency) {
@@ -247,7 +261,7 @@ export function createProcessSwapResponse({
     // Read the same tx the editor pre-fills from (`transactions[0]`); with
     // overrides applied, show its max cost (`maxFeePerGas × gasLimit`) so the row
     // stays in sync. Falls back to the estimate below when it has no gas fields.
-    const swapTx = response?.transactions[0]
+    const swapTx = response?.transactions?.[0]
     const maxCostDisplayValue = hasOverrides
       ? computeMaxCostFromTx({ maxFeePerGas: swapTx?.maxFeePerGas, gasLimit: swapTx?.gasLimit })
       : undefined
@@ -277,11 +291,14 @@ export function createProcessSwapResponse({
 
     return {
       gasFeeResult,
-      txRequests: response?.transactions,
+      ...(response?.transactions
+        ? { txRequests: response.transactions }
+        : { unsignedUserOperation: response?.unsignedUserOperation }),
       permitData: permitsDontNeedSignature ? undefined : permitData,
       gasEstimate,
       includesDelegation: response?.includesDelegation,
       swapRequestArgs: swapRequestParams,
+      requestUniswapGasSponsorship: response?.requestUniswapGasSponsorship,
       paymasterService: response?.paymasterService,
     }
   }
@@ -414,7 +431,7 @@ export function getClassicSwapTxAndGasInfo({
   includesDelegation?: boolean
 }): ClassicSwapTxAndGasInfo {
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
-  const unsigned = Boolean(isWebApp && swapTxInfo.permitData)
+  const hasUnsignedPermit = Boolean(isWebApp && swapTxInfo.permitData)
   const typedData = validatePermit(swapTxInfo.permitData)
 
   const permit = typedData
@@ -429,11 +446,13 @@ export function getClassicSwapTxAndGasInfo({
     ...createGasFields({ swapTxInfo, approvalTxInfo, permitTxInfo }),
     ...createApprovalFields({ approvalTxInfo }),
     swapRequestArgs: swapTxInfo.swapRequestArgs,
-    unsigned,
+    hasUnsignedPermit,
     txRequests,
     permit,
     includesDelegation: swapTxInfo.includesDelegation,
+    requestUniswapGasSponsorship: swapTxInfo.requestUniswapGasSponsorship,
     paymasterService: swapTxInfo.paymasterService,
+    unsignedUserOperation: swapTxInfo.unsignedUserOperation,
   }
 }
 
@@ -511,7 +530,9 @@ export function getBridgeSwapTxAndGasInfo({
     ...createApprovalFields({ approvalTxInfo }),
     txRequests,
     includesDelegation: swapTxInfo.includesDelegation,
+    requestUniswapGasSponsorship: swapTxInfo.requestUniswapGasSponsorship,
     paymasterService: swapTxInfo.paymasterService,
+    unsignedUserOperation: swapTxInfo.unsignedUserOperation,
   }
 }
 
@@ -521,18 +542,33 @@ export function getWrapTxAndGasInfo({
 }: {
   trade: WrapTrade | UnwrapTrade
   swapTxInfo: TransactionRequestInfo
-}): ClassicSwapTxAndGasInfo | WrapSwapTxAndGasInfo {
-  const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
-
-  return {
+}): WrapSwapTxAndGasInfo {
+  const base: Omit<WrapSwapTxAndGasInfo, 'txRequests' | 'unsignedUserOperation'> = {
     routing: trade.routing,
     trade,
-    txRequests,
     approveTxRequest: undefined,
     revocationTxRequest: undefined,
     gasFee: swapTxInfo.gasFeeResult,
     gasFeeEstimation: swapTxInfo.gasEstimate,
-    includesDelegation: swapTxInfo.includesDelegation,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
+  }
+
+  if (swapTxInfo.unsignedUserOperation) {
+    return {
+      ...base,
+      txRequests: undefined,
+      unsignedUserOperation: swapTxInfo.unsignedUserOperation,
+      requestUniswapGasSponsorship: swapTxInfo.requestUniswapGasSponsorship,
+      paymasterService: swapTxInfo.paymasterService,
+    }
+  }
+
+  return {
+    ...base,
+    txRequests: validateTransactionRequests(swapTxInfo.txRequests),
+    unsignedUserOperation: undefined,
+    requestUniswapGasSponsorship: swapTxInfo.requestUniswapGasSponsorship,
+    paymasterService: swapTxInfo.paymasterService,
   }
 }
 
@@ -552,7 +588,8 @@ export function getFallbackSwapTxAndGasInfo({
     txRequests,
     permit: undefined,
     swapRequestArgs: swapTxInfo.swapRequestArgs,
-    unsigned: false,
+    hasUnsignedPermit: false,
     includesDelegation: swapTxInfo.includesDelegation,
+    requestUniswapGasSponsorship: swapTxInfo.requestUniswapGasSponsorship ?? false,
   }
 }

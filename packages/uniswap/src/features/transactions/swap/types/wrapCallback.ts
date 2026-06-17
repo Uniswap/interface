@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { GasEstimate } from '@universe/api'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import type { WrapTransactionStep, WrapTransactionStepWalletCall } from 'uniswap/src/features/transactions/steps/wrap'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 
 export type WrapCallbackParams = {
@@ -9,7 +9,7 @@ export type WrapCallbackParams = {
   wrapType: WrapType.Wrap | WrapType.Unwrap
   onSuccess: () => void
   onFailure: () => void
-  txRequest: ValidatedTransactionRequest
+  step: WrapTransactionStep | WrapTransactionStepWalletCall
   txId?: string
   gasEstimate?: GasEstimate
 }

@@ -5,12 +5,12 @@ import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { useTimeout } from 'utilities/src/time/timing'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 const AUTO_HIDE_MS = 60_000

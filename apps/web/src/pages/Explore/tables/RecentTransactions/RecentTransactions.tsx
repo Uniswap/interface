@@ -3,7 +3,6 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
@@ -44,7 +43,6 @@ const TableRow = styled(Flex, {
 type RecentTransactionType = GraphQLApi.PoolTransaction & { usdValueFormatted: string }
 
 export const RecentTransactionsTable = memo(function RecentTransactions() {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -273,7 +271,6 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
       data={filteredTransactionsWithFiat}
       loading={allDataStillLoading}
       error={combinedError}
-      v2={multichainTokenUxEnabled}
       loadMore={loadMore}
       maxWidth={1200}
       defaultPinnedColumns={['timestamp', 'swap-type']}

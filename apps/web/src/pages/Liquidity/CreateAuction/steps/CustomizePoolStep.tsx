@@ -10,6 +10,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
@@ -292,16 +294,18 @@ export function CustomizePoolStep() {
         )}
       </Flex>
       <Flex row>
-        <Button
-          fill
-          size="medium"
-          emphasis="primary"
-          onPress={goToNextStep}
-          isDisabled={isNextStepDisabled}
-          backgroundColor={tokenColor}
-        >
-          {t('toucan.createAuction.reviewLaunch')}
-        </Button>
+        <Trace logPress element={ElementName.Continue}>
+          <Button
+            fill
+            size="medium"
+            emphasis="primary"
+            onPress={goToNextStep}
+            isDisabled={isNextStepDisabled}
+            backgroundColor={isNextStepDisabled ? undefined : tokenColor}
+          >
+            {t('toucan.createAuction.reviewLaunch')}
+          </Button>
+        </Trace>
       </Flex>
     </Flex>
   )

@@ -5,7 +5,7 @@ import { useAppSelector } from '~/state/hooks'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
-vi.mock('~/components/claim/AddressClaimModal', () => ({
+vi.mock('~/features/claim/AddressClaimModal', () => ({
   default: () => <div data-testid="mock-address-claim-modal">Address Claim Modal</div>,
 }))
 

@@ -15,7 +15,7 @@ import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DEFAULT_VERIFIED_AUCTION_IDS } from '~/features/Toucan/Config/config'
+import { DEFAULT_VERIFIED_AUCTION_IDS, getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { isAuctionCompleted } from '~/features/Toucan/hooks/useTopAuctions/isAuctionCompleted'
 import { BlockTimestampRequest, useGetBlockTimestamps, useMultiChainBlockInfo } from '~/hooks/useMultiChainBlockInfo'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
@@ -204,6 +204,14 @@ export function useTopAuctions(): {
         const coreAuction = auction.auction
         const currencyInfo = currencyInfos[index]
 
+        // Image precedence (mirrors the auction detail page): curated config override logo
+        // (authoritative) -> creator-uploaded API image -> indexed currency logo -> TokenLogo
+        // placeholder. Centralized here so the table cell and chip stay consistent.
+        const overrideLogo =
+          coreAuction?.chainId && coreAuction.tokenAddress
+            ? getAuctionMetadata({ chainId: coreAuction.chainId, tokenAddress: coreAuction.tokenAddress })?.logoUrl
+            : undefined
+
         const startBlockTimestamp =
           coreAuction?.startBlock && coreAuction.chainId
             ? getBlockTimestamp(coreAuction.chainId, coreAuction.startBlock)
@@ -218,7 +226,7 @@ export function useTopAuctions(): {
         if (coreAuction !== undefined) {
           auctionWithCurrency = {
             ...toPlainMessage(coreAuction),
-            tokenName: currencyInfo?.currency.name,
+            tokenName: currencyInfo?.currency.name ?? coreAuction.tokenName,
             tokenSymbol: currencyInfo?.currency.symbol ?? coreAuction.tokenSymbol,
           }
         } else {
@@ -229,7 +237,9 @@ export function useTopAuctions(): {
           // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
           ...auction,
           verified: coreAuction ? verifiedSet.has(coreAuction.auctionId) : false,
-          logoUrl: currencyInfo?.logoUrl,
+          // `||` (not `??`) so an empty-string API image is treated as absent and doesn't
+          // suppress the override / indexed logo, independent of the backend's unset-vs-"".
+          logoUrl: overrideLogo || coreAuction?.tokenImageUrl || currencyInfo?.logoUrl,
           timeRemaining: {
             startBlockTimestamp,
             endBlockTimestamp,

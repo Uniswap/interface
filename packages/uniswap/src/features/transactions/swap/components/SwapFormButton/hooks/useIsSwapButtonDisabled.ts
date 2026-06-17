@@ -3,6 +3,7 @@ import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wal
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
+import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
@@ -47,11 +48,17 @@ export const useIsSwapButtonDisabled = (): boolean => {
 
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
+  const { blockingWarning } = useParsedSwapWarnings()
+  const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
 
-  if (isWebFORNudgeEnabled && isShowingWebFORNudge) {
-    return true
-  } else if (isWebFORNudgeEnabled && !isShowingWebFORNudge) {
+  // Geo acknowledgement overrides any blocking warning: keep the button enabled so
+  // pressing it opens the attestation modal instead of surfacing a disabled CTA.
+  if (needsGeoAcknowledgment) {
     return false
+  }
+
+  if (isWebFORNudgeEnabled && !blockingWarning) {
+    return isShowingWebFORNudge
   }
   return (
     // Only disable if the wallet is connected, review button is disabled, wallet is a signable-wallet, and there is no swap redirect callback

@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ExternalLink } from '~/theme/components/Links'
 
 export function PrivacyPolicyNotice() {
@@ -11,14 +11,19 @@ export function PrivacyPolicyNotice() {
         components={{
           termsLink: (
             <ExternalLink
-              href={uniswapUrls.termsOfServiceUrl}
+              href={UniswapStaticUrls.termsOfServiceUrl}
               color="$neutral3"
               fontSize="$micro"
               lineHeight="$micro"
             />
           ),
           privacyLink: (
-            <ExternalLink href={uniswapUrls.privacyPolicyUrl} color="$neutral3" fontSize="$micro" lineHeight="$micro" />
+            <ExternalLink
+              href={UniswapStaticUrls.privacyPolicyUrl}
+              color="$neutral3"
+              fontSize="$micro"
+              lineHeight="$micro"
+            />
           ),
         }}
       />

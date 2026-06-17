@@ -9,6 +9,7 @@ import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { TokenMenuActionType } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useEvent } from 'utilities/src/react/hooks'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
@@ -132,7 +133,12 @@ export function TokensContextMenuWrapper({
         openReportTokenModal={openReportTokenModalForCurrency}
         openReportDataIssueModal={undefined}
         copyAddressToClipboard={copyAddressToClipboard}
-        onPressToken={() => navigateToTokenDetails(tokenData.currencyInfo.currency, tokenData.chainId)}
+        onPressToken={() =>
+          navigateToTokenDetails(tokenData.currencyInfo.currency, {
+            type: TdpChainSelectionType.Chain,
+            chainId: tokenData.chainId,
+          })
+        }
         disableNotifications={true}
         recipient={isExternalWallet ? externalAddress?.address : undefined}
       >
@@ -150,7 +156,12 @@ export function TokensContextMenuWrapper({
       openReportTokenModal={openReportTokenModalForCurrency}
       openReportDataIssueModal={openReportDataIssueModalForCurrency}
       copyAddressToClipboard={copyAddressToClipboard}
-      onPressToken={() => navigateToTokenDetails(tokenData.currencyInfo.currency, tokenData.chainId)}
+      onPressToken={() =>
+        navigateToTokenDetails(tokenData.currencyInfo.currency, {
+          type: TdpChainSelectionType.Chain,
+          chainId: tokenData.chainId,
+        })
+      }
       disableNotifications={true}
       recipient={isExternalWallet ? externalAddress?.address : undefined}
     >

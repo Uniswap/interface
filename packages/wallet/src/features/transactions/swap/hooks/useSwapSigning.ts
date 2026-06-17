@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { PrepareSwapCallback, PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isUserOpSwap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
@@ -73,6 +74,13 @@ export function useSwapSigning(): UseSwapSigningResult {
     async (params: PrepareSwapParams): Promise<void> => {
       // If execution has already been called, ignore new prepare requests
       if (executionCalledRef.current) {
+        return
+      }
+
+      // 4337 sponsored swaps cannot be pre-signed — the paymaster fills paymasterData
+      // inside the execute saga and the UserOp signature commits to those fields.
+      // Skip the pre-sign hop entirely; execution will sign directly.
+      if (isUserOpSwap(params.swapTxContext)) {
         return
       }
 

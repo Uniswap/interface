@@ -1,5 +1,4 @@
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -35,8 +34,6 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
   const colors = useSporeColors()
   const defaultTokenColor = colors.neutral3.get()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   const {
     address,
     currencyId,
@@ -55,20 +52,20 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
   const { data: screenData } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
     },
     fetchPolicy: 'cache-only',
   })
 
   const aggregatedData = useMemo(() => {
-    if (!multichainTokenUxEnabled || !screenData?.token?.multichainMarket) {
+    if (!screenData?.token?.multichainMarket) {
       return undefined
     }
     return {
       market: screenData.token.multichainMarket,
       project: { markets: screenData.token.project?.markets },
     }
-  }, [multichainTokenUxEnabled, screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
+  }, [screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
 
   const networkChainIds = useMemo((): UniverseChainId[] => {
     const projectTokens = screenData?.token?.project?.tokens
@@ -90,7 +87,7 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
 
   const singleNetworkChainId = networkChainIds.length === 1 ? networkChainIds[0] : undefined
 
-  const isMultichainToken = multichainTokenUxEnabled && isMultichainProjectTokens(project?.tokens)
+  const isMultichainToken = isMultichainProjectTokens(project?.tokens)
 
   /** Native currency pages have no contract address to copy / multichain address sheet (see TokenDetailsLinks). */
   const hasCopyableContractAddress = useMemo(() => {

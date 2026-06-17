@@ -17,7 +17,7 @@ export const approve = Cli.create('approve', {
   }),
   async run(c) {
     const { auth } = vars(c)
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
 
     const scope = `/${c.options.app}/${c.options.scope}`
 

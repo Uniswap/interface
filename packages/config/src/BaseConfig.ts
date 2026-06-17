@@ -49,6 +49,7 @@ export const BaseConfigValues = {
   jupiterProxyUrl: process.env.JUPITER_PROXY_URL ?? process.env.REACT_APP_JUPITER_PROXY_URL,
   quicknodeEndpointName: process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
+  quicknodeSolanaRpcUrl: process.env.QUICKNODE_SOLANA_RPC_URL ?? process.env.REACT_APP_QUICKNODE_SOLANA_RPC_URL,
 
   // Feature Flags
   enableEntryGatewayProxy: process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY,
@@ -108,6 +109,9 @@ export const BaseConfigSchema = z.object({
   jupiterProxyUrl: optionalString.describe('URL for Jupiter proxy'),
   quicknodeEndpointName: optionalString.describe('QuickNode endpoint name'),
   quicknodeEndpointToken: optionalString.describe('QuickNode endpoint token'),
+  quicknodeSolanaRpcUrl: optionalString.describe(
+    'Dedicated QuickNode RPC URL for Solana; overrides the built-in default until UniRPC routes Solana',
+  ),
 
   // Feature Flags
   enableEntryGatewayProxy: boolFromString.describe('Is the entry gateway proxy enabled'),

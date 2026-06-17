@@ -320,7 +320,6 @@ export const BidActivities = ({
             columns={columns}
             data={formattedBidActivities}
             loading={loading}
-            v2={true}
             hideHeader={false}
             maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
             loadMore={pendingNewBidCount > 0 ? undefined : loadMore}

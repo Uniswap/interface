@@ -20,6 +20,7 @@ import { Search } from 'ui/src/components/icons/Search'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -40,6 +41,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
+import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
 import { DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
@@ -52,10 +54,10 @@ import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
-import { serializeSwapStateToURLParameters } from '~/features/Swap/state/swap/tradeQueryParams'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { serializeSwapStateToURLParameters } from '~/pages/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -324,7 +326,9 @@ export function SelectTokensStep({
   const token1FoTError = hasLPFoTTransferError(token1CurrencyInfo, protocolVersion)
   const fotErrorToken = token0FoTError || token1FoTError
 
-  const hasError = isUnsupportedTokenSelected || Boolean(fotErrorToken)
+  const { hasBlockedToken, blockedTokenSymbols } = useBlockedTokens(token0, token1)
+
+  const hasError = isUnsupportedTokenSelected || Boolean(fotErrorToken) || hasBlockedToken
 
   const currentFeeTierKey = useMemo(
     () =>
@@ -426,6 +430,7 @@ export function SelectTokensStep({
                 protocolVersion={protocolVersion}
                 wrappedNativeWarning={undefined}
                 fotToken={fotErrorToken}
+                blockedTokenSymbols={blockedTokenSymbols}
               />
               {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
             </Flex>
@@ -589,16 +594,49 @@ function SelectStepError({
   protocolVersion,
   wrappedNativeWarning,
   fotToken,
+  blockedTokenSymbols,
 }: {
   isUnsupportedTokenSelected: boolean
   unsupportedChainId?: UniverseChainId
   protocolVersion: ProtocolVersion
   wrappedNativeWarning?: WrappedNativeWarning
   fotToken?: CurrencyInfo
+  blockedTokenSymbols?: string[]
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { setPositionState } = useCreateLiquidityContext()
+
+  if (blockedTokenSymbols && blockedTokenSymbols.length > 0) {
+    return (
+      <ErrorCallout
+        errorMessage={true}
+        title={
+          blockedTokenSymbols.length > 1
+            ? t('token.safety.blocked.title.tokensNotAvailable', {
+                tokenSymbol0: blockedTokenSymbols[0],
+                tokenSymbol1: blockedTokenSymbols[1],
+              })
+            : t('token.safety.blocked.title.tokenNotAvailable', { tokenSymbol: blockedTokenSymbols[0] })
+        }
+        description={
+          <>
+            {blockedTokenSymbols.length > 1
+              ? t('token.safety.warning.blocked.description.default_other')
+              : t('token.safety.warning.blocked.description.default_one')}{' '}
+            <Text
+              color="$neutral1"
+              variant="body3"
+              onPress={() => window.open(UniswapHelpUrls.articles.tokenWarning, '_blank', 'noopener,noreferrer')}
+              {...ClickableTamaguiStyle}
+            >
+              {t('common.button.learn')}
+            </Text>
+          </>
+        }
+      />
+    )
+  }
 
   if (isUnsupportedTokenSelected) {
     return (

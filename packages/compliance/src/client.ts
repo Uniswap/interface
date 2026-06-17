@@ -1,0 +1,59 @@
+import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect'
+import { compliancev2Service } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_connect'
+import { ChainId, TokenRef } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
+
+export type ComplianceV2Client = PromiseClient<typeof compliancev2Service>
+
+/**
+ * Builds a compliance v2 client over the given transport. Injected via
+ * `ComplianceClientProvider` rather than held as a module singleton, so each app
+ * supplies its own platform transport and tests can pass a stub.
+ */
+export function createComplianceV2Client(transport: Transport): ComplianceV2Client {
+  return createPromiseClient(compliancev2Service, transport)
+}
+
+export type ComplianceTokenInput = {
+  chainId: number
+  address: string
+}
+
+/**
+ * Bulk deny-list check for a single token. The endpoint accepts up to 100
+ * tokens per call, but we keep calls scoped to one token so each result is
+ * cached on its own `chainId:address` key.
+ *
+ * `includeNonBlockingReasons: true` keeps acknowledged tokens visible as
+ * `ACKNOWLEDGED`; without it the server omits them after acknowledgement,
+ * breaking the `REQUIRES_ACKNOWLEDGEMENT` → `ACKNOWLEDGED` flip.
+ *
+ * Returns the response `TokenRef` (with populated `reasons`) when the token is
+ * blocked or acknowledged, or `undefined` when the API omits it (clean token).
+ */
+export async function fetchFeatureGatedToken(
+  client: ComplianceV2Client,
+  { chainId, address }: ComplianceTokenInput,
+): Promise<TokenRef | undefined> {
+  const response = await client.featureGatedTokens({
+    tokens: [new TokenRef({ chainId: chainId as ChainId, address })],
+    includeNonBlockingReasons: true,
+  })
+  return response.tokens[0]
+}
+
+/**
+ * Records that the caller's Entry Gateway session has acknowledged a single
+ * ack-gated token. Only valid for a token currently reporting
+ * `REQUIRES_ACKNOWLEDGEMENT`; the server rejects hard-blocked or unmatched
+ * tokens. The response is empty by design, so callers must re-read status via
+ * `fetchFeatureGatedToken` (after invalidating its query) to observe the flip
+ * to `ACKNOWLEDGED`.
+ */
+export async function setTokenAcknowledgement(
+  client: ComplianceV2Client,
+  { chainId, address }: ComplianceTokenInput,
+): Promise<void> {
+  await client.setTokenAcknowledgement({
+    token: new TokenRef({ chainId: chainId as ChainId, address }),
+  })
+}

@@ -6,7 +6,6 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText } from '~/components/Table/shared/TableText'
-import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 /**
@@ -53,17 +52,12 @@ export function AuctionTableHeader({
 }
 
 export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
-  // Check for logo override from config
-  const logoOverride =
-    auction.auction?.chainId && auction.auction.tokenAddress
-      ? getAuctionMetadata({ chainId: auction.auction.chainId, tokenAddress: auction.auction.tokenAddress })?.logoUrl
-      : undefined
-
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
       <Flex pr="$spacing4">
+        {/* logoUrl already resolves API image -> config override -> indexed logo (see useTopAuctions) */}
         <TokenLogo
-          url={logoOverride ?? auction.logoUrl}
+          url={auction.logoUrl}
           size={24}
           chainId={auction.auction?.chainId}
           symbol={auction.auction?.tokenSymbol}

@@ -30,7 +30,7 @@ export const push = Cli.create('push', {
 
     // Step 2: build the config client (handles auth + dev overrides).
     const { auth } = vars(c)
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
 
     // Step 3: warn the user about migration-only intent and confirm.
     console.warn('⚠️  WARNING: `push` is a migration tool, not a normal workflow.')

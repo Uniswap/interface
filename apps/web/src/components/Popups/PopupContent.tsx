@@ -118,6 +118,8 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
     <PendingPortfolioLogo
       chainId={activity.chainId}
       currencies={activity.currencies}
+      images={activity.logos}
+      fallbackSymbols={activity.fallbackSymbols}
       accountAddress={activity.otherAccount}
       customIcon={pendingCustomIcon}
     />
@@ -126,6 +128,8 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
     <PortfolioLogo
       chainId={activity.chainId}
       currencies={activity.currencies}
+      images={activity.logos}
+      fallbackSymbols={activity.fallbackSymbols}
       accountAddress={activity.otherAccount}
       customIcon={completedCustomIcon}
     />

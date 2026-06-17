@@ -11,13 +11,17 @@ import {
   getNetworkWarning,
   useFormattedWarnings,
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
+import {
+  type GeoRestrictionMode,
+  useGeoRestrictionMode,
+} from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getBalanceWarning'
 import { getFormIncompleteWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getFormIncompleteWarning'
+import { getGeoRestrictionWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getGeoRestrictionWarning'
 import { getPriceImpactWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getPriceImpactWarning'
 import { getSwapWarningFromError } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getSwapWarningFromError'
 import { getTokenBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getTokenBlockedWarning'
 import { useParsedActivePlanWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useParsedActivePlanWarnings'
-import { useRWAGeoBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useRWAGeoBlockedWarning'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
@@ -32,11 +36,13 @@ export function getSwapWarnings({
   formatPercent,
   derivedSwapInfo,
   offline,
+  geoRestrictionMode,
 }: {
   t: TFunction
   formatPercent: LocalizationContextState['formatPercent']
   derivedSwapInfo: DerivedSwapInfo
   offline: boolean
+  geoRestrictionMode: GeoRestrictionMode
 }): Warning[] {
   const warnings: Warning[] = []
 
@@ -46,7 +52,13 @@ export function getSwapWarnings({
 
   const { trade } = derivedSwapInfo
 
-  // token is blocked
+  // Geo-restriction wins over the generic token-blocked message — its CTA and card
+  // are more specific, so push it first to let `blockingWarning` pick it up.
+  const geoRestrictionWarning = getGeoRestrictionWarning(t, geoRestrictionMode)
+  if (geoRestrictionWarning) {
+    warnings.push(geoRestrictionWarning)
+  }
+
   const tokenBlockedWarning = getTokenBlockedWarning(t, derivedSwapInfo.currencies)
   if (tokenBlockedWarning) {
     warnings.push(tokenBlockedWarning)
@@ -90,8 +102,12 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const offline = useIsOffline()
+  const geoRestrictionMode = useGeoRestrictionMode()
 
-  return useMemoCompare(() => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline }), isEqual)
+  return useMemoCompare(
+    () => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline, geoRestrictionMode }),
+    isEqual,
+  )
 }
 
 function useParsedSwapFormWarnings(): ParsedWarnings {
@@ -103,8 +119,6 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
-  const rwaGeoBlockedWarning = useRWAGeoBlockedWarning(derivedSwapInfo.currencies)
-
   const gasWarning = useTransactionGasWarning({
     accountAddress,
     derivedInfo: derivedSwapInfo,
@@ -112,12 +126,8 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
   })
 
   const allWarnings = useMemo(() => {
-    const warnings = rwaGeoBlockedWarning ? [rwaGeoBlockedWarning, ...swapWarnings] : [...swapWarnings]
-    if (gasWarning) {
-      warnings.push(gasWarning)
-    }
-    return warnings
-  }, [gasWarning, swapWarnings, rwaGeoBlockedWarning])
+    return !gasWarning ? swapWarnings : [...swapWarnings, gasWarning]
+  }, [gasWarning, swapWarnings])
 
   return useFormattedWarnings(allWarnings)
 }

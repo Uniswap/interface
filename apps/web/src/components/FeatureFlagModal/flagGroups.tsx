@@ -45,10 +45,6 @@ export function buildFlagGroups(extras: {
       flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
     {
-      name: 'Multichain Token UX Improvements',
-      flags: [{ flag: FeatureFlags.MultichainTokenUx, label: 'Enable Updated Multichain Token UX' }],
-    },
-    {
       name: 'Swap Features',
       flags: [
         { flag: FeatureFlags.NoUniswapInterfaceFees, label: 'Turn off Uniswap interface fees' },
@@ -109,8 +105,10 @@ export function buildFlagGroups(extras: {
     {
       name: 'New Chains',
       flags: [
+        { flag: FeatureFlags.Arc, label: 'Enable Arc' },
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
         { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
+        { flag: FeatureFlags.Robinhood, label: 'Enable Robinhood' },
         { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
       ],
     },
@@ -136,7 +134,6 @@ export function buildFlagGroups(extras: {
       flags: [
         { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
         { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
-        { flag: FeatureFlags.ProfitLoss, label: 'Enable Profit/Loss' },
         { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
       ],
     },

@@ -13,7 +13,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -79,6 +79,7 @@ interface PoolTableValues {
   rewardApr?: number
   token0CurrencyId?: string
   token1CurrencyId?: string
+  selected?: boolean
 }
 
 function isGqlPool(pool: TablePool | PoolStat): pool is TablePool & { hash: string } {
@@ -188,7 +189,7 @@ function PoolTableHeader({
     [PoolSortFields.RewardApr]: (
       <>
         {t('pool.incentives.merklDocs')}
-        <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.merklDocsUrl} />
+        <LearnMoreLink textVariant="buttonLabel4" url={UniswapStaticUrls.merklDocsUrl} />
       </>
     ),
   }
@@ -308,6 +309,8 @@ export function PoolsTable({
   forcePinning,
   getLink,
   linkState,
+  selectedPoolId,
+  selectedPoolChainId,
 }: {
   pools?: TablePool[] | PoolStat[]
   loading: boolean
@@ -320,11 +323,15 @@ export function PoolsTable({
   forcePinning?: boolean
   getLink?: (pool: PoolLinkData) => string
   linkState?: { entryPoint?: string }
+  // The pool currently selected in the URL (pool id/hash + its chain). The matching row renders
+  // with a selected highlight — used by the add-liquidity pool browser where the table stays
+  // visible after a pool is picked.
+  selectedPoolId?: string
+  selectedPoolChainId?: UniverseChainId
 }) {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const isLPIncentivesTablesColumnEnabled = useFeatureFlag(FeatureFlags.LpIncentivesTablesColumn)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const { formatPercent, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
@@ -342,9 +349,15 @@ export function PoolsTable({
         const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain) ?? defaultChainId
         const poolIdOrHash = getPoolIdOrHash(pool)
         const volumes = getPoolVolumes(pool)
+        // The row link is built from this same `poolIdOrHash`, so the URL route param matches it
+        // verbatim for the clicked pool — exact equality is correct (and avoids address-casing rules
+        // that don't apply to v4 pool-id hashes).
+        const selected =
+          selectedPoolId !== undefined && chainId === selectedPoolChainId && poolIdOrHash === selectedPoolId
 
         return {
           index: poolSortRank,
+          selected,
           poolDescription: (
             <PoolDescription
               token0={unwrapToken(chainId, pool.token0) as TokenStats | Token | undefined}
@@ -380,7 +393,16 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [convertFiatAmountFormatted, defaultChainId, filterString, getLink, linkState, pools],
+    [
+      convertFiatAmountFormatted,
+      defaultChainId,
+      filterString,
+      getLink,
+      linkState,
+      pools,
+      selectedPoolId,
+      selectedPoolChainId,
+    ],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -621,7 +643,6 @@ export function PoolsTable({
       data={poolTableValues}
       loading={loading}
       error={error}
-      v2={multichainTokenUxEnabled}
       loadMore={loadMore}
       maxWidth={maxWidth}
       maxHeight={maxHeight}

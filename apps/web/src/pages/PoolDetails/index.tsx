@@ -24,7 +24,6 @@ import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
 import { OrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
-import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
 import { PoolDetailsLink } from '~/pages/PoolDetails/components/PoolDetailsLink'
@@ -38,7 +37,8 @@ import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const PageWrapper = styled(Flex, {
   row: true,
-  py: 48,
+  pt: 24,
+  pb: 48,
   px: 40,
   justifyContent: 'center',
   width: '100%',
@@ -221,7 +221,7 @@ export function PoolDetailsPage() {
       token1={color1 !== colors.accent1.val ? color1 : undefined}
     >
       <Helmet>
-        <title>{getPoolDetailPageTitle(t, poolData)}</title>
+        <title>{getPoolDetailPageTitle(t, { token0, token1 })}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
@@ -281,28 +281,10 @@ export function PoolDetailsPage() {
             gap="$spacing24"
             width={360}
             flexShrink={0}
-            $lg={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
-            $xl={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
+            $lg={{ width: '100%', mt: 44, minWidth: 'unset' }}
+            $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}
           >
-            {showOrderBook &&
-              poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V2 &&
-              poolData?.feeTier &&
-              orderBookCurrencyA &&
-              orderBookCurrencyB && (
-                <OrderBook
-                  tokenA={orderBookCurrencyA}
-                  tokenB={orderBookCurrencyB}
-                  feeTier={Number(poolData.feeTier.feeAmount)}
-                  isReversed={isReversed}
-                  chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
-                  version={parseRestProtocolVersion(poolData.protocolVersion) ?? RestProtocolVersion.V3}
-                  hooks={poolData.hookAddress}
-                  poolId={poolData.idOrAddress}
-                  height={356}
-                  onLoadingChange={handleOrderBookLoadingChange}
-                />
-              )}
-            <Flex $lg={{ marginTop: -24 }} $xl={{ marginTop: -24 }} min-height="fit-content">
+            <Flex gap="$spacing24" min-height="fit-content">
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}
                 poolIdOrAddress={poolAddress}
@@ -315,13 +297,25 @@ export function PoolDetailsPage() {
                 protocolVersion={poolData?.protocolVersion}
                 loading={loading}
               />
+              {showOrderBook &&
+                poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V2 &&
+                poolData?.feeTier &&
+                orderBookCurrencyA &&
+                orderBookCurrencyB && (
+                  <OrderBook
+                    tokenA={orderBookCurrencyA}
+                    tokenB={orderBookCurrencyB}
+                    feeTier={Number(poolData.feeTier.feeAmount)}
+                    isReversed={isReversed}
+                    chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
+                    version={parseRestProtocolVersion(poolData.protocolVersion) ?? RestProtocolVersion.V3}
+                    hooks={poolData.hookAddress}
+                    poolId={poolData.idOrAddress}
+                    height={356}
+                    onLoadingChange={handleOrderBookLoadingChange}
+                  />
+                )}
             </Flex>
-            {poolData && (
-              <PoolDetailsApr
-                poolApr={poolApr}
-                rewardsApr={isLPIncentivesEnabled ? poolData.rewardsCampaign?.boostedApr : undefined}
-              />
-            )}
             {showRewardsDistribution && (
               <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
             )}
@@ -332,6 +326,8 @@ export function PoolDetailsPage() {
               tokenBColor={color1}
               chainId={chainInfo.id}
               loading={loading}
+              poolApr={poolApr}
+              rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
             />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>

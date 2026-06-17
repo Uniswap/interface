@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, UniversalImage } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCloseIfConsented } from 'wallet/src/components/smartWallet/modals/hooks/useCloseIfConsented'
@@ -89,7 +89,7 @@ export function SmartWalletNudge({
       title={dappInfo ? t('smartWallets.postSwapNudge.title.dapp') : t('smartWallets.postSwapNudge.title')}
       subtext={t('smartWallets.educationalModal.description')}
       secondaryButton={{ text: t('common.button.notNow'), onClick: handleSecondaryButtonOnClick }}
-      learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
+      learnMoreUrl={UniswapHelpUrls.articles.smartWalletDelegation}
       modalName={ModalName.SmartWalletNudge}
       primaryButton={{ text: t('smartWallets.postSwapNudge.enable'), onClick: handlePrimaryButtonOnClick }}
       onClose={onClose}

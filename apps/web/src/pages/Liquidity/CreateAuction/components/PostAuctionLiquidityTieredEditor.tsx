@@ -3,9 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, TouchableArea, type GetRef } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { X } from 'ui/src/components/icons/X'
-import { type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
-import { MAX_POST_AUCTION_LIQUIDITY_TIERS, type PostAuctionLiquidityTier } from '~/pages/Liquidity/CreateAuction/types'
 import {
+  type InputCurrency,
+  MAX_POST_AUCTION_LIQUIDITY_TIERS,
+  type PostAuctionLiquidityTier,
+} from '~/pages/Liquidity/CreateAuction/types'
+import {
+  clampPostAuctionLiquidityTierPercent,
   formatArithmeticResultForInput,
   formatCompactNumberDisplay,
   formatCompactNumberInput,
@@ -146,10 +150,15 @@ const PercentInput = forwardRef(function PercentInput(
   ref: React.ForwardedRef<TierInputRef>,
 ) {
   const [percentInput, setPercentInput] = useState(percent.toString())
+  const [isFocused, setIsFocused] = useState(false)
 
+  // Don't overwrite in-progress typing; the prop re-syncs on blur and while the field is unfocused.
   useEffect(() => {
+    if (isFocused) {
+      return
+    }
     setPercentInput(percent.toString())
-  }, [percent])
+  }, [percent, isFocused])
 
   return (
     <>
@@ -157,25 +166,30 @@ const PercentInput = forwardRef(function PercentInput(
         ref={ref}
         unstyled
         value={percentInput}
+        onFocus={() => setIsFocused(true)}
         onChangeText={(value) => {
           if (!isValidPartialPercentInput(value)) {
             return
           }
 
           setPercentInput(value)
+          // Propagate only values already within range (clamp is a no-op); clamping is deferred
+          // to blur so partial entries (e.g. "5" en route to "50") aren't snapped mid-typing.
           const parsed = Number(value)
-          if (Number.isFinite(parsed) && parsed > 0) {
+          if (Number.isFinite(parsed) && clampPostAuctionLiquidityTierPercent(parsed) === parsed) {
             onUpdatePercent(parsed)
           }
         }}
         onBlur={() => {
+          setIsFocused(false)
           const parsed = Number(percentInput)
           if (!Number.isFinite(parsed) || parsed <= 0) {
             setPercentInput(percent.toString())
             return
           }
-          setPercentInput(parsed.toString())
-          onUpdatePercent(parsed)
+          const clamped = clampPostAuctionLiquidityTierPercent(parsed)
+          setPercentInput(clamped.toString())
+          onUpdatePercent(clamped)
         }}
         placeholder="25"
         placeholderTextColor="$neutral3"

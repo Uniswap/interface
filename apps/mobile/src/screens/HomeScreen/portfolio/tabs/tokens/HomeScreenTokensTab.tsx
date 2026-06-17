@@ -3,14 +3,13 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ViewStyle } from 'react-native'
 import { View } from 'react-native'
-import { FadeInDown, FadeOut, runOnJS, useAnimatedReaction } from 'react-native-reanimated'
+import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import type { SharedValue } from 'react-native-reanimated'
 import { TokenBalanceItemRow } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { useRafCoalescedScrollWindow } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useRafCoalescedScrollWindow'
+import { useScrollWindow } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useScrollWindow'
 import { useWalletTabEmptyStyle } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useWalletTabEmptyStyle'
 import { TabMeasuredLayout } from 'src/screens/HomeScreen/portfolio/tabs/common/TabMeasuredLayout'
 import { WalletPortfolioEmptyState } from 'src/screens/HomeScreen/portfolio/tabs/tokens/empty/WalletPortfolioEmptyState'
-import type { ScrollWindowRange } from 'src/screens/HomeScreen/portfolio/types'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -21,8 +20,6 @@ import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/Token
 import { isHiddenTokenBalancesRow, type TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { noop } from 'utilities/src/react/noop'
 
-/** Off-viewport buffer (dp) for Tokens tab scroll windowing. */
-const TOKEN_DRAW_DISTANCE = 1500
 type TokenRowDescriptor =
   | { kind: 'token'; rowId: TokenBalanceListRow }
   /** `HIDDEN_TOKEN_BALANCES_ROW` divider - variable height, always rendered. */
@@ -60,37 +57,13 @@ export const HomeScreenTokensTab = memo(function HomeScreenTokensTabInner({
     [tokenRows],
   )
 
-  const numRows = rowDescriptors.length
-  const initialEnd = Math.min(
-    numRows - 1,
-    Math.ceil((viewportHeight + TOKEN_DRAW_DISTANCE) / TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT) + 1,
-  )
-  const firstWindowEnd = Math.max(0, initialEnd)
-  const initialVisibleRange = useMemo(
-    (): ScrollWindowRange => ({
-      start: 0,
-      end: firstWindowEnd,
-    }),
-    [firstWindowEnd],
-  )
-  const [visibleRange, scheduleVisibleRange] = useRafCoalescedScrollWindow(initialVisibleRange)
-
-  useAnimatedReaction(
-    () => {
-      const scrollY = feedScrollValue.value
-      const relStart = scrollY - bodyOffsetY - TOKEN_DRAW_DISTANCE
-      const relEnd = scrollY - bodyOffsetY + viewportHeight + TOKEN_DRAW_DISTANCE
-      const start = Math.max(0, Math.floor(relStart / TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT))
-      const end = Math.max(0, Math.min(numRows - 1, Math.floor(relEnd / TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT)))
-      return { start, end }
-    },
-    (range, prev) => {
-      if (!prev || range.start !== prev.start || range.end !== prev.end) {
-        runOnJS(scheduleVisibleRange)(range)
-      }
-    },
-    [numRows, bodyOffsetY, viewportHeight, scheduleVisibleRange],
-  )
+  const isRowVisible = useScrollWindow({
+    feedScrollValue,
+    viewportHeight,
+    bodyOffsetY,
+    numRows: rowDescriptors.length,
+    rowHeight: TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT,
+  })
 
   return (
     <TabMeasuredLayout testID={testID} onHeightChange={onHeightChange}>
@@ -100,8 +73,7 @@ export const HomeScreenTokensTab = memo(function HomeScreenTokensTabInner({
           if (row.kind === 'special') {
             return <TokenBalanceItemRow key={row.rowId} item={row.rowId} />
           }
-          const isVisible = i <= firstWindowEnd || (i >= visibleRange.start && i <= visibleRange.end)
-          if (!isVisible) {
+          if (!isRowVisible(i)) {
             return <View key={row.rowId} style={tokenPlaceholderStyle} />
           }
           return <TokenBalanceItemRow key={row.rowId} item={row.rowId} />

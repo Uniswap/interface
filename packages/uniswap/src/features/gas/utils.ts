@@ -25,7 +25,11 @@ import {
   NORMAL_GAS_STRATEGY,
   URGENT_GAS_STRATEGY,
 } from 'uniswap/src/features/gas/consts'
-import { hasSufficientFundsIncludingTempoGas } from 'uniswap/src/features/gas/tempo'
+import {
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+  hasSufficientFundsIncludingShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
 import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -133,11 +137,12 @@ export function hasSufficientGasBalance({
   if (!gasFee || !gasBalance) {
     return true
   }
-  if (chainId === UniverseChainId.Tempo) {
-    return hasSufficientFundsIncludingTempoGas({
-      pathUsdBalance: gasBalance,
+  if (hasShiftedGasToken(chainId)) {
+    return hasSufficientFundsIncludingShiftedGasToken({
+      gasTokenBalance: gasBalance,
       gasFee,
-      pathUsdTransactionAmount: gasTokenTransactionAmount,
+      gasTokenTransactionAmount,
+      decimalShift: getGasFeeDecimalsShift(chainId),
     })
   }
   return hasSufficientFundsIncludingGas({

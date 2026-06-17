@@ -28,7 +28,6 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
   const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChainInfo.backendChain.chain) : tokenAddress
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const rwaCoinGeckoDataEnabled = useFeatureFlag(FeatureFlags.RWACoinGeckoData)
 
   // Split query: this lightweight metadata query (no market fields, so no ClickHouse/Aurora) gates
@@ -45,7 +44,7 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     variables: {
       address: tokenDBAddress,
       chain: currencyChainInfo.backendChain.chain,
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
       // Fetch project market fields whenever the data flag is on so RWA consumers can opt in
       // after matching without a second token query waterfall.
       preferProjectMarketData: rwaCoinGeckoDataEnabled,

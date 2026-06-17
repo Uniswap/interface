@@ -21,7 +21,7 @@ import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
@@ -147,7 +147,7 @@ export function BridgedAssetModal({
   }, [isOpen])
 
   const onPressGetHelp = async (): Promise<void> => {
-    await openUri({ uri: uniswapUrls.helpArticleUrls.bridgedAssets })
+    await openUri({ uri: UniswapHelpUrls.articles.bridgedAssets })
     onClose()
   }
 

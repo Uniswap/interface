@@ -51,7 +51,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.75.0'
+const BASE_VERSION = '1.76.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -128,9 +128,9 @@ export default defineConfig({
         }
       }
     },
-    // Post-process generated manifest to add content_script `id` fields and ensure parity
-    // with the legacy webpack-generated manifest. WXT's `defineContentScript()` doesn't
-    // expose an `id` option (as of 0.20.x), so we inject it here based on the js filename.
+    // Post-process generated manifest to add content_script `id` fields. WXT's
+    // `defineContentScript()` doesn't expose an `id` option (as of 0.20.x), so we inject
+    // it here based on the js filename.
     // See https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#id
     'build:manifestGenerated': (_wxt, manifest) => {
       if (!manifest.content_scripts) {
@@ -281,9 +281,9 @@ export default defineConfig({
       // (monorepo-root .env / .env.defaults / etc.) are ignored.
       envVars = parseEnvFile(NEW_ENV_PATH)
     } else {
-      // Load ALL env variables (including those without VITE_ prefix). Matches webpack's
-      // DotenvPlugin behavior: read the monorepo-root `.env` (user-provided) AND the
-      // monorepo-root `.env.defaults` (checked-in defaults), with `.env` taking precedence.
+      // Load ALL env variables (including those without VITE_ prefix): read the
+      // monorepo-root `.env` (user-provided) AND the monorepo-root `.env.defaults`
+      // (checked-in defaults), with `.env` taking precedence.
       // Vite only reads from one directory per call and doesn't know about `.env.defaults`,
       // so we do both loads and merge.
       const monorepoRoot = path.resolve(import.meta.dirname, '../..')
@@ -339,12 +339,9 @@ export default defineConfig({
       // to `i.BigInt(0)` where `i` is the namespace without the static methods — runtime
       // TypeError in the service worker at module evaluation time.
       jsbi: path.resolve(__dirname, 'src/shims/jsbi.mjs'),
-      // Vite-only override: route the hashcash worker helper to a `?worker`-based
-      // variant. Vite's `new Worker(new URL(...))` detection doesn't fire when the URL
-      // escapes the Vite root (apps/extension → packages/sessions), so we use the
-      // `?worker` query instead. Webpack doesn't read this alias and falls through
-      // to `src/workers/hashcashWorker.ts` (which uses `new URL()` — webpack handles
-      // it correctly regardless of cross-package path).
+      // Route the hashcash worker helper to a `?worker`-based variant. Vite's
+      // `new Worker(new URL(...))` detection doesn't fire when the URL escapes the Vite
+      // root (apps/extension → packages/sessions), so the `?worker` query is used instead.
       'src/workers/hashcashWorker': path.resolve(__dirname, 'src/workers/hashcashWorker.vite'),
       // Dynamically load all monorepo package aliases from tsconfig.base.json
       ...getTsconfigAliases(),
@@ -551,7 +548,7 @@ export default defineConfig({
   // Development server configuration
   dev: {
     server: {
-      port: 9998, // Different from webpack (9997) to avoid conflicts
+      port: 9998,
     },
   },
 

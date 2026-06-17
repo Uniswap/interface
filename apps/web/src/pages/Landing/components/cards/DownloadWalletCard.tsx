@@ -3,7 +3,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Star } from 'ui/src/components/icons/Star'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
 import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
 import { Wallet } from '~/pages/Landing/components/Icons'
@@ -30,7 +30,7 @@ export function DownloadWalletCard() {
 
   return (
     <ValuePropCard
-      href={uniswapUrls.downloadWalletUrl}
+      href={UniswapStaticUrls.downloadWalletUrl}
       minHeight={500}
       color="$accent1"
       backgroundColor="rgba(252, 114, 255, 0.12)"

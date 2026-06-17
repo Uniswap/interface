@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
@@ -35,10 +34,9 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 
   const { currencyId } = useTokenDetailsContext()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
-  const isMultichainToken = multichainTokenUxEnabled && isMultichainProjectTokens(project?.tokens)
+  const isMultichainToken = isMultichainProjectTokens(project?.tokens)
 
   const logo = project?.logoUrl ?? undefined
   const symbol = token.symbol
@@ -76,9 +74,8 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   } = useTokenDetailsContext()
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
-  const isMultichainToken = multichainTokenUxEnabled && (project?.tokens?.length ?? 0) > 1
+  const isMultichainToken = (project?.tokens?.length ?? 0) > 1
 
   const openReportTokenModal = useEvent(() => {
     setTimeout(() => {

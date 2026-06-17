@@ -1,14 +1,10 @@
 /**
- * Vite-specific variant of the hashcash Web Worker factory. Used ONLY by WXT/Vite
- * builds via an alias override in `wxt.config.ts`. Webpack is unaware of this file
- * and falls through to `hashcashWorker.ts` (which uses the `new Worker(new URL())`
- * pattern that webpack handles correctly).
+ * WXT/Vite production variant of the hashcash Web Worker factory. The alias in
+ * `wxt.config.ts` routes `src/workers/hashcashWorker` here for Vite builds.
  *
- * Why two files: Vite's `new Worker(new URL(literal, import.meta.url))` detection
- * does not fire when the URL path escapes the Vite root (here, crossing from
- * `apps/extension/` into `packages/sessions/`). Vite's `?worker` URL query is an
- * explicit signal that bypasses that restriction, but it's Vite-only syntax that
- * webpack would silently strip and then mis-handle as a regular import.
+ * Uses Vite's `?worker` query, which bundles the worker even though its source escapes
+ * the Vite root (crossing from `apps/extension/` into `packages/sessions/`). The plain
+ * `new Worker(new URL())` variant in `hashcashWorker.ts` does not bundle correctly here.
  */
 
 // oxlint-disable-next-line import/default -- Vite ?worker virtual module; linter can't resolve the default export

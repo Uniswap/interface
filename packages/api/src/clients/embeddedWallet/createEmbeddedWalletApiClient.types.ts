@@ -60,7 +60,7 @@ export interface EmbeddedWalletClientContext {
     setupRecovery: (req: Record<string, unknown>) => Promise<SetupRecoveryResponse>
     executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
     reportDecryptionResult: (req: Record<string, unknown>) => Promise<ReportDecryptionResultResponse>
-    getRecoveryConfig: (req: Record<string, unknown>) => Promise<GetRecoveryConfigResponse>
+    getRecoveryConfig: (req: Record<string, unknown>, options?: CallOptions) => Promise<GetRecoveryConfigResponse>
     deleteRecovery: (req: Record<string, unknown>) => Promise<DeleteRecoveryResponse>
     sign7702Authorization: (req: Record<string, unknown>) => Promise<Sign7702AuthorizationResponse>
     sign7702Transaction: (req: Record<string, unknown>) => Promise<Sign7702TransactionResponse>
@@ -191,7 +191,7 @@ export interface EmbeddedWalletApiClient {
     // generate an export signing payload instead of a passkey-registration payload.
     encryptionKey?: string
   }) => Promise<ReportDecryptionResultResponse>
-  fetchGetRecoveryConfig: (params: { authMethodId: string }) => Promise<GetRecoveryConfigResponse>
+  fetchGetRecoveryConfig: (params: { authMethodId: string }, accessToken: string) => Promise<GetRecoveryConfigResponse>
   fetchDeleteRecovery: (params: { credential: string }) => Promise<DeleteRecoveryResponse>
   fetchExportSeedPhraseWithRecovery: (params: {
     authMethodId: string

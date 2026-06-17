@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { RankedRwaExploreCategory } from '~/pages/Explore/categories/exploreRwaCategory'
 
 function DisclaimerLearnMoreLink(): JSX.Element {
@@ -8,7 +8,7 @@ function DisclaimerLearnMoreLink(): JSX.Element {
 
   return (
     <Anchor
-      href={uniswapUrls.helpArticleUrls.rwaExploreDisclaimer}
+      href={UniswapHelpUrls.articles.rwaExploreDisclaimer}
       target="_blank"
       rel="noopener noreferrer"
       textDecorationLine="none"

@@ -87,7 +87,7 @@ export function YouNeedTokenView({
             fontWeight="$medium"
             cursor="pointer"
             onPress={() => {
-              // TODO(CONS-1781): link "Learn more" to uniswapUrls.helpArticleUrls.earn once the article exists.
+              // TODO(CONS-1781): link "Learn more" to UniswapHelpUrls.articles.earn once the article exists.
             }}
           >
             {t('common.button.learn')}

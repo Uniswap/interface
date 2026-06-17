@@ -12,7 +12,7 @@ export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewa
   const showAprBreakdown = rewardsApr !== undefined && rewardsApr > 0
   const totalApr = rewardsApr
     ? formatPercent(calculateTotalApr(poolApr, rewardsApr).toSignificant(), 2)
-    : `${poolApr.toFixed(2)}%`
+    : formatPercent(poolApr.toSignificant(), 2)
 
   return (
     <Flex

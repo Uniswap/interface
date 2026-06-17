@@ -6,14 +6,21 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { isAddress } from '~/chains'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { isAddress, zeroAddress } from '~/chains'
 import { BIPS_BASE } from '~/constants/misc'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { getAuctionCreateAnalyticsProperties } from '~/pages/Liquidity/CreateAuction/analytics'
+import { LaunchAuctionErrorModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionErrorModal'
+import { LaunchAuctionReviewModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionReviewModal'
+import { LaunchAuctionSuccessModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionSuccessModal'
 import { ReviewCustomPriceRangeExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewCustomPriceRangeExpandable'
 import { ReviewLaunchAuctionDetailsSection } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchAuctionDetailsSection'
 import {
@@ -25,7 +32,9 @@ import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useCreateAuctionSubmit } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import { useLaunchAuctionFlow } from '~/pages/Liquidity/CreateAuction/hooks/useLaunchAuctionFlow'
 import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import {
   CreateAuctionStep,
@@ -34,6 +43,7 @@ import {
   TimeLockPreset,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
+import { resolveTokenImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveTokenImageSrc'
 
 // oxlint-disable-next-line complexity
 export function ReviewLaunchStep(): JSX.Element | null {
@@ -43,8 +53,10 @@ export function ReviewLaunchStep(): JSX.Element | null {
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
+  const xVerification = useCreateAuctionStore((state) => state.xVerification)
   const { setStep } = useCreateAuctionStoreActions()
   const activeAddress = useActiveAddress(Platform.EVM)
+  const { evmAccount } = useWallet()
 
   const handleEditTokenInfo = useCallback(() => setStep(CreateAuctionStep.ADD_TOKEN_INFO), [setStep])
   const handleEditAuctionConfig = useCallback(() => setStep(CreateAuctionStep.CONFIGURE_AUCTION), [setStep])
@@ -134,6 +146,55 @@ export function ReviewLaunchStep(): JSX.Element | null {
     return t('toucan.createAuction.step.customizePool.priceRange.fullRange')
   })()
 
+  const currencyAddress =
+    configureAuction.raiseCurrency === RaiseCurrency.ETH ? zeroAddress : getChainInfo(chainId).tokens.USDC?.address
+
+  const launchSubmit = useCreateAuctionSubmit({
+    tokenForm,
+    configureAuction,
+    customizePool,
+    walletAddress: activeAddress ?? undefined,
+    currencyAddress,
+    xVerificationToken: xVerification?.xVerificationToken,
+  })
+
+  const trace = useTrace()
+  const getLaunchAnalyticsProperties = useEvent(
+    (addresses: { predictedAuctionAddress: string; predictedTokenAddress: string }) =>
+      getAuctionCreateAnalyticsProperties({
+        trace,
+        chainId,
+        tokenMode: tokenForm.mode,
+        tokenSymbol,
+        configureAuction,
+        customizePool,
+        raiseCurrencyAddress: currencyAddress,
+        raiseUsdPrice: stableRaiseUsdPrice,
+        maxFdv: fdv,
+        ...addresses,
+      }),
+  )
+
+  // Raw form name (no display placeholder) and a persistence-safe logo URL: the gateway URL
+  // outlives the session and survives a reload, unlike the `blob:` preview the review section uses.
+  const launchTokenName =
+    (tokenForm.mode === TokenMode.CREATE_NEW ? tokenForm.name : tokenForm.existingTokenCurrencyInfo?.currency.name) ||
+    undefined
+  const launchTokenLogoUrl =
+    tokenForm.mode === TokenMode.CREATE_NEW
+      ? resolveTokenImageSrc(tokenForm.imageUrl)
+      : (tokenForm.existingTokenCurrencyInfo?.logoUrl ?? undefined)
+
+  const launchFlow = useLaunchAuctionFlow({
+    evmAccount,
+    chainId,
+    getLaunchAnalyticsProperties,
+    launchSubmit,
+    tokenName: launchTokenName,
+    tokenSymbol: tokenSymbol || undefined,
+    tokenLogoUrl: launchTokenLogoUrl,
+  })
+
   if (!committed || !raiseCurrencyInfo) {
     return null
   }
@@ -147,7 +208,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
           tokenSymbol={tokenSymbol}
           description={tokenForm.description}
           xProfile={tokenForm.xProfile}
-          websiteLink={tokenForm.websiteLink}
+          websiteLink={tokenForm.mode === TokenMode.EXISTING ? tokenForm.websiteLink : undefined}
           onEditTokenInfo={handleEditTokenInfo}
         />
 
@@ -227,11 +288,57 @@ export function ReviewLaunchStep(): JSX.Element | null {
         </Flex>
       </Flex>
 
-      <Flex row>
-        <Button size="large" emphasis="primary" isDisabled fill backgroundColor={tokenColor}>
-          {t('toucan.createAuction.launchAuction')}
-        </Button>
+      <Flex gap="$spacing8">
+        <Flex row>
+          <Button
+            size="large"
+            emphasis="primary"
+            isDisabled={launchSubmit.isDisabled}
+            fill
+            backgroundColor={launchSubmit.isDisabled ? undefined : tokenColor}
+            onPress={launchFlow.openReviewModal}
+          >
+            {t('toucan.createAuction.launchAuction')}
+          </Button>
+        </Flex>
       </Flex>
+
+      <LaunchAuctionReviewModal
+        isOpen={launchFlow.isReviewModalVisible}
+        onClose={launchFlow.closeReviewModal}
+        tokenName={tokenName}
+        tokenSymbol={tokenSymbol}
+        description={tokenForm.description}
+        isNewToken={tokenForm.mode === TokenMode.CREATE_NEW}
+        committed={committed}
+        startTime={configureAuction.startTime}
+        endTime={configureAuction.endTime}
+        feeTierDisplay={feeTierDisplay}
+        raiseCurrencySymbol={configureAuction.raiseCurrency}
+        tokenColor={tokenColor}
+        progressSteps={launchFlow.progressSteps}
+        currentProgressStepIndex={launchFlow.currentProgressStepIndex}
+        currentStepPending={launchFlow.currentStepPending}
+        isLaunching={launchFlow.isLaunching}
+        onLaunchToken={launchFlow.handleLaunchToken}
+      />
+
+      <LaunchAuctionErrorModal
+        isOpen={launchFlow.isErrorModalOpen}
+        tokenSymbol={tokenSymbol}
+        error={launchFlow.launchError}
+        onClose={launchFlow.handleCloseErrorModal}
+        onRetry={launchFlow.handleRetry}
+      />
+
+      <LaunchAuctionSuccessModal
+        isOpen={launchFlow.isSuccessModalOpen}
+        tokenSymbol={tokenSymbol}
+        chainId={chainId}
+        launchHash={launchFlow.launchSuccess?.hash}
+        onClose={launchFlow.handleCloseSuccessModal}
+        onViewAuction={launchFlow.handleViewAuction}
+      />
     </Flex>
   )
 }

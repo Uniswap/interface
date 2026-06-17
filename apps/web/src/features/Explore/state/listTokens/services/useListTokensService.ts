@@ -1,5 +1,4 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { dataApiServiceClient, type ListTokensParams } from 'uniswap/src/data/apiClients/dataApiService/listTokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -31,7 +30,6 @@ export function useListTokensService(
   const effectiveOptions = getEffectiveListTokensOptions(options)
   const { chains: enabledChainIds } = useEnabledChains()
   const backendSorting = useExploreBackendSortingEnabled()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const chainIds = useMemo(() => (chainId !== undefined ? [chainId] : enabledChainIds), [chainId, enabledChainIds])
 
@@ -56,14 +54,14 @@ export function useListTokensService(
     [chainIds, optionsKeySegment, backendSorting],
   )
   const legacyQueryKey = useMemo(
-    () => ['topTokens', 'legacy', { multichain: multichainTokenUxEnabled }, chainIds, ...optionsKeySegment] as const,
-    [chainIds, multichainTokenUxEnabled, optionsKeySegment],
+    () => ['topTokens', 'legacy', { multichain: true }, chainIds, ...optionsKeySegment] as const,
+    [chainIds, optionsKeySegment],
   )
 
   const legacyResult = useTopTokensLegacy({
     enabled: !backendSorting,
     options: effectiveOptions,
-    multichain: multichainTokenUxEnabled,
+    multichain: true,
   })
   const getTokenStats = useEvent(() => legacyResult.topTokens)
 

@@ -1,4 +1,5 @@
 import { OnchainItemListOptionType, type RwaCollectionOption } from 'uniswap/src/components/lists/items/types'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { resolveRwaIssuerDisplay } from 'uniswap/src/data/rest/rwa/resolveRwaIssuerDisplay'
 import {
   PREFERRED_RWA_CHAIN_ID,
@@ -7,7 +8,6 @@ import {
   type Rwa,
 } from 'uniswap/src/data/rest/rwa/types'
 import { getExpandableSearchRowHeightPx } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
-import { normalizeRWAAddress } from 'uniswap/src/features/rwa/rwaMatch'
 
 export type RwaSearchIndexEntry = { rwa: Rwa; issuer: IssuerToken }
 export type RwaSearchIndex = { rwas: Rwa[]; byChainAddress: Map<string, RwaSearchIndexEntry> }
@@ -15,7 +15,7 @@ export type RwaSearchIndex = { rwas: Rwa[]; byChainAddress: Map<string, RwaSearc
 const EMPTY_SPARKLINE = { points: [] }
 
 function indexKey(chainId: number, address: string): string {
-  return `${chainId}:${normalizeRWAAddress(address)}`
+  return `${chainId}:${normalizeTokenAddressForCache(address)}`
 }
 
 /** Builds a canonical `Rwa` from a `ListRwas` asset. Metric fields are zeroed: the search/identity

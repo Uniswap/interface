@@ -49,12 +49,12 @@ describe('useUSDCPrice', () => {
   beforeEach(() => {
     mocks.usePrice.mockReset()
     mocks.useTrade.mockReset()
-    mocks.usePrice.mockReturnValue(undefined)
+    mocks.usePrice.mockReturnValue({ price: undefined, isLoading: false })
     mocks.useTrade.mockReturnValue({ trade: undefined, isLoading: false })
   })
 
   it('uses remote price service for supported EVM chains', () => {
-    mocks.usePrice.mockReturnValue(2)
+    mocks.usePrice.mockReturnValue({ price: 2, isLoading: false })
 
     const { result } = renderHook(() => useUSDCPrice(MAINNET_TOKEN))
 
@@ -74,7 +74,7 @@ describe('useUSDCPrice', () => {
   })
 
   it('uses the Solana quote fallback for Solana currencies', () => {
-    mocks.usePrice.mockReturnValue(999)
+    mocks.usePrice.mockReturnValue({ price: 999, isLoading: false })
     mocks.useTrade.mockReturnValue({
       trade: {
         routing: TradingApi.Routing.JUPITER,
@@ -127,10 +127,26 @@ describe('useUSDCPrice', () => {
   })
 
   it('keeps tiny remote prices instead of truncating them to zero', () => {
-    mocks.usePrice.mockReturnValue(0.00000001)
+    mocks.usePrice.mockReturnValue({ price: 0.00000001, isLoading: false })
 
     const { result } = renderHook(() => useUSDCPrice(MAINNET_TOKEN))
 
     expect(result.current.price).toBeDefined()
+  })
+
+  it('reports loading while the remote price lookup is still in flight', () => {
+    mocks.usePrice.mockReturnValue({ price: undefined, isLoading: true })
+
+    const { result } = renderHook(() => useUSDCPrice(MAINNET_TOKEN))
+
+    expect(result.current).toEqual({ price: undefined, isLoading: true })
+  })
+
+  it('reports settled (not loading) when the remote lookup completes with no price', () => {
+    mocks.usePrice.mockReturnValue({ price: undefined, isLoading: false })
+
+    const { result } = renderHook(() => useUSDCPrice(MAINNET_TOKEN))
+
+    expect(result.current).toEqual({ price: undefined, isLoading: false })
   })
 })

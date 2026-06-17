@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { formatUnits, parseUnits } from '~/chains'
 import { SimulationChart } from '~/features/Toucan/Auction/ActivityTimeline/SimulationTab/SimulationChart'
 import { computeSimulationResult } from '~/features/Toucan/Auction/ActivityTimeline/SimulationTab/utils/computeSimulationResult'
@@ -128,7 +128,7 @@ export function HowItWorksTab() {
     <Flex px="$spacing24" pb="$spacing24" gap="$spacing16">
       <Text variant="body2" color="$neutral1">
         {t('toucan.simulation.description')}{' '}
-        <ExternalLink href={uniswapUrls.helpArticleUrls.toucanBidHelp} style={{ textDecoration: 'none' }}>
+        <ExternalLink href={UniswapHelpUrls.articles.toucanBidHelp} style={{ textDecoration: 'none' }}>
           <Text variant="body2" color="$neutral2">
             {t('common.button.learn')}
           </Text>

@@ -2,8 +2,8 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { useBidConfirmModalState } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidConfirmModalState'
 import { PreparedBidTransaction } from '~/features/Toucan/Auction/hooks/useBidFormSubmit'
-import { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
+import { PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 
 describe('useBidConfirmModalState', () => {
   it('submits via onSubmit and enters pending state', async () => {

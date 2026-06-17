@@ -1,13 +1,16 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { GQLQueries, GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { FeatureFlags } from '@universe/gating'
 import React, { memo, useEffect, useMemo } from 'react'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { useIsInModal } from 'src/components/modals/useIsInModal'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
+import { MoreRwaTokens } from 'src/components/TokenDetails/rwa/MoreRwaTokens'
+import { OffHoursMarketWarning } from 'src/components/TokenDetails/rwa/OffHoursMarketWarning'
+import { OtherStocks } from 'src/components/TokenDetails/rwa/OtherStocks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBridgedAssetSection } from 'src/components/TokenDetails/TokenDetailsBridgedAssetSection'
 import { TokenDetailsContextProvider, useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
@@ -19,10 +22,11 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import { TokenPerformance } from 'src/components/TokenDetails/TokenPerformance'
 import { useMobileTokenDetailsEarnData } from 'src/components/TokenDetails/useMobileTokenDetailsEarnData'
 import { useTokenDetailsCrossChainBalances } from 'src/components/TokenDetails/useTokenDetailsCrossChainBalances'
+import { useGatedTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { TokenDetailsActionButtonsWrapper } from 'src/screens/TokenDetailsScreen/TokenDetailsActionButtonsWrapper'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsScreen/TokenDetailsHeaders'
 import { TokenDetailsModals } from 'src/screens/TokenDetailsScreen/TokenDetailsModals'
-import { Flex, Separator } from 'ui/src'
+import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -32,6 +36,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -61,7 +66,6 @@ function TokenDetailsWrapper(): JSX.Element {
   const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
   const { data: token } = useTokenBasicInfoPartsFragment({ currencyId })
   const { data: projectParts } = useTokenBasicProjectPartsFragment({ currencyId })
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   // Combine the navigator-provided hint with the project-derived signal so the
   // first analytics impression carries the correct value even when the project
   // fragment hasn't resolved yet.
@@ -72,10 +76,18 @@ function TokenDetailsWrapper(): JSX.Element {
       chain: chainId,
       address,
       currencyName: token.name,
-      ...(multichainTokenUxEnabled ? { multichain: isMultichainAsset } : {}),
+      multichain: isMultichainAsset,
     }),
-    [address, chainId, isMultichainAsset, multichainTokenUxEnabled, token.name],
+    [address, chainId, isMultichainAsset, token.name],
   )
+
+  const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
+  useLogRWATokenDetailsViewed({
+    rwaMatch,
+    tokenAddress: address,
+    tokenSymbol: token.symbol,
+    chainId,
+  })
 
   return (
     <ReactNavigationPerformanceView interactive screenName={MobileScreens.TokenDetails}>
@@ -88,12 +100,11 @@ function TokenDetailsWrapper(): JSX.Element {
 
 const TokenDetailsQuery = memo(function TokenDetailsQueryInner(): JSX.Element {
   const { currencyId, setError } = useTokenDetailsContext()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const { error } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
     },
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
@@ -109,7 +120,6 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
   const { isContentHidden } = useDelayedRender(CONTEXT_MENU_RENDER_DELAY_MS)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const inModal = useIsInModal(MobileScreens.Explore, true)
 
@@ -128,6 +138,7 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
           <Flex gap="$spacing16">
             <TokenDetailsHeader />
             <PriceExplorer />
+            <OffHoursMarketWarning />
           </Flex>
 
           <TokenDetailsErrorCard />
@@ -142,15 +153,15 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
             {showEarn && <TokenDetailsEarnSection activeAddress={activeAddress} earnData={earnData} />}
 
             {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
-
-            {!multichainTokenUxEnabled && <Separator />}
           </Flex>
           <Flex gap="$spacing24">
             <TokenPerformance />
+            <MoreRwaTokens />
             <Flex px="$spacing16">
               <TokenDetailsStats />
             </Flex>
             <TokenDetailsLinks />
+            <OtherStocks />
           </Flex>
         </Flex>
       </HeaderScrollScreen>

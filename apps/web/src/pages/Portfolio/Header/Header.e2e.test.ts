@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { expect, getTest } from '~/playwright/fixtures'
@@ -146,7 +147,7 @@ test.describe(
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
 
         // Select Ethereum from the dropdown
-        await getVisibleDropdownElementByTestId(page, `${TestID.TokensNetworkFilterOptionPrefix}ethereum`).click()
+        await getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`).click()
 
         // URL should include chain parameter
         await expect(page).toHaveURL(/chain=ethereum/)
@@ -155,7 +156,7 @@ test.describe(
       test('should preserve chain filter across tab navigation', async ({ page }) => {
         // First set a chain filter
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        await getVisibleDropdownElementByTestId(page, `${TestID.TokensNetworkFilterOptionPrefix}ethereum`).click()
+        await getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`).click()
         await expect(page).toHaveURL(/chain=ethereum/)
 
         // Wait for tab links to re-render with chain param (usePortfolioRoutes reads searchParams; avoid clicking stale link)

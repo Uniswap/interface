@@ -35,6 +35,8 @@ function parseSuffixedAmount(input: string, currency: Currency): CurrencyAmount<
 interface AuctionSupplySelectorProps {
   auctionSupplyAmount: CurrencyAmount<Currency>
   tokenTotalSupply: CurrencyAmount<Currency>
+  /** Smallest deposit whose sold/LP split keeps both legs at >= 1 base unit; clamped to on blur. */
+  minAuctionSupplyAmount: CurrencyAmount<Currency>
   tokenSymbol: string
   onSelectPercent: (percent: number) => void
   onAmountChange: (amount: CurrencyAmount<Currency>) => void
@@ -43,6 +45,7 @@ interface AuctionSupplySelectorProps {
 export function AuctionSupplySelector({
   auctionSupplyAmount,
   tokenTotalSupply,
+  minAuctionSupplyAmount,
   tokenSymbol,
   onSelectPercent,
   onAmountChange,
@@ -124,10 +127,17 @@ export function AuctionSupplySelector({
       return
     }
 
-    // Cap to total supply on blur
-    const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
-    onAmountChange(capped)
-  }, [rawInput, currency, tokenTotalSupply, onAmountChange])
+    // Clamp into [min, totalSupply] on blur: the lower bound keeps the sold/LP split from
+    // rounding a leg to zero base units (a degenerate auction that divides by zero in the
+    // percent math); the upper bound keeps the deposit within the available supply. Raise to
+    // the min first, then cap at total supply, so the supply ceiling always wins — in the
+    // pathological case where min > totalSupply (a token with fewer base units than the
+    // minimum two-leg deposit) the result never exceeds what exists, and the step's own
+    // validation disables Continue since the deposit stays below the minimum.
+    const raised = parsed.lessThan(minAuctionSupplyAmount) ? minAuctionSupplyAmount : parsed
+    const clamped = raised.greaterThan(tokenTotalSupply) ? tokenTotalSupply : raised
+    onAmountChange(clamped)
+  }, [rawInput, currency, tokenTotalSupply, minAuctionSupplyAmount, onAmountChange])
 
   const handleSelectPercent = useCallback(
     (percent: number) => {

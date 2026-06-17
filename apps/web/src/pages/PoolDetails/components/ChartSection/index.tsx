@@ -37,6 +37,7 @@ import {
 import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import { usePDPVolumeChartData } from '~/pages/PoolDetails/components/ChartSection/hooks'
 import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY, ChartType.DEPTH] as const
@@ -255,30 +256,33 @@ export function ChartSection(props: ChartSectionProps) {
 
   return (
     <Flex data-testid="pdp-chart-container">
+      <Flex height="$spacing48" justifyContent="center" mb="$spacing24">
+        <ChartTypeToggle
+          variant="text"
+          availableOptions={availableChartOptions}
+          currentChartType={displayChartType}
+          onChartTypeChange={(c: ChartType) => {
+            if (c !== ChartType.LIQUIDITY) {
+              setZoomActions(null)
+            }
+            setChartType(c as PoolsDetailsChartType)
+          }}
+          disabledOption={disabledChartOption}
+        />
+      </Flex>
       {ChartBody}
-      <ChartActionsContainer>
-        <Flex $md={{ width: '100%' }}>
-          <ChartTypeToggle
-            availableOptions={availableChartOptions}
-            currentChartType={displayChartType}
-            onChartTypeChange={(c: ChartType) => {
-              if (c !== ChartType.LIQUIDITY) {
-                setZoomActions(null)
-              }
-              setChartType(c as PoolsDetailsChartType)
-            }}
-            disabledOption={disabledChartOption}
-          />
-        </Flex>
-        {activeQuery.chartType === ChartType.LIQUIDITY ? (
-          zoomActions ? (
+      {activeQuery.chartType === ChartType.LIQUIDITY ? (
+        zoomActions ? (
+          <ChartActionsContainer>
             <ZoomButtons
               onZoomIn={zoomActions.zoomIn}
               onZoomOut={zoomActions.zoomOut}
               onReset={zoomActions.resetView}
             />
-          ) : null
-        ) : (
+          </ChartActionsContainer>
+        ) : null
+      ) : (
+        <ChartActionsContainer>
           <Flex $md={{ width: '100%' }}>
             <SegmentedControl
               fullWidth={media.md}
@@ -293,8 +297,8 @@ export function ChartSection(props: ChartSectionProps) {
               }}
             />
           </Flex>
-        )}
-      </ChartActionsContainer>
+        </ChartActionsContainer>
+      )}
     </Flex>
   )
 }
@@ -317,6 +321,8 @@ function PriceChart({
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const locale = useCurrentLocale()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
+  const baseSymbol = unwrappedToken(baseCurrency).symbol ?? baseCurrency.symbol
+  const quoteSymbol = unwrappedToken(quoteCurrency).symbol ?? quoteCurrency.symbol
 
   const yAxisFormatter = useMemo(
     () => (price: number) => formatPriceWithSubscript({ price, locale, formatNumberOrString }),
@@ -347,11 +353,11 @@ function PriceChart({
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
-              {`1 ${baseCurrency.symbol} = ${formatPriceWithSubscript({
+              {`1 ${baseSymbol} = ${formatPriceWithSubscript({
                 price: displayValue.close,
                 locale,
                 formatNumberOrString,
-              })} ${quoteCurrency.symbol}`}
+              })} ${quoteSymbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">
               {/* the usd price is only calculated for the most recent data point so hide it when selecting a crosshair */}
@@ -359,15 +365,11 @@ function PriceChart({
                 ? '(' + convertFiatAmountFormatted(price.toSignificant(), NumberType.FiatTokenPrice) + ')'
                 : ''}
             </ChartPriceText>
+            <PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />
           </PriceDisplayContainer>
         )
         return (
-          <ChartHeader
-            value={priceDisplay}
-            additionalFields={<PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />}
-            valueFormatterType={NumberType.FiatTokenPrice}
-            time={crosshairData?.time}
-          />
+          <ChartHeader value={priceDisplay} valueFormatterType={NumberType.FiatTokenPrice} time={crosshairData?.time} />
         )
       }}
     </Chart>

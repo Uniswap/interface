@@ -41,9 +41,13 @@ type CreateNewTokenFields = {
   symbol: string
   description: string
   imageUrl: string
+  /**
+   * `blob:` URL for instant preview after file pick. Cleared after the Pinata-resolved image loads
+   * in the background so later steps keep showing the upload until the gateway URL is ready.
+   */
+  localImagePreviewUri: string
   network: UniverseChainId
   xProfile: string
-  websiteLink: string
   totalSupply: CurrencyAmount<Currency>
 }
 
@@ -59,8 +63,8 @@ export type CreateNewTokenFormState = { mode: TokenMode.CREATE_NEW } & CreateNew
 export type ExistingTokenFormState = { mode: TokenMode.EXISTING } & ExistingTokenFields
 export type TokenFormState = CreateNewTokenFormState | ExistingTokenFormState
 
-/** Default share of total token supply deposited into the auction for new tokens. */
-export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(25, 100)
+/** Default share for new tokens: auction the entire minted supply. */
+export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 
 /** Default share for existing tokens: auction the user's entire wallet balance. */
 export const DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
@@ -92,7 +96,7 @@ export enum PostAuctionLiquidityAllocationType {
 
 export const MIN_POST_AUCTION_LIQUIDITY_PERCENT = 25
 export const MAX_POST_AUCTION_LIQUIDITY_PERCENT = 100
-export const MAX_POST_AUCTION_LIQUIDITY_TIERS = 10
+export const MAX_POST_AUCTION_LIQUIDITY_TIERS = 32
 export const DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE = 100_000
 export const UNBOUNDED_TIER_ID = 'tier-unbounded'
 export const DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT = 100
@@ -195,7 +199,7 @@ export const TIMELOCK_PRESET_DURATION_DAYS: Record<Exclude<TimeLockPreset, TimeL
   [TimeLockPreset.Permanent]: 365 * 100000,
 }
 
-type CustomizePoolState = {
+export type CustomizePoolState = {
   fee: FeeData
   priceRangeStrategy: PriceRangeStrategy
   customPriceRanges: CustomPriceRangeEntry[]
@@ -261,9 +265,9 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     symbol: '',
     description: '',
     imageUrl: '',
+    localImagePreviewUri: '',
     network: UniverseChainId.Unichain,
     xProfile: '',
-    websiteLink: '',
     totalSupply: NEW_TOKEN_DEFAULT_TOTAL_SUPPLY,
   },
   configureAuction: {

@@ -34,6 +34,9 @@ export const Mocks = {
   TokenProjects: {
     token_spam: path.resolve(__dirname, '../mocks/graphql/TokenProjects/token_warning.json'),
   },
+  TokenProjectWeb: {
+    token_warning: path.resolve(__dirname, '../mocks/graphql/TokenProjectWeb/token_warning.json'),
+  },
   TokenWeb: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
     uni_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/uni_token.json'),

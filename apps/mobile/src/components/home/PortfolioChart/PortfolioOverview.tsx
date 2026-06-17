@@ -19,10 +19,9 @@ import { noop } from 'utilities/src/react/noop'
 interface PortfolioChartSectionProps {
   evmAddress: string
   chainIds: number[]
-  isPnLEnabled: boolean
 }
 
-export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: PortfolioChartSectionProps): JSX.Element {
+export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectionProps): JSX.Element {
   const chartPeriod = ChartPeriod.DAY
 
   const {
@@ -33,7 +32,6 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
     evmAddress,
     chartPeriod,
     chainIds,
-    enabled: isPnLEnabled,
   })
 
   const chartPercentChange = useMemo(() => {
@@ -57,7 +55,7 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
     portfolioTotalBalanceUSD: portfolioData?.balanceUSD,
   })
 
-  const canShowChart = isPnLEnabled && chartData.length > 0
+  const canShowChart = chartData.length > 0
 
   const openPortfolioChartDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

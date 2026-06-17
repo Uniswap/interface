@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableTextLink, useIsDarkMode } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -45,7 +45,7 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
                 <TouchableTextLink
                   onlyUseText
                   variant="buttonLabel4"
-                  link={uniswapUrls.termsOfServiceUrl}
+                  link={UniswapStaticUrls.termsOfServiceUrl}
                   target="_blank"
                   display="inline"
                   color="$neutral3"
@@ -57,7 +57,7 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
                 <TouchableTextLink
                   onlyUseText
                   variant="buttonLabel4"
-                  link={uniswapUrls.privacyPolicyUrl}
+                  link={UniswapStaticUrls.privacyPolicyUrl}
                   target="_blank"
                   display="inline"
                   color="$neutral3"

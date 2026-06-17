@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { ComplianceClientProvider } from '@universe/compliance'
 import { isDevEnv, isTestEnv, localDevDatadogEnabled } from '@universe/environment'
 import type { StatsigUser } from '@universe/gating'
 import {
@@ -58,6 +59,7 @@ import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
+import { isPrivyConfigured } from '~/hooks/useMaybePrivy'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
 import { WebNotificationServiceManager } from '~/notification-service/WebNotificationService'
@@ -233,10 +235,10 @@ function StatsigProvider({ children }: PropsWithChildren) {
 }
 
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
-  const { appId, clientId } = getPrivyConfig(false)
-  if (!appId || !clientId) {
+  if (!isPrivyConfigured()) {
     return <>{children}</>
   }
+  const { appId, clientId } = getPrivyConfig(false)
   return (
     <PrivyProvider appId={appId} clientId={clientId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
       {children}
@@ -259,52 +261,54 @@ const RootApp = (): JSX.Element => {
         <ReactRouterUrlProvider>
           <Provider store={store}>
             <QueryClientPersistProvider>
-              <NuqsAdapter>
-                <Router>
-                  <MaybePrivyProvider>
-                    <I18nextProvider i18n={i18n}>
-                      <LanguageProvider>
-                        <Web3Provider>
-                          <StatsigProvider>
-                            <WalletCapabilitiesEffects />
-                            <ExternalWalletProvider>
-                              <ConnectWalletMutationProvider>
-                                <WebAccountsStoreProvider>
-                                  <WebUniswapProvider>
-                                    <GraphqlProviders>
-                                      <LivePricesProvider>
-                                        <LocalizationContextProvider>
-                                          <BlockNumberProvider>
-                                            <Updaters />
-                                            <ThemeProvider>
-                                              <TamaguiProvider>
-                                                <PortalProvider>
-                                                  <WebNotificationServiceManager />
-                                                  <ThemedGlobalStyle />
-                                                  <App />
-                                                  {AgentationLazy && isDevEnv() && (
-                                                    <Suspense fallback={null}>
-                                                      <AgentationLazy />
-                                                    </Suspense>
-                                                  )}
-                                                </PortalProvider>
-                                              </TamaguiProvider>
-                                            </ThemeProvider>
-                                          </BlockNumberProvider>
-                                        </LocalizationContextProvider>
-                                      </LivePricesProvider>
-                                    </GraphqlProviders>
-                                  </WebUniswapProvider>
-                                </WebAccountsStoreProvider>
-                              </ConnectWalletMutationProvider>
-                            </ExternalWalletProvider>
-                          </StatsigProvider>
-                        </Web3Provider>
-                      </LanguageProvider>
-                    </I18nextProvider>
-                  </MaybePrivyProvider>
-                </Router>
-              </NuqsAdapter>
+              <ComplianceClientProvider>
+                <NuqsAdapter>
+                  <Router>
+                    <MaybePrivyProvider>
+                      <I18nextProvider i18n={i18n}>
+                        <LanguageProvider>
+                          <Web3Provider>
+                            <StatsigProvider>
+                              <WalletCapabilitiesEffects />
+                              <ExternalWalletProvider>
+                                <ConnectWalletMutationProvider>
+                                  <WebAccountsStoreProvider>
+                                    <WebUniswapProvider>
+                                      <GraphqlProviders>
+                                        <LivePricesProvider>
+                                          <LocalizationContextProvider>
+                                            <BlockNumberProvider>
+                                              <Updaters />
+                                              <ThemeProvider>
+                                                <TamaguiProvider>
+                                                  <PortalProvider>
+                                                    <WebNotificationServiceManager />
+                                                    <ThemedGlobalStyle />
+                                                    <App />
+                                                    {AgentationLazy && isDevEnv() && (
+                                                      <Suspense fallback={null}>
+                                                        <AgentationLazy />
+                                                      </Suspense>
+                                                    )}
+                                                  </PortalProvider>
+                                                </TamaguiProvider>
+                                              </ThemeProvider>
+                                            </BlockNumberProvider>
+                                          </LocalizationContextProvider>
+                                        </LivePricesProvider>
+                                      </GraphqlProviders>
+                                    </WebUniswapProvider>
+                                  </WebAccountsStoreProvider>
+                                </ConnectWalletMutationProvider>
+                              </ExternalWalletProvider>
+                            </StatsigProvider>
+                          </Web3Provider>
+                        </LanguageProvider>
+                      </I18nextProvider>
+                    </MaybePrivyProvider>
+                  </Router>
+                </NuqsAdapter>
+              </ComplianceClientProvider>
             </QueryClientPersistProvider>
           </Provider>
         </ReactRouterUrlProvider>

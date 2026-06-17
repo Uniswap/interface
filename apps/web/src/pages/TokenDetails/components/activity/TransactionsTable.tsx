@@ -4,7 +4,6 @@ import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
@@ -63,7 +62,6 @@ export function TransactionsTable({
   isMultichainView: boolean
 }) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -338,7 +336,6 @@ export function TransactionsTable({
         data={data}
         loading={allDataStillLoading}
         error={combinedError}
-        v2={multichainTokenUxEnabled}
         loadMore={loadMore}
         maxHeight={600}
         defaultPinnedColumns={['timestamp', 'swap-type']}

@@ -11,16 +11,19 @@
         "cwd": "{projectRoot}"
       }
     },
-    "build:production": {
-      "command": "webpack --node-env=production --env BUILD_ENV=prod BUILD_NUM=${BUILD_NUM:-0}",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "build:wxt": {
       "command": "wxt build",
       "options": {
         "cwd": "{projectRoot}"
+      }
+    },
+    "build:production": {
+      "command": "wxt build",
+      "options": {
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production"
+        }
       }
     },
     "check:circular": {
@@ -115,6 +118,15 @@
         "cwd": "{projectRoot}"
       }
     },
+    "start:absolute:no-browser": {
+      "command": "bun run scripts/startAbsolute.ts",
+      "options": {
+        "cwd": "{projectRoot}",
+        "env": {
+          "WXT_NO_OPEN_BROWSER": "true"
+        }
+      }
+    },
     "start:absolute:mac": {
       "command": "WXT_ABSOLUTE_OUTDIR=/Users/Shared/stretch wxt",
       "options": {
@@ -129,18 +141,6 @@
     },
     "start:absolute:linux": {
       "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start:webpack": {
-      "command": "webpack serve --config webpack.config.js",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start:webpack:absolute": {
-      "command": "webpack serve --config webpack.config.js --output-path /Users/Shared/stretch",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -181,16 +181,6 @@
       "cache": true,
       "dependsOn": ["^build", "prepare"]
     },
-    "build:e2e:webpack": {
-      "command": "webpack --node-env=production --env BUILD_ENV=dev --env BUILD_NUM=0",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "inputs": ["sourceFiles"],
-      "outputs": ["{projectRoot}/build"],
-      "cache": true,
-      "dependsOn": ["^build", "prepare"]
-    },
     "playwright:test": {
       "command": "playwright test --config=e2e/config/playwright.config.ts",
       "options": {
@@ -220,12 +210,6 @@
     "e2e:ui": {
       "command": "nx playwright:ui extension",
       "dependsOn": ["build:e2e"]
-    },
-    "diff:builds": {
-      "command": "bun run scripts/diffBuilds.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
     },
     "validate:build": {
       "command": "bun run scripts/validateBuildOutput.ts",

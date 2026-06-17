@@ -1,7 +1,7 @@
 export const TEAM = 'privy-embedded-wallet'
 
 export const PRIVY_EMBEDDED_WALLET_RUNBOOK =
-  'https://www.notion.so/uniswaplabs/embedded-wallet-305c52b2548b80fa9bc5e52b35baf684'
+  'https://www.notion.so/uniswaplabs/Privy-Embedded-Wallet-Oncall-Runbook-37bc52b2548b81afbb7bcc8b3f5200c2'
 
 export const UNIVERSE_REPO_URL = 'https://github.com/Uniswap/universe'
 
@@ -14,9 +14,27 @@ export const albTagFilter = (environment: string): string => `name:privy-wallet-
 // APM filter for trace metrics. service:privy-embedded-wallet is the registered DD service name.
 export const apmTagFilter = (environment: string): string => `service:privy-embedded-wallet,env:${environment}`
 
-// Proto service prefix for per-resource APM metric names.
-// Per-endpoint metrics are emitted as:
-//   trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService_<Endpoint>
-//   trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService_<Endpoint>.hits
-//   trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService_<Endpoint>.errors
+// Proto service prefix for per-resource handler-span APM metrics, emitted as
+//   trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService_<Endpoint>.{hits,errors}
+// The handler-span `.errors` count increments on ANY thrown error, including handled 4xx
+// (auth / origin / validation), so it is unsuitable for error-rate monitors — use the
+// web-span `webResourceName` below instead.
 export const APM_METRIC_PREFIX = 'trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService'
+
+// `resource_name` tag of the entry web span (`trace.web.request.*`) for an RPC. dd-trace
+// lowercases the resource and rewrites the "POST " prefix to "post_", e.g.
+//   POST /...EmbeddedWalletService/Challenge -> post_/...embeddedwalletservice/challenge
+// The web span is error-flagged only on 5xx, so errors scoped to this resource exclude
+// handled 4xx; the post_ prefix also scopes to POST, excluding CORS OPTIONS preflights.
+export const webResourceName = (endpoint: string): string =>
+  `post_/uniswap.privyembeddedwallet.v1.embeddedwalletservice/${endpoint.toLowerCase()}`
+
+// Denominator floor (via clamp_min) for error-RATE monitors. privy-embedded-wallet is
+// low-traffic, so at the real request count a single 5xx can exceed a percentage
+// threshold and page; computing the rate against this floor keeps a lone error under
+// the threshold while genuine bursts still page. At a 5% threshold, 20 requires 2+
+// errors to alert (tighter thresholds, e.g. Challenge's 2%, still page on one).
+export const MIN_REQUESTS_5M = 20
+
+// The ALB sees whole-service traffic (incl. OPTIONS preflights), so it floors higher.
+export const MIN_ALB_REQUESTS_5M = 30

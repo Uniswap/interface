@@ -7,7 +7,7 @@ import { ModalRegistry, ModalWrapperProps } from '~/pages/App/TopLevelModals/typ
 import { useAppSelector } from '~/state/hooks'
 import { createLazy } from '~/utils/lazyWithRetry'
 
-const AddressClaimModal = createLazy(() => import('~/components/claim/AddressClaimModal'))
+const AddressClaimModal = createLazy(() => import('~/features/claim/AddressClaimModal'))
 const ConnectedAccountBlocked = createLazy(() => import('~/components/ConnectedAccountBlocked'))
 const PendingWalletConnectionModal = createLazy(
   () => import('~/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),

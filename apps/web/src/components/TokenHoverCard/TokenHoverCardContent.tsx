@@ -17,6 +17,7 @@ const CHART_WIDTH = 240
 
 export interface TokenHoverCardContentProps {
   currencyInfo: CurrencyInfo
+  isMultichainAsset?: boolean
   price?: number | null
   pricePercentChange?: number | null
   priceAbsoluteChange?: number | null
@@ -25,10 +26,12 @@ export interface TokenHoverCardContentProps {
   isCopied?: boolean
   onCopy?: () => void
   onExpand?: () => void
+  maxWidth?: number
 }
 
 function TokenHoverCardContentInner({
   currencyInfo,
+  isMultichainAsset,
   price,
   pricePercentChange,
   priceAbsoluteChange,
@@ -37,6 +40,7 @@ function TokenHoverCardContentInner({
   isCopied = false,
   onCopy,
   onExpand,
+  maxWidth,
 }: TokenHoverCardContentProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -60,23 +64,26 @@ function TokenHoverCardContentInner({
   const lineColor = isPositive ? colors.statusSuccess.val : colors.statusCritical.val
 
   return (
-    <Flex gap="$spacing8" width={CHART_WIDTH}>
+    <Flex
+      gap="$spacing8"
+      width={maxWidth !== undefined ? Math.min(CHART_WIDTH, Math.max(0, Math.floor(maxWidth))) : CHART_WIDTH}
+    >
       {/* Token identity row */}
       <Flex row justifyContent="space-between" alignItems="center">
         <Flex row gap="$spacing8" alignItems="center" flex={1} minWidth={0}>
-          <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} />
+          <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} hideNetworkLogo={isMultichainAsset} />
           <Text variant="body2" color="$neutral2" numberOfLines={1}>
             {currencyInfo.currency.symbol}
           </Text>
         </Flex>
         <Flex row gap="$spacing8" alignItems="center">
           {onCopy && (
-            <TouchableArea hitSlop={8} hoverStyle={{ opacity: 0.7 }} onPress={onCopy}>
+            <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onCopy}>
               <AnimatableCopyIcon isCopied={isCopied} size={iconSizes.icon16} />
             </TouchableArea>
           )}
           {onExpand && (
-            <TouchableArea hitSlop={8} hoverStyle={{ opacity: 0.7 }} onPress={onExpand}>
+            <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onExpand}>
               <ArrowsExpand color="$neutral2" size={iconSizes.icon16} />
             </TouchableArea>
           )}

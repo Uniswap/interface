@@ -1,4 +1,5 @@
 import type { TransactionRequest } from '@ethersproject/providers'
+import { getEntryGatewayUrl } from '@universe/api'
 import type { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
@@ -8,6 +9,7 @@ import type { Provider } from 'wallet/src/features/transactions/executeTransacti
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
+import { createAlchemyPaymasterClient } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/paymasterClient'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type {
   DelegationType,
@@ -119,12 +121,17 @@ export function* createTransactionServices(
   let userOpService: UserOpService | undefined
 
   if (input.includeUserOpServices) {
+    const paymasterClient = createAlchemyPaymasterClient({
+      getPaymasterUrl: () => `${getEntryGatewayUrl()}/paymaster`,
+    })
+
     userOpSigner = dependencies.createBundledDelegationUserOpSignerService({
       delegationInfo,
       getAccount: () => input.account,
       getProvider,
       getViemClient,
       getSignerManager: () => signerManager,
+      getPaymasterClient: () => paymasterClient,
     })
 
     userOpService = dependencies.createUserOpService({

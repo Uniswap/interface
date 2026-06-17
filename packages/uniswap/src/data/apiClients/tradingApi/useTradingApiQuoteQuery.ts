@@ -1,6 +1,5 @@
 import { queryOptions, type UseQueryOptions } from '@tanstack/react-query'
-import { type DiscriminatedQuoteResponse, type TradingApi } from '@universe/api'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { V1_TRADING_API_PATHS, type DiscriminatedQuoteResponse, type TradingApi } from '@universe/api'
 import { type TradeRepository } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeRepository'
 import { type QuoteWithTradeAndGasEstimate } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/transformQuoteToTrade'
 import { type Logger } from 'utilities/src/logger/logger'
@@ -24,7 +23,7 @@ export function createGetTradingApiQuoteQueryOptions(ctx: {
 }): GetTradingApiQuoteQueryOptions {
   const getTradingApiQuoteQueryOptions = (params?: TradingApi.QuoteRequest): TradingApiQuoteQueryOptions => {
     return queryOptions({
-      queryKey: [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.quote, params],
+      queryKey: [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.quote, params],
       queryFn: async (): Promise<DiscriminatedQuoteResponse | null> => {
         if (!params) {
           return null

@@ -5,7 +5,7 @@ import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 
@@ -45,7 +45,7 @@ export function BestRouteTooltip(): JSX.Element | null {
       <Tooltip.Separator />
       {routingProvider.getDescription && (
         <Tooltip.Description
-          learnMoreUrl={uniswapUrls.helpArticleUrls.routingSettings}
+          learnMoreUrl={UniswapHelpUrls.articles.routingSettings}
           text={routingProvider.getDescription(t)}
         />
       )}
@@ -72,7 +72,7 @@ export function BestRouteUniswapXTooltip(): JSX.Element {
         </Tooltip.Row>
       </Tooltip.Content>
       <Tooltip.Description
-        learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo}
+        learnMoreUrl={UniswapHelpUrls.articles.uniswapXInfo}
         text={t('routing.aggregateLiquidity.uniswapx')}
       />
     </Tooltip.Outer>

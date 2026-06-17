@@ -4,6 +4,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function useNetworkFee(transactionDetails: TransactionDetails): {
@@ -25,7 +26,7 @@ export function useNetworkFee(transactionDetails: TransactionDetails): {
         ? '0'
         : undefined
 
-  return useFormattedCurrencyAmountAndUSDValue({
+  const { value, amount, hasAmount, hasUSDValue, isLoading } = useFormattedCurrencyAmountAndUSDValue({
     currency: currencyInfo?.currency,
     currencyAmountRaw,
     valueType: transactionDetails.networkFee?.valueType,
@@ -33,4 +34,16 @@ export function useNetworkFee(transactionDetails: TransactionDetails): {
     isApproximateAmount: false,
     isUniswapX: isUniswapX(transactionDetails),
   })
+
+  // USD pricing can be unavailable on newly launched chains (e.g. Robinhood);
+  // fall back to the fee token amount so the row isn't an empty dash.
+  const symbol = getSymbolDisplayText(currencyInfo?.currency.symbol)
+  const showTokenAmountFallback =
+    !isLoading && !hasUSDValue && hasAmount && transactionDetails.networkFee?.quantity != null && symbol != null
+
+  return {
+    value: showTokenAmountFallback ? `${amount} ${symbol}` : value,
+    amount,
+    isLoading,
+  }
 }

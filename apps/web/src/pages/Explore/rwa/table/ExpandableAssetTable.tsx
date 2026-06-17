@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -36,7 +35,6 @@ export function ExpandableAssetTable({
   sortMethod,
   orderDirection,
 }: ExpandableAssetTableProps): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { chains: enabledChainIds } = useEnabledChains()
 
   const showLoadingSkeleton = isLoading
@@ -45,7 +43,6 @@ export function ExpandableAssetTable({
 
   const columns = useExpandableAssetTableColumns({
     showLoadingSkeleton,
-    multichainTokenUxEnabled,
     enabledChainIds,
     enableSorting,
     sortMethod: enableSorting ? sortMethod : undefined,
@@ -61,7 +58,6 @@ export function ExpandableAssetTable({
       loading={isLoading}
       error={isError}
       loadMore={loadMore}
-      v2
       rowHeight={EXPANDABLE_ASSET_TABLE_ROW_HEIGHT}
       compactRowHeight={EXPANDABLE_ASSET_TABLE_ROW_HEIGHT}
       maxWidth={1200}

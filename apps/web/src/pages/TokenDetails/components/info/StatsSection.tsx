@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -150,7 +149,6 @@ type StatsSectionProps = {
 
 export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const effectiveCurrency = useTDPEffectiveCurrency()
 
   const { showAggregatedStats, filteredDeploymentMarket, networkFilterName, marketStatsInput } =
@@ -188,7 +186,7 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
             testID={TestID.TokenDetailsStatsTvl}
             value={tvl}
             description={
-              multichainTokenUxEnabled && networkFilterName
+              networkFilterName
                 ? t('stats.tvl.description.network', {
                     symbol: effectiveCurrency.symbol,
                     network: networkFilterName,

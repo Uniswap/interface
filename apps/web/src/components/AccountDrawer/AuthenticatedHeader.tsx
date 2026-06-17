@@ -40,11 +40,11 @@ import { DelegationMismatchModal } from '~/components/delegation/DelegationMisma
 import { StatusIcon } from '~/components/StatusIcon'
 import { ExtensionRequestMethods, useUniswapExtensionRequest } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
+import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/features/claim/hooks'
 import { useDataApiOutageModal } from '~/hooks/useDataApiOutageModal'
 import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
 import { useModalState } from '~/hooks/useModalState'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
 
 export function AuthenticatedHeader({
   evmAddress,

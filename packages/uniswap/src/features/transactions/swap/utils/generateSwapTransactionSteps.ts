@@ -12,10 +12,11 @@ import {
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { orderUniswapXSteps } from 'uniswap/src/features/transactions/swap/steps/uniswapxSteps'
 import { isValidSwapTxContext, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isUniswapX, isUserOpSwap } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): TransactionStep[] {
-  const isValidSwap = isValidSwapTxContext(txContext)
+  // Swaps with already-encoded UserOps don't happen here; they happen in separate 4337 flow
+  const isValidSwap = isValidSwapTxContext(txContext) && !isUserOpSwap(txContext)
 
   if (isValidSwap) {
     const { trade, approveTxRequest, revocationTxRequest } = txContext
@@ -38,7 +39,7 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
       const { swapRequestArgs } = txContext
       const isSponsored = txContext.trade.quote.sponsorshipInfo?.sponsored && txContext.paymasterService
 
-      if (txContext.unsigned) {
+      if (txContext.hasUnsignedPermit) {
         return orderClassicSwapSteps({
           revocation,
           approval,

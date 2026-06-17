@@ -310,8 +310,13 @@ export function createEmbeddedWalletApiClient({
     recoveryAuthSignature: string
   }): Promise<ExportSeedPhraseResponse> => rpcClient.exportSeedPhraseWithRecovery(params)
 
-  async function fetchGetRecoveryConfig(params: { authMethodId: string }): Promise<GetRecoveryConfigResponse> {
-    return await rpcClient.getRecoveryConfig(params)
+  async function fetchGetRecoveryConfig(
+    params: { authMethodId: string },
+    accessToken: string,
+  ): Promise<GetRecoveryConfigResponse> {
+    return await rpcClient.getRecoveryConfig(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
   }
 
   async function fetchDeleteRecovery({ credential }: { credential: string }): Promise<DeleteRecoveryResponse> {

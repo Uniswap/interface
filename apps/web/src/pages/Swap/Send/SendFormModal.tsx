@@ -15,10 +15,10 @@ import {
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { noop } from 'utilities/src/react/noop'
-import { SendContextProvider } from '~/features/Swap/state/send/SendContext'
-import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
+import { SwapAndLimitContext } from '~/features/Swap/state/types'
 import { useCurrency } from '~/hooks/Tokens'
 import { SendForm, SendFormProps } from '~/pages/Swap/Send/SendForm'
+import { SendContextProvider } from '~/pages/Swap/Send/state/SendContext'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 type SendFormModalProps = {

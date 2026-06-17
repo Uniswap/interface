@@ -5,6 +5,7 @@ import { NetworkError, NoResultsFound } from 'uniswap/src/components/lists/NoRes
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSectionsForSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResults'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
+import { useRwaIssuerCurrencyInfos } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
@@ -21,6 +22,7 @@ interface SearchModalResultsListProps {
   onResetFilters?: () => void
   renderedInModal: boolean
   contentContainerStyle?: ContentStyle
+  wrapTokenRow?: SearchModalListProps['wrapTokenRow']
 }
 
 function SearchModalResultsListInner({
@@ -34,6 +36,7 @@ function SearchModalResultsListInner({
   onResetFilters,
   renderedInModal,
   contentContainerStyle,
+  wrapTokenRow,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
   const isOffline = useIsOffline()
@@ -70,6 +73,10 @@ function SearchModalResultsListInner({
   const hasActiveFilters = chainFilter !== null || activeTab !== SearchTab.All
 
   const sectionsForMetrics = useMemo(() => (isOfflineWithNoData ? [] : sections), [isOfflineWithNoData, sections])
+
+  // Resolve from the RAW sections (not the offline-guarded []): the hook tolerates empty and must see the real
+  // sections to resolve the RwaCollection rows' primary-chain CurrencyInfos.
+  const rwaIssuerCurrencyInfos = useRwaIssuerCurrencyInfos({ sections })
 
   useMultichainSearchModalMetricsAnalytics({
     sections: sectionsForMetrics,
@@ -113,6 +120,8 @@ function SearchModalResultsListInner({
       }}
       renderedInModal={renderedInModal}
       contentContainerStyle={contentContainerStyle}
+      wrapTokenRow={wrapTokenRow}
+      rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
     />
   )

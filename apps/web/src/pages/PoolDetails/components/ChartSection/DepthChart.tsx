@@ -39,6 +39,7 @@ import {
   DepthTooltipBody,
   TooltipShell,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChartTooltip'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 export type { DepthChartZoomActions } from '~/pages/PoolDetails/components/ChartSection/DepthChartModel'
 
@@ -77,8 +78,10 @@ export function DepthChart({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
-  const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
+  const tokenADisplay = unwrappedToken(tokenA)
+  const tokenBDisplay = unwrappedToken(tokenB)
+  const tokenADescriptor = tokenADisplay.symbol ?? tokenADisplay.name ?? t('common.tokenA')
+  const tokenBDescriptor = tokenBDisplay.symbol ?? tokenBDisplay.name ?? t('common.tokenB')
 
   const [mirrorState, setMirrorState] = useState<TooltipUpdate | null>(null)
   const [gapState, setGapState] = useState<{ sell: TooltipUpdate; buy: TooltipUpdate } | null>(null)
@@ -244,8 +247,8 @@ export function DepthChart({
             <ChartHeader
               value={
                 <PriceDisplayContainer>
-                  <Flex row>
-                    <ChartPriceText>{`1 ${baseDescriptor} = `}</ChartPriceText>
+                  <Flex row gap="$spacing4">
+                    <ChartPriceText>{`1 ${baseDescriptor} =`}</ChartPriceText>
                     <SubscriptZeroPrice
                       variant="heading3"
                       value={displayPrice}
@@ -260,15 +263,13 @@ export function DepthChart({
                         ')'}
                     </ChartPriceText>
                   )}
+                  {priceEntries && priceEntries.length >= 2 && (
+                    <PriceChartDelta
+                      startingPrice={priceEntries[0].close}
+                      endingPrice={priceEntries[priceEntries.length - 1].close}
+                    />
+                  )}
                 </PriceDisplayContainer>
-              }
-              additionalFields={
-                priceEntries && priceEntries.length >= 2 ? (
-                  <PriceChartDelta
-                    startingPrice={priceEntries[0].close}
-                    endingPrice={priceEntries[priceEntries.length - 1].close}
-                  />
-                ) : undefined
               }
             />
           )

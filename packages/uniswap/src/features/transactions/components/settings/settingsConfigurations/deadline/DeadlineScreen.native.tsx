@@ -4,7 +4,7 @@ import { fonts, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_DEADLINE, MIN_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { DeadlineWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineWarning'
 import { useDeadlineSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/useDeadlineSettings'
 
@@ -27,7 +27,7 @@ export function DeadlineScreen(): JSX.Element {
       <Text color="$neutral2" textAlign="center" variant="body2">
         {t('swap.settings.deadline.tooltip')}
       </Text>
-      <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapDeadline} />
+      <LearnMoreLink url={UniswapHelpUrls.articles.swapDeadline} />
       <Flex gap="$spacing12">
         <Flex centered row gap="$spacing16" mt="$spacing12">
           <PlusMinusButton

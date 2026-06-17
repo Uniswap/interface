@@ -6,50 +6,40 @@
  *
  * 1. **Background-only patterns** — checked against `background.js`. These are markers
  *    that the entry-point bundle picked up something it shouldn't have (e.g. Node-only
- *    modules left externalized by Rollup/Vite, which crash the service worker at boot).
+ *    modules left externalized by Vite, which crash the service worker at boot).
  *
- * 2. **Global patterns** — checked against every emitted `.js` file. Today this catches
- *    `importScripts(` calls anywhere in the output, which is the smoking gun for the
- *    `chunks/chunks/<hash>.js` NetworkError that took down the hashcash worker on v1.73.0
- *    and v1.74.0: webpack's default `workerChunkLoading: 'import-scripts'` emits
- *    `importScripts(<relative-url>)` inside the worker chunk to load split sub-chunks,
- *    and the relative resolution from `chrome-extension://<id>/chunks/<worker-hash>.js`
- *    produces the doubled `chunks/chunks/` path. Every Web Worker in this extension is
- *    constructed with `{ type: 'module' }`, so `importScripts(` should never appear in
- *    the production output — if it does, a config regression let classic worker chunk
- *    loading back in. See PR #32666 for the original fix.
+ * 2. **Global patterns** — checked against every emitted `.js` file. Catches
+ *    `importScripts(` calls anywhere in the output. Every Web Worker in this extension is
+ *    constructed with `{ type: 'module' }`, so `importScripts(` must never appear — its
+ *    presence means classic worker chunk loading slipped back in, which fails at runtime
+ *    with a doubled `chunks/chunks/<hash>.js` NetworkError when the worker loads sub-chunks.
  *
- * The script understands three layouts via flags:
- *   --webpack   apps/extension/build/                 (webpack production output)
- *   --prod      apps/extension/.output/chrome-mv3/    (WXT production output)
- *   --dev       apps/extension/.output/chrome-mv3-dev/ (WXT dev output)
+ * The script understands two layouts via flags:
+ *   --prod   apps/extension/.output/chrome-mv3/     (WXT production output)
+ *   --dev    apps/extension/.output/chrome-mv3-dev/ (WXT dev output)
  *
  * `WXT_ABSOLUTE_OUTDIR` overrides target detection (used by `start:absolute` workflows).
- * With no flag, both WXT layouts are probed and the first one that exists is scanned.
+ * With no flag, both layouts are probed and the first one that exists is scanned.
  */
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
-const WEBPACK_PROD_DIR = 'build'
 const WXT_PROD_DIR = '.output/chrome-mv3'
 const WXT_DEV_DIR = '.output/chrome-mv3-dev'
 
 const args = process.argv.slice(2)
 const devOnly = args.includes('--dev')
 const prodOnly = args.includes('--prod')
-const webpackOnly = args.includes('--webpack')
 
 const absoluteOutDir = process.env['WXT_ABSOLUTE_OUTDIR']
 
 const dirsToCheck = absoluteOutDir
   ? [absoluteOutDir]
-  : webpackOnly
-    ? [WEBPACK_PROD_DIR]
-    : devOnly
-      ? [WXT_DEV_DIR]
-      : prodOnly
-        ? [WXT_PROD_DIR]
-        : [WXT_DEV_DIR, WXT_PROD_DIR]
+  : devOnly
+    ? [WXT_DEV_DIR]
+    : prodOnly
+      ? [WXT_PROD_DIR]
+      : [WXT_DEV_DIR, WXT_PROD_DIR]
 
 const BACKGROUND_SCRIPT = 'background.js'
 
@@ -79,11 +69,7 @@ const FORBIDDEN_PATTERNS_GLOBAL: ForbiddenPattern[] = [
       "in production with `NetworkError: Failed to execute 'importScripts' on 'WorkerGlobalScope'`",
       'because the relative URL resolves to `chrome-extension://<id>/chunks/chunks/<hash>.js` (doubled).',
       '',
-      'Fix paths to check:',
-      "  • apps/extension/webpack.config.js — `experiments.outputModule: true` and `output.workerChunkLoading: 'import'`",
-      "  • apps/extension/wxt.config.ts — `vite.worker.format: 'es'`",
-      '',
-      'See PR #32666 for the original fix and context.',
+      "Fix: ensure apps/extension/wxt.config.ts keeps `vite.worker.format: 'es'`.",
     ].join('\n'),
   },
 ]
@@ -139,7 +125,7 @@ function validateBuild(): boolean {
   }
 
   if (!buildDir) {
-    console.error('No build output found. Run `bun build:wxt` or `bun build:production` first.')
+    console.error('No build output found. Run `bun build:wxt` first.')
     process.exit(1)
   }
 

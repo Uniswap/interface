@@ -8,7 +8,7 @@ import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { EARN_DEPOSIT_SOURCE_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
+import { getEarnDepositSourceSupportedChainIds } from 'uniswap/src/features/earn/constants'
 import type {
   EarnDepositSourceOption,
   EarnDepositSourceOptionsBySupport,
@@ -350,9 +350,10 @@ export function getEarnDepositSourceOptionsBySupport(
 ): EarnDepositSourceOptionsBySupport {
   const supportedDepositSourceOptions: EarnDepositSourceOption[] = []
   const unsupportedDepositSourceOptions: EarnDepositSourceOption[] = []
+  const supportedChainIds = getEarnDepositSourceSupportedChainIds()
 
   depositSourceOptions.forEach((option) => {
-    const destination = EARN_DEPOSIT_SOURCE_SUPPORTED_CHAIN_IDS.includes(option.chainId)
+    const destination = supportedChainIds.includes(option.chainId)
       ? supportedDepositSourceOptions
       : unsupportedDepositSourceOptions
 

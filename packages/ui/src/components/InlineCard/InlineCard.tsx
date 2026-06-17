@@ -10,6 +10,7 @@ type InlineCardProps = {
   iconProps?: FlexProps
   color: ColorTokens
   backgroundColor?: ColorTokens
+  padding?: FlexProps['p']
   description: string | JSX.Element
   iconBackgroundColor?: ColorTokens
   heading?: string | JSX.Element
@@ -25,6 +26,7 @@ export function InlineCard({
   color,
   backgroundColor = '$surface2',
   iconBackgroundColor,
+  padding = '$spacing12',
   heading,
   description,
   CtaButtonIcon,
@@ -59,7 +61,7 @@ export function InlineCard({
     )
 
   return (
-    <Flex row backgroundColor={backgroundColor} borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
+    <Flex row backgroundColor={backgroundColor} borderRadius="$rounded16" gap="$spacing12" p={padding}>
       <Flex {...iconProps}>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">

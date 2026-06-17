@@ -14,6 +14,7 @@ import { Chain as WagmiChain } from 'wagmi/chains'
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
   ArbitrumOne = UniswapSDKChainId.ARBITRUM_ONE,
+  Arc = UniswapSDKChainId.ARC,
   Avalanche = UniswapSDKChainId.AVALANCHE,
   Base = UniswapSDKChainId.BASE,
   Blast = UniswapSDKChainId.BLAST,
@@ -22,6 +23,7 @@ export enum UniverseChainId {
   Monad = UniswapSDKChainId.MONAD,
   Optimism = UniswapSDKChainId.OPTIMISM,
   Polygon = UniswapSDKChainId.POLYGON,
+  Robinhood = UniswapSDKChainId.ROBINHOOD,
   Sepolia = UniswapSDKChainId.SEPOLIA,
   Soneium = UniswapSDKChainId.SONEIUM,
   Tempo = UniswapSDKChainId.TEMPO,
@@ -144,6 +146,15 @@ export interface UniverseChainInfo extends WagmiChain {
     decimals: number // 18,
     address: string // '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
   }
+  /**
+   * For chains that pay gas in a non-native ERC-20 token instead of ETH (e.g. Tempo
+   * pays gas in pathUSD, Arc in USDC). When set, this token is used as the gas token
+   * for balance checks, fee display, and max-spend reservation instead of the native
+   * currency. Gas fees are reported by the node in 18-decimal native units and shifted
+   * to this token's decimals (see features/gas/shiftedGasToken.ts). Undefined → gas is
+   * paid in the native currency (the common case).
+   */
+  readonly gasTokenOverride?: Token
   readonly gasConfig: {
     send: {
       configKey: SwapConfigKey // Dynamic config key for send transactions

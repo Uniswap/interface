@@ -1,7 +1,6 @@
 import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ScrollView } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 import type { AnimatedRef } from 'react-native-reanimated'
 import { FadeIn } from 'react-native-reanimated'
 import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-native-sortables'
@@ -20,7 +19,7 @@ const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
 type FavoriteWalletsGridProps = {
   showLoading: boolean
-  listRef: AnimatedRef<FlatList> | AnimatedRef<ScrollView>
+  listRef: AnimatedRef<ScrollView>
 }
 
 /** Renders the favorite wallets section on the Explore tab */

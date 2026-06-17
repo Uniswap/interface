@@ -8,7 +8,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, Bank, MinusCircle, PlusCircle, SendAction, SwapDotted } from 'ui/src/components/icons'
+import { ArrowDownCircle, MinusCircle, PlusCircle, SendAction, SwapDotted } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/portfolio/balances/hooks'
@@ -25,7 +25,6 @@ const MIN_BUTTON_WIDTH = 102
 
 type IconComponent =
   | typeof SwapDotted
-  | typeof Bank
   | typeof PlusCircle
   | typeof MinusCircle
   | typeof SendAction
@@ -59,7 +58,6 @@ export function HomeScreenQuickActions(): JSX.Element {
   const openReceiveModal = useOpenReceiveModal()
   const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isPortfolioZero = useIsPortfolioZero()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -103,10 +101,7 @@ export function HomeScreenQuickActions(): JSX.Element {
         })
         return
       }
-      // When multichain UX is enabled, show the interstitial sheet unless
-      // the user has zero balance (in which case go straight to FOR).
-      // Korea check is handled inside the modal and below for the direct path.
-      if (multichainTokenUxEnabled && !isPortfolioZero) {
+      if (!isPortfolioZero) {
         navigate(ModalName.FiatOnRampAction, { entry })
         return
       }
@@ -121,12 +116,11 @@ export function HomeScreenQuickActions(): JSX.Element {
         }),
       )
     },
-    [triggerHaptics, isTestnetModeEnabled, disableForKorea, multichainTokenUxEnabled, isPortfolioZero, dispatch, t],
+    [triggerHaptics, isTestnetModeEnabled, disableForKorea, isPortfolioZero, dispatch, t],
   )
 
   // PR #4621 Necessary to declare these as direct dependencies due to race
   // condition with initializing react-i18next and useMemo
-  const forLabel = t('home.label.for')
   const sendLabel = t('home.label.send')
   const receiveLabel = t('home.label.receive')
   const buyLabel = t('common.buy.label')
@@ -140,9 +134,9 @@ export function HomeScreenQuickActions(): JSX.Element {
         onPress: onPressSwap,
       },
       {
-        Icon: multichainTokenUxEnabled ? PlusCircle : Bank,
+        Icon: PlusCircle,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-        label: multichainTokenUxEnabled ? buyLabel : forLabel,
+        label: buyLabel,
         name: ElementName.Buy,
         onPress: () => onPressFORAction('onramp'),
       },
@@ -158,30 +152,15 @@ export function HomeScreenQuickActions(): JSX.Element {
         name: ElementName.Receive,
         onPress: onPressReceive,
       },
-      ...(multichainTokenUxEnabled
-        ? [
-            {
-              Icon: MinusCircle,
-              eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-              label: sellLabel,
-              name: ElementName.Sell,
-              onPress: () => onPressFORAction('offramp'),
-            },
-          ]
-        : []),
+      {
+        Icon: MinusCircle,
+        eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
+        label: sellLabel,
+        name: ElementName.Sell,
+        onPress: () => onPressFORAction('offramp'),
+      },
     ],
-    [
-      onPressSwap,
-      multichainTokenUxEnabled,
-      buyLabel,
-      forLabel,
-      onPressFORAction,
-      sendLabel,
-      onPressSend,
-      receiveLabel,
-      onPressReceive,
-      sellLabel,
-    ],
+    [onPressSwap, buyLabel, onPressFORAction, sendLabel, onPressSend, receiveLabel, onPressReceive, sellLabel],
   )
 
   const renderItem = useCallback(

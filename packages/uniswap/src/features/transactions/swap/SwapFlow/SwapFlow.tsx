@@ -1,5 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
+import {
+  TokenSelectorHoverConfigProvider,
+  useTokenSelectorHoverConfig,
+} from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionSettingsStoreContext,
@@ -73,6 +77,7 @@ export function SwapFlow({
   const swapDependenciesStore = useSwapDependenciesStoreBase()
   const swapFormStore = useSwapFormStoreBase()
   const closeAndCleanUp = useSwapFlowOnClose({ onClose: transactionModalProps.onClose, swapFormStore })
+  const wrapTokenRow = useTokenSelectorHoverConfig()
 
   const tracker = useMemo(() => new SwapFlowTimer(), [])
 
@@ -95,13 +100,16 @@ export function SwapFlow({
           {/* Re-create the SwapTxStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
           <SwapTxStoreContextProvider>
             <SwapDependenciesStoreContext.Provider value={swapDependenciesStore}>
-              <ActivePlanUpdater />
-              <CurrentScreen
-                settings={settings}
-                tokenColor={tokenColor}
-                onSubmitSwap={onSubmitSwap}
-                onCurrencyPanelsLayout={onCurrencyPanelsLayout}
-              />
+              {/* Re-create TokenSelectorHoverConfigProvider since rendering within a Portal causes its children to be in a separate component tree. */}
+              <TokenSelectorHoverConfigProvider wrapTokenRow={wrapTokenRow}>
+                <ActivePlanUpdater />
+                <CurrentScreen
+                  settings={settings}
+                  tokenColor={tokenColor}
+                  onSubmitSwap={onSubmitSwap}
+                  onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+                />
+              </TokenSelectorHoverConfigProvider>
             </SwapDependenciesStoreContext.Provider>
           </SwapTxStoreContextProvider>
         </SwapFormStoreContext.Provider>

@@ -5,6 +5,8 @@ import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/fe
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
+import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -17,6 +19,7 @@ type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'
 export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const disabled = useIsSwapButtonDisabled()
   const isBlockingWithCustomMessage = useIsBlockingWithCustomMessage()
+  const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const platform = chainIdToPlatform(chainId)
@@ -26,9 +29,14 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor)
   const { swapRedirectCallback } = useTransactionModalContext()
-  const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
+  const { blockingWarning } = useParsedSwapWarnings()
+  const promptWebFORNudge =
+    useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge && !blockingWarning
 
-  const isBlockingOrDisabledWithoutSwapRedirect = (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
+  // In the geo-acknowledgement case the button is an active "Review" CTA (it opens the
+  // attestation modal), so it should not adopt the blocked/disabled styling.
+  const isBlockingOrDisabledWithoutSwapRedirect =
+    !needsGeoAcknowledgment && (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
   const isInactiveAccountOrSubmitting = !activeAccount || isSubmitting
 
   // If disabled, use defaults for background color

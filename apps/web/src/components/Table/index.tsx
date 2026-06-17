@@ -38,26 +38,15 @@ const TableBodyContainer = styled(Flex, {
   className: 'scrollbar-hidden',
   justifyContent: 'flex-start',
   borderStyle: 'solid',
+  borderBottomRightRadius: '$rounded12',
+  borderBottomLeftRadius: '$rounded12',
+  borderWidth: 0,
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
     overflowY: 'auto',
   },
   variants: {
-    v2: {
-      true: {
-        borderBottomRightRadius: '$rounded12',
-        borderBottomLeftRadius: '$rounded12',
-        borderWidth: 0,
-      },
-      false: {
-        borderBottomRightRadius: '$rounded20',
-        borderBottomLeftRadius: '$rounded20',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        borderTopWidth: '$none',
-      },
-    },
     hasHiddenRows: {
       true: {
         borderBottomRightRadius: 0,
@@ -74,26 +63,13 @@ const HiddenTableScrollContainer = styled(Flex, {
   className: 'scrollbar-hidden',
   justifyContent: 'flex-start',
   borderStyle: 'solid',
+  borderBottomRightRadius: '$rounded12',
+  borderBottomLeftRadius: '$rounded12',
+  borderWidth: 0,
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
     overflowY: 'visible', // Critical: allows sticky to work
-  },
-  variants: {
-    v2: {
-      true: {
-        borderBottomRightRadius: '$rounded12',
-        borderBottomLeftRadius: '$rounded12',
-        borderWidth: 0,
-      },
-      false: {
-        borderBottomRightRadius: '$rounded20',
-        borderBottomLeftRadius: '$rounded20',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        borderTopWidth: 0,
-      },
-    },
   },
 })
 
@@ -104,26 +80,8 @@ const TableSeparatorRow = styled(Flex, {
   py: '$spacing8',
   px: '$spacing16',
   borderStyle: 'solid',
+  borderWidth: 0,
   width: '100%',
-  variants: {
-    v2: {
-      true: {
-        borderWidth: 0,
-      },
-      false: {
-        borderColor: '$surface3',
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-      },
-    },
-    showBottomBorder: {
-      true: {
-        borderBottomWidth: 1,
-      },
-    },
-  } as const,
 })
 
 const TableHead = (
@@ -153,6 +111,8 @@ const HeaderRow = styled(TableRowBase, {
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
   transition: 'unset',
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded12',
 
   '$platform-web': {
     overscrollBehavior: 'none',
@@ -162,22 +122,6 @@ const HeaderRow = styled(TableRowBase, {
     dimmed: {
       true: {
         opacity: 0.4,
-      },
-    },
-    v2: {
-      true: {
-        backgroundColor: '$surface2',
-        borderRadius: '$rounded12',
-      },
-      false: {
-        backgroundColor: '$surface1Hovered',
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '$surface3',
-        borderTopRightRadius: '$rounded20',
-        borderTopLeftRadius: '$rounded20',
-        borderBottomRightRadius: 'unset',
-        borderBottomLeftRadius: 'unset',
       },
     },
   } as const,
@@ -194,7 +138,6 @@ export function Table<T extends RowData>({
   maxHeight,
   defaultPinnedColumns = [],
   forcePinning = false,
-  v2 = true,
   hideHeader = false,
   externalScrollSync = false,
   scrollGroup = 'table-sync',
@@ -309,7 +252,7 @@ export function Table<T extends RowData>({
     return computeBodyMaxHeight({ bodyHeight, itemHeight, hasPinnedColumns })
   }, [maxHeight, hideHeader, headerHeight, rowHeight, compactRowHeight, hasPinnedColumns])
 
-  const extendedPinnedColumnDivider = hasPinnedColumns && v2
+  const extendedPinnedColumnDivider = hasPinnedColumns
   const pinnedColumnOverlayLeftPx = table.getLeftTotalSize()
 
   const content = (
@@ -318,21 +261,18 @@ export function Table<T extends RowData>({
         <TablePinnedColumnOverlay leftPx={pinnedColumnOverlayLeftPx} color={colors.surface3.val} />
       ) : null}
       <>
-        <TableHead $isSticky={isSticky} $top={headerHeight} mb={v2 && !hasPinnedColumns ? '$spacing2' : undefined}>
-          {hasPinnedColumns && (
-            <TableSideScrollButtons {...sideScrollButtons} table={table} v2={v2} isSticky={isSticky} />
-          )}
+        <TableHead $isSticky={isSticky} $top={headerHeight} mb={!hasPinnedColumns ? '$spacing2' : undefined}>
+          {hasPinnedColumns && <TableSideScrollButtons {...sideScrollButtons} table={table} isSticky={isSticky} />}
 
           {!hideHeader && (
             <ScrollSyncPane group={scrollGroup}>
-              <HeaderRow data-testid={headerTestId} dimmed={!!error} v2={v2}>
+              <HeaderRow data-testid={headerTestId} dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer
                     key={header.id}
                     style={getCommonPinningStyles({
                       column: header.column,
                       colors,
-                      v2,
                       isHeader: true,
                       hidePinnedColumnBorder: extendedPinnedColumnDivider,
                     })}
@@ -344,25 +284,19 @@ export function Table<T extends RowData>({
             </ScrollSyncPane>
           )}
         </TableHead>
-        {hasPinnedColumns && (!v2 || sideScrollButtons.showRightFadeOverlay) && (
-          <TableScrollMask
-            zIndex={zIndexes.default}
-            borderBottomRightRadius={v2 ? '$rounded12' : '$rounded20'}
-            right={v2 ? 0 : 1}
-          />
+        {hasPinnedColumns && sideScrollButtons.showRightFadeOverlay && (
+          <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded12" right={0} />
         )}
       </>
       <ScrollSyncPane group={scrollGroup}>
         <TableBodyContainer
           maxHeight={computedBodyMaxHeight}
-          v2={v2}
           hasHiddenRows={hasHiddenRows && !loading && !error}
           {...(showScrollbar && { scrollbarWidth: 'thin' as const })}
         >
           <TableBody
             loading={loading}
             error={error}
-            v2={v2}
             rowWrapper={rowWrapper}
             topLevelRowWrapper={topLevelRowWrapper}
             subRowsWrapper={subRowsWrapper}
@@ -385,10 +319,8 @@ export function Table<T extends RowData>({
         <>
           {/* Separator with expand/collapse control */}
           <TableSeparatorRow
-            v2={v2}
-            showBottomBorder={!v2 && !areHiddenRowsShown}
-            borderBottomRightRadius={areHiddenRowsShown ? 0 : v2 ? '$rounded12' : '$rounded20'}
-            borderBottomLeftRadius={areHiddenRowsShown ? 0 : v2 ? '$rounded12' : '$rounded20'}
+            borderBottomRightRadius={areHiddenRowsShown ? 0 : '$rounded12'}
+            borderBottomLeftRadius={areHiddenRowsShown ? 0 : '$rounded12'}
           >
             <Separator />
             <TouchableArea
@@ -418,10 +350,9 @@ export function Table<T extends RowData>({
             styleProps={{ overflowY: 'hidden', overflowX: 'visible' } as any}
           >
             <ScrollSyncPane group={scrollGroup}>
-              <HiddenTableScrollContainer v2={v2}>
+              <HiddenTableScrollContainer>
                 <TableBody
                   table={hiddenTable}
-                  v2={v2}
                   rowWrapper={rowWrapper}
                   rowHeight={rowHeight}
                   compactRowHeight={compactRowHeight}

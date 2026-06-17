@@ -1,4 +1,5 @@
 import { USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 
@@ -73,7 +74,7 @@ test.describe(
     test('should update when token explore table network changed', async ({ page }) => {
       await page.goto('/explore/tokens/ethereum')
       await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
-      await page.getByTestId(`${TestID.TokensNetworkFilterOptionPrefix}optimism`).last().click()
+      await page.getByTestId(`${ElementName.NetworkButton}-10`).last().click()
       await expect(page.getByTestId(TestID.TokensNetworkFilterSelected)).toHaveAttribute('alt', 'OP Mainnet logo')
     })
 
@@ -82,7 +83,7 @@ test.describe(
       await page.goto('/explore/tokens/ethereum')
 
       await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
-      await page.getByTestId(`${TestID.TokensNetworkFilterOptionPrefix}arbitrum`).last().click()
+      await page.getByTestId(`${ElementName.NetworkButton}-42161`).last().click()
 
       await expect(page.getByTestId(TestID.TokensNetworkFilterSelected)).toHaveAttribute('alt', 'Arbitrum logo')
 

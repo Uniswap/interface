@@ -22,7 +22,7 @@ vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
 }))
 
 const mockCopy = vi.fn()
-vi.mock('~/hooks/useCopyClipboard', () => ({
+vi.mock('utilities/src/react/useCopyClipboard', () => ({
   useCopyClipboard: vi.fn(() => [false, mockCopy]),
 }))
 

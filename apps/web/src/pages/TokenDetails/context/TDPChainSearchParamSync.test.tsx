@@ -1,6 +1,5 @@
 import { render, waitFor } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { MemoryRouter, useLocation, useSearchParams } from 'react-router'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -11,11 +10,6 @@ import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultich
 import { mocked } from '~/test-utils/mocked'
 import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
 import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
   useMultichainTokenEntries: vi.fn(),
@@ -78,26 +72,9 @@ describe('TDPChainSearchParamSync', () => {
     vi.clearAllMocks()
     window.history.replaceState(null, '', '/')
     mocked(useMultichainTokenEntries).mockReturnValue([])
-    mocked(useFeatureFlag).mockImplementation((flag) => {
-      return flag === FeatureFlags.MultichainTokenUx
-    })
   })
 
-  it('removes chain search param when multichain token UX is disabled', async () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-
-    const store = createTDPStore(createPendingTDPState())
-
-    const { getByTestId } = render(
-      <Harness store={store} initialPath="/explore/tokens/ethereum/0xabc?chain=ethereum" />,
-    )
-
-    await waitFor(() => {
-      expect(getByTestId('url-search').textContent).toBe('')
-    })
-  })
-
-  it('removes chain param for single-chain tokens when multichain UX is on', async () => {
+  it('removes chain param for single-chain tokens', async () => {
     mocked(useMultichainTokenEntries).mockReturnValue(ONE_CHAIN)
 
     const store = createTDPStore(createPendingTDPState({ selectedMultichainChainId: UniverseChainId.Mainnet }))

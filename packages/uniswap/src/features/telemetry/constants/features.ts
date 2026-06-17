@@ -73,4 +73,6 @@ export enum AuctionEventName {
   AuctionWithdrawSubmitted = 'Auction Withdraw Submitted',
   AuctionBidSubmitted = 'Auction Bid Submitted',
   AuctionBidInputted = 'Auction Bid Inputted',
+  AuctionCreateSubmitted = 'Auction Create Submitted',
+  AuctionCreateCompleted = 'Auction Create Completed',
 }

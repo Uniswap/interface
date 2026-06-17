@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Anchor, Button, Checkbox, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from '~/components/PrivacyChoices/constants'
@@ -49,7 +49,7 @@ export function PrivacyChoicesModal() {
                 components={{
                   privacyLink: (
                     <Anchor
-                      href={uniswapUrls.privacyPolicyUrl}
+                      href={UniswapStaticUrls.privacyPolicyUrl}
                       target="_blank"
                       textDecorationLine="none"
                       fontSize="inherit"

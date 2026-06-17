@@ -1,6 +1,10 @@
-import { createTradingApiClient, TradingApi, type TradingApiClient as TradingApiClientType } from '@universe/api'
+import {
+  TRADING_API_PATHS,
+  TradingApi,
+  createTradingApiClient,
+  type TradingApiClient as TradingApiClientType,
+} from '@universe/api'
 import { ChainId } from '@universe/api/src/clients/trading/__generated__'
-import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
 import {
   EthAsErc20UniswapXProperties,
   Experiments,
@@ -11,7 +15,7 @@ import {
   waitForStatsigReady,
 } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
@@ -19,7 +23,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 const TradingFetchClient = createUniswapFetchClient({
-  baseUrl: uniswapUrls.tradingApiUrl,
+  baseUrl: getUniswapServiceUrls(config).tradingApiUrl,
   additionalHeaders: {
     'x-api-key': config.tradingApiKey,
   },
@@ -117,7 +121,7 @@ export const getFeatureFlaggedHeaders = async (
 export const TradingApiClient: TradingApiClientType = createTradingApiClient({
   fetchClient: TradingFetchClient,
   getFeatureFlagHeaders: getFeatureFlaggedHeaders,
-  getApiPathPrefix: () => tradingApiVersionPrefix,
+  getApiPathPrefix: () => (config.tradingApiWebTestEnv === 'true' ? '' : '/v1'),
 })
 
 // Default maximum amount of combinations wallet<>chainId per check delegation request

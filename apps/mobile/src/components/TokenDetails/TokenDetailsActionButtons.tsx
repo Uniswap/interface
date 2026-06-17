@@ -137,93 +137,14 @@ function useActionButtonState(actionMenuOptions: MenuOptionItem[]): ActionButton
   }
 }
 
-/** Single contextual CTA (Swap/Buy/Get) with an overflow action menu */
-export function TokenDetailsSwapButtons({
-  ctaButton,
-  userHasBalance,
-  actionMenuOptions,
-  onPressDisabled,
-}: {
-  ctaButton: {
-    title: string
-    icon?: GeneratedIcon
-    onPress: () => void
-  }
-  userHasBalance: boolean
-  actionMenuOptions: MenuOptionItem[]
-  onPressDisabled?: () => void
-}): JSX.Element {
-  const {
-    tokenColor,
-    disabled,
-    validTokenColor,
-    lightTokenColor,
-    actionsWithIcons,
-    actionMenuOpen,
-    closeActionMenu,
-    toggleActionMenu,
-  } = useActionButtonState(actionMenuOptions)
-
-  return (
-    <Flex
-      row
-      backgroundColor="$surface1"
-      borderTopColor="$surface3"
-      borderTopWidth={1}
-      gap="$spacing8"
-      p="$spacing16"
-      pt="$spacing12"
-    >
-      <Flex fill row gap="$spacing12">
-        <CTAButton
-          disabled={disabled}
-          element={ElementName.Swap}
-          icon={ctaButton.icon}
-          testID={TestID.TokenDetailsSwapButton}
-          title={ctaButton.title}
-          tokenColor={tokenColor}
-          onPress={ctaButton.onPress}
-          onPressDisabled={onPressDisabled}
-        />
-        {userHasBalance && !disabled && (
-          <ContextMenu
-            isPlacementAbove
-            closeMenu={closeActionMenu}
-            isOpen={actionMenuOpen}
-            menuItems={actionsWithIcons}
-            offsetY={20}
-            triggerMode={ContextMenuTriggerMode.Primary}
-            onPressAny={(e) => {
-              sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
-                action: e.name,
-              })
-            }}
-          >
-            <Trace logPress element={ElementName.TDPActionMenuButton} section={SectionName.TokenDetails}>
-              <IconButton
-                emphasis="primary"
-                variant="branded"
-                backgroundColor={lightTokenColor}
-                borderColor="$transparent"
-                icon={actionMenuOpen ? <X color={validTokenColor} /> : <GridView color={validTokenColor} />}
-                size="large"
-                testID={TestID.TokenDetailsActionButton}
-                onPress={toggleActionMenu}
-              />
-            </Trace>
-          </ContextMenu>
-        )}
-      </Flex>
-    </Flex>
-  )
-}
-
 /** Dedicated Buy and Sell CTAs with a secondary action menu */
 export function TokenDetailsBuySellButtons({
   userHasBalance,
   actionMenuOptions,
   buyButtonTitle,
   buyButtonIcon,
+  buyButtonDisabled,
+  sellButtonDisabled,
   onPressDisabled,
   onPressBuy,
   onPressSell,
@@ -232,6 +153,8 @@ export function TokenDetailsBuySellButtons({
   actionMenuOptions: MenuOptionItem[]
   buyButtonTitle?: string
   buyButtonIcon?: GeneratedIcon
+  buyButtonDisabled?: boolean
+  sellButtonDisabled?: boolean
   onPressDisabled?: () => void
   onPressBuy: () => void
   onPressSell: () => void
@@ -317,7 +240,7 @@ export function TokenDetailsBuySellButtons({
     >
       <Flex fill row gap="$spacing12">
         <CTAButton
-          disabled={disabled}
+          disabled={disabled || buyButtonDisabled}
           element={ElementName.Buy}
           icon={buyButtonIcon}
           testID={TestID.TokenDetailsBuyButton}
@@ -332,7 +255,7 @@ export function TokenDetailsBuySellButtons({
         />
         {userHasBalance && (
           <CTAButton
-            disabled={disabled}
+            disabled={disabled || sellButtonDisabled}
             element={ElementName.Sell}
             testID={TestID.TokenDetailsSellButton}
             title={sellLabel}
@@ -344,9 +267,10 @@ export function TokenDetailsBuySellButtons({
             onPressDisabled={onPressDisabled}
           />
         )}
-        {/* buyButtonTitle is only set when hasTokenBalance is false (see useMultichainBuyVariant),
-            so this condition and userHasBalance are mutually exclusive in practice. */}
-        {!buyButtonTitle && !disabled && (
+        {/* Alternate buy titles normally appear only in no-balance states (see useMultichainBuyVariant).
+            The geo-blocked override sets a title even for holders, who still need Send/Receive from the
+            menu — so a balance keeps it visible. */}
+        {(!buyButtonTitle || userHasBalance) && !disabled && (
           <ContextMenu
             isPlacementAbove
             closeMenu={closeActionMenu}

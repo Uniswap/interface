@@ -6,20 +6,18 @@ import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 /** Chain + DB address for TDP chart queries, aligned with the network dropdown (`?chain=` → `selectedMultichainChainId`). */
 export function getTDPChartGraphqlTarget({
-  multichainTokenUxEnabled,
   selectedMultichainChainId,
   tokenQueryData,
   pathGraphqlChain,
   pathTokenDbAddress,
 }: {
-  multichainTokenUxEnabled: boolean
   selectedMultichainChainId: UniverseChainId | undefined
   tokenQueryData: TokenQueryData | undefined
   pathGraphqlChain: GraphQLApi.Chain
   pathTokenDbAddress: string | undefined
 }): { chain: GraphQLApi.Chain; address: string | undefined } {
   // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-  if (multichainTokenUxEnabled && selectedMultichainChainId !== undefined && tokenQueryData?.project?.tokens?.length) {
+  if (selectedMultichainChainId !== undefined && tokenQueryData?.project?.tokens?.length) {
     const gqlChain = getChainInfo(selectedMultichainChainId).backendChain.chain
     const row = tokenQueryData.project.tokens.find((t) => t.chain === gqlChain)
     if (row) {

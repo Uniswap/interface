@@ -8,6 +8,7 @@ import {
   isChained,
   isClassic,
   isUniswapX,
+  isUserOpSwap,
   isWrap,
 } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
@@ -43,6 +44,22 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
   return function* prepareAndSignSwapTransaction(params: PrepareAndSignSwapSagaParams) {
     const { swapTxContext, account, onSuccess, onFailure } = params
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
+
+    // 4337 sponsored swaps cannot be pre-signed: paymaster fields are populated
+    // inside the execute saga (pm_sponsorUserOperation), and the UserOp signature
+    // commits to those fields. Resolve immediately with a stub so any speculative
+    // pre-sign machinery (useSwapSigning) stays quiet without burning a signer.
+    if (isUserOpSwap(swapTxContext)) {
+      const stubPreSigned: PreSignedSwapTransaction = {
+        signedSwapTx: {} as SignedTransactionRequest,
+        swapTxContext,
+        metadata: {} as BaseTransactionMetadata,
+        chainId,
+        account,
+      }
+      onSuccess?.(stubPreSigned)
+      return stubPreSigned
+    }
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     // We disable for bridge to avoid any potential issues with BE checking status.

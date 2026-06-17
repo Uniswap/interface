@@ -1,11 +1,15 @@
+import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { curveCardinal, scaleLinear } from 'd3'
-import { useMemo } from 'react'
+import { type ComponentProps, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Skeleton, Text, useSporeColors } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { Button, Flex, Skeleton, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
+import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import { iconSizes, INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import type { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
@@ -23,6 +27,7 @@ const DOT_RADIUS = 4
 const SPARKLINE_PADDING = DOT_RADIUS + 1
 const SPARKLINE_WIDTH = SIDEBAR_WIDTH - 32 - 2
 const SPARKLINE_HEIGHT = 64
+const SPARKLINE_GRID_SIZE = 16
 
 export function PoolInfoSparkline({ poolData, width: overrideWidth }: { poolData: PoolData; width?: number }) {
   const colors = useSporeColors()
@@ -64,18 +69,33 @@ export function PoolInfoSparkline({ poolData, width: overrideWidth }: { poolData
   const dotY = yScale(lastEntry.value)
 
   return (
-    <LineChart
-      data={entries}
-      getX={(p) => xScale(p.time)}
-      getY={(p) => yScale(p.value)}
-      curve={curveCardinal.tension(0.9)}
-      color={colors.accent1.val}
-      strokeWidth={1.5}
-      width={sparklineWidth}
-      height={SPARKLINE_HEIGHT}
-    >
-      <circle cx={dotX} cy={dotY} r={4} fill={colors.accent1.val} />
-    </LineChart>
+    <Flex position="relative" width={sparklineWidth} height={SPARKLINE_HEIGHT}>
+      <Flex
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        style={{
+          backgroundImage: `radial-gradient(circle at center, ${colors.surface3.val} 1px, transparent 1px)`,
+          backgroundSize: `${SPARKLINE_GRID_SIZE}px ${SPARKLINE_GRID_SIZE}px`,
+        }}
+      />
+      <Flex position="relative">
+        <LineChart
+          data={entries}
+          getX={(p) => xScale(p.time)}
+          getY={(p) => yScale(p.value)}
+          curve={curveCardinal.tension(0.9)}
+          color={colors.accent1.val}
+          strokeWidth={1.5}
+          width={sparklineWidth}
+          height={SPARKLINE_HEIGHT}
+        >
+          <circle cx={dotX} cy={dotY} r={DOT_RADIUS} fill={colors.accent1.val} />
+        </LineChart>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -295,6 +315,110 @@ export function PoolInfoCard({
           <Button.Text>{t('common.addLiquidity')}</Button.Text>
         </Button>
       )}
+    </Flex>
+  )
+}
+
+// Shared expand/collapse pool summary, also rendered by EditSelectTokensStep.
+export function ExpandablePoolInfo({
+  currency0,
+  currency1,
+  version,
+  v4hook,
+  feeTier,
+  poolData,
+}: {
+  currency0?: Currency
+  currency1?: Currency
+  version?: ComponentProps<typeof LiquidityPositionInfoBadges>['version']
+  v4hook?: string
+  feeTier?: ComponentProps<typeof LiquidityPositionInfoBadges>['feeTier']
+  poolData: PoolData
+}) {
+  const media = useMedia()
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [sparklineWidth, setSparklineWidth] = useState(0)
+  const toggleExpand = useCallback(() => setIsExpanded((prev) => !prev), [])
+
+  return (
+    // Measure on the always-rendered outer container (its width matches the inner expanded
+    // column) so the sparkline has a correct width before the first expansion — measuring the
+    // display:none inner Flex only fires onLayout on expand, causing a one-frame width jump.
+    <Flex gap={isExpanded ? '$gap12' : 0} onLayout={(e) => setSparklineWidth(e.nativeEvent.layout.width)}>
+      <Flex row gap="$gap12" alignItems="center">
+        <DoubleCurrencyLogo currencies={[currency0, currency1]} size={media.md ? iconSizes.icon44 : iconSizes.icon32} />
+        <Flex row grow gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
+          <Flex row gap="$gap8" alignItems="center" testID={TestID.PoolPairLabel}>
+            <Text variant="subheading1">{currency0?.symbol}</Text>
+            <Text variant="subheading1">/</Text>
+            <Text variant="subheading1">{currency1?.symbol}</Text>
+          </Flex>
+          <Flex row gap={2} alignItems="center">
+            <LiquidityPositionInfoBadges size="small" version={version} v4hook={v4hook} feeTier={feeTier} />
+          </Flex>
+        </Flex>
+        <Flex flexShrink={0}>
+          <TouchableArea onPress={toggleExpand}>
+            {isExpanded ? (
+              <ChevronsIn size="$icon.20" color="$neutral2" />
+            ) : (
+              <ChevronsOut size="$icon.20" color="$neutral2" />
+            )}
+          </TouchableArea>
+        </Flex>
+      </Flex>
+
+      <Flex display={isExpanded ? 'flex' : 'none'} gap="$spacing24" mt="$spacing16">
+        <PoolStatsContent poolData={poolData} sparklineWidth={sparklineWidth || undefined} />
+      </Flex>
+    </Flex>
+  )
+}
+
+export function PoolInfoCardMobileHeader({ poolData, loading }: { poolData?: PoolData; loading?: boolean }) {
+  const currency0 = useMemo(() => (poolData ? gqlToCurrency(poolData.token0) : undefined), [poolData])
+  const currency1 = useMemo(() => (poolData ? gqlToCurrency(poolData.token1) : undefined), [poolData])
+
+  if (!poolData) {
+    if (loading) {
+      return (
+        <Flex
+          borderRadius="$rounded20"
+          borderColor="$surface3"
+          borderWidth="$spacing1"
+          p="$padding16"
+          mb="$spacing16"
+          row
+          gap="$gap12"
+          alignItems="center"
+        >
+          <Skeleton>
+            <Flex
+              width={iconSizes.icon32}
+              height={iconSizes.icon32}
+              borderRadius="$roundedFull"
+              backgroundColor="$surface3"
+            />
+          </Skeleton>
+          <Skeleton>
+            <Flex height={20} width={120} borderRadius="$rounded8" backgroundColor="$surface3" />
+          </Skeleton>
+        </Flex>
+      )
+    }
+    return null
+  }
+
+  return (
+    <Flex borderRadius="$rounded20" borderColor="$surface3" borderWidth="$spacing1" p="$padding16" mb="$spacing16">
+      <ExpandablePoolInfo
+        currency0={currency0}
+        currency1={currency1}
+        version={poolData.protocolVersion}
+        v4hook={poolData.hookAddress}
+        feeTier={poolData.feeTier}
+        poolData={poolData}
+      />
     </Flex>
   )
 }

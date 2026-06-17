@@ -1,4 +1,4 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 
@@ -110,7 +110,7 @@ test.describe(
         await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Terms of Service')).toBeVisible()
 
         await expect(
-          page.getByTestId(TestID.NavCompanyDropdown).locator(`a[href="${uniswapUrls.termsOfServiceUrl}"]`),
+          page.getByTestId(TestID.NavCompanyDropdown).locator(`a[href="${UniswapStaticUrls.termsOfServiceUrl}"]`),
         ).toBeVisible()
       })
 
@@ -169,7 +169,7 @@ test.describe(
         await expect(drawer.getByText('Privacy Policy')).toBeVisible()
         await expect(drawer.getByText('Terms of Service')).toBeVisible()
 
-        await expect(drawer.locator(`a[href="${uniswapUrls.termsOfServiceUrl}"]`)).toBeVisible()
+        await expect(drawer.locator(`a[href="${UniswapStaticUrls.termsOfServiceUrl}"]`)).toBeVisible()
       })
 
       test('displays mobile-specific UI elements', async ({ page }) => {

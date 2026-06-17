@@ -223,7 +223,7 @@ export function OrderBook({
     tickSpacing: poolData?.pools[0]?.tickSpacing,
   })
 
-  const { asks, bids, midPrice } = useMemo(() => {
+  const { asks, bids } = useMemo(() => {
     if (!tickData?.barData || activeTick === undefined) {
       return { asks: [], bids: [], midPrice: 0 }
     }
@@ -246,13 +246,7 @@ export function OrderBook({
 
   const feeTierLabel = `${feeTier / BIPS_BASE}%`
 
-  const spreadPct = useMemo(() => {
-    const bestAsk = asks.length > 0 ? asks[asks.length - 1] : null
-    const bestBid = bids.length > 0 ? bids[0] : null
-    if (!bestAsk || !bestBid || midPrice <= 0) return null
-    const spread = bestAsk.displayPrice - bestBid.displayPrice
-    return spread > 0 ? (spread / midPrice) * 100 : null
-  }, [asks, bids, midPrice])
+  const spreadPct = (2 * feeTier) / BIPS_BASE
 
   const maxAskAmount = useMemo(() => Math.max(...asks.map((r) => r.amount), 0), [asks])
   const maxBidAmount = useMemo(() => Math.max(...bids.map((r) => r.amount), 0), [bids])
@@ -345,30 +339,26 @@ export function OrderBook({
         row
         px="$padding8"
         py="$padding8"
+        gap="$gap4"
         borderTopWidth="$spacing1"
         borderTopColor="$surface3"
         borderBottomWidth="$spacing1"
         borderBottomColor="$surface3"
-        justifyContent="space-between"
         alignItems="center"
         flexShrink={0}
       >
-        <Flex row gap="$gap4" alignItems="center">
-          <Text variant="body4" color="$neutral2">
-            {t('chart.type.depth.spread')}
-          </Text>
-          <Text variant="body4" color="$neutral1">
-            {spreadPct !== null ? `${spreadPct.toFixed(2)}%` : '—'}
-          </Text>
-        </Flex>
-        <Flex row gap="$gap4" alignItems="center">
-          <Text variant="body4" color="$neutral2">
-            {t('chart.type.depth.feeTier')}
-          </Text>
-          <Text variant="body4" color="$neutral1">
-            {feeTierLabel}
-          </Text>
-        </Flex>
+        <Text variant="body4" color="$neutral2">
+          {t('chart.type.depth.spread')}
+        </Text>
+        <Text variant="body4" color="$neutral1">
+          {`${spreadPct.toFixed(2)}%`}
+        </Text>
+        <Text variant="body4" color="$neutral2">
+          {`(${t('chart.type.depth.feeTier')}`}
+        </Text>
+        <Text variant="body4" color="$neutral1">
+          {`${feeTierLabel})`}
+        </Text>
       </Flex>
 
       {/* Bids (buy orders) — independently scrollable, top shows closest-to-mid by default */}

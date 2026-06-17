@@ -4,10 +4,11 @@ import type { SharedValue } from 'react-native-reanimated'
 import { HomeFeedPager, type HomeFeedPagerPage } from 'src/screens/HomeScreen/HomeFeedPager'
 import { HomeScreenNftsTab } from 'src/screens/HomeScreen/portfolio/tabs/nfts/HomeScreenNftsTab'
 import { computeNftPairRowHeight } from 'src/screens/HomeScreen/portfolio/tabs/nfts/NftRows'
+import { HomeScreenPoolsTab } from 'src/screens/HomeScreen/portfolio/tabs/pools/HomeScreenPoolsTab'
+import type { PoolsTabRenderData } from 'src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData'
 import { HomeScreenTokensTab } from 'src/screens/HomeScreen/portfolio/tabs/tokens/HomeScreenTokensTab'
-import type { HomeRoute, NftListRenderData } from 'src/screens/HomeScreen/portfolio/types'
+import { HomeTab, type HomeRoute, type NftTabRenderData } from 'src/screens/HomeScreen/portfolio/types'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface TabViewBodyProps {
@@ -19,7 +20,9 @@ interface TabViewBodyProps {
   bodyOffsetY: number
   shouldDetachInactiveTabs: boolean
   shouldLoadNfts: boolean
-  nftListRenderData: NftListRenderData
+  nftListRenderData: NftTabRenderData
+  shouldLoadPools: boolean
+  poolsListRenderData: PoolsTabRenderData
   onTabInteractionStart: () => void
 }
 
@@ -33,11 +36,14 @@ export const TabViewBody = memo(function TabViewBodyInner({
   shouldDetachInactiveTabs,
   shouldLoadNfts,
   nftListRenderData,
+  shouldLoadPools,
+  poolsListRenderData,
   onTabInteractionStart,
 }: TabViewBodyProps): JSX.Element {
   const { fullWidth, fullHeight } = useDeviceDimensions()
   const [tokensHeight, setTokensHeight] = useState(0)
   const [nftsHeight, setNftsHeight] = useState(0)
+  const [poolsHeight, setPoolsHeight] = useState(0)
 
   const pairRowHeight = useMemo(() => computeNftPairRowHeight(fullWidth), [fullWidth])
 
@@ -49,12 +55,16 @@ export const TabViewBody = memo(function TabViewBodyInner({
     setNftsHeight((prev) => (Math.abs(prev - h) < 4 ? prev : h))
   }, [])
 
+  const onPoolsHeightChange = useCallback((h: number) => {
+    setPoolsHeight((prev) => (Math.abs(prev - h) < 4 ? prev : h))
+  }, [])
+
   const pages = useMemo<HomeFeedPagerPage[]>(
     () =>
       routes.map((route, routeIndex) => {
         const isActive = routeIndex === tabIndex
         const freeze = shouldDetachInactiveTabs && !isActive
-        if (route.key === SectionName.HomeTokensTab) {
+        if (route.key === HomeTab.Tokens) {
           return {
             key: route.key,
             height: tokensHeight,
@@ -71,7 +81,7 @@ export const TabViewBody = memo(function TabViewBodyInner({
             ),
           }
         }
-        if (route.key === SectionName.HomeNFTsTab) {
+        if (route.key === HomeTab.NFTs) {
           return {
             key: route.key,
             height: nftsHeight,
@@ -92,15 +102,36 @@ export const TabViewBody = memo(function TabViewBodyInner({
             ),
           }
         }
+        if (route.key === HomeTab.Pools) {
+          return {
+            key: route.key,
+            height: poolsHeight,
+            content: (
+              <Freeze freeze={freeze}>
+                <HomeScreenPoolsTab
+                  testID={TestID.PoolsTab}
+                  bodyOffsetY={bodyOffsetY}
+                  poolsListRenderData={poolsListRenderData}
+                  feedScrollValue={feedScrollValue}
+                  shouldLoadPools={shouldLoadPools}
+                  viewportHeight={fullHeight}
+                  onHeightChange={onPoolsHeightChange}
+                />
+              </Freeze>
+            ),
+          }
+        }
         return { key: route.key, height: 0, content: null }
       }),
     [
       routes,
       tokensHeight,
       nftsHeight,
+      poolsHeight,
       owner,
       onTokensHeightChange,
       onNftsHeightChange,
+      onPoolsHeightChange,
       bodyOffsetY,
       fullHeight,
       feedScrollValue,
@@ -108,6 +139,8 @@ export const TabViewBody = memo(function TabViewBodyInner({
       shouldDetachInactiveTabs,
       shouldLoadNfts,
       nftListRenderData,
+      shouldLoadPools,
+      poolsListRenderData,
       tabIndex,
     ],
   )

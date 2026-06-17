@@ -6,8 +6,6 @@ import {
   sendViemSignTypedData,
 } from './viem'
 
-export type { EthersSignTypedDataParams } from './ethers'
-
 /**
  * Pure ethers path, equivalent to the legacy flow.
  */

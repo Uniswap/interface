@@ -1,6 +1,6 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { useEffect, useState } from 'react'
 import { useAssertOAuthRedirectRouter } from '~/components/Passkey/OAuthRedirectContext'
+import { useMaybePrivy } from '~/hooks/useMaybePrivy'
 
 interface OAuthReturnResult {
   provider: 'google' | 'apple' | null
@@ -17,7 +17,7 @@ const ABANDON_TIMEOUT_MS = 10_000
 export function useOAuthResult(sessionStorageKey: string): OAuthReturnResult {
   useAssertOAuthRedirectRouter()
 
-  const { ready, authenticated, user } = usePrivy()
+  const { ready, authenticated, user } = useMaybePrivy()
 
   // Capture once at mount from sessionStorage AND the `privy_oauth_provider` URL param.
   // The URL fallback covers flows without `useOAuthRedirectRouter` and the case where

@@ -3,6 +3,7 @@ import {
   getQuicknodeChainId,
   getQuicknodeChainIdPathSuffix,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -10,7 +11,12 @@ vi.mock('uniswap/src/config', () => ({
   config: {
     quicknodeEndpointName: 'test-endpoint',
     quicknodeEndpointToken: 'test-token-123',
+    quicknodeSolanaRpcUrl: 'https://configured.solana-mainnet.quiknode.pro/configured-token/',
   },
+}))
+
+vi.mock('@universe/api', () => ({
+  getEntryGatewayUrl: () => 'https://gateway.example',
 }))
 
 describe('getQuicknodeChainIdPathSuffix', () => {
@@ -60,6 +66,34 @@ describe('getQuicknodeEndpointUrl', () => {
     )
   })
 
+  it('returns the env-configured dedicated endpoint for chains not covered by the multichain endpoint', () => {
+    expect(getQuicknodeEndpointUrl(UniverseChainId.Solana)).toBe(
+      'https://configured.solana-mainnet.quiknode.pro/configured-token/',
+    )
+  })
+
+  it('falls back to the multichain endpoint when no dedicated Solana URL is configured', () => {
+    vi.mocked(config).quicknodeSolanaRpcUrl = ''
+
+    expect(getQuicknodeEndpointUrl(UniverseChainId.Solana)).toBe(
+      'https://test-endpoint.solana-mainnet.quiknode.pro/test-token-123',
+    )
+
+    vi.mocked(config).quicknodeSolanaRpcUrl = 'https://configured.solana-mainnet.quiknode.pro/configured-token/'
+  })
+
+  it('ignores a non-URL Solana config value (e.g. the .env.defaults placeholder) and uses the multichain endpoint', () => {
+    // In CI/jest the `.env.defaults` placeholder reaches config verbatim; it must
+    // not become the RPC URL (Solana's Connection throws on a non-http endpoint).
+    vi.mocked(config).quicknodeSolanaRpcUrl = 'stored-in-.env.local'
+
+    expect(getQuicknodeEndpointUrl(UniverseChainId.Solana)).toBe(
+      'https://test-endpoint.solana-mainnet.quiknode.pro/test-token-123',
+    )
+
+    vi.mocked(config).quicknodeSolanaRpcUrl = 'https://configured.solana-mainnet.quiknode.pro/configured-token/'
+  })
+
   it('handles all supported chains without throwing', () => {
     const supportedChains = [
       UniverseChainId.ArbitrumOne,
@@ -88,6 +122,15 @@ describe('getQuicknodeEndpointUrl', () => {
         `https://test-endpoint${chainId === UniverseChainId.Mainnet ? '' : `.${getQuicknodeChainId(chainId)}`}.quiknode.pro/test-token-123${getQuicknodeChainIdPathSuffix(chainId)}`,
       )
     })
+  })
+})
+
+describe('getUniRpcEndpointUrl', () => {
+  it('builds the UniRPC gateway url for a chain', () => {
+    expect(getUniRpcEndpointUrl(UniverseChainId.Arc)).toBe(`https://gateway.example/rpc/${UniverseChainId.Arc}`)
+    expect(getUniRpcEndpointUrl(UniverseChainId.Robinhood)).toBe(
+      `https://gateway.example/rpc/${UniverseChainId.Robinhood}`,
+    )
   })
 })
 

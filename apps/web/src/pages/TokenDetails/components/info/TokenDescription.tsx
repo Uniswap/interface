@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatableCopyIcon, Flex, styled, Text, TouchableArea } from 'ui/src'
@@ -22,11 +21,11 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink, isAllowedExternalUri, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { FOTTooltipContent } from '~/features/Swap/SwapLineItem'
-import { useCopyClipboard } from '~/hooks/useCopyClipboard'
+import { FOTTooltipContent } from '~/features/Swap/SwapLineItemTooltips'
 import { useSwapTaxes } from '~/hooks/useSwapTaxes'
 import {
   MultichainPillDropdown,
@@ -107,7 +106,6 @@ export function TokenDescription() {
     selectedMultichainChainId: s.selectedMultichainChainId,
   }))
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const hasMultipleChains = multichainEntries.length > 1
 
@@ -212,7 +210,7 @@ export function TokenDescription() {
   const Icon = getBlockExplorerIcon(effectiveCurrency.chainId)
   const explorerName = getChainInfo(effectiveCurrency.chainId).explorer.name
 
-  const showMultichainDropdowns = multichainTokenUxEnabled && hasMultipleChains && !selectedMultichainChainId
+  const showMultichainDropdowns = hasMultipleChains && !selectedMultichainChainId
 
   const addressPill = effectiveCurrency.isNative ? null : showMultichainDropdowns ? (
     <MultichainPillDropdown
@@ -230,14 +228,14 @@ export function TokenDescription() {
     <TokenInfoButton
       onPress={copy}
       icon={
-        multichainTokenUxEnabled && selectedMultichainChainId ? (
+        selectedMultichainChainId ? (
           <NetworkLogo chainId={selectedMultichainChainId} size={iconSizes.icon16} />
         ) : (
           <Page size="$icon.16" color="$neutral1" />
         )
       }
       iconRight={
-        multichainTokenUxEnabled && selectedMultichainChainId ? (
+        selectedMultichainChainId ? (
           <AnimatableCopyIcon isCopied={isCopied} size={iconSizes.icon16} textColor="$neutral1" />
         ) : undefined
       }
@@ -265,7 +263,7 @@ export function TokenDescription() {
     <TokenLinkButton
       uri={explorerUrl}
       icon={
-        multichainTokenUxEnabled && selectedMultichainChainId ? (
+        selectedMultichainChainId ? (
           <BlockExplorer size="$icon.16" color="$neutral1" />
         ) : (
           <Icon size="$icon.16" color="$neutral1" />

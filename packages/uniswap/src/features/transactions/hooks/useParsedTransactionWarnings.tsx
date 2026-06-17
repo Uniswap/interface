@@ -47,16 +47,8 @@ export function useFormattedWarnings(warnings: Warning[]): ParsedWarnings {
   }, [warnings])
 }
 
-// RWA geo-blocking has its own dedicated banner (RWAGeoBlockedCard), so it must not also render as
-// an inline form/review warning (which would show a title-less alert icon).
-function isInlineDisplayableWarning(warning: Warning): boolean {
-  return warning.type !== WarningLabel.RWAGeoBlocked
-}
-
 function getReviewScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
-  const reviewWarning = warnings.find(
-    (warning) => warning.severity >= WarningSeverity.Medium && isInlineDisplayableWarning(warning),
-  )
+  const reviewWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   if (!reviewWarning) {
     return undefined
@@ -64,6 +56,10 @@ function getReviewScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScre
 
   return getWarningWithStyle({ warning: reviewWarning, displayedInline: true })
 }
+
+// Warnings that render their own dedicated UI elsewhere on the form and should
+// not also surface as an inline form-screen warning (e.g. via the gas-row triangle).
+const WARNINGS_WITH_DEDICATED_UI: ReadonlySet<WarningLabel> = new Set([WarningLabel.GeoRestricted])
 
 // This function decides which warning to show when there is more than one.
 function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
@@ -79,7 +75,7 @@ function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreen
   }
 
   const formWarning = warnings.find(
-    (warning) => warning.severity >= WarningSeverity.Low && isInlineDisplayableWarning(warning),
+    (warning) => warning.severity >= WarningSeverity.Low && !WARNINGS_WITH_DEDICATED_UI.has(warning.type),
   )
 
   if (!formWarning) {

@@ -23,6 +23,13 @@ test.describe(
         chain: 'ETHEREUM',
         address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
       })
+      // TokenProjectWeb gates the page and powers the header name. Without this mock the
+      // live API responds with an empty name for this token, so 'test token' only ever
+      // appeared in the transient loading skeleton — making the assertion a timing race.
+      await graphql.intercept('TokenProjectWeb', Mocks.TokenProjectWeb.token_warning, {
+        chain: 'ETHEREUM',
+        address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
+      })
       await graphql.intercept('Token', Mocks.Token.token_warning, {
         chain: 'ETHEREUM',
         address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
@@ -38,7 +45,8 @@ test.describe(
       await page.goto('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
       // Wait for the GraphQL response to complete before checking UI elements
       await graphql.waitForResponse('TokenWeb')
-      await expect(page.getByText('test token')).toBeVisible()
+      // .first(): the loaded page renders the name in both the breadcrumb and the header
+      await expect(page.getByText('test token').first()).toBeVisible()
       await expect(page.getByText('Missing chart data')).toBeVisible()
       await expect(page.getByText('No stats available')).toBeVisible()
       await expect(page.getByText('No token information available')).toBeVisible()

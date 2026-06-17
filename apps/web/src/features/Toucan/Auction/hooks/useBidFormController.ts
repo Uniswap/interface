@@ -68,6 +68,7 @@ export function useBidFormController({
     auctionTokenDecimals,
     auctionTokenSymbol,
     auctionTokenName,
+    auctionTokenAddress,
   } = useAuctionStore((state) => ({
     chainId: state.auctionDetails?.chainId,
     currency: state.auctionDetails?.currency,
@@ -82,6 +83,7 @@ export function useBidFormController({
     auctionTokenDecimals: state.auctionDetails?.token?.currency.decimals,
     auctionTokenSymbol: state.auctionDetails?.token?.currency.symbol,
     auctionTokenName: state.auctionDetails?.token?.currency.name,
+    auctionTokenAddress: state.auctionDetails?.tokenAddress,
   }))
 
   const clearingPrice = getClearingPrice(checkpointData, auctionDetails)
@@ -260,6 +262,7 @@ export function useBidFormController({
     chainId,
     isNativeBidToken,
     currency,
+    auctionTokenAddress,
     resetBudgetField,
     resetMaxValuationField,
     budgetAmountIsZero,

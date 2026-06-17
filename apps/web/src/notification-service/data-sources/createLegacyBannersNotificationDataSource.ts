@@ -17,7 +17,7 @@ import {
   NO_UNISWAP_INTERFACE_FEES_BANNER_DARK,
   NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
 } from 'ui/src/assets'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import store from '~/state/index'
@@ -185,7 +185,7 @@ function createNoUniswapInterfaceFeesBanner(isDarkMode: boolean): InAppNotificat
         link: isDarkMode ? NO_UNISWAP_INTERFACE_FEES_BANNER_DARK : NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
         backgroundOnClick: new OnClick({
           onClick: [OnClickAction.EXTERNAL_LINK, OnClickAction.DISMISS, OnClickAction.ACK],
-          onClickLink: uniswapUrls.helpArticleUrls.swapFeeInfo,
+          onClickLink: UniswapHelpUrls.articles.swapFeeInfo,
         }),
       }),
       onDismissClick: new OnClick({

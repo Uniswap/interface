@@ -81,6 +81,20 @@ const megaEthCommonToken = new Token(
   'USDM',
   'USDM',
 )
+const robinhoodCommonToken = new Token(
+  UniverseChainId.Robinhood,
+  '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168',
+  6,
+  'USDG',
+  'Global Dollar',
+)
+const arcCommonToken = new Token(
+  UniverseChainId.Arc,
+  '0x3600000000000000000000000000000000000000',
+  6,
+  'USDC',
+  'USD Coin',
+)
 const unichainUsdtToken = new Token(
   UniverseChainId.Unichain,
   '0x588ce4f028d8e7b53b687865d6a67b3a54c75518',
@@ -96,6 +110,8 @@ const lineaCommonCurrencyInfo = makeCurrencyInfo({ token: lineaCommonToken })
 const xLayerCommonCurrencyInfo = makeCurrencyInfo({ token: xLayerCommonToken })
 const baseCommonCurrencyInfo = makeCurrencyInfo({ token: baseCommonToken })
 const megaEthCommonCurrencyInfo = makeCurrencyInfo({ token: megaEthCommonToken })
+const robinhoodCommonCurrencyInfo = makeCurrencyInfo({ token: robinhoodCommonToken })
+const arcCommonCurrencyInfo = makeCurrencyInfo({ token: arcCommonToken })
 const unichainUsdtCurrencyInfo = makeCurrencyInfo({ token: unichainUsdtToken })
 
 const allCommonBaseCurrencies = [
@@ -106,6 +122,8 @@ const allCommonBaseCurrencies = [
   xLayerCommonCurrencyInfo,
   baseCommonCurrencyInfo,
   megaEthCommonCurrencyInfo,
+  robinhoodCommonCurrencyInfo,
+  arcCommonCurrencyInfo,
   unichainUsdtCurrencyInfo,
 ]
 
@@ -214,6 +232,54 @@ const megaEthCurrencies = [
   makeCurrencyInfo({ token: megaEthBtcBToken }),
 ]
 
+// Robinhood-specific quick-select currencies
+const robinhoodWethToken = new Token(
+  UniverseChainId.Robinhood,
+  '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
+  18,
+  'WETH',
+  'Wrapped Ether',
+)
+const robinhoodUsdgToken = new Token(
+  UniverseChainId.Robinhood,
+  '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168',
+  6,
+  'USDG',
+  'Global Dollar',
+)
+
+const robinhoodCurrencies = [
+  makeCurrencyInfo({ token: robinhoodWethToken }),
+  makeCurrencyInfo({ token: robinhoodUsdgToken }),
+]
+
+// Arc-specific quick-select currencies
+const arcUsdcToken = new Token(UniverseChainId.Arc, '0x3600000000000000000000000000000000000000', 6, 'USDC', 'USD Coin')
+const arcUsycToken = new Token(UniverseChainId.Arc, '0xe9185F0c5F296Ed1797AaE4238D26CCaBEadb86C', 6, 'USYC', 'USYC')
+const arcEurcToken = new Token(UniverseChainId.Arc, '0xbEf5f6d51CB62b58e6A8f77868681825C6fe21c1', 6, 'EURC', 'EURC')
+const arcWethToken = new Token(
+  UniverseChainId.Arc,
+  '0x128cC466B61f542da60c70e3aA11c10e19B84EDB',
+  18,
+  'wETH',
+  'Wrapped Ether',
+)
+const arcCirBtcToken = new Token(
+  UniverseChainId.Arc,
+  '0x171A4217b86A807A64eB94757Db6849fb4bDbAA0',
+  8,
+  'cirBTC',
+  'Circle Wrapped BTC',
+)
+
+const arcCurrencies = [
+  makeCurrencyInfo({ token: arcUsdcToken }),
+  makeCurrencyInfo({ token: arcEurcToken }),
+  makeCurrencyInfo({ token: arcCirBtcToken }),
+  makeCurrencyInfo({ token: arcWethToken }),
+  makeCurrencyInfo({ token: arcUsycToken }),
+]
+
 // --- Mock helpers ---
 
 const defaultGqlResult = {
@@ -258,6 +324,12 @@ function setupDefaultMocks({
   megaEthData = megaEthCurrencies,
   megaEthError,
   megaEthLoading = false,
+  robinhoodData = robinhoodCurrencies,
+  robinhoodError,
+  robinhoodLoading = false,
+  arcData = arcCurrencies,
+  arcError,
+  arcLoading = false,
 }: {
   chainFilter: UniverseChainId | null
   commonBase?: CurrencyInfo[] | null
@@ -275,6 +347,12 @@ function setupDefaultMocks({
   megaEthData?: CurrencyInfo[]
   megaEthError?: Error
   megaEthLoading?: boolean
+  robinhoodData?: CurrencyInfo[]
+  robinhoodError?: Error
+  robinhoodLoading?: boolean
+  arcData?: CurrencyInfo[]
+  arcError?: Error
+  arcLoading?: boolean
 }): void {
   mockUseAllCommonBaseCurrencies.mockReturnValue({
     data: commonBase === null ? undefined : (commonBase ?? allCommonBaseCurrencies),
@@ -283,8 +361,8 @@ function setupDefaultMocks({
     refetch: vi.fn(),
   })
 
-  // useCurrencyInfosWithLoading is called four times: first for XLayer, then for Linea, then for Base, then for MegaETH.
-  // Each call receives { skip: true } when the chain doesn't match.
+  // useCurrencyInfosWithLoading is called six times: first for XLayer, then for Linea, then for Base,
+  // then for MegaETH, then for Robinhood, then for Arc. Each call receives { skip: true } when the chain doesn't match.
   mockUseCurrencyInfosWithLoading
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.XLayer
@@ -305,6 +383,16 @@ function setupDefaultMocks({
       chainFilter === UniverseChainId.MegaETH
         ? { data: megaEthData, error: megaEthError, loading: megaEthLoading, refetch: vi.fn() }
         : { ...skippedResult, loading: megaEthLoading },
+    )
+    .mockReturnValueOnce(
+      chainFilter === UniverseChainId.Robinhood
+        ? { data: robinhoodData, error: robinhoodError, loading: robinhoodLoading, refetch: vi.fn() }
+        : { ...skippedResult, loading: robinhoodLoading },
+    )
+    .mockReturnValueOnce(
+      chainFilter === UniverseChainId.Arc
+        ? { data: arcData, error: arcError, loading: arcLoading, refetch: vi.fn() }
+        : { ...skippedResult, loading: arcLoading },
     )
 }
 
@@ -360,6 +448,51 @@ describe(useCommonTokensOptions, () => {
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.MegaETH, megaEthUsdeToken.address))
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.MegaETH, megaEthBtcBToken.address))
       expect(result.current.data).toHaveLength(megaEthCurrencies.length)
+    })
+
+    it('returns Robinhood-specific tokens when chainFilter is Robinhood', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Robinhood })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Robinhood,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      // Should return Robinhood currencies, not common base
+      const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Robinhood, robinhoodWethToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Robinhood, robinhoodUsdgToken.address))
+      expect(result.current.data).toHaveLength(robinhoodCurrencies.length)
+    })
+
+    it('returns Arc-specific tokens when chainFilter is Arc', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Arc })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Arc,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      // Should return Arc currencies, not common base
+      const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcUsdcToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcUsycToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcEurcToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcWethToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcCirBtcToken.address))
+      expect(result.current.data).toHaveLength(arcCurrencies.length)
     })
 
     it('returns XLayer-specific tokens when chainFilter is XLayer', async () => {
@@ -516,6 +649,40 @@ describe(useCommonTokensOptions, () => {
 
       expect(result.current.data).toEqual([])
     })
+
+    it('returns empty array when Robinhood currencies are empty', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Robinhood, robinhoodData: [] })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Robinhood,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.data).toEqual([])
+    })
+
+    it('returns empty array when Arc currencies are empty', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Arc, arcData: [] })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Arc,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.data).toEqual([])
+    })
   })
 
   describe('error handling', () => {
@@ -581,6 +748,42 @@ describe(useCommonTokensOptions, () => {
         useCommonTokensOptions({
           portfolioData: makePortfolioData(),
           chainFilter: UniverseChainId.MegaETH,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.error).toBeTruthy()
+    })
+
+    it('returns error when Robinhood currencies fetch fails and chainFilter is Robinhood', async () => {
+      const robinhoodError = new Error('Robinhood fetch failed')
+      setupDefaultMocks({ chainFilter: UniverseChainId.Robinhood, robinhoodData: [], robinhoodError })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Robinhood,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.error).toBeTruthy()
+    })
+
+    it('returns error when Arc currencies fetch fails and chainFilter is Arc', async () => {
+      const arcError = new Error('Arc fetch failed')
+      setupDefaultMocks({ chainFilter: UniverseChainId.Arc, arcData: [], arcError })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Arc,
         }),
       )
 
@@ -665,6 +868,32 @@ describe(useCommonTokensOptions, () => {
         useCommonTokensOptions({
           portfolioData: makePortfolioData(),
           chainFilter: UniverseChainId.Base,
+        }),
+      )
+
+      expect(result.current.loading).toBe(true)
+    })
+
+    it('is loading when Robinhood currencies are loading', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Robinhood, robinhoodLoading: true })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Robinhood,
+        }),
+      )
+
+      expect(result.current.loading).toBe(true)
+    })
+
+    it('is loading when Arc currencies are loading', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Arc, arcLoading: true })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Arc,
         }),
       )
 

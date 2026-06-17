@@ -1,4 +1,4 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { DeadlineControl } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineControl'
 import { DeadlineWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineWarning'
@@ -12,7 +12,7 @@ export const Deadline: TransactionSettingConfig = {
   applicablePlatforms: [Platform.EVM],
   renderTitle: (t) => t('swap.deadline.settings.title.short'),
   renderTooltip: (t) => t('swap.settings.deadline.tooltip'),
-  tooltipLearnMoreUrl: uniswapUrls.helpArticleUrls.swapDeadline,
+  tooltipLearnMoreUrl: UniswapHelpUrls.articles.swapDeadline,
   Control() {
     return <DeadlineControl />
   },

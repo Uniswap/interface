@@ -5,7 +5,7 @@ import { GasEstimate, GraphQLApi, TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
+import type { AuctionCreateAnalyticsProperties, SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
@@ -355,6 +355,7 @@ export enum TransactionType {
   AuctionBid = 'auction-bid',
   AuctionClaimed = 'auction-claimed',
   AuctionExited = 'auction-exited',
+  AuctionLaunch = 'auction-launch',
 
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
@@ -697,6 +698,14 @@ export interface ToucanBidTransactionInfo extends BaseTransactionInfo {
    */
   bidTokenAddress: string
   /**
+   * Address of the token being auctioned.
+   */
+  auctionTokenAddress?: string
+  /**
+   * Symbol of the token being auctioned.
+   */
+  auctionTokenSymbol?: string
+  /**
    * Identifier returned from the Toucan auction service
    */
   requestId: string
@@ -749,6 +758,25 @@ export interface AuctionExitedTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   amountRaw: string
   dappInfo?: DappInfoTransactionDetails
+}
+
+export interface AuctionLaunchTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.AuctionLaunch
+  requestId: string
+  predictedAuctionAddress: string
+  predictedTokenAddress: string
+  // The launched token isn't indexed at submit time, so activity UIs can't resolve its
+  // metadata from the predicted address — carry the form's display fields instead.
+  tokenName?: string
+  tokenSymbol?: string
+  tokenLogoUrl?: string
+  dappInfo?: DappInfoTransactionDetails
+  /**
+   * Snapshot of the `Auction Create Submitted` analytics properties, persisted so the activity
+   * updater can fire `Auction Create Completed` with identical values once the launch confirms —
+   * even if the create-auction flow has unmounted by then.
+   */
+  analytics?: AuctionCreateAnalyticsProperties
 }
 
 export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
@@ -811,6 +839,7 @@ export type TransactionTypeInfo =
   | AuctionBidTransactionInfo
   | AuctionClaimedTransactionInfo
   | AuctionExitedTransactionInfo
+  | AuctionLaunchTransactionInfo
 
 /**
  * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.

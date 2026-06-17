@@ -30,7 +30,7 @@ import {
   Sliders,
   Wrench,
 } from 'ui/src/components/icons'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
@@ -152,11 +152,11 @@ export function SettingsScreen(): JSX.Element {
   const handleAboutModalClose = useEvent(() => setIsAboutModalOpen(false))
 
   const handleOpenPrivacyPolicy = useEvent(() => {
-    window.open(uniswapUrls.privacyPolicyUrl, '_blank', 'noopener,noreferrer')
+    window.open(UniswapStaticUrls.privacyPolicyUrl, '_blank', 'noopener,noreferrer')
   })
 
   const handleOpenTermsOfService = useEvent(() => {
-    window.open(uniswapUrls.termsOfServiceUrl, '_blank', 'noopener,noreferrer')
+    window.open(UniswapStaticUrls.termsOfServiceUrl, '_blank', 'noopener,noreferrer')
   })
 
   const handleDisclosuresPress = useEvent(() => {
@@ -328,7 +328,7 @@ export function SettingsScreen(): JSX.Element {
               <SettingsItem
                 Icon={HelpCenter}
                 title={t('settings.setting.helpCenter.title')}
-                url={uniswapUrls.helpArticleUrls.extensionHelp}
+                url={UniswapHelpUrls.articles.extensionHelp}
                 RightIcon={ArrowUpRight}
               />
               <SettingsItem

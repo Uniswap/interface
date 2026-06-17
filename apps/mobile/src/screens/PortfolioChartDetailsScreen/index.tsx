@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
@@ -30,7 +29,6 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const { chains } = useEnabledChains()
   const insets = useAppInsets()
   const queryClient = useQueryClient()
-  const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const [chartPeriod, setChartPeriod] = useState(ChartPeriod.DAY)
   const { chartScrubFiatValue, handleScrub } = useChartScrub()
 
@@ -42,7 +40,6 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     evmAddress: activeAccount.address,
     chartPeriod,
     chainIds: chains,
-    enabled: isPnLEnabled,
   })
 
   const chartPercentChange = useMemo(() => {
@@ -71,11 +68,11 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     portfolioTotalBalanceUSD: portfolioData?.balanceUSD,
   })
 
-  const canShowChart = isPnLEnabled && chartData.length > 0
+  const canShowChart = chartData.length > 0
   const isAllTimePeriod = chartPeriod === ChartPeriod.MAX
 
   useEffect(() => {
-    if (!isPnLEnabled || !activeAccount.address) {
+    if (!activeAccount.address) {
       return
     }
 
@@ -92,7 +89,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
         )
         .catch(() => undefined)
     }
-  }, [activeAccount.address, chartPeriod, chains, isPnLEnabled, queryClient])
+  }, [activeAccount.address, chartPeriod, chains, queryClient])
 
   const centerElement = useMemo(
     () => (

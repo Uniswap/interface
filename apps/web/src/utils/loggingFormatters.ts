@@ -1,15 +1,15 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SwapResult } from '~/hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from '~/lib/utils/analytics'
-import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
+import type { InterfaceTrade } from '~/state/routing/types'
 import { isClassicTrade, isUniswapXTradeType } from '~/state/routing/utils'
+import { TradeFillType, type LimitOrderResult } from '~/types/trade'
 import { computeRealizedPriceImpact } from '~/utils/prices'
 
 export function formatSwapPriceUpdatedEventProperties({
@@ -36,7 +36,7 @@ export function formatSwapPriceUpdatedEventProperties({
 interface AnalyticsEventProps {
   trade: InterfaceTrade
   inputCurrency?: Currency
-  swapResult?: SwapResult
+  limitOrderResult?: LimitOrderResult
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
@@ -48,7 +48,7 @@ interface AnalyticsEventProps {
 export const formatSwapButtonClickEventProperties = ({
   trade,
   inputCurrency,
-  swapResult,
+  limitOrderResult,
   allowedSlippage,
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
@@ -62,8 +62,8 @@ export const formatSwapButtonClickEventProperties = ({
 
   return {
     estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD?.toString() : undefined,
-    transaction_hash: swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined,
-    order_hash: isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : undefined,
+    transaction_hash: limitOrderResult?.type === TradeFillType.Classic ? limitOrderResult.response.hash : undefined,
+    order_hash: isUniswapXTradeType(limitOrderResult?.type) ? limitOrderResult.response.orderHash : undefined,
     transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
     token_in_address: getTokenAddress(displayedInputCurrency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),

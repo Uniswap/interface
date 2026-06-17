@@ -1,4 +1,4 @@
-import { LegendList, LegendListRef } from '@legendapp/list'
+import { LegendList, type LegendListRef } from '@legendapp/list/react-native'
 import { useScrollToTop } from '@react-navigation/native'
 import {
   TokenRankingsResponse,
@@ -6,7 +6,6 @@ import {
   TokenStats,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -16,13 +15,23 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
-import { AnimatedRef, useAnimatedRef } from 'react-native-reanimated'
+import type { AnimatedRef } from 'react-native-reanimated'
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ExploreScreenParams } from 'src/app/navigation/types'
 import { StartEarningSection } from 'src/components/earn/StartEarningSection'
+import {
+  type ExploreListItem,
+  EXPLORE_LIST_DRAW_ROWS,
+  EXPLORE_SKELETON_LIST_ITEMS,
+  EXPLORE_TOKEN_ROW_HEIGHT,
+  exploreListItemKey,
+  exploreListItemsAreEqual,
+  getExploreListItemSize,
+  getExploreListItemType,
+  tokenItemDataKey,
+} from 'src/components/explore/ExploreSections/exploreListItems'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
 import { NetworkPills, NetworkPillsProps } from 'src/components/explore/ExploreSections/NetworkPillsRow'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -40,7 +49,6 @@ import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explo
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -49,31 +57,12 @@ import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
-const TOKEN_ITEM_SIZE = 68
-const AMOUNT_TO_DRAW = 18
-
 type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDisplayType: TokenMetadataDisplayType }
 
 type ExploreSectionsProps = ExploreScreenParams & {
-  listRef: AnimatedRef<FlatList>
+  listRef: AnimatedRef<ScrollView>
   setIsAtTopOnScroll?: (isAtTop: boolean) => void
-}
-
-const renderItem = ({
-  item: { tokenItemData, tokenMetadataDisplayType },
-  index,
-}: {
-  item: TokenItemDataWithMetadata
-  index: number
-}): JSX.Element => {
-  return (
-    <TokenItem
-      eventName={MobileEventName.ExploreTokenItemSelected}
-      index={index}
-      metadataDisplayType={tokenMetadataDisplayType}
-      tokenItemData={tokenItemData}
-    />
-  )
+  onScrollToTopReady?: (scrollToTop: () => void) => void
 }
 
 function ExploreSectionsInner({
@@ -82,6 +71,7 @@ function ExploreSectionsInner({
   orderByMetric,
   chainId,
   setIsAtTopOnScroll,
+  onScrollToTopReady,
 }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
@@ -98,8 +88,7 @@ function ExploreSectionsInner({
       return
     }
     const yOffset = event.nativeEvent.contentOffset.y
-    const isAtTop = yOffset <= 0
-    setIsAtTopOnScroll(isAtTop)
+    setIsAtTopOnScroll(yOffset <= 0)
   })
 
   // Update selectedNetwork and orderBy when chainId prop changes (e.g., from deep links)
@@ -110,8 +99,7 @@ function ExploreSectionsInner({
     }
   }, [chainId, onOrderByChange, orderByMetric])
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const isMultichainPath = multichainTokenUxEnabled && selectedNetwork === null
+  const isMultichainPath = selectedNetwork === null
 
   const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
     chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
@@ -135,10 +123,16 @@ function ExploreSectionsInner({
   usePerformanceLogger(DDRumManualTiming.RenderExploreSections, [selectedNetwork, orderBy])
 
   const legendListRef = useRef<LegendListRef>(null)
-  const scrollRef = useAnimatedRef<ScrollView>()
 
-  useScrollToTop(listRef)
-  useScrollToTop(scrollRef)
+  const scrollToTop = useEvent(() => {
+    void legendListRef.current?.scrollToOffset({ offset: 0, animated: true })
+  })
+
+  useScrollToTop(legendListRef)
+
+  useEffect(() => {
+    onScrollToTopReady?.(scrollToTop)
+  }, [onScrollToTopReady, scrollToTop])
 
   const onRetry = useCallback(async () => {
     await refetch()
@@ -155,15 +149,73 @@ function ExploreSectionsInner({
   const isLoadingOrFetching = isLoading || isFetching
   const showFullScreenLoadingState = (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
 
+  const listData: ExploreListItem[] = useMemo(() => {
+    if (showFullScreenLoadingState) {
+      return EXPLORE_SKELETON_LIST_ITEMS
+    }
+
+    // Generate unique key; using an index in it causes recycling state bugs.
+    const seenCounts = new Map<string, number>()
+
+    return topTokenItems.map((item) => {
+      const baseKey = tokenItemDataKey(item.tokenItemData)
+      const count = seenCounts.get(baseKey) ?? 0
+      seenCounts.set(baseKey, count + 1)
+
+      return {
+        rowType: 'token' as const,
+        key: count === 0 ? baseKey : `${baseKey}-${count}`,
+        ...item,
+      }
+    })
+  }, [showFullScreenLoadingState, topTokenItems])
+
   const contentContainerStyle = useMemo(() => {
     return {
       paddingBottom: ESTIMATED_BOTTOM_TABS_HEIGHT + spacing.spacing32 + insets.bottom,
     }
   }, [insets.bottom])
 
-  const listEmptyComponent = useMemo(
-    () => <TokenListEmptyComponent isLoading={showFullScreenLoadingState} />,
-    [showFullScreenLoadingState],
+  const listEmptyComponent = useMemo(() => {
+    if (showFullScreenLoadingState || topTokenItems.length > 0) {
+      return null
+    }
+
+    return <TokenListEmptyComponent />
+  }, [showFullScreenLoadingState, topTokenItems.length])
+
+  const renderItem = useCallback(({ item, index }: { item: ExploreListItem; index: number }): JSX.Element => {
+    if (item.rowType === 'skeleton') {
+      return (
+        <Flex height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px={24}>
+          <Loader.Token />
+        </Flex>
+      )
+    }
+
+    return (
+      <TokenItem
+        eventName={MobileEventName.ExploreTokenItemSelected}
+        index={index}
+        metadataDisplayType={item.tokenMetadataDisplayType}
+        tokenItemData={item.tokenItemData}
+      />
+    )
+  }, [])
+
+  const listHeader = useMemo(
+    () => (
+      <ListHeaderComponent
+        listRef={listRef}
+        orderBy={uiOrderBy}
+        showFavorites={showFavorites}
+        showLoading={isInitialLoading}
+        selectedNetwork={selectedNetwork}
+        onSelectNetwork={onSelectNetwork}
+        onOrderByChange={onOrderByChange}
+      />
+    ),
+    [listRef, uiOrderBy, showFavorites, isInitialLoading, selectedNetwork, onSelectNetwork, onOrderByChange],
   )
 
   if (!hasAllData && error) {
@@ -182,41 +234,27 @@ function ExploreSectionsInner({
     <Flex fill animation="100ms">
       <LegendList
         ref={legendListRef}
-        refScrollView={scrollRef}
+        recycleItems
+        refScrollView={listRef}
+        itemsAreEqual={exploreListItemsAreEqual}
         ListEmptyComponent={listEmptyComponent}
-        ListHeaderComponent={
-          <ListHeaderComponent
-            listRef={scrollRef}
-            orderBy={uiOrderBy}
-            showFavorites={showFavorites}
-            showLoading={isInitialLoading}
-            selectedNetwork={selectedNetwork}
-            onSelectNetwork={onSelectNetwork}
-            onOrderByChange={onOrderByChange}
-          />
-        }
+        ListHeaderComponent={listHeader}
         ListHeaderComponentStyle={styles.foreground}
         contentContainerStyle={contentContainerStyle}
-        data={showFullScreenLoadingState ? [] : topTokenItems}
-        keyExtractor={tokenKey}
+        data={listData}
+        keyExtractor={exploreListItemKey}
         renderItem={renderItem}
+        getItemType={getExploreListItemType}
+        getFixedItemSize={getExploreListItemSize}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={TOKEN_ITEM_SIZE}
-        drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
+        estimatedItemSize={EXPLORE_TOKEN_ROW_HEIGHT}
+        drawDistance={EXPLORE_TOKEN_ROW_HEIGHT * EXPLORE_LIST_DRAW_ROWS}
         estimatedListSize={dimensions}
         onScroll={handleScroll}
       />
     </Flex>
   )
-}
-
-const tokenKey = (token: TokenItemDataWithMetadata, index: number): string => {
-  return `${
-    token.tokenItemData.address
-      ? buildCurrencyId(token.tokenItemData.chainId, token.tokenItemData.address)
-      : buildNativeCurrencyId(token.tokenItemData.chainId)
-  }-${index}`
 }
 
 function tokenRankingStatsToTokenItemData(tokenRankingStat: TokenRankingsStat): TokenItemData | null {
@@ -306,7 +344,7 @@ function useTokenItems(data: TokenRankingsResponse | undefined, orderBy: Explore
 }
 
 type ListHeaderProps = {
-  listRef: AnimatedRef<FlatList> | AnimatedRef<ScrollView>
+  listRef: AnimatedRef<ScrollView>
   orderBy: ExploreOrderBy
   showLoading: boolean
   showFavorites: boolean
@@ -338,7 +376,7 @@ const ListHeader = memo(function ListHeader({
   )
 })
 
-const ListHeaderComponent = ({
+const ListHeaderComponent = memo(function ListHeaderComponent({
   listRef,
   onSelectNetwork,
   orderBy,
@@ -346,7 +384,7 @@ const ListHeaderComponent = ({
   showLoading,
   showFavorites,
   onOrderByChange,
-}: ListHeaderProps & NetworkPillsProps): JSX.Element => {
+}: ListHeaderProps & NetworkPillsProps): JSX.Element {
   return (
     <>
       <ListHeader
@@ -359,22 +397,10 @@ const ListHeaderComponent = ({
       <NetworkPills selectedNetwork={selectedNetwork} onSelectNetwork={onSelectNetwork} />
     </>
   )
-}
+})
 
-const TokenListEmptyComponent = memo(function TokenListEmptyComponent({
-  isLoading,
-}: {
-  isLoading: boolean
-}): JSX.Element {
+const TokenListEmptyComponent = memo(function TokenListEmptyComponent(): JSX.Element {
   const { t } = useTranslation()
-
-  if (isLoading) {
-    return (
-      <Flex mx="$spacing24" my="$spacing12">
-        <Loader.Token repeat={5} />
-      </Flex>
-    )
-  }
 
   return (
     <Flex centered pt="$spacing48" px="$spacing36">

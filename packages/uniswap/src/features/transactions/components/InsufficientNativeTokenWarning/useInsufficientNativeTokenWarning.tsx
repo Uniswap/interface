@@ -5,11 +5,14 @@ import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
-import { convertTempoGasFeeForDisplay } from 'uniswap/src/features/gas/tempo'
+import {
+  convertShiftedGasFeeForDisplay,
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -72,11 +75,14 @@ export function useInsufficientNativeTokenWarning({
     if (!gasFee.value || !nativeCurrency?.chainId) {
       return undefined
     }
-    // For Tempo: use warning.currency directly (pathUSD from upstream) and convert
-    // the 18-decimal gas fee to 6-decimal pathUSD units
-    const isTempo = nativeCurrency.chainId === UniverseChainId.Tempo
-    const currency = isTempo ? nativeCurrency : nativeOnChain(nativeCurrency.chainId)
-    const value = isTempo ? convertTempoGasFeeForDisplay(gasFee.value) : gasFee.value
+    // On chains that pay gas in a non-native shifted token (e.g. Tempo pathUSD, Arc
+    // USDC): use warning.currency directly (the gas token, set upstream) and convert
+    // the 18-decimal native gas fee to the gas token's decimals.
+    const shiftGasToken = hasShiftedGasToken(nativeCurrency.chainId)
+    const currency = shiftGasToken ? nativeCurrency : nativeOnChain(nativeCurrency.chainId)
+    const value = shiftGasToken
+      ? convertShiftedGasFeeForDisplay(gasFee.value, getGasFeeDecimalsShift(nativeCurrency.chainId))
+      : gasFee.value
     return getCurrencyAmount({ value, valueType: ValueType.Raw, currency })
   }, [gasFee.value, nativeCurrency])
 
@@ -155,7 +161,10 @@ export function useInsufficientNativeTokenWarning({
         tokenSymbol: nativeCurrency.symbol,
       }
 
-      if (isTestnetModeEnabled) {
+      // Use the amount-less copy when we have no `gasAmount` to display. Otherwise the
+      // message renders a broken "~ {{tokenSymbol}} (-)" (e.g. on newly launched chains
+      // like Robinhood where no quote/gas estimate or USD price is available yet).
+      if (isTestnetModeEnabled || !gasAmount) {
         return (
           <Trans
             i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount.noAction"

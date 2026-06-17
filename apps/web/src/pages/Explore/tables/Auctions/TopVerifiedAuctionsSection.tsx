@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
 import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
@@ -62,7 +62,7 @@ export function TopVerifiedAuctionsSection() {
         <Tooltip placement="top" delay={0}>
           <Tooltip.Trigger>
             <Anchor
-              href={uniswapUrls.helpArticleUrls.toucanVerifiedAuctionsHelp}
+              href={UniswapHelpUrls.articles.toucanVerifiedAuctionsHelp}
               target="_blank"
               onPress={(e) => e.stopPropagation()}
               display="flex"

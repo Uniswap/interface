@@ -26,7 +26,6 @@ import { usePortfolioChartSeries } from '~/pages/Portfolio/Overview/hooks/usePor
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
 import { PortfolioPerformance } from '~/pages/Portfolio/Overview/PortfolioPerformance'
-import { OverviewStatsTiles } from '~/pages/Portfolio/Overview/StatsTiles'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const ActionsAndStatsContainer = styled(Flex, {
@@ -50,7 +49,6 @@ const ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER = 92
 export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const showBalanceHeaderRow = portfolioPoolsBalancesEnabled
   const { chainId, isExternalWallet } = usePortfolioRoutes()
@@ -150,7 +148,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     [queryClient, portfolioAddresses.evmAddress, portfolioAddresses.svmAddress, filterChainIds, selectedPeriod],
   )
 
-  // Fetch activity data once at the top level to share between useSwapsThisWeek and MiniActivityTable
+  // Fetch activity data once at the top level to share across the overview tables
   const activityData = useActivityData({
     evmOwner: portfolioAddresses.evmAddress,
     svmOwner: portfolioAddresses.svmAddress,
@@ -199,7 +197,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
                 pt={showBalanceHeaderRow && !isFullWidth ? ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER : undefined}
               >
                 <OverviewActionTiles />
-                {isProfitLossEnabled ? <PortfolioPerformance /> : <OverviewStatsTiles activityData={activityData} />}
+                <PortfolioPerformance />
               </ActionsAndStatsContainer>
             </Trace>
           )}

@@ -150,9 +150,17 @@ export const networkColors = {
     light: '#121212',
     dark: '#61DFFF',
   },
+  arc: {
+    light: '#2B5CE6',
+    dark: '#6E8FF7',
+  },
   megaeth: {
     light: '#19191A',
     dark: '#FFFFFF',
+  },
+  robinhood: {
+    light: '#00C805',
+    dark: '#00C805',
   },
   soneium: {
     light: '#000000',
@@ -360,6 +368,8 @@ export const colorsLight = {
   chain_196: networkColors.xlayer.light,
   chain_59144: networkColors.linea.light,
   chain_4326: networkColors.megaeth.light,
+  chain_4663: networkColors.robinhood.light,
+  chain_5042: networkColors.arc.light,
   chain_501000101: networkColors.solana.light,
   chain_143: networkColors.monad.light,
 
@@ -454,6 +464,8 @@ export const colorsDark = {
   chain_196: networkColors.xlayer.dark,
   chain_59144: networkColors.linea.dark,
   chain_4326: networkColors.megaeth.dark,
+  chain_4663: networkColors.robinhood.dark,
+  chain_5042: networkColors.arc.dark,
   chain_501000101: networkColors.solana.dark,
   chain_143: networkColors.monad.dark,
 

@@ -6,7 +6,7 @@ import { useOpenSidebar } from 'src/app/features/onboarding/hooks/useOpenSidebar
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
 import { Flex, Text } from 'ui/src'
 import { Check, GraduationCap } from 'ui/src/components/icons'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 
 export function ResetComplete(): JSX.Element {
   const { t } = useTranslation()
@@ -33,11 +33,7 @@ export function ResetComplete(): JSX.Element {
           handleOpenSidebar={handleOpenSidebar}
           handleOpenWebApp={handleOpenWebApp}
         />
-        <Link
-          style={{ textDecoration: 'none' }}
-          target="_blank"
-          to={uniswapUrls.helpArticleUrls.walletSecurityMeasures}
-        >
+        <Link style={{ textDecoration: 'none' }} target="_blank" to={UniswapHelpUrls.articles.walletSecurityMeasures}>
           <Flex row alignItems="center" gap="$spacing8">
             <GraduationCap color="$neutral3" size="$icon.20" />
             <Text color="$neutral3" variant="buttonLabel2">

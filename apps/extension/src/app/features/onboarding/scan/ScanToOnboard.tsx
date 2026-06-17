@@ -10,6 +10,7 @@ import {
 } from 'react-native-reanimated'
 import { SpringConfig } from 'react-native-reanimated/lib/typescript/animation/springUtils'
 import QRCode from 'react-qr-code' //TODO(EXT-476): Replace with custom QR code designs
+import { getUniswapServiceUrls } from 'src/app/config'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useScantasticContext } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
@@ -22,7 +23,6 @@ import { DOT_GRID, UNISWAP_LOGO } from 'ui/src/assets'
 import { FileListLock, Mobile, RotatableChevron, Wifi } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
@@ -86,7 +86,7 @@ export function ScanToOnboard(): JSX.Element {
     }
     try {
       // poll OTP state
-      const response = await fetch(`${uniswapUrls.scantasticApiUrl}/otp-state/${sessionUUID}`, {
+      const response = await fetch(`${getUniswapServiceUrls().scantasticApiUrl}/otp-state/${sessionUUID}`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

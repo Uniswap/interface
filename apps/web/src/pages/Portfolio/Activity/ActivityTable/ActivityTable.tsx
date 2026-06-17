@@ -174,7 +174,6 @@ function ActivityTableInner({ data, loading = false, error = false, rowWrapper }
       data={data}
       loading={loading}
       error={error}
-      v2={true}
       rowWrapper={rowWrapper}
       rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
       compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}

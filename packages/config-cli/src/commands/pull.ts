@@ -26,10 +26,10 @@ export const pull = Cli.create('pull', {
   }),
   async run(c) {
     const { auth } = vars(c)
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
     const fetcher = createConfigFetcherService({ client })
 
-    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}`))
+    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}/${c.options.env}`))
 
     if (parameters.length === 0) {
       return c.error({

@@ -6,6 +6,7 @@ import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -191,7 +192,7 @@ export const PriceSettingsSection = forwardRef<PriceSettingsSectionHandle, Price
           />
           <Flex row gap="$spacing4" alignItems="center">
             <QuestionInCircleFilled size="$icon.16" color="$neutral2" />
-            <ExternalLink href="https://support.uniswap.org/hc/en-us">
+            <ExternalLink href={UniswapHelpUrls.articles.toucanLaunchAuctionConfigureAuctionHelp}>
               <Text variant="body3" color="$neutral2" textDecorationLine="underline" textDecorationStyle="dashed">
                 {t('toucan.createAuction.step.configureAuction.raiseCurrency.helpLink')}
               </Text>

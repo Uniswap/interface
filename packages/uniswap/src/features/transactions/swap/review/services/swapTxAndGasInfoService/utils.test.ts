@@ -1,5 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
-import type { ClassicQuoteResponse, GasFeeResult } from '@universe/api'
+import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import type { ClassicQuoteResponse, GasFeeResult, WrapQuoteResponse } from '@universe/api'
 import { FeeType, TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import type { providers } from 'ethers/lib/ethers'
@@ -13,14 +13,22 @@ import {
   createProcessSwapResponse,
   getShouldSkipSwapRequest,
   getSimulationError,
+  getWrapTxAndGasInfo,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import {
+  createWrapTrade,
+  type TokenApprovalInfo,
+  type TradeWithStatus,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { ETH, WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
 // Mock the gating layer so we can drive the GasFeeOverrides flag per test
 vi.mock('@universe/gating', async (importOriginal) => {

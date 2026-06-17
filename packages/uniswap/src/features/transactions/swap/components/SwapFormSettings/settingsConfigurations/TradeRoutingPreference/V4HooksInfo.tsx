@@ -7,7 +7,7 @@ import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function V4HooksInfo(): JSX.Element {
@@ -15,10 +15,7 @@ export function V4HooksInfo(): JSX.Element {
   return (
     <WarningInfo
       infoButton={
-        <LearnMoreLink
-          textVariant={isWebPlatform ? 'body4' : undefined}
-          url={uniswapUrls.helpArticleUrls.v4HooksInfo}
-        />
+        <LearnMoreLink textVariant={isWebPlatform ? 'body4' : undefined} url={UniswapHelpUrls.articles.v4HooksInfo} />
       }
       modalProps={{
         caption: t('swap.settings.routingPreference.option.v4.hooks.tooltip'),

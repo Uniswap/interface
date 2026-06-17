@@ -70,7 +70,7 @@ export const createRenderActions = (
       getState,
       getActions,
     })
-    const timescaleRenderer = createTimescaleRenderer({ g: timescaleG, context, getState })
+    const timescaleRenderer = createTimescaleRenderer({ g: timescaleG, context })
 
     set((state) => ({
       ...state,

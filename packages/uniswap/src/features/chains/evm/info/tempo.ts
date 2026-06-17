@@ -52,6 +52,8 @@ export const TEMPO_CHAIN_INFO = {
     logo: TEMPO_LOGO,
   },
   wrappedNativeCurrency: null,
+  // Tempo pays gas in pathUSD (6-decimal ERC-20), not a native token.
+  gasTokenOverride: tempoTokens.pathUSD,
   networkLayer: NetworkLayer.L1,
   blockTimeMs: 500,
   pendingTransactionsRetryOptions: undefined,

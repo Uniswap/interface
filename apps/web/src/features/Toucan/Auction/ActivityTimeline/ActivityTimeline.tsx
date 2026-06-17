@@ -13,6 +13,7 @@ import {
   TimelineEventType,
   useTimelineEvents,
 } from '~/features/Toucan/Auction/ActivityTimeline/useTimelineEvents'
+import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
@@ -141,9 +142,18 @@ function TimelineItem({
               <Text variant="body4" color="$neutral2">
                 {timeLabel}
               </Text>
-              <Text variant="buttonLabel3" color={isPast && !isActive ? '$neutral2' : '$neutral1'}>
-                {event.label}
-              </Text>
+              <Flex row alignItems="center" gap="$spacing8">
+                <Text variant="buttonLabel3" color={isPast && !isActive ? '$neutral2' : '$neutral1'}>
+                  {event.label}
+                </Text>
+                {event.badge ? (
+                  <Flex backgroundColor="$surface3" px="$spacing6" py="$spacing2" borderRadius="$rounded6">
+                    <Text variant="body4" color="$neutral2">
+                      {event.badge}
+                    </Text>
+                  </Flex>
+                ) : null}
+              </Flex>
             </Flex>
             {isExpanded ? (
               <AnglesMinimize color="$neutral3" size="$icon.16" />
@@ -173,6 +183,12 @@ export function ActivityTimeline() {
   const { effectiveTokenColor } = useAuctionTokenColor()
   const dayjs = useLocalizedDayjs()
 
+  const { auctionHasPresale, allowlistEndBlock } = useAuctionKycStatus({
+    auctionAddress: auctionDetails?.address,
+    chainId: auctionDetails?.chainId,
+    currentBlockNumber,
+  })
+
   const strings = useMemo(
     (): Record<TimelineEventType, TimelineEventStrings> => ({
       'pre-sale-starts': {
@@ -189,6 +205,14 @@ export function ActivityTimeline() {
         label: t('toucan.timeline.auctionStarted'),
         description: t('toucan.timeline.auctionStarted.description'),
         futureDescription: t('toucan.timeline.auctionStarted.description.future'),
+        badge: t('toucan.timeline.allowlistOnly'),
+        allowlistDescription: t('toucan.timeline.auctionStarted.allowlist.description'),
+        allowlistFutureDescription: t('toucan.timeline.auctionStarted.allowlist.description.future'),
+      },
+      'general-sale-starts': {
+        label: t('toucan.timeline.generalSaleStarts'),
+        description: t('toucan.timeline.generalSaleStarts.description'),
+        futureDescription: t('toucan.timeline.generalSaleStarts.description.future'),
       },
       'auction-ends': {
         label: t('toucan.timeline.auctionEnds'),
@@ -204,7 +228,7 @@ export function ActivityTimeline() {
     [t],
   )
 
-  const events = useTimelineEvents(auctionDetails, strings)
+  const events = useTimelineEvents({ auctionDetails, strings, auctionHasPresale, allowlistEndBlock })
   const activeIndex = getActiveEventIndex(events, currentBlockNumber)
 
   if (events.length === 0) {

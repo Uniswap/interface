@@ -14,10 +14,10 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 _mb-t-space-spa94665587 scrollbar-hidden"
         >
           <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -128,7 +128,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _maxHeight-528px _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _maxHeight-528px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _gap-t-space-spa94665587"
@@ -140,7 +140,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column t_group_true"
               >
                 <div
-                  class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+                  class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
@@ -338,10 +338,10 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 _mb-t-space-spa94665587 scrollbar-hidden"
         >
           <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _opacity-0--4 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _opacity-0--4 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -486,13 +486,13 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _maxHeight-528px _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _maxHeight-528px scrollbar-hidden"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665587"
           >
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -676,7 +676,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -860,7 +860,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1044,7 +1044,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1228,7 +1228,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1412,7 +1412,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1596,7 +1596,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1780,7 +1780,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1964,7 +1964,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2148,7 +2148,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2332,7 +2332,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2516,7 +2516,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2700,7 +2700,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2884,7 +2884,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3068,7 +3068,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3252,7 +3252,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3436,7 +3436,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3620,7 +3620,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3804,7 +3804,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -3988,7 +3988,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -4242,10 +4242,10 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 _mb-t-space-spa94665587 scrollbar-hidden"
         >
           <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -4390,13 +4390,13 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _maxHeight-528px _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _maxHeight-528px scrollbar-hidden"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665587"
           >
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -4580,7 +4580,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -4764,7 +4764,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -4948,7 +4948,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -5132,7 +5132,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -5316,7 +5316,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -5500,7 +5500,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -5684,7 +5684,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -5868,7 +5868,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6052,7 +6052,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6236,7 +6236,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6420,7 +6420,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6604,7 +6604,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6788,7 +6788,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6972,7 +6972,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -7156,7 +7156,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -7340,7 +7340,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -7524,7 +7524,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -7708,7 +7708,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -7892,7 +7892,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"

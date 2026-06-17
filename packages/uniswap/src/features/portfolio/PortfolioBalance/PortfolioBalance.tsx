@@ -1,13 +1,13 @@
 import type { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { isWarmLoadingStatus } from '@universe/api'
 import { isWebApp, isWebPlatform } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, RefreshButton, Shine, Text, useIsDarkMode } from 'ui/src'
+import { Flex, RefreshButton, Text, useIsDarkMode } from 'ui/src'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,7 +19,13 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
+import { Change1dUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/Change1dUnavailableIndicator'
+import {
+  getPortfolioRelativeChangeDisplay,
+  PortfolioRelativeChangeDisplay,
+} from 'uniswap/src/features/portfolio/PortfolioBalance/getPortfolioRelativeChangeDisplay'
 import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
+import { PortfolioRelativeChange } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioRelativeChange'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
@@ -95,6 +101,21 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const percentChange = hidePercentChange ? undefined : (overridePercentChange ?? backendPercentChange)
   const absoluteChangeUSD = overrideAbsoluteChangeUSD ?? backendAbsoluteChangeUSD
 
+  // Read from `activeData` (the displayed source, which falls back to tokens when pools are
+  // unavailable) so the check matches `percentChange` above. `undefined` means the server omitted
+  // the field (unavailable); `0` is a valid zero.
+  const backendPercentChangeUnavailable = !!activeData && activeData.percentChange === undefined
+
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const changeDisplay = getPortfolioRelativeChangeDisplay({
+    enabled: portfolioPoolsBalancesEnabled,
+    part,
+    backendPercentChangeUnavailable,
+    hasOverride: overridePercentChange !== undefined,
+    hidePercentChange,
+    isLoading,
+  })
+
   const isRightToLeft = i18next.dir() === 'rtl'
 
   const displayBalanceUSD = overrideBalanceUSD ?? balanceUSD
@@ -137,17 +158,17 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
         endElementGap={endElementGap}
       />
       <Flex row grow alignItems="center">
-        <Shine disabled={!isWarmLoading}>
-          <RelativeChange
+        {changeDisplay === PortfolioRelativeChangeDisplay.Unavailable ? (
+          <Change1dUnavailableIndicator />
+        ) : changeDisplay === PortfolioRelativeChangeDisplay.Omit ? null : (
+          <PortfolioRelativeChange
+            isLoading={isLoading}
+            isWarmLoading={isWarmLoading}
+            hasError={!!error}
+            percentChange={percentChange}
             absoluteChange={absoluteChange}
-            arrowSize="$icon.16"
-            change={percentChange}
-            loading={isLoading}
-            negativeChangeColor={isWarmLoading || !!error ? '$neutral2' : '$statusCritical'}
-            positiveChangeColor={isWarmLoading || !!error ? '$neutral2' : '$statusSuccess'}
-            variant="body3"
           />
-        </Shine>
+        )}
         {/* Hide period label during chart scrub (overrideBalanceUSD is set while scrubbing) */}
         {chartPeriod !== undefined && overrideBalanceUSD === undefined && (
           <Text variant="body3" color="$neutral3" ml="$spacing4">

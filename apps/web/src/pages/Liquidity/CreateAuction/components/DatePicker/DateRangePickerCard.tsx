@@ -22,7 +22,7 @@ export type DateRangePickerCardProps = {
   endTimeLabel: string
   startDate: Date | undefined
   endDate: Date | undefined
-  /** Minimum allowed start date (e.g. now+1h). End date's effective min is `max(minStartDate, startDate)`. */
+  /** Minimum allowed start date (e.g. now+5m). End date's effective min is `max(minStartDate, startDate)`. */
   minStartDate?: Date
   startPlaceholder: string
   endPlaceholder: string

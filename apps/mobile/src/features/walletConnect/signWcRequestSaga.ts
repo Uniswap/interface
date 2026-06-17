@@ -142,6 +142,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         account,
         chainId: params.request.chainId,
         typeInfo,
+        requestUniswapGasSponsorship: false,
       }
       const { userOpHash } = yield* call(executeUserOpSaga, userOpParams)
 

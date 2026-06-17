@@ -1,12 +1,6 @@
 import { GqlResult } from '@universe/api'
 import { isWebApp } from '@universe/environment'
-import {
-  DynamicConfigs,
-  FeatureFlags,
-  useDynamicConfigValue,
-  useFeatureFlag,
-  DisableWalletSearchTermsConfigKey,
-} from '@universe/gating'
+import { DynamicConfigs, useDynamicConfigValue, DisableWalletSearchTermsConfigKey } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
@@ -16,7 +10,7 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/TokenSelector/hooks/useMultichainSearchResultsToOptions'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
-import { useMultichainSearchTokens, useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useMultichainSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
@@ -41,8 +35,7 @@ export function useSectionsForSearchResults({
   shouldPrioritizeWallets: boolean
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
   // Token search results
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const useMultichainPath = multichainTokenUxEnabled && chainFilter === null
+  const useMultichainPath = chainFilter === null
 
   // RWA (tokenized stock) grouping
   const rwaIndex = useRwaSearchIndex()
@@ -51,33 +44,24 @@ export function useSectionsForSearchResults({
   const skipTokenSearch = !searchFilter || (activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All)
 
   const {
-    data: searchResultCurrencies,
-    error: flatSearchTokensError,
-    refetch: refetchFlatSearchTokens,
-    loading: flatSearchTokensLoading,
-  } = useSearchTokens({
-    searchQuery: searchFilter,
-    chainFilter,
-    skip: skipTokenSearch || useMultichainPath,
-  })
-
-  const {
-    data: multichainResults,
-    error: multichainTokensError,
-    refetch: refetchMultichainTokens,
-    loading: multichainTokensLoading,
+    data: multichainData,
+    error: searchTokensError,
+    refetch: refetchSearchTokens,
+    loading: searchTokensLoading,
   } = useMultichainSearchTokens({
     searchQuery: searchFilter,
     chainFilter,
-    skip: skipTokenSearch || !useMultichainPath,
+    skip: skipTokenSearch,
   })
+
+  const searchResultCurrencies = useMemo(
+    () => (!useMultichainPath ? multichainData?.flatMap((r) => r.tokens) : undefined),
+    [useMultichainPath, multichainData],
+  )
+  const multichainResults = useMultichainPath ? multichainData : undefined
 
   const tokenSearchResults = useCurrencyInfosToTokenOptions({ currencyInfos: searchResultCurrencies })
   const multichainSearchOptions = useMultichainSearchResultsToOptions({ results: multichainResults })
-
-  const searchTokensError = useMultichainPath ? multichainTokensError : flatSearchTokensError
-  const searchTokensLoading = useMultichainPath ? multichainTokensLoading : flatSearchTokensLoading
-  const refetchSearchTokens = useMultichainPath ? refetchMultichainTokens : refetchFlatSearchTokens
 
   // Pool search results
   const skipPoolSearchQuery =

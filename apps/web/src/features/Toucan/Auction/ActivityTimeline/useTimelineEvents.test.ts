@@ -24,6 +24,11 @@ const strings: Record<TimelineEventType, TimelineEventStrings> = {
     description: 'Auction begins',
     futureDescription: 'Auction will begin',
   },
+  'general-sale-starts': {
+    label: 'General sale starts',
+    description: 'General sale begins',
+    futureDescription: 'General sale will begin',
+  },
   'auction-ends': { label: 'Auction ends', description: 'Auction ends', futureDescription: 'Auction will end' },
   'tokens-claimable': {
     label: 'Tokens claimable',
@@ -91,7 +96,7 @@ describe('getActiveEventIndex', () => {
 describe('deriveTimelineEvents', () => {
   it('returns empty array when there are no steps', () => {
     const details = makeAuctionDetails({ parsedAuctionSteps: [] })
-    expect(deriveTimelineEvents(details, strings)).toEqual([])
+    expect(deriveTimelineEvents({ auctionDetails: details, strings })).toEqual([])
   })
 
   it('derives auction-started, auction-ends, and tokens-claimable without pre-sale', () => {
@@ -101,7 +106,7 @@ describe('deriveTimelineEvents', () => {
       claimBlock: '600',
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     expect(events).toHaveLength(3)
     expect(events.map((e) => e.type)).toEqual(['auction-started', 'auction-ends', 'tokens-claimable'])
@@ -120,7 +125,7 @@ describe('deriveTimelineEvents', () => {
       claimBlock: '600',
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     expect(events).toHaveLength(5)
     expect(events.map((e) => e.type)).toEqual([
@@ -142,7 +147,7 @@ describe('deriveTimelineEvents', () => {
       claimBlock: '600',
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     // No pre-sale because firstReleaseStepIndex would be -1 (no mps > 0)
     expect(events).toHaveLength(3)
@@ -155,7 +160,7 @@ describe('deriveTimelineEvents', () => {
       parsedAuctionSteps: [makeStep(10, '200')],
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     expect(events[0].label).toBe('Auction started')
     expect(events[0].description).toBe('Auction begins')
@@ -170,7 +175,7 @@ describe('deriveTimelineEvents', () => {
       parsedAuctionSteps: [makeStep(10, '200')],
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     expect(events[0].time.getTime()).toBe(1735690800000)
     expect(events[1].time.getTime()).toBe(1735694400000)
@@ -188,7 +193,7 @@ describe('deriveTimelineEvents', () => {
       claimBlock: '600',
     })
 
-    const events = deriveTimelineEvents(details, strings)
+    const events = deriveTimelineEvents({ auctionDetails: details, strings })
 
     expect(events).toHaveLength(5)
     expect(events[0].type).toBe('pre-sale-starts')

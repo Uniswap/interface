@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { TFunction } from 'i18next'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -21,7 +21,7 @@ export function getTokenStructuredData({
   }
 
   const chainUrlParam = getChainInfo(fromGraphQLChain(tokenQueryData.chain) ?? UniverseChainId.Mainnet).urlParam
-  const tokenDetailsUrl = `${uniswapUrls.webInterfaceTokensUrl}/${chainUrlParam}/${tokenQueryData.address ?? NATIVE_CHAIN_ID}`
+  const tokenDetailsUrl = `${UniswapStaticUrls.webInterfaceTokensUrl}/${chainUrlParam}/${tokenQueryData.address ?? NATIVE_CHAIN_ID}`
   return [
     {
       '@context': 'https://schema.org/',
@@ -44,7 +44,7 @@ export function getTokenStructuredData({
           '@type': 'ListItem',
           position: 1,
           name: 'Explore',
-          item: uniswapUrls.webInterfaceTokensUrl,
+          item: UniswapStaticUrls.webInterfaceTokensUrl,
         },
         {
           '@type': 'ListItem',

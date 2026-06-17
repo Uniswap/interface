@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import type { PoolSummary } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -25,6 +26,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 }))
 
 const useInfiniteQueryMock = vi.mocked(useInfiniteQuery)
+const listPoolsMock = vi.mocked(liquidityQueries.listPools)
 
 const SORT_STATE = { sortBy: PoolSortFields.TVL, sortDirection: OrderDirection.Desc }
 
@@ -68,6 +70,14 @@ describe('useAddLiquidityPools', () => {
     expect(result.current.pools).toHaveLength(2)
   })
 
+  it('requests spam-filtered pools from the ListPools endpoint', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-1' })])
+    renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(listPoolsMock).toHaveBeenCalledWith(
+      expect.objectContaining({ params: expect.objectContaining({ filterSpam: true }) }),
+    )
+  })
+
   // Regression: native-token pools come back with an empty token address (proto3 scalar defaults to ''),
   // which the converter stores as `undefined`. The search filter must not crash on the address lookup.
   it('does not throw when filtering a pool whose token address is empty (native token)', () => {
@@ -108,5 +118,20 @@ describe('useAddLiquidityPools', () => {
     mockPools([buildPool({ poolIdentifier: 'pool-x', token0Metadata: undefined, token1Metadata: undefined })])
     const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: 'undefined' }))
     expect(result.current.pools).toEqual([])
+  })
+
+  it('converts the numeric protocol version to a display label', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-1', protocolVersion: Protocols.V4 })])
+    const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(result.current.pools?.[0]?.protocolVersion).toBe('v4')
+  })
+
+  // Regression: the ListPools query is persisted to storage and rehydrated as plain JSON, where the
+  // protobuf `Protocols` enum is its name ("V4") rather than the numeric value. The converter must
+  // still resolve a label, otherwise the pool table's Protocol column renders empty after a refresh.
+  it('converts the persisted (enum-name) protocol version to a display label', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-1', protocolVersion: 'V4' as unknown as Protocols })])
+    const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(result.current.pools?.[0]?.protocolVersion).toBe('v4')
   })
 })

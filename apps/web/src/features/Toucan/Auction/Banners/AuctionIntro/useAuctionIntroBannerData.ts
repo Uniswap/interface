@@ -3,6 +3,9 @@ import { CSSProperties, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { opacifyRaw } from 'ui/src/theme'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDurationRemaining'
 import { AuctionDetails, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
@@ -13,16 +16,20 @@ type AuctionIntroBannerVariant = 'not-started' | 'in-progress'
 function getAuctionBannerConfig({
   isPreBidPeriod,
   isNotStarted,
+  isAllowlistOnlyWindow,
+  allowlistEndBlock,
   auctionDetails,
   t,
 }: {
   isPreBidPeriod: boolean
   isNotStarted: boolean
+  isAllowlistOnlyWindow: boolean
+  allowlistEndBlock?: number
   auctionDetails: AuctionDetails | null
   t: TFunction
 }): {
   variant: AuctionIntroBannerVariant
-  targetBlock: string | bigint | undefined
+  targetBlock: string | bigint | number | undefined
   durationLabel: string
 } {
   if (isPreBidPeriod) {
@@ -38,6 +45,14 @@ function getAuctionBannerConfig({
       variant: 'not-started',
       targetBlock: auctionDetails?.startBlock,
       durationLabel: t('toucan.auction.introBanner.auctionStartsIn'),
+    }
+  }
+
+  if (isAllowlistOnlyWindow) {
+    return {
+      variant: 'in-progress',
+      targetBlock: allowlistEndBlock,
+      durationLabel: t('toucan.auction.introBanner.generalSaleStartsIn'),
     }
   }
 
@@ -99,6 +114,14 @@ export function useAuctionIntroBannerData(): UseAuctionIntroBannerDataResult {
   const isNotStarted = progressState === AuctionProgressState.NOT_STARTED
   const isInProgress = progressState === AuctionProgressState.IN_PROGRESS
 
+  const activeAddress = useActiveAddress((auctionDetails?.chainId ?? UniverseChainId.Mainnet) as UniverseChainId)
+  const { auctionHasPresale, allowlistEndBlock, isAllowlisted } = useAuctionKycStatus({
+    walletAddress: activeAddress,
+    auctionAddress: auctionDetails?.address,
+    chainId: auctionDetails?.chainId,
+    currentBlockNumber,
+  })
+
   const startBlockNumber = auctionDetails?.startBlock ? Number(auctionDetails.startBlock) : undefined
   const preBidEndBlockNumber = auctionDetails?.preBidEndBlock ? Number(auctionDetails.preBidEndBlock) : undefined
   const isPreBidPeriod =
@@ -108,10 +131,21 @@ export function useAuctionIntroBannerData(): UseAuctionIntroBannerDataResult {
     currentBlockNumber > startBlockNumber &&
     currentBlockNumber < preBidEndBlockNumber
 
+  // Auction is live and emitting but bidding is still restricted to allowlisted wallets
+  const isAllowlistOnlyWindow =
+    isInProgress &&
+    auctionHasPresale &&
+    !isAllowlisted &&
+    allowlistEndBlock !== undefined &&
+    currentBlockNumber !== undefined &&
+    currentBlockNumber < allowlistEndBlock
+
   // Determine the variant, target block, and duration label based on progress state
   const { variant, targetBlock, durationLabel } = getAuctionBannerConfig({
     isPreBidPeriod,
     isNotStarted,
+    isAllowlistOnlyWindow,
+    allowlistEndBlock,
     auctionDetails,
     t,
   })

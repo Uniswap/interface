@@ -389,7 +389,8 @@ function getApprovalTransactionInfo(
   approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
 ): ApproveTransactionInfo {
   const pair = 'pair' in approvalStep ? approvalStep.pair : undefined
-  const tokenSymbol = pair ? `${pair[0].symbol}-${pair[1].symbol}` : undefined
+  const explicitTokenSymbol = 'tokenSymbol' in approvalStep ? approvalStep.tokenSymbol : undefined
+  const tokenSymbol = explicitTokenSymbol ?? (pair ? `${pair[0].symbol}-${pair[1].symbol}` : undefined)
 
   return {
     type: TransactionType.Approve,

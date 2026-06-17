@@ -38,15 +38,18 @@ interface AnvilManager {
 }
 
 /**
+ * Fork from PublicNode, a free unkeyed public RPC. UniRPC can't serve anvil (it
+ * 401s cookieless/session-less requests) and the QuickNode endpoint formerly used
+ * here has its mainnet methods paused due to abuse. Override via ANVIL_FORK_URL;
+ * keep in sync with scripts/start-anvil.sh.
+ */
+const DEFAULT_MAINNET_FORK_URL = 'https://ethereum-rpc.publicnode.com'
+
+/**
  * Build fork URL from environment variables
  */
 function buildForkUrl(): string {
-  const endpoint = process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME
-  const token = process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN
-  if (!endpoint || !token) {
-    throw new Error('Missing QuickNode credentials for Anvil fork')
-  }
-  return `https://${endpoint}.quiknode.pro/${token}`
+  return process.env.ANVIL_FORK_URL ?? DEFAULT_MAINNET_FORK_URL
 }
 
 /**

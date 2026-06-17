@@ -2,10 +2,10 @@ import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiSe
 import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { CHAIN_TO_ADDRESSES_MAP } from '@uniswap/sdk-core'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { erc721Abi } from 'viem'
 import { mainnet } from 'viem/chains'
+import { getUniswapServiceUrls } from '~/config'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
@@ -54,7 +54,7 @@ test.describe(
       })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.route(
-        `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+        `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
         async (route) => {
           await route.fulfill({ path: Mocks.Positions.get_v4_position })
         },

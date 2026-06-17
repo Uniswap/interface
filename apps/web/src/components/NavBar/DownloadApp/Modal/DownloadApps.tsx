@@ -7,7 +7,7 @@ import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -185,7 +185,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
             </CardInfo>
           </Card>
           <Trace logPress element={ElementName.ExtensionDownloadButton}>
-            <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
+            <Card onClick={() => window.open(UniswapStaticUrls.chromeExtension)}>
               <IllustrationContainer>
                 <Illustration src={ExtensionIllustration} alt="Extension example page" />
               </IllustrationContainer>

@@ -1,11 +1,17 @@
 import { type DataApiChainToken, type DataApiMultichainToken } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { CurrencyInfo, MultichainSearchResult, SafetyInfo } from 'uniswap/src/features/dataApi/types'
+import {
+  CurrencyInfo,
+  MultichainSearchResult,
+  SafetyInfo,
+  SearchMultichainParent,
+} from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import {
   getRestCurrencySafetyInfo,
   getRestTokenSafetyInfo,
 } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import type { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 function deriveParentSafetyInfo(parent: DataApiMultichainToken): SafetyInfo {
@@ -70,12 +76,17 @@ export function dataApiMultichainTokenToSearchResult(
     return undefined
   }
 
+  const searchMultichainParent: SearchMultichainParent = {
+    id: multichainToken.multichainId,
+    tokenCurrencyIds: tokens.map((t) => t.currencyId) as CurrencyId[],
+  }
+
   return {
     id: multichainToken.multichainId,
     name: multichainToken.name,
     symbol: multichainToken.symbol,
     logoUrl: multichainToken.logoUrl || undefined,
     safetyInfo,
-    tokens,
+    tokens: tokens.map((t) => ({ ...t, searchMultichainParent })),
   }
 }

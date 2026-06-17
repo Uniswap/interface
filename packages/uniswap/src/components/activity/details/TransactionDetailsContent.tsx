@@ -75,6 +75,8 @@ export function TransactionDetailsContent({
         return (
           <AuctionTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
+      case TransactionType.AuctionLaunch:
+        return null
       default:
         return null
     }

@@ -1,28 +1,23 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { HomeRoute } from 'src/screens/HomeScreen/portfolio/types'
-import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { HomeTab, type HomeRoute } from 'src/screens/HomeScreen/portfolio/types'
 
-export function useHomeScreenPortfolioRoutes(showEmptyWalletState: boolean): HomeRoute[] {
+export function useHomeScreenPortfolioRoutes(showEmptyWalletState: boolean, shouldShowPoolsTab: boolean): HomeRoute[] {
   const { t } = useTranslation()
   const tokensTitle = t('home.tokens.title')
   const nftsTitle = t('home.nfts.title')
+  const poolsTitle = t('common.pools')
   const exploreTitle = t('home.explore.title')
 
   return useMemo((): HomeRoute[] => {
     if (showEmptyWalletState) {
-      return [
-        {
-          key: SectionName.HomeExploreTab,
-          title: exploreTitle,
-          textStyleType: 'secondary',
-        },
-      ]
+      return [{ key: HomeTab.Explore, title: exploreTitle, textStyleType: 'secondary' }]
     }
 
     return [
-      { key: SectionName.HomeTokensTab, title: tokensTitle },
-      { key: SectionName.HomeNFTsTab, title: nftsTitle },
+      { key: HomeTab.Tokens, title: tokensTitle },
+      ...(shouldShowPoolsTab ? [{ key: HomeTab.Pools, title: poolsTitle }] : []),
+      { key: HomeTab.NFTs, title: nftsTitle },
     ]
-  }, [showEmptyWalletState, tokensTitle, nftsTitle, exploreTitle])
+  }, [showEmptyWalletState, shouldShowPoolsTab, tokensTitle, poolsTitle, nftsTitle, exploreTitle])
 }

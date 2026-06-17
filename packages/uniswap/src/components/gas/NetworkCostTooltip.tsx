@@ -5,7 +5,7 @@ import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { UniswapXText } from 'ui/src/components/text/UniswapXText'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -19,8 +19,8 @@ export function NetworkCostTooltip({
   const { t } = useTranslation()
 
   const learnMoreUrl = includesDelegation
-    ? uniswapUrls.helpArticleUrls.smartWalletDelegation
-    : uniswapUrls.helpArticleUrls.networkFeeInfo
+    ? UniswapHelpUrls.articles.smartWalletDelegation
+    : UniswapHelpUrls.articles.networkFeeInfo
   const text = includesDelegation
     ? t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })
     : t('transaction.networkCost.description')
@@ -69,7 +69,7 @@ export function NetworkCostTooltipUniswapX({
         )}
       </Tooltip.Content>
       <Tooltip.Separator />
-      <Tooltip.Description learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo} text={t('uniswapX.cost')} />
+      <Tooltip.Description learnMoreUrl={UniswapHelpUrls.articles.uniswapXInfo} text={t('uniswapX.cost')} />
     </Tooltip.Outer>
   )
 }

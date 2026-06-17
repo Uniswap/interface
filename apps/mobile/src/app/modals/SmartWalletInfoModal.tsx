@@ -4,7 +4,7 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 
@@ -29,7 +29,7 @@ export function SmartWalletInfoModal(): JSX.Element {
           <Text textAlign="center" variant="body3" color="$neutral2">
             {t('smartWallet.modal.description.block2')}
           </Text>
-          <TouchableArea onPress={() => onPressLearnMore(uniswapUrls.helpArticleUrls.smartWalletDelegation)}>
+          <TouchableArea onPress={() => onPressLearnMore(UniswapHelpUrls.articles.smartWalletDelegation)}>
             <Text textAlign="center" variant="buttonLabel3" color="$neutral1">
               {t('common.button.learn')}
             </Text>

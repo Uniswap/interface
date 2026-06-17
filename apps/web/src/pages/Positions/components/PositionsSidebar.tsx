@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
 import V4_HOOK from '~/assets/images/v4Hooks.png'
@@ -25,11 +25,11 @@ export function PositionsSidebar({ chainFilter, isConnected }: PositionsSidebarP
             <LearnMoreTile
               img={PROVIDE_LIQUIDITY}
               text={t('liquidity.provideOnProtocols')}
-              link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
+              link={UniswapHelpUrls.articles.providingLiquidityInfo}
             />
-            <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={uniswapUrls.helpArticleUrls.v4HooksInfo} />
+            <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={UniswapHelpUrls.articles.v4HooksInfo} />
           </Flex>
-          <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
+          <ExternalArrowLink href={UniswapHelpUrls.articles.positionsLearnMore}>
             {t('common.button.learn')}
           </ExternalArrowLink>
         </Flex>

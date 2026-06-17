@@ -1,9 +1,8 @@
 import type { QueryClient, QueryFunction, QueryKey, UseQueryResult } from '@tanstack/react-query'
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { TradingApi, UseQueryApiHelperHookArgs } from '@universe/api'
-import { type SwappableTokensParams } from '@universe/api'
+import { V1_TRADING_API_PATHS, type SwappableTokensParams } from '@universe/api'
 import { useEffect } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import {
@@ -85,7 +84,7 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
 }
 
 const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
-  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.swappableTokens, params]
+  return [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.swappableTokens, params]
 }
 
 const swappableTokensQueryFn = (

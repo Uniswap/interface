@@ -55,7 +55,7 @@ const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
   trade: undefined,
   permit: undefined,
   swapRequestArgs: undefined,
-  unsigned: false,
+  hasUnsignedPermit: false,
   includesDelegation: false,
 } satisfies SwapTxAndGasInfo
 

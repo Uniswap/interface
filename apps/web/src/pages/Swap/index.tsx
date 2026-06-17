@@ -8,9 +8,11 @@ import type { SegmentedControlOption } from 'ui/src'
 import { Flex, SegmentedControl, stackingLayerAbove, styled, Text, Tooltip, useMedia, WidthAnimator } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
+import { TokenSelectorHoverConfigProvider } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ShowGetStartedProvider } from 'uniswap/src/features/passkey/ShowGetStartedContext'
@@ -35,11 +37,11 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { noop } from 'utilities/src/react/noop'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
-import { useInitialCurrencyState } from '~/features/Swap/state/swap/hooks'
-import { SwapAndLimitContextProvider } from '~/features/Swap/state/swap/SwapContext'
-import { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
-import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
+import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
+import type { CurrencyState } from '~/features/Swap/state/types'
+import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { PAGE_WRAPPER_MAX_WIDTH, PageWrapper, SwapModuleWrapper } from '~/features/Swap/styled'
 import { SwapBottomCard } from '~/features/Swap/SwapBottomCard'
 import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
@@ -50,11 +52,20 @@ import { useModalState } from '~/hooks/useModalState'
 import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
 import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from '~/pages/Swap/settings/useWebSwapSettings'
-import { SwapChartCard } from '~/pages/Swap/SwapChartCard'
+import { SlideoutChartCard } from '~/pages/Swap/SlideoutChartCard/SlideoutChartCard'
+import { useInitialCurrencyState } from '~/pages/Swap/state/hooks'
 import { SwapChartToggleButton } from '~/pages/Swap/SwapChartToggleButton'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { isIFramed } from '~/utils/isIFramed'
+
+function wrapWithTokenHoverCard(element: JSX.Element, currencyInfo: CurrencyInfo): JSX.Element {
+  return (
+    <TokenHoverCard currencyInfo={currencyInfo} placement="right-start" offset={8}>
+      {element}
+    </TokenHoverCard>
+  )
+}
 
 export function SwapPage() {
   const navigate = useNavigate()
@@ -140,6 +151,7 @@ export function Swap({
   tdpCurrency?: Currency
 }) {
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const media = useMedia()
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(initialInputChainId)
@@ -168,34 +180,36 @@ export function Swap({
   })
 
   return (
-    <ShowGetStartedProvider value={showGetStarted}>
-      <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
-        <SwapTransactionSettingsStoreContextProvider>
-          <SwapAndLimitContextProvider
-            initialInputCurrency={initialInputCurrency}
-            initialOutputCurrency={initialOutputCurrency}
-          >
-            <PrefetchBalancesWrapper>
-              <SwapFormStoreContextProvider prefilledState={prefilledState} hideFooter={hideFooter}>
-                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                  <UniversalSwapFlow
-                    hideHeader={hideHeader}
-                    hideFooter={hideFooter}
-                    syncTabToUrl={syncTabToUrl}
-                    swapRedirectCallback={swapRedirectCallback}
-                    onCurrencyChange={onCurrencyChange}
-                    prefilledState={prefilledState}
-                    tokenColor={tokenColor}
-                    tdpCurrency={tdpCurrency}
-                  />
-                </Flex>
-              </SwapFormStoreContextProvider>
-            </PrefetchBalancesWrapper>
-          </SwapAndLimitContextProvider>
-        </SwapTransactionSettingsStoreContextProvider>
-      </MultichainContextProvider>
-    </ShowGetStartedProvider>
+    <TokenSelectorHoverConfigProvider wrapTokenRow={media.xl ? undefined : wrapWithTokenHoverCard}>
+      <ShowGetStartedProvider value={showGetStarted}>
+        <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
+          <SwapTransactionSettingsStoreContextProvider>
+            <SwapAndLimitContextProvider
+              initialInputCurrency={initialInputCurrency}
+              initialOutputCurrency={initialOutputCurrency}
+            >
+              <PrefetchBalancesWrapper>
+                <SwapFormStoreContextProvider prefilledState={prefilledState} hideFooter={hideFooter}>
+                  <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+                    {isSharedSwapDisabled && <DisabledSwapOverlay />}
+                    <UniversalSwapFlow
+                      hideHeader={hideHeader}
+                      hideFooter={hideFooter}
+                      syncTabToUrl={syncTabToUrl}
+                      swapRedirectCallback={swapRedirectCallback}
+                      onCurrencyChange={onCurrencyChange}
+                      prefilledState={prefilledState}
+                      tokenColor={tokenColor}
+                      tdpCurrency={tdpCurrency}
+                    />
+                  </Flex>
+                </SwapFormStoreContextProvider>
+              </PrefetchBalancesWrapper>
+            </SwapAndLimitContextProvider>
+          </SwapTransactionSettingsStoreContextProvider>
+        </MultichainContextProvider>
+      </ShowGetStartedProvider>
+    </TokenSelectorHoverConfigProvider>
   )
 }
 
@@ -354,7 +368,7 @@ function UniversalSwapFlow({
           contentWidth={PAGE_WRAPPER_MAX_WIDTH}
           $platform-web={{ flexShrink: 1, minWidth: 0 }}
         >
-          <SwapChartCard />
+          <SlideoutChartCard />
         </WidthAnimator>
       )}
 

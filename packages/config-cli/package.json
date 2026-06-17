@@ -2,6 +2,7 @@
   "name": "@universe/config-cli",
   "version": "0.0.0",
   "dependencies": {
+    "@actions/core": "1.10.1",
     "@universe/api": "workspace:^",
     "@universe/config": "workspace:^",
     "@universe/encoding": "workspace:^",

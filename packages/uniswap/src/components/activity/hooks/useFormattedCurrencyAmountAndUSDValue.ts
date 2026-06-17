@@ -21,7 +21,7 @@ export function useFormattedCurrencyAmountAndUSDValue({
   valueType?: ValueType
   isUniswapX?: boolean
   pollInterval?: PollingInterval
-}): { amount: string; value: string; tilde: string; isLoading: boolean } {
+}): { amount: string; value: string; tilde: string; hasAmount: boolean; hasUSDValue: boolean; isLoading: boolean } {
   const currencyAmount = getCurrencyAmount({
     value: currencyAmountRaw,
     valueType,
@@ -35,6 +35,8 @@ export function useFormattedCurrencyAmountAndUSDValue({
       tilde: '',
       amount: `${formatter.formatNumberOrString({ value: 0 })}`,
       value: formatter.convertFiatAmountFormatted(0, NumberType.FiatTokenQuantity),
+      hasAmount: true,
+      hasUSDValue: true,
       isLoading: false,
     }
   }
@@ -47,6 +49,8 @@ export function useFormattedCurrencyAmountAndUSDValue({
     value: value
       ? formatter.convertFiatAmountFormatted(parseFloat(value.toExact()), NumberType.FiatTokenQuantity)
       : '-',
+    hasAmount: currencyAmount != null,
+    hasUSDValue: value != null,
     isLoading,
   }
 }

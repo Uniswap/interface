@@ -10,13 +10,11 @@ import { useWalletEncode7702Query } from 'uniswap/src/data/apiClients/tradingApi
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
+import { transformTradingApiUserOpToRpcUserOp } from 'uniswap/src/features/smartWallet/userOp/transformTradingApiUserOp'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import type { RpcUserOperation } from 'viem/account-abstraction'
-import {
-  transformCallsToTransactionRequests,
-  transformTradingApiUserOpToRpcUserOp,
-} from 'wallet/src/features/batchedTransactions/utils'
+import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
 import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

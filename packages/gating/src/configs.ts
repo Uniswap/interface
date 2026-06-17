@@ -124,8 +124,12 @@ export enum SwapConfigKey {
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
   TempoSwapMinGasAmount = 'tempoSwapMinGasAmount',
   TempoSendMinGasAmount = 'tempoSendMinGasAmount',
+  ArcSwapMinGasAmount = 'arcSwapMinGasAmount',
+  ArcSendMinGasAmount = 'arcSendMinGasAmount',
 
   LowBalanceWarningGasPercentage = 'lowBalanceWarningGasPercentage',
+
+  ChainedActionsUnsupportedChainIds = 'chainedActionsUnsupportedChainIds',
 }
 
 export enum NetworkRequestsConfigKey {

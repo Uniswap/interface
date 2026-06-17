@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -47,8 +46,6 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
   const { chainId: urlChainId, isExternalWallet } = usePortfolioRoutes()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
 
   const modifier = useRestPortfolioValueModifier(portfolioAddresses.evmAddress ?? portfolioAddresses.svmAddress)
 
@@ -62,7 +59,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
 
   // Multichain PnL responses use `multichainTokenProfitLoss` / `chainBreakdown`. With a single-network
   // filter, the API often omits that shape; request flat `tokenProfitLosses` instead (multichain: false).
-  const requestMultichainPnlShape = multichainTokenUxEnabled && effectiveChainId === null
+  const requestMultichainPnlShape = effectiveChainId === null
 
   const { data: tokenProfitLossData, isError: isProfitLossError } = useGetWalletTokensProfitLossQuery({
     input: {
@@ -72,7 +69,6 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
       modifier,
       multichain: requestMultichainPnlShape || undefined,
     },
-    enabled: isProfitLossEnabled,
   })
 
   // Get token data filtered by chain at API level
@@ -110,9 +106,9 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
       pnl_token_count: pnlCount,
       portfolio_token_count: portfolioCount,
       coverage_rate: coverageRate,
-      multichain_ux_enabled: multichainTokenUxEnabled,
+      multichain_ux_enabled: true,
     })
-  }, [tokenData, tokenProfitLossData, multichainTokenUxEnabled])
+  }, [tokenData, tokenProfitLossData])
 
   // Filter tokens by search term at client level (chain filtering is handled at API level)
   const filteredTokenData = useMemo(() => {

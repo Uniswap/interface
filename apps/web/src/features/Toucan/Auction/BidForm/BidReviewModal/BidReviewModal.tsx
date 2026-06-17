@@ -36,8 +36,8 @@ import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { useAccount } from '~/hooks/useAccount'
 import { AllowanceState } from '~/hooks/usePermit2Allowance'
-import { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
+import { PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { swapErrorToUserReadableMessage } from '~/utils/swapErrorToUserReadableMessage'
 
 interface BidReviewModalProps {

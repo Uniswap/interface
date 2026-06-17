@@ -19,7 +19,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getFiatOnRampURL, getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { getFiatOnRampURL, getPoolDetailsURL, type TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
@@ -28,7 +28,6 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useAccountsStoreContext } from '~/features/accounts/store/provider'
-import { serializeSwapAddressesToURLParameters } from '~/features/Swap/state/swap/tradeQueryParams'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersProvider } from '~/hooks/useEthersProvider'
 import { useEthersSigner } from '~/hooks/useEthersSigner'
@@ -36,13 +35,13 @@ import { PageType } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
+import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
-import { getChainUrlParam } from '~/utils/params/chainParams'
-import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
+import { getTdpChainQueryParam } from '~/utils/params/chainQueryParam'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
@@ -169,17 +168,12 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   }, [])
 
   const navigateToTokenDetails = useCallback(
-    (currencyId: string, chainFilter?: UniverseChainId | null) => {
+    (currencyId: string, chainSelection?: TdpChainSelection) => {
       const tokenChainId = currencyIdToChain(currencyId)
       const url = getTokenDetailsURL({
         address: currencyIdToAddress(currencyId),
         chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
-        chainQueryParam:
-          chainFilter === null
-            ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE
-            : chainFilter !== undefined && chainFilter !== tokenChainId
-              ? getChainUrlParam(chainFilter)
-              : undefined,
+        chainQueryParam: getTdpChainQueryParam({ selection: chainSelection, tokenChainId }),
       })
       navigate(url)
       closeSearchModal()

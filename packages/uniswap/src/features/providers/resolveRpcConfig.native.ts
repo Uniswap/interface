@@ -2,7 +2,9 @@ import { getEntryGatewayUrl, provideDeviceIdService, provideSessionStorage } fro
 import { createRpcConfigResolver, createUniRpcConfigResolver } from '@universe/chains'
 import { REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
+import { isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
 
 export { createRpcConfigResolver } from '@universe/chains'
 export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains'
@@ -17,9 +19,12 @@ export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains
  */
 export const defaultResolveRpcConfig = createRpcConfigResolver({
   resolveUniRpcConfig: createUniRpcConfigResolver({
-    // Saga init runs before the Statsig provider mounts; guard so the flag read
-    // doesn't trigger StatsigClient.instance()'s broken-fallback branch.
-    getFeatureFlag: () => isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled),
+    // UniRPC-only chains (Arc/Robinhood) always route through UniRPC; everything
+    // else is flag-gated. Saga init runs before the Statsig provider mounts; guard
+    // so the flag read doesn't trigger StatsigClient.instance()'s broken-fallback
+    // branch.
+    getFeatureFlag: (chainId: UniverseChainId) =>
+      isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled)),
     getEntryGatewayUrl,
     requestSource: REQUEST_SOURCE,
     getRequestHeaders: async () => {

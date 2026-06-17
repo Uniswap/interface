@@ -1,7 +1,7 @@
 import type { TokenSelectorListOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
 import { findRwaForToken, type RwaSearchIndex } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
+import { tagOptionAsRwa } from 'uniswap/src/features/search/SearchModal/stocks/tagOptionAsRwa'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 
 /** Sets `rwaCategory` on each single-`TokenOption` row whose (chainId, address) is in the RWA index, so the
@@ -33,7 +33,7 @@ export function tagRwaTokenSelectorSections({
       if (!match) {
         return item
       }
-      return { ...item, rwaCategory: getRwaTagCategory({ categories: match.rwa.categories }) }
+      return tagOptionAsRwa({ option: item, match })
     })
     // A row was tagged iff `.map` produced a new object for it — unchanged rows keep their reference.
     const sectionChanged = data.some((item, index) => item !== sectionItem.data[index])

@@ -4,8 +4,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isAndroid } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type TextInput } from 'react-native'
-import type { FlatList } from 'react-native-gesture-handler'
+import { type ScrollView, type TextInput } from 'react-native'
 import { useAnimatedRef } from 'react-native-reanimated'
 import type { Edge } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
@@ -47,7 +46,8 @@ export function ExploreScreen(): JSX.Element {
   const { t } = useTranslation()
 
   const textInputRef = useRef<TextInput>(null)
-  const listRef = useAnimatedRef<FlatList<unknown>>()
+  const listRef = useAnimatedRef<ScrollView>()
+  const exploreScrollToTopRef = useRef<(() => void) | null>(null)
   const isFocused = useIsFocused()
 
   const [isAtTop, setIsAtTop] = useState<boolean>(true)
@@ -98,12 +98,11 @@ export function ExploreScreen(): JSX.Element {
         textInputRef.current?.focus()
       } else {
         // If not at top, scroll to top
-        listRef.current?.scrollToOffset({ offset: 0, animated: true })
+        exploreScrollToTopRef.current?.()
       }
     })
 
     return unsubscribe
-    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [navigation])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
@@ -186,6 +185,9 @@ export function ExploreScreen(): JSX.Element {
           chainId={chainId}
           orderByMetric={orderByMetric}
           showFavorites={showFavorites}
+          onScrollToTopReady={(scrollToTop): void => {
+            exploreScrollToTopRef.current = scrollToTop
+          }}
         />
       ) : null}
     </Screen>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { PreparedBidTransaction, SubmitBidOptions } from '~/features/Toucan/Auction/hooks/useBidFormSubmit'
-import { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
+import { PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 interface UseBidConfirmModalStateParams {

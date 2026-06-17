@@ -240,6 +240,36 @@ describe('urls', () => {
 
     expect(result).toBe('https://graphql.interface.gateway.uniswap.org')
   })
+
+  describe('createHelpArticleUrl', () => {
+    it('builds an article URL without a section', async () => {
+      mockEnvironmentAndPlatform(envConfigs.webProd)
+      const { createHelpArticleUrl } = await import('./urls')
+      expect(createHelpArticleUrl('46569604134157-Launching-a-Continuous-Clearing-Auction')).toBe(
+        'https://support.uniswap.org/hc/en-us/articles/46569604134157-Launching-a-Continuous-Clearing-Auction?product_link=web',
+      )
+    })
+
+    it('appends the section fragment after the query string', async () => {
+      mockEnvironmentAndPlatform(envConfigs.webProd)
+      const { createHelpArticleUrl } = await import('./urls')
+      expect(
+        createHelpArticleUrl('46569604134157-Launching-a-Continuous-Clearing-Auction', {
+          section: '2.-configure-auction',
+        }),
+      ).toBe(
+        'https://support.uniswap.org/hc/en-us/articles/46569604134157-Launching-a-Continuous-Clearing-Auction?product_link=web#2.-configure-auction',
+      )
+    })
+
+    it('uses the app-specific product_link for the section URL', async () => {
+      mockEnvironmentAndPlatform(envConfigs.mobileIosProd)
+      const { createHelpArticleUrl } = await import('./urls')
+      expect(createHelpArticleUrl('123', { section: '3.-customize-pool' })).toBe(
+        'https://support.uniswap.org/hc/en-us/articles/123?product_link=mobileApp#3.-customize-pool',
+      )
+    })
+  })
 })
 
 /**

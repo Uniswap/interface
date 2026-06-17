@@ -6,6 +6,8 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -15,7 +17,7 @@ import { useTotalSupply } from '~/hooks/useTotalSupply'
 import { ExistingTokenInfoDisplay } from '~/pages/Liquidity/CreateAuction/components/ExistingTokenInfoDisplay'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
-import { useCreateAuctionAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionAllowedNetworks'
+import { useCreateAuctionAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import { useExistingTokenProjectMetadata } from '~/pages/Liquidity/CreateAuction/hooks/useExistingTokenProjectMetadata'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
@@ -192,17 +194,19 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
       )}
 
       <Flex row>
-        <Button
-          size="large"
-          emphasis="primary"
-          onPress={commitTokenFormAndAdvance}
-          isDisabled={!canContinue}
-          onDisabledPress={canContinue ? undefined : handleDisabledContinuePress}
-          fill
-          backgroundColor={tokenColor}
-        >
-          {t('common.button.continue')}
-        </Button>
+        <Trace logPress element={ElementName.Continue} properties={{ token_source: 'existing' }}>
+          <Button
+            size="large"
+            emphasis="primary"
+            onPress={commitTokenFormAndAdvance}
+            isDisabled={!canContinue}
+            onDisabledPress={canContinue ? undefined : handleDisabledContinuePress}
+            fill
+            backgroundColor={canContinue ? tokenColor : undefined}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
       </Flex>
 
       <CurrencySearchModal

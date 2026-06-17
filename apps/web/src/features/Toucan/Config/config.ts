@@ -3,46 +3,6 @@
  */
 
 /**
- * Total supply overrides for specific auction tokens
- * Key format: "{chainId}-{tokenAddress}"
- * Value: Total supply as a string (to handle large numbers)
- *
- * Use this to override the total supply returned by the API for specific auctions
- * where the on-chain data differs from what's expected.
- */
-const TOTAL_SUPPLY_OVERRIDES: Record<string, string> = {
-  // Example: '1-0x1234567890123456789012345678901234567890': '1000000000000000000000000',
-  '1-0x4647e1fe715c9e23959022c2416c71867f5a6e80': '1000000000000000',
-  '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': '100000000000000000000000000',
-}
-
-/**
- * Helper function to get the override key for an auction
- */
-function getTotalSupplyOverrideKey(chainId: number, tokenAddress: string): string {
-  return `${chainId}-${tokenAddress.toLowerCase()}`
-}
-
-/**
- * Get the total supply for an auction, using override if available
- */
-export function getTotalSupply({
-  chainId,
-  tokenAddress,
-  apiTotalSupply,
-}: {
-  chainId: number
-  tokenAddress: string
-  apiTotalSupply: string
-}): string {
-  const overrideKey = getTotalSupplyOverrideKey(chainId, tokenAddress)
-  if (overrideKey in TOTAL_SUPPLY_OVERRIDES) {
-    return TOTAL_SUPPLY_OVERRIDES[overrideKey]
-  }
-  return apiTotalSupply
-}
-
-/**
  * Metadata override for auction projects.
  * All fields are optional - if not provided, the corresponding UI section will be hidden.
  */

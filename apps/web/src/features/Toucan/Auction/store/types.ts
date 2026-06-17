@@ -13,6 +13,10 @@ export interface AuctionDetails extends Omit<Auction, 'chainId'> {
   token?: CurrencyInfo
   // Pre-bidding end block derived from parsedAuctionSteps
   preBidEndBlock?: string
+  // Launched-token metadata (tokenImageUrl / tokenDescription / xHandle, fields 40-42 on
+  // `data.v1.Auction`) is inherited from the generated Auction type. It is unset (not empty
+  // string) while a newly launched token's metadata is pending moderation, so all consumers
+  // must handle absence gracefully.
 }
 
 export enum AuctionBidStatus {

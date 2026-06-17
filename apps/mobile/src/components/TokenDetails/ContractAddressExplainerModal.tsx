@@ -3,7 +3,7 @@ import { Text } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -33,7 +33,7 @@ export function ContractAddressExplainerModal({
             display="inline"
             textColor="$neutral1"
             textVariant="buttonLabel3"
-            url={uniswapUrls.helpArticleUrls.contractAddressExplainer}
+            url={UniswapHelpUrls.articles.contractAddressExplainer}
           />
         </>
       }

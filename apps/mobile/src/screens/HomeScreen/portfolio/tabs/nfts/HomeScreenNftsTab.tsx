@@ -4,21 +4,17 @@ import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ViewStyle } from 'react-native'
 import { View } from 'react-native'
-import { runOnJS, useAnimatedReaction } from 'react-native-reanimated'
 import type { SharedValue } from 'react-native-reanimated'
-import { useRafCoalescedScrollWindow } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useRafCoalescedScrollWindow'
+import { useScrollWindow } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useScrollWindow'
 import { useWalletTabEmptyStyle } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useWalletTabEmptyStyle'
 import { TabMeasuredLayout } from 'src/screens/HomeScreen/portfolio/tabs/common/TabMeasuredLayout'
 import { EmptyNftsCard } from 'src/screens/HomeScreen/portfolio/tabs/nfts/empty/EmptyNftsCard'
 import { MOBILE_NFT_LOADING_ITEM, NftPairRow, NftSpecialRow } from 'src/screens/HomeScreen/portfolio/tabs/nfts/NftRows'
-import type { NftListRenderData, ScrollWindowRange } from 'src/screens/HomeScreen/portfolio/types'
+import type { NftTabRenderData } from 'src/screens/HomeScreen/portfolio/types'
 import { Flex, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import type { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
-
-/** Off-viewport buffer (dp) above and below, wide enough that fast scrolls stay inside it. */
-const NFT_DRAW_DISTANCE = 1500
 
 type NftRowDescriptor =
   | { kind: 'pair'; key: string; left: NFTItem; right?: NFTItem }
@@ -28,7 +24,7 @@ interface HomeScreenNftsTabProps {
   testID?: string
   owner: string
   shouldLoadNfts: boolean
-  nftListRenderData: NftListRenderData
+  nftListRenderData: NftTabRenderData
   onHeightChange: (height: number) => void
   /** Outer FlatList scroll offset; used to derive which pair rows are within the visible window. */
   feedScrollValue: SharedValue<number>
@@ -110,38 +106,13 @@ export const HomeScreenNftsTab = memo(function HomeScreenNftsTabInner({
     return out
   }, [nfts])
 
-  const numRows = rowDescriptors.length
-  const initialEnd = Math.min(
-    numRows - 1,
-    Math.ceil((viewportHeight + NFT_DRAW_DISTANCE) / Math.max(1, pairRowHeight)) + 1,
-  )
-  const firstWindowEnd = Math.max(0, initialEnd)
-  const initialVisibleRange = useMemo(
-    (): ScrollWindowRange => ({
-      start: 0,
-      end: firstWindowEnd,
-    }),
-    [firstWindowEnd],
-  )
-  const [visibleRange, scheduleVisibleRange] = useRafCoalescedScrollWindow(initialVisibleRange)
-
-  useAnimatedReaction(
-    () => {
-      const scrollY = feedScrollValue.value
-      const relStart = scrollY - bodyOffsetY - NFT_DRAW_DISTANCE
-      const relEnd = scrollY - bodyOffsetY + viewportHeight + NFT_DRAW_DISTANCE
-      const rowH = Math.max(1, pairRowHeight)
-      const start = Math.max(0, Math.floor(relStart / rowH))
-      const end = Math.max(0, Math.min(numRows - 1, Math.floor(relEnd / rowH)))
-      return { start, end }
-    },
-    (range, prev) => {
-      if (!prev || range.start !== prev.start || range.end !== prev.end) {
-        runOnJS(scheduleVisibleRange)(range)
-      }
-    },
-    [numRows, bodyOffsetY, viewportHeight, pairRowHeight, scheduleVisibleRange],
-  )
+  const isRowVisible = useScrollWindow({
+    feedScrollValue,
+    viewportHeight,
+    bodyOffsetY,
+    numRows: rowDescriptors.length,
+    rowHeight: pairRowHeight,
+  })
 
   if (!shouldLoadNfts) {
     return (
@@ -202,8 +173,7 @@ export const HomeScreenNftsTab = memo(function HomeScreenNftsTabInner({
             />
           )
         }
-        const isVisible = i <= firstWindowEnd || (i >= visibleRange.start && i <= visibleRange.end)
-        if (!isVisible) {
+        if (!isRowVisible(i)) {
           return <View key={row.key} style={placeholderStyle} />
         }
         return <NftPairRow key={row.key} left={row.left} right={row.right} owner={owner} />

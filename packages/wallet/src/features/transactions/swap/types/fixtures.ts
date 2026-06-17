@@ -212,7 +212,7 @@ export const prepareSwapTxContext = createFixture<ValidatedSwapTxContext>()(() =
   swapRequestArgs: { quote: mockClassicTrade.quote.quote },
   revocationTxRequest: undefined,
   includesDelegation: false,
-  unsigned: false,
+  hasUnsignedPermit: false,
 }))
 
 export const prepareUniswapXSwapTxContext = createFixture<ValidatedUniswapXSwapTxAndGasInfo>()(() => ({

@@ -2,6 +2,9 @@ import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { getAuctionCreateTokenSource } from '~/pages/Liquidity/CreateAuction/analytics'
 import { AuctionAdvancedSettings } from '~/pages/Liquidity/CreateAuction/components/AuctionAdvancedSettings'
 import { AuctionDistributionSection } from '~/pages/Liquidity/CreateAuction/components/AuctionDistributionSection'
 import { AuctionSupplySection } from '~/pages/Liquidity/CreateAuction/components/AuctionSupplySection'
@@ -24,6 +27,7 @@ import {
   getInitialConfigureAuctionInputCurrency,
   getNextConfigureAuctionInputCurrency,
 } from '~/pages/Liquidity/CreateAuction/steps/configureAuctionInputCurrency'
+import { minimumAuctionSupplyDeposit } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import {
   type ConfigureAuctionFormState,
   CreateAuctionStep,
@@ -46,6 +50,7 @@ export function ConfigureAuctionStep() {
     hideNetworkLogo: true,
   })
   const configureAuction: ConfigureAuctionFormState = useCreateAuctionStore((state) => state.configureAuction)
+  const tokenMode = useCreateAuctionStore((state) => state.tokenForm.mode)
 
   const {
     goToPreviousStep,
@@ -164,6 +169,8 @@ export function ConfigureAuctionStep() {
 
   const { totalSupply, auctionSupplyAmount } = committed
   const tokenSymbol = totalSupply.currency.symbol ?? ''
+  // Floor for the deposit: below this the sold/LP split rounds a leg to zero base units.
+  const minAuctionSupplyAmount = minimumAuctionSupplyDeposit(totalSupply.currency, postAuctionLiquidityAllocation)
 
   return (
     <Flex gap="$spacing16">
@@ -192,6 +199,7 @@ export function ConfigureAuctionStep() {
           <AuctionSupplySection
             auctionSupplyAmount={auctionSupplyAmount}
             tokenTotalSupply={totalSupply}
+            minAuctionSupplyAmount={minAuctionSupplyAmount}
             tokenSymbol={tokenSymbol}
             onSelectAuctionSupplyPercent={handleAuctionSupplyPercentChange}
             onAuctionSupplyAmountChange={handleAuctionSupplyAmountChange}
@@ -245,17 +253,23 @@ export function ConfigureAuctionStep() {
       </Flex>
 
       <Flex row>
-        <Button
-          size="medium"
-          emphasis="primary"
-          onPress={goToNextStep}
-          isDisabled={isNextStepDisabled}
-          onDisabledPress={isNextStepDisabled ? handleDisabledContinue : undefined}
-          fill
-          backgroundColor={tokenColor}
+        <Trace
+          logPress
+          element={ElementName.Continue}
+          properties={{ token_source: getAuctionCreateTokenSource(tokenMode) }}
         >
-          {t('common.button.continue')}
-        </Button>
+          <Button
+            size="medium"
+            emphasis="primary"
+            onPress={goToNextStep}
+            isDisabled={isNextStepDisabled}
+            onDisabledPress={isNextStepDisabled ? handleDisabledContinue : undefined}
+            fill
+            backgroundColor={isNextStepDisabled ? undefined : tokenColor}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
       </Flex>
     </Flex>
   )

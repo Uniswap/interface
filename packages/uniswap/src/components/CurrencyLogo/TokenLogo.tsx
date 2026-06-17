@@ -1,5 +1,4 @@
 import { isMobileApp } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useState } from 'react'
 import {
   Flex,
@@ -12,6 +11,7 @@ import {
   useColorSchemeFromSeed,
   useSporeColors,
 } from 'ui/src'
+import type { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { iconSizes, validColor, zIndexes } from 'ui/src/theme'
 import { getBadgeBorderRadius, getBadgeOuterSize } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -33,6 +33,8 @@ interface TokenLogoProps {
   webFontSize?: number
   lineHeight?: TextProps['lineHeight']
   transition?: FlexProps['transition']
+  /** When set, controls how the image fills the circular logo. */
+  imageResizeMode?: UniversalImageResizeMode
 }
 
 const Badge = styled(Flex, {
@@ -137,8 +139,8 @@ export const TokenLogo = memo(function TokenLogoInner({
   webFontSize = 10,
   lineHeight = 14,
   transition,
+  imageResizeMode,
 }: TokenLogoProps): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isTestnetToken = !!chainId && isTestnetChain(chainId)
 
   // We want to avoid the extra render on mobile when updating the state, so we set this to `true` from the start.
@@ -149,12 +151,12 @@ export const TokenLogo = memo(function TokenLogoInner({
 
   const borderWidth = isTestnetToken ? size / TESTNET_BORDER_DIVISOR : 0
 
-  const showMultichainCountBadge = multichainTokenUxEnabled && networkCount !== undefined && networkCount > 1
+  const showMultichainCountBadge = networkCount !== undefined && networkCount > 1
   const showNetworkLogo = shouldShowNetworkLogo({
     alwaysShowNetworkLogo,
     hideNetworkLogo,
     chainId,
-    showMainnetNetworkLogo: multichainTokenUxEnabled,
+    showMainnetNetworkLogo: true,
   })
   const networkLogoSize = Math.round(size * STATUS_RATIO)
 
@@ -228,7 +230,7 @@ export const TokenLogo = memo(function TokenLogoInner({
       <UniversalImage
         allowLocalUri
         fallback={fallback}
-        size={{ height: tokenSize, width: tokenSize }}
+        size={{ height: tokenSize, width: tokenSize, resizeMode: imageResizeMode }}
         style={{
           image: {
             // High value auto-maps to max, preventing CSS animation issues

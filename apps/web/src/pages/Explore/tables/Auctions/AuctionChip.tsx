@@ -9,7 +9,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
 import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
@@ -33,14 +32,14 @@ export function AuctionChip({
 
   const chainId = auction.auction?.chainId
   const tokenAddress = auction.auction?.tokenAddress
-  const tokenName = auction.auction?.tokenName
   const tokenSymbol = auction.auction?.tokenSymbol
+  const tokenName = auction.auction?.tokenName ?? tokenSymbol ?? tokenAddress
 
   const projectedFdv = computeProjectedFdvTableValue({ auction, auctionTokenUsdPrice })
 
   const address = auction.auction?.address
-  const logoOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress })?.logoUrl : undefined
-  const logoUrl = logoOverride ?? auction.logoUrl
+  // logoUrl already resolves API image -> config override -> indexed logo (see useTopAuctions)
+  const logoUrl = auction.logoUrl
 
   // Color extraction logic
   const { tokenColor, tokenColorLoading } = useSrcColor({

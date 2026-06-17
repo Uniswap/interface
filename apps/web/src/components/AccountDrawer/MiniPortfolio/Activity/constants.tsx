@@ -199,6 +199,11 @@ const getTransactionTitleTable = (): {
     [TransactionStatus.Success]: i18n.t('transaction.status.withdrawBid.success'),
     [TransactionStatus.Failed]: i18n.t('transaction.status.withdrawBid.failed'),
   },
+  [TransactionType.AuctionLaunch]: {
+    [TransactionStatus.Pending]: i18n.t('toucan.createAuction.transaction.pending'),
+    [TransactionStatus.Success]: i18n.t('toucan.createAuction.transaction.success'),
+    [TransactionStatus.Failed]: i18n.t('toucan.createAuction.transaction.failed'),
+  },
   [TransactionType.Withdraw]: {
     [TransactionStatus.Pending]: i18n.t('transaction.status.withdraw.pending'),
     [TransactionStatus.Success]: i18n.t('transaction.status.withdraw.success'),
@@ -284,6 +289,7 @@ export const getCancelledTransactionTitleTable = (): { [key in TransactionType]:
   [TransactionType.AuctionBid]: i18n.t('transaction.status.submitBid.canceled'),
   [TransactionType.AuctionClaimed]: i18n.t('transaction.status.claim.canceled'),
   [TransactionType.AuctionExited]: i18n.t('transaction.status.withdrawBid.canceled'),
+  [TransactionType.AuctionLaunch]: i18n.t('toucan.createAuction.transaction.canceled'),
   [TransactionType.Withdraw]: i18n.t('transaction.status.withdraw.canceled'),
 })
 

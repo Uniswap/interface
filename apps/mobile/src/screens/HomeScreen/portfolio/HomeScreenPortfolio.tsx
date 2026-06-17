@@ -8,7 +8,6 @@ import Animated, { runOnJS, useAnimatedReaction } from 'react-native-reanimated'
 import { Screen } from 'src/components/layout/Screen'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
-import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenPortfolioScroll } from 'src/screens/HomeScreen/portfolio/context/HomeScreenPortfolioScrollContext'
 import { HomeScreenPortfolioStatusBar } from 'src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStatusBar'
 import { HomeScreenPortfolioStickyTabBar } from 'src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStickyTabBar'
@@ -18,12 +17,19 @@ import { useHomeScreenPortfolioRefresh } from 'src/screens/HomeScreen/portfolio/
 import { useHomeScreenPortfolioRoutes } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioRoutes'
 import { useHomeScreenPortfolioTabState } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioTabState'
 import { TabViewBody } from 'src/screens/HomeScreen/portfolio/tabs/common/TabViewBody'
+import { usePoolsListRenderData } from 'src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData'
 import { EmptyWalletTokensTab } from 'src/screens/HomeScreen/portfolio/tabs/tokens/empty/EmptyWalletTokensTab'
-import type { FeedListRow, HomeScreenPortfolioProps } from 'src/screens/HomeScreen/portfolio/types'
+import {
+  HOME_TAB_SECTION_NAME,
+  HomeTab,
+  type FeedListRow,
+  type HomeScreenPortfolioProps,
+} from 'src/screens/HomeScreen/portfolio/types'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { Flex, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
+import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -40,10 +46,17 @@ const FEED_LIST_ROWS: FeedListRow[] = [FEED_LIST_ROW_PORTFOLIO, { id: 'tabBar' }
 function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioProps): JSX.Element {
   const hideSplashScreen = useHideSplashScreen()
   const activeAccount = useActiveAccountWithThrow()
-  const { showEmptyWalletState } = useHomeScreenState()
+  const { showEmptyWalletState: hasNoWalletActivity } = useHomeScreenState()
   const { header: portfolio, shouldShowWrappedBanner, outageModal } = useHomeScreenPortfolioHeader()
-  const routes = useHomeScreenPortfolioRoutes(showEmptyWalletState)
-  const { tabIndex, onTabIndexChange } = useHomeScreenPortfolioTabState(showEmptyWalletState)
+  const { shouldShowPoolsTab } = usePoolsTabVisibility(activeAccount.address)
+  // A pools-only wallet (positions but no tokens/NFTs/activity) should still see its tabs.
+  const showEmptyWalletState = hasNoWalletActivity && !shouldShowPoolsTab
+  const routes = useHomeScreenPortfolioRoutes(showEmptyWalletState, shouldShowPoolsTab)
+  const { tabIndex: rawTabIndex, onTabIndexChange } = useHomeScreenPortfolioTabState(showEmptyWalletState)
+  // Pools is a conditional middle tab, so display indices are dynamic; clamp the stored index
+  // before resolving the active tab via route.key.
+  const tabIndex = Math.max(0, Math.min(rawTabIndex, routes.length - 1))
+  const activeKey = routes[tabIndex]?.key
   const { feedScrollValue, feedScrollHandler, feedScrollRef } = useHomeScreenPortfolioScroll()
   const [headerHeight, setHeaderHeight] = useState(CONTENT_HEADER_HEIGHT_ESTIMATE)
 
@@ -60,23 +73,36 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   const { fullHeight } = useDeviceDimensions()
   const [isScrolledPastDetachThreshold, setIsScrolledPastDetachThreshold] = useState(false)
   const [hasInteractionAttachedTabs, setHasInteractionAttachedTabs] = useState(false)
-  const [hasVisitedNfts, setHasVisitedNfts] = useState(tabIndex === HomeScreenTabIndex.NFTs)
+  const [hasVisitedNfts, setHasVisitedNfts] = useState(activeKey === HomeTab.NFTs)
+  const [hasVisitedPools, setHasVisitedPools] = useState(activeKey === HomeTab.Pools)
 
   useEffect(() => {
-    if (tabIndex === HomeScreenTabIndex.NFTs) {
+    if (activeKey === HomeTab.NFTs) {
       setHasVisitedNfts(true)
     }
-  }, [tabIndex])
+    if (activeKey === HomeTab.Pools) {
+      setHasVisitedPools(true)
+    }
+  }, [activeKey])
 
   const shouldLoadNfts = hasVisitedNfts && !showEmptyWalletState
+  const shouldLoadPools = hasVisitedPools && !showEmptyWalletState && shouldShowPoolsTab
 
   const { refreshing, onRefresh } = useHomeScreenPortfolioRefresh({ shouldLoadNfts })
 
-  const nftListRenderData = useNftListRenderData({
+  const {
+    onListEndReached: onNftListEndReached,
+    numShown,
+    ...nftListRenderData
+  } = useNftListRenderData({
     owner: activeAccount.address,
     skip: !shouldLoadNfts,
   })
-  const { onListEndReached: onNftListEndReached, numShown, numHidden } = nftListRenderData
+
+  const { onListEndReached: onPoolsListEndReached, ...poolsListRenderData } = usePoolsListRenderData({
+    owner: activeAccount.address,
+    skip: !shouldLoadPools,
+  })
 
   useEffect(() => {
     if (!shouldLoadNfts) {
@@ -85,9 +111,9 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
 
     sendAnalyticsEvent(WalletEventName.NFTsLoaded, {
       shown: numShown,
-      hidden: numHidden,
+      hidden: nftListRenderData.numHidden,
     })
-  }, [shouldLoadNfts, numShown, numHidden])
+  }, [shouldLoadNfts, numShown, nftListRenderData.numHidden])
   const listData = FEED_LIST_ROWS
   const stickyHeaderIndices = [1]
   const shouldDetachInactiveTabs = isScrolledPastDetachThreshold && !hasInteractionAttachedTabs
@@ -124,11 +150,13 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
     [colors.neutral3, insets.top, onRefresh, refreshing],
   )
 
-  const onNftEndReached = useCallback(() => {
-    if (shouldLoadNfts && tabIndex === HomeScreenTabIndex.NFTs) {
+  const onEndReached = useCallback(() => {
+    if (activeKey === HomeTab.NFTs && shouldLoadNfts) {
       void onNftListEndReached()
+    } else if (activeKey === HomeTab.Pools && shouldLoadPools) {
+      onPoolsListEndReached()
     }
-  }, [shouldLoadNfts, tabIndex, onNftListEndReached])
+  }, [activeKey, shouldLoadNfts, onNftListEndReached, shouldLoadPools, onPoolsListEndReached])
 
   const attachInactiveTabs = useCallback(() => {
     if (isScrolledPastDetachThreshold) {
@@ -148,10 +176,10 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   const handleTabIndexChange = useCallback(
     (index: number) => {
       if (index !== tabIndex) {
-        const sectionKey = routes[index]?.key
-        if (sectionKey) {
+        const route = routes[index]
+        if (route) {
           sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
-            section: sectionKey,
+            section: HOME_TAB_SECTION_NAME[route.key],
             screen: MobileScreens.Home,
           })
         }
@@ -191,6 +219,8 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
               feedScrollValue={feedScrollValue}
               shouldDetachInactiveTabs={shouldDetachInactiveTabs}
               shouldLoadNfts={shouldLoadNfts}
+              shouldLoadPools={shouldLoadPools}
+              poolsListRenderData={poolsListRenderData}
               tabIndex={tabIndex}
               onTabIndexChange={handleTabIndexChange}
               onTabInteractionStart={attachInactiveTabs}
@@ -214,6 +244,8 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
       tabIndex,
       nftListRenderData,
       shouldLoadNfts,
+      shouldLoadPools,
+      poolsListRenderData,
     ],
   )
 
@@ -239,7 +271,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
             scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
             showsVerticalScrollIndicator={false}
             stickyHeaderIndices={stickyHeaderIndices}
-            onEndReached={onNftEndReached}
+            onEndReached={onEndReached}
             onEndReachedThreshold={NFT_END_REACHED_THRESHOLD}
             onScroll={feedScrollHandler}
           />

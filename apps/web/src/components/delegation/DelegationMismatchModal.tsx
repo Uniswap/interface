@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Blocked } from 'ui/src/components/icons/Blocked'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
@@ -99,7 +99,7 @@ export function DelegationMismatchModal({ onClose }: DelegationMismatchModalProp
         icon={<WalletAlertBadge walletIcon={iconSrc} />}
         primaryButton={primaryButton}
         secondaryButton={secondaryButton}
-        learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
+        learnMoreUrl={UniswapHelpUrls.articles.mismatchedImports}
         learnMoreTextColor="$accent1"
         learnMoreTextVariant="buttonLabel3"
         onClose={onClose}

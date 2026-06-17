@@ -24,8 +24,8 @@ import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
-import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
+import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 
 const ReviewContentContainer = styled(Flex, {
   width: '100%',

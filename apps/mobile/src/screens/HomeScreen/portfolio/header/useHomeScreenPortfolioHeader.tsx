@@ -42,7 +42,6 @@ export function useHomeScreenPortfolioHeader(): HomeScreenPortfolioHeaderState {
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
   const [hasIntroCards, setHasIntroCards] = useState(false)
 
-  const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
   const isNotificationServiceEnabled =
@@ -123,7 +122,7 @@ export function useHomeScreenPortfolioHeader(): HomeScreenPortfolioHeaderState {
           </Flex>
         )}
         <AccountHeader />
-        <PortfolioOverview evmAddress={activeAccount.address} chainIds={chains} isPnLEnabled={isPnLEnabled} />
+        <PortfolioOverview evmAddress={activeAccount.address} chainIds={chains} />
         {isSignerAccount ? (
           <HomeScreenQuickActions />
         ) : (
@@ -142,7 +141,6 @@ export function useHomeScreenPortfolioHeader(): HomeScreenPortfolioHeaderState {
     [
       hasIntroCards,
       showEmptyWalletState,
-      isPnLEnabled,
       chains,
       shouldShowWrappedBanner,
       handleDismissWrappedBanner,

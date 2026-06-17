@@ -1,6 +1,7 @@
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BlockExplorer } from 'ui/src/components/icons/BlockExplorer'
 import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
@@ -152,7 +153,7 @@ export function usePoolDetailsHeaderActions({
         actions: [
           {
             title: t('pool.explorers'),
-            icon: <BlockExplorerIcon size="$icon.18" color="$neutral2" />,
+            icon: <BlockExplorer size="$icon.18" color="$neutral2" />,
             show: true,
             dropdownItems: explorerDropdownItems,
           },

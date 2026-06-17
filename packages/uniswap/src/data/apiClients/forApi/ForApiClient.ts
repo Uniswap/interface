@@ -9,6 +9,7 @@ import {
 import { tryProvideSession } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { SessionGateSource } from '@universe/sessions'
+import { config } from 'uniswap/src/config'
 import { getForApiUrl } from 'uniswap/src/constants/urls'
 import { getForApiHeaders } from 'uniswap/src/features/fiatOnRamp/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -44,12 +45,14 @@ import { logger } from 'utilities/src/logger/logger'
  * ### Environment variable override:
  * Set `FOR_API_URL_OVERRIDE` to use a custom URL.
  */
+// Resolved at request time (not at module load) so the `ForUrlMigration` flag read does not call
+// the Statsig client before it is initialized. See `getForApiUrl` for the full explanation.
 const ForApiFetchClient = createFetchClient({
-  getBaseUrl: getForApiUrl,
+  getBaseUrl: () => getForApiUrl(config),
   getHeaders: getForApiHeaders,
   getSessionService: () =>
     provideSessionService({
-      getBaseUrl: getForApiUrl,
+      getBaseUrl: () => getForApiUrl(config),
       getIsSessionServiceEnabled: () => getFeatureFlag(FeatureFlags.ForSessionsEnabled),
     }),
   getSession: tryProvideSession,

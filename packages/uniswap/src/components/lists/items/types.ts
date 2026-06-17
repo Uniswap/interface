@@ -40,6 +40,10 @@ export interface TokenOption extends BaseOption {
   isUnsupported?: boolean
   /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
   rwaCategory?: RwaCategory
+  /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
+  rwaName?: string
+  /** Raw issuer slug (e.g. "ondo"), set by RWA grouping; formatted with formatIssuerLabel at render. Absent on non-RWA. */
+  rwaIssuerSlug?: string
 }
 
 export interface RwaTokenOption extends BaseOption {
@@ -68,6 +72,10 @@ export interface MultichainTokenOption extends BaseOption {
   tdpChainFilter?: UniverseChainId
   /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
   rwaCategory?: RwaCategory
+  /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
+  rwaName?: string
+  /** Raw issuer slug (e.g. "ondo"), set by RWA grouping; formatted with formatIssuerLabel at render. Absent on non-RWA. */
+  rwaIssuerSlug?: string
 }
 
 export interface PoolOption extends BaseOption {

@@ -88,6 +88,19 @@ export function exceedsDecimalCap(normalized: string, maxDecimals: number): bool
 }
 
 /**
+ * Numeric equality between two dot-decimal value strings. The draft layer is locale-free (group
+ * separators and localized decimal marks exist only at the render boundary in
+ * `useLocalizedNumberInput`), so parsing both sides means formatting-only differences (`1000` vs
+ * `1000.0`) never count as divergence while genuine value changes (`23222` vs `23000`) always do.
+ * A side that does not parse to a finite number is never equal.
+ */
+export function isNumericallyEqualDraftValue(a: string, b: string): boolean {
+  const numA = parseFloat(a.trim())
+  const numB = parseFloat(b.trim())
+  return Number.isFinite(numA) && Number.isFinite(numB) && numA === numB
+}
+
+/**
  * Truncate a positive decimal string to a currency's wei precision. Prevents `getCurrencyAmount`
  * from throwing "fractional component exceeds decimals" when a USD draft implies a raise amount
  * finer than 1 wei (e.g. typing `$0.0000001` per token with USDC).

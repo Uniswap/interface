@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines -- activity registry switches over every TransactionType; it grows by design */
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { mapTAPIPlanStatusToTXStatus } from 'uniswap/src/features/activity/extract/statusMappers'
@@ -443,6 +444,23 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         typeLabel: {
           baseGroup: ActivityFilterType.Receives,
           overrideLabelKey: 'transaction.status.withdrawBid.success',
+        },
+        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
+      }
+    }
+
+    case TransactionType.AuctionLaunch: {
+      const currencyId = buildCurrencyId(chainId, typeInfo.predictedTokenAddress)
+      return {
+        amount: {
+          kind: 'single',
+          currencyId,
+          amountRaw: undefined,
+        },
+        counterparty: null,
+        typeLabel: {
+          baseGroup: ActivityFilterType.Sends,
+          overrideLabelKey: 'toucan.createAuction.transaction.success',
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }

@@ -78,8 +78,11 @@ export {
 export * as TradingApi from '@universe/api/src/clients/trading/__generated__'
 export {
   createTradingApiClient,
+  TRADING_API_PATHS,
+  type TradingApiPaths,
   type TradingApiClient,
   type TradingClientContext,
+  V1_TRADING_API_PATHS,
 } from '@universe/api/src/clients/trading/createTradingApiClient'
 export {
   type BridgeQuoteResponse,

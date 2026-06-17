@@ -6,7 +6,8 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { useAuctionTokenInfo } from '~/features/Toucan/Auction/hooks/useAuctionTokenInfo'
 import { AuctionDetails, AuctionDetailsLoadState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { getTotalSupply } from '~/features/Toucan/Config/config'
+import { resolveAuctionTokenLogo } from '~/features/Toucan/Auction/utils/tokenMetadata'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 
 type ParsedAuctionStep = {
   mps?: number | string
@@ -140,18 +141,29 @@ export function useLoadAuctionDetails(
         ? baseAuctionDetails.clearingPrice
         : baseAuctionDetails.floorPrice
 
-    // Apply total supply override if configured for this auction
-    const tokenTotalSupply = getTotalSupply({
-      chainId: baseAuctionDetails.chainId,
-      tokenAddress: baseAuctionDetails.tokenAddress,
-      apiTotalSupply: baseAuctionDetails.tokenTotalSupply ?? baseAuctionDetails.totalSupply,
+    // Use the token total supply from the API, falling back to the auction supply when absent
+    const tokenTotalSupply = baseAuctionDetails.tokenTotalSupply ?? baseAuctionDetails.totalSupply
+
+    // Logo precedence: config override (authoritative) -> creator-uploaded API image ->
+    // indexed token logo -> TokenLogo placeholder. The override is resolved explicitly so it
+    // wins over the API image, while the API image still beats the indexed logo.
+    const overrideLogoUrl = baseAuctionDetails.tokenAddress
+      ? getAuctionMetadata({
+          chainId: baseAuctionDetails.chainId,
+          tokenAddress: baseAuctionDetails.tokenAddress,
+        })?.logoUrl
+      : undefined
+    const token = resolveAuctionTokenLogo({
+      tokenInfo,
+      overrideLogoUrl,
+      tokenImageUrl: baseAuctionDetails.tokenImageUrl,
     })
 
     const auctionDetails: AuctionDetails = {
       ...baseAuctionDetails,
       clearingPrice,
       tokenTotalSupply,
-      token: tokenInfo,
+      token,
       preBidEndBlock: computePreBidEndBlock(
         (apiAuction as unknown as { parsedAuctionSteps?: ParsedAuctionStep[] }).parsedAuctionSteps,
         baseAuctionDetails.startBlock,

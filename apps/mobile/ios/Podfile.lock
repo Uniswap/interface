@@ -1204,29 +1204,33 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.37):
     - BoringSSL-GRPC/Interface (= 0.0.37)
   - BoringSSL-GRPC/Interface (0.0.37)
-  - DatadogCore (2.30.0):
-    - DatadogInternal (= 2.30.0)
-  - DatadogCrashReporting (2.30.0):
-    - DatadogInternal (= 2.30.0)
-    - PLCrashReporter (~> 1.12.0)
-  - DatadogInternal (2.30.0)
-  - DatadogLogs (2.30.0):
-    - DatadogInternal (= 2.30.0)
-  - DatadogRUM (2.30.0):
-    - DatadogInternal (= 2.30.0)
-  - DatadogSDKReactNative (2.12.2):
-    - DatadogCore (= 2.30.0)
-    - DatadogCrashReporting (= 2.30.0)
-    - DatadogLogs (= 2.30.0)
-    - DatadogRUM (= 2.30.0)
-    - DatadogTrace (= 2.30.0)
-    - DatadogWebViewTracking (= 2.30.0)
+  - DatadogCore (3.11.0):
+    - DatadogInternal (= 3.11.0)
+  - DatadogCrashReporting (3.11.0):
+    - DatadogInternal (= 3.11.0)
+    - KSCrash/Filters (= 2.5.0)
+    - KSCrash/Recording (= 2.5.0)
+  - DatadogFlags (3.11.0):
+    - DatadogInternal (= 3.11.0)
+  - DatadogInternal (3.11.0)
+  - DatadogLogs (3.11.0):
+    - DatadogInternal (= 3.11.0)
+  - DatadogRUM (3.11.0):
+    - DatadogInternal (= 3.11.0)
+  - DatadogSDKReactNative (3.5.0):
+    - DatadogCore (= 3.11.0)
+    - DatadogCrashReporting (= 3.11.0)
+    - DatadogFlags (= 3.11.0)
+    - DatadogLogs (= 3.11.0)
+    - DatadogRUM (= 3.11.0)
+    - DatadogTrace (= 3.11.0)
+    - DatadogWebViewTracking (= 3.11.0)
     - React-Core
-  - DatadogTrace (2.30.0):
-    - DatadogInternal (= 2.30.0)
-    - OpenTelemetrySwiftApi (= 1.13.1)
-  - DatadogWebViewTracking (2.30.0):
-    - DatadogInternal (= 2.30.0)
+  - DatadogTrace (3.11.0):
+    - DatadogInternal (= 3.11.0)
+    - OpenTelemetry-Swift-Api (~> 2.3.0)
+  - DatadogWebViewTracking (3.11.0):
+    - DatadogInternal (= 3.11.0)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.5)
   - EXApplication (6.1.5):
@@ -1489,9 +1493,9 @@ PODS:
     - ExpoModulesCore
   - ExpoCrypto (14.1.5):
     - ExpoModulesCore
-  - ExpoFileSystem (19.0.22):
+  - ExpoFileSystem (19.0.23):
     - ExpoModulesCore
-  - ExpoFont (14.0.11):
+  - ExpoFont (14.0.12):
     - ExpoModulesCore
   - ExpoHaptics (14.0.1):
     - ExpoModulesCore
@@ -1718,10 +1722,21 @@ PODS:
     - gRPC-Core/Privacy (= 1.69.0)
   - gRPC-Core/Interface (1.69.0)
   - gRPC-Core/Privacy (1.69.0)
-  - GTMSessionFetcher/Core (5.0.0)
+  - GTMSessionFetcher/Core (5.3.0)
   - hermes-engine (0.81.5):
     - hermes-engine/Pre-built (= 0.81.5)
   - hermes-engine/Pre-built (0.81.5)
+  - KSCrash/Core (2.5.0)
+  - KSCrash/Filters (2.5.0):
+    - KSCrash/Recording
+    - KSCrash/RecordingCore
+    - KSCrash/ReportingCore
+  - KSCrash/Recording (2.5.0):
+    - KSCrash/RecordingCore
+  - KSCrash/RecordingCore (2.5.0):
+    - KSCrash/Core
+  - KSCrash/ReportingCore (2.5.0):
+    - KSCrash/Core
   - leveldb-library (1.22.6)
   - libavif/core (1.0.0)
   - libavif/libdav1d (1.0.0):
@@ -1882,8 +1897,7 @@ PODS:
     - OneSignalXCFramework/OneSignalNotifications
     - OneSignalXCFramework/OneSignalOSCore
     - OneSignalXCFramework/OneSignalOutcomes
-  - OpenTelemetrySwiftApi (1.13.1)
-  - PLCrashReporter (1.12.0)
+  - OpenTelemetry-Swift-Api (2.3.0)
   - QuickCrypto (1.0.11):
     - boost
     - DoubleConversion
@@ -4981,6 +4995,7 @@ SPEC REPOS:
     - BoringSSL-GRPC
     - DatadogCore
     - DatadogCrashReporting
+    - DatadogFlags
     - DatadogInternal
     - DatadogLogs
     - DatadogRUM
@@ -5000,6 +5015,7 @@ SPEC REPOS:
     - "gRPC-C++"
     - gRPC-Core
     - GTMSessionFetcher
+    - KSCrash
     - leveldb-library
     - libavif
     - libdav1d
@@ -5007,8 +5023,7 @@ SPEC REPOS:
     - MMKVCore
     - nanopb
     - OneSignalXCFramework
-    - OpenTelemetrySwiftApi
-    - PLCrashReporter
+    - OpenTelemetry-Swift-Api
     - RecaptchaInterop
     - SDWebImage
     - SDWebImageAVIFCoder
@@ -5325,14 +5340,15 @@ SPEC CHECKSUMS:
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
-  DatadogCore: 5c01290a3b60b27bf49aa958f2e339c738364d9e
-  DatadogCrashReporting: 11286d48ab61baeb2b41b945c7c0d4ef23db317d
-  DatadogInternal: 7aeb48e254178a0c462c3953dc0a8a8d64499a93
-  DatadogLogs: 4324739de62a6059e07d70bf6ceceed78764edeb
-  DatadogRUM: f36949a38285f3b240a7be577d425f8518e087d4
-  DatadogSDKReactNative: 58d9a3f2005f0f9b47c057929c021fcb3b5201e4
-  DatadogTrace: bfea32b6ed2870829629a9296cf526221493cc3e
-  DatadogWebViewTracking: 78c20d8e5f1ade506f4aadaec5690c1a63283fe2
+  DatadogCore: 106d2aa8bef1a3dfb2a75723240f78cb5f8310fd
+  DatadogCrashReporting: eace5202ae63d92835718cf4a86489fdaef681a3
+  DatadogFlags: 0587c5b5db34874ce22264abc5e03102b53d3656
+  DatadogInternal: 00709affd9889ca9e8fd96e85e39ad865e651c32
+  DatadogLogs: ef98708261f8f7ba82d15360f9951d43f578163b
+  DatadogRUM: 67d130164f4a7663e05a3d02803be9e9dd1abbb7
+  DatadogSDKReactNative: d0d791087a8cc04e9467b86ba4104fe0b182462e
+  DatadogTrace: 17f50647107755fba79fc2298bf4cb282e0efb1f
+  DatadogWebViewTracking: 1290fce6010bf65b5e0e0ffa9048b448782e469c
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EthersRS: 56b70e73d22d4e894b7e762eef1129159bcd3135
   EXApplication: 50cc8ea58c138da6e3f25cd789634219c86b90d5
@@ -5350,8 +5366,8 @@ SPEC CHECKSUMS:
   ExpoCamera: d1894aad960492f4881c1f83967167963365d937
   ExpoClipboard: 99109306a2d9ed2fbd16f6b856e6267b2afa8472
   ExpoCrypto: fcb6a8a08d1929f346cb95eb05a8f7818627177a
-  ExpoFileSystem: dc2c00cc568d432efc36ea1d994c25050909d23d
-  ExpoFont: c625dbd97ed57e9089b172b2a7bb99003d074664
+  ExpoFileSystem: 72c7bedb30b6c8565322f9c6377663a1476d7703
+  ExpoFont: cc2be150f9c107bc8cd072eb0cd15388d6081479
   ExpoHaptics: e01cce0741d68c281853118eb0267f88d42c6b7a
   ExpoImage: f6bcd30bb98d4c484869668fbc32834bb3ee5bfb
   ExpoKeepAwake: 44bf6715bc1d2ddb17afe19d927cd039cda123f0
@@ -5383,8 +5399,9 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   "gRPC-C++": cc207623316fb041a7a3e774c252cf68a058b9e8
   gRPC-Core: 860978b7db482de8b4f5e10677216309b5ff6330
-  GTMSessionFetcher: 02d6e866e90bc236f48a703a041dfe43e6221a29
+  GTMSessionFetcher: 127211aeec0b1e904fc49f4f6f895dcc535b0ecf
   hermes-engine: 9f4dfe93326146a1c99eb535b1cb0b857a3cd172
+  KSCrash: 80e1e24eaefbe5134934ae11ca8d7746586bc2ed
   leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   libavif: 5f8e715bea24debec477006f21ef9e95432e254d
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
@@ -5395,8 +5412,7 @@ SPEC CHECKSUMS:
   NitroMmkv: 761eb1bd782fa8903db7b5cef10dcb604db0f39d
   NitroModules: 9aefeb3b3605f4d16961237413c239de0f5450ec
   OneSignalXCFramework: 1a3b28dfbff23aabce585796d23c1bef37772774
-  OpenTelemetrySwiftApi: aaee576ed961e0c348af78df58b61300e95bd104
-  PLCrashReporter: db59ef96fa3d25f3650040d02ec2798cffee75f2
+  OpenTelemetry-Swift-Api: 3d77582ab6837a63b65bf7d2eacc57d8f2595edd
   QuickCrypto: abd9da3406899d88f5127b0030367b142e5a4268
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: 5eb1d2eeff5fb91151e8a8eef45b6c7658b6c897

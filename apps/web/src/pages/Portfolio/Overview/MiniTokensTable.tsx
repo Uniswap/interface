@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -28,8 +27,6 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   const { t } = useTranslation()
   const { externalAddress, chainId: routeChainId } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { chains: enabledChains } = useEnabledChains()
   const modifier = useRestPortfolioValueModifier(portfolioAddresses.evmAddress ?? portfolioAddresses.svmAddress)
   const viewAllHref = buildPortfolioUrl({
@@ -39,7 +36,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   })
 
   // Same as Portfolio tokens tab: single-chain view should use flat `tokenProfitLosses`, not multichain shape.
-  const requestMultichainPnlShape = multichainTokenUxEnabled && chainId === undefined
+  const requestMultichainPnlShape = chainId === undefined
 
   const { data: tokenProfitLossData, isError: isProfitLossError } = useGetWalletTokensProfitLossQuery({
     input: {
@@ -49,7 +46,6 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
       modifier,
       multichain: requestMultichainPnlShape || undefined,
     },
-    enabled: isProfitLossEnabled,
   })
 
   const {
@@ -67,9 +63,6 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   const tableLoading = loading && !tokenData
 
   const hiddenColumns = [TokenColumns.Change1d, TokenColumns.Allocation, TokenColumns.AvgCost]
-  if (!isProfitLossEnabled) {
-    hiddenColumns.push(TokenColumns.UnrealizedPnl)
-  }
 
   return (
     <Flex grow gap="$gap12">

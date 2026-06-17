@@ -19,7 +19,7 @@ vi.mock('react-router', () => ({
   useSearchParams: vi.fn(() => [new URLSearchParams()]),
 }))
 
-vi.mock('~/hooks/useCopyClipboard', () => ({
+vi.mock('utilities/src/react/useCopyClipboard', () => ({
   useCopyClipboard: vi.fn(() => [false, mockSetCopied]),
 }))
 

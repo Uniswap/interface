@@ -12,6 +12,7 @@ export function ExpandableSearchRowContainer({
   canExpand,
   onToggle,
   onParentPress,
+  onParentLongPress,
   header,
   issuerPanel,
   focusedRowControl,
@@ -36,6 +37,7 @@ export function ExpandableSearchRowContainer({
       testID={testID}
       onToggle={onToggle}
       onParentPress={onParentPress}
+      onParentLongPress={onParentLongPress}
     />
   )
 }

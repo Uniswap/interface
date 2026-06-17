@@ -139,6 +139,7 @@ describe('prepareViemSignTypedData', () => {
     const { walletClient } = makeWalletClient()
     const prepared = await prepareViemSignTypedData({ walletClient, domain, types, value })
     expect(prepared.viemDomain.chainId).toBe(1n)
+    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
     expect(prepared.viemDomain.verifyingContract?.toLowerCase()).toBe(domain.verifyingContract)
     expect(prepared.normalizedTypes).toEqual(types)
     expect(prepared.primaryType).toBe('Mail')

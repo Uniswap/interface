@@ -9,6 +9,9 @@ export type ExpandableSearchRowContainerProps = {
   onToggle: () => void
   /** Called when a single-issuer (non-expandable) row is tapped. */
   onParentPress?: () => void
+  /** Called on a long-press of a single-issuer (non-expandable) collapsed row — opens the row's context menu on
+   *  native + mobile-web touch. Undefined for multi-issuer/parent rows. Interaction-only; no layout/height change. */
+  onParentLongPress?: () => void
   /** Parent identity + "Stocks" tag + chevron, built by the consumer. */
   header: ReactNode
   /** Issuer sub-rows (an `ExpandableIssuerRows` element), built by the consumer. */

@@ -11,8 +11,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
 const mockFetch = vi.fn()
 global.fetch = mockFetch
 
-import { TradingApi } from '@universe/api'
-import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
+import { TRADING_API_PATHS, TradingApi } from '@universe/api'
 import {
   EthAsErc20UniswapXProperties,
   FeatureFlags,

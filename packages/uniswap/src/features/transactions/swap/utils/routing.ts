@@ -2,8 +2,14 @@ import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import type { ChainedQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
-import { type SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import {
+  type BridgeSwapTxAndGasInfo,
+  type ClassicSwapTxAndGasInfo,
+  type SwapTxAndGasInfo,
+  type WrapSwapTxAndGasInfo,
+} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { type ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
 export const UNISWAPX_ROUTING_VARIANTS = [
   TradingApi.Routing.DUTCH_V2,
@@ -41,6 +47,19 @@ export function isJupiter<T extends { routing: TradingApi.Routing }>(
   obj: T,
 ): obj is Extract<T, { routing: TradingApi.Routing.JUPITER }> {
   return obj.routing === TradingApi.Routing.JUPITER
+}
+
+export function isUserOpSwap(swapTxContext: SwapTxAndGasInfo): swapTxContext is (
+  | ClassicSwapTxAndGasInfo
+  | WrapSwapTxAndGasInfo
+  | BridgeSwapTxAndGasInfo
+) & {
+  unsignedUserOperation: RpcUserOperation<'0.8'>
+} {
+  return (
+    (isClassic(swapTxContext) || isWrap(swapTxContext) || isBridge(swapTxContext)) &&
+    swapTxContext.unsignedUserOperation !== undefined
+  )
 }
 
 export function isChained<T extends { routing: TradingApi.Routing }>(

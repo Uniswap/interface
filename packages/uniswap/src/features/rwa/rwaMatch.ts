@@ -1,5 +1,5 @@
 import { type RWAAsset, type RWAToken, type RWAWhitelist } from 'uniswap/src/features/rwa/types'
-import { getAddress, isAddress } from 'viem'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export type RWACandidate = {
   chainId: number | null | undefined
@@ -12,11 +12,6 @@ export type RWAMatch = {
 }
 
 type RWACandidateInput = RWACandidate | null | undefined
-
-export function normalizeRWAAddress(address: string): string {
-  const trimmedAddress = address.trim()
-  return isAddress(trimmedAddress, { strict: false }) ? getAddress(trimmedAddress) : trimmedAddress
-}
 
 export function rwaTokenMatchesCandidate(token: RWACandidate, candidate: RWACandidateInput): boolean {
   if (
@@ -32,7 +27,10 @@ export function rwaTokenMatchesCandidate(token: RWACandidate, candidate: RWACand
     return false
   }
 
-  return normalizeRWAAddress(token.address) === normalizeRWAAddress(candidate.address)
+  return areAddressesEqual({
+    addressInput1: { address: token.address, chainId: token.chainId },
+    addressInput2: { address: candidate.address, chainId: candidate.chainId },
+  })
 }
 
 function findMatchForCandidate({

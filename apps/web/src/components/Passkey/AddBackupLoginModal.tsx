@@ -1,6 +1,5 @@
 /* oxlint-disable max-lines */
 import { Code, ConnectError } from '@connectrpc/connect'
-import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isMobileWeb } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
@@ -36,6 +35,7 @@ import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { getPrivyConfig } from '~/config'
 import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
+import { useMaybeLoginWithEmail, useMaybeLoginWithOAuth, useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { popupRegistry } from '~/state/popups/registry'
@@ -81,7 +81,7 @@ export function AddBackupLoginModal() {
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
 
-  const { ready: privyReady, getAccessToken, user, logout } = usePrivy()
+  const { ready: privyReady, getAccessToken, user, logout } = useMaybePrivy()
 
   const oauthReturn = useOAuthResult(OAUTH_PENDING_KEY)
 
@@ -124,12 +124,12 @@ export function AddBackupLoginModal() {
     }
   }, [oauthReturn.provider, oauthReturn.pending, oauthReturn.providerEmail, advanceAfterVerification])
 
-  const { sendCode, loginWithCode } = useLoginWithEmail()
+  const { sendCode, loginWithCode } = useMaybeLoginWithEmail()
 
   const handleSendCodeError = (e: Error, fn: string) =>
     logger.error(e, { tags: { file: 'AddBackupLoginModal', function: fn } })
 
-  const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
+  const { initOAuth, loading: oauthLoading } = useMaybeLoginWithOAuth({
     onError: (oauthError) => {
       logger.error(oauthError, { tags: { file: 'AddBackupLoginModal', function: 'handleOAuthLogin' } })
       sessionStorage.removeItem(OAUTH_PENDING_KEY)

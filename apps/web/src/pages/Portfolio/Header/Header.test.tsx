@@ -51,6 +51,10 @@ vi.mock('~/pages/Portfolio/Header/SharePortfolioButton', () => ({
   SharePortfolioButton: () => <div data-testid="share-button">Share Button Mock</div>,
 }))
 
+vi.mock('~/pages/Portfolio/Header/PortfolioMoreMenu', () => ({
+  PortfolioMoreMenu: () => <div data-testid="more-menu">More Menu Mock</div>,
+}))
+
 vi.mock('~/components/NetworkFilter/NetworkFilter', () => ({
   NetworkFilter: () => <div data-testid="network-filter">Network Filter Mock</div>,
 }))

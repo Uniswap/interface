@@ -10,7 +10,7 @@ import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -289,7 +289,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
             <Anchor
               target="_blank"
               rel="noreferrer"
-              href={uniswapUrls.helpArticleUrls.passkeysInfo}
+              href={UniswapHelpUrls.articles.passkeysInfo}
               height="$padding20"
               {...ClickableTamaguiStyle}
             >

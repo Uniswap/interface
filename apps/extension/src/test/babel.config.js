@@ -1,5 +1,5 @@
 // This file is used only by jest in the test environment. To check the extension
-// build set up, see the webpack.config.js file.
+// build set up, see the wxt.config.ts file.
 
 // Inline Babel plugin to transform import.meta.url for Jest compatibility.
 // Jest runs in CommonJS mode where import.meta is not available.

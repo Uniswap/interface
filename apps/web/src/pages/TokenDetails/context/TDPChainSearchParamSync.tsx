@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -44,7 +43,6 @@ export function TDPChainSearchParamSync(): null {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { currencyChainId, multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
     currencyChainId: s.currencyChainId,
     multiChainMap: s.multiChainMap,
@@ -73,18 +71,6 @@ export function TDPChainSearchParamSync(): null {
   const pathChainId = getTDPPathChainId(currentTDPUrlState.pathname) ?? currencyChainId
 
   useEffect(() => {
-    if (multichainTokenUxEnabled) {
-      return
-    }
-    if (chainQueryValue !== null) {
-      setSearchParams((prev) => withChainSearchParam(prev, undefined), { replace: true })
-    }
-  }, [chainQueryValue, multichainTokenUxEnabled, setSearchParams])
-
-  useEffect(() => {
-    if (!multichainTokenUxEnabled) {
-      return
-    }
     // Single-chain page has no network selector; drop stale `?chain=` (e.g. from Portfolio / shared links).
     if (!isMultiChainAsset) {
       // While `multiChainMap` is still empty (cold load), does not strip `?chain=` so deep links work once entries load.
@@ -145,7 +131,6 @@ export function TDPChainSearchParamSync(): null {
     tdpChainSearchParam,
     currencyChainId,
     pathChainId,
-    multichainTokenUxEnabled,
     isMultiChainAsset,
     multichainEntries.length,
     multichainEntries,

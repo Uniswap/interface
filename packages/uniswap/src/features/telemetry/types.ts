@@ -593,6 +593,41 @@ export type AuctionBidInputtedAnalyticsProperties = ITraceContext & {
   price_source?: PriceSourceTag
 }
 
+export type AuctionCreateTokenSource = 'new' | 'existing'
+
+export type AuctionCreateAnalyticsProperties = ITraceContext & {
+  chain_id: number
+  token_source: AuctionCreateTokenSource
+
+  // Predicted addresses returned by the CreateAuction endpoint before submission
+  auction_contract_address: string
+  auction_token_address: string
+  auction_token_symbol?: string
+
+  // Auction configuration
+  /** Percent of total supply deposited into the auction (0-100). */
+  auction_supply_pct?: number
+  /** Percent of auctioned tokens reserved for post-auction liquidity (0-100). Omitted for bracketed (tiered) allocations. */
+  lp_pct?: number
+  /** True when the post-auction liquidity allocation uses raise-milestone brackets (tiers). */
+  is_bracketed: boolean
+  start_datetime?: string
+  end_datetime?: string
+  floor_price?: string
+  floor_price_usd?: number
+  raise_currency: string
+  raise_currency_address?: string
+  /** FDV at the floor price, denominated in the raise currency. */
+  max_fdv?: number
+  max_fdv_usd?: number
+
+  // Pool configuration
+  timelock_enabled: boolean
+  /** Timelock duration in days; omitted when the timelock is disabled. */
+  timelock_duration?: number
+  has_kyc_hook: boolean
+}
+
 export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
 
 type TokenReportProperties = {
@@ -866,6 +901,10 @@ export type UniverseEventProperties = {
   [AuctionEventName.AuctionWithdrawSubmitted]: AuctionWithdrawAnalyticsProperties
   [AuctionEventName.AuctionBidSubmitted]: AuctionBidAnalyticsProperties
   [AuctionEventName.AuctionBidInputted]: AuctionBidInputtedAnalyticsProperties
+  [AuctionEventName.AuctionCreateSubmitted]: AuctionCreateAnalyticsProperties
+  [AuctionEventName.AuctionCreateCompleted]: AuctionCreateAnalyticsProperties & {
+    transaction_hash: string
+  }
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
     showBiometricsScreen: boolean
@@ -975,6 +1014,8 @@ export type UniverseEventProperties = {
     token_address?: string
     token_symbol?: string
     token_list_length?: number
+    /** ElementName.Continue on the launch-auction flow — new (factory-deployed) vs existing token */
+    token_source?: AuctionCreateTokenSource
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
     /** Token details */

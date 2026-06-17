@@ -21,6 +21,7 @@ minimumReleaseAgeExcludes = [
   "@privy-io/expo",
   "@privy-io/js-sdk-core",
   "@privy-io/routes",
+  "@uniswap/client-compliancev2",
   "@uniswap/client-conversion-proxy",
   "@uniswap/client-data-api",
   "@uniswap/client-enclave-data-proxy",

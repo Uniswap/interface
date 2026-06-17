@@ -1,5 +1,7 @@
 import { memo } from 'react'
 import { Accordion, Flex } from 'ui/src'
+import { GeoRestrictionCard } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionCard'
+import { GeoRestrictionModalStoreContextProvider } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionModalStoreContextProvider'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
@@ -14,25 +16,30 @@ export const SwapFormScreenDetails = memo(function SwapFormScreenDetails(): JSX.
   }))
 
   return (
-    <Accordion collapsible type="single" overflow="hidden">
-      <Accordion.Item value="a1" className="gas-container">
-        {/* <Accordion.HeightAnimator> attaches an absolutely positioned element that cannot be targeted without the below style */}
-        <style>{`
+    <GeoRestrictionModalStoreContextProvider>
+      <Flex gap="$spacing8">
+        <Accordion collapsible type="single" overflow="hidden">
+          <Accordion.Item value="a1" className="gas-container">
+            {/* <Accordion.HeightAnimator> attaches an absolutely positioned element that cannot be targeted without the below style */}
+            <style>{`
               .gas-container > div > div {
                 width: 100%;
               }
             `}</style>
-        <Flex>
-          <Flex>
-            <SwapFormWarningStoreContextProvider>
-              <SwapFormButton tokenColor={tokenColor} />
-              <SwapFormWarningModals />
-            </SwapFormWarningStoreContextProvider>
-          </Flex>
-          <SwapFormScreenFooter />
-        </Flex>
-        {showFooter ? <ExpandableRows /> : null}
-      </Accordion.Item>
-    </Accordion>
+            <Flex>
+              <Flex>
+                <SwapFormWarningStoreContextProvider>
+                  <SwapFormButton tokenColor={tokenColor} />
+                  <SwapFormWarningModals />
+                </SwapFormWarningStoreContextProvider>
+              </Flex>
+              <SwapFormScreenFooter />
+            </Flex>
+            {showFooter ? <ExpandableRows /> : null}
+          </Accordion.Item>
+        </Accordion>
+        <GeoRestrictionCard />
+      </Flex>
+    </GeoRestrictionModalStoreContextProvider>
   )
 })

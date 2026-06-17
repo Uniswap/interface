@@ -134,7 +134,10 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
 
   const tokenSymbol = auctionDetails.token?.currency.symbol ?? auctionDetails.tokenSymbol
   const tokenName = auctionDetails.token?.currency.name ?? ''
-  const logoUrl = auctionDetails.token?.logoUrl ?? ''
+  // token.logoUrl already falls back to the API-provided token image (see
+  // useLoadAuctionDetails); reading tokenImageUrl here too covers the case where
+  // token info couldn't be constructed at all.
+  const logoUrl = auctionDetails.token?.logoUrl ?? auctionDetails.tokenImageUrl ?? ''
 
   return (
     <Flex gap="$gap8">

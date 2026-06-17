@@ -15,7 +15,7 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, MultichainSearchResult, SearchMultichainParent } from 'uniswap/src/features/dataApi/types'
 import {
   isEtherscanSearchHistoryResult,
   isMultichainTokenSearchHistoryResult,
@@ -58,18 +58,24 @@ function multichainHistoryToTokenOption(
   if (!primaryCurrencyInfo) {
     return undefined
   }
+  // Use history.tokenCurrencyIds (the full saved list) so multichain detection
+  // works even when some chain tokens haven't been loaded into the cache yet.
+  const searchMultichainParent: SearchMultichainParent = {
+    id: history.multichainId,
+    tokenCurrencyIds: history.tokenCurrencyIds,
+  }
   const multichainResult: MultichainSearchResult = {
     id: history.multichainId,
     name: history.name,
     symbol: history.symbol,
     logoUrl: history.logoUrl,
-    tokens,
+    tokens: tokens.map((t) => ({ ...t, searchMultichainParent })),
     safetyInfo: primaryCurrencyInfo.safetyInfo,
   }
   return {
     type: OnchainItemListOptionType.MultichainToken,
     multichainResult,
-    primaryCurrencyInfo,
+    primaryCurrencyInfo: { ...primaryCurrencyInfo, searchMultichainParent },
     ...(history.tdpChainFilter != null ? { tdpChainFilter: history.tdpChainFilter } : {}),
   }
 }

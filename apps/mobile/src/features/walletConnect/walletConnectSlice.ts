@@ -85,7 +85,7 @@ export interface WalletSendCallsUserOperationRequest extends WalletSendCallsRequ
   unsignedUserOperation: RpcUserOperation<'0.8'>
   requestId: string
   gasSponsored: boolean
-  sponsorMetadata?: { name: string; icon?: string }
+  sponsorMetadata?: { name?: string; icon?: string }
   paymasterServiceUrl: string
   paymasterServiceContext?: Record<string, unknown>
 }

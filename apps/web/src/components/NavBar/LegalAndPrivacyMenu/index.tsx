@@ -3,7 +3,7 @@ import { Fragment, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, AnchorProps, Flex, Text, TouchableArea } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { Expand } from '~/components/Expand'
@@ -62,7 +62,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
           <PrivacyOptions /> {t('common.privacyChoices')}
         </MenuLink>
         <MenuLink onPress={handleOnMenuPress(togglePrivacyPolicy)}>{t('common.privacyPolicy')}</MenuLink>
-        <MenuLink href={uniswapUrls.termsOfServiceUrl} target="_blank">
+        <MenuLink href={UniswapStaticUrls.termsOfServiceUrl} target="_blank">
           {t('common.termsOfService')}
         </MenuLink>
         <MenuLink onPress={handleOnMenuPress(toggleDisclosures)}>{t('common.disclosures')}</MenuLink>

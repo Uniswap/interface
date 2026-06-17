@@ -1,6 +1,7 @@
 import { createRef, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputChangeEventData, TextInputKeyPressEventData } from 'react-native'
+import { getUniswapServiceUrls } from 'src/app/config'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useScantasticContext } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
@@ -8,7 +9,6 @@ import { decryptMessage } from 'src/app/features/onboarding/scan/utils'
 import { Flex, Input, inputStyles, Square, Text } from 'ui/src'
 import { Mobile } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
@@ -76,7 +76,7 @@ export function OTPInput(): JSX.Element {
     setError(false)
     setLoading(true)
     // submit OTP to receive blob
-    const response = await fetch(`${uniswapUrls.scantasticApiUrl}/otp`, {
+    const response = await fetch(`${getUniswapServiceUrls().scantasticApiUrl}/otp`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -104,7 +104,7 @@ export function OTPInput(): JSX.Element {
           return
         }
       }
-      throw new Error(`fetch(${uniswapUrls.scantasticApiUrl}/otp failed to include an encrypted seed`)
+      throw new Error(`fetch(${getUniswapServiceUrls().scantasticApiUrl}/otp failed to include an encrypted seed`)
     }
     const preImage = await decryptMessage(privateKey, data.encryptedSeed)
     const words = preImage.split(' ')

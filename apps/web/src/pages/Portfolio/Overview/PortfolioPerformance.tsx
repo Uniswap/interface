@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -21,7 +20,6 @@ import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 
 export const PortfolioPerformance = memo(function PortfolioPerformance() {
   const { t } = useTranslation()
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const isDemoView = useShowDemoView()
   const { chainId } = usePortfolioRoutes()
   const { evmAddress, svmAddress } = usePortfolioAddresses()
@@ -43,7 +41,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
       since,
       modifier,
     },
-    enabled: isProfitLossEnabled && !isDemoView,
+    enabled: !isDemoView,
   })
 
   const handlePeriodSelect = useCallback((period: ProfitLossPeriod) => {
@@ -67,7 +65,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
     })
   }, [profitLoss, selectedPeriod])
 
-  if (!isProfitLossEnabled || isDemoView || isError || isTestnetModeEnabled || (data && !profitLoss)) {
+  if (isDemoView || isError || isTestnetModeEnabled || (data && !profitLoss)) {
     return null
   }
 

@@ -44,6 +44,8 @@ export function useAuctionChart({ enabled = true }: { enabled?: boolean } = {}) 
         borderVisible: false,
         fixLeftEdge: true,
         fixRightEdge: true,
+        timeVisible: true,
+        secondsVisible: false,
         tickMarkFormatter: (time: UTCTimestamp) => formatShortDateTime(new Date(time * 1000)),
       },
       handleScroll: false,

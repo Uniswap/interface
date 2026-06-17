@@ -13,4 +13,8 @@ export { ExpandableIssuerIdentity } from 'uniswap/src/features/expandableAsset/E
 export { ExpandableParentAssetIdentity } from 'uniswap/src/features/expandableAsset/ExpandableParentAssetIdentity'
 export { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset/IssuerTableRowHoverContext'
 export { CategoryTag } from 'uniswap/src/features/expandableAsset/CategoryTag'
-export type { ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
+export type {
+  ExpandableAssetGroupVariant,
+  IssuerMenuControl,
+  RenderIssuerRowArgs,
+} from 'uniswap/src/features/expandableAsset/types'

@@ -4,7 +4,8 @@ import { getEntryGatewayUrl, getTransport } from '@universe/api'
 import { tryProvideSession } from '@universe/api'
 import { isWebApp, Environment } from '@universe/environment'
 import { SessionGateSource, type Session } from '@universe/sessions'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { config } from 'uniswap/src/config'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 
 export function createConnectTransportWithDefaults({
@@ -20,7 +21,7 @@ export function createConnectTransportWithDefaults({
   source?: string
 }): Transport {
   return getTransport({
-    getBaseUrl: getBaseUrlOverride ?? ((): string => uniswapUrls.apiBaseUrlV2),
+    getBaseUrl: getBaseUrlOverride ?? ((): string => getUniswapServiceUrls(config).apiBaseUrlV2),
     getHeaders: () => BASE_UNISWAP_HEADERS,
     options,
     getSession,
@@ -52,11 +53,11 @@ export const ALL_NETWORKS_ARG = 'ALL_NETWORKS'
 
 export const dataApiGetTransport = createConnectTransportWithDefaults({
   options: { useHttpGet: true },
-  getBaseUrlOverride: () => uniswapUrls.dataApiBaseUrlV2,
+  getBaseUrlOverride: () => getUniswapServiceUrls(config).dataApiBaseUrlV2,
 })
 
 export const dataApiPostTransport = createConnectTransportWithDefaults({
-  getBaseUrlOverride: () => uniswapUrls.dataApiBaseUrlV2,
+  getBaseUrlOverride: () => getUniswapServiceUrls(config).dataApiBaseUrlV2,
 })
 
 /**

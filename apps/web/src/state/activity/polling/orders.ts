@@ -2,7 +2,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -66,7 +65,7 @@ export async function fetchOpenLimitOrders(params: {
   account?: string
   orderHashes?: string[]
 }): Promise<UniswapXBackendOrder[]> {
-  let url = `${UNISWAP_GATEWAY_DNS_URL}${uniswapUrls.limitOrderStatusesPath}`
+  let url = `${UNISWAP_GATEWAY_DNS_URL}/limit-orders`
   const queryParams: string[] = []
 
   if (params.account) {

@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
@@ -18,6 +18,36 @@ export const TDP_MULTICHAIN_CHAIN_QUERY_VALUE = 'multichain'
 export enum TDPView {
   Chain = 'chain',
   Aggregate = 'aggregate',
+}
+
+/** Discriminant for {@link TdpChainSelection}. Values mirror `TDPChainSearchParam` (apps/web) for one vocabulary. */
+export enum TdpChainSelectionType {
+  Chain = 'chain', // a specific network's deployment
+  Multichain = 'multichain', // the all-networks (multichain) aggregate view
+}
+
+/**
+ * How the token-detail-page network selector should be initialized when navigating.
+ * Omit (pass `undefined`) to open the token's own chain via a path-only URL.
+ */
+export type TdpChainSelection =
+  | { type: TdpChainSelectionType.Chain; chainId: UniverseChainId }
+  | { type: TdpChainSelectionType.Multichain }
+
+/**
+ * Adapts a raw chain filter (the shape persisted for search history, `UniverseChainId | null`) into a
+ * `TdpChainSelection`. `null` -> aggregate multichain view; `undefined` -> the token's own chain (no selection).
+ */
+export function tdpChainSelectionFromFilter(
+  chainFilter: UniverseChainId | null | undefined,
+): TdpChainSelection | undefined {
+  if (chainFilter === null) {
+    return { type: TdpChainSelectionType.Multichain }
+  }
+  if (chainFilter === undefined) {
+    return undefined
+  }
+  return { type: TdpChainSelectionType.Chain, chainId: chainFilter }
 }
 
 /**
@@ -300,19 +330,19 @@ export async function openTransactionLink(hash: string | undefined, chainId: Uni
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpRequestUrl })
+  return openUri({ uri: UniswapHelpUrls.requestUrl })
 }
 
 export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
-  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
+  return openUri({ uri: serviceProvider.supportUrl ?? UniswapHelpUrls.requestUrl })
 }
 
 export async function openOfframpPendingSupportLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
+  return openUri({ uri: UniswapHelpUrls.articles.fiatOffRampHelp })
 }
 
 export function getPortfolioUrl(walletAddress: string): string {
-  return `${uniswapUrls.webInterfacePortfolioUrl}/${walletAddress}`
+  return `${UniswapStaticUrls.webInterfacePortfolioUrl}/${walletAddress}`
 }
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
@@ -341,7 +371,7 @@ export function getTokenUrl(
       // this is how web app handles native tokens
       tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
     }
-    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    const tokenUrl = `${UniswapStaticUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
     const params = new URLSearchParams()
     if (options.addMobileUTMTags) {
       for (const [key, value] of new URLSearchParams(UTM_TAGS_MOBILE)) {

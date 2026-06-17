@@ -1,5 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useFeatureFlag } from '@universe/gating'
 import {
   TokenContextMenuAction,
   UseSearchTokenMenuItemsParams,
@@ -8,6 +8,7 @@ import {
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { renderHook } from 'uniswap/src/test/test-utils'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import type { Mock } from 'vitest'
 
 vi.mock('uniswap/src/contexts/UniswapContext', async (importOriginal) => ({
@@ -230,8 +231,7 @@ describe(useSearchTokenMenuItems, () => {
     expect(mockNavigateToTokenDetails).toHaveBeenCalled()
   })
 
-  it('passes the token chain as TDP chain filter when multichain UX is enabled', () => {
-    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
+  it('passes the token chain as TDP chain filter', () => {
     const closeMenu = vi.fn()
     const { result } = renderUseSearchTokenMenuItems({
       closeMenu,
@@ -241,9 +241,9 @@ describe(useSearchTokenMenuItems, () => {
     result.current.menuItems[0]!.onPress()
 
     expect(closeMenu).toHaveBeenCalled()
-    expect(mockNavigateToTokenDetails).toHaveBeenCalledWith(
-      '1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      UniverseChainId.Mainnet,
-    )
+    expect(mockNavigateToTokenDetails).toHaveBeenCalledWith('1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Mainnet,
+    })
   })
 })

@@ -14,16 +14,17 @@ exports[`PoolTable > renders data filled state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxWidth-1200px _position-relative scrollbar-hidden"
       >
         <div
+          aria-hidden="true"
+          style="position: absolute; top: 0px; bottom: 0px; left: 239px; width: 1px; pointer-events: none; z-index: 2; background-color: rgba(19, 19, 19, 0.08);"
+        />
+        <div
           class="_position-_platformweb_sticky _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _top-72px _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-12px"
           />
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _top-t-space-spa1360334080 _zIndex-969 _right-1px _borderTopRightRadius-t-radius-ro291586424"
-          />
-          <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -43,7 +44,7 @@ exports[`PoolTable > renders data filled state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -264,10 +265,7 @@ exports[`PoolTable > renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _top-0px _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _zIndex-1 _borderBottomRightRadius-t-radius-ro291586424 _right-1px"
-        />
-        <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -284,11 +282,11 @@ exports[`PoolTable > renders data filled state 1`] = `
                   style="cursor: pointer; text-decoration: none;"
                 >
                   <div
-                    class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+                    class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 60px; left: 0px; position: relative; z-index: 0; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      class="_backgroundColor-_grouptrue-hover_surface1Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-FFFFFFf235 _borderTopLeftRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
+                      style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -302,8 +300,8 @@ exports[`PoolTable > renders data filled state 1`] = `
                       </div>
                     </div>
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 180px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      class="_backgroundColor-_grouptrue-hover_surface1Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-FFFFFFf235 _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
+                      style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -358,6 +356,31 @@ exports[`PoolTable > renders data filled state 1`] = `
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: contain; border-radius: 24px; z-index: 1;"
                                     width="24"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--4px _position-absolute _right--4px _zIndex-10"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
+                                data-testid="network-logo-1"
+                                style="width: 12.8px; height: 12.8px; border-radius: 3.84px; border-width: 1.6px; border-style: solid;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                  style="object-fit: contain; width: 10.600000000000001px; height: 10.600000000000001px;"
+                                >
+                                  <div
+                                    class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                    style="background-image: url(ethereum-logo.png);"
+                                  />
+                                  <img
+                                    alt=""
+                                    class="css-accessibilityImage-9pa8cd"
+                                    draggable="false"
+                                    src="ethereum-logo.png"
                                   />
                                 </div>
                               </div>
@@ -556,16 +579,17 @@ exports[`PoolTable > renders error state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxWidth-1200px _position-relative scrollbar-hidden"
       >
         <div
+          aria-hidden="true"
+          style="position: absolute; top: 0px; bottom: 0px; left: 239px; width: 1px; pointer-events: none; z-index: 2; background-color: rgba(19, 19, 19, 0.08);"
+        />
+        <div
           class="_position-_platformweb_sticky _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _top-72px _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-12px"
           />
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _top-t-space-spa1360334080 _zIndex-969 _right-1px _borderTopRightRadius-t-radius-ro291586424"
-          />
-          <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _opacity-0--4 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _opacity-0--4 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -585,7 +609,7 @@ exports[`PoolTable > renders error state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -806,20 +830,17 @@ exports[`PoolTable > renders error state 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _top-0px _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _zIndex-1 _borderBottomRightRadius-t-radius-ro291586424 _right-1px"
-        />
-        <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           >
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -849,7 +870,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1089,11 +1110,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1123,7 +1144,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1363,11 +1384,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1397,7 +1418,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1637,11 +1658,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1671,7 +1692,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1911,11 +1932,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1945,7 +1966,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2185,11 +2206,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2219,7 +2240,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2459,11 +2480,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2493,7 +2514,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2733,11 +2754,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2767,7 +2788,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3007,11 +3028,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3041,7 +3062,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3281,11 +3302,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3315,7 +3336,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3555,11 +3576,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3589,7 +3610,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3829,11 +3850,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3863,7 +3884,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4103,11 +4124,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4137,7 +4158,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4377,11 +4398,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4411,7 +4432,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4651,11 +4672,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4685,7 +4706,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4925,11 +4946,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4959,7 +4980,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5199,11 +5220,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5233,7 +5254,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5473,11 +5494,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5507,7 +5528,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5747,11 +5768,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5781,7 +5802,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6021,11 +6042,11 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6055,7 +6076,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6365,16 +6386,17 @@ exports[`PoolTable > renders loading state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxWidth-1200px _position-relative scrollbar-hidden"
       >
         <div
+          aria-hidden="true"
+          style="position: absolute; top: 0px; bottom: 0px; left: 239px; width: 1px; pointer-events: none; z-index: 2; background-color: rgba(19, 19, 19, 0.08);"
+        />
+        <div
           class="_position-_platformweb_sticky _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _top-72px _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-12px"
           />
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _top-t-space-spa1360334080 _zIndex-969 _right-1px _borderTopRightRadius-t-radius-ro291586424"
-          />
-          <div
-            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-unset _borderBottomLeftRadius-unset _backgroundColor-surface1Hov3121676 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 scrollbar-hidden"
+            class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _scrollbarWidth-none _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 scrollbar-hidden"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -6394,7 +6416,7 @@ exports[`PoolTable > renders loading state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+              style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6615,20 +6637,17 @@ exports[`PoolTable > renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _top-0px _bottom-0px _width-20px _pointerEvents-none _background-linear-grad1202317882 _zIndex-1 _borderBottomRightRadius-t-radius-ro291586424 _right-1px"
-        />
-        <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-non101 _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           >
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6658,7 +6677,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6898,11 +6917,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6932,7 +6951,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7172,11 +7191,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7206,7 +7225,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7446,11 +7465,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7480,7 +7499,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7720,11 +7739,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7754,7 +7773,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -7994,11 +8013,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8028,7 +8047,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8268,11 +8287,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8302,7 +8321,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8542,11 +8561,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8576,7 +8595,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8816,11 +8835,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -8850,7 +8869,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9090,11 +9109,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9124,7 +9143,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9364,11 +9383,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9398,7 +9417,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9638,11 +9657,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9672,7 +9691,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9912,11 +9931,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -9946,7 +9965,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10186,11 +10205,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10220,7 +10239,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10460,11 +10479,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10494,7 +10513,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10734,11 +10753,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -10768,7 +10787,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11008,11 +11027,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11042,7 +11061,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11282,11 +11301,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11316,7 +11335,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11556,11 +11575,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11590,7 +11609,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11830,11 +11849,11 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
             </div>
             <div
-              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-56px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
+              class="_backgroundColor-0hover-surface1Hov3121676 _transition-0hover-background-1979323289 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-56px"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949);"
+                style="width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; min-width: 60px; max-width: 60px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -11864,7 +11883,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(249, 249, 249, 0.949); border-right: 1px solid rgba(19, 19, 19, 0.08);"
+                style="width: 180px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; min-width: 180px; max-width: 180px; flex-shrink: 0; flex-grow: 0; background: rgba(255, 255, 255, 0.949);"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"

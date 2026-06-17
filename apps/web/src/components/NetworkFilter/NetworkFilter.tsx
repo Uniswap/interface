@@ -131,6 +131,9 @@ export function NetworkFilter({
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const filteredChainIds = useFilteredChainIds(networks)
+  const allSupportedChainIds = useFilteredChainIds()
+  const isNetworkSubset = filteredChainIds.length < allSupportedChainIds.length
+  const allNetworksDisplayChainIds = isNetworkSubset ? filteredChainIds : undefined
   const chainInfo = currentChainId ? getChainInfo(currentChainId) : null
   const isAllNetworks = chainInfo === null
   const isMobileSheet = isWebApp && media.sm
@@ -202,6 +205,7 @@ export function NetworkFilter({
                 autoFocus={!isMobileSheet}
                 chainIds={filteredChainIds}
                 includeAllNetworks={showMultichainOption}
+                allNetworksChainIds={showMultichainOption ? allNetworksDisplayChainIds : undefined}
                 isOpen={isMenuOpen}
                 maxHeight={
                   (typeof dropdownStyle?.maxHeight === 'number' ? dropdownStyle.maxHeight : StyledDropdown.maxHeight) -
@@ -221,6 +225,7 @@ export function NetworkFilter({
                 {showMultichainOption && (
                   <TableNetworkItem
                     chainInfo={null}
+                    chainIds={allNetworksDisplayChainIds}
                     tab={tab}
                     toggleMenu={toggleMenu}
                     tracePage={tracePage}
@@ -240,6 +245,7 @@ export function NetworkFilter({
 
 const TableNetworkItem = memo(function TableNetworkItem({
   chainInfo,
+  chainIds,
   tab,
   toggleMenu,
   tracePage,
@@ -248,6 +254,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   currentChainId,
 }: {
   chainInfo: UniverseChainInfo | null
+  chainIds?: UniverseChainId[]
   tab?: ExploreTab
   toggleMenu: Dispatch<SetStateAction<boolean>>
   tracePage?: InterfacePageName
@@ -297,6 +304,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
       >
         <NetworkOption
           chainId={chainId}
+          chainIds={chainId === null ? chainIds : undefined}
           currentlySelected={isCurrentChain}
           isNew={isNew}
           trailingElement={unsupported ? <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge> : undefined}

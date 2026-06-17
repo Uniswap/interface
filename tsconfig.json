@@ -99,6 +99,9 @@
     },
     {
       "path": "./packages/cryptography"
+    },
+    {
+      "path": "./packages/compliance"
     }
   ]
 }

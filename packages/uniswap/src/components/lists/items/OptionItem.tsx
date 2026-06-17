@@ -22,6 +22,9 @@ export interface OptionItemProps {
   rightElement?: JSX.Element
   /** Persistent category pill (e.g. "Stocks") rendered before `rightElement`, independent of hover. */
   categoryTag?: ReactNode
+  /** Rendered immediately after the title on the same baseline (e.g. a dimmed RWA issuer label). When present,
+   *  the title shrinks/ellipsizes and the suffix holds its width. Absent → title renders exactly as before. */
+  titleSuffix?: ReactNode
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
@@ -42,6 +45,7 @@ function OptionItemInner({
   subtitle,
   rightElement,
   categoryTag,
+  titleSuffix,
   badge,
   titleProps,
   onPress,
@@ -127,7 +131,27 @@ function OptionItemInner({
             {image}
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
-                {typeof title === 'string' ? (
+                {titleSuffix ? (
+                  <Flex row shrink alignItems="baseline" gap="$spacing6" minWidth={0}>
+                    {typeof title === 'string' ? (
+                      <Text
+                        color="$neutral1"
+                        variant="body1"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        numberOfLines={1}
+                        flexShrink={1}
+                        {...titleProps}
+                      >
+                        {title}
+                      </Text>
+                    ) : (
+                      title
+                    )}
+                    {titleSuffix}
+                  </Flex>
+                ) : typeof title === 'string' ? (
                   <Text
                     color="$neutral1"
                     variant="body1"

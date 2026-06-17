@@ -2,6 +2,10 @@
 import type { BaseConfig } from '@universe/config'
 import { AppId, optionalString, parseConfig } from '@universe/config'
 import DeviceInfo from 'react-native-device-info'
+import {
+  getUniswapServiceUrls as getUniswapServiceUrlsFromOverrides,
+  type UniswapServiceUrls,
+} from 'uniswap/src/constants/urls'
 import { z } from 'zod'
 
 /**
@@ -38,4 +42,8 @@ export function getConfig(): Config {
     schema: mobileConfigSchema,
   })
   return cachedConfig
+}
+
+export function getUniswapServiceUrls(): UniswapServiceUrls {
+  return getUniswapServiceUrlsFromOverrides(getConfig())
 }

@@ -19,6 +19,7 @@ import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/type
 import { useAllPoolTicks } from '~/features/Liquidity/hooks/usePoolTickData'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { useColor } from '~/hooks/useColor'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 const PDP_CHART_HEIGHT_PX = 356
 
@@ -318,8 +319,10 @@ export function D3LiquidityPoolChart({
 
   const { t } = useTranslation()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
-  const baseDescriptor = baseCurrency.symbol ?? baseCurrency.name ?? t('common.tokenA')
-  const quoteDescriptor = quoteCurrency.symbol ?? quoteCurrency.name ?? t('common.tokenB')
+  const baseDisplay = unwrappedToken(baseCurrency)
+  const quoteDisplay = unwrappedToken(quoteCurrency)
+  const baseDescriptor = baseDisplay.symbol ?? baseDisplay.name ?? t('common.tokenA')
+  const quoteDescriptor = quoteDisplay.symbol ?? quoteDisplay.name ?? t('common.tokenB')
 
   const { visualCurrentTick, visualActiveTick } = computeVisualTicks({ currentTick, tickSpacing, isReversed })
   const activeTickEntry = useMemo(

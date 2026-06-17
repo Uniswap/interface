@@ -9,5 +9,7 @@ export interface UserOpService {
     chainId: UniverseChainId
     account: SignerMnemonicAccountMeta
     typeInfo?: TransactionTypeInfo
+    requestUniswapGasSponsorship?: boolean
+    paymasterServiceContext?: Record<string, unknown>
   }): Promise<{ userOpHash: string }>
 }

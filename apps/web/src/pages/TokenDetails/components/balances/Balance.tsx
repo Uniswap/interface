@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -13,14 +12,15 @@ export function Balance({
   fetchedBalance,
   isAggregate = false,
   isMultichainBalance = false,
+  projectName,
 }: {
   currency?: Currency
   fetchedBalance?: PortfolioBalance
   isAggregate?: boolean
   isMultichainBalance?: boolean
+  projectName?: string
 }): JSX.Element {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const formattedBalance = formatNumberOrString({
@@ -29,7 +29,7 @@ export function Balance({
   })
   const formattedUsdValue = convertFiatAmountFormatted(fetchedBalance?.balanceUSD, NumberType.PortfolioBalance)
   const tokenSymbol = currency?.symbol
-  const tokenName = currency?.name
+  const tokenName = projectName ?? currency?.name
 
   if (isAggregate) {
     return (
@@ -37,18 +37,16 @@ export function Balance({
         <CurrencyLogo
           currencyInfo={fetchedBalance?.currencyInfo}
           size={iconSizes.icon32}
-          hideNetworkLogo={multichainTokenUxEnabled && isMultichainBalance}
+          hideNetworkLogo={isMultichainBalance}
         />
         <Flex shrink row width="100%" justifyContent="space-between" alignItems="center" ml="$spacing12">
           <Flex>
             <Text variant="body2" color="$neutral1">
               {tokenName}
             </Text>
-            {multichainTokenUxEnabled && (
-              <Text variant="body3" color="$neutral2">
-                {t('transaction.network.all')}
-              </Text>
-            )}
+            <Text variant="body3" color="$neutral2">
+              {t('transaction.network.all')}
+            </Text>
           </Flex>
           <Flex alignItems="flex-end">
             <Text variant="body2" color="$neutral1">
@@ -68,7 +66,7 @@ export function Balance({
       <CurrencyLogo
         currencyInfo={fetchedBalance?.currencyInfo}
         size={iconSizes.icon32}
-        hideNetworkLogo={multichainTokenUxEnabled && isMultichainBalance}
+        hideNetworkLogo={isMultichainBalance}
       />
       <Flex shrink row width="100%" justifyContent="space-between" alignItems="center" ml="$spacing12">
         <Flex>

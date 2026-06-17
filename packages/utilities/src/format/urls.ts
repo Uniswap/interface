@@ -15,6 +15,11 @@ export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }
     case 'file': {
       return options?.allowLocalUri ? [uri] : []
     }
+    // Object URLs from `URL.createObjectURL` — only safe to pass through when the caller opted in
+    // (e.g. UniversalImage with `allowLocalUri`); otherwise reject like unknown schemes.
+    case 'blob': {
+      return options?.allowLocalUri ? [uri] : []
+    }
     case 'data':
       return [uri]
     case 'https':

@@ -1,18 +1,9 @@
 import { act } from '@testing-library/react-native'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/hooks/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/hooks/useToggleFavoriteCallback'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { renderHook } from 'uniswap/src/test/test-utils'
-
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-  return {
-    ...actual,
-    useFeatureFlag: vi.fn(() => false),
-  }
-})
 
 vi.mock('uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings', () => ({
   useMultichainFavoritesRankings: vi.fn(() => ({
@@ -30,10 +21,6 @@ const ARBITRUM_ETH = '42161-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 const EMPTY_FAVORITES: FavoritesState = { tokens: [], watchedAddresses: [] }
 
-function enableMultichainFlag(): void {
-  vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
-}
-
 function setCanonicalLookup(entries: Array<[string, string]>): void {
   vi.mocked(useMultichainFavoritesRankings).mockReturnValue({
     canonicalByKey: new Map(entries),
@@ -44,7 +31,6 @@ function setCanonicalLookup(entries: Array<[string, string]>): void {
 
 describe(useToggleFavoriteCallback, () => {
   beforeEach(() => {
-    vi.mocked(useFeatureFlag).mockReturnValue(false)
     vi.mocked(useMultichainFavoritesRankings).mockReturnValue({
       canonicalByKey: new Map(),
       networkCountByKey: new Map(),
@@ -52,23 +38,7 @@ describe(useToggleFavoriteCallback, () => {
     })
   })
 
-  describe('adding favorites with multichain flag OFF', () => {
-    it('dispatches the normalized currencyId as-is', () => {
-      const { result, store } = renderHook(
-        () => useToggleFavoriteCallback({ id: ARBITRUM_USDC, tokenName: 'USDC', isFavoriteToken: false }),
-        { preloadedState: { favorites: EMPTY_FAVORITES } },
-      )
-      act(() => result.current())
-
-      expect(store.getState().favorites.tokens).toEqual([ARBITRUM_USDC])
-    })
-  })
-
-  describe('adding favorites with multichain flag ON', () => {
-    beforeEach(() => {
-      enableMultichainFlag()
-    })
-
+  describe('adding favorites', () => {
     it('stores the canonical mainnet CurrencyId when adding a non-mainnet token', () => {
       setCanonicalLookup([[ARBITRUM_USDC, MAINNET_USDC]])
 
@@ -121,41 +91,7 @@ describe(useToggleFavoriteCallback, () => {
     })
   })
 
-  describe('removing favorites with multichain flag OFF', () => {
-    it('removes only the exact stored CurrencyId (no canonical or address fallback)', () => {
-      const { result, store } = renderHook(
-        () => useToggleFavoriteCallback({ id: ARBITRUM_USDC, tokenName: 'USDC', isFavoriteToken: true }),
-        {
-          preloadedState: { favorites: { tokens: [ARBITRUM_USDC], watchedAddresses: [] } as FavoritesState },
-        },
-      )
-      act(() => result.current())
-
-      expect(store.getState().favorites.tokens).toEqual([])
-    })
-
-    it('does not consult the canonical lookup when the flag is off, even if it would otherwise match', () => {
-      // Canonical map is populated, but flag-off should ignore it. User tapping Arbitrum USDC must
-      // not remove the Mainnet USDC entry — flag-off behavior is strict, chain-specific matching.
-      setCanonicalLookup([[ARBITRUM_USDC, MAINNET_USDC]])
-
-      const { result, store } = renderHook(
-        () => useToggleFavoriteCallback({ id: ARBITRUM_USDC, tokenName: 'USDC', isFavoriteToken: true }),
-        {
-          preloadedState: { favorites: { tokens: [MAINNET_USDC], watchedAddresses: [] } as FavoritesState },
-        },
-      )
-      act(() => result.current())
-
-      expect(store.getState().favorites.tokens).toEqual([MAINNET_USDC])
-    })
-  })
-
-  describe('removing favorites with multichain flag ON', () => {
-    beforeEach(() => {
-      enableMultichainFlag()
-    })
-
+  describe('removing favorites', () => {
     it('removes a favorite stored under a different chain when token has the same address', () => {
       const mainnetSameAddress = '1-0x0000000000000000000000000000000000000aaa'
       const arbitrumSameAddress = '42161-0x0000000000000000000000000000000000000aaa'
@@ -194,11 +130,7 @@ describe(useToggleFavoriteCallback, () => {
     })
   })
 
-  describe('round-trip with useSelectHasTokenFavorited (multichain flag ON)', () => {
-    beforeEach(() => {
-      enableMultichainFlag()
-    })
-
+  describe('round-trip with useSelectHasTokenFavorited', () => {
     it('favoriting from Arbitrum USDC makes the selector report favorited on every USDC chain', () => {
       setCanonicalLookup([
         [ARBITRUM_USDC, MAINNET_USDC],

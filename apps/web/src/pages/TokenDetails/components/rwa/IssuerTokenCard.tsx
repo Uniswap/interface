@@ -7,10 +7,10 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
+import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import type { RWAIssuerMarketData } from '~/pages/TokenDetails/hooks/useRWAIssuerMarketData'
 
 interface IssuerTokenCardProps {
   token: RWAToken

@@ -10,7 +10,7 @@ import { NetworkCostTooltip, NetworkCostTooltipUniswapX } from 'uniswap/src/comp
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NetworkCostBanner } from 'uniswap/src/features/smartWallet/banner/NetworkCostBanner'
@@ -46,7 +46,7 @@ export function NetworkFeeWarning({
         isMobileApp && (
           <NetworkCostBanner
             bannerText={t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })}
-            url={uniswapUrls.helpArticleUrls.smartWalletDelegation}
+            url={UniswapHelpUrls.articles.smartWalletDelegation}
           />
         )
       }

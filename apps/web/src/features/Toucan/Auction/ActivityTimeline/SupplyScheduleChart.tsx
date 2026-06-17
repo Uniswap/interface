@@ -4,11 +4,12 @@ import {
   createChart,
   type IChartApi,
   type ISeriesApi,
+  type ITimeScaleApi,
   type MouseEventParams,
   type Time,
   type UTCTimestamp,
 } from 'lightweight-charts'
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
@@ -17,6 +18,7 @@ import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { blockToTimestamp } from '~/features/Toucan/Auction/utils/blockToTimestamp'
+import { dottedMarkerStyle } from '~/features/Toucan/Auction/utils/dottedMarker'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { formatShortDateTime } from '~/features/Toucan/Auction/utils/formatting'
 import { TooltipContainer } from '~/features/Toucan/Shared/TooltipContainer'
@@ -119,6 +121,58 @@ function getSupplySchedulePoints({
   return points
 }
 
+function computeNowX({
+  data,
+  timeScale,
+}: {
+  data: SupplySchedulePoint[]
+  timeScale: ITimeScaleApi<Time>
+}): number | null {
+  if (data.length < 2) {
+    return null
+  }
+
+  const nowSec = Date.now() / 1000
+  const firstTime = data[0].time as number
+  const lastTime = data[data.length - 1].time as number
+  if (nowSec < firstTime || nowSec > lastTime) {
+    return null
+  }
+
+  let segmentStart = 0
+  for (let i = 0; i < data.length - 1; i++) {
+    if (nowSec >= (data[i].time as number) && nowSec <= (data[i + 1].time as number)) {
+      segmentStart = i
+      break
+    }
+  }
+
+  const t0 = data[segmentStart].time as number
+  const t1 = data[segmentStart + 1].time as number
+  const c0 = timeScale.timeToCoordinate(data[segmentStart].time)
+  const c1 = timeScale.timeToCoordinate(data[segmentStart + 1].time)
+  if (c0 === null || c1 === null) {
+    return null
+  }
+
+  const fraction = t1 === t0 ? 0 : (nowSec - t0) / (t1 - t0)
+  return c0 + fraction * (c1 - c0)
+}
+
+function MarkerLine({ x, top, height }: { x: number; top: number; height: number }) {
+  const { neutral2 } = useSporeColors()
+  return (
+    <Flex
+      position="absolute"
+      top={top}
+      height={Math.max(0, height)}
+      pointerEvents="none"
+      zIndex={1}
+      style={{ left: x, transform: 'translateX(-50%)', ...dottedMarkerStyle(neutral2.val) }}
+    />
+  )
+}
+
 const ChartTooltip = forwardRef<HTMLDivElement, { data: TooltipData; containerWidth: number }>(function ChartTooltip(
   { data, containerWidth },
   ref,
@@ -173,6 +227,7 @@ const ChartTooltip = forwardRef<HTMLDivElement, { data: TooltipData; containerWi
 })
 
 export function SupplyScheduleChart() {
+  const { t } = useTranslation()
   const { neutral2, surface3 } = useSporeColors()
   const neutral2Val = neutral2.val
   const surface3Val = surface3.val
@@ -180,8 +235,13 @@ export function SupplyScheduleChart() {
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null)
   const [yAxisLabels, setYAxisLabels] = useState<Array<{ label: string; y: number }>>([])
+  const [plotHeight, setPlotHeight] = useState(CHART_HEIGHT)
+  const [nowLineX, setNowLineX] = useState<number | null>(null)
+  const [hoverLineX, setHoverLineX] = useState<number | null>(null)
+  const [nowBadgeHeight, setNowBadgeHeight] = useState(0)
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const nowBadgeRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Area'> | null>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
@@ -209,14 +269,18 @@ export function SupplyScheduleChart() {
     (param: MouseEventParams<Time>) => {
       if (!param.time || !param.point || !seriesRef.current || !containerRef.current) {
         setTooltipData(null)
+        setHoverLineX(null)
         return
       }
 
       const matchingPoint = data.find((p) => p.time === param.time)
       if (!matchingPoint) {
         setTooltipData(null)
+        setHoverLineX(null)
         return
       }
+
+      setHoverLineX(chartRef.current?.timeScale().timeToCoordinate(param.time) ?? null)
 
       const date = new Date((param.time as number) * 1000)
       const dateLabel = formatShortDateTime(date)
@@ -264,6 +328,8 @@ export function SupplyScheduleChart() {
         borderVisible: false,
         fixLeftEdge: true,
         fixRightEdge: true,
+        timeVisible: true,
+        secondsVisible: false,
         tickMarkFormatter: (time: UTCTimestamp) => formatShortDateTime(new Date(time * 1000)),
       },
       handleScroll: false,
@@ -271,12 +337,7 @@ export function SupplyScheduleChart() {
       crosshair: {
         mode: CrosshairMode.Magnet,
         horzLine: { visible: false, labelVisible: false },
-        vertLine: {
-          visible: true,
-          labelVisible: false,
-          color: neutral2Val,
-          style: 3,
-        },
+        vertLine: { visible: false, labelVisible: false },
       },
     })
 
@@ -320,6 +381,9 @@ export function SupplyScheduleChart() {
         }
       }
       setYAxisLabels(positions)
+
+      setPlotHeight(CHART_HEIGHT - chart.timeScale().height())
+      setNowLineX(computeNowX({ data, timeScale: chart.timeScale() }))
     }
 
     // Update after initial render and on resize
@@ -341,6 +405,12 @@ export function SupplyScheduleChart() {
       seriesRef.current = null
     }
   }, [data, effectiveTokenColor, neutral2Val, surface3Val, handleCrosshairMove])
+
+  useLayoutEffect(() => {
+    if (nowLineX !== null && nowBadgeRef.current) {
+      setNowBadgeHeight(nowBadgeRef.current.offsetHeight)
+    }
+  }, [nowLineX])
 
   if (data.length === 0) {
     return null
@@ -365,6 +435,28 @@ export function SupplyScheduleChart() {
         </Text>
       ))}
       <Flex ref={containerRef} width="100%" height={CHART_HEIGHT} />
+      {hoverLineX !== null && <MarkerLine x={hoverLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />}
+      {nowLineX !== null && (
+        <>
+          <MarkerLine x={nowLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />
+          <Flex
+            ref={nowBadgeRef}
+            position="absolute"
+            top={0}
+            borderRadius="$rounded4"
+            backgroundColor="$surface3"
+            px="$spacing4"
+            py="$spacing2"
+            pointerEvents="none"
+            zIndex={1}
+            style={{ left: nowLineX, transform: 'translateX(-50%)' }}
+          >
+            <Text variant="body4" color="$neutral1">
+              {t('toucan.details.now')}
+            </Text>
+          </Flex>
+        </>
+      )}
       {tooltipData && (
         <ChartTooltip ref={tooltipRef} data={tooltipData} containerWidth={containerRef.current?.clientWidth ?? 0} />
       )}

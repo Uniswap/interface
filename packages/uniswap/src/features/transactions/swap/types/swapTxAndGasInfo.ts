@@ -1,6 +1,5 @@
 import { GasEstimate, GasFeeResult, TradingApi } from '@universe/api'
-import { isWebApp } from '@universe/environment'
-import { ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/utils'
+import { ValidatedGasFeeResult } from 'uniswap/src/features/gas/utils'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import {
   BridgeTrade,
@@ -10,20 +9,14 @@ import {
   UnwrapTrade,
   WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  isBridge,
-  isChained,
-  isClassic,
-  isJupiter,
-  isUniswapX,
-  isWrap,
-} from 'uniswap/src/features/transactions/swap/utils/routing'
+import { validateSwapTxContext } from 'uniswap/src/features/transactions/swap/types/validateSwapTxContext'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   PopulatedTransactionRequestArray,
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { Prettify } from 'viem'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
 export type SwapTxAndGasInfo =
   | ClassicSwapTxAndGasInfo
@@ -88,19 +81,32 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   permit: PermitTransaction | PermitTypedData | undefined
   swapRequestArgs: TradingApi.CreateSwapRequest | undefined
   /**
-   * `unsigned` is true if `txRequest` is undefined due to a permit signature needing to be signed first.
+   * `hasUnsignedPermit` is true if `txRequest` is undefined due to a permit signature needing to be signed first.
    * This occurs on interface where the user must be prompted to sign a permit before txRequest can be fetched.
    */
-  unsigned: boolean
+  hasUnsignedPermit: boolean
+  /**
+   * Either txRequests or unsignedUserOperation is defined.
+   * When `unsignedUserOperation` is set, the swap was fetched via the 4337 endpoint and
+   * paymaster + signing happen in the execute saga (see `isUserOpSwap`).
+   */
   txRequests: PopulatedTransactionRequestArray | undefined
-  paymasterService?: TradingApi.PaymasterServiceCapability
+  unsignedUserOperation?: RpcUserOperation<'0.8'>
+  requestUniswapGasSponsorship?: boolean
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
 }
 
 export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP
   trade: WrapTrade | UnwrapTrade
+  /**
+   * Either txRequests or unsignedUserOperation is defined
+   */
   txRequests: PopulatedTransactionRequestArray | undefined
-  paymasterService?: TradingApi.PaymasterServiceCapability
+  unsignedUserOperation?: RpcUserOperation<'0.8'>
+  /** Only set on the 4337 path; `undefined` for the standard EOA path. */
+  requestUniswapGasSponsorship?: boolean
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
@@ -113,8 +119,14 @@ export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
 export interface BridgeSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.BRIDGE
   trade: BridgeTrade
+  /**
+   * Either txRequests or unsignedUserOperation is defined
+   */
   txRequests: PopulatedTransactionRequestArray | undefined
-  paymasterService?: TradingApi.PaymasterServiceCapability
+  unsignedUserOperation?: RpcUserOperation<'0.8'>
+  /** Only set on the 4337 path; `undefined` for the standard EOA path. */
+  requestUniswapGasSponsorship?: boolean
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
 }
 
 export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
@@ -145,36 +157,81 @@ interface BaseRequiredSwapTxContextFields {
   gasFee: ValidatedGasFeeResult
 }
 
+/** Either txRequests or unsignedUserOperation is set after validation. */
+export type ValidatedTxRequestsOrUserOp =
+  | {
+      txRequests: PopulatedTransactionRequestArray
+      unsignedUserOperation?: undefined
+      requestUniswapGasSponsorship?: undefined
+    }
+  | {
+      txRequests: undefined
+      unsignedUserOperation: RpcUserOperation<'0.8'>
+      requestUniswapGasSponsorship: boolean
+    }
+
 export type ValidatedClassicSwapTxAndGasInfo = Prettify<
-  Required<Omit<ClassicSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
+  Required<
+    Omit<
+      ClassicSwapTxAndGasInfo,
+      | 'hasUnsignedPermit'
+      | 'permit'
+      | 'txRequests'
+      | 'unsignedUserOperation'
+      | 'includesDelegation'
+      | 'requestUniswapGasSponsorship'
+      | 'paymasterService'
+    >
+  > &
+    Pick<ClassicSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'> &
     BaseRequiredSwapTxContextFields &
     (
       | {
-          unsigned: true
+          hasUnsignedPermit: true
           permit: PermitTypedData
           txRequests: undefined
+          unsignedUserOperation?: undefined
+          requestUniswapGasSponsorship?: undefined
         }
       | {
-          unsigned: false
+          hasUnsignedPermit: false
           permit: PermitTransaction | undefined
           txRequests: PopulatedTransactionRequestArray
+          unsignedUserOperation?: undefined
+          requestUniswapGasSponsorship?: undefined
         }
-    ) &
-    Pick<ClassicSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
+      | {
+          hasUnsignedPermit: false
+          permit: undefined
+          txRequests: undefined
+          unsignedUserOperation: RpcUserOperation<'0.8'>
+          requestUniswapGasSponsorship: boolean
+        }
+    )
 >
 
 export type ValidatedWrapSwapTxAndGasInfo = Prettify<
-  Required<Omit<WrapSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
-    BaseRequiredSwapTxContextFields & {
-      txRequests: PopulatedTransactionRequestArray
-    } & Pick<WrapSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
+  Required<
+    Omit<
+      WrapSwapTxAndGasInfo,
+      'includesDelegation' | 'paymasterService' | 'unsignedUserOperation' | 'requestUniswapGasSponsorship'
+    >
+  > &
+    BaseRequiredSwapTxContextFields &
+    ValidatedTxRequestsOrUserOp &
+    Pick<WrapSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
 >
 
 export type ValidatedBridgeSwapTxAndGasInfo = Prettify<
-  Required<Omit<BridgeSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>> &
-    BaseRequiredSwapTxContextFields & {
-      txRequests: PopulatedTransactionRequestArray
-    } & Pick<BridgeSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
+  Required<
+    Omit<
+      BridgeSwapTxAndGasInfo,
+      'includesDelegation' | 'paymasterService' | 'unsignedUserOperation' | 'requestUniswapGasSponsorship'
+    >
+  > &
+    BaseRequiredSwapTxContextFields &
+    ValidatedTxRequestsOrUserOp &
+    Pick<BridgeSwapTxAndGasInfo, 'includesDelegation' | 'paymasterService'>
 >
 
 export type ValidatedUniswapXSwapTxAndGasInfo = Prettify<
@@ -192,60 +249,3 @@ export type ValidatedSolanaSwapTxAndGasInfo = Prettify<
 export type ValidatedChainedSwapTxAndGasInfo = Prettify<
   Required<ChainedSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields
 >
-
-/**
- * Validates a SwapTxAndGasInfo object without any casting and returns a ValidatedSwapTxContext object if the object is valid.
- * @param swapTxContext - The SwapTxAndGasInfo object to validate.
- * @returns A ValidatedSwapTxContext object if the object is valid, otherwise undefined.
- */
-function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTxContext | undefined {
-  const gasFee = validateGasFeeResult(swapTxContext.gasFee)
-
-  if (!gasFee) {
-    return undefined
-  }
-
-  if (swapTxContext.trade) {
-    if (isClassic(swapTxContext)) {
-      const { trade, unsigned, permit, txRequests, includesDelegation } = swapTxContext
-
-      if (unsigned) {
-        // SwapTxContext should only ever be unsigned / still require a signature on interface.
-        if (!isWebApp || !permit || permit.method !== PermitMethod.TypedData) {
-          return undefined
-        }
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation }
-      } else if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined, includesDelegation }
-      } else {
-        return undefined
-      }
-    } else if (isBridge(swapTxContext)) {
-      const { trade, txRequests, includesDelegation } = swapTxContext
-      if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation }
-      } else {
-        return undefined
-      }
-    } else if (isUniswapX(swapTxContext) && swapTxContext.permit) {
-      const { trade, permit } = swapTxContext
-      return { ...swapTxContext, trade, gasFee, permit, includesDelegation: false }
-    } else if (isWrap(swapTxContext)) {
-      const { trade, txRequests } = swapTxContext
-      if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation: false }
-      } else {
-        return undefined
-      }
-    } else if (isJupiter(swapTxContext) && swapTxContext.transactionBase64) {
-      return { ...swapTxContext, transactionBase64: swapTxContext.transactionBase64, gasFee }
-    } else if (isChained(swapTxContext)) {
-      const { includesDelegation } = swapTxContext
-      return { ...swapTxContext, gasFee, includesDelegation: includesDelegation ?? false }
-    } else {
-      return undefined
-    }
-  } else {
-    return undefined
-  }
-}

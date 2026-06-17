@@ -244,7 +244,6 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         data={limitedOrders}
         loading={tableLoading}
         error={false}
-        v2={true}
         rowWrapper={rowWrapper}
         loadingRowsCount={MAX_LIMITS_LOADING_ROWS}
         rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}

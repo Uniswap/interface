@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PropsWithChildren, ReactElement } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -11,11 +10,6 @@ import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 import { mocked } from '~/test-utils/mocked'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
   useMultichainTokenEntries: vi.fn(),
@@ -90,7 +84,6 @@ describe(useTDPStatsMarketSource, () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocked(useMultichainTokenEntries).mockReturnValue(ONE_CHAIN)
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
   })
 
   it('returns empty stats input when token query data is undefined', () => {
@@ -102,21 +95,6 @@ describe(useTDPStatsMarketSource, () => {
     expect(result.current.filteredDeploymentMarket).toBeUndefined()
     expect(result.current.marketStatsInput).toBeUndefined()
     expect(result.current.networkFilterName).toBe('')
-  })
-
-  it('uses rollup market when multichain token UX is off', () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-    const tokenQueryData = buildTokenQueryData()
-    const store = createTDPStore(createTDPState())
-
-    const { result } = renderUseTDPStatsMarketSource(tokenQueryData, store)
-
-    expect(result.current.showAggregatedStats).toBe(true)
-    expect(result.current.marketStatsInput).toEqual({
-      market: rollupMarket,
-      // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-      project: tokenQueryData?.project,
-    })
   })
 
   it('uses rollup market for single-chain deployment list', () => {

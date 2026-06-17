@@ -5,7 +5,7 @@ import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, opacify } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import flowersImage from '~/assets/images/recovery-phrase-flowers.png'
@@ -109,7 +109,7 @@ export function RecoveryPhraseDownloadPrompt({
   }
 
   const onPressExtension = (): void => {
-    window.open(uniswapUrls.chromeExtension, '_blank', 'noopener,noreferrer')
+    window.open(UniswapStaticUrls.chromeExtension, '_blank', 'noopener,noreferrer')
   }
 
   return (

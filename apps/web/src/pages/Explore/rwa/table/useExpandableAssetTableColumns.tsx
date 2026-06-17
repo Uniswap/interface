@@ -32,14 +32,12 @@ function safeAccessorGetValue<T>(getValue: (() => T | undefined) | undefined): T
 
 export function useExpandableAssetTableColumns({
   showLoadingSkeleton,
-  multichainTokenUxEnabled,
   enabledChainIds,
   enableSorting = false,
   sortMethod,
   orderDirection,
 }: {
   showLoadingSkeleton: boolean
-  multichainTokenUxEnabled: boolean
   enabledChainIds: readonly UniverseChainId[]
   enableSorting?: boolean
   sortMethod?: StocksSortMethod
@@ -68,7 +66,7 @@ export function useExpandableAssetTableColumns({
       return ExpandableAssetTableMetricHeaderCell
     }
 
-    const tokenColumnSize = getExpandableAssetTokenColumnSize(media.lg, multichainTokenUxEnabled)
+    const tokenColumnSize = getExpandableAssetTokenColumnSize(media.lg)
 
     const columns = [
       columnHelper.display({
@@ -227,7 +225,6 @@ export function useExpandableAssetTableColumns({
     return columns
   }, [
     media.lg,
-    multichainTokenUxEnabled,
     showLoadingSkeleton,
     t,
     convertFiatAmountFormatted,

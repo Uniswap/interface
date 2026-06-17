@@ -1052,6 +1052,7 @@ const importBoundary = {
 // ── no-direct-viem-ethers-import ───────────────────────────────────────
 // Routes viem/ethers/@ethersproject consumers through `@universe/chains`.
 // Allowlist below names every file that imports these directly today.
+// It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel.ts',
@@ -1062,13 +1063,13 @@ const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/constants/providers.ts',
   'apps/web/src/features/accounts/store/updater.tsx',
   'apps/web/src/features/Swap/hooks/useSendCallback.ts',
-  'apps/web/src/features/Swap/state/send/hooks.tsx',
+  'apps/web/src/pages/Swap/Send/state/hooks.tsx',
   'apps/web/src/features/Toucan/Auction/BidForm/BidReviewModal/useBidPermit2Flow.ts',
   'apps/web/src/hooks/useContract.ts',
   'apps/web/src/hooks/useEthersProvider.ts',
   'apps/web/src/hooks/useEthersSigner.ts',
   'apps/web/src/hooks/useSelectChain.ts',
-  'apps/web/src/hooks/useSwapCallback.tsx',
+  'apps/web/src/pages/Swap/Limit/useLimitOrderCallback.tsx',
   'apps/web/src/hooks/useTokenAllowance.ts',
   'apps/web/src/hooks/useTransactionDeadline.ts',
   'apps/web/src/hooks/useTransactionGasFee.ts',
@@ -1083,11 +1084,12 @@ const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/rpc/AppJsonRpcProvider.ts',
   'apps/web/src/rpc/ConfiguredJsonRpcProvider.ts',
   'apps/web/src/state/activity/polling/batch.ts',
-  'apps/web/src/state/claim/hooks.ts',
+  'apps/web/src/features/claim/hooks.ts',
   'apps/web/src/state/logs/slice.ts',
   'apps/web/src/state/logs/updater.ts',
   'apps/web/src/state/logs/utils.ts',
   'apps/web/src/state/routing/types.ts',
+  'apps/web/src/types/trade.ts',
   'apps/web/src/state/routing/utils.ts',
   'apps/web/src/state/sagas/transactions/5792.ts',
   'apps/web/src/state/sagas/transactions/cancelOrderSaga.ts',
@@ -1152,7 +1154,11 @@ const noDirectViemEthersImport = {
       if (isDirectViemEthersSource(source)) {
         context.report({
           node,
-          message: 'Import from `@universe/chains` instead, not viem/ethers directly.',
+          message: [
+            'Import from `@universe/chains` instead, not viem/ethers directly.',
+            "If what you need isn't there, update the allowlist in `universe-custom.js`.",
+            'Entries in `DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST` are exempt.',
+          ].join(' '),
         })
       }
     }

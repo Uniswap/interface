@@ -13,6 +13,9 @@ export interface ExecuteUserOpParams {
   account: SignerMnemonicAccountMeta
   chainId: UniverseChainId
   typeInfo?: TransactionTypeInfo
+  // When set, the saga requests gas sponsorship to fill `paymasterData` before signing.
+  requestUniswapGasSponsorship: boolean
+  paymasterServiceContext?: Record<string, unknown>
 }
 
 export function* executeUserOpSaga(params: ExecuteUserOpParams): SagaIterator<{ userOpHash: string }> {
@@ -35,6 +38,8 @@ export function* executeUserOpSaga(params: ExecuteUserOpParams): SagaIterator<{ 
     account: params.account,
     chainId: params.chainId,
     typeInfo: params.typeInfo,
+    requestUniswapGasSponsorship: params.requestUniswapGasSponsorship,
+    paymasterServiceContext: params.paymasterServiceContext,
   })
 
   return { userOpHash }

@@ -2837,6 +2837,10 @@
                     "USER_OP"
                   ],
                   "description": "Identifies whether the row was resolved from a transaction hash or a userOperation hash. Omitted on transaction rows; absence is equivalent to `TX`."
+                },
+                "paymaster": {
+                  "$ref": "#/components/schemas/Address",
+                  "description": "Paymaster address from the userOperation receipt. Present only for userOperation queries when the receipt is available and a paymaster was used."
                 }
               }
             }
@@ -2980,6 +2984,10 @@
           },
           "urgency": {
             "$ref": "#/components/schemas/Urgency"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
           }
         },
         "required": [
@@ -3055,6 +3063,10 @@
           },
           "eip7702Auth": {
             "$ref": "#/components/schemas/Eip7702Authorization"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
           }
         },
         "required": [
@@ -3074,11 +3086,17 @@
           },
           "gasSponsored": {
             "type": "boolean",
-            "description": "Whether gas for this operation will be sponsored by a paymaster."
+            "description": "Whether gas for this operation will be sponsored by a paymaster.",
+            "x-internal": true
           },
           "gasSponsorshipRejectionReason": {
             "type": "string",
-            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`."
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
+          },
+          "paymasterServiceContext": {
+            "$ref": "#/components/schemas/PaymasterServiceContext",
+            "x-internal": true
           }
         },
         "required": [
@@ -3158,6 +3176,7 @@
       "PaymasterServiceCapability": {
         "type": "object",
         "description": "EIP-7677 paymasterService capability. Present only when this swap is sponsored. The wallet forwards `context` as-is to the URL; the trading service does not expect the wallet to inspect or modify it.",
+        "x-internal": true,
         "properties": {
           "url": {
             "type": "string",
@@ -3166,20 +3185,25 @@
             "example": "https://unirpc.uniswap.org/paymaster/v1/130"
           },
           "context": {
-            "type": "object",
-            "properties": {
-              "sponsorship": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "sponsorship"
-            ]
+            "$ref": "#/components/schemas/PaymasterServiceContext"
           }
         },
         "required": [
           "url",
           "context"
+        ]
+      },
+      "PaymasterServiceContext": {
+        "type": "object",
+        "description": "EIP-7677 paymasterService.context bundle. The wallet forwards this verbatim to the paymaster RPC (or — for ERC-4337 — to /wallet/encode_4337). `sponsorship` is opaque AES-256-GCM ciphertext whose integrity is enforced cryptographically on the uniRPC side.",
+        "x-internal": true,
+        "properties": {
+          "sponsorship": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sponsorship"
         ]
       },
       "CreateSwap7702Response": {
@@ -3235,7 +3259,8 @@
       },
       "SponsorshipInfo": {
         "type": "object",
-        "description": "Gas sponsorship information for the quoted swap. When `sponsored` is `true`, gas fees for executing this swap will be covered by the `sponsor`. When `sponsored` is `false`, `rejectionReason` describes why sponsorship was not granted.",
+        "description": "Gas sponsorship information for the quoted swap. When `sponsored` is `true`, gas fees for executing this swap will be covered by the sponsor described in `sponsorMetadata`, under the campaign described in `campaign`. When `sponsored` is `false`, `rejectionReason` describes why sponsorship was not granted.",
+        "x-internal": true,
         "properties": {
           "sponsored": {
             "type": "boolean",
@@ -3245,22 +3270,41 @@
             "type": "string",
             "description": "Reason gas sponsorship was not granted. Present only when `sponsored` is `false`."
           },
-          "sponsor": {
-            "$ref": "#/components/schemas/SponsorSummary"
+          "campaign": {
+            "$ref": "#/components/schemas/CampaignDetails"
+          },
+          "sponsorMetadata": {
+            "$ref": "#/components/schemas/SponsorMetadata"
           }
         }
       },
-      "SponsorSummary": {
+      "CampaignDetails": {
+        "type": "object",
+        "description": "Display information about the sponsorship campaign covering gas fees for the swap.",
+        "x-internal": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name of the campaign."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the campaign."
+          }
+        }
+      },
+      "SponsorMetadata": {
         "type": "object",
         "description": "Display information about the sponsor covering gas fees for the swap.",
+        "x-internal": true,
         "properties": {
           "name": {
             "type": "string",
             "description": "Display name of the sponsor."
           },
-          "logoUrl": {
+          "icon": {
             "type": "string",
-            "description": "URL of the sponsor's logo."
+            "description": "URL of the sponsor's icon."
           }
         }
       },
@@ -3382,23 +3426,6 @@
           "signature"
         ]
       },
-      "Encode4337SponsorMetadata": {
-        "type": "object",
-        "description": "Display information about the sponsor covering gas fees.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Display name of the sponsor."
-          },
-          "icon": {
-            "type": "string",
-            "description": "URL of the sponsor's logo or icon."
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
       "Encode4337Request": {
         "type": "object",
         "description": "Request body for encoding an ERC-4337 UserOperation.",
@@ -3449,15 +3476,18 @@
             "$ref": "#/components/schemas/UserOperation"
           },
           "sponsorMetadata": {
-            "$ref": "#/components/schemas/Encode4337SponsorMetadata"
+            "$ref": "#/components/schemas/SponsorMetadata",
+            "x-internal": true
           },
           "gasSponsored": {
             "type": "boolean",
-            "description": "Whether gas for this operation is sponsored by a paymaster."
+            "description": "Whether gas for this operation is sponsored by a paymaster.",
+            "x-internal": true
           },
           "gasSponsorshipRejectionReason": {
             "type": "string",
-            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`."
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
           }
         },
         "required": [
@@ -3866,6 +3896,8 @@
           324,
           480,
           1868,
+          4663,
+          5042,
           4217,
           4326,
           8453,

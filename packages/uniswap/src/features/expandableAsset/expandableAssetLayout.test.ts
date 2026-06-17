@@ -62,3 +62,30 @@ describe('getExpandableSearchRowHeightPx', () => {
     expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(260)
   })
 })
+
+describe('height invariance with the context-menu affordance', () => {
+  // The `…` menu / right-click affordance is a 28px horizontal sibling inside the fixed-height row (no vertical
+  // extent), so it must NOT change any row/panel height — the virtualized list relies on these heights being exact.
+  // Freezing the search-variant heights as absolute px for 1..4 issuers fails loudly if a layout regression (or an
+  // accidental menu-driven height change) slips in.
+  it('search issuer-panel height is unchanged for 1..4 issuers (border + 56px rows + 2px gaps)', () => {
+    expect(getExpandableIssuerPanelHeightPx({ issuerCount: 1, variant: 'search' })).toBe(58)
+    expect(getExpandableIssuerPanelHeightPx({ issuerCount: 2, variant: 'search' })).toBe(116)
+    expect(getExpandableIssuerPanelHeightPx({ issuerCount: 3, variant: 'search' })).toBe(174)
+    expect(getExpandableIssuerPanelHeightPx({ issuerCount: 4, variant: 'search' })).toBe(232)
+  })
+
+  it('expanded search-row height is unchanged for the expandable cases (2..4 issuers)', () => {
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 2, expanded: true })).toBe(202)
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(260)
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 4, expanded: true })).toBe(318)
+  })
+
+  it('collapsed row height stays the bare min-height for 1..4 issuers (the single-issuer Stocks-shelf row included)', () => {
+    for (const issuerCount of [1, 2, 3, 4]) {
+      expect(getExpandableSearchRowHeightPx({ issuerCount, expanded: false })).toBe(
+        EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX,
+      )
+    }
+  })
+})

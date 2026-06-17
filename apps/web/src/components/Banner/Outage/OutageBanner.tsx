@@ -7,7 +7,7 @@ import { Globe } from 'ui/src/components/icons/Globe'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExternalLink } from '~/theme/components/Links'
 import { getChainUrlParam } from '~/utils/params/chainParams'
@@ -147,7 +147,7 @@ export function LimitedDataBanner({
         <Text variant="body3" color="$neutral2">
           {t('outageBanner.message.sub')}
         </Text>
-        <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapVersionsInfo}>
+        <ExternalLink href={UniswapHelpUrls.articles.uniswapVersionsInfo}>
           <Text variant="body3" color="$accent1">
             {t('common.button.learn')}
           </Text>
@@ -170,7 +170,7 @@ export function LimitedDataBanner({
       <Text variant="body3" color="$neutral2">
         {t('limitedTransactionData.sub')}
       </Text>
-      <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapVersionsInfo}>
+      <ExternalLink href={UniswapHelpUrls.articles.uniswapVersionsInfo}>
         <Text variant="body3" color="$accent1">
           {t('common.button.learn')}
         </Text>

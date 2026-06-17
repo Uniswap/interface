@@ -6,12 +6,9 @@
 
 Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `bun extension env:local:download` to copy them to your root folder.
 
-### Build Systems
+### Build System
 
-The extension supports two build systems during the migration from Webpack to WXT:
-
-- **WXT** (new) - Preferred for local development. Opens browser automatically.
-- **Webpack** (legacy) - Still used for production builds during the transition.
+The extension is built with **WXT** (Vite-based) for both local development and production. The dev server opens a browser automatically.
 
 ### Running the extension locally
 
@@ -23,7 +20,7 @@ bun install
 
 ---
 
-#### Option 1: WXT (recommended)
+#### Running with WXT
 
 ```bash
 bun extension dev
@@ -73,69 +70,36 @@ Absolute output directories by platform:
 - Linux: `/var/tmp/stretch`
 - Windows: `C:/ProgramData/stretch`
 
-### Reusing an already-onboarded extension state
+##### Loading into your own Chrome (no managed browser)
 
-Use a persistent Chrome user-data directory for the extension browser profile.
+`start:absolute` auto-launches a separate web-ext-managed Chrome with its own
+profile, so it onboards fresh on every run. To instead build/watch to the
+absolute path and load it into your everyday Chrome — keeping your login and
+completed onboarding, the way the old `start:webpack:absolute` worked:
 
-For absolute mode, set `WXT_CHROME_USER_DATA_DIR` to a stable path and keep reusing it:
+```bash
+bun extension start:absolute:no-browser
+```
+
+Then load the output directory (e.g. `/Users/Shared/stretch` on Mac) once via
+`chrome://extensions` → **Load unpacked**. Because it lives in your own profile,
+state persists across reruns and you only onboard once. The dev server still
+hot-reloads the unpacked extension.
+
+### Reusing an already-onboarded extension state (managed browser)
+
+`start:absolute` persists its Chrome profile by default — the profile lives in a
+sibling directory of the output dir (e.g. `/Users/Shared/stretch-chrome-data` on
+Mac), so it survives the outdir wipe WXT performs on each build. Complete
+onboarding once and it's preserved (local storage + persisted Redux state) across
+reruns.
+
+To point at a different profile directory, set `WXT_CHROME_USER_DATA_DIR` to any
+stable path **outside** the output dir:
 
 ```bash
 WXT_CHROME_USER_DATA_DIR=/var/tmp/uniswap-extension-chrome-data bun extension start:absolute
 ```
-
-To avoid onboarding on every run:
-1. Start with a stable `WXT_CHROME_USER_DATA_DIR`.
-2. Complete onboarding once.
-3. Reuse the same directory on subsequent runs (or copy it from a known onboarded machine).
-
-This preserves extension local storage and persisted Redux state, including onboarding status.
-
-To keep extension dev running without WXT auto-opening a browser window, set:
-
-```bash
-WXT_NO_OPEN_BROWSER=true bun extension start:absolute
-```
-
----
-
-#### Option 2: Webpack (legacy)
-
-```bash
-bun extension start:webpack
-```
-
-Then manually load the extension into Chrome:
-
-1. Go to **chrome://extensions**
-2. At the top right, turn on **Developer mode**
-3. Click **Load unpacked**
-4. Find and select the extension folder (`apps/extension/dev`)
-
-##### Running Webpack with absolute paths (for Scantastic testing)
-
-Our Scantastic API requires a consistent origin header, so the build must be loaded from an absolute path. Chrome generates a consistent extension ID based on the path it was loaded from.
-
-```bash
-# Mac
-bun extension start:webpack:absolute
-
-# Windows
-bun extension start:webpack:absolute:windows
-```
-
-Then manually load the extension into Chrome:
-
-1. Go to **chrome://extensions**
-2. At the top right, turn on **Developer mode**
-3. Click **Load unpacked**
-4. Find and select the extension folder with an absolute path:
-   - Mac: `/Users/Shared/stretch`
-   - Windows: `C:/ProgramData/stretch`
-5. Your extension URL should be:
-   - Mac: `chrome-extension://ceofpnbcmdjbibjjdniemjemmgaibeih`
-   - Windows: `chrome-extension://ffogefanhjekjafbpofianlhkonejcoe`
-
-The backend allows these origins, and the ID is consistently generated based on the absolute path.
 
 ## Migrations
 

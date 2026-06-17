@@ -4,7 +4,6 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
-import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 /** Horizontal swipe must exceed this before pan activates — keeps tap targets responsive. */
@@ -21,7 +20,8 @@ const ANIMATION_DURATION = 220
 const BOTTOM_NAV_CLEARANCE_FALLBACK = 50
 
 export interface HomeFeedPagerPage {
-  key: (typeof SectionName)[keyof typeof SectionName]
+  /** Stable React key / identity for the page. */
+  key: string
   /** Latest measured natural height of the page's content; `0` until first layout. */
   height: number
   content: ReactNode

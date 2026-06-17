@@ -68,7 +68,7 @@ describe('Swap', () => {
     },
     trade: mockTrade.trade as ClassicTrade,
     txRequests: [mockTxRequest],
-    unsigned: false,
+    hasUnsignedPermit: false,
     includesDelegation: false,
   } as const satisfies SwapTxAndGasInfo
 
@@ -142,7 +142,7 @@ describe('Swap', () => {
       const swapTxContext = {
         ...baseSwapTxContext,
         approveTxRequest: mockApproveRequest,
-        unsigned: true,
+        hasUnsignedPermit: true,
         permit: mockPermit,
       }
 

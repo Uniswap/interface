@@ -36,6 +36,7 @@ export interface ListParameterNamesResponse {
 export interface GetParameterValueResponse {
   value?: string
   author?: string
+  updatedAt?: string
 }
 
 export interface SetParameterReply {

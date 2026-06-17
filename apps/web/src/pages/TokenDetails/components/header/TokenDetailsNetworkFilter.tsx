@@ -4,10 +4,12 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 
@@ -16,6 +18,7 @@ interface TokenDetailsNetworkFilterProps {
   selectedChainId: UniverseChainId | undefined
   setSelectedChainId: (chainId: UniverseChainId | undefined) => void
   showAddressCopy: boolean
+  isChainDataLoading?: boolean
   showNetworkName?: boolean
   position?: 'left' | 'right'
 }
@@ -25,11 +28,11 @@ export function TokenDetailsNetworkFilter({
   showAddressCopy,
   selectedChainId,
   setSelectedChainId,
+  isChainDataLoading,
   showNetworkName = true,
   position = 'left',
 }: TokenDetailsNetworkFilterProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
   const activeAddresses = useActiveAddresses()
   const tieredNetworkOptions = useNetworkSelectorOptions({
@@ -37,8 +40,10 @@ export function TokenDetailsNetworkFilter({
     chainIds,
     enabled: isNetworkFilterV2Enabled,
   })
+  const allSupportedChainIds = useFilteredChainIds()
+  const isNetworkSubset = !isChainDataLoading && chainIds.length > 0 && chainIds.length < allSupportedChainIds.length
 
-  if (!multichainTokenUxEnabled || chainIds.length <= 1) {
+  if (chainIds.length <= 1) {
     return null
   }
 
@@ -56,10 +61,20 @@ export function TokenDetailsNetworkFilter({
           isTriggerStyled={false}
           customTrigger={
             <Flex row alignItems="center" gap="$spacing6">
-              <NetworkLogo chainId={selectedChainId ?? null} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
+              {selectedChainId ? (
+                <NetworkLogo chainId={selectedChainId} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
+              ) : isNetworkSubset ? (
+                <NetworkPile chainIds={chainIds} size="small" />
+              ) : (
+                <NetworkLogo chainId={null} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
+              )}
               {showNetworkName && (
                 <Text variant="buttonLabel3" color="$neutral2" transition={HEADER_TRANSITION}>
-                  {selectedChainId ? getChainInfo(selectedChainId).label : t('transaction.network.all')}
+                  {selectedChainId
+                    ? getChainInfo(selectedChainId).label
+                    : isNetworkSubset
+                      ? t('explore.tokens.table.networks', { count: chainIds.length })
+                      : t('transaction.network.all')}
                 </Text>
               )}
             </Flex>

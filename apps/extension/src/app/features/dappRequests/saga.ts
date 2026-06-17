@@ -638,6 +638,7 @@ export function* handleSendCalls({
         account: activeAccount,
         chainId,
         typeInfo,
+        requestUniswapGasSponsorship: false,
       }
       const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
 

@@ -8,6 +8,7 @@ import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkP
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { type TdpChainSelection, TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -239,12 +240,16 @@ export function VolumeByNetworkPopover({
                   onListSurfaceHover={setListSurfaceItemId}
                   onPress={() => {
                     const firstOtherBreakdown = breakdown[MAX_VISIBLE_NETWORKS]
-                    const chainQueryFilter = breakdown.length === MAX_VISIBLE_NETWORKS + 1 ? undefined : null
+                    // One hidden network: open its chain-specific page (omit selection). Multiple: open the aggregate view.
+                    const chainSelection: TdpChainSelection | undefined =
+                      breakdown.length === MAX_VISIBLE_NETWORKS + 1
+                        ? undefined
+                        : { type: TdpChainSelectionType.Multichain }
                     navigateVolumePopoverToTokenDetails({
                       navigateToTokenDetails,
                       mcToken,
                       chainId: firstOtherBreakdown.chainId,
-                      chainQueryFilter,
+                      chainSelection,
                     })
                   }}
                 >

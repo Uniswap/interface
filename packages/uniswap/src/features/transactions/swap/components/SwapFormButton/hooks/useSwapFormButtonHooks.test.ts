@@ -86,6 +86,10 @@ vi.mock('uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/
   useIsSwapButtonDisabled: vi.fn(),
 }))
 
+vi.mock('uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment', () => ({
+  useNeedsGeoAcknowledgment: vi.fn(() => false),
+}))
+
 vi.mock(
   'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage',
   () => ({

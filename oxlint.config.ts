@@ -1055,6 +1055,12 @@ export default defineConfig({
                 message: 'Import wrapped utilities from internal hooks instead.',
               },
               {
+                name: '@privy-io/react-auth',
+                importNames: ['usePrivy', 'useLoginWithOAuth', 'useLoginWithEmail', 'useAuthorizationSignature'],
+                message:
+                  'Use the gated `useMaybe*` hooks from `~/hooks/useMaybePrivy` instead. `MaybePrivyProvider` only mounts <PrivyProvider> when Privy is configured (PRIVY_APP_ID / PRIVY_CLIENT_ID); Privy hooks read provider-backed contexts at render and crash the page when it is not.',
+              },
+              {
                 name: 'i18next',
                 importNames: ['i18n'],
                 message: 'Use `uniswap/src/i18n` instead of importing i18n from i18next directly.',
@@ -1231,7 +1237,7 @@ export default defineConfig({
 
     // ── @universe/* packages with standard pattern ────────────────────
     // (no-relative-import-paths + restrictedImportPatternsForUniversePackage)
-    ...(['api', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
+    ...(['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
       files: [`packages/${pkg}/**`],
       rules: {
         ...(!isFastLint && {

@@ -22,6 +22,9 @@ import { Route as V3Route } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { zeroAddress } from '~/chains'
 import { ZERO_PERCENT } from '~/constants/misc'
+import { TradeFillType } from '~/types/trade'
+
+export { TradeFillType }
 
 export enum TradeState {
   LOADING = 'loading',
@@ -254,14 +257,6 @@ export type URAQuoteResponse =
 
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
   return data.routing === URAQuoteType.CLASSIC
-}
-
-export enum TradeFillType {
-  Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
-  UniswapX = 'uniswap_x', // off-chain trades, no routes
-  UniswapXv2 = 'uniswap_x_v2',
-  UniswapXv3 = 'uniswap_x_v3',
-  None = 'none', // for preview trades, cant be used for submission
 }
 
 export type ApproveInfo = { needsApprove: true; approveGasEstimateUSD: number } | { needsApprove: false }

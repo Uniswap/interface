@@ -9,14 +9,13 @@ import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 export function useTokenDetailsRWAMatch({ enabled = true }: { enabled?: boolean } = {}): RWAMatch | undefined {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const rwaWhitelist = useRWAWhitelist(enabled)
   const { address, chainId, currencyId } = useTokenDetailsContext()
 
   const { data } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
     },
     fetchPolicy: 'cache-only',
   })
@@ -43,9 +42,14 @@ export function useTokenDetailsRWAMatch({ enabled = true }: { enabled?: boolean 
   )
 }
 
+/** RWA whitelist match for the current TDP token, fetched only while the given feature flag is on. */
+export function useGatedTokenDetailsRWAMatch(flag: FeatureFlags): RWAMatch | undefined {
+  const enabled = useFeatureFlag(flag)
+  return useTokenDetailsRWAMatch({ enabled })
+}
+
 export function useTokenDetailsPreferProjectMarketData(): boolean {
-  const rwaCoinGeckoDataEnabled = useFeatureFlag(FeatureFlags.RWACoinGeckoData)
-  const rwaMatch = useTokenDetailsRWAMatch({ enabled: rwaCoinGeckoDataEnabled })
+  const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWACoinGeckoData)
 
   return rwaMatch !== undefined
 }

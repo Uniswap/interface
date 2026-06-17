@@ -136,7 +136,7 @@ describe('createCreateAuctionStore', () => {
     }
     // 2 tiers remain: tier-1 (bounded) + unbounded
     expect(allocation.tiers).toHaveLength(2)
-    expect(state.configureAuction.committed!.postAuctionLiquidityAmount.toExact()).toBe('114864864.864864864864864864')
+    expect(state.configureAuction.committed!.postAuctionLiquidityAmount.toExact()).toBe('459459459.459459459459459459')
   })
 
   it('removes custom price range rows with 0% liquidity when advancing from customize pool', () => {
@@ -157,7 +157,7 @@ describe('createCreateAuctionStore', () => {
     expect(getCustomPriceRangeLiquidityTotal(customPriceRanges)).toBe(100)
   })
 
-  it('limits tiered allocation to ten tiers', () => {
+  it('limits tiered allocation to thirty-two tiers', () => {
     const store = createCreateAuctionStore()
     const { actions } = store.getState()
 

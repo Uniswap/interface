@@ -14,7 +14,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
+import { useEthersProvider, useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
 const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
@@ -32,9 +32,15 @@ export function useContract<T extends Contract = Contract>({
   chainId?: UniverseChainId
 }): T | null {
   const account = useAccount()
-  const provider = useEthersProvider({ chainId: chainId ?? account.chainId })
+  const readProvider = useEthersProvider({ chainId: chainId ?? account.chainId })
+  // Signer contracts must use the wallet's provider; read contracts use the app's
+  // read provider (UniRPC). The signer can only come from the connector client, so
+  // `account` is attached only when that client exists — never to the read provider.
+  const walletProvider = useEthersWeb3Provider({ chainId: chainId ?? account.chainId })
 
   return useMemo(() => {
+    const withSigner = Boolean(withSignerIfPossible && account.address && walletProvider)
+    const provider = withSigner ? walletProvider : readProvider
     if (!address || !ABI || !provider) {
       return null
     }
@@ -43,7 +49,7 @@ export function useContract<T extends Contract = Contract>({
         address,
         ABI,
         provider,
-        account: withSignerIfPossible && account.address ? account.address : undefined,
+        account: withSigner ? account.address : undefined,
       })
     } catch (error) {
       const wrappedError = new Error('failed to get contract', { cause: error })
@@ -54,7 +60,7 @@ export function useContract<T extends Contract = Contract>({
       })
       return null
     }
-  }, [address, ABI, provider, withSignerIfPossible, account.address]) as T
+  }, [address, ABI, readProvider, walletProvider, withSignerIfPossible, account.address]) as T
 }
 
 export function useTokenContract({

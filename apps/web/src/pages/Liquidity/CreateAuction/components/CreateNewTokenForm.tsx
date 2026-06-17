@@ -1,6 +1,16 @@
-import { type ComponentRef, useRef, useState } from 'react'
+import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
+import {
+  Button,
+  Flex,
+  Input,
+  Popover,
+  SpinningLoader,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  UniversalImageResizeMode,
+} from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { ImageUpload } from 'ui/src/components/icons/ImageUpload'
@@ -10,14 +20,19 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
 import { TokenAdditionalInfoSection } from '~/pages/Liquidity/CreateAuction/components/TokenAdditionalInfoSection'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useCreateNewTokenAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
-import { useCreateNewTokenAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useCreateNewTokenAllowedNetworks'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
+import { useReconcileCreateNewTokenNetwork } from '~/pages/Liquidity/CreateAuction/hooks/useReconcileCreateNewTokenNetwork'
+import { useTokenImageUpload } from '~/pages/Liquidity/CreateAuction/hooks/useTokenImageUpload'
 import { CreateAuctionStep, type CreateNewTokenFormState } from '~/pages/Liquidity/CreateAuction/types'
+import { resolveCreateNewTokenDisplayImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveCreateNewTokenDisplayImageSrc'
 
 function NetworkSelector({
   network,
@@ -101,6 +116,32 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const allowedNetworks = useCreateNewTokenAllowedNetworks()
   const address = useActiveAddress(Platform.EVM)
 
+  // Testnet mode re-partitions the allowed networks, so the default selection (Unichain) can fall
+  // out of the offered list; snap it back to a valid chain.
+  useReconcileCreateNewTokenNetwork({ selectedNetwork: createNew.network, allowedNetworks })
+
+  const { status: imageStatus, errorReason: imageErrorReason, start: startImageUpload } = useTokenImageUpload()
+  const isImageProcessing = imageStatus === 'uploading' || imageStatus === 'verifying'
+  // Blob preview (step-local upload) wins until the Pinata URL loads in the background; see
+  // `useTokenImageUpload` + `localImagePreviewUri` on the store.
+  const displayImageUri = resolveCreateNewTokenDisplayImageSrc(createNew.localImagePreviewUri, createNew.imageUrl)
+
+  const imageErrorMessage = useMemo((): string | undefined => {
+    switch (imageErrorReason) {
+      case 'invalid-type':
+        return t('toucan.createAuction.step.tokenInfo.image.error.invalidType')
+      case 'too-large':
+        return t('toucan.createAuction.step.tokenInfo.image.error.tooLarge')
+      // A single generic message for every moderation slug — never surface the category.
+      case 'rejected':
+        return t('toucan.createAuction.step.tokenInfo.image.error.rejected')
+      case 'upload-failed':
+        return t('toucan.createAuction.step.tokenInfo.image.error.failed')
+      default:
+        return undefined
+    }
+  }, [imageErrorReason, t])
+
   const handleDisabledContinue = () => {
     if (createNew.name.trim().length === 0) {
       setIsEditingName(true)
@@ -138,9 +179,34 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
             backgroundColor="$surface3"
             alignItems="center"
             justifyContent="center"
-            onPress={() => {}} // TODO: launch S3 upload flow
+            overflow="hidden"
+            onPress={startImageUpload}
+            accessibilityRole="button"
+            accessibilityLabel={t('toucan.createAuction.step.tokenInfo.image.upload')}
           >
-            <ImageUpload color="$neutral2" size="$icon.24" />
+            {displayImageUri ? (
+              <UniversalImage
+                uri={displayImageUri}
+                size={{ width: 80, height: 80, resizeMode: UniversalImageResizeMode.Cover }}
+                allowLocalUri
+              />
+            ) : (
+              <ImageUpload color="$neutral2" size="$icon.24" />
+            )}
+            {isImageProcessing && (
+              <Flex
+                position="absolute"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="$scrim"
+              >
+                <SpinningLoader color="$white" />
+              </Flex>
+            )}
           </TouchableArea>
           <Flex flex={1} gap="$spacing4" justifyContent="center">
             <Text variant="body3" color="$neutral2">
@@ -181,6 +247,11 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
             )}
           </Flex>
         </Flex>
+        {imageErrorMessage && (
+          <Text variant="body3" color="$statusCritical">
+            {imageErrorMessage}
+          </Text>
+        )}
         <Flex gap="$spacing8">
           <Flex row gap="$spacing8">
             <Flex flex={3} backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing2">
@@ -215,23 +286,23 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           <TokenAdditionalInfoSection
             description={createNew.description}
             onDescriptionChange={(v) => updateCreateNewTokenField('description', v)}
-            websiteLink={createNew.websiteLink}
-            onWebsiteLinkChange={(v) => updateCreateNewTokenField('websiteLink', v)}
           />
         </Flex>
       </Flex>
       <Flex row>
-        <Button
-          size="large"
-          emphasis="primary"
-          onPress={commitTokenFormAndAdvance}
-          isDisabled={!canContinue}
-          onDisabledPress={canContinue ? undefined : handleDisabledContinue}
-          fill
-          backgroundColor={tokenColor}
-        >
-          {t('common.button.continue')}
-        </Button>
+        <Trace logPress element={ElementName.Continue} properties={{ token_source: 'new' }}>
+          <Button
+            size="large"
+            emphasis="primary"
+            onPress={commitTokenFormAndAdvance}
+            isDisabled={!canContinue}
+            onDisabledPress={canContinue ? undefined : handleDisabledContinue}
+            fill
+            backgroundColor={canContinue ? tokenColor : undefined}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
       </Flex>
     </Flex>
   )

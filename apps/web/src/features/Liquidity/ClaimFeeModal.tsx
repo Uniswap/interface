@@ -13,7 +13,7 @@ import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -265,7 +265,7 @@ export function ClaimFeeModal() {
     <Modal name={ModalName.ClaimFee} onClose={closeModal} isDismissible>
       <Flex gap="$gap16">
         <GetHelpHeader
-          link={uniswapUrls.helpRequestUrl}
+          link={UniswapHelpUrls.requestUrl}
           title={t('pool.collectFees')}
           closeModal={closeModal}
           closeDataTestId="ClaimFeeModal-close-icon"

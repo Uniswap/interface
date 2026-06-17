@@ -1,4 +1,5 @@
 import { ARBITRUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arbitrum'
+import { ARC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arc'
 import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avalanche'
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
@@ -10,6 +11,7 @@ import { MEGAETH_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/megaeth
 import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
 import { POLYGON_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/polygon'
+import { ROBINHOOD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/robinhood'
 import { SONEIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/soneium'
 import { TEMPO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/tempo'
 import { UNICHAIN_CHAIN_INFO, UNICHAIN_SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/unichain'
@@ -42,6 +44,8 @@ export const ORDERED_CHAINS = [
   WORLD_CHAIN_INFO,
   LINEA_CHAIN_INFO,
   MEGAETH_CHAIN_INFO,
+  ROBINHOOD_CHAIN_INFO,
+  ARC_CHAIN_INFO,
   SONEIUM_CHAIN_INFO,
   TEMPO_CHAIN_INFO,
   XLAYER_CHAIN_INFO,
@@ -96,6 +100,8 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Zora]: ZORA_CHAIN_INFO,
   [UniverseChainId.Zksync]: ZKSYNC_CHAIN_INFO,
   [UniverseChainId.Monad]: MONAD_CHAIN_INFO,
+  [UniverseChainId.Robinhood]: ROBINHOOD_CHAIN_INFO,
+  [UniverseChainId.Arc]: ARC_CHAIN_INFO,
 
   // TESTNET
   [UniverseChainId.Sepolia]: SEPOLIA_CHAIN_INFO,

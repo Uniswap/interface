@@ -14,8 +14,10 @@ function getAbsoluteOutdir(): string {
   throw new Error(`Unsupported platform "${platform}" for absolute extension output path`)
 }
 
+// Sibling of the outdir, not inside it: WXT wipes the outdir on every build, which would
+// delete an in-outdir profile and force re-onboarding each run.
 function getChromeUserDataDir(absoluteOutdir: string): string {
-  return `${absoluteOutdir}/chrome-data`
+  return `${absoluteOutdir}-chrome-data`
 }
 
 const absoluteOutdir = getAbsoluteOutdir()

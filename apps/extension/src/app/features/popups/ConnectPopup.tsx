@@ -23,7 +23,7 @@ import { Power, RotatableChevron, X } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -167,7 +167,7 @@ export function ConnectPopupContent({
               <Link
                 style={{ textDecoration: 'none' }}
                 target="_blank"
-                to={uniswapUrls.helpArticleUrls.extensionDappTroubleshooting}
+                to={UniswapHelpUrls.articles.extensionDappTroubleshooting}
                 onClick={() =>
                   sendAnalyticsEvent(ExtensionEventName.DappTroubleConnecting, {
                     dappUrl,

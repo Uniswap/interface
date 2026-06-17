@@ -19,6 +19,8 @@ interface TokenLaunchedBannerContentProps {
   auctionTokenDecimals: number
   accentColor: string
   currentTickValue?: number
+  isTradeAvailable: boolean
+  tradeAvailabilityDurationRemaining: string | undefined
 }
 
 export function TokenLaunchedBannerContent({
@@ -27,6 +29,8 @@ export function TokenLaunchedBannerContent({
   auctionTokenDecimals,
   accentColor,
   currentTickValue,
+  isTradeAvailable,
+  tradeAvailabilityDurationRemaining,
 }: TokenLaunchedBannerContentProps) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -66,7 +70,21 @@ export function TokenLaunchedBannerContent({
     navigate(tokenDetailsURL)
   }, [auctionDetails, navigate])
 
-  const isDisabled = !auctionDetails
+  const canPress = Boolean(auctionDetails && isTradeAvailable)
+  const isCountingDown = !isTradeAvailable && Boolean(tradeAvailabilityDurationRemaining)
+  // Only show the second line when it carries something actionable or temporal: the "Trade now" CTA
+  // once trading is live, or the countdown while it isn't. Without a countdown the status line stands
+  // alone ("Available to trade soon") so we don't stack a dangling label over a bare "Soon".
+  const showActionRow = isTradeAvailable || isCountingDown
+
+  let statusLabel: string
+  if (isTradeAvailable) {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTrade', { tokenName })
+  } else if (isCountingDown) {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTradeIn')
+  } else {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTradeSoon')
+  }
 
   return (
     <Flex width="100%" row justifyContent="space-between" alignItems="center" position="relative" zIndex={1}>
@@ -75,18 +93,24 @@ export function TokenLaunchedBannerContent({
         <PulsingIndicatorDot color={accentColor} />
         <Flex>
           <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.tokenLaunchedBanner.availableToTrade', { tokenName })}
+            {statusLabel}
           </Text>
-          <Trace logPress element={ElementName.AuctionTokenTradeNowButton}>
-            <TouchableArea onPress={onPress} disabled={isDisabled}>
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="buttonLabel2" color="$neutral1">
-                  {t('toucan.auction.tokenLaunchedBanner.tradeNow')}
-                </Text>
-                <ArrowRight size="$icon.16" color="$neutral1" />
-              </Flex>
-            </TouchableArea>
-          </Trace>
+          {showActionRow && (
+            <Trace logPress element={ElementName.AuctionTokenTradeNowButton}>
+              <TouchableArea onPress={canPress ? onPress : undefined} cursor={canPress ? 'pointer' : 'default'}>
+                <Flex row alignItems="center" gap="$spacing4">
+                  <Text variant="buttonLabel2" color="$neutral1">
+                    {isTradeAvailable
+                      ? t('toucan.auction.tokenLaunchedBanner.tradeNow')
+                      : t('toucan.auction.tokenLaunchedBanner.tradeAvailableIn', {
+                          time: tradeAvailabilityDurationRemaining,
+                        })}
+                  </Text>
+                  {isTradeAvailable && <ArrowRight size="$icon.16" color="$neutral1" />}
+                </Flex>
+              </TouchableArea>
+            </Trace>
+          )}
         </Flex>
       </Flex>
 

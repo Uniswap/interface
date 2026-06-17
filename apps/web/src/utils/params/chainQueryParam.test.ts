@@ -1,7 +1,9 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import {
   CHAIN_SEARCH_PARAM,
   getChainFilterFromSearchParams,
+  getTdpChainQueryParam,
   getTDPChainSearchParam,
   TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
   withChainSearchParam,
@@ -77,5 +79,38 @@ describe('withTDPMultichainSearchParam', () => {
     const next = withTDPMultichainSearchParam(base)
     expect(next.get('foo')).toBe('1')
     expect(next.get(CHAIN_SEARCH_PARAM)).toBe(TDP_MULTICHAIN_CHAIN_QUERY_VALUE)
+  })
+})
+
+describe('getTdpChainQueryParam', () => {
+  it('returns undefined when there is no selection (token default)', () => {
+    expect(getTdpChainQueryParam({ selection: undefined, tokenChainId: UniverseChainId.Mainnet })).toBeUndefined()
+  })
+
+  it('returns the multichain value for an aggregate selection', () => {
+    expect(
+      getTdpChainQueryParam({
+        selection: { type: TdpChainSelectionType.Multichain },
+        tokenChainId: UniverseChainId.Mainnet,
+      }),
+    ).toBe(TDP_MULTICHAIN_CHAIN_QUERY_VALUE)
+  })
+
+  it('returns the network url param when the chain differs from the token chain', () => {
+    expect(
+      getTdpChainQueryParam({
+        selection: { type: TdpChainSelectionType.Chain, chainId: UniverseChainId.Base },
+        tokenChainId: UniverseChainId.Mainnet,
+      }),
+    ).toBe('base')
+  })
+
+  it('returns undefined when the chain selection matches the token chain (path-only URL)', () => {
+    expect(
+      getTdpChainQueryParam({
+        selection: { type: TdpChainSelectionType.Chain, chainId: UniverseChainId.Base },
+        tokenChainId: UniverseChainId.Base,
+      }),
+    ).toBeUndefined()
   })
 })

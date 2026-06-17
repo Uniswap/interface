@@ -179,6 +179,47 @@ exports[`TokenItem renders without error 1`] = `
             testID="img-token-image"
             width={40}
           />
+          <View
+            style={
+              {
+                "bottom": -2,
+                "flexDirection": "column",
+                "position": "absolute",
+                "right": -3,
+                "zIndex": 10,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "borderColor": "#FFFFFF",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 2,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "justifyContent": "center",
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo-1"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-ETHEREUM_LOGO.png"
+                style={
+                  {
+                    "height": 17,
+                    "width": 17,
+                  }
+                }
+              />
+            </View>
+          </View>
         </View>
       </View>
       <View

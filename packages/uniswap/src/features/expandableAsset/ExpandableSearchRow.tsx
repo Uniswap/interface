@@ -15,6 +15,9 @@ type ExpandableSearchRowProps = {
   isExpanded: boolean
   onToggle: () => void
   onParentPress?: () => void
+  /** Long-press of the collapsed single-issuer row → opens the row's context menu (native + mobile-web touch).
+   *  Added as an interaction-only prop on the existing collapsed touchable; no layout/height change. */
+  onParentLongPress?: () => void
   header: ReactNode
   /** Rendered inside the shell below the header — the issuer panel, possibly wrapped in an animation clip. */
   panelSlot: ReactNode
@@ -36,6 +39,7 @@ export function ExpandableSearchRow({
   isExpanded,
   onToggle,
   onParentPress,
+  onParentLongPress,
   header,
   panelSlot,
   focusedRowControl,
@@ -74,7 +78,12 @@ export function ExpandableSearchRow({
     // panel below the header (no base-height change).
     return (
       <Flex px="$spacing12" width="100%">
-        <TouchableArea pressStyle={{ scale: 1 }} onPress={canExpand ? onToggle : onParentPress} {...toggleA11yProps}>
+        <TouchableArea
+          pressStyle={{ scale: 1 }}
+          onPress={canExpand ? onToggle : onParentPress}
+          onLongPress={onParentLongPress}
+          {...toggleA11yProps}
+        >
           <Flex minHeight={EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX} width="100%">
             <Flex
               row

@@ -14,6 +14,7 @@ import type {
   SwapData,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
+  create4337EVMSwapRepository,
   create5792EVMSwapRepository,
   create7702EVMSwapRepository,
   createLegacyEVMSwapRepository,
@@ -83,7 +84,7 @@ function createLegacyEVMSwapInstructionsService(
   return service
 }
 
-function createWalletCallEVMSwapInstructionsService(
+function createBatchedEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
   const { gasStrategy, gasOverrides, swapRepository } = ctx
@@ -100,7 +101,7 @@ function createWalletCallEVMSwapInstructionsService(
         signature: undefined,
         transactionSettings,
         alreadyApproved: approvalAction === ApprovalAction.None,
-        overrideSimulation: true, // always simulate for wallet_sendCalls transactions
+        overrideSimulation: true, // always simulate for batched transactions
       })
 
       const response = await swapRepository.fetchSwapData(swapRequestParams)
@@ -114,15 +115,20 @@ function createWalletCallEVMSwapInstructionsService(
 export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsServiceContext): EVMSwapInstructionsService {
   const { getSwapDelegationInfo } = ctx
   const smartContractWalletInstructionService = getSwapDelegationInfo
-    ? createWalletCallEVMSwapInstructionsService({
+    ? createBatchedEVMSwapInstructionsService({
         ...ctx,
         swapRepository: create7702EVMSwapRepository({ getSwapDelegationInfo }),
       })
     : undefined
 
-  const walletCallInstructionService = createWalletCallEVMSwapInstructionsService({
+  const walletCallInstructionService = createBatchedEVMSwapInstructionsService({
     ...ctx,
     swapRepository: create5792EVMSwapRepository(),
+  })
+
+  const userOp4337InstructionService = createBatchedEVMSwapInstructionsService({
+    ...ctx,
+    swapRepository: create4337EVMSwapRepository(),
   })
 
   const legacyInstructionsService = createLegacyEVMSwapInstructionsService({
@@ -135,6 +141,10 @@ export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsService
       const chainId = tradingApiToUniverseChainId(params.swapQuoteResponse.quote.chainId)
 
       if (smartContractWalletInstructionService && ctx.getSwapDelegationInfo?.(chainId).delegationAddress) {
+        if (params.swapQuoteResponse.sponsorshipInfo?.sponsored) {
+          return userOp4337InstructionService.getSwapInstructions(params)
+        }
+
         return smartContractWalletInstructionService.getSwapInstructions(params)
       }
 

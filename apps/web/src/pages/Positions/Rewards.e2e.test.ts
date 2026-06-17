@@ -1,6 +1,6 @@
 import { getRewards } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { FeatureFlags } from '@universe/gating'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getUniswapServiceUrls } from '~/config'
 import { expect, getTest } from '~/playwright/fixtures'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
 import { Mocks } from '~/playwright/mocks/mocks'
@@ -69,7 +69,7 @@ test.describe(
         })
 
         // Stub the claimRewards liquidity service endpoint to prevent actual claims
-        await page.route(`${uniswapUrls.liquidityServiceUrl}/**ClaimLPRewards*`, async (route) => {
+        await page.route(`${getUniswapServiceUrls().liquidityServiceUrl}/**ClaimLPRewards*`, async (route) => {
           await route.fulfill({
             status: 200,
             headers: { 'content-type': 'application/json' },

@@ -1,17 +1,19 @@
 import { WalletKitTypes } from '@reown/walletkit'
-import { ProposalTypes, Verify } from '@walletconnect/types'
+import { PendingRequestTypes, ProposalTypes, Verify } from '@walletconnect/types'
 import { buildApprovedNamespaces, populateAuthPayload } from '@walletconnect/utils'
 import { expectSaga } from 'redux-saga-test-plan'
 import {
   disconnectSessionsForRemovedAccounts,
   handleSessionAuthenticate,
   handleSessionProposal,
+  handleSessionRequest,
   populateActiveSessions,
 } from 'src/features/walletConnect/saga'
 import { parseVerifyStatus } from 'src/features/walletConnect/utils'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { addPendingSession, addSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -23,7 +25,13 @@ jest.mock('@walletconnect/utils', () => ({
   buildApprovedNamespaces: jest.fn(),
   getSdkError: jest.fn(() => 'mocked-error'),
   populateAuthPayload: jest.fn(),
-  parseVerifyStatus: jest.fn(),
+}))
+
+// Enable EIP-5792 methods so wallet_getCapabilities
+// reaches the namespace check when it's called
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
+  getFeatureFlag: jest.fn(() => true),
 }))
 
 // Mock dependencies
@@ -33,6 +41,14 @@ jest.mock('./walletConnectClient', () => ({
     formatAuthMessage: jest.fn(),
     getActiveSessions: jest.fn(),
     disconnectSession: jest.fn(),
+    respondSessionRequest: jest.fn(),
+    engine: {
+      signClient: {
+        session: {
+          get: jest.fn(),
+        },
+      },
+    },
   },
 }))
 
@@ -553,6 +569,180 @@ describe('WalletConnect Saga', () => {
         .not.call.fn(wcWeb3Wallet.disconnectSession)
         .not.put.actionType('walletConnect/removeSession')
         .silentRun()
+    })
+  })
+
+  // Verify that the address asked to sign/send is
+  // actually in the approved session namespace.
+  describe('handleSessionRequest authorization', () => {
+    const APPROVED_ACCOUNT = '0xaaaa000000000000000000000000000000000001'
+    const UNAPPROVED_ACCOUNT = '0xbbbb000000000000000000000000000000000002'
+    const SESSION_TOPIC = 'test-session-topic'
+
+    const sessionWithOnlyApprovedAccount = {
+      topic: SESSION_TOPIC,
+      peer: {
+        metadata: {
+          name: 'Malicious Dapp',
+          url: 'https://malicious.example',
+          icons: [],
+        },
+      },
+      namespaces: {
+        eip155: {
+          accounts: [`eip155:1:${APPROVED_ACCOUNT}`],
+          chains: ['eip155:1'],
+          methods: ['eth_sendTransaction', 'personal_sign'],
+          events: [],
+        },
+      },
+    }
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+      ;(wcWeb3Wallet.engine.signClient.session.get as jest.Mock).mockReturnValue(sessionWithOnlyApprovedAccount)
+    })
+
+    it('rejects eth_sendTransaction whose `from` is not in the session namespace', async () => {
+      const requestId = 101
+
+      // Dapp asks the unapproved account
+      // to sign a max ERC20 approval.
+      const maliciousRequest = {
+        topic: SESSION_TOPIC,
+        id: requestId,
+        params: {
+          chainId: 'eip155:1',
+          request: {
+            method: EthMethod.EthSendTransaction,
+            params: [
+              {
+                from: UNAPPROVED_ACCOUNT,
+                to: '0x1111111111111111111111111111111111111111',
+                data: '0x095ea7b3000000000000000000000000222222222222222222222222222222222222222200000000000000000000000000000000000000000000000000ffffffffffffffff',
+                gasLimit: '0x5208',
+                value: '0x0',
+              },
+            ],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+
+      await expectSaga(handleSessionRequest, maliciousRequest).not.put.actionType('walletConnect/addRequest').run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topic: SESSION_TOPIC,
+          response: expect.objectContaining({
+            id: requestId,
+            jsonrpc: '2.0',
+            error: expect.anything(),
+          }),
+        }),
+      )
+    })
+
+    it('rejects personal_sign whose address is not in the session namespace', async () => {
+      const requestId = 202
+
+      const maliciousRequest = {
+        topic: SESSION_TOPIC,
+        id: requestId,
+        params: {
+          chainId: 'eip155:1',
+          request: {
+            method: EthMethod.PersonalSign,
+            // `personal_sign` params are [message, address].
+            params: ['0x68656c6c6f', UNAPPROVED_ACCOUNT],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+
+      await expectSaga(handleSessionRequest, maliciousRequest).not.put.actionType('walletConnect/addRequest').run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topic: SESSION_TOPIC,
+          response: expect.objectContaining({
+            id: requestId,
+            jsonrpc: '2.0',
+            error: expect.anything(),
+          }),
+        }),
+      )
+    })
+
+    it('rejects wallet_getCapabilities whose address is not in the session namespace', async () => {
+      const requestId = 303
+
+      const maliciousRequest = {
+        topic: SESSION_TOPIC,
+        id: requestId,
+        params: {
+          chainId: 'eip155:1',
+          request: {
+            method: EthMethod.WalletGetCapabilities,
+            // `wallet_getCapabilities` params are [address, chainIds?].
+            params: [UNAPPROVED_ACCOUNT, ['0x1']],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+
+      await expectSaga(handleSessionRequest, maliciousRequest).run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topic: SESSION_TOPIC,
+          response: expect.objectContaining({
+            id: requestId,
+            jsonrpc: '2.0',
+            error: expect.anything(),
+          }),
+        }),
+      )
+    })
+
+    it('rejects wallet_sendCalls whose `from` is not in the session namespace', async () => {
+      const requestId = 404
+
+      const maliciousRequest = {
+        topic: SESSION_TOPIC,
+        id: requestId,
+        params: {
+          chainId: 'eip155:1',
+          request: {
+            method: EthMethod.WalletSendCalls,
+            // `wallet_sendCalls` params are [{ from, calls, ... }].
+            params: [
+              {
+                from: UNAPPROVED_ACCOUNT,
+                version: '1.0',
+                chainId: '0x1',
+                calls: [
+                  {
+                    to: '0x1111111111111111111111111111111111111111',
+                    data: '0x095ea7b3000000000000000000000000222222222222222222222222222222222222222200000000000000000000000000000000000000000000000000ffffffffffffffff',
+                    value: '0x0',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+
+      await expectSaga(handleSessionRequest, maliciousRequest).not.put.actionType('walletConnect/addRequest').run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topic: SESSION_TOPIC,
+          response: expect.objectContaining({
+            id: requestId,
+            jsonrpc: '2.0',
+            error: expect.anything(),
+          }),
+        }),
+      )
     })
   })
 

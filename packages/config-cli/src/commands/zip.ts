@@ -29,13 +29,13 @@ export const zip = Cli.create('zip', {
     const { auth } = vars(c)
     const apps = c.options.apps?.length ? c.options.apps : DEFAULT_APPS
 
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
     const fetcher = createConfigFetcherService({ client })
 
     const files: Record<string, Uint8Array> = {}
     const summary: { app: AppId; keysWritten: number }[] = []
     for (const app of apps) {
-      const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${app}`))
+      const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${app}/${c.options.env}`))
       const entries = paramEntryToObject(parameters)
       // Always use forward slashes inside zip paths regardless of host OS.
       files[`apps/${app}/${ENV_FILENAME}`] = strToU8(serializeParams(entries))

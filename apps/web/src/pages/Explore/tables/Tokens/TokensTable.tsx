@@ -3,7 +3,6 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
@@ -57,6 +56,8 @@ interface TokenTableValue {
   linkState: { preloadedLogoSrc?: string }
 }
 
+const ROW_HEIGHT = 64
+
 function LivePriceCell({ token }: { token?: TokenStat }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const chainId = token ? fromGraphQLChain(token.chain) : undefined
@@ -86,7 +87,6 @@ export function TokenTable({
 }) {
   const { t } = useTranslation()
   const trace = useTrace()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const { defaultChainId } = useEnabledChains()
   const { sortMethod, sortAscending } = useTokenTableSortStore((s) => ({
@@ -161,9 +161,7 @@ export function TokenTable({
               chain: toGraphQLChain(chainId ?? defaultChainId),
               chainUrlParam: chainFilter,
               chainQueryParam:
-                multichainTokenUxEnabled && !chainFilter && mcToken.chainTokens.length > 1
-                  ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE
-                  : undefined,
+                !chainFilter && mcToken.chainTokens.length > 1 ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
             }),
             analytics: {
               elementName: ElementName.TokensTableRow,
@@ -189,7 +187,6 @@ export function TokenTable({
       defaultChainId,
       filterString,
       formatPercent,
-      multichainTokenUxEnabled,
       sparklines,
       timePeriod,
       tokenSortRank,
@@ -200,7 +197,7 @@ export function TokenTable({
   const showLoadingSkeleton = loading || !!error
 
   useEffect(() => {
-    if (!multichainTokenUxEnabled || showLoadingSkeleton) {
+    if (showLoadingSkeleton) {
       return
     }
     const { totalTokenRowCount, multichainRowReductionCount, multichainAssetCount } =
@@ -213,9 +210,7 @@ export function TokenTable({
       element: ElementName.ExploreTokensTab,
       section: SectionName.ExploreTopTokensSection,
     })
-  }, [multichainTokenUxEnabled, showLoadingSkeleton, tokens, trace])
-
-  const rowHeight = useMemo(() => (multichainTokenUxEnabled ? 64 : undefined), [multichainTokenUxEnabled])
+  }, [showLoadingSkeleton, tokens, trace])
 
   const media = useMedia()
   const columns = useMemo(() => {
@@ -241,7 +236,7 @@ export function TokenTable({
         : null,
       columnHelper.accessor((row) => row.tokenDescription, {
         id: 'tokenDescription',
-        size: getTokenDescriptionColumnSize(media.lg, multichainTokenUxEnabled),
+        size: getTokenDescriptionColumnSize(media.lg),
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
@@ -352,14 +347,13 @@ export function TokenTable({
             )
           }
           const isMultichainAsset = (row.mcToken?.chainTokens.length ?? 0) > 1
-          const showMultichainVolumeInfoIcon = multichainTokenUxEnabled && isMultichainAsset
           return (
             <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
               <Flex flex={1} minWidth={0} justifyContent="flex-end">
                 <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
                   <Flex position="relative">
                     <EllipsisText textAlign="right">{volume.getValue?.()}</EllipsisText>
-                    {showMultichainVolumeInfoIcon ? (
+                    {isMultichainAsset ? (
                       <Flex
                         centered
                         position="absolute"
@@ -398,7 +392,7 @@ export function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [multichainTokenUxEnabled, orderDirection, showLoadingSkeleton, sortMethod, media, t, timePeriod])
+  }, [orderDirection, showLoadingSkeleton, sortMethod, media, t, timePeriod])
 
   return (
     <Table
@@ -406,9 +400,8 @@ export function TokenTable({
       data={tokenTableValues}
       loading={loading}
       error={error}
-      v2={multichainTokenUxEnabled}
-      rowHeight={rowHeight}
-      compactRowHeight={rowHeight}
+      rowHeight={ROW_HEIGHT}
+      compactRowHeight={ROW_HEIGHT}
       loadMore={loadMore}
       maxWidth={1200}
       defaultPinnedColumns={['index', 'tokenDescription']}

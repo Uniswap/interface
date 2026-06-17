@@ -1,8 +1,10 @@
 import { getEntryGatewayUrl, provideDeviceIdService, provideSessionStorage } from '@universe/api'
 import { createRpcConfigResolver, createUniRpcConfigResolver } from '@universe/chains'
-import { isExtensionApp, REQUEST_SOURCE } from '@universe/environment'
+import { isE2eTestEnv, isExtensionApp, REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
+import { isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
 
 export { createRpcConfigResolver } from '@universe/chains'
 export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains'
@@ -21,17 +23,25 @@ export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains
  * Mobile uses the `.native.ts` sibling.
  */
 const SHARED_UNI_RPC_CONFIG = {
-  // Saga init runs before the Statsig provider mounts; guard so the flag read
-  // doesn't trigger StatsigClient.instance()'s broken-fallback branch.
-  getFeatureFlag: () => isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled),
+  // UniRPC-only chains (Arc/Robinhood) always route through UniRPC; everything
+  // else is flag-gated. Saga init runs before the Statsig provider mounts; guard
+  // so the flag read doesn't trigger StatsigClient.instance()'s broken-fallback
+  // branch.
+  getFeatureFlag: (chainId: UniverseChainId) =>
+    isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled)),
   getEntryGatewayUrl,
   requestSource: REQUEST_SOURCE,
 } as const
 
 const webResolveUniRpcConfig = createUniRpcConfigResolver({
   ...SHARED_UNI_RPC_CONFIG,
-  // Web app always routes through UniRPC; extension stays gated below.
-  getFeatureFlag: () => true,
+  // Web app always routes through UniRPC; extension stays gated above.
+  // Playwright e2e runs are the exception: UniRPC requires a session the test
+  // environment can't establish (every /rpc/* call 401s), so let the resolver
+  // fall through to the legacy chain-info URLs, which point at local anvil in e2e.
+  // UniRPC-only chains intentionally follow this too — e2e has no gateway session
+  // for them either — so this overrides the shared chain-aware getter.
+  getFeatureFlag: () => !isE2eTestEnv(),
   credentials: 'include',
 })
 

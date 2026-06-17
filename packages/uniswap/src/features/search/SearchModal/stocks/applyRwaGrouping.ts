@@ -1,5 +1,4 @@
 import { OnchainItemListOptionType, type SearchModalOption } from 'uniswap/src/components/lists/items/types'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
 import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -8,6 +7,7 @@ import {
   getRwaCollectionKey,
   type RwaSearchIndex,
 } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
+import { tagOptionAsRwa } from 'uniswap/src/features/search/SearchModal/stocks/tagOptionAsRwa'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 
 /** Every (chainId,address) an option resolves to (one for Token, N for MultichainToken). */
@@ -58,12 +58,9 @@ export function applyRwaGroupingToSearchOptions({
       continue
     }
 
-    // Direct-CA search: never roll up; tag the single matched token.
+    // Direct-CA search: never roll up; tag the single matched token with its RWA identity (clean name + issuer).
     if (isAddressSearch) {
-      stockItems.push({
-        ...option,
-        rwaCategory: getRwaTagCategory({ categories: match.rwa.categories }),
-      } as SearchModalOption)
+      stockItems.push(tagOptionAsRwa({ option, match }))
       continue
     }
 
@@ -77,11 +74,8 @@ export function applyRwaGroupingToSearchOptions({
     if (rwa.issuerTokens.length >= 2) {
       stockItems.push(buildRwaCollectionOption({ rwa, showCategoryTag: true }))
     } else {
-      // single issuer on-chain -> tagged token
-      stockItems.push({
-        ...option,
-        rwaCategory: getRwaTagCategory({ categories: match.rwa.categories }),
-      } as SearchModalOption)
+      // single issuer on-chain -> tagged token with its RWA identity (clean name + issuer)
+      stockItems.push(tagOptionAsRwa({ option, match }))
     }
   }
 

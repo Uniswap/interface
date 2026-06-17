@@ -80,9 +80,12 @@ export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?
   return baseUrl
 }
 
-export function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {
+export function createHelpArticleUrl(resourceId: string, options?: { path?: string; section?: string }): string {
+  const { path = 'articles', section } = options ?? {}
   const product = isMobileApp ? 'mobileApp' : isExtensionApp ? 'extension' : 'web'
-  return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
+  // The fragment must come after the query string so the browser resolves it to a section anchor.
+  const fragment = section ? `#${section}` : ''
+  return `${helpUrl}/${path}/${resourceId}?product_link=${product}${fragment}`
 }
 
 // Entry Gateway API URLs

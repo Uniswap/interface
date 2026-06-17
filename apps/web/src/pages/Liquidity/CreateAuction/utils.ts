@@ -43,7 +43,7 @@ export function clampPostAuctionLiquidityPercent(percent: number): number {
 }
 
 export function clampPostAuctionLiquidityTierPercent(percent: number): number {
-  return Math.min(Math.max(percent, 0), MAX_POST_AUCTION_LIQUIDITY_PERCENT)
+  return Math.min(Math.max(percent, MIN_POST_AUCTION_LIQUIDITY_PERCENT), MAX_POST_AUCTION_LIQUIDITY_PERCENT)
 }
 
 /** Maximum fractional digits allowed while editing post-auction liquidity percent inputs. */
@@ -424,17 +424,16 @@ export function percentOfAmount(amount: CurrencyAmount<Currency>, percent: numbe
 }
 
 /**
- * Derives the float percentage that `part` represents of `total`.
- * Uses the SDK's Fraction for exact rational division.
- *
- * Precondition: `total` and `part` must share the same currency and decimals —
- * this function divides raw `quotient` values directly without currency conversion.
+ * Derives the float percentage that `part` represents of `total` (same currency/decimals).
+ * Divides on the exact fractions, not the floored `quotient` integers: a sub-base-unit `total`
+ * (e.g. half a base unit from an LP split) floors to a `0` quotient and would divide by zero.
+ * The exact fraction is non-zero whenever `total` is (already guarded), so this is crash-safe.
  */
 export function amountToPercent(total: CurrencyAmount<Currency>, part: CurrencyAmount<Currency>): number {
   if (total.equalTo(0)) {
     return 0
   }
-  const ratio = new Fraction(part.quotient, total.quotient).multiply(100)
+  const ratio = part.asFraction.divide(total.asFraction).multiply(100)
   return parseFloat(ratio.toFixed(6))
 }
 
@@ -480,12 +479,6 @@ export function percentOfSoldToLiquidityFromDepositAndLiquidityAmount(
   }
   return amountToPercent(sold, postAuctionLiquidityAmount)
 }
-
-export {
-  isAllowedWebsiteLinkInput,
-  isValidWebsiteLink,
-  normalizeWebsiteLink,
-} from '~/pages/Liquidity/CreateAuction/websiteLink'
 
 export {
   addCustomPriceRangePreset,

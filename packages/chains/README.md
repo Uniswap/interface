@@ -19,6 +19,8 @@ Related functionality in groups:
 - RPC
 - Transactions
 - Utilities
+- Contracts
+- ABIs
 
 ## Design decisions
 

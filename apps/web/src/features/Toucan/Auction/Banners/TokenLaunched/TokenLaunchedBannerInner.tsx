@@ -19,6 +19,8 @@ interface TokenLaunchedBannerInnerProps {
   }
   bannerGradient: { backgroundImage: string; backgroundSize: string }
   accentColor: string
+  isTradeAvailable: boolean
+  tradeAvailabilityDurationRemaining: string | undefined
 }
 
 export function TokenLaunchedBannerInner({
@@ -28,6 +30,8 @@ export function TokenLaunchedBannerInner({
   priceData,
   bannerGradient,
   accentColor,
+  isTradeAvailable,
+  tradeAvailabilityDurationRemaining,
 }: TokenLaunchedBannerInnerProps) {
   const navigate = useNavigate()
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
@@ -43,17 +47,19 @@ export function TokenLaunchedBannerInner({
     navigate(tokenDetailsURL)
   }, [auctionDetails, navigate])
 
-  const isDisabled = !auctionDetails
+  const canPress = Boolean(auctionDetails && isTradeAvailable)
 
   return (
     <TokenLaunchedBannerWrapper bannerGradient={bannerGradient}>
-      <TouchableArea onPress={onBannerPress} disabled={isDisabled} cursor={isDisabled ? 'default' : 'pointer'}>
+      <TouchableArea onPress={canPress ? onBannerPress : undefined} cursor={canPress ? 'pointer' : 'default'}>
         <TokenLaunchedBannerContent
           tokenName={tokenName}
           totalSupply={totalSupply}
           auctionTokenDecimals={auctionTokenDecimals}
           accentColor={accentColor}
           currentTickValue={priceData?.currentTickValue}
+          isTradeAvailable={isTradeAvailable}
+          tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
         />
       </TouchableArea>
     </TokenLaunchedBannerWrapper>

@@ -1,5 +1,4 @@
 import { isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -32,7 +31,7 @@ export enum TokenContextMenuVariant {
   TokenSelector = 'tokenSelector',
 }
 
-const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
+export const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
   [TokenContextMenuVariant.Search]: [
     TokenContextMenuAction.CopyAddress,
     ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
@@ -248,6 +247,9 @@ export interface TokenOptionItemProps {
   multichainData?: MultichainData
   /** Canonical name override for multichain tokens, used instead of currency.name (which may be chain-specific for native tokens). */
   displayName?: string
+  /** Dimmed issuer label rendered beside the title for RWA rows (e.g. "Ondo"). Already formatted by the caller
+   *  (via formatIssuerLabel). Absent on non-RWA rows. */
+  issuerLabel?: string
 }
 
 function isLegacyTokenOptionItemProps(
@@ -272,6 +274,7 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     focusedRowControl,
     openContextMenu,
     displayName,
+    issuerLabel,
   } = props
   const { currencyInfo } = option
   const { currency } = currencyInfo
@@ -297,6 +300,13 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         />
       }
       title={displayName ?? currency.name ?? currency.symbol ?? ''}
+      titleSuffix={
+        issuerLabel ? (
+          <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
+            {issuerLabel}
+          </Text>
+        ) : undefined
+      }
       subtitle={
         <Flex row alignItems="center" gap="$spacing8">
           <Text color="$neutral2" numberOfLines={1} variant="body3">
@@ -347,9 +357,7 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
   const { value: isAddressSheetOpen, setFalse: closeAddressSheet, setTrue: openAddressSheet } = useBooleanState(false)
   const { hapticFeedback } = useHapticFeedback()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const multichainData =
-    !isLegacyTokenOptionItemProps(props) && multichainTokenUxEnabled ? props.multichainData : undefined
+  const multichainData = !isLegacyTokenOptionItemProps(props) ? props.multichainData : undefined
   const rawEntries = useMemo<MultichainTokenEntry[]>(
     () =>
       multichainData

@@ -22,10 +22,10 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useRecentTransfersByAddress, TransferCount } from 'uniswap/src/features/send/useRecentTransfersByAddress'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { RecipientData } from '~/features/Swap/state/send/hooks'
-import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
+import { RecipientData } from '~/pages/Swap/Send/state/hooks'
+import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 
 const SEND_RECIPIENT_INPUT_PADDING = 16
 

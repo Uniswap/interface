@@ -16,6 +16,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type {
   ApproveTransactionInfo,
+  AuctionLaunchTransactionInfo,
   BridgeTransactionInfo,
   CollectFeesTransactionInfo,
   ConfirmedSwapTransactionInfo,
@@ -39,6 +40,7 @@ import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types
 import i18n from 'uniswap/src/i18n'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -276,7 +278,7 @@ async function parseApproval({
   status: TransactionStatus
 }): Promise<Partial<Activity>> {
   const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, approval.tokenAddress))
-  const descriptor = currency?.symbol ?? currency?.name ?? i18n.t('common.unknown')
+  const descriptor = currency?.symbol ?? currency?.name ?? approval.tokenSymbol ?? i18n.t('common.unknown')
   return {
     title: getActivityTitle({
       type: TransactionType.Approve,
@@ -414,29 +416,47 @@ async function parseToucanBid({
   formatNumber: FormatNumberFunctionType
   chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
-  const currencyId =
+  const bidCurrencyId =
     bid.bidTokenAddress === ZERO_ADDRESS
       ? buildNativeCurrencyId(chainId)
       : buildCurrencyId(chainId, bid.bidTokenAddress)
-  const currency = await getCurrencyFromCurrencyId(currencyId)
+  const auctionCurrencyId = bid.auctionTokenAddress ? buildCurrencyId(chainId, bid.auctionTokenAddress) : undefined
+  const [bidCurrency, auctionCurrency] = await Promise.all([
+    getCurrencyFromCurrencyId(bidCurrencyId),
+    auctionCurrencyId ? getCurrencyFromCurrencyId(auctionCurrencyId) : undefined,
+  ])
+  const auctionTokenSymbol = auctionCurrency?.symbol ?? bid.auctionTokenSymbol ?? bid.auctionContractAddress
 
   const formattedAmount =
-    currency && bid.amountRaw
+    bidCurrency && bid.amountRaw
       ? formatNumber({
-          value: parseFloat(CurrencyAmount.fromRawAmount(currency, bid.amountRaw).toSignificant()),
+          value: parseFloat(CurrencyAmount.fromRawAmount(bidCurrency, bid.amountRaw).toSignificant()),
           type: NumberType.TokenNonTx,
         })
       : undefined
 
   return {
     descriptor:
-      currency && formattedAmount
+      bidCurrency && formattedAmount
         ? i18n.t('activity.transaction.submitBid.descriptor', {
-            amountWithSymbol: `${formattedAmount} ${currency.symbol}`,
-            walletAddress: bid.auctionContractAddress,
+            amountWithSymbol: `${formattedAmount} ${bidCurrency.symbol}`,
+            walletAddress: auctionTokenSymbol,
           })
         : i18n.t('common.unknown'),
-    currencies: [currency],
+    currencies: [bidCurrency],
+  }
+}
+
+function parseAuctionLaunch(launch: AuctionLaunchTransactionInfo): Partial<Activity> {
+  // The launched token isn't indexed yet, so render from the metadata captured at submit time;
+  // TokenLogo falls back to a symbol placeholder when the logo URL is missing.
+  return {
+    descriptor:
+      launch.tokenName ??
+      launch.tokenSymbol ??
+      (shortenAddress({ address: launch.predictedTokenAddress }) || undefined),
+    logos: [launch.tokenLogoUrl],
+    fallbackSymbols: [launch.tokenSymbol ?? launch.tokenName],
   }
 }
 
@@ -744,6 +764,8 @@ export async function transactionToActivity({
         formatNumber,
         chainId,
       })
+    } else if (info.type === TransactionType.AuctionLaunch) {
+      additionalFields = parseAuctionLaunch(info)
     } else if (info.type === TransactionType.ToucanWithdrawBidAndClaimTokens) {
       additionalFields = await parseWithdrawBidAndClaimTokens({
         withdraw: info,

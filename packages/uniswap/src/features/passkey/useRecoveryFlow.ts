@@ -104,7 +104,7 @@ export function useRecoveryFlow({
       setAccessToken(token)
 
       const authMethodId = hashAuthMethodId(providerEmail)
-      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({ authMethodId })
+      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({ authMethodId }, token)
       if (!recoveryConfig.encryptedKeyId) {
         setStep(RecoveryStep.NoWalletFound)
         return
@@ -209,9 +209,10 @@ export function useRecoveryFlow({
       }
       setAccessToken(token)
 
-      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({
-        authMethodId: hashAuthMethodId(effectiveEmail),
-      })
+      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig(
+        { authMethodId: hashAuthMethodId(effectiveEmail) },
+        token,
+      )
       if (!recoveryConfig.encryptedKeyId) {
         setStep(RecoveryStep.NoWalletFound)
         return

@@ -26,7 +26,6 @@ function TableBodyInner<T extends RowData>(
     table,
     loading,
     error,
-    v2,
     rowWrapper,
     topLevelRowWrapper,
     subRowsWrapper,
@@ -91,7 +90,6 @@ function TableBodyInner<T extends RowData>(
       return (
         <TableRow<T>
           row={row}
-          v2={v2}
           rowWrapper={activeRowWrapper}
           rowHeight={propRowHeight}
           compactRowHeight={propCompactRowHeight}
@@ -105,7 +103,6 @@ function TableBodyInner<T extends RowData>(
       )
     },
     [
-      v2,
       rowWrapper,
       renderUnifiedExpandableRow,
       propRowHeight,
@@ -127,7 +124,6 @@ function TableBodyInner<T extends RowData>(
         <TableRow<T>
           key={subRow.id}
           row={subRow}
-          v2={v2}
           rowWrapper={rowWrapper}
           rowHeight={propRowHeight}
           compactRowHeight={propCompactRowHeight}
@@ -147,7 +143,6 @@ function TableBodyInner<T extends RowData>(
       )
     },
     [
-      v2,
       rowWrapper,
       subRowsWrapper,
       propRowHeight,
@@ -191,16 +186,15 @@ function TableBodyInner<T extends RowData>(
   if (loading || error) {
     return (
       <>
-        <Flex ref={setContainerRef} gap={!hasPinnedColumns && v2 ? '$spacing2' : undefined}>
+        <Flex ref={setContainerRef} gap={!hasPinnedColumns ? '$spacing2' : undefined}>
           {Array.from({ length: loadingRowsCount }, (_, rowIndex) => (
-            <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
+            <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight}>
               {table.getAllColumns().map((column, columnIndex) => (
                 <CellContainer
                   key={`skeleton-row-${rowIndex}-column-${columnIndex}`}
                   style={getCommonPinningStyles({
                     column,
                     colors,
-                    v2,
                     isHeader: false,
                     hidePinnedColumnBorder: extendedPinnedColumnDivider,
                   })}

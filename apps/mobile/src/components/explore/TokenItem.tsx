@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
@@ -52,7 +51,6 @@ export const TokenItem = memo(function TokenItemInner({
   onPriceWrapperLayout,
 }: TokenItemProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const colors = useSporeColors()
@@ -127,9 +125,7 @@ export const TokenItem = memo(function TokenItemInner({
             )}
             <TokenLogo
               chainId={chainId}
-              hideNetworkLogo={
-                multichainTokenUxEnabled && tokenItemData.networkCount !== undefined && tokenItemData.networkCount > 1
-              }
+              hideNetworkLogo={tokenItemData.networkCount !== undefined && tokenItemData.networkCount > 1}
               name={name}
               symbol={symbol}
               url={logoUrl}

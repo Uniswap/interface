@@ -55,6 +55,9 @@
       ]
     },
     "apps/extension": {
+      "entry": [
+        "src/entrypoints/**/*.{ts,tsx}"
+      ],
       "ignoreDependencies": [
         "@svgr/webpack",
         "@testing-library/dom",
@@ -124,7 +127,12 @@
         "react-native-restart",
         "sp-react-native-in-app-updates",
         "ts-jest",
-        "ts-node"
+        "ts-node",
+        "@ethersproject/shims",
+        "@formatjs/intl-getcanonicallocales",
+        "@formatjs/intl-locale",
+        "react-native-quick-base64",
+        "react-native-quick-crypto"
       ]
     },
     "apps/web": {
@@ -246,6 +254,13 @@
     "packages/api": {
       "ignoreDependencies": [
         "expo-secure-store",
+        "@vitest/coverage-v8"
+      ]
+    },
+    "packages/compliance": {
+      "ignoreDependencies": [
+        "@universe/api",
+        "@universe/environment",
         "@vitest/coverage-v8"
       ]
     },

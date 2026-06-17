@@ -13,7 +13,7 @@ import { ExtensionState } from 'src/store/extensionReducer'
 import { Button, Flex, InputProps, Text } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SagaStatus, useMonitoredSagaStatus } from 'uniswap/src/utils/saga'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -115,7 +115,7 @@ export function Locked(): JSX.Element {
       buttonText: t('extension.lock.button.reset'),
       description: t('extension.lock.password.reset.initial.description', { count: recoveryPhraseWordCount }),
       linkText: t('extension.lock.password.reset.initial.help'),
-      linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseHowToFind,
+      linkUrl: UniswapHelpUrls.articles.recoveryPhraseHowToFind,
       icon: (
         <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
           <Lock color="$neutral1" size="$icon.24" />
@@ -130,7 +130,7 @@ export function Locked(): JSX.Element {
       buttonText: t('common.button.continue'),
       description: t('extension.lock.password.reset.speedbump.description', { count: recoveryPhraseWordCount }),
       linkText: t('extension.lock.password.reset.speedbump.help'),
-      linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseForgotten,
+      linkUrl: UniswapHelpUrls.articles.recoveryPhraseForgotten,
       icon: (
         <Flex backgroundColor="$statusCritical2" borderRadius="$rounded12" p="$spacing12">
           <AlertTriangleFilled color="$statusCritical" size="$icon.24" />

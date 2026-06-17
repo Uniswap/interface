@@ -14,10 +14,11 @@ import {
   draftMirrorsPersisted,
   exceedsDecimalCap,
   getDisplayValueForMode,
-  isDraftFloorBelowMinimumRepresentable,
   maxDecimalsForDraftInput,
   pickDisplayValueForToggleTarget,
   previewFloorPriceForFdvUsdDraft,
+  resolveUnfocusedDraftSync,
+  shouldRejectDraftBelowMinimum,
   type FloorPriceDenomination,
   type InputCurrency,
 } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
@@ -169,41 +170,23 @@ export function FloorPriceSelector({
     if (inputCurrency === 'usd' && usdPriceNum === null) {
       return
     }
-    if (
-      floorPriceInput?.floorPrice === floorPrice &&
-      floorPriceInput.denomination === denomination &&
-      floorPriceInput.inputCurrency === inputCurrency
-    ) {
-      if (localValue !== floorPriceInput.rawValue) {
-        skipNextDraftCommitRef.current = true
-        setLocalValue(floorPriceInput.rawValue)
-      }
-      return
-    }
-    // If draft commits to the same canonical floor as the store, keep the user's string as entered.
-    if (localValue.trim() !== '') {
-      const committedFromDraft = commitDraftToFloorPrice({
-        localValue,
-        denomination,
-        inputCurrency,
-        usdPriceNum,
-        tokenTotalSupply,
-        raiseCurrency: raiseCurrencyObj,
-      })
-      if (committedFromDraft === floorPrice) {
-        return
-      }
-    }
-    const display = getDisplayValueForMode({
+    const sync = resolveUnfocusedDraftSync({
+      localValue,
       denomination,
       inputCurrency,
-      floorPrice,
-      hasValidFloorPrice,
+      usdPriceNum,
       tokenTotalSupply,
       raiseCurrency: raiseCurrencyObj,
-      usdPriceNum,
+      floorPrice,
+      floorPriceInput,
+      hasValidFloorPrice,
     })
-    setLocalValue(display)
+    if (sync.action === 'restoreSnapshot') {
+      skipNextDraftCommitRef.current = true
+      setLocalValue(sync.value)
+    } else if (sync.action === 'replace') {
+      setLocalValue(sync.value)
+    }
   }, [
     denomination,
     floorPrice,
@@ -231,7 +214,7 @@ export function FloorPriceSelector({
         }
         if (
           raiseCurrencyObj &&
-          isDraftFloorBelowMinimumRepresentable({
+          shouldRejectDraftBelowMinimum({
             localValue: raw,
             denomination,
             inputCurrency,
@@ -260,7 +243,7 @@ export function FloorPriceSelector({
       }
       if (
         raiseCurrencyObj &&
-        isDraftFloorBelowMinimumRepresentable({
+        shouldRejectDraftBelowMinimum({
           localValue: raw,
           denomination,
           inputCurrency,

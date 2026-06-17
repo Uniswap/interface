@@ -1,10 +1,10 @@
 import { skipToken, type UseQueryResult } from '@tanstack/react-query'
 import {
+  V1_TRADING_API_PATHS,
   type TradingApi,
   type UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,
   useQueryWithImmediateGarbageCollection,
 } from '@universe/api'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   convertSwap5792ResponseToSwapData,
@@ -18,7 +18,7 @@ export function useTradingApiSwapQuery(
   { params, ...rest }: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<TradingApi.CreateSwapRequest, SwapData>,
   config?: { canBatchTransactions?: boolean; swapDelegationAddress?: string; includesDelegation?: boolean },
 ): UseQueryResult<SwapData> {
-  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.swap, params]
+  const queryKey = [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.swap, params]
   const fetch = getFetchFn(config)
 
   return useQueryWithImmediateGarbageCollection<SwapData>({

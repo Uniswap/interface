@@ -97,6 +97,7 @@ function normalizeDomainForPayload(domain: EthersTypedDataDomain): PayloadDomain
     out.chainId = BigInt(String(domain.chainId)).toString()
   }
   if (domain.verifyingContract !== undefined) {
+    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
     out.verifyingContract = domain.verifyingContract.toLowerCase()
   }
   if (domain.salt !== undefined) {
@@ -247,6 +248,7 @@ export async function prepareViemSignTypedData({
   if (!walletClient.account) {
     throw new Error('signTypedData: WalletClient has no account configured')
   }
+  // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
   const address = walletClient.account.address.toLowerCase()
   const message = JSON.stringify({
     domain: populatedDomain,

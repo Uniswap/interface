@@ -48,7 +48,6 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
     currency: s.currency!,
   }))
   const tokenQueryData = tokenQuery.data?.token
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isMultichainAsset = isMultichainProjectTokens(tokenQueryData?.project?.tokens)
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
@@ -90,7 +89,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
         tokenSymbol: currency.symbol,
         tokenName: currency.name,
         chainId: currency.chainId,
-        ...(multichainTokenUxEnabled ? { multichain: isMultichainAsset } : {}),
+        multichain: isMultichainAsset,
       }}
     >
       <TDPBreadcrumb />

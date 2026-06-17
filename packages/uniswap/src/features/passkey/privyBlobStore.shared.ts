@@ -1,4 +1,5 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { config } from 'uniswap/src/config'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
 
 type PrivyHeadersBuilder = (input: { accessToken: string; privyAppId: string }) => Record<string, string>
@@ -22,7 +23,7 @@ export function createPrivyBlobStore({
     blob: string
     privyAppId: string
   }): Promise<{ keyId: string }> {
-    const response = await fetch(uniswapUrls.privyEncryptedAuthorizationKeysUrl, {
+    const response = await fetch(getUniswapServiceUrls(config).privyEncryptedAuthorizationKeysUrl, {
       method: 'POST',
       headers: buildHeaders({ accessToken, privyAppId }),
       body: JSON.stringify({ ciphertext: blob }),
@@ -50,7 +51,7 @@ export function createPrivyBlobStore({
     keyId: string
     privyAppId: string
   }): Promise<string> {
-    const response = await fetch(`${uniswapUrls.privyEncryptedAuthorizationKeysUrl}/${keyId}`, {
+    const response = await fetch(`${getUniswapServiceUrls(config).privyEncryptedAuthorizationKeysUrl}/${keyId}`, {
       method: 'GET',
       headers: buildHeaders({ accessToken, privyAppId }),
       credentials: 'include',

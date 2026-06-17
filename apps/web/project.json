@@ -70,14 +70,14 @@
       }
     },
     "anvil:mainnet": {
-      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${QUICKNODE_ENDPOINT_NAME:-$REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${QUICKNODE_ENDPOINT_TOKEN:-$REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8545'",
+      "command": "dotenv -- ./scripts/start-anvil.sh mainnet",
       "options": {
         "cwd": "{projectRoot}"
       },
       "continuous": true
     },
     "anvil:base": {
-      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${QUICKNODE_ENDPOINT_NAME:-$REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${QUICKNODE_ENDPOINT_TOKEN:-$REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8546'",
+      "command": "dotenv -- ./scripts/start-anvil.sh base",
       "options": {
         "cwd": "{projectRoot}"
       },

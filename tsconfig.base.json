@@ -40,8 +40,10 @@
       "@universe/api/*": ["./packages/api/*"],
       "@universe/chains/*": ["./packages/chains/*"],
       "@universe/cli/*": ["./apps/cli/*"],
+      "@universe/compliance/*": ["./packages/compliance/*"],
       "@universe/config/*": ["./packages/config/*"],
       "@universe/config-cli/*": ["./packages/config-cli/*"],
+      "@universe/cryptography/*": ["./packages/cryptography/*"],
       "@universe/encoding/*": ["./packages/encoding/*"],
       "@universe/environment/*": ["./packages/environment/*"],
       "@universe/gating/*": ["./packages/gating/*"],
@@ -60,8 +62,7 @@
       "ui/*": ["./packages/ui/*"],
       "uniswap/*": ["./packages/uniswap/*"],
       "utilities/*": ["./packages/utilities/*"],
-      "wallet/*": ["./packages/wallet/*"],
-      "@universe/cryptography/*": ["./packages/cryptography/*"]
+      "wallet/*": ["./packages/wallet/*"]
     }
   }
 }

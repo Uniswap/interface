@@ -1,7 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -29,7 +28,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress, currencyId, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getTokenDetailsURL, type TDPView } from 'uniswap/src/utils/linking'
+import { getTokenDetailsURL, type TDPView, tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -79,24 +78,19 @@ export function useSearchTokenMenuItems({
     useUniswapContext()
   const dispatch = useDispatch()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const [copiedAddress, setCopiedAddress] = useState(false)
   const [copiedUrl, setCopiedUrl] = useState(false)
   const trace = useTrace()
 
   const id = currencyId(currency)
-  const tdpChainFilter = multichainTokenUxEnabled && isUniverseChainId(currency.chainId) ? currency.chainId : undefined
+  const tdpChainFilter = isUniverseChainId(currency.chainId) ? currency.chainId : undefined
 
   const onNavigateToTokenDetails = useCallback(() => {
     if (isTestnetModeEnabled) {
       return
     }
     closeMenu()
-    if (tdpChainFilter === undefined) {
-      navigateToTokenDetails(id)
-    } else {
-      navigateToTokenDetails(id, tdpChainFilter)
-    }
+    navigateToTokenDetails(id, tdpChainSelectionFromFilter(tdpChainFilter))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
       ...trace,

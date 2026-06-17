@@ -1,31 +1,40 @@
+import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import type { ReactNode } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { AdaptiveWebPopoverContent, Popover, TouchableArea, useIsTouchDevice } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useShadowPropsMedium } from 'ui/src/theme/shadows'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId as toCurrencyId } from 'uniswap/src/utils/currencyId'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { PriceChartType } from '~/components/Charts/utils'
 import { TokenHoverCardContent } from '~/components/TokenHoverCard/TokenHoverCardContent'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
-interface TokenHoverCardProps {
-  token: GraphQLApi.Token
+const POPOVER_HORIZONTAL_PADDING = 16
+
+type TokenHoverCardProps = {
   children: ReactNode
-}
+  placement?: ComponentProps<typeof Popover>['placement']
+  offset?: number
+  containerWidth?: number
+} & ({ token: GraphQLApi.Token; currencyInfo?: never } | { token?: never; currencyInfo: CurrencyInfo })
 
 const stopPressEventPropagation = {
   onPressIn: (e: { stopPropagation: () => void }) => e.stopPropagation(),
@@ -33,35 +42,58 @@ const stopPressEventPropagation = {
   onPress: (e: { stopPropagation: () => void }) => e.stopPropagation(),
 }
 
-export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.Element {
+export function TokenHoverCard({
+  token,
+  currencyInfo: currencyInfoProp,
+  children,
+  placement = 'bottom-start',
+  offset,
+  containerWidth,
+}: TokenHoverCardProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const shadowProps = useShadowPropsMedium()
+  const { fullWidth: windowWidth } = useDeviceDimensions()
   const isTouchDevice = useIsTouchDevice()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [isCopied, copyToClipboard] = useCopyClipboard()
   const { defaultChainId } = useEnabledChains()
 
-  const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
-  const unwrappedToken = unwrapToken(chainId, token)
-  const currency = gqlToCurrency(unwrappedToken)
-  const currencyInfo = useCurrencyInfo(currency ? toCurrencyId(currency) : undefined)
+  const chainId: UniverseChainId = token
+    ? (fromGraphQLChain(token.chain) ?? defaultChainId)
+    : currencyInfoProp.currency.chainId
+  const gqlChain = token ? token.chain : toGraphQLChain(chainId)
+
+  const unwrappedToken = token ? unwrapToken(chainId, token) : undefined
+  const currency = unwrappedToken ? gqlToCurrency(unwrappedToken) : undefined
+  const currencyIdFromToken = currency ? toCurrencyId(currency) : undefined
+  const currencyIdValue = currencyInfoProp ? currencyInfoProp.currencyId : currencyIdFromToken
 
   // Read spot price from Apollo cache (populated by TDP data) — no extra network call
-  const currencyIdValue = currency ? toCurrencyId(currency) : undefined
   const spotPrice = useTokenSpotPrice(currencyIdValue)
 
+  // Only fetch currencyInfo when using the token prop path; use the prop directly otherwise
+  const derivedCurrencyInfo = useCurrencyInfo(currencyInfoProp ? undefined : currencyIdFromToken)
+  const currencyInfo = currencyInfoProp ?? derivedCurrencyInfo
+
+  const isMultichainAsset = isMultichainProjectTokens(currencyInfo?.searchMultichainParent?.tokenCurrencyIds)
+
   // NATIVE_CHAIN_ID is a frontend sentinel — the backend expects undefined (not 'NATIVE') for native-token price queries
-  const rawAddress = unwrappedToken.address
-  const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(token.chain) : rawAddress
+  const rawAddress = token
+    ? unwrappedToken?.address
+    : currencyInfoProp.currency instanceof Token
+      ? currencyInfoProp.currency.address
+      : undefined
+  const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(gqlChain) : rawAddress
+
   const variables = useMemo(
     () => ({
-      chain: token.chain,
+      chain: gqlChain,
       address: tokenAddress,
       duration: GraphQLApi.HistoryDuration.Day,
-      multichain: false,
+      multichain: isMultichainAsset,
     }),
-    [token.chain, tokenAddress],
+    [gqlChain, tokenAddress, isMultichainAsset],
   )
 
   const { entries, loading: chartLoading } = useTokenPriceChartData({
@@ -99,8 +131,7 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
 
   const isDataLivelinessUIEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
-  const contractAddress =
-    unwrappedToken.address && unwrappedToken.address !== NATIVE_CHAIN_ID ? unwrappedToken.address : undefined
+  const contractAddress = rawAddress && rawAddress !== NATIVE_CHAIN_ID ? rawAddress : undefined
 
   const handleCopy = useCallback((): void => {
     if (!contractAddress) {
@@ -117,18 +148,33 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
 
   const handleExpand = useCallback((): void => {
     const url = getTokenDetailsURL({
-      address: unwrappedToken.address,
-      chain: token.chain,
+      address: rawAddress,
+      chain: gqlChain,
     })
     navigate(url)
-  }, [unwrappedToken.address, token.chain, navigate])
+  }, [rawAddress, gqlChain, navigate])
 
   if (isTouchDevice || !currencyInfo || !isDataLivelinessUIEnabled) {
     return <>{children}</>
   }
 
+  // Constrain content width so the popover fits with a viewport edge gap equal to the offset (8px on each side).
+  // Available space: (windowWidth - containerWidth) / 2, minus the left offset, both inner paddings, and matching right gap.
+  const maxContentWidth =
+    containerWidth !== undefined
+      ? (windowWidth - containerWidth) / 2 - (offset ?? 0) * 2 - POPOVER_HORIZONTAL_PADDING * 2
+      : undefined
+
   return (
-    <Popover hoverable open={isOpen} placement="bottom-start" stayInFrame allowFlip onOpenChange={setIsOpen}>
+    <Popover
+      hoverable
+      open={isOpen}
+      placement={placement}
+      offset={offset}
+      stayInFrame
+      allowFlip
+      onOpenChange={setIsOpen}
+    >
       <Popover.Trigger>
         <TouchableArea variant="unstyled" activeOpacity={1} {...stopPressEventPropagation}>
           {children}
@@ -136,7 +182,7 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
       </Popover.Trigger>
       <AdaptiveWebPopoverContent
         isOpen={isOpen}
-        placement="bottom-start"
+        placement={placement}
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded20"
@@ -147,6 +193,7 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
       >
         <TokenHoverCardContent
           currencyInfo={currencyInfo}
+          isMultichainAsset={isMultichainAsset}
           price={price}
           pricePercentChange={priceChange?.percentChange}
           priceAbsoluteChange={priceAbsoluteChange}
@@ -155,6 +202,7 @@ export function TokenHoverCard({ token, children }: TokenHoverCardProps): JSX.El
           isCopied={isCopied}
           onCopy={contractAddress ? handleCopy : undefined}
           onExpand={handleExpand}
+          maxWidth={maxContentWidth}
         />
       </AdaptiveWebPopoverContent>
     </Popover>

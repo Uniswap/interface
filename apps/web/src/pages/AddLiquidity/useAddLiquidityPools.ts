@@ -129,6 +129,7 @@ export function useAddLiquidityPools({
         sortBy: poolSortFieldToSortBy[sortState.sortBy] ?? PoolSortBy.TVL_USD,
         ascending: sortState.sortDirection === OrderDirection.Asc,
         limit: EXPLORE_API_PAGE_SIZE,
+        filterSpam: true,
       },
       enabled: !hasTokenFilter || effectiveChainId !== undefined,
     }),

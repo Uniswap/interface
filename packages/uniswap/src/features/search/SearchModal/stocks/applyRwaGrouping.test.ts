@@ -65,7 +65,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
     expect(out).toHaveLength(1)
   })
 
-  it('direct-CA search keeps the single matched token tagged, no collection', () => {
+  it('direct-CA search keeps the single matched token tagged with clean name + issuer slug, no collection', () => {
     const out = applyRwaGroupingToSearchOptions({
       options: [token(MAINNET, '0xa', 'TSLAON')],
       index,
@@ -74,6 +74,8 @@ describe('applyRwaGroupingToSearchOptions', () => {
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
+    expect((out[0] as TokenOption).rwaName).toBe('Tesla')
+    expect((out[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
   })
 
   it('network filter demotes to a single tagged token when only one issuer is on-chain', () => {
@@ -86,6 +88,8 @@ describe('applyRwaGroupingToSearchOptions', () => {
     // only ondo is on BNB -> single issuer on-chain -> tagged token, not a collection
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
+    expect((out[0] as TokenOption).rwaName).toBe('Tesla')
+    expect((out[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
   })
 
   it('threads a non-STOCKS category from the matched asset onto the tagged token', () => {

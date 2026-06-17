@@ -11,7 +11,7 @@ import { load } from 'cheerio'
 import uppercamelcase from 'uppercamelcase'
 
 // Generates .tsx from src/assets/icons/*.svg and re-exports hand-written icons in components/icons
-// without a matching SVG (does not create missing .tsx files).
+// without a matching SVG (does not create or overwrite hand-written .tsx files).
 
 // Types
 

@@ -1,7 +1,7 @@
-import { ensure0xHex } from '@universe/encoding'
+import { ensure0xHex, HexString } from '@universe/encoding'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
-import { type Address, encodeAbiParameters, pad } from 'viem'
+import { type Address, encodeAbiParameters, pad, toHex } from 'viem'
 import type { PublicClient } from 'viem'
 import {
   entryPoint08Address,
@@ -13,11 +13,37 @@ import {
 import type { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import { createSignedAuthorization } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
+import type {
+  PaymasterClient,
+  RequestGasAndPaymasterAndDataParams,
+} from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/paymasterClient'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import type { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
-const ROOT_KEY_HASH = pad('0x0', { size: 32 })
+/**
+ * Encodes a raw ECDSA signature into the Calibur format required by the AA module's
+ * authorization scheme. This involves creating a bytes-encoded tuple of:
+ *   - keyHash: ROOT_KEY_HASH = a consistent root key identifier (bytes32(0))
+ *   - signature: the actual 65 byte ECDSA signature bytes
+ *   - hookData: empty bytes
+ */
+function encodeCaliburUserOpSignature(ecdsaSignature: HexString): HexString {
+  const ROOT_KEY_HASH = pad('0x0', { size: 32 })
+
+  return encodeAbiParameters(
+    [
+      { type: 'bytes32', name: 'keyHash' },
+      { type: 'bytes', name: 'signature' },
+      { type: 'bytes', name: 'hookData' },
+    ],
+    [
+      ROOT_KEY_HASH, // bytes32(0)
+      ecdsaSignature, // 65 bytes ECDSA signature
+      '0x', // empty bytes
+    ],
+  )
+}
 
 export function createBundledDelegationUserOpSignerService(ctx: {
   delegationInfo: DelegationCheckResult
@@ -25,6 +51,7 @@ export function createBundledDelegationUserOpSignerService(ctx: {
   getProvider: () => Promise<Provider>
   getViemClient: () => Promise<PublicClient>
   getSignerManager: () => SignerManager
+  getPaymasterClient: () => PaymasterClient
 }): UserOpSigner {
   const getSigner = async (): Promise<NativeSigner> => {
     const signerManager = ctx.getSignerManager()
@@ -70,22 +97,7 @@ export function createBundledDelegationUserOpSignerService(ctx: {
     )
 
     // Step 2: Calibur signature encoding
-    // Structure: abi.encode(keyHash, signature, hookData)
-    // - keyHash: ROOT_KEY_HASH = bytes32(0)
-    // - signature: 65 bytes ECDSA signature
-    // - hookData: empty bytes
-    const encodedUserOpSignature = encodeAbiParameters(
-      [
-        { type: 'bytes32', name: 'keyHash' },
-        { type: 'bytes', name: 'signature' },
-        { type: 'bytes', name: 'hookData' },
-      ],
-      [
-        ROOT_KEY_HASH, // bytes32(0)
-        rawSignature, // 65 bytes ECDSA signature
-        '0x', // empty bytes
-      ],
-    )
+    const encodedUserOpSignature = encodeCaliburUserOpSignature(rawSignature)
 
     // Step 3: Attach 7702 authorization if the wallet still needs delegation.
     let eip7702Auth = rpcUserOp.eip7702Auth
@@ -108,21 +120,75 @@ export function createBundledDelegationUserOpSignerService(ctx: {
     return { ...rpcUserOp, signature: encodedUserOpSignature, ...(eip7702Auth ? { eip7702Auth } : {}) }
   }
 
+  const sponsorUniswapUserOp: UserOpSigner['sponsorUniswapUserOp'] = async ({
+    initialUserOp,
+    entryPoint,
+    paymasterServiceContext,
+    chainId,
+  }): Promise<RpcUserOperation<'0.8'>> => {
+    const sponsorship = paymasterServiceContext?.['sponsorship']
+    if (sponsorship && typeof sponsorship === 'string') {
+      const dummySignature = encodeCaliburUserOpSignature(`0x${'00'.repeat(65)}`)
+
+      const params: RequestGasAndPaymasterAndDataParams = {
+        entryPoint,
+        dummySignature,
+        userOperation: initialUserOp,
+        sponsorship,
+        chainIdHex: toHex(chainId),
+        overrides: {
+          // TODO(SWAP-2494): investigate Alchemy's callGasLimits returning low values
+        },
+      }
+
+      const alchemyResult = await ctx.getPaymasterClient().requestGasAndPaymasterAndData(params)
+
+      if (alchemyResult) {
+        const { paymaster, paymasterData, paymasterPostOpGasLimit, paymasterVerificationGasLimit, ...userOpFields } =
+          alchemyResult
+
+        // Apply Alchemy's gas estimates regardless of sponsorship outcome.
+        const userOpWithGas: RpcUserOperation<'0.8'> = {
+          ...initialUserOp,
+          ...(userOpFields.callGasLimit && {
+            callGasLimit: userOpFields.callGasLimit,
+          }),
+          ...(userOpFields.verificationGasLimit && {
+            verificationGasLimit: userOpFields.verificationGasLimit,
+          }),
+          ...(userOpFields.preVerificationGas && {
+            preVerificationGas: userOpFields.preVerificationGas,
+          }),
+          ...(userOpFields.maxFeePerGas && {
+            maxFeePerGas: userOpFields.maxFeePerGas,
+          }),
+          ...(userOpFields.maxPriorityFeePerGas && {
+            maxPriorityFeePerGas: userOpFields.maxPriorityFeePerGas,
+          }),
+        }
+
+        // UserOp is unsponsored, no paymaster
+        if (!paymaster || !paymasterData) {
+          return userOpWithGas
+        }
+
+        return {
+          ...userOpWithGas,
+          paymaster,
+          paymasterData,
+          ...(paymasterVerificationGasLimit && {
+            paymasterVerificationGasLimit,
+          }),
+          ...(paymasterPostOpGasLimit && { paymasterPostOpGasLimit }),
+        }
+      }
+    }
+
+    return initialUserOp
+  }
+
   const sendUserOp: UserOpSigner['sendUserOp'] = async (signedUserOp: RpcUserOperation<'0.8'>): Promise<string> => {
     const viemClient = await ctx.getViemClient()
-    // Route bundler RPC through the same @universe/chains-managed viem transport
-    // that handles every other chain RPC call. We use `transport.request` rather
-    // than viem's typed `BundlerClient.sendUserOperation` because `signUserOp`
-    // returns the userop in RPC (hex) form and viem's bundler actions take
-    // native (bigint) form — the typed API would force a round-trip conversion
-    // for no gain. The transport already applies UniRPC routing, session auth,
-    // the 6s timeout, and emits rpcObserver telemetry tagged `provider:unirpc`.
-    //
-    // `transport.request` returns `unknown` because the method is off-schema
-    // for a PublicClient. Validate the shape at the boundary rather than
-    // casting blind — eth_sendUserOperation returns a userop hash string per
-    // ERC-4337 spec; anything else is a backend contract violation we want
-    // to surface here, not let propagate as a malformed hash downstream.
     const userOpHash = await viemClient.transport.request({
       method: 'eth_sendUserOperation',
       params: [signedUserOp, entryPoint08Address],
@@ -133,5 +199,5 @@ export function createBundledDelegationUserOpSignerService(ctx: {
     return userOpHash
   }
 
-  return { signUserOp, sendUserOp }
+  return { signUserOp, sendUserOp, sponsorUniswapUserOp }
 }

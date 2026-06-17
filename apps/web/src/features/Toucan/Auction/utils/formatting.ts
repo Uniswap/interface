@@ -21,10 +21,23 @@ export function formatTimestampToDate(timestamp: bigint): string {
  * Formats a Date to a short date+time string: "MM/DD HH:MM"
  * Used for chart axis labels and tooltips.
  */
-export function formatShortDateTime(date: Date): string {
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
-  const day = String(date.getUTCDate()).padStart(2, '0')
-  const hours = String(date.getUTCHours()).padStart(2, '0')
-  const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+export function formatShortDateTime(date: Date, options?: { timeZone?: string }): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    hourCycle: 'h23',
+    timeZone: options?.timeZone,
+  }).formatToParts(date)
+
+  const partValue = (type: Intl.DateTimeFormatPartTypes): string =>
+    parts.find((part) => part.type === type)?.value ?? '00'
+  const month = partValue('month')
+  const day = partValue('day')
+  const hours = partValue('hour')
+  const minutes = partValue('minute')
+
   return `${month}/${day} ${hours}:${minutes}`
 }

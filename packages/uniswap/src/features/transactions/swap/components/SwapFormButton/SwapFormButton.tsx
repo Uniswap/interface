@@ -7,12 +7,14 @@ import {
   useSetIsShowingWebFORNudge,
 } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
 import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
 import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
+import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -46,6 +48,21 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
     setIsShowingWebFORNudge(true)
   })
 
+  const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
+  const openGeoRestrictionModal = useGeoRestrictionModalStore((s) => s.open)
+
+  const onPress = useEvent(() => {
+    if (needsGeoAcknowledgment) {
+      openGeoRestrictionModal()
+      return
+    }
+    if (promptWebFORNudge) {
+      setIsShowingWebFORNudgeHandler()
+      return
+    }
+    handleOnReviewPress()
+  })
+
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
       <SwapFormButtonTrace>
@@ -60,7 +77,7 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
             size={isShortMobileDevice ? 'medium' : 'large'}
             testID={TestID.ReviewSwap}
             animation="simple"
-            onPress={promptWebFORNudge ? setIsShowingWebFORNudgeHandler : handleOnReviewPress}
+            onPress={onPress}
           >
             {buttonTextColor ? <Button.Text color={buttonTextColor}>{buttonText}</Button.Text> : buttonText}
           </Button>

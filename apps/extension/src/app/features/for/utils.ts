@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { focusOrCreateUniswapInterfaceTab } from 'src/app/navigation/utils'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -26,7 +26,7 @@ export function useInterfaceBuyNavigator(element?: ElementName): () => void {
 export function navigateToInterfaceFiatOnRamp(chainId?: UniverseChainId): void {
   const chainParam = chainId ? `?chain=${getChainInfo(chainId).urlParam}` : ''
   focusOrCreateUniswapInterfaceTab({
-    url: `${uniswapUrls.webInterfaceBuyUrl}${chainParam}`,
+    url: `${UniswapStaticUrls.webInterfaceBuyUrl}${chainParam}`,
   }).catch((err) =>
     logger.error(err, {
       tags: {

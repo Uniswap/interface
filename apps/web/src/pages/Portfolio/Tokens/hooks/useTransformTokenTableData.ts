@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -56,9 +55,6 @@ export interface TokenData {
   isStablecoin: boolean
 }
 
-// Custom hook to format portfolio data
-// When flag OFF: do not request multichain from backend → backend returns legacy → we transform to multichain shape for the table.
-// When flag ON: request multichain from backend → backend returns portfolio.multichainBalances → no transform needed.
 export function useTransformTokenTableData({
   chainIds,
   limit,
@@ -78,7 +74,6 @@ export function useTransformTokenTableData({
   networkStatus: NetworkStatus
 } {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const ownerAddresses = useMemo(
     () => [evmAddress, svmAddress].filter((a): a is Address => !!a),
     [evmAddress, svmAddress],
@@ -96,8 +91,7 @@ export function useTransformTokenTableData({
     evmAddress,
     svmAddress,
     chainIds,
-    // Flag OFF: legacy data from backend, transform to multichain shape on client. Flag ON: multichain (mock) data from backend.
-    requestMultichainFromBackend: multichainTokenUxEnabled,
+    requestMultichainFromBackend: true,
   })
 
   return useMemo(() => {

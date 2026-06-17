@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { useRWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { IssuerTokenCard } from '~/pages/TokenDetails/components/rwa/IssuerTokenCard'
-import { useRWAIssuerMarketData } from '~/pages/TokenDetails/hooks/useRWAIssuerMarketData'
 import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
 const COLLAPSED_VISIBLE_COUNT = 2

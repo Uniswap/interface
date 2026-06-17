@@ -5,7 +5,7 @@ import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store
 import type { CreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import type { CreateAuctionStoreState } from '~/pages/Liquidity/CreateAuction/types'
 
-function useCreateAuctionStoreBase(): CreateAuctionStore {
+export function useCreateAuctionStoreBase(): CreateAuctionStore {
   const context = useContext(CreateAuctionStoreContext)
 
   if (!context) {

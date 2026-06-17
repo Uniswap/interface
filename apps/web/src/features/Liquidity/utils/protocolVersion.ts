@@ -42,8 +42,10 @@ export function getProtocols(version: ProtocolVersion | undefined): Protocols | 
   }
 }
 
-export function protocolsToProtocolVersion(version: Protocols | undefined): ProtocolVersion {
-  switch (version) {
+export function protocolsToProtocolVersion(version: Protocols | string | undefined): ProtocolVersion {
+  // Persisted ListPools data rehydrates protobuf enums as their name ("V2"/"V3"/"V4"); normalize to the numeric enum.
+  const normalized = typeof version === 'string' ? Protocols[version as keyof typeof Protocols] : version
+  switch (normalized) {
     case Protocols.V2:
       return ProtocolVersion.V2
     case Protocols.V3:

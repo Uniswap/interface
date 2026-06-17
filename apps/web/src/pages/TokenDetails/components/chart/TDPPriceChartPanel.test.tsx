@@ -21,6 +21,10 @@ vi.mock('~/hooks/useTokenPriceChartPanel', () => ({
   useTokenPriceChartPanel: vi.fn(),
 }))
 
+vi.mock('~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData', () => ({
+  useTDPPreferProjectMarketData: vi.fn(() => false),
+}))
+
 vi.mock('~/components/Charts/PriceChart', () => ({
   PriceChart: function MockPriceChart() {
     return <div data-testid="tdp-price-chart" />

@@ -14,3 +14,13 @@ export function formatTokenMetatagTitleName(symbol: string | undefined, name: st
   }
   return 'View Token on Uniswap'
 }
+
+export function formatAuctionMetatagTitleName(symbol: string | undefined, name: string | undefined) {
+  if (symbol) {
+    return 'Bid on ' + symbol + ' on Uniswap'
+  }
+  if (name) {
+    return 'Bid on ' + name + ' on Uniswap'
+  }
+  return 'Bid in a Uniswap auction'
+}

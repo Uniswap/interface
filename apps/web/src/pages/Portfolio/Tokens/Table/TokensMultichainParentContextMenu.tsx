@@ -111,13 +111,10 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
 
   const menuActions = useMemo((): MenuOptionItemWithId[] => {
     return menuActionsRaw.map((action) => {
-      if (action.id !== TokenMenuActionType.CopyAddress) {
-        return action
+      if (action.id === TokenMenuActionType.CopyAddress) {
+        return { ...action, trailingIcon: <RotatableChevron direction="right" color="$neutral3" size="$icon.16" /> }
       }
-      return {
-        ...action,
-        trailingIcon: <RotatableChevron direction="right" color="$neutral3" size="$icon.16" />,
-      }
+      return action
     })
   }, [menuActionsRaw])
 

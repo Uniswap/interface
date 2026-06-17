@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { isProdEnv } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +39,6 @@ export function ReportTokenDataModal({
 }: ReportTokenDataModalProps & BaseModalProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const walletAddress = useActiveAddress(Platform.EVM)
 
   const submitReport = useEvent(
@@ -120,23 +118,19 @@ export function ReportTokenDataModal({
         subtitle: t('reporting.token.data.options.tokenDetails.subtitle'),
         value: TokenDataReportOption.TokenDetails,
       },
-      ...(isPnLEnabled
-        ? [
-            {
-              title: t('reporting.token.data.options.performance.title'),
-              subtitle: t('reporting.token.data.options.performance.subtitle'),
-              value: TokenDataReportOption.Performance,
-              additionalTextInput: true,
-            },
-          ]
-        : []),
+      {
+        title: t('reporting.token.data.options.performance.title'),
+        subtitle: t('reporting.token.data.options.performance.subtitle'),
+        value: TokenDataReportOption.Performance,
+        additionalTextInput: true,
+      },
       {
         title: t('reporting.token.options.other.title'),
         value: TokenDataReportOption.Other,
         additionalTextInput: true,
       },
     ],
-    [t, isPnLEnabled],
+    [t],
   )
 
   return (

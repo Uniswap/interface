@@ -434,6 +434,7 @@ failOnConsole({
         (message.includes('Trans') ||
           message.includes('UniswapXDescription') ||
           message.includes('SwapPreview') ||
+          message.includes('LimitOrderPreview') ||
           message.includes('LimitPriceInputLabel'))
       ) {
         return true

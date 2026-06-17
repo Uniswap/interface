@@ -1,6 +1,7 @@
 //! tamagui-ignore
 // tamagui-ignore
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Flex } from 'ui/src'
@@ -30,19 +31,95 @@ import { AuctionGraduated } from '~/features/Toucan/Auction/Bids/AuctionGraduate
 import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
 import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
 import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
+import { useLbpMigrationBlock } from '~/features/Toucan/Auction/hooks/useLbpMigrationBlock'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
-import { AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
+import { AuctionDetails, AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
+import {
+  getTokenLaunchTradeAvailabilityBlock,
+  isTokenLaunchTradeAvailable,
+  shouldShowTokenLaunchedBanner as getShouldShowTokenLaunchedBanner,
+} from '~/features/Toucan/Auction/utils/tokenLaunchedBannerUtils'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { ToucanContainer } from '~/features/Toucan/Shared/ToucanContainer'
 import { ToucanIntroModal } from '~/features/Toucan/ToucanIntroModal'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
+import { useDynamicMetatags } from '~/pages/metatags'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
+import { formatAuctionMetatagTitleName } from '~/shared-cloud/metatags'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { InterfaceState } from '~/state/webReducer'
 
 const TOUCAN_INTRO_MODAL_SESSION_KEY = 'toucan-intro-modal-seen-session'
+
+function usePageMetatags(auctionDetails: AuctionDetails | null) {
+  const { chainName, auctionAddress } = useParams<{ chainName: string; auctionAddress: string }>()
+
+  const tokenSymbol = auctionDetails?.token?.currency.symbol ?? auctionDetails?.tokenSymbol
+  const tokenName = auctionDetails?.token?.currency.name ?? auctionDetails?.tokenName ?? tokenSymbol
+  const pageTitle = formatAuctionMetatagTitleName(tokenSymbol, tokenName)
+  const pageDescription = tokenName ? `Bid on ${tokenName} in a Uniswap token auction.` : undefined
+  const metatagProperties = useMemo(
+    () => ({
+      title: pageTitle,
+      image:
+        chainName && auctionAddress
+          ? window.location.origin + '/api/image/auctions/' + chainName + '/' + auctionAddress
+          : undefined,
+      url: window.location.href,
+      description: pageDescription,
+    }),
+    [auctionAddress, chainName, pageDescription, pageTitle],
+  )
+  const metatags = useDynamicMetatags(metatagProperties)
+
+  return { pageTitle, metatags }
+}
+
+function useTokenLaunchedBannerState({
+  auctionDetails,
+  auctionState,
+  currentBlockNumber,
+  isGraduated,
+}: {
+  auctionDetails: AuctionDetails | null
+  auctionState: AuctionProgressState
+  currentBlockNumber: number | undefined
+  isGraduated: boolean
+}) {
+  const isAuctionEnded = auctionState === AuctionProgressState.ENDED
+  const shouldReadMigrationBlock = isAuctionEnded && isGraduated && Boolean(auctionDetails?.lbpStrategyAddress)
+  const { migrationBlock } = useLbpMigrationBlock({
+    chainId: auctionDetails?.chainId,
+    enabled: shouldReadMigrationBlock,
+    lbpStrategyAddress: auctionDetails?.lbpStrategyAddress,
+  })
+  const shouldShowTokenLaunchedBanner =
+    auctionDetails !== null &&
+    getShouldShowTokenLaunchedBanner({
+      isAuctionEnded,
+    })
+  const isTradeAvailable =
+    auctionDetails !== null &&
+    isTokenLaunchTradeAvailable({
+      claimBlock: auctionDetails.claimBlock,
+      currentBlockNumber,
+      hasLbpStrategyAddress: Boolean(auctionDetails.lbpStrategyAddress),
+      isGraduated,
+      migrationBlock,
+    })
+  const tradeAvailabilityBlock =
+    auctionDetails !== null && !isTradeAvailable
+      ? getTokenLaunchTradeAvailabilityBlock({
+          claimBlock: auctionDetails.claimBlock,
+          hasLbpStrategyAddress: Boolean(auctionDetails.lbpStrategyAddress),
+          migrationBlock,
+        })
+      : undefined
+
+  return { isAuctionEnded, shouldShowTokenLaunchedBanner, isTradeAvailable, tradeAvailabilityBlock }
+}
 
 function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolean; onCloseModal: () => void }) {
   const { t } = useTranslation()
@@ -72,12 +149,19 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const handleDetailsModal = useCallback(() => setIsDetailsModalOpen(true), [])
   const handleCloseDetailsModal = useCallback(() => setIsDetailsModalOpen(false), [])
-  const isAuctionEnded = auctionState === AuctionProgressState.ENDED
+  const { isAuctionEnded, shouldShowTokenLaunchedBanner, isTradeAvailable, tradeAvailabilityBlock } =
+    useTokenLaunchedBannerState({
+      auctionDetails,
+      auctionState,
+      currentBlockNumber,
+      isGraduated,
+    })
   const showAuctionGraduated = isAuctionEnded && isGraduated && hasUserBids
-  const shouldShowTokenLaunchedBanner = isAuctionEnded && auctionDetails !== null
 
   const [chartActiveTab, setChartActiveTab] = useState<BidDistributionChartTab>(BidDistributionChartTab.ClearingPrice)
   const [showBidFormModal, setShowBidFormModal] = useState(false)
+
+  const { pageTitle, metatags } = usePageMetatags(auctionDetails)
 
   // Sync activeBidFormTab to store so chart knows whether to render bid line
   const { setActiveBidFormTab } = useAuctionStoreActions()
@@ -96,16 +180,24 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         tokenName: auctionDetails?.token?.currency.name,
       }}
     >
+      <Helmet>
+        <title>{pageTitle}</title>
+        {metatags.map((tag, index) => (
+          <meta key={index} {...tag} />
+        ))}
+      </Helmet>
       <ToucanIntroModal isOpen={isModalOpen} onClose={onCloseModal} />
       <AuctionDetailsModal isOpen={isDetailsModalOpen} onClose={handleCloseDetailsModal} />
       <ToucanContainer>
         <AuctionIntroBanner onLearnMorePress={handleDetailsModal} />
-        {shouldShowTokenLaunchedBanner && (
+        {shouldShowTokenLaunchedBanner && auctionDetails && (
           <TokenLaunchedBanner
             tokenName={auctionDetails.token?.currency.name ?? ''}
             tokenColor={tokenColor}
             totalSupply={auctionDetails.tokenTotalSupply}
             auctionTokenDecimals={auctionDetails.token?.currency.decimals}
+            isTradeAvailable={isTradeAvailable}
+            tradeAvailabilityBlock={tradeAvailabilityBlock}
           />
         )}
       </ToucanContainer>

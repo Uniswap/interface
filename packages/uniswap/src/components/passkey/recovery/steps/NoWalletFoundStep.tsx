@@ -4,7 +4,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { IconBox } from 'uniswap/src/components/passkey/recovery/IconBox'
 import { StepHeader } from 'uniswap/src/components/passkey/recovery/StepHeader'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface NoWalletFoundStepProps {
@@ -15,7 +15,7 @@ interface NoWalletFoundStepProps {
 
 export function NoWalletFoundStep({ t, handleClose, onCreateAccount }: NoWalletFoundStepProps): JSX.Element {
   const helpButton = (
-    <Anchor target="_blank" rel="noreferrer" href={uniswapUrls.helpArticleUrls.passkeysInfo} textDecorationLine="none">
+    <Anchor target="_blank" rel="noreferrer" href={UniswapHelpUrls.articles.passkeysInfo} textDecorationLine="none">
       <Flex
         row
         gap="$gap4"

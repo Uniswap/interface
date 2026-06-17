@@ -1,6 +1,7 @@
 import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ARBITRUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arbitrum'
+import { ARC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arc'
 import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avalanche'
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
@@ -12,6 +13,7 @@ import { MEGAETH_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/megaeth
 import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
 import { POLYGON_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/polygon'
+import { ROBINHOOD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/robinhood'
 import { SONEIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/soneium'
 import { TEMPO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/tempo'
 import { UNICHAIN_CHAIN_INFO, UNICHAIN_SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/unichain'
@@ -36,7 +38,13 @@ export const { USDC: USDC_UNICHAIN_SEPOLIA } = UNICHAIN_SEPOLIA_CHAIN_INFO.token
 
 export const { USDC: USDC_LINEA, USDT: USDT_LINEA } = LINEA_CHAIN_INFO.tokens
 
+export const { USDC: USDC_ARC } = ARC_CHAIN_INFO.tokens
+
+export { CIRBTC_ARC, EURC_ARC, USYC_ARC, WETH_ARC } from 'uniswap/src/features/chains/evm/info/arc'
+
 export const { USDM: USDM_MEGAETH, USDe: USDE_MEGAETH } = MEGAETH_CHAIN_INFO.tokens
+
+export const { USDG: USDG_ROBINHOOD } = ROBINHOOD_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 

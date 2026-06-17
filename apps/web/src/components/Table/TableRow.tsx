@@ -22,7 +22,6 @@ const TableRowLink = styled(Link, {
 
 interface TableCellProps<T extends RowData> {
   cell: Cell<T, unknown>
-  v2?: boolean
   /** Passed so memo re-renders when row expansion toggles (cell reference may not change). */
   isExpanded?: boolean
   embeddedInExpandableGroup?: boolean
@@ -33,7 +32,6 @@ interface TableCellProps<T extends RowData> {
 
 function TableCellComponent<T extends RowData>({
   cell,
-  v2 = true,
   isExpanded: _isExpanded,
   embeddedInExpandableGroup,
   embeddedInIssuerPanel,
@@ -46,7 +44,6 @@ function TableCellComponent<T extends RowData>({
   const { background, ...positionStyles } = getCommonPinningStyles({
     column: cell.column,
     colors,
-    v2,
     isHeader: false,
     embeddedInExpandableGroup,
     hidePinnedColumnBorder: extendedPinnedColumnDivider,
@@ -61,17 +58,17 @@ function TableCellComponent<T extends RowData>({
     <CellContainer
       style={positionStyles}
       backgroundColor={selected && isPinned ? '$surface3' : background}
-      borderTopLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
-      borderBottomLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
+      borderTopLeftRadius={isFirstPinnedColumn ? '$rounded12' : undefined}
+      borderBottomLeftRadius={isFirstPinnedColumn ? '$rounded12' : undefined}
       overflow={overflowVisible ? 'visible' : 'hidden'}
       $group-hover={{
         backgroundColor: selected
           ? isPinned
             ? '$surface3'
             : 'unset'
-          : isPinned && v2 && embeddedInExpandableGroup
+          : isPinned && embeddedInExpandableGroup
             ? '$surface2Hovered'
-            : isPinned && v2 && !embeddedInIssuerPanel
+            : isPinned && !embeddedInIssuerPanel
               ? '$surface1Hovered'
               : 'unset',
       }}
@@ -85,7 +82,6 @@ const TableCell = memo(TableCellComponent) as typeof TableCellComponent
 
 interface TableRowProps<T extends RowData> {
   row: Row<T>
-  v2: boolean
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
   rowHeight?: number
   compactRowHeight?: number
@@ -100,7 +96,6 @@ interface TableRowProps<T extends RowData> {
 
 function TableRowComponent<T extends RowData>({
   row,
-  v2,
   rowWrapper,
   rowHeight: propRowHeight,
   compactRowHeight: propCompactRowHeight,
@@ -145,7 +140,6 @@ function TableRowComponent<T extends RowData>({
       <TableCell<T>
         key={cell.id}
         cell={cell}
-        v2={v2}
         isExpanded={_isExpanded}
         embeddedInExpandableGroup={embeddedInExpandableShell}
         embeddedInIssuerPanel={embeddedInIssuerPanel}
@@ -168,7 +162,6 @@ function TableRowComponent<T extends RowData>({
           <TableRowLink to={rowOriginal.link} state={navState} data-testid={rowTestId}>
             <DataRow
               height={rowHeight}
-              v2={v2}
               dimmed={dimmed}
               selected={selected}
               embeddedInExpandableGroup={embeddedInExpandableShell}
@@ -181,7 +174,6 @@ function TableRowComponent<T extends RowData>({
           <DataRow
             height={rowHeight}
             data-testid={rowTestId}
-            v2={v2}
             dimmed={dimmed}
             selected={selected}
             embeddedInExpandableGroup={embeddedInExpandableShell}

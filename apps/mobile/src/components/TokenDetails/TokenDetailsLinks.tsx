@@ -1,7 +1,6 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from 'react-native'
@@ -80,7 +79,6 @@ export function TokenDetailsLinks(): JSX.Element {
     closeMultichainAddressSheet,
   } = useTokenDetailsContext()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multichainEntries = useMultichainTokenEntries(currencyId)
   const hasMultipleChains = multichainEntries.length > 1
 
@@ -114,7 +112,7 @@ export function TokenDetailsLinks(): JSX.Element {
   )
 
   const links = useMemo((): LinkButtonProps[] => {
-    const showMultichainDropdowns = multichainTokenUxEnabled && hasMultipleChains
+    const showMultichainDropdowns = hasMultipleChains
     const isNativeAddress = isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
     const items: LinkButtonProps[] = []
 
@@ -186,7 +184,6 @@ export function TokenDetailsLinks(): JSX.Element {
     chainId,
     address,
     isNativeCurrency,
-    multichainTokenUxEnabled,
     hasMultipleChains,
     openMultichainAddressSheet,
     homepageUrl,

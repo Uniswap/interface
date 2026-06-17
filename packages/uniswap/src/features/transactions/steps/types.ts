@@ -11,7 +11,7 @@ import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transact
 import type { SignTypedDataStepFields } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
-import type { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
+import type { WrapTransactionStep, WrapTransactionStepWalletCall } from 'uniswap/src/features/transactions/steps/wrap'
 import type { PlanSagaAnalytics } from 'uniswap/src/features/transactions/swap/plan/types'
 import type { ClassicSwapSteps } from 'uniswap/src/features/transactions/swap/steps/classicSteps'
 import type { UniswapXPlanSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
@@ -35,6 +35,7 @@ export enum TransactionStepType {
   SwapTransactionAsync = 'SwapTransactionAsync',
   SwapTransactionWalletCall = 'SwapTransactionWalletCall',
   WrapTransaction = 'WrapTransaction',
+  WrapTransactionWalletCall = 'WrapTransactionWalletCall',
   Permit2Signature = 'Permit2Signature',
   Permit2Transaction = 'Permit2Transaction',
   UniswapXSignature = 'UniswapXSignature',
@@ -68,6 +69,7 @@ export type TransactionStep =
   | CollectFeesSteps
   | CollectLpIncentiveRewardsSteps
   | WrapTransactionStep
+  | WrapTransactionStepWalletCall
   | ToucanBidTransactionStep
   | ToucanWithdrawBidAndClaimTokensTransactionStep
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
@@ -90,6 +92,8 @@ export interface RevokeApproveFields extends OnChainTransactionFields {
   amount: string
   pair?: [Currency, Currency]
   spender: string
+  // Symbol override for tokens the token service can't resolve (e.g. unindexed tokens).
+  tokenSymbol?: string
 }
 
 export interface HandleOnChainStepParams<

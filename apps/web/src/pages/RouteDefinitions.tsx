@@ -99,8 +99,8 @@ const StaticTitlesAndDescriptions = {
   MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
   AddLiquidityDescription: i18n.t('title.earnFees'),
   PasskeyManagementTitle: i18n.t('title.managePasskeys'),
-  // TODO(LP-295): Update after launch
-  ToucanPlaceholderDescription: 'Placeholder description for Toucan page',
+  ToucanAuctionDescription: i18n.t('title.bidOnTokensInAuctions'),
+  ToucanLaunchAuctionDescription: i18n.t('title.launchTokenAuction'),
 }
 
 /**
@@ -211,7 +211,7 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore/auctions/:chainName/:auctionAddress',
     getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanAuctionDescription,
     getElement: () => (
       <Suspense fallback={null}>
         <ToucanToken />
@@ -221,13 +221,13 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/liquidity/launch-auction',
     getTitle: () => i18n.t('toucan.createAuction.title'),
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanLaunchAuctionDescription,
     getElement: () => <CreateAuctionRouteGate />,
   }),
   createRouteDefinition({
     path: '/liquidity/launch-auction/x/callback',
     getTitle: () => 'X Verification',
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanLaunchAuctionDescription,
     getElement: () => (
       <Suspense fallback={null}>
         <XOAuthCallbackPage />

@@ -11,7 +11,7 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { RoutingLabel } from 'uniswap/src/components/RoutingDiagram/RoutingLabel'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -98,7 +98,7 @@ export function RoutingHopInfo({
 
   const mobileLearnMore =
     isMobileApp && !isUniswapXTrade ? (
-      <LearnMoreLink textVariant="buttonLabel3" url={uniswapUrls.helpArticleUrls.routingSettings} />
+      <LearnMoreLink textVariant="buttonLabel3" url={UniswapHelpUrls.articles.routingSettings} />
     ) : undefined
 
   return (

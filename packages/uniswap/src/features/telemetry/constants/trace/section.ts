@@ -8,6 +8,7 @@ export enum SectionName {
   HomeActivityTab = 'home-activity-tab',
   HomeExploreTab = 'home-explore-tab',
   HomeNFTsTab = 'home-nfts-tab',
+  HomePoolsTab = 'home-pools-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
   MigrateSelectTokensStep = 'migrate-select-tokens-step',

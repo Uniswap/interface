@@ -10,7 +10,7 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -134,7 +134,7 @@ export function SlippageScreenNative(): JSX.Element {
           {t('swap.settings.slippage.description')}
         </Text>
       )}
-      {!isBridgeTrade && <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />}
+      {!isBridgeTrade && <LearnMoreLink url={UniswapHelpUrls.articles.swapSlippage} />}
       <Flex gap="$spacing12">
         <Flex centered row gap="$spacing16" mt="$spacing12">
           <PlusMinusButton

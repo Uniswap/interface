@@ -19,7 +19,11 @@ import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSma
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainGasToken, useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
-import { convertTempoGasFeeForDisplay } from 'uniswap/src/features/gas/tempo'
+import {
+  convertShiftedGasFeeForDisplay,
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
 import { getActiveGasStrategy, hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -162,8 +166,10 @@ function getGasFeeCurrencyAmount({
     return undefined
   }
   const gasToken = getChainGasToken(chainId)
-  const isTempoChain = chainId === UniverseChainId.Tempo
-  const adjustedFee = isTempoChain && feeValueInWei ? convertTempoGasFeeForDisplay(feeValueInWei) : feeValueInWei
+  const adjustedFee =
+    hasShiftedGasToken(chainId) && feeValueInWei
+      ? convertShiftedGasFeeForDisplay(feeValueInWei, getGasFeeDecimalsShift(chainId))
+      : feeValueInWei
 
   return (
     getCurrencyAmount({
@@ -315,11 +321,13 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const gasToken = getChainGasToken(chainId)
-  const isTempoChain = chainId === UniverseChainId.Tempo
 
-  // For Tempo, convert 18-decimal attodollar gas fee to 6-decimal pathUSD before wrapping
+  // On chains that pay gas in a non-native shifted token (e.g. Tempo pathUSD, Arc
+  // USDC), convert the 18-decimal native gas fee to the gas token's decimals before wrapping.
   const displayValue =
-    isTempoChain && gasFee?.displayValue ? convertTempoGasFeeForDisplay(gasFee.displayValue) : gasFee?.displayValue
+    hasShiftedGasToken(chainId) && gasFee?.displayValue
+      ? convertShiftedGasFeeForDisplay(gasFee.displayValue, getGasFeeDecimalsShift(chainId))
+      : gasFee?.displayValue
 
   const gasTokenAmount = getCurrencyAmount({
     currency: gasToken,

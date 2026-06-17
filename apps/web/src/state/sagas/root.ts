@@ -6,6 +6,7 @@ import {
   planWrappedSaga,
 } from 'uniswap/src/features/transactions/swap/plan/planSaga'
 import { getMonitoredSagaReducers, type MonitoredSaga, waitForRehydration } from 'uniswap/src/utils/saga'
+import { submitAuctionLaunchSaga } from '~/state/sagas/createAuction/submitAuctionLaunchSaga'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { lpIncentivesClaimSaga } from '~/state/sagas/lp_incentives/lpIncentivesSaga'
 import { submitToucanBidSaga } from '~/state/sagas/toucan/submitBidSaga'
@@ -21,6 +22,7 @@ const sagas = [
   liquiditySaga,
   watchTransactionsSaga,
   lpIncentivesClaimSaga,
+  submitAuctionLaunchSaga,
   submitToucanBidSaga,
   withdrawBidAndClaimTokensToucanBidSaga,
 ]

@@ -12,6 +12,8 @@ import type {
   CreateSwapResponse,
   Encode4337Request,
   Encode4337Response,
+  Swap4337Request,
+  Swap4337Response,
   Encode7702ResponseBody,
   GetOrdersResponse,
   GetSwappableTokensResponse,
@@ -34,7 +36,6 @@ import type {
 } from '@universe/api/src/clients/trading/tradeTypes'
 import { logger } from 'utilities/src/logger/logger'
 
-// TODO(app-infra), de-duplicate with uniswapUrls.tradingApiPaths when other consumers are migrated to use TradingApiClient
 export const TRADING_API_PATHS = {
   approval: 'check_approval',
   order: 'order',
@@ -42,6 +43,7 @@ export const TRADING_API_PATHS = {
   quote: 'quote',
   plan: 'plan',
   swap: 'swap',
+  swap4337: 'swap_4337',
   swap5792: 'swap_5792',
   swap7702: 'swap_7702',
   swappableTokens: 'swappable_tokens',
@@ -52,6 +54,23 @@ export const TRADING_API_PATHS = {
     encode4337: 'wallet/encode_4337',
   },
 }
+
+export type TradingApiPaths = typeof TRADING_API_PATHS
+
+/** Prefixes each trading API path (e.g. with the '/v1' version prefix). */
+export function getVersionedTradingApiPaths(apiPathPrefix: string): TradingApiPaths {
+  const addPrefix = <T extends Record<string, string | Record<string, string>>>(paths: T): T =>
+    Object.fromEntries(
+      Object.entries(paths).map(([key, value]) =>
+        typeof value === 'string' ? [key, `${apiPathPrefix}/${value}`] : [key, addPrefix(value)],
+      ),
+      // Object.fromEntries widens to a generic record; the structure is unchanged so reassert T.
+    ) as T
+  return addPrefix(TRADING_API_PATHS)
+}
+
+/** Trading API paths under the default v1 prefix. */
+export const V1_TRADING_API_PATHS = getVersionedTradingApiPaths('/v1')
 
 export interface TradingClientContext {
   fetchClient: FetchClient
@@ -66,6 +85,7 @@ export interface TradingApiClient {
   fetchQuote: (params: QuoteRequest & { isUSDQuote?: boolean }) => Promise<DiscriminatedQuoteResponse>
   fetchIndicativeQuote: (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
   fetchSwap: (params: CreateSwapRequest) => Promise<CreateSwapResponse>
+  fetchSwap4337: (params: Swap4337Request) => Promise<Swap4337Response>
   fetchSwap5792: (params: CreateSwap5792Request) => Promise<CreateSwap5792Response>
   fetchSwap7702: (params: CreateSwap7702Request) => Promise<CreateSwap7702Response>
   fetchSwaps: (params: {
@@ -144,6 +164,15 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     method: 'post',
     transformRequest: async ({ params }) => ({
       headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap, params.quote.chainId),
+    }),
+  })
+
+  const fetchSwap4337 = createFetcher<Swap4337Request, Swap4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.swap4337),
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap4337, params.quote.chainId),
     }),
   })
 
@@ -335,6 +364,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchQuote,
     fetchIndicativeQuote,
     fetchSwap,
+    fetchSwap4337,
     fetchSwap5792,
     fetchSwap7702,
     fetchSwaps,

@@ -3,6 +3,7 @@ import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { getInternalError, getSdkError } from '@walletconnect/utils'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
+import { WalletSendCallsUserOperationRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { addRequest, WalletSendCallsRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
@@ -10,6 +11,7 @@ import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiCli
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { transformTradingApiUserOpToRpcUserOp } from 'uniswap/src/features/smartWallet/userOp/transformTradingApiUserOp'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { logger } from 'utilities/src/logger/logger'
@@ -17,7 +19,6 @@ import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/ei
 import {
   getCapabilitiesForDelegationStatus,
   transformCallsToTransactionRequests,
-  transformTradingApiUserOpToRpcUserOp,
 } from 'wallet/src/features/batchedTransactions/utils'
 import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
@@ -168,7 +169,7 @@ export function* handleSendCalls({
         paymasterServiceContext,
       })
 
-      const requestWithEncodedUserOp = {
+      const requestWithEncodedUserOp: WalletSendCallsUserOperationRequest = {
         ...request,
         unsignedUserOperation: transformTradingApiUserOpToRpcUserOp(userOperation),
         requestId: encode4337RequestId,

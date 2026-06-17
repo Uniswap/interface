@@ -4,7 +4,7 @@ import { Swap } from 'ui/src/components/icons/Swap'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { useSecondsUntilDeadline } from 'uniswap/src/components/ConfirmSwapModal/useSecondsUntilDeadline'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import {
   UniswapXPlanSignatureStep,
@@ -65,8 +65,8 @@ export function SwapTransactionStepRow({
       learnMore={{
         url:
           step.type === TransactionStepType.SwapTransactionWalletCall
-            ? uniswapUrls.helpArticleUrls.batchedSwaps
-            : uniswapUrls.helpArticleUrls.howToSwapTokens,
+            ? UniswapHelpUrls.articles.batchedSwaps
+            : UniswapHelpUrls.articles.howToSwapTokens,
         text: t('common.learnMoreSwap'),
       }}
       status={status}

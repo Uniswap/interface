@@ -41,6 +41,37 @@ pre-commit:
           echo "trufflehog not installed, skipping..."
         fi
 
+    i18n-check:
+      glob: "{apps,packages}/**/*.{ts,tsx}"
+      env:
+        CI: "true"
+        FORCE_COLOR: "0"
+      run: |
+        export TERM=dumb
+        # Check if any staged TS/TSX files exist that might contain i18n strings
+        STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "(apps|packages)/.*\.(ts|tsx)$" || true)
+
+        if [ -n "$STAGED_FILES" ]; then
+          echo "Checking i18n strings (found modified TS/TSX files)..."
+
+          # Run i18n extraction
+          bun run i18n:extract
+
+          # Check if the i18n source file was modified
+          if git diff --exit-code packages/uniswap/src/i18n/locales/source/en-US.json > /dev/null 2>&1; then
+            echo "✅ i18n strings are up to date"
+          else
+            echo "❌ i18n strings need to be updated!"
+            echo "Please run 'bun i18n:extract' and commit the changes."
+            echo ""
+            echo "Modified translation file:"
+            git diff --stat packages/uniswap/src/i18n/locales/source/en-US.json
+            exit 1
+          fi
+        else
+          echo "No TS/TSX files staged, skipping i18n check..."
+        fi
+
 post-checkout:
   commands:
     check-deps-sync:

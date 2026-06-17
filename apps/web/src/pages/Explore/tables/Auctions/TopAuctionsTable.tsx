@@ -1,6 +1,5 @@
 /* oxlint-disable typescript/no-unnecessary-condition, max-lines */
 import { createColumnHelper } from '@tanstack/react-table'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { memo, ReactElement, useMemo } from 'react'
@@ -46,10 +45,15 @@ import {
  * Uses bigint comparison to avoid precision loss.
  * Treats 0n as "no data" and sorts it to the end.
  */
+export interface SortableTopAuctionTableValue {
+  auction: EnrichedAuction
+  projectedFdv: ProjectedFdvTableValue
+}
+
 const AuctionSortMethods: Record<
   AuctionSortField,
   // oxlint-disable-next-line max-params -- sort comparators conventionally take (a, b, direction)
-  (a: TopAuctionsTableValue, b: TopAuctionsTableValue, sortAscending?: boolean) => number
+  (a: SortableTopAuctionTableValue, b: SortableTopAuctionTableValue, sortAscending?: boolean) => number
 > = {
   [AuctionSortField.FDV]: (a, b) => {
     // Use USD values for cross-currency comparison (follows portfolio balances pattern)
@@ -118,15 +122,15 @@ const AuctionSortMethods: Record<
  * @param sortAscending - Whether to sort in ascending order
  * @returns Sorted array of auctions
  */
-function sortAuctions({
+export function sortAuctions<TAuction extends SortableTopAuctionTableValue>({
   auctions,
   sortMethod,
   sortAscending,
 }: {
-  auctions: TopAuctionsTableValue[]
+  auctions: TAuction[]
   sortMethod: AuctionSortField
   sortAscending: boolean
-}): TopAuctionsTableValue[] {
+}): TAuction[] {
   // For TIME_REMAINING, pass sortAscending to enable custom sorting logic
   // For other fields, use reverse() approach
   if (sortMethod === AuctionSortField.TIME_REMAINING) {
@@ -137,7 +141,45 @@ function sortAuctions({
   return sortAscending ? sorted.reverse() : sorted
 }
 
-const auctionSortMethodAtom = atomWithReset<AuctionSortField>(AuctionSortField.COMMITTED_VOLUME)
+function getDefaultAuctionSortRank({ auction }: SortableTopAuctionTableValue, currentTimeMs: number): number {
+  const { verified, timeRemaining } = auction
+  const startTimestampMs =
+    timeRemaining.startBlockTimestamp === undefined
+      ? undefined
+      : Number(timeRemaining.startBlockTimestamp) * ONE_SECOND_MS
+  const isComingSoon = !timeRemaining.isCompleted && startTimestampMs !== undefined && currentTimeMs < startTimestampMs
+  const isLive = !timeRemaining.isCompleted && !isComingSoon
+
+  if (verified) {
+    if (isLive) {
+      return 0
+    }
+    if (isComingSoon) {
+      return 1
+    }
+    return 2
+  }
+
+  return isLive ? 3 : 4
+}
+
+export function sortAuctionsByDefault<TAuction extends SortableTopAuctionTableValue>(
+  auctions: TAuction[],
+  currentTimeMs = Date.now(),
+): TAuction[] {
+  const sortedByCommittedVolume = sortAuctions({
+    auctions,
+    sortMethod: AuctionSortField.COMMITTED_VOLUME,
+    sortAscending: false,
+  })
+
+  // Start from committed-volume rank, then stably group by default launch-page priority.
+  return sortedByCommittedVolume.sort(
+    (a, b) => getDefaultAuctionSortRank(a, currentTimeMs) - getDefaultAuctionSortRank(b, currentTimeMs),
+  )
+}
+
+const auctionSortMethodAtom = atomWithReset<AuctionSortField | undefined>(undefined)
 const auctionSortAscendingAtom = atomWithReset<boolean>(false)
 
 const TableWrapper = styled(Flex, {
@@ -206,11 +248,9 @@ function filterAuctionsByVerificationAndStatus(
   })
 }
 
-interface TopAuctionsTableValue {
+interface TopAuctionsTableValue extends SortableTopAuctionTableValue {
   index: number
   tokenName: ReactElement
-  auction: EnrichedAuction
-  projectedFdv: ProjectedFdvTableValue
   link: string
 }
 
@@ -242,7 +282,8 @@ export const ToucanTable = memo(function ToucanTable() {
   return (
     <TableWrapper data-testid="toucan-explore-table">
       <ToucanTableComponent
-        auctions={filteredAuctions.slice(0, page * TABLE_PAGE_SIZE)}
+        auctions={filteredAuctions}
+        visibleAuctionLimit={page * TABLE_PAGE_SIZE}
         loading={isLoading}
         loadMore={loadMore}
         error={isError}
@@ -253,17 +294,18 @@ export const ToucanTable = memo(function ToucanTable() {
 
 function ToucanTableComponent({
   auctions,
+  visibleAuctionLimit,
   loading,
   error,
   loadMore,
 }: {
   auctions?: readonly EnrichedAuction[]
+  visibleAuctionLimit: number
   loading: boolean
   error?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { priceMap: auctionTokenPriceMap } = useAuctionTokenPrices(auctions ?? [])
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -332,12 +374,7 @@ function ToucanTableComponent({
         })
         .filter((auction) => auction !== undefined) ?? []
 
-    // Sort by default sort order (committed volume descending) and assign indices
-    const sortedByDefault = sortAuctions({
-      auctions: auctionValues,
-      sortMethod: AuctionSortField.COMMITTED_VOLUME,
-      sortAscending: false,
-    })
+    const sortedByDefault = sortAuctionsByDefault(auctionValues)
 
     // Assign indices based on default sort order
     sortedByDefault.forEach((auction, i) => {
@@ -350,11 +387,13 @@ function ToucanTableComponent({
   // Apply sorting
   const sortedAuctionTableValues = useMemo(
     () =>
-      sortAuctions({
-        auctions: topAuctionsTableValues,
-        sortMethod,
-        sortAscending,
-      }),
+      sortMethod === undefined
+        ? topAuctionsTableValues
+        : sortAuctions({
+            auctions: topAuctionsTableValues,
+            sortMethod,
+            sortAscending,
+          }),
     [topAuctionsTableValues, sortMethod, sortAscending],
   )
 
@@ -524,10 +563,9 @@ function ToucanTableComponent({
     <Flex gap="$spacing12">
       <Table
         columns={columns}
-        data={sortedVisibleAuctionTableValues}
+        data={sortedVisibleAuctionTableValues.slice(0, visibleAuctionLimit)}
         loading={loading}
         error={error}
-        v2={multichainTokenUxEnabled}
         loadMore={loadMore}
         maxWidth={1200}
         defaultPinnedColumns={['index', 'tokenName']}

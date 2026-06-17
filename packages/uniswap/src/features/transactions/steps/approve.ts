@@ -13,12 +13,14 @@ export function createApprovalTransactionStep({
   tokenAddress,
   pair,
   chainId,
+  tokenSymbol,
 }: {
-  amount: TokenApprovalTransactionStep['amount']
+  amount?: TokenApprovalTransactionStep['amount']
   txRequest?: ValidatedTransactionRequest
   pair?: [Currency, Currency]
   tokenAddress?: TokenApprovalTransactionStep['tokenAddress']
   chainId?: TokenApprovalTransactionStep['chainId']
+  tokenSymbol?: TokenApprovalTransactionStep['tokenSymbol']
 }): TokenApprovalTransactionStep | undefined {
   if (!txRequest?.data || !amount || !chainId || !tokenAddress) {
     return undefined
@@ -27,5 +29,5 @@ export function createApprovalTransactionStep({
   const type = TransactionStepType.TokenApprovalTransaction
   const { spender } = parseERC20ApproveCalldata(txRequest.data.toString())
 
-  return { type, txRequest, tokenAddress, amount, pair, spender, chainId }
+  return { type, txRequest, tokenAddress, amount, pair, spender, chainId, tokenSymbol }
 }

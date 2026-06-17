@@ -178,7 +178,6 @@ export const MiniActivityTable = memo(function MiniActivityTable({
             data={transactionData.slice(0, maxActivities)}
             loading={tableLoading}
             error={false}
-            v2={true}
             rowWrapper={rowWrapper}
             loadingRowsCount={MAX_ACTIVITY_ROWS}
             rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}

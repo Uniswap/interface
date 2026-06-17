@@ -82,4 +82,28 @@ describe('createEmbeddedWalletApiClient', () => {
       expect(result).toEqual({ available: false })
     })
   })
+
+  describe('fetchGetRecoveryConfig', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.getRecoveryConfig).mockResolvedValue({ found: true } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      await client.fetchGetRecoveryConfig({ authMethodId: 'amid' }, 'fake-token')
+
+      expect(rpcClient.getRecoveryConfig).toHaveBeenCalledWith(
+        { authMethodId: 'amid' },
+        { headers: { Authorization: 'Bearer fake-token' } },
+      )
+    })
+
+    it('forwards the response from the rpc client', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.getRecoveryConfig).mockResolvedValue({ found: false } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const result = await client.fetchGetRecoveryConfig({ authMethodId: 'a' }, 'tok')
+      expect(result).toEqual({ found: false })
+    })
+  })
 })

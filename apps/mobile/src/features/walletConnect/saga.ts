@@ -264,6 +264,65 @@ function getAccountAddressFromWCSession(requestSession: SessionTypes.Struct) {
   return eip155Account ? getAccountAddressFromEIP155String(eip155Account) : undefined
 }
 
+/**
+ * Verifies an `account` is approved for a `chainId` in a session's namespace.
+ * signer/from address, should be cross-checked against the approved set.
+ */
+function isAccountInSessionNamespace({
+  session,
+  chainId,
+  account,
+}: {
+  session: SessionTypes.Struct
+  chainId: UniverseChainId
+  account: Address
+}): boolean {
+  const eip155Chain = `eip155:${chainId}`
+
+  for (const [namespaceKey, namespace] of Object.entries(session.namespaces)) {
+    const namespaceChains = namespaceKey.includes(':') ? [namespaceKey] : (namespace.chains ?? [])
+    if (!namespaceChains.includes(eip155Chain)) {
+      continue
+    }
+
+    for (const eip155Account of namespace.accounts) {
+      const parts = eip155Account.split(':')
+      // Strict per-account chain check, must match the request's chain
+      if (parts.length === 3 && parts[0] === 'eip155' && Number(parts[1]) !== chainId) {
+        continue
+      }
+      const approvedAddress = getAccountAddressFromEIP155String(eip155Account)
+      if (!approvedAddress) {
+        continue
+      }
+      if (
+        areAddressesEqual({
+          addressInput1: { address: approvedAddress, platform: Platform.EVM },
+          addressInput2: { address: account, platform: Platform.EVM },
+        })
+      ) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
+/**
+ * Responds with unauthorized account access
+ */
+function* respondUnauthorizedAccount({ topic, id }: { topic: string; id: number }) {
+  yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+    topic,
+    response: {
+      id,
+      jsonrpc: '2.0',
+      error: getSdkError('USER_REJECTED', 'Requested account is not approved for this session'),
+    },
+  })
+}
+
 const eip5792Methods = [EthMethod.WalletGetCallsStatus, EthMethod.WalletSendCalls, EthMethod.WalletGetCapabilities].map(
   (m) => m.valueOf(),
 )
@@ -331,7 +390,7 @@ export function* handleSessionAuthenticate(authenticate: WalletKitTypes.SessionA
   yield* put(addRequest(request))
 }
 
-function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
+export function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
   const { topic, params, id } = sessionRequest
   const { request: wcRequest, chainId: wcChainId } = params
   const { method, params: requestParams } = wcRequest
@@ -377,6 +436,10 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         dapp,
         requestParams,
       })
+      if (!isAccountInSessionNamespace({ session: requestSession, chainId, account: request.account })) {
+        yield* call(respondUnauthorizedAccount, { topic, id })
+        return
+      }
       yield* put(addRequest(request))
       break
     }
@@ -389,6 +452,10 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         dapp,
         requestParams,
       })
+      if (!isAccountInSessionNamespace({ session: requestSession, chainId, account: request.account })) {
+        yield* call(respondUnauthorizedAccount, { topic, id })
+        return
+      }
       // Validate for self-call with data
       if (
         isSelfCallWithData({
@@ -419,6 +486,10 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         requestParams,
         account: accountAddress,
       })
+      if (!isAccountInSessionNamespace({ session: requestSession, chainId, account: request.account })) {
+        yield* call(respondUnauthorizedAccount, { topic, id })
+        return
+      }
       // Validate for self-call with data in any of the calls
       const hasSelfCall = request.calls.some((batchCall) =>
         isSelfCallWithData({ from: request.account, to: batchCall.to, data: batchCall.data }),
@@ -455,6 +526,10 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         chainIds,
         dappRequestInfo: { url: dappUrl },
       } = parseGetCapabilitiesRequest({ method, topic, internalId: id, dapp, requestParams })
+      if (!isAccountInSessionNamespace({ session: requestSession, chainId, account })) {
+        yield* call(respondUnauthorizedAccount, { topic, id })
+        return
+      }
       yield* call(handleGetCapabilities, {
         topic,
         requestId: id,

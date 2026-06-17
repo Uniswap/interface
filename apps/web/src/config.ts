@@ -1,6 +1,10 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access in these config files
 import type { BaseConfig } from '@universe/config'
 import { AppId, boolFromString, Environment, NodeEnv, parseConfig } from '@universe/config'
+import {
+  getUniswapServiceUrls as getUniswapServiceUrlsFromOverrides,
+  type UniswapServiceUrls,
+} from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { z } from 'zod'
 
@@ -193,4 +197,8 @@ export function getPrivyConfig(isRequired = true): { appId: string; clientId: st
 
 export function getPrivyAppId(): string | undefined {
   return getPrivyConfig(false).appId || undefined
+}
+
+export function getUniswapServiceUrls(): UniswapServiceUrls {
+  return getUniswapServiceUrlsFromOverrides(getConfig())
 }

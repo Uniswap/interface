@@ -1,10 +1,10 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
@@ -35,7 +35,6 @@ import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenD
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 interface TokenDetailsHeaderProps {
@@ -43,17 +42,15 @@ interface TokenDetailsHeaderProps {
 }
 
 function getShowAddressCopy({
-  multichainTokenUxEnabled,
   isNative,
   isMultiChainAsset,
   selectedChainId,
 }: {
-  multichainTokenUxEnabled: boolean
   isNative: boolean
   isMultiChainAsset: boolean
   selectedChainId: UniverseChainId | undefined
 }): boolean {
-  if (!multichainTokenUxEnabled || !isMultiChainAsset) {
+  if (!isMultiChainAsset) {
     return !isNative
   }
   return !!selectedChainId && !isNative
@@ -75,13 +72,11 @@ function getRWAHeaderIdentity({
   return { name: fallbackName, logoUrl: fallbackLogoUrl }
 }
 
-// eslint-disable-next-line complexity
 export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
   const media = useMedia()
   const trace = useTrace()
   const isMobileScreen = media.md
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   const { currency, tokenProjectQuery, multiChainMap } = useTDPStore((s) => ({
     currency: s.currency!,
@@ -109,8 +104,8 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
       source: 'token-details',
       currency,
       isMarkedSpam: tokenProjectQuery.data?.token?.project?.isSpam,
-      isMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset,
-      shouldReportMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined,
+      isMultichainAsset: isMultiChainAsset,
+      shouldReportMultichainAsset: isMultiChainAsset && selectedChainId === undefined,
     })
     openModal()
   })
@@ -145,7 +140,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     fallbackName: fallbackTokenName,
     fallbackLogoUrl: tokenProjectQuery.data?.token?.project?.logoUrl,
   })
-  const showAddressCopy = getShowAddressCopy({ multichainTokenUxEnabled, isNative, isMultiChainAsset, selectedChainId })
+  const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
 
   const onBreadcrumbAddressCopied = useEvent(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -168,7 +163,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
           url={tokenLogoUrl}
           symbol={effectiveCurrency.symbol ?? undefined}
           name={effectiveCurrency.name ?? undefined}
-          chainId={!multichainTokenUxEnabled || !isMultiChainAsset ? effectiveCurrency.chainId : null}
+          chainId={!isMultiChainAsset ? effectiveCurrency.chainId : null}
           size={tokenLogoSize}
           transition={HEADER_TRANSITION}
         />
@@ -203,6 +198,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 selectedChainId={selectedChainId}
                 setSelectedChainId={onSelectedChainChange}
                 showAddressCopy={showAddressCopy}
+                isChainDataLoading={tokenProjectQuery.loading}
               />
               {showAddressCopy && (
                 <Flex alignSelf="center">
@@ -237,6 +233,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             showAddressCopy={false}
             showNetworkName={false}
             position="right"
+            isChainDataLoading={tokenProjectQuery.loading}
           />
         )}
       </Flex>
@@ -244,7 +241,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
       <ReportTokenDataModal
         currency={currency}
         isMarkedSpam={tokenProjectQuery.data?.token?.project?.isSpam}
-        shouldReportMultichainAsset={multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined}
+        shouldReportMultichainAsset={isMultiChainAsset && selectedChainId === undefined}
         onReportSuccess={onReportSuccess}
         isOpen={isReportDataIssueModalOpen}
         onClose={closeReportDataIssueModal}

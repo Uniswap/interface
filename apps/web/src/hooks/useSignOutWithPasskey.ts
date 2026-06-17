@@ -1,9 +1,9 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { logger } from 'utilities/src/logger/logger'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
+import { useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface SignOutWithPasskeyOptions {
@@ -25,7 +25,7 @@ interface SignOutWithPasskeyOptions {
 export function useSignOutWithPasskey({ onSuccess, onError }: SignOutWithPasskeyOptions = {}) {
   const { walletId, setIsConnected } = useEmbeddedWalletState()
   const queryClient = useQueryClient()
-  const { logout, ready } = usePrivy()
+  const { logout, ready } = useMaybePrivy()
   const connectedWithEmbeddedWallet = useIsEmbeddedWallet()
 
   const { mutate: signOutWithPasskey, ...rest } = useMutation({

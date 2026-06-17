@@ -107,7 +107,7 @@ export function useAllPoolTicks({
 } {
   const [skipNumber, setSkipNumber] = useState(0)
 
-  const [tickData, setTickData] = useState<Ticks>([])
+  const [pagesBySkip, setPagesBySkip] = useState<Record<number, Ticks>>({})
 
   const poolId = useMemo(() => {
     if (precalculatedPoolId) {
@@ -142,14 +142,20 @@ export function useAllPoolTicks({
 
   useEffect(() => {
     if (ticks?.length) {
-      // oxlint-disable-next-line no-shadow
-      setTickData((tickData) => [...tickData, ...ticks])
+      setPagesBySkip((prev) => (prev[skipNumber] === ticks ? prev : { ...prev, [skipNumber]: ticks }))
       if (ticks.length === MAX_TICK_FETCH_VALUE) {
         // oxlint-disable-next-line no-shadow
         setSkipNumber((skipNumber) => skipNumber + MAX_TICK_FETCH_VALUE)
       }
     }
-  }, [ticks])
+  }, [ticks, skipNumber])
+
+  const tickData = useMemo<Ticks>(() => {
+    const sortedSkips = Object.keys(pagesBySkip)
+      .map(Number)
+      .sort((a, b) => a - b)
+    return sortedSkips.flatMap((s) => pagesBySkip[s])
+  }, [pagesBySkip])
 
   return {
     isLoading: isLoading || ticks?.length === MAX_TICK_FETCH_VALUE,

@@ -61,9 +61,11 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   // Use chainId from URL params (available immediately) for initial block fetch,
   // not chainIdFromStore (which requires API response) to avoid race condition
   // where progressState is NOT_STARTED while timestamps show "X ago"
+  const startBlock = useAuctionStore((state) => state.auctionDetails?.startBlock)
+  const startBlockNum = startBlock ? Number(startBlock) : undefined
   const endBlock = useAuctionStore((state) => state.auctionDetails?.endBlock)
   const endBlockNum = endBlock ? Number(endBlock) : undefined
-  useAuctionBlockPolling(chainId, endBlockNum)
+  useAuctionBlockPolling({ chainId, startBlock: startBlockNum, endBlock: endBlockNum })
 
   return children
 }

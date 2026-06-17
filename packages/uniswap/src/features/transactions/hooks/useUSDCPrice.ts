@@ -26,7 +26,7 @@ export function useUSDCPrice(
   )
 
   // Remote pricing no-ops when disabled or when the input is the chain's primary stablecoin.
-  const livePrice = usePrice({
+  const { price: livePrice, isLoading: livePriceLoading } = usePrice({
     chainId: isRemoteSupported && !currencyIsStablecoin ? chainId : undefined,
     address: isRemoteSupported && !currencyIsStablecoin ? address : undefined,
   })
@@ -43,7 +43,9 @@ export function useUSDCPrice(
     }
 
     if (livePrice === undefined || !Number.isFinite(livePrice)) {
-      return { price: undefined, isLoading: false }
+      // Distinguish "still fetching" from "settled with no price" so callers
+      // don't treat a cold-cache miss as a confirmed absence of price.
+      return { price: undefined, isLoading: livePriceLoading }
     }
 
     try {
@@ -77,7 +79,7 @@ export function useUSDCPrice(
       logger.debug('useUSDCPrice', 'remoteResult', 'parse price failed', { error, livePrice })
       return { price: undefined, isLoading: false }
     }
-  }, [currency, stablecoin, chainId, currencyIsStablecoin, livePrice])
+  }, [currency, stablecoin, chainId, currencyIsStablecoin, livePrice, livePriceLoading])
 
   return isRemoteSupported ? remoteResult : solanaResult
 }

@@ -5,7 +5,7 @@ import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap
 import { GasEstimate, TradingApi } from '@universe/api'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ACROSS_DAPP_INFO, isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { ACROSS_DAPP_INFO, isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
@@ -14,6 +14,7 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
   TransactionTypeInfo,
+  WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   PopulatedTransactionRequestArray,
@@ -35,7 +36,7 @@ export function tradeToTransactionInfo({
   gasEstimate?: GasEstimate
   swapStartTimestamp?: number
   isFinalStep?: boolean
-}): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
+}): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo | WrapTransactionInfo {
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
@@ -56,6 +57,15 @@ export function tradeToTransactionInfo({
       gasEstimate,
       swapStartTimestamp,
       isFinalStep,
+    }
+  }
+
+  if (isWrap(trade)) {
+    return {
+      type: TransactionType.Wrap,
+      unwrapped: trade.routing === TradingApi.Routing.UNWRAP,
+      currencyAmountRaw: trade.inputAmount.quotient.toString(),
+      gasEstimate,
     }
   }
 

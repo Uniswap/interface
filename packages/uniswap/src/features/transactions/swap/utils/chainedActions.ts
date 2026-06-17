@@ -1,28 +1,42 @@
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { DynamicConfigs, FeatureFlags, SwapConfigKey, getDynamicConfigValue, getFeatureFlag } from '@universe/gating'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainIdArrayType } from 'uniswap/src/features/gating/typeGuards'
 
 /**
- * Chains that support chained actions.
- * This is an explicit allowlist of EVM chains.
- * Excludes: Solana (SVM) and non-ETH EVM chains (not yet supported).
+ * Fallback denylist used when the Statsig swap config is unavailable or the key is missing.
+ * Chains not listed here support chained actions (Solana and some EVM chains are not yet supported).
  */
-export const CHAINED_ACTIONS_SUPPORTED_CHAINS: UniverseChainId[] = [
-  // Mainnet EVM chains
-  UniverseChainId.Mainnet,
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.Base,
-  UniverseChainId.Linea,
-  UniverseChainId.Optimism,
-  UniverseChainId.Soneium,
-  UniverseChainId.Unichain,
-  UniverseChainId.WorldChain,
-  UniverseChainId.Zksync,
-  UniverseChainId.Zora,
-  UniverseChainId.MegaETH,
-  // Testnet EVM chains
-  UniverseChainId.Sepolia,
-  UniverseChainId.UnichainSepolia,
-] as const
+export const DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS: UniverseChainId[] = [
+  UniverseChainId.Avalanche,
+  UniverseChainId.Bnb,
+  UniverseChainId.Celo,
+  UniverseChainId.Monad,
+  UniverseChainId.Polygon,
+  UniverseChainId.Solana,
+  UniverseChainId.Tempo,
+  UniverseChainId.XLayer,
+]
+
+/**
+ * Returns the chains that do NOT support chained actions, read from the Statsig swap config.
+ */
+export function getChainedActionsUnsupportedChainIds(): UniverseChainId[] {
+  return getDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.ChainedActionsUnsupportedChainIds,
+    defaultValue: DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS,
+    customTypeGuard: isUniverseChainIdArrayType,
+  })
+}
+
+/**
+ * Returns the chains that support chained actions (all chains minus the configured denylist).
+ */
+export function getChainedActionsSupportedChainIds(): UniverseChainId[] {
+  const unsupportedChainIds = getChainedActionsUnsupportedChainIds()
+  return ALL_CHAIN_IDS.filter((chainId) => !unsupportedChainIds.includes(chainId))
+}
 
 /**
  * Checks if a chain is supported for chained actions.
@@ -32,5 +46,5 @@ export const CHAINED_ACTIONS_SUPPORTED_CHAINS: UniverseChainId[] = [
  */
 export function isChainSupportedForChainedActions(chainId: UniverseChainId): boolean {
   const isChainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
-  return isChainedActionsEnabled && CHAINED_ACTIONS_SUPPORTED_CHAINS.includes(chainId)
+  return isChainedActionsEnabled && !getChainedActionsUnsupportedChainIds().includes(chainId)
 }

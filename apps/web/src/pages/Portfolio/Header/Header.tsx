@@ -81,7 +81,6 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
   const { tab, chainId: currentChainId, externalAddress, isExternalWallet } = usePortfolioRoutes()
   const activeAddresses = useActiveAddresses()
   const showDemoView = useShowDemoView()
-  const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const headerHeight = useAppHeaderHeight()
   const buttonSize = media.md || isCompact ? 'small' : 'medium'
 
@@ -151,7 +150,7 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
           <PortfolioAddressDisplay isCompact={isCompact} />
 
           <Flex row gap="$spacing8" alignItems="center">
-            {!showDemoView && isPnLEnabled && <PortfolioMoreMenu size={buttonSize} transition={HEADER_TRANSITION} />}
+            {!showDemoView && <PortfolioMoreMenu size={buttonSize} transition={HEADER_TRANSITION} />}
             {showShareButton && (
               <SharePortfolioButton size={buttonSize} showLabel={!media.sm} transition={HEADER_TRANSITION} />
             )}

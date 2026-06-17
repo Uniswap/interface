@@ -13,12 +13,21 @@ import {
   ExecuteSwapParams,
   SwapHandlers,
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
-import { getEVMTxRequest, isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  getEVMTxRequest,
+  isChained,
+  isClassic,
+  isUserOpSwap,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccountsStore, useActiveAddress } from 'wallet/src/features/accounts/store/hooks'
-import { executePlanActions, executeSwapActions } from 'wallet/src/features/transactions/swap/configuredSagas'
+import {
+  executePlanActions,
+  executeSwapActions,
+  executeUserOpSwapActions,
+} from 'wallet/src/features/transactions/swap/configuredSagas'
 import { useSwapSigning } from 'wallet/src/features/transactions/swap/hooks/useSwapSigning'
 
 /**
@@ -98,6 +107,8 @@ export function useSwapHandlers(): SwapHandlers {
       }
       if (isChained(swapTxContext)) {
         dispatch(executePlanActions.trigger(commonParams))
+      } else if (isUserOpSwap(swapTxContext)) {
+        dispatch(executeUserOpSwapActions.trigger(commonParams))
       } else {
         const preSignedTransaction = await signing.getValidSignedTransaction(swapTxContext)
         dispatch(executeSwapActions.trigger({ ...commonParams, preSignedTransaction }))

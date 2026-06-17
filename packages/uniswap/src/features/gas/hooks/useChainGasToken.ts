@@ -1,15 +1,18 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
-import { nativeOnChain, PATHUSD_TEMPO } from 'uniswap/src/constants/tokens'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 
 /**
  * Returns the gas token for a given chain (pure function, no hooks).
  *
- * On Tempo, gas is paid in pathUSD. On all other chains, gas is paid in the native currency.
+ * Chains that pay gas in a non-native token declare it via `gasTokenOverride` in
+ * their chain info (e.g. Tempo pathUSD, Arc USDC). All other chains pay gas in the
+ * native currency.
  */
 export function getChainGasToken(chainId: UniverseChainId): Currency {
-  return chainId === UniverseChainId.Tempo ? PATHUSD_TEMPO : nativeOnChain(chainId)
+  return getChainInfo(chainId).gasTokenOverride ?? nativeOnChain(chainId)
 }
 
 /**

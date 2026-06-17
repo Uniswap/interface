@@ -21,6 +21,9 @@
       "path": "../cryptography"
     },
     {
+      "path": "../compliance"
+    },
+    {
       "path": "../api"
     },
     {

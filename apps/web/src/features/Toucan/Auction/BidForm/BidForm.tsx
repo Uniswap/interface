@@ -68,6 +68,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
   const { tokenColor, effectiveTokenColor } = useAuctionTokenColor()
   const auctionAddress = useAuctionStore((state) => state.auctionAddress)
   const auctionProgressState = useAuctionStore((state) => state.progress.state)
+  const currentBlockNumber = useAuctionStore((state) => state.currentBlockNumber)
   const validationHook = useAuctionStore((state) => state.auctionDetails?.validationHook)
   const isAuctionInProgress = auctionProgressState === AuctionProgressState.IN_PROGRESS
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
@@ -113,6 +114,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     walletAddress: accountAddress,
     auctionAddress,
     chainId,
+    currentBlockNumber,
   })
 
   const { showDisabledState, shouldShowWarningBanner, shouldDisableBidForm } = useBidFormWarningState({
@@ -270,7 +272,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
           {shouldShowTokenWarning && token && (
             <TokenWarningCard currencyInfo={token} onPress={() => setShowTokenWarningModal(true)} />
           )}
-          {kycStatus.kycButtonLabel || kycStatus.whitelistLabel ? (
+          {isWalletConnected && (kycStatus.kycButtonLabel || kycStatus.whitelistLabel) ? (
             <KycActionButton
               kycStatus={kycStatus}
               onPress={() =>

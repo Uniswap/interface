@@ -116,6 +116,7 @@ interface ChainTheme {
 const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Mainnet]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
   [UniverseChainId.ArbitrumOne]: { bgColor: '#00A3FF33', textColor: '#00A3FF' },
+  [UniverseChainId.Arc]: { bgColor: 'rgba(43, 92, 230, 0.12)', textColor: '#2B5CE6' },
   [UniverseChainId.Avalanche]: { bgColor: '#E8414233', textColor: '#E84142' },
   [UniverseChainId.Base]: { bgColor: '#0052FF33', textColor: '#0052FF' },
   [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
@@ -126,6 +127,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Monad]: { bgColor: 'rgba(115, 91, 248, 0.08)', textColor: '#735BF8' },
   [UniverseChainId.Optimism]: { bgColor: '#FF042033', textColor: '#FF0420' },
   [UniverseChainId.Polygon]: { bgColor: '#9558FF33', textColor: '#9558FF' },
+  [UniverseChainId.Robinhood]: { bgColor: 'rgba(0, 200, 5, 0.12)', textColor: '#00C805' },
   [UniverseChainId.Sepolia]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
   [UniverseChainId.Solana]: { bgColor: '#9945FF33', textColor: '#000000' },
   [UniverseChainId.Soneium]: { bgColor: '#FFFFFF', textColor: '#000000' },

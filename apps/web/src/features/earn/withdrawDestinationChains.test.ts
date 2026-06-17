@@ -1,9 +1,15 @@
+import { getDynamicConfigValue } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import {
   getWithdrawDestinationBalanceUsd,
   getWithdrawDestinationChainIds,
 } from '~/features/earn/withdrawDestinationChains'
+
+beforeEach(() => {
+  // The global gating mock returns undefined; mirror the real contract of falling back to defaultValue
+  vi.mocked(getDynamicConfigValue).mockImplementation(({ defaultValue }) => defaultValue)
+})
 
 describe(getWithdrawDestinationChainIds, () => {
   it('returns only mainnet chains when testnet mode is disabled', () => {

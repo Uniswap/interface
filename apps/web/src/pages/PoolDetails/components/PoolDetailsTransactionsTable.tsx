@@ -2,7 +2,6 @@
 
 import { createColumnHelper } from '@tanstack/react-table'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia, View } from 'ui/src'
@@ -93,7 +92,6 @@ export function PoolDetailsTransactionsTable({
   protocolVersion?: GraphQLApi.ProtocolVersion
 }) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
@@ -311,7 +309,6 @@ export function PoolDetailsTransactionsTable({
         data={transactions}
         loading={loading}
         error={error}
-        v2={multichainTokenUxEnabled}
         loadMore={loadMore}
         maxHeight={600}
         defaultPinnedColumns={['timestamp', 'swap-type']}

@@ -1,5 +1,5 @@
 import { type ConfigServerClient, type ParameterEntry, createConfigServerClient } from '@universe/api'
-import type { Environment } from '@universe/environment'
+import { Environment } from '@universe/environment'
 import { Result } from 'better-result'
 import { errorToString } from 'utilities/src/errors'
 import { ConfigServiceError, type CliError } from '../errors'
@@ -27,11 +27,6 @@ export function createConfigFetcherService({ client }: ConfigFetcherDeps) {
   }
 }
 
-export type BuildConfigClientDeps = {
-  auth: AuthService
-  environment: Environment
-}
-
 /**
  * Build a ConfigServerClient honoring dev overrides:
  *   - CONFIG_SERVICE_URL  — skip the env-based hostname (e.g. http://localhost:3000)
@@ -39,10 +34,7 @@ export type BuildConfigClientDeps = {
  * When neither is set, the access token is fetched from auth (via Okta + Keychain) and the
  * request hits the real env-based config service.
  */
-export async function buildConfigClient({
-  auth,
-  environment,
-}: BuildConfigClientDeps): Promise<Result<ConfigServerClient, CliError>> {
+export async function buildConfigClient(auth: AuthService): Promise<Result<ConfigServerClient, CliError>> {
   const tokenOverride = process.env['CONFIG_SERVICE_TOKEN']
   const urlOverride = process.env['CONFIG_SERVICE_URL']
 
@@ -50,13 +42,15 @@ export async function buildConfigClient({
   if (tokenOverride) {
     apiToken = tokenOverride
   } else {
-    const tokenResult = await auth.getValidAccessToken()
+    const tokenResult = await auth.getAccessToken()
     if (tokenResult.isErr()) {
       return Result.err(tokenResult.error)
     }
     apiToken = tokenResult.value
   }
 
+  // For reliability, app configs for all environments are stored in the production config service
+  const environment = Environment.Production
   const client = createConfigServerClient({ environment, apiToken, baseUrl: urlOverride })
   return Result.ok(client)
 }

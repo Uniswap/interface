@@ -1,6 +1,7 @@
 import { type Currency, CurrencyAmount, type Percent } from '@uniswap/sdk-core'
 import {
   DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT,
+  MAX_POST_AUCTION_LIQUIDITY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
@@ -110,12 +111,48 @@ export function getPostAuctionLiquidityAmountFromAllocation(
 }
 
 /**
+ * Smallest deposit whose split into sold (`S`) and LP reserve (`R = D·r/(1+r)`) leaves **both**
+ * legs at ≥ 1 base unit after flooring. Below this, a leg rounds to 0 base units — a degenerate
+ * auction that also divides by zero in the slider-percent math.
+ *
+ * `R ≥ 1` is the binding constraint (the smaller leg for `r ≤ 100%`):
+ *   D·r/(1+r) ≥ 1  ⟺  D ≥ (1+r)/r = 1 + 1/r,  with `r = effectiveLpPercent/100`.
+ * So a smaller LP percent needs a larger minimum (10% → 11 units, 25% → 5, 100% → 2).
+ */
+export function minimumAuctionSupplyDeposit(
+  currency: Currency,
+  allocation: PostAuctionLiquidityAllocation,
+): CurrencyAmount<Currency> {
+  const effectiveLpPercent =
+    allocation.type === PostAuctionLiquidityAllocationType.SINGLE
+      ? allocation.percent
+      : getMaxTieredPostAuctionLiquidityEffectivePercent(allocation)
+
+  // No LP reserve at all → only the sold leg must clear 1 base unit.
+  if (effectiveLpPercent <= 0) {
+    return CurrencyAmount.fromRawAmount(currency, 1)
+  }
+
+  const minRawUnits = 1 + Math.ceil(100 / effectiveLpPercent)
+  return CurrencyAmount.fromRawAmount(currency, minRawUnits)
+}
+
+/**
  * Whether the current post-auction liquidity allocation can produce a positive reservation.
- * Tiered validity depends only on marginal effective LP rate (not auction supply).
+ * Tiered allocations must use the same per-tier LP percent bounds as single mode (minimum 25%)
+ * and produce a positive marginal effective LP rate from milestones.
  */
 export function isPostAuctionLiquidityAllocationValid(allocation: PostAuctionLiquidityAllocation): boolean {
   if (allocation.type === PostAuctionLiquidityAllocationType.SINGLE) {
     return allocation.percent >= MIN_POST_AUCTION_LIQUIDITY_PERCENT
+  }
+  if (
+    !allocation.tiers.every(
+      (tier) =>
+        tier.percent >= MIN_POST_AUCTION_LIQUIDITY_PERCENT && tier.percent <= MAX_POST_AUCTION_LIQUIDITY_PERCENT,
+    )
+  ) {
+    return false
   }
   return getMaxTieredPostAuctionLiquidityEffectivePercent(allocation) > 0
 }

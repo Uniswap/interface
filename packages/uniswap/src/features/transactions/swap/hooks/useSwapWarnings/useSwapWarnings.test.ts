@@ -112,13 +112,25 @@ const { formatPercent } = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings({ t: i18n.t, formatPercent, derivedSwapInfo: swapState, offline: false })
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: swapState,
+      offline: false,
+      geoRestrictionMode: 'default',
+    })
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches blocked token errors', async () => {
-    const warnings = getSwapWarnings({ t: i18n.t, formatPercent, derivedSwapInfo: blockedTokenState, offline: false })
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: blockedTokenState,
+      offline: false,
+      geoRestrictionMode: 'default',
+    })
     expect(warnings.map((w) => w.type)).toContain(WarningLabel.BlockedToken)
   })
 
@@ -128,6 +140,7 @@ describe(getSwapWarnings, () => {
       formatPercent,
       derivedSwapInfo: insufficientBalanceState,
       offline: false,
+      geoRestrictionMode: 'default',
     })
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
@@ -147,22 +160,63 @@ describe(getSwapWarnings, () => {
       formatPercent,
       derivedSwapInfo: incompleteAndInsufficientBalanceState,
       offline: false,
+      geoRestrictionMode: 'default',
     })
     expect(warnings.length).toBe(2)
   })
 
   it('catches errors returned by the trading api', () => {
-    const warnings = getSwapWarnings({ t: i18n.t, formatPercent, derivedSwapInfo: tradeErrorState, offline: false })
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: tradeErrorState,
+      offline: false,
+      geoRestrictionMode: 'default',
+    })
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSwapWarnings({ t: i18n.t, formatPercent, derivedSwapInfo: tradeErrorState, offline: true })
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: tradeErrorState,
+      offline: true,
+      geoRestrictionMode: 'default',
+    })
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeTruthy()
   })
 
   it('does not return a network error when offline is false', () => {
-    const warnings = getSwapWarnings({ t: i18n.t, formatPercent, derivedSwapInfo: tradeErrorState, offline: false })
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: tradeErrorState,
+      offline: false,
+      geoRestrictionMode: 'default',
+    })
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeFalsy()
+  })
+
+  it('adds a geo restriction warning when mode is restricted', () => {
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: swapState,
+      offline: false,
+      geoRestrictionMode: 'restricted',
+    })
+    expect(warnings.map((w) => w.type)).toContain(WarningLabel.GeoRestricted)
+  })
+
+  it('does not add a geo restriction warning when mode is unrestricted', () => {
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: swapState,
+      offline: false,
+      geoRestrictionMode: 'unrestricted',
+    })
+    expect(warnings.map((w) => w.type)).not.toContain(WarningLabel.GeoRestricted)
   })
 })

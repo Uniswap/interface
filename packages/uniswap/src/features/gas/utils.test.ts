@@ -121,7 +121,7 @@ describe(hasSufficientGasBalance, () => {
     ).toBe(false)
   })
 
-  it('delegates to hasSufficientFundsIncludingTempoGas for Tempo', () => {
+  it('delegates to the shifted-gas-token path for Tempo', () => {
     expect(
       hasSufficientGasBalance({
         chainId: UniverseChainId.Tempo,

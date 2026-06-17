@@ -36,6 +36,9 @@
       "path": "../config"
     },
     {
+      "path": "../compliance"
+    },
+    {
       "path": "../chains"
     },
     {

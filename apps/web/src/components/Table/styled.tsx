@@ -9,31 +9,15 @@ export const TableRowBase = styled(Flex, {
   minWidth: '100%',
   height: '100%',
   transition: 'background-color 0.1s ease-in-out',
-  variants: {
-    v2: {
-      true: {
-        borderRadius: '$rounded12',
-      },
-      false: {
-        borderRadius: '$rounded20',
-      },
-    },
-  },
+  borderRadius: '$rounded12',
 })
 
 export const DataRow = styled(TableRowBase, {
+  hoverStyle: {
+    backgroundColor: '$surface1Hovered',
+    transition: 'background-color 0ms',
+  },
   variants: {
-    v2: {
-      true: {
-        hoverStyle: {
-          backgroundColor: '$surface1Hovered',
-          transition: 'background-color 0ms',
-        },
-      },
-      false: {
-        hoverStyle: { backgroundColor: '$surface1Hovered' },
-      },
-    },
     dimmed: {
       true: {
         opacity: 0.6,
@@ -55,7 +39,7 @@ export const DataRow = styled(TableRowBase, {
         },
       },
     },
-    // Defined last so the selected fill wins over the v2/embedded hover backgrounds when both apply.
+    // Defined last so the selected fill wins over embedded hover backgrounds when both apply.
     selected: {
       true: {
         backgroundColor: '$surface3',
