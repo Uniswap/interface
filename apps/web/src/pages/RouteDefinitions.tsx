@@ -1,8 +1,6 @@
-/* oxlint-disable max-lines */
-import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
-import { SpinningLoader } from 'ui/src'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
@@ -103,27 +101,6 @@ const StaticTitlesAndDescriptions = {
   ToucanLaunchAuctionDescription: i18n.t('title.launchTokenAuction'),
 }
 
-/**
- * Registers /liquidity/launch-auction even while Statsig is still loading so direct
- * navigation does not fall through to 404. After gates are ready, shows the page or not-found.
- */
-function CreateAuctionRouteGate(): JSX.Element {
-  const isToucanLaunchAuctionEnabled = useFeatureFlag(FeatureFlags.ToucanLaunchAuction)
-  const { isStatsigReady } = useStatsigClientStatus()
-
-  if (!isStatsigReady) {
-    return <SpinningLoader color="$accent1" />
-  }
-  if (!isToucanLaunchAuctionEnabled) {
-    return <Navigate to="/not-found" replace />
-  }
-  return (
-    <Suspense fallback={null}>
-      <CreateAuction />
-    </Suspense>
-  )
-}
-
 export interface RouteDefinition {
   path: string
   nestedPaths: string[]
@@ -222,7 +199,11 @@ export const routes: RouteDefinition[] = [
     path: '/liquidity/launch-auction',
     getTitle: () => i18n.t('toucan.createAuction.title'),
     getDescription: () => StaticTitlesAndDescriptions.ToucanLaunchAuctionDescription,
-    getElement: () => <CreateAuctionRouteGate />,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <CreateAuction />
+      </Suspense>
+    ),
   }),
   createRouteDefinition({
     path: '/liquidity/launch-auction/x/callback',

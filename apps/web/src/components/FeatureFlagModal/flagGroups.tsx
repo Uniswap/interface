@@ -90,7 +90,6 @@ export function buildFlagGroups(extras: {
       name: 'Toucan',
       flags: [
         { flag: FeatureFlags.ToucanAuctionKYC, label: 'Enable Toucan Auction KYC' },
-        { flag: FeatureFlags.ToucanLaunchAuction, label: 'Enable Toucan Launch Auction' },
         {
           flag: FeatureFlags.ToucanTickDetailsTooltip,
           label: 'Show Remaining (currency required) on chart-bar tooltip',

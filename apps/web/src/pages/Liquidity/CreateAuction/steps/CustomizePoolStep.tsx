@@ -49,6 +49,9 @@ import {
 /** Wide-layout width for the address field / control column in advanced settings rows (must match across sections). */
 const ADVANCED_SETTINGS_CONTROL_COLUMN_WIDTH_PX = 280
 
+// Liquidity timelock isn't implemented yet — keep the section (and its dependent advanced settings) hidden until it ships.
+const SHOW_TIMELOCK_SECTION: boolean = false
+
 export function CustomizePoolStep() {
   const { t } = useTranslation()
   const tokenColor = useCreateAuctionTokenColor()
@@ -258,17 +261,19 @@ export function CustomizePoolStep() {
           activeAddress={activeAddress ?? null}
         />
 
-        <TimeLockSection
-          enabled={timeLockEnabled}
-          onEnabledChange={setTimeLockEnabled}
-          timeLockPreset={timeLockPreset}
-          onTimeLockPresetChange={setTimeLockPreset}
-          unlockDate={unlockDate}
-          onUnlockDateChange={handleUnlockDateChange}
-          minUnlockDate={minUnlockDate}
-        />
+        {SHOW_TIMELOCK_SECTION && (
+          <TimeLockSection
+            enabled={timeLockEnabled}
+            onEnabledChange={setTimeLockEnabled}
+            timeLockPreset={timeLockPreset}
+            onTimeLockPresetChange={setTimeLockPreset}
+            unlockDate={unlockDate}
+            onUnlockDateChange={handleUnlockDateChange}
+            minUnlockDate={minUnlockDate}
+          />
+        )}
 
-        {timeLockEnabled && (
+        {SHOW_TIMELOCK_SECTION && timeLockEnabled && (
           <>
             <AdvancedSettingsSeparator
               isExpanded={advancedSettingsExpanded}

@@ -255,18 +255,22 @@ describe('urls', () => {
       const { createHelpArticleUrl } = await import('./urls')
       expect(
         createHelpArticleUrl('46569604134157-Launching-a-Continuous-Clearing-Auction', {
-          section: '2.-configure-auction',
+          section: 'set-your-auction-details',
         }),
       ).toBe(
-        'https://support.uniswap.org/hc/en-us/articles/46569604134157-Launching-a-Continuous-Clearing-Auction?product_link=web#2.-configure-auction',
+        'https://support.uniswap.org/hc/en-us/articles/46569604134157-Launching-a-Continuous-Clearing-Auction?product_link=web#set-your-auction-details',
       )
     })
 
     it('uses the app-specific product_link for the section URL', async () => {
       mockEnvironmentAndPlatform(envConfigs.mobileIosProd)
       const { createHelpArticleUrl } = await import('./urls')
-      expect(createHelpArticleUrl('123', { section: '3.-customize-pool' })).toBe(
-        'https://support.uniswap.org/hc/en-us/articles/123?product_link=mobileApp#3.-customize-pool',
+      expect(
+        createHelpArticleUrl('123', {
+          section: 'configure-the-liquidity-pool-your-auction-will-seed-into-at-the-end',
+        }),
+      ).toBe(
+        'https://support.uniswap.org/hc/en-us/articles/123?product_link=mobileApp#configure-the-liquidity-pool-your-auction-will-seed-into-at-the-end',
       )
     })
   })

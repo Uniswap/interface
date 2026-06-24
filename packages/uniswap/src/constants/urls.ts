@@ -96,11 +96,11 @@ export const UniswapHelpUrls = {
     // Deep-links into specific sections of the published CCA launch guide; anchors match the article's headings.
     toucanLaunchAuctionConfigureAuctionHelp: createHelpArticleUrl(
       '46569604134157-Launching-a-Continuous-Clearing-Auction',
-      { section: '2.-configure-auction' },
+      { section: 'set-your-auction-details' },
     ),
     toucanLaunchAuctionCustomizePoolHelp: createHelpArticleUrl(
       '46569604134157-Launching-a-Continuous-Clearing-Auction',
-      { section: '3.-customize-pool' },
+      { section: 'configure-the-liquidity-pool-your-auction-will-seed-into-at-the-end' },
     ),
     toucanVerifiedAuctionsHelp: createHelpArticleUrl('43107250032781'),
     tokenWarning: createHelpArticleUrl('8723118437133-What-are-token-warnings-'),
