@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { StatsRow } from 'src/components/TokenDetails/TokenDetailsStats/StatsRow'
+import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
 import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
@@ -67,13 +68,17 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     }
   }, [screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
 
+  // Gate out unlaunched chains (e.g. Arc/Robinhood) so they don't appear in the Networks row or
+  // make the token look multichain.
+  const featureFlaggedScreenTokens = useFeatureFlaggedProjectTokens(screenData?.token?.project?.tokens)
+  const featureFlaggedProjectTokens = useFeatureFlaggedProjectTokens(project?.tokens)
+
   const networkChainIds = useMemo((): UniverseChainId[] => {
-    const projectTokens = screenData?.token?.project?.tokens
-    if (!projectTokens?.length) {
+    if (!featureFlaggedScreenTokens.length) {
       return [chainId]
     }
     const chainIds = new Set<UniverseChainId>()
-    for (const projectToken of projectTokens) {
+    for (const projectToken of featureFlaggedScreenTokens) {
       const id = fromGraphQLChain(projectToken.chain)
       if (id !== null) {
         chainIds.add(id)
@@ -83,11 +88,11 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
       return [chainId]
     }
     return Array.from(chainIds)
-  }, [chainId, screenData?.token?.project?.tokens])
+  }, [chainId, featureFlaggedScreenTokens])
 
   const singleNetworkChainId = networkChainIds.length === 1 ? networkChainIds[0] : undefined
 
-  const isMultichainToken = isMultichainProjectTokens(project?.tokens)
+  const isMultichainToken = isMultichainProjectTokens(featureFlaggedProjectTokens)
 
   /** Native currency pages have no contract address to copy / multichain address sheet (see TokenDetailsLinks). */
   const hasCopyableContractAddress = useMemo(() => {

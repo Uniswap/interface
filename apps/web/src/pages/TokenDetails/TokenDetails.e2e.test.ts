@@ -88,5 +88,11 @@ test.describe(
       await page.goto('/explore/tokens/ethereum/0x123')
       await expect(page).toHaveURL('/explore')
     })
+
+    test('redirect to explore for a feature-gated chain (Arc)', async ({ page }) => {
+      // Arc is gated behind FeatureFlags.Arc (off by default), so the TDP must not load.
+      await page.goto('/explore/tokens/arc/0xbef5f6d51cb62b58e6a8f77868681825c6fe21c1')
+      await expect(page).toHaveURL('/explore')
+    })
   },
 )

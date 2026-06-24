@@ -18,6 +18,7 @@ import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTo
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -47,6 +48,7 @@ function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
   const { data } = GraphQLApi.useTokenProjectsQuery({
     variables: { contracts: [contractInput] },
   })
+  const featureFlaggedChainIds = useFeatureFlaggedChainIds()
 
   const entries = useMemo(() => {
     const tokens = data?.tokenProjects?.[0]?.tokens
@@ -56,12 +58,13 @@ function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
     const result: MultichainTokenEntry[] = []
     for (const token of tokens) {
       const chainId = fromGraphQLChain(token.chain)
-      if (chainId && token.address) {
+      // Exclude feature-gated chains (e.g. unlaunched Arc/Robinhood) so they don't appear in the network selector.
+      if (chainId && token.address && featureFlaggedChainIds.includes(chainId)) {
         result.push({ chainId, address: token.address, isNative: false })
       }
     }
     return result
-  }, [data])
+  }, [data, featureFlaggedChainIds])
 
   return useOrderedMultichainEntries(entries)
 }

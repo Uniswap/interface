@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { RWAIssuerHeaderDetails } from 'src/components/TokenDetails/rwa/RWAIssuerHeaderDetails'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
+import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
 import { useGatedTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { EM_DASH, Flex, FlexLoader, flexStyles, Shine, Text, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons'
@@ -31,7 +32,9 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
   const projectTokensLoaded = project?.tokens !== undefined
-  const projectIsMultichain = projectTokensLoaded && isMultichainProjectTokens(project.tokens)
+  // Gate out unlaunched chains (e.g. Arc/Robinhood) so they don't drive multichain UI on the header.
+  const featureFlaggedProjectTokens = useFeatureFlaggedProjectTokens(project?.tokens)
+  const projectIsMultichain = projectTokensLoaded && isMultichainProjectTokens(featureFlaggedProjectTokens)
   const isMultichainToken = initialIsMultichainAsset || projectIsMultichain
   // need to wait for the project tokens to load before we can open the multichain address sheet
   const canOpenMultichainAddressSheet = projectIsMultichain
