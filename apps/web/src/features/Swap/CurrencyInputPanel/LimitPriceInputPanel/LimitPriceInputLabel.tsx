@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 
 export function LimitPriceInputLabel({
@@ -36,14 +35,12 @@ export function LimitPriceInputLabel({
         components={{
           tokenSymbol: (
             <Flex my="$none" mx="$spacing4">
-              <PrefetchBalancesWrapper>
-                <TouchableArea row alignItems="center" gap="$spacing8" height="100%" onPress={openCurrencySearchModal}>
-                  <CurrencyLogo currency={currency} size={16} />
-                  <Text variant="body2" display="inline" color="$neutral1">
-                    {currency.symbol}
-                  </Text>
-                </TouchableArea>
-              </PrefetchBalancesWrapper>
+              <TouchableArea row alignItems="center" gap="$spacing8" height="100%" onPress={openCurrencySearchModal}>
+                <CurrencyLogo currency={currency} size={16} />
+                <Text variant="body2" display="inline" color="$neutral1">
+                  {currency.symbol}
+                </Text>
+              </TouchableArea>
             </Flex>
           ),
         }}

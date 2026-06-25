@@ -33,6 +33,7 @@ export interface ToucanChartData extends CustomData {
   time: UTCTimestamp
   tickValue?: number
   tickQ96?: string // Original Q96 string for precise click handling
+  fillRatio?: number
 }
 
 interface BarItem {
@@ -40,14 +41,10 @@ interface BarItem {
   y: number
   column?: ColumnPosition
   tickValue: number // stored for bar coloring logic
+  fillRatio?: number
 }
 
 export type ChartMode = 'distribution' | 'demand'
-
-interface DemandBackgroundGradient {
-  startColor: string // Top of gradient (darker)
-  endColor: string // Bottom of gradient (nearly transparent)
-}
 
 export interface ToucanChartSeriesOptions extends CustomSeriesOptions {
   // Visual + scale configuration (controller-owned; allows updates without recreating chart)
@@ -57,9 +54,6 @@ export interface ToucanChartSeriesOptions extends CustomSeriesOptions {
   clearingPriceLineColors: ClearingPriceLineColors
   bidLineColors?: BidLineColors
   concentrationGradientColors?: ConcentrationGradientColors
-  demandBackgroundGradient?: DemandBackgroundGradient // Full-width background for demand chart
-  demandOutOfRangeBackgroundGradient?: DemandBackgroundGradient // Background for demand bars below clearing price
-  demandBackgroundGapMaxTicks?: number // Remove background gaps when visible ticks exceed this count
   clearingPrice: number
   tickSize: number
   priceScaleFactor: number
@@ -122,9 +116,6 @@ export interface ToucanChartProps {
   clearingPriceLineColors: ClearingPriceLineColors // Theme-aware colors for clearing price line gradient
   bidLineColors?: BidLineColors // Theme-aware colors for bid line gradient
   concentrationGradientColors?: ConcentrationGradientColors // Token color-based gradient for concentration band background
-  demandBackgroundGradient?: DemandBackgroundGradient // Full-width background for demand chart
-  demandOutOfRangeBackgroundGradient?: DemandBackgroundGradient // Background for demand bars below clearing price
-  demandBackgroundGapMaxTicks?: number // Remove background gaps when visible ticks exceed this count
   clearingPrice: number // Clearing price in fiat (for conditional bar styling)
   tickSize: number
   /**
@@ -296,6 +287,7 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
         x: bar.x,
         y: priceToCoordinate(bar.originalData.value) ?? 0,
         tickValue,
+        fillRatio: bar.originalData.fillRatio,
       }
     })
 
@@ -313,13 +305,9 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
 
     const isDemandMode = this._options.chartMode === 'demand'
 
-    // Draw background gradient
-    if (isDemandMode) {
-      // Demand mode: draw per-bar background gradients with gaps
-      this._drawDemandBackground({ renderingScope, bars, start, end })
-    } else {
-      // Distribution mode: draw concentration gradient only when the band is valid.
-      // Note: `concentrationBand` is always an object (never null) due to lightweight-charts deep-merge behavior.
+    // Distribution mode: draw concentration gradient only when the band is valid.
+    // Note: `concentrationBand` is always an object (never null) due to lightweight-charts deep-merge behavior.
+    if (!isDemandMode) {
       const band = this._options.concentrationBand
       if (band && Number.isFinite(band.startTick) && Number.isFinite(band.endTick)) {
         this._drawConcentrationGradient(renderingScope, bars)
@@ -379,30 +367,27 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
 
       // Draw bar with conditional color and opacity
       // When hovering, non-hovered bars should be dimmed (40% opacity)
-      ctx.fillStyle = barColor
       ctx.globalAlpha = shouldDim ? 0.4 : 1
 
-      roundRect({
-        ctx,
-        x: column.left + xMargin,
-        y: barBox.position,
-        w: barWidth,
-        h: barBox.length,
-        radii: BAR_STYLE.BORDER_RADIUS,
-      })
-
-      // In demand mode, draw a lower-opacity extension of the bar color above the bar to the chart top.
-      // This creates a "ghost" column showing the remaining space above each bar.
-      if (isDemandMode && barBox.length > 0 && barBox.position > 0) {
+      const useFillSplit = isDemandMode && !isUserBidBar && bar.fillRatio != null && barBox.length > 0
+      if (useFillSplit) {
+        this._drawFillSplitBar({
+          ctx,
+          x: column.left + xMargin,
+          y: barBox.position,
+          width: barWidth,
+          height: barBox.length,
+          fillRatio: bar.fillRatio ?? 0,
+        })
+      } else {
         ctx.fillStyle = barColor
-        ctx.globalAlpha = (shouldDim ? 0.4 : 1) * 0.15
         roundRect({
           ctx,
           x: column.left + xMargin,
-          y: 0,
+          y: barBox.position,
           w: barWidth,
-          h: barBox.position,
-          radii: [BAR_STYLE.BORDER_RADIUS, BAR_STYLE.BORDER_RADIUS, 0, 0],
+          h: barBox.length,
+          radii: BAR_STYLE.BORDER_RADIUS,
         })
       }
 
@@ -423,6 +408,54 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
     // Draw user bid line AFTER bars so it renders on top
     if (effectiveUserBidPrice != null && this._options.bidLineColors) {
       this._drawBidLine({ renderingScope, bars, zeroY, userBidPrice: effectiveUserBidPrice })
+    }
+  }
+
+  /**
+   * Draw a demand bar split into a filled (token color) bottom segment and a
+   * remaining-to-fill (grey) top segment, using the tick-details fill ratio.
+   */
+  _drawFillSplitBar(params: {
+    ctx: CanvasRenderingContext2D
+    x: number
+    y: number
+    width: number
+    height: number
+    fillRatio: number
+  }): void {
+    const { ctx, x, y, width, height, fillRatio } = params
+    const barColors = this._options?.barColors
+    if (!barColors) {
+      return
+    }
+
+    const clamped = Math.max(0, Math.min(1, fillRatio))
+    const remainingHeight = height * (1 - clamped)
+    const filledHeight = height - remainingHeight
+    const radius = BAR_STYLE.BORDER_RADIUS
+
+    if (remainingHeight > 0) {
+      ctx.fillStyle = barColors.belowClearingPriceColor
+      roundRect({
+        ctx,
+        x,
+        y,
+        w: width,
+        h: filledHeight > 0 ? remainingHeight : height,
+        radii: filledHeight > 0 ? [radius, radius, 0, 0] : radius,
+      })
+    }
+
+    if (filledHeight > 0) {
+      ctx.fillStyle = barColors.clearingPriceColor
+      roundRect({
+        ctx,
+        x,
+        y: y + remainingHeight,
+        w: width,
+        h: remainingHeight > 0 ? filledHeight : height,
+        radii: remainingHeight > 0 ? [0, 0, radius, radius] : radius,
+      })
     }
   }
 
@@ -609,84 +642,6 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
     // Adjust by xMargin to align with bar positions (bars start at column.left + xMargin)
     ctx.fillStyle = gradient
     ctx.fillRect(leftX + xMargin, 0, rightX - leftX - xMargin, canvasHeight)
-  }
-
-  /**
-   * Draw per-bar background gradients for demand chart mode.
-   * Each bar gets its own gradient column with gaps between them,
-   * matching the bar spacing for visual consistency with the Figma design.
-   */
-  _drawDemandBackground({
-    renderingScope,
-    bars,
-    start,
-    end,
-  }: {
-    renderingScope: BitmapCoordinatesRenderingScope
-    bars: BarItem[]
-    start: number
-    end: number
-  }): void {
-    if (!this._options?.demandBackgroundGradient || !this._data) {
-      return
-    }
-
-    const ctx = renderingScope.context
-    const { height } = renderingScope.bitmapSize
-    const gradientColors = this._options.demandBackgroundGradient
-    const outOfRangeGradientColors = this._options.demandOutOfRangeBackgroundGradient ?? gradientColors
-    const clearingPrice = this._options.clearingPrice
-    const tickSize = this._options.tickSize
-    const tolerance = tickSize * TOLERANCE.TICK_COMPARISON
-
-    // Demand mode uses 2px spacing between bars
-    const barSpacing = 2
-    const visibleCount = end - start
-    const gapMaxTicks = this._options.demandBackgroundGapMaxTicks
-    const shouldRemoveGaps = gapMaxTicks != null && visibleCount >= gapMaxTicks
-    const xMargin = shouldRemoveGaps ? 0 : barSpacing * renderingScope.horizontalPixelRatio
-
-    // Create vertical gradients once (reuse for all bars since colors are the same)
-    const inRangeGradient = ctx.createLinearGradient(0, 0, 0, height)
-    inRangeGradient.addColorStop(0, gradientColors.startColor) // Top (darker)
-    inRangeGradient.addColorStop(1, gradientColors.endColor) // Bottom (nearly transparent)
-
-    const useSameGradient = outOfRangeGradientColors === gradientColors
-    const outOfRangeGradient = useSameGradient
-      ? inRangeGradient
-      : (() => {
-          const gradient = ctx.createLinearGradient(0, 0, 0, height)
-          gradient.addColorStop(0, outOfRangeGradientColors.startColor)
-          gradient.addColorStop(1, outOfRangeGradientColors.endColor)
-          return gradient
-        })()
-
-    for (let i = start; i < end; i++) {
-      const bar = bars[i]
-      const column = bar.column
-      if (!column) {
-        continue
-      }
-
-      const width = Math.min(
-        Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),
-        this._data.barSpacing * renderingScope.horizontalPixelRatio,
-      )
-      const barWidth = Math.max(renderingScope.horizontalPixelRatio, width - xMargin)
-
-      const isOutOfRange = bar.tickValue < clearingPrice - tolerance
-      ctx.fillStyle = isOutOfRange ? outOfRangeGradient : inRangeGradient
-
-      // Draw gradient column with rounded corners matching bar style
-      roundRect({
-        ctx,
-        x: column.left + xMargin,
-        y: 0,
-        w: barWidth,
-        h: height,
-        radii: BAR_STYLE.BORDER_RADIUS,
-      })
-    }
   }
 
   /**

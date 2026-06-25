@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import type { FeeData, PositionInfo } from 'uniswap/src/features/positions/types'
@@ -9,6 +9,18 @@ import type { FeeData, PositionInfo } from 'uniswap/src/features/positions/types
  */
 export function getPositionKey(position: Pick<PositionInfo, 'poolId' | 'tokenId' | 'chainId'>): string {
   return `${position.poolId}-${position.tokenId ?? ''}-${position.chainId}`
+}
+
+/** Returns a new array with Closed positions moved to the end, preserving the order of the rest (stable). */
+export function sortPositionsByStatusClosedLast(positions: PositionInfo[]): PositionInfo[] {
+  return [...positions].sort(
+    (a, b) => Number(a.status === PositionStatus.CLOSED) - Number(b.status === PositionStatus.CLOSED),
+  )
+}
+
+/** Filters positions to the given statuses, then moves Closed positions to the end (stable). */
+export function filterAndSortPositions(positions: PositionInfo[], statuses: PositionStatus[]): PositionInfo[] {
+  return sortPositionsByStatusClosedLast(positions.filter((position) => statuses.includes(position.status)))
 }
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {

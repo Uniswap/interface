@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, TouchableArea, type GetRef } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { X } from 'ui/src/components/icons/X'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   type InputCurrency,
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
@@ -162,47 +164,45 @@ const PercentInput = forwardRef(function PercentInput(
 
   return (
     <>
-      <Input
-        ref={ref}
-        unstyled
-        value={percentInput}
-        onFocus={() => setIsFocused(true)}
-        onChangeText={(value) => {
-          if (!isValidPartialPercentInput(value)) {
-            return
-          }
+      <Trace logFocus element={ElementName.AuctionLpBracketPercent}>
+        <Input
+          ref={ref}
+          unstyled
+          value={percentInput}
+          onFocus={() => setIsFocused(true)}
+          onChangeText={(value) => {
+            if (!isValidPartialPercentInput(value)) {
+              return
+            }
 
-          setPercentInput(value)
-          // Propagate only values already within range (clamp is a no-op); clamping is deferred
-          // to blur so partial entries (e.g. "5" en route to "50") aren't snapped mid-typing.
-          const parsed = Number(value)
-          if (Number.isFinite(parsed) && clampPostAuctionLiquidityTierPercent(parsed) === parsed) {
-            onUpdatePercent(parsed)
-          }
-        }}
-        onBlur={() => {
-          setIsFocused(false)
-          const parsed = Number(percentInput)
-          if (!Number.isFinite(parsed) || parsed <= 0) {
-            setPercentInput(percent.toString())
-            return
-          }
-          const clamped = clampPostAuctionLiquidityTierPercent(parsed)
-          setPercentInput(clamped.toString())
-          onUpdatePercent(clamped)
-        }}
-        placeholder="25"
-        placeholderTextColor="$neutral3"
-        color="$neutral1"
-        outlineStyle="none"
-        fontSize={14}
-        lineHeight={18}
-        $platform-web={{
-          fieldSizing: 'content',
-          minWidth: '1ch',
-          maxWidth: '100%',
-        }}
-      />
+            setPercentInput(value)
+            // Propagate only values already within range (clamp is a no-op); clamping is deferred
+            // to blur so partial entries (e.g. "5" en route to "50") aren't snapped mid-typing.
+            const parsed = Number(value)
+            if (Number.isFinite(parsed) && clampPostAuctionLiquidityTierPercent(parsed) === parsed) {
+              onUpdatePercent(parsed)
+            }
+          }}
+          onBlur={() => {
+            setIsFocused(false)
+            const parsed = Number(percentInput)
+            if (!Number.isFinite(parsed) || parsed <= 0) {
+              setPercentInput(percent.toString())
+              return
+            }
+            const clamped = clampPostAuctionLiquidityTierPercent(parsed)
+            setPercentInput(clamped.toString())
+            onUpdatePercent(clamped)
+          }}
+          placeholder="25"
+          placeholderTextColor="$neutral3"
+          color="$neutral1"
+          outlineStyle="none"
+          fontSize={14}
+          lineHeight={18}
+          $platform-web={{ fieldSizing: 'content', minWidth: '1ch', maxWidth: '100%' }}
+        />
+      </Trace>
       <Text variant="body3" color="$neutral3" flexShrink={0} userSelect="none">
         %
       </Text>
@@ -286,45 +286,43 @@ function BoundedTierRow({
             <Text variant="body3" color="$neutral2" flexShrink={0} userSelect="none">
               ≤
             </Text>
-            <Input
-              ref={milestoneInputRef}
-              unstyled
-              value={milestoneInput}
-              onFocus={() => setIsFocused(true)}
-              onChangeText={(value) => {
-                if (!isAllowedCompactNumberInput(value)) {
-                  return
-                }
+            <Trace logFocus element={ElementName.AuctionLpBracketMilestone}>
+              <Input
+                ref={milestoneInputRef}
+                unstyled
+                value={milestoneInput}
+                onFocus={() => setIsFocused(true)}
+                onChangeText={(value) => {
+                  if (!isAllowedCompactNumberInput(value)) {
+                    return
+                  }
 
-                setMilestoneInput(value)
-                const raiseNum = activeInputToRaiseNumber({ value, inputCurrency, usdPriceNum })
-                if (raiseNum !== null && raiseNum >= minimumMilestone) {
+                  setMilestoneInput(value)
+                  const raiseNum = activeInputToRaiseNumber({ value, inputCurrency, usdPriceNum })
+                  if (raiseNum !== null && raiseNum >= minimumMilestone) {
+                    onUpdateMilestone(formatArithmeticResultForInput(raiseNum))
+                  }
+                }}
+                onBlur={() => {
+                  setIsFocused(false)
+                  const raiseNum = activeInputToRaiseNumber({ value: milestoneInput, inputCurrency, usdPriceNum })
+                  if (raiseNum === null || raiseNum < minimumMilestone) {
+                    setMilestoneInput(
+                      raiseStringToActiveDisplay({ raiseString: tier.raiseMilestone, inputCurrency, usdPriceNum }),
+                    )
+                    return
+                  }
                   onUpdateMilestone(formatArithmeticResultForInput(raiseNum))
-                }
-              }}
-              onBlur={() => {
-                setIsFocused(false)
-                const raiseNum = activeInputToRaiseNumber({ value: milestoneInput, inputCurrency, usdPriceNum })
-                if (raiseNum === null || raiseNum < minimumMilestone) {
-                  setMilestoneInput(
-                    raiseStringToActiveDisplay({ raiseString: tier.raiseMilestone, inputCurrency, usdPriceNum }),
-                  )
-                  return
-                }
-                onUpdateMilestone(formatArithmeticResultForInput(raiseNum))
-              }}
-              placeholder="100k"
-              placeholderTextColor="$neutral3"
-              color="$neutral1"
-              outlineStyle="none"
-              fontSize={14}
-              lineHeight={18}
-              $platform-web={{
-                fieldSizing: 'content',
-                minWidth: '1ch',
-                maxWidth: '100%',
-              }}
-            />
+                }}
+                placeholder="100k"
+                placeholderTextColor="$neutral3"
+                color="$neutral1"
+                outlineStyle="none"
+                fontSize={14}
+                lineHeight={18}
+                $platform-web={{ fieldSizing: 'content', minWidth: '1ch', maxWidth: '100%' }}
+              />
+            </Trace>
             <Text variant="body3" color="$neutral3" flexShrink={0} userSelect="none">
               {symbol}
             </Text>

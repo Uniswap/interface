@@ -1,13 +1,16 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
-import { Flex, TouchableArea } from 'ui/src'
+import { Coachmark, Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { spacing } from 'ui/src/theme'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
+import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -22,7 +25,12 @@ interface PortfolioChartSectionProps {
 }
 
 export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectionProps): JSX.Element {
+  const { t } = useTranslation()
   const chartPeriod = ChartPeriod.DAY
+
+  const { shouldShow: shouldShowPoolsCoachmark, dismiss: dismissPoolsCoachmark } = usePoolsBalanceCoachmarkVisibility({
+    evmAddress,
+  })
 
   const {
     data: chartData,
@@ -82,13 +90,23 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
         <TouchableArea testID={TestID.PortfolioChartToggle} activeOpacity={1} onPress={openPortfolioChartDetails}>
           <Flex row alignItems="flex-start">
             <Flex flex={1}>
-              <PortfolioBalance
-                evmOwner={evmAddress}
-                endText={chartNavigationIcon}
-                chartPeriod={chartPeriod}
-                overridePercentChange={chartPercentChange?.percentChange}
-                overrideAbsoluteChangeUSD={chartPercentChange?.absoluteChangeUSD}
-              />
+              <Coachmark
+                open={shouldShowPoolsCoachmark}
+                placement="bottom-start"
+                // Shift up so the pill sits under the balance value rather than the change row below it.
+                offset={{ mainAxis: -spacing.spacing16 }}
+                text={t('portfolio.poolsBalance.coachmark.body')}
+                testID={TestID.PoolsBalanceCoachmark}
+                onDismiss={dismissPoolsCoachmark}
+              >
+                <PortfolioBalance
+                  evmOwner={evmAddress}
+                  endText={chartNavigationIcon}
+                  chartPeriod={chartPeriod}
+                  overridePercentChange={chartPercentChange?.percentChange}
+                  overrideAbsoluteChangeUSD={chartPercentChange?.absoluteChangeUSD}
+                />
+              </Coachmark>
             </Flex>
             <PortfolioChart
               data={chartData}
@@ -102,7 +120,17 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
           </Flex>
         </TouchableArea>
       ) : (
-        <PortfolioBalance evmOwner={evmAddress} />
+        <Coachmark
+          open={shouldShowPoolsCoachmark}
+          placement="bottom-start"
+          // Shift up so the pill sits under the balance value rather than the change row below it.
+          offset={{ mainAxis: -spacing.spacing16 }}
+          text={t('portfolio.poolsBalance.coachmark.body')}
+          testID={TestID.PoolsBalanceCoachmark}
+          onDismiss={dismissPoolsCoachmark}
+        >
+          <PortfolioBalance evmOwner={evmAddress} />
+        </Coachmark>
       )}
     </Flex>
   )

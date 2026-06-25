@@ -188,7 +188,7 @@ describe(watchTransaction, () => {
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForSameNonceFinalized, { chainId, id, nonce: options.request.nonce }), true],
+        [call(waitForSameNonceFinalized, { chainId, id, nonce: options.request?.nonce }), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
@@ -207,7 +207,7 @@ describe(watchTransaction, () => {
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForBridgeSendCompleted, { chainId, id, nonce: options.request.nonce }), true],
+        [call(waitForBridgeSendCompleted, { chainId, id, nonce: options.request?.nonce }), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))

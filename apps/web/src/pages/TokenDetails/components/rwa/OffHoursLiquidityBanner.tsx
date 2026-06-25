@@ -1,14 +1,9 @@
-import { useTranslation } from 'react-i18next'
-import { Clock } from 'ui/src/components/icons/Clock'
-import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { OffHoursWarningCard } from 'uniswap/src/features/rwa/OffHoursWarningCard'
 import { useIsEquityOffHours } from 'uniswap/src/features/rwa/useIsEquityOffHours'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
 export function OffHoursLiquidityBanner(): JSX.Element | null {
-  const { t } = useTranslation()
   const rwaMatch = useRWATokenDetailsMatch()
   const isOffHours = useIsEquityOffHours()
 
@@ -17,12 +12,9 @@ export function OffHoursLiquidityBanner(): JSX.Element | null {
   }
 
   return (
-    <InlineWarningCard
-      severity={WarningSeverity.Low}
-      Icon={Clock}
-      description={t('tdp.rwa.offHours.warning', { name: rwaMatch.asset.name })}
-      learnMoreUrl={UniswapHelpUrls.articles.rwaOffHours}
-      inlineLearnMore
+    <OffHoursWarningCard
+      assetName={rwaMatch.asset.name}
+      descriptionMaxWidth={600}
       descriptionTestId={TestID.TokenDetailsRWAOffHoursBanner}
     />
   )

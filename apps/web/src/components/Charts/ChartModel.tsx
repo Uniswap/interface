@@ -21,6 +21,9 @@ export {
 } from '~/components/Charts/ChartModelCore'
 export type { ChartHoverData, ChartModelParams } from '~/components/Charts/ChartModelCore'
 
+/** Screen-space hover position passed to chart overlay render props. `plotRightEdge` marks where the price axis begins. */
+export type ChartHoverCoordinates = { x: number; y: number; plotRightEdge?: number }
+
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
 type ChartTooltipBodyComponent<TDataType extends SeriesDataItemType> = React.FunctionComponent<{
@@ -52,7 +55,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
   params: TParamType
   height?: number
-  children?: (crosshair?: TDataType) => ReactElement | null
+  children?: (crosshair?: TDataType, hover?: ChartHoverCoordinates | null) => ReactElement | null
   onCrosshairChange?: (crosshair?: TDataType) => void
   className?: string
   disableChartTouchPanning?: boolean // On touch devices, optionally disables chart touch panning on mobile devices to avoid interfering with vertical scrolling
@@ -206,7 +209,11 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       </Flex>
 
       {/* Header/content outside background */}
-      {children && children(crosshairData)}
+      {children &&
+        children(
+          crosshairData,
+          hoverCoordinates ? { ...hoverCoordinates, plotRightEdge: chartModelRef.current?.getPlotRightEdge() } : null,
+        )}
       {TooltipBody && crosshairData && (
         <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
           <TooltipBody data={crosshairData} />

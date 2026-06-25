@@ -292,7 +292,6 @@ function AppOuter(): JSX.Element | null {
     storageWrapper: new MMKVWrapper(createMMKVApolloAdapter()),
     maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
     customEndpoint,
-    reduxStore: store,
   })
   const jsBundleLoadedRef = useRef(false)
 

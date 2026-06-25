@@ -1,3 +1,4 @@
+import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags } from '@universe/gating'
 import { getWalletBalancesQuery, PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -11,7 +12,6 @@ import { renderHookWithProviders } from 'uniswap/src/test/render'
 const {
   mockUseEnabledChains,
   mockUseCurrencyIdToVisibility,
-  mockUseGetPortfolioQuery,
   mockUseGetWalletBalancesQuery,
   mockUseHideSmallBalancesSetting,
   mockUseHideSpamTokensSetting,
@@ -20,17 +20,11 @@ const {
 } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseCurrencyIdToVisibility: vi.fn(),
-  mockUseGetPortfolioQuery: vi.fn(),
   mockUseGetWalletBalancesQuery: vi.fn(),
   mockUseHideSmallBalancesSetting: vi.fn(),
   mockUseHideSpamTokensSetting: vi.fn(),
   mockUsePlatformBasedFetchPolicy: vi.fn(),
   mockUseFeatureFlag: vi.fn(),
-}))
-
-vi.mock('uniswap/src/data/rest/getPortfolio', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getPortfolio')>()),
-  useGetPortfolioQuery: mockUseGetPortfolioQuery,
 }))
 
 vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
@@ -62,15 +56,8 @@ vi.mock('@universe/gating', async (importOriginal) => ({
   useFeatureFlag: mockUseFeatureFlag,
 }))
 
-// `useGetPortfolioQuery` and `useGetWalletBalancesQuery` both return shapes compatible with
-// `UseQueryResult`. The hook reads `data`/`isFetching`/`status`/`error`/`refetch`/`dataUpdatedAt`,
-// so the mocks only need those fields.
-const PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO = {
-  balanceUSD: 1000,
-  percentChange: 2,
-  absoluteChangeUSD: 50,
-}
-
+// `useGetWalletBalancesQuery` returns a shape compatible with `UseQueryResult`. The hook reads
+// `data`/`isFetching`/`status`/`error`/`refetch`/`dataUpdatedAt`, so the mocks only need those fields.
 const WALLET_BALANCES_BY_PART = {
   total: { balanceUSD: 1300, percentChange: 3, absoluteChangeUSD: 100 },
   tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
@@ -106,8 +93,6 @@ describe(usePortfolioBalancePart, () => {
     mockUseHideSmallBalancesSetting.mockReturnValue(false)
     mockUseHideSpamTokensSetting.mockReturnValue(false)
 
-    mockUseGetPortfolioQuery.mockReturnValue(makeQueryResult(PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO))
-
     // The GetWalletBalances mock honours the `select` so the test exercises the real selector
     // routing inside `selectorForPart` end-to-end.
     mockUseGetWalletBalancesQuery.mockImplementation(({ select }) => {
@@ -122,50 +107,48 @@ describe(usePortfolioBalancePart, () => {
     })
   })
 
-  describe('flag off (default)', () => {
+  describe('tokens-only default (flag off)', () => {
     beforeEach(() => {
       mockUseFeatureFlag.mockReturnValue(false)
     })
 
+    it('always uses GetWalletBalances (no GetPortfolio fallback)', () => {
+      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
+
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
+    })
+
+    it('sends an empty include_categories array (tokens-only)', () => {
+      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
+
+      const input = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]?.input
+      expect(input?.includeCategories).toEqual([])
+    })
+
     it.each([PortfolioBalancePart.Total, PortfolioBalancePart.Tokens, PortfolioBalancePart.Pools])(
-      'resolves part="%s" to the GetPortfolio total when the flag is off',
+      'resolves part="%s" to the matching GetWalletBalances part',
       (part) => {
         const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
 
-        expect(result.current.data).toEqual(PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO)
+        expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
       },
     )
-
-    it('only enables the GetPortfolio query when the flag is off', () => {
-      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
-
-      expect(mockUseGetPortfolioQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-      expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-    })
-
-    it('returns identical data across all three parts when the flag is off', () => {
-      const { result: total } = renderHookWithProviders(() =>
-        usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }),
-      )
-      const { result: tokens } = renderHookWithProviders(() =>
-        usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }),
-      )
-      const { result: pools } = renderHookWithProviders(() =>
-        usePortfolioBalancePart({ part: PortfolioBalancePart.Pools, evmAddress: '0x123' }),
-      )
-
-      expect(total.current.data).toEqual(tokens.current.data)
-      expect(tokens.current.data).toEqual(pools.current.data)
-    })
   })
 
-  describe('flag on', () => {
+  describe('pools opted in (flag on)', () => {
     beforeEach(() => {
       mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
     })
 
+    it('sends include_categories=[POOLS]', () => {
+      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
+
+      const input = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]?.input
+      expect(input?.includeCategories).toEqual([WalletBalanceCategory.POOLS])
+    })
+
     it.each([PortfolioBalancePart.Total, PortfolioBalancePart.Tokens, PortfolioBalancePart.Pools])(
-      'resolves part="%s" to the matching GetWalletBalances part when the flag is on',
+      'resolves part="%s" to the matching GetWalletBalances part',
       (part) => {
         const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
 
@@ -173,14 +156,13 @@ describe(usePortfolioBalancePart, () => {
       },
     )
 
-    it('only enables the GetWalletBalances query when the flag is on', () => {
+    it('only enables the GetWalletBalances query when an address is provided', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
 
       expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-      expect(mockUseGetPortfolioQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
     })
 
-    it('returns differentiated data across the three parts when the flag is on', () => {
+    it('returns differentiated data across the three parts', () => {
       const { result: total } = renderHookWithProviders(() =>
         usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }),
       )
@@ -196,15 +178,6 @@ describe(usePortfolioBalancePart, () => {
       expect(pools.current.data?.balanceUSD).toBe(300)
       expect(total.current.data).not.toEqual(tokens.current.data)
       expect(tokens.current.data).not.toEqual(pools.current.data)
-    })
-
-    it('passes the same chain/modifier shape to both queries so cache keys stay consistent', () => {
-      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
-
-      const portfolioInput = mockUseGetPortfolioQuery.mock.calls[0]?.[0]?.input
-      const walletBalancesInput = mockUseGetWalletBalancesQuery.mock.calls[0]?.[0]?.input
-
-      expect(portfolioInput).toEqual(walletBalancesInput)
     })
 
     it('re-projects to the new part when part changes on a mounted hook', () => {
@@ -242,7 +215,7 @@ describe(usePortfolioBalancePart, () => {
     })
   })
 
-  it('passes the network/error/refetch metadata through unchanged when the flag is on', () => {
+  it('passes the network/error/refetch metadata through unchanged', () => {
     mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
     mockUseGetWalletBalancesQuery.mockReturnValue({
       data: undefined,
@@ -277,17 +250,18 @@ describe(usePortfolioBalancePart, () => {
       includeSpamTokens: true,
     }
 
-    it('forwards evmAddress, svmAddress, default chainIds, and the REST modifier as input', () => {
+    it('forwards evmAddress, svmAddress, default chainIds, include_categories, and the REST modifier as input', () => {
       renderHookWithProviders(() =>
         usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123', svmAddress: 'svm456' }),
       )
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenCalledWith(
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(
         expect.objectContaining({
           input: {
             evmAddress: '0x123',
             svmAddress: 'svm456',
             chainIds: [UniverseChainId.Mainnet],
+            includeCategories: [],
             modifier: EXPECTED_MAINNET_MODIFIER,
           },
         }),
@@ -303,7 +277,7 @@ describe(usePortfolioBalancePart, () => {
         }),
       )
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(
         expect.objectContaining({
           input: expect.objectContaining({
             chainIds: [UniverseChainId.Optimism, UniverseChainId.ArbitrumOne],
@@ -311,11 +285,11 @@ describe(usePortfolioBalancePart, () => {
         }),
       )
 
-      mockUseGetPortfolioQuery.mockClear()
+      mockUseGetWalletBalancesQuery.mockClear()
 
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(
         expect.objectContaining({
           input: expect.objectContaining({
             chainIds: [UniverseChainId.Mainnet],
@@ -327,13 +301,13 @@ describe(usePortfolioBalancePart, () => {
     it('enables the query when an address is provided and enabled is not explicitly false', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: true }))
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: true }))
     })
 
     it('disables the query when no evm/svm address is provided', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total }))
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
     })
 
     it('disables the query when enabled: false is passed even with an address', () => {
@@ -341,7 +315,22 @@ describe(usePortfolioBalancePart, () => {
         usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123', enabled: false }),
       )
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
+    })
+
+    it('still forwards the modifier when the query is disabled', () => {
+      // All observers for an address share one query (modifier is excluded from the key), so a disabled
+      // observer must keep forwarding the modifier or it clobbers the shared queryFn for the others.
+      renderHookWithProviders(() =>
+        usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123', enabled: false }),
+      )
+
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          enabled: false,
+          input: expect.objectContaining({ modifier: EXPECTED_MAINNET_MODIFIER }),
+        }),
+      )
     })
 
     it('forwards refetchInterval from usePlatformBasedFetchPolicy', () => {
@@ -349,27 +338,27 @@ describe(usePortfolioBalancePart, () => {
 
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
-      expect(mockUseGetPortfolioQuery).toHaveBeenLastCalledWith(expect.objectContaining({ refetchInterval: 15_000 }))
+      expect(mockUseGetWalletBalancesQuery).toHaveBeenLastCalledWith(
+        expect.objectContaining({ refetchInterval: 15_000 }),
+      )
     })
 
-    it('passes a select callback that returns undefined for an undefined response', () => {
+    it('passes a select callback that returns undefined for an undefined or balance-less response', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
-      const callArgs = mockUseGetPortfolioQuery.mock.calls.at(-1)?.[0]
+      const callArgs = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]
       expect(callArgs?.select(undefined)).toBeUndefined()
-      expect(callArgs?.select({ portfolio: undefined })).toBeUndefined()
+      expect(callArgs?.select({ balance: undefined })).toBeUndefined()
     })
 
-    it('passes a select callback that maps GetPortfolio totals to {balanceUSD, percentChange, absoluteChangeUSD}', () => {
+    it('passes a select callback that maps the GetWalletBalances total to {balanceUSD, percentChange, absoluteChangeUSD}', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
-      const callArgs = mockUseGetPortfolioQuery.mock.calls.at(-1)?.[0]
+      const callArgs = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]
       expect(
         callArgs?.select({
-          portfolio: {
-            totalValueUsd: 250,
-            totalValuePercentChange1d: -3.5,
-            totalValueAbsoluteChange1d: -10,
+          balance: {
+            total: { valueUsd: 250, percentChange1d: -3.5, absoluteChange1d: -10 },
           },
         }),
       ).toEqual({
@@ -392,7 +381,6 @@ describe(usePortfolioTotalValue, () => {
     mockUseHideSmallBalancesSetting.mockReturnValue(false)
     mockUseHideSpamTokensSetting.mockReturnValue(false)
     mockUseFeatureFlag.mockReturnValue(false)
-    mockUseGetPortfolioQuery.mockReturnValue(makeQueryResult(PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO))
     mockUseGetWalletBalancesQuery.mockReturnValue(makeQueryResult(undefined))
   })
 
@@ -418,7 +406,6 @@ describe(usePortfolioBalanceBreakdown, () => {
     mockUseCurrencyIdToVisibility.mockReturnValue({})
     mockUseHideSmallBalancesSetting.mockReturnValue(false)
     mockUseHideSpamTokensSetting.mockReturnValue(false)
-    mockUseGetPortfolioQuery.mockReturnValue(makeQueryResult(PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO))
 
     mockUseGetWalletBalancesQuery.mockImplementation(({ select }) => {
       const rawResponse = {
@@ -432,33 +419,30 @@ describe(usePortfolioBalanceBreakdown, () => {
     })
   })
 
-  it('disables the GetWalletBalances query when the PortfolioPoolsBalances flag is off', () => {
-    mockUseFeatureFlag.mockReturnValue(false)
+  const EXPECTED_BREAKDOWN = {
+    total: { balanceUSD: 1300, percentChange: 3, absoluteChangeUSD: 100 },
+    tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
+    pools: { balanceUSD: 300, percentChange: 5, absoluteChangeUSD: 50 },
+  }
 
-    renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
-
-    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-  })
-
-  it('returns undefined data when the PortfolioPoolsBalances flag is off even if GetWalletBalances has cached data', () => {
-    mockUseFeatureFlag.mockReturnValue(false)
-
-    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
-
-    expect(result.current.data).toBeUndefined()
-  })
-
-  it('enables the GetWalletBalances query and returns the full breakdown when the flag is on', () => {
+  it('enables the query and returns the full breakdown with [POOLS] in requestedCategories when the flag is on', () => {
     mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
 
     const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
 
     expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-    expect(result.current.data).toEqual({
-      total: { balanceUSD: 1300, percentChange: 3, absoluteChangeUSD: 100 },
-      tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
-      pools: { balanceUSD: 300, percentChange: 5, absoluteChangeUSD: 50 },
-    })
+    expect(result.current.data).toEqual(EXPECTED_BREAKDOWN)
+    expect(result.current.requestedCategories).toEqual([WalletBalanceCategory.POOLS])
+  })
+
+  it('still enables the query and returns data with empty requestedCategories when the flag is off', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
+    expect(result.current.data).toEqual(EXPECTED_BREAKDOWN)
+    expect(result.current.requestedCategories).toEqual([])
   })
 
   it('disables the query when no evm/svm address is provided', () => {

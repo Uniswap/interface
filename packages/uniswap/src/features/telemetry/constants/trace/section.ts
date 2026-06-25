@@ -31,6 +31,7 @@ export enum SectionName {
   SwapReview = 'swap-review',
   TokenSelector = 'token-selector',
   TokenDetails = 'token-details',
+  TransactionDetails = 'transaction-details',
 
   // These name / values don't match because we refactored code to use "send", but wanted to preserve old names for dashboards
   SendForm = 'transfer-form',

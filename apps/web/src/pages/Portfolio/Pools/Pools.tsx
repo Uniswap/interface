@@ -228,7 +228,7 @@ export function PortfolioPools() {
             showCreateButton={!isExternalWallet}
           />
         </Flex>
-        <Flex row gap="$spacing24" alignItems="flex-start" $xl={{ flexDirection: 'column' }}>
+        <Flex row gap="$spacing24" alignItems="flex-start" $xl={{ flexDirection: 'column-reverse' }}>
           <Flex grow shrink width="100%" maxWidth={POSITIONS_LIST_MAX_WIDTH} $xl={{ maxWidth: '100%' }}>
             {renderListContent()}
             {!isExternalWallet && (
@@ -253,7 +253,13 @@ export function PortfolioPools() {
               </Flex>
             )}
           </Flex>
-          <Flex width={POSITIONS_SIDEBAR_WIDTH} flexShrink={0} gap="$gap12" $xl={{ width: '100%' }}>
+          <Flex
+            width={POSITIONS_SIDEBAR_WIDTH}
+            flexShrink={0}
+            gap="$gap12"
+            $xl={{ width: '100%', flexDirection: 'row' }}
+            $md={{ flexDirection: 'column' }}
+          >
             {isLpIncentivesEnabled && (
               <PortfolioPoolsRewardsCard walletAddress={evmAddress} isExternalWallet={isExternalWallet} />
             )}

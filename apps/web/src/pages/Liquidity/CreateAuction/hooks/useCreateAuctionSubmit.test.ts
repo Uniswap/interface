@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { zeroAddress } from '~/chains'
 import {
@@ -26,7 +27,17 @@ vi.mock('utilities/src/logger/logger', () => ({
   logger: { error: vi.fn(), debug: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }))
 
+const mockSendAnalyticsEvent = vi.fn()
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: (...args: unknown[]) => mockSendAnalyticsEvent(...args),
+}))
+
 type Params = Parameters<typeof useCreateAuctionSubmit>[0]
+
+/** Minimal stand-in for the `Auction Create Failed` props the Review step would build. */
+const FAILED_PROPS = { token_source: 'new', chain_id: 1, failed_step: 'build_request' } as NonNullable<
+  ReturnType<NonNullable<Params['getCreateFailedProperties']>>
+>
 
 function buildableParams(overrides: Partial<Params> = {}): Params {
   const store = createCreateAuctionStore()
@@ -50,6 +61,7 @@ function buildableParams(overrides: Partial<Params> = {}): Params {
 beforeEach(() => {
   mockMutateAsync.mockReset()
   mockValidate.mockReset()
+  mockSendAnalyticsEvent.mockReset()
   mockMutationState.isPending = false
 })
 
@@ -171,5 +183,38 @@ describe('useCreateAuctionSubmit', () => {
 
     expect(returned).toBeUndefined()
     expect(result.current.error?.message).toBe('boom')
+  })
+
+  it('fires Auction Create Failed (build_request) when the start time has passed', async () => {
+    const getCreateFailedProperties = vi.fn(() => FAILED_PROPS)
+    const params = buildableParams({ getCreateFailedProperties })
+    const pastParams: Params = {
+      ...params,
+      configureAuction: { ...params.configureAuction, startTime: new Date(Date.now() - 1000) },
+    }
+    const { result } = renderHook(() => useCreateAuctionSubmit(pastParams))
+
+    await act(async () => {
+      await result.current.onLaunch()
+    })
+
+    expect(getCreateFailedProperties).toHaveBeenCalledWith({ failedStep: 'build_request', errorCode: undefined })
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionCreateFailed, FAILED_PROPS)
+  })
+
+  it('fires Auction Create Failed (create_auction_request) when the mutation rejects', async () => {
+    mockMutateAsync.mockRejectedValue(new Error('boom'))
+    const getCreateFailedProperties = vi.fn(() => FAILED_PROPS)
+
+    const { result } = renderHook(() => useCreateAuctionSubmit(buildableParams({ getCreateFailedProperties })))
+    await act(async () => {
+      await result.current.onLaunch()
+    })
+
+    expect(getCreateFailedProperties).toHaveBeenCalledWith({
+      failedStep: 'create_auction_request',
+      errorCode: undefined,
+    })
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionCreateFailed, FAILED_PROPS)
   })
 })

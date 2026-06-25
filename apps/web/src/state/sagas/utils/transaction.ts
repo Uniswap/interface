@@ -1,10 +1,10 @@
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
   TransactionDetails as UniswapTransactionDetails,
+  TransactionTypeInfo,
   WrapTransactionInfo as UniswapWrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import type { TransactionInfo } from '~/state/transactions/types'
 
 const createUniverseSwapTransaction = ({
   inputCurrencyId,
@@ -32,7 +32,7 @@ const createUniverseWrapTransaction = (info: UniswapWrapTransactionInfo) => {
   } as UniswapTransactionDetails
 }
 
-const createUniverseTransactionFromInfo = (typeInfo: TransactionInfo): UniswapTransactionDetails =>
+const createUniverseTransactionFromInfo = (typeInfo: TransactionTypeInfo): UniswapTransactionDetails =>
   ({ typeInfo }) as UniswapTransactionDetails
 
 // Maps a web transaction object to a universe transaction object if we can.
@@ -47,7 +47,7 @@ export const createUniverseTransaction = ({
   chainId,
   address,
 }: {
-  info: TransactionInfo
+  info: TransactionTypeInfo
   chainId: UniverseChainId
   address: string
 }) => {

@@ -74,6 +74,7 @@ export const UniswapHelpUrls = {
     recoveryPhraseForgotten: createHelpArticleUrl('11306367118349'),
     revokeExplainer: createHelpArticleUrl('15724901841037-How-to-revoke-a-token-approval'),
     rwaExploreDisclaimer: createHelpArticleUrl('46577159640589'),
+    rwaExploreDisclaimerEtfs: createHelpArticleUrl('46601854111501'),
     rwaOffHours: createHelpArticleUrl('46572002944013'),
     supportedNetworks: createHelpArticleUrl('14569415293325'),
     swapFeeInfo: createHelpArticleUrl('20131678274957'),

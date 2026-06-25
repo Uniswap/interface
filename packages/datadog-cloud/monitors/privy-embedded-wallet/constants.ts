@@ -29,12 +29,17 @@ export const APM_METRIC_PREFIX = 'trace.uniswap.privyembeddedwallet.v1.EmbeddedW
 export const webResourceName = (endpoint: string): string =>
   `post_/uniswap.privyembeddedwallet.v1.embeddedwalletservice/${endpoint.toLowerCase()}`
 
-// Denominator floor (via clamp_min) for error-RATE monitors. privy-embedded-wallet is
-// low-traffic, so at the real request count a single 5xx can exceed a percentage
-// threshold and page; computing the rate against this floor keeps a lone error under
-// the threshold while genuine bursts still page. At a 5% threshold, 20 requires 2+
-// errors to alert (tighter thresholds, e.g. Challenge's 2%, still page on one).
+// Base request-count floor for low-traffic suppression. privy-embedded-wallet is low-traffic,
+// so a lone failure or single slow request can otherwise cross a threshold and page. Combined
+// with the threshold via rateDenominatorFloor in rate monitors, and used directly as the
+// volume-gate divisor in latency monitors.
 export const MIN_REQUESTS_5M = 20
 
 // The ALB sees whole-service traffic (incl. OPTIONS preflights), so it floors higher.
 export const MIN_ALB_REQUESTS_5M = 30
+
+// Denominator floor for a rate monitor: the larger of the base request-count floor and
+// ceil(100 / failurePct), the smallest count at which a single failure stays under failurePct%.
+// clamp_min'ing the denominator to this keeps one failure in a quiet window from paging.
+export const rateDenominatorFloor = (failurePct: number, baseFloor: number): number =>
+  Math.max(baseFloor, Math.ceil(100 / failurePct))

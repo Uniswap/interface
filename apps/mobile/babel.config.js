@@ -9,13 +9,30 @@ const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
 
 if (USE_NEW_CONFIGS) {
   const newEnvPath = path.resolve(__dirname, '.env.new')
-  if (!fs.existsSync(newEnvPath)) {
-    throw new Error(`USE_NEW_CONFIGS=true but ${newEnvPath} does not exist`)
+  // A missing .env.new is not an error: treat the base env as empty. The override
+  // file (if present) and process.env still apply.
+  let baseValues = {}
+  if (fs.existsSync(newEnvPath)) {
+    const result = dotenv.config({ path: newEnvPath, override: true })
+    // Fail fast on bad env file
+    if (result.error) {
+      throw new Error(`Failed to parse ${newEnvPath}: ${result.error.message}`)
+    }
+    baseValues = result.parsed ?? {}
   }
-  const result = dotenv.config({ path: newEnvPath, override: true })
-  // Fail fast on bad env file
-  if (result.error) {
-    throw new Error(`Failed to parse ${newEnvPath}: ${result.error.message}`)
+
+  // Apply .env.new.override on top (overrides win), logging every value it overrides.
+  const overrideEnvPath = path.resolve(__dirname, '.env.new.override')
+  if (fs.existsSync(overrideEnvPath)) {
+    const overrideResult = dotenv.config({ path: overrideEnvPath, override: true })
+    if (overrideResult.error) {
+      throw new Error(`Failed to parse ${overrideEnvPath}: ${overrideResult.error.message}`)
+    }
+    for (const [key, value] of Object.entries(overrideResult.parsed ?? {})) {
+      if (key in baseValues && baseValues[key] !== value) {
+        console.log(`ENV_OVERRIDE: ${key}`)
+      }
+    }
   }
 } else {
   dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults') })

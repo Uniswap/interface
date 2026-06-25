@@ -6,6 +6,7 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
+import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
@@ -20,6 +21,8 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const disabled = useIsSwapButtonDisabled()
   const isBlockingWithCustomMessage = useIsBlockingWithCustomMessage()
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
+  // A region hard block renders a disabled CTA in the neutral blocked style, even when no wallet is connected.
+  const isGeoRestricted = useGeoRestrictionMode() === 'restricted'
 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const platform = chainIdToPlatform(chainId)
@@ -33,8 +36,7 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const promptWebFORNudge =
     useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge && !blockingWarning
 
-  // In the geo-acknowledgement case the button is an active "Review" CTA (it opens the
-  // attestation modal), so it should not adopt the blocked/disabled styling.
+  // Geo acknowledgement keeps the button an active "Review" CTA, so skip the blocked styling.
   const isBlockingOrDisabledWithoutSwapRedirect =
     !needsGeoAcknowledgment && (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
   const isInactiveAccountOrSubmitting = !activeAccount || isSubmitting
@@ -58,14 +60,24 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
     return validTokenColor
   })()
 
-  const buttonVariant: ButtonProps['variant'] =
-    !activeAccount || promptWebFORNudge ? 'branded' : isBlockingOrDisabledWithoutSwapRedirect ? 'default' : 'branded'
+  const buttonVariant: ButtonProps['variant'] = isGeoRestricted
+    ? 'default'
+    : !activeAccount || promptWebFORNudge
+      ? 'branded'
+      : isBlockingOrDisabledWithoutSwapRedirect
+        ? 'default'
+        : 'branded'
   const buttonEmphasis: ButtonProps['emphasis'] =
     isInactiveAccountOrSubmitting || isBlockingOrDisabledWithoutSwapRedirect ? 'secondary' : 'primary'
 
   const buttonTextColor = ((): ColorTokens | undefined => {
     if (promptWebFORNudge) {
       return '$accent1'
+    }
+
+    // Neutral blocked style: don't adopt the branded token color used for the connect-wallet CTA.
+    if (isGeoRestricted) {
+      return undefined
     }
 
     if (!activeAccount) {

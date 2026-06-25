@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react'
+import { memo, useCallback, type ReactNode } from 'react'
 import type { ViewStyle } from 'react-native'
 import { TabLabel, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import type { HomeRoute } from 'src/screens/HomeScreen/portfolio/types'
@@ -9,12 +9,15 @@ interface HomeScreenPortfolioStickyTabBarProps {
   routes: HomeRoute[]
   tabIndex: number
   onTabIndexChange: (index: number) => void
+  /** Optional element pinned to the right edge of the tab row. */
+  rightAccessory?: ReactNode
 }
 
 export const HomeScreenPortfolioStickyTabBar = memo(function HomeScreenPortfolioStickyTabBarInner({
   routes,
   tabIndex,
   onTabIndexChange,
+  rightAccessory,
 }: HomeScreenPortfolioStickyTabBarProps): JSX.Element {
   return (
     <Flex
@@ -23,7 +26,7 @@ export const HomeScreenPortfolioStickyTabBar = memo(function HomeScreenPortfolio
       backgroundColor="$surface1"
       borderBottomColor="$surface3"
       borderBottomWidth={1}
-      pl="$spacing12"
+      px="$spacing12"
       style={TAB_STYLES.tabBar as ViewStyle}
     >
       {routes.map((route, index) => (
@@ -35,6 +38,11 @@ export const HomeScreenPortfolioStickyTabBar = memo(function HomeScreenPortfolio
           onTabIndexChange={onTabIndexChange}
         />
       ))}
+      {rightAccessory ? (
+        <Flex fill row justifyContent="flex-end" alignItems="center">
+          {rightAccessory}
+        </Flex>
+      ) : null}
     </Flex>
   )
 })

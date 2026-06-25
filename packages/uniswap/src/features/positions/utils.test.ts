@@ -1,7 +1,13 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
-import { getFeeLabel, getPositionKey, getProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
+import {
+  filterAndSortPositions,
+  getFeeLabel,
+  getPositionKey,
+  getProtocolVersionLabel,
+  sortPositionsByStatusClosedLast,
+} from 'uniswap/src/features/positions/utils'
 import { describe, expect, it } from 'vitest'
 
 describe('getPositionKey', () => {
@@ -41,6 +47,70 @@ describe('getProtocolVersionLabel', () => {
   // upstream proto can add new versions before we update this switch.
   it('returns undefined for an unknown ProtocolVersion value', () => {
     expect(getProtocolVersionLabel(999 as ProtocolVersion)).toBeUndefined()
+  })
+})
+
+describe('sortPositionsByStatusClosedLast', () => {
+  const position = (poolId: string, status: PositionStatus): PositionInfo =>
+    ({ poolId, status }) as unknown as PositionInfo
+
+  it('moves closed positions to the end while preserving order of the rest', () => {
+    const positions = [
+      position('closed-1', PositionStatus.CLOSED),
+      position('open-1', PositionStatus.IN_RANGE),
+      position('open-2', PositionStatus.OUT_OF_RANGE),
+      position('closed-2', PositionStatus.CLOSED),
+    ]
+
+    expect(sortPositionsByStatusClosedLast(positions).map((p) => p.poolId)).toEqual([
+      'open-1',
+      'open-2',
+      'closed-1',
+      'closed-2',
+    ])
+  })
+
+  it('does not mutate the input array', () => {
+    const positions = [position('closed', PositionStatus.CLOSED), position('open', PositionStatus.IN_RANGE)]
+    const original = [...positions]
+
+    sortPositionsByStatusClosedLast(positions)
+
+    expect(positions).toEqual(original)
+  })
+})
+
+describe('filterAndSortPositions', () => {
+  const position = (poolId: string, status: PositionStatus): PositionInfo =>
+    ({ poolId, status }) as unknown as PositionInfo
+
+  it('keeps only positions whose status is in the given list', () => {
+    const positions = [
+      position('open', PositionStatus.IN_RANGE),
+      position('closed', PositionStatus.CLOSED),
+      position('out-of-range', PositionStatus.OUT_OF_RANGE),
+    ]
+
+    expect(
+      filterAndSortPositions(positions, [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE]).map((p) => p.poolId),
+    ).toEqual(['open', 'out-of-range'])
+  })
+
+  it('filters to the given statuses and sorts closed positions last', () => {
+    const positions = [
+      position('closed-1', PositionStatus.CLOSED),
+      position('open-1', PositionStatus.IN_RANGE),
+      position('out-of-range', PositionStatus.OUT_OF_RANGE),
+      position('closed-2', PositionStatus.CLOSED),
+    ]
+
+    expect(
+      filterAndSortPositions(positions, [
+        PositionStatus.IN_RANGE,
+        PositionStatus.OUT_OF_RANGE,
+        PositionStatus.CLOSED,
+      ]).map((p) => p.poolId),
+    ).toEqual(['open-1', 'out-of-range', 'closed-1', 'closed-2'])
   })
 })
 

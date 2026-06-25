@@ -48,14 +48,10 @@ export function Bid({ item, onPress }: BidProps): JSX.Element {
     filledPercentageDisplay,
     totalTokensReceivedDisplay,
     displayState,
-    isAuctionEnded,
     bidTokenSymbol,
     auctionTokenSymbol,
-    isGraduated,
   } = item
 
-  // Hide bid details when auction has ended but not graduated
-  const shouldHideBidDetails = isAuctionEnded && !isGraduated
   const isPending = displayState === 'pending'
   const statusText = getStatusText(displayState, t)
   const statusColor = getDisplayStateColor(displayState, bidStatusColors)
@@ -85,7 +81,7 @@ export function Bid({ item, onPress }: BidProps): JSX.Element {
             <Flex row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing4" flex={1} minWidth={0}>
                 <Text variant="body3" color="$neutral1" numberOfLines={1} flexShrink={0}>
-                  {shouldHideBidDetails ? '-' : totalTokensReceivedDisplay} {auctionTokenSymbol}
+                  {totalTokensReceivedDisplay} {auctionTokenSymbol}
                 </Text>
                 <Text variant="body3" color="$neutral2" numberOfLines={1}>
                   ({filledPercentageDisplay} {t('toucan.bid.filled')})

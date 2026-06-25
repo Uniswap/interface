@@ -11,6 +11,7 @@ export function NetworkCostEditorModal({ isOpen, ...editorProps }: NetworkCostEd
       isModalOpen={isOpen}
       maxWidth={420}
       name={ModalName.NetworkCostEditor}
+      padding="$none"
       onClose={editorProps.onCancel}
     >
       <NetworkCostEditor {...editorProps} />

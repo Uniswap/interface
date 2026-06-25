@@ -6,7 +6,7 @@ import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   InterfaceTransactionDetails,
   PlanTransactionDetails,
@@ -79,22 +79,22 @@ export function makeSelectAddressTransactions(): AddressTransactionsSelector {
       }
       /*
        * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
-       * this represents a txn that is replacing or cancelling the older txn.
+       * this represents a txn that is replacing or cancelling the older txn. Only on-chain EOA txs carry a
+       * sequential nonce; orders (which have no `options`) can't be replacement-matched this way.
        */
+      const request = 'options' in tx ? tx.options.request : undefined
+      if (request?.nonce == null || request.chainId == null) {
+        return true
+      }
+      const { chainId, nonce } = request
       const duplicate = self.find(
         (tx2) =>
           tx2.id !== tx.id &&
-          (isClassic(tx) || isBridge(tx)) &&
-          (isClassic(tx2) || isBridge(tx2)) &&
-          tx2.options.request.chainId &&
-          tx2.options.request.chainId === tx.options.request.chainId &&
-          tx.options.request.nonce &&
-          tx2.options.request.nonce === tx.options.request.nonce,
+          'options' in tx2 &&
+          tx2.options.request?.chainId === chainId &&
+          tx2.options.request.nonce === nonce,
       )
-      if (duplicate) {
-        return tx.addedTime > duplicate.addedTime
-      }
-      return true
+      return duplicate ? tx.addedTime > duplicate.addedTime : true
     })
   })
 }

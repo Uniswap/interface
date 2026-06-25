@@ -1,10 +1,10 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { HexString } from '@universe/encoding'
 import { useEffect, useMemo } from 'react'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
+import type { GetCallsStatusResult } from 'wallet/src/features/dappRequests/types'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
@@ -114,28 +114,7 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
   }, [pendingBatchTransactions, pollAllPendingBatches, walletProvider])
 }
 
-type GetCallsResult = {
-  version: string
-  id: HexString
-  chainId: HexString
-  status: number
-  atomic: boolean
-  receipts?: {
-    logs: {
-      address: HexString
-      data: HexString
-      topics: HexString[]
-    }[]
-    status: HexString
-    blockHash: HexString
-    blockNumber: HexString
-    gasUsed: HexString
-    transactionHash: HexString
-  }[]
-  capabilities?: Record<string, any>
-}
-
-function getCallsStatus(params: { provider: Web3Provider; batchId: string }): Promise<GetCallsResult> {
+function getCallsStatus(params: { provider: Web3Provider; batchId: string }): Promise<GetCallsStatusResult> {
   const { provider, batchId } = params
   return provider.send('wallet_getCallsStatus', [batchId])
 }

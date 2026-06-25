@@ -86,6 +86,11 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     }
   }
 
+  /** Right edge of the plot area (excludes the price axis), in the same coordinate space as getHoverCoordinates. */
+  public getPlotRightEdge(): number {
+    return this.api.priceScale('left').width() + this.api.paneSize().width
+  }
+
   /** Check if chart is zoomed in (visible range is smaller than total data range) */
   public isZoomed(): boolean {
     const visibleRange = this.api.timeScale().getVisibleLogicalRange()

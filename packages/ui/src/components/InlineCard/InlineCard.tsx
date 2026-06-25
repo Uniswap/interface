@@ -8,6 +8,7 @@ type InlineCardProps = {
   Icon: GeneratedIcon | ((props: IconProps) => JSX.Element)
   iconColor?: ColorTokens
   iconProps?: FlexProps
+  iconSize?: IconProps['size']
   color: ColorTokens
   backgroundColor?: ColorTokens
   padding?: FlexProps['p']
@@ -23,6 +24,7 @@ export function InlineCard({
   Icon,
   iconColor,
   iconProps,
+  iconSize = '$icon.20',
   color,
   backgroundColor = '$surface2',
   iconBackgroundColor,
@@ -33,7 +35,7 @@ export function InlineCard({
   CtaButtonIconColor = '$neutral3',
   onPressCtaButton,
 }: InlineCardProps): JSX.Element {
-  const icon = <Icon color={iconColor ?? color} size="$icon.20" />
+  const icon = <Icon color={iconColor ?? color} size={iconSize} />
   const iconElement = iconBackgroundColor ? (
     <Flex backgroundColor={iconBackgroundColor} borderRadius="$rounded12" p="$spacing8">
       {icon}
@@ -70,7 +72,7 @@ export function InlineCard({
         </Flex>
         {CtaButtonIcon && (
           <TouchableArea onPress={onPressCtaButton}>
-            <CtaButtonIcon color={CtaButtonIconColor} size="$icon.20" />
+            <CtaButtonIcon color={CtaButtonIconColor} size={iconSize} />
           </TouchableArea>
         )}
       </Flex>

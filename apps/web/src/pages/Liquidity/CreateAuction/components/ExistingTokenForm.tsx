@@ -6,14 +6,18 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useTotalSupply } from '~/hooks/useTotalSupply'
+import { getAuctionTokenInfoEnteredProperties } from '~/pages/Liquidity/CreateAuction/analytics'
 import { ExistingTokenInfoDisplay } from '~/pages/Liquidity/CreateAuction/components/ExistingTokenInfoDisplay'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
@@ -29,6 +33,7 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   const tokenColor = useCreateAuctionTokenColor()
   const { updateExistingTokenField, commitTokenFormAndAdvance } = useCreateAuctionStoreActions()
   const address = useActiveAddress(Platform.EVM)
+  const trace = useTrace()
 
   const [showCurrencySearch, setShowCurrencySearch] = useState(false)
   const [lookupCurrencyId, setLookupCurrencyId] = useState<string | undefined>()
@@ -56,6 +61,14 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   const handleDisabledContinuePress = useCallback(() => {
     setShowCurrencySearch(true)
   }, [])
+
+  const handleContinue = useEvent(() => {
+    sendAnalyticsEvent(
+      AuctionEventName.AuctionTokenInfoEntered,
+      getAuctionTokenInfoEnteredProperties({ trace, tokenForm: existing }),
+    )
+    commitTokenFormAndAdvance()
+  })
 
   // Auto-populate currencyInfo when address resolves
   useEffect(() => {
@@ -134,43 +147,45 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
           <Flex backgroundColor="$surface3" borderRadius="$rounded12" height={50} />
         </Shine>
       ) : (
-        <TouchableArea
-          row
-          alignItems="center"
-          gap="$spacing16"
-          justifyContent="space-between"
-          p="$spacing16"
-          borderRadius="$rounded12"
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          backgroundColor="$surface1"
-          onPress={() => setShowCurrencySearch(true)}
-        >
-          {selectedCurrencyInfo ? (
-            <>
-              <Flex width={iconSizes.icon64} height={iconSizes.icon64}>
-                <TokenLogo
-                  size={iconSizes.icon64}
-                  chainId={selectedCurrencyInfo.currency.chainId}
-                  name={selectedCurrencyInfo.currency.name}
-                  symbol={selectedCurrencyInfo.currency.symbol}
-                  url={selectedCurrencyInfo.logoUrl ?? undefined}
-                />
-              </Flex>
-              <Flex flex={1}>
-                <Text variant="heading3">{selectedCurrencyInfo.currency.name}</Text>
-                <Text variant="body2" color="$neutral2">
-                  {selectedCurrencyInfo.currency.symbol}
-                </Text>
-              </Flex>
-            </>
-          ) : (
-            <Text variant="buttonLabel3" color="$neutral1" flex={1}>
-              {t('toucan.createAuction.step.tokenInfo.selectToken')}
-            </Text>
-          )}
-          <RotatableChevron direction="down" color="$neutral1" size="$icon.24" />
-        </TouchableArea>
+        <Trace logPress element={ElementName.AuctionTokenSearch}>
+          <TouchableArea
+            row
+            alignItems="center"
+            gap="$spacing16"
+            justifyContent="space-between"
+            p="$spacing16"
+            borderRadius="$rounded12"
+            borderWidth="$spacing1"
+            borderColor="$surface3"
+            backgroundColor="$surface1"
+            onPress={() => setShowCurrencySearch(true)}
+          >
+            {selectedCurrencyInfo ? (
+              <>
+                <Flex width={iconSizes.icon64} height={iconSizes.icon64}>
+                  <TokenLogo
+                    size={iconSizes.icon64}
+                    chainId={selectedCurrencyInfo.currency.chainId}
+                    name={selectedCurrencyInfo.currency.name}
+                    symbol={selectedCurrencyInfo.currency.symbol}
+                    url={selectedCurrencyInfo.logoUrl ?? undefined}
+                  />
+                </Flex>
+                <Flex flex={1}>
+                  <Text variant="heading3">{selectedCurrencyInfo.currency.name}</Text>
+                  <Text variant="body2" color="$neutral2">
+                    {selectedCurrencyInfo.currency.symbol}
+                  </Text>
+                </Flex>
+              </>
+            ) : (
+              <Text variant="buttonLabel3" color="$neutral1" flex={1}>
+                {t('toucan.createAuction.step.tokenInfo.selectToken')}
+              </Text>
+            )}
+            <RotatableChevron direction="down" color="$neutral1" size="$icon.24" />
+          </TouchableArea>
+        </Trace>
       )}
 
       {invalidTokenSelected && (
@@ -198,7 +213,7 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
           <Button
             size="large"
             emphasis="primary"
-            onPress={commitTokenFormAndAdvance}
+            onPress={handleContinue}
             isDisabled={!canContinue}
             onDisabledPress={canContinue ? undefined : handleDisabledContinuePress}
             fill

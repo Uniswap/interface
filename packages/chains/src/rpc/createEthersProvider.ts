@@ -145,7 +145,9 @@ export function createEthersProviderFactory(ctx: CreateEthersProviderFactoryCtx)
         })
       }
 
-      if (rpcConfig.getRequestHeaders) {
+      // Branch on the explicit `isUniRpc` flag (like createViemClient), not header
+      // presence, so the session-gated path is chosen consistently across transports.
+      if (rpcConfig.isUniRpc && rpcConfig.getRequestHeaders) {
         // ethers v5 JsonRpcProvider only accepts string | ConnectionInfo — it
         // doesn't take a JsonRpcFetchFunc. Web3Provider is the provider that
         // wraps a fetch function, so it's the right tool despite its name.

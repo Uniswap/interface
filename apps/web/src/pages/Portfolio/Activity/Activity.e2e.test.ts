@@ -2,6 +2,7 @@ import { Page } from '@playwright/test'
 import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
+import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { HAYDEN_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
@@ -16,29 +17,30 @@ const MOCK_ACTIVITY_ROW_IDS = {
 
 async function goToPortfolioActivity({
   page,
-  graphql,
   dataApi,
+  getPortfolioMock = Mocks.DataApiService.get_portfolio,
   listTransactionsMock = Mocks.DataApiService.list_transactions,
   externalAddress,
   chain,
 }: {
   page: Page
-  graphql: { intercept: (op: string, path: string) => Promise<void>; waitForResponse: (op: string) => Promise<void> }
   dataApi: { intercept: (method: { service: { typeName: string }; name: string }, mockPath: string) => Promise<void> }
+  getPortfolioMock?: string
   listTransactionsMock?: string
   externalAddress?: string
   chain?: string
 }): Promise<void> {
-  await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
+  await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
   await dataApi.intercept(listTransactions, listTransactionsMock)
 
   const base = externalAddress ? `/portfolio/${externalAddress}/activity` : '/portfolio/activity'
   const params = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   const query = chain ? `${params}&chain=${chain}` : params
 
+  const getPortfolioResponse = page.waitForResponse((res) => res.request().url().includes('GetPortfolio'))
   const listTransactionsResponse = page.waitForResponse((res) => res.url().includes('ListTransactions'))
   await page.goto(`${base}?${query}`)
-  await listTransactionsResponse
+  await Promise.all([getPortfolioResponse, listTransactionsResponse])
 }
 
 test.describe(
@@ -52,8 +54,8 @@ test.describe(
   },
   () => {
     test.describe('Activity Table Display', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioActivity({ page, graphql, dataApi })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioActivity({ page, dataApi })
       })
 
       test('should display activity table headers', async ({ page }) => {
@@ -78,8 +80,8 @@ test.describe(
     })
 
     test.describe('Transaction Type Filter', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioActivity({ page, graphql, dataApi })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioActivity({ page, dataApi })
       })
 
       test('should show filter dropdown with options', async ({ page }) => {
@@ -120,10 +122,9 @@ test.describe(
     })
 
     test.describe('Empty States', () => {
-      test('should show empty state when wallet has no activity', async ({ page, graphql, dataApi }) => {
+      test('should show empty state when wallet has no activity', async ({ page, dataApi }) => {
         await goToPortfolioActivity({
           page,
-          graphql,
           dataApi,
           listTransactionsMock: Mocks.DataApiService.list_transactions_empty,
         })
@@ -133,10 +134,9 @@ test.describe(
         await expect(emptyState.getByText(/no activity/i)).toBeVisible()
       })
 
-      test('should show chain-specific empty state with filter', async ({ page, graphql, dataApi }) => {
+      test('should show chain-specific empty state with filter', async ({ page, dataApi }) => {
         await goToPortfolioActivity({
           page,
-          graphql,
           dataApi,
           listTransactionsMock: Mocks.DataApiService.list_transactions_empty,
           chain: 'optimism',
@@ -147,10 +147,9 @@ test.describe(
         await expect(page.getByTestId(TestID.PortfolioActivitySeeAllNetworksButton)).toBeVisible()
       })
 
-      test('should navigate to all activity when clicking "See all networks"', async ({ page, graphql, dataApi }) => {
+      test('should navigate to all activity when clicking "See all networks"', async ({ page, dataApi }) => {
         await goToPortfolioActivity({
           page,
-          graphql,
           dataApi,
           listTransactionsMock: Mocks.DataApiService.list_transactions_empty,
           chain: 'optimism',
@@ -162,8 +161,8 @@ test.describe(
     })
 
     test.describe('Transaction Row Interactions', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioActivity({ page, graphql, dataApi })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioActivity({ page, dataApi })
       })
 
       test('should open transaction details modal when clicking a row', async ({ page }) => {
@@ -190,13 +189,12 @@ test.describe(
     })
 
     test.describe('External Wallet View', () => {
-      test.beforeEach(async ({ graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
+      test.beforeEach(async ({ dataApi }) => {
         await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
       })
 
-      test('should show activity for external wallet', async ({ page, graphql, dataApi }) => {
-        await goToPortfolioActivity({ page, graphql, dataApi, externalAddress: HAYDEN_ADDRESS })
+      test('should show activity for external wallet', async ({ page, dataApi }) => {
+        await goToPortfolioActivity({ page, dataApi, externalAddress: HAYDEN_ADDRESS })
         await expect(page.getByTestId(MOCK_ACTIVITY_ROW_IDS.firstReceive)).toBeVisible()
       })
 

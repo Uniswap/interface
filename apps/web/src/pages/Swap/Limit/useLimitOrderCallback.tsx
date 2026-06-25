@@ -17,6 +17,7 @@ import {
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/hooks/useAccount'
 import type { PermitSignature } from '~/hooks/usePermitAllowance'
@@ -27,7 +28,6 @@ import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import type { InterfaceTrade } from '~/state/routing/types'
 import { isClassicTrade, isLimitTrade, isUniswapXTrade } from '~/state/routing/utils'
 import { useTransaction, useTransactionAdder } from '~/state/transactions/hooks'
-import type { TransactionInfo } from '~/state/transactions/types'
 import { TradeFillType, type LimitOrderResult } from '~/types/trade'
 
 type UniversalRouterFeeField = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
@@ -102,7 +102,7 @@ export function useLimitOrderCallback({
     }
     const result = await swapCallback()
 
-    const swapInfo: TransactionInfo = {
+    const swapInfo: TransactionTypeInfo = {
       type: TransactionType.Swap,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),

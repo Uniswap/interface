@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
-import { Flex, Loader, Text, TouchableArea } from 'ui/src'
+import { Flex, Loader, Text } from 'ui/src'
 import { fonts, iconSizes, validColor } from 'ui/src/theme'
+import { TransactionTokenContextMenu } from 'uniswap/src/components/activity/details/transactions/TransactionTokenContextMenu'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
-import { useTokenDetailsNavigation } from 'uniswap/src/components/activity/hooks/useTokenDetailsNavigation'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -60,34 +60,35 @@ export function TwoTokenDetails({
   onClose?: () => void
   hideNetworkLogos?: boolean
 }): JSX.Element {
-  const onPressTokenA = useTokenDetailsNavigation(inputCurrency, onClose)
-  const onPressTokenB = useTokenDetailsNavigation(outputCurrency, onClose)
-
   const tokenAChainId = toSupportedChainId(inputCurrency?.currency.chainId)
   const tokenBChainId = toSupportedChainId(outputCurrency?.currency.chainId)
   return (
     <Flex gap="$spacing16" px="$spacing8" py="$spacing12">
-      <TouchableArea cursor={disableClick ? 'default' : 'pointer'} onPress={disableClick ? undefined : onPressTokenA}>
+      <Flex>
         {tokenAChainId && !hideNetworkLogos && <NetworkLabel chainId={tokenAChainId} />}
         <Flex centered row justifyContent="space-between">
           <Flex>
             <Text variant="heading3">{tokenDescriptorA}</Text>
             <ValueText value={usdValueA} isLoading={isLoadingA} />
           </Flex>
-          <CurrencyLogo hideNetworkLogo={hideNetworkLogos} currencyInfo={inputCurrency} size={iconSizes.icon40} />
+          <TransactionTokenContextMenu currencyInfo={inputCurrency} disabled={disableClick} onClose={onClose}>
+            <CurrencyLogo hideNetworkLogo={hideNetworkLogos} currencyInfo={inputCurrency} size={iconSizes.icon40} />
+          </TransactionTokenContextMenu>
         </Flex>
-      </TouchableArea>
+      </Flex>
       <Flex>{separatorElement}</Flex>
-      <TouchableArea onPress={disableClick ? undefined : onPressTokenB}>
+      <Flex>
         {tokenBChainId && !hideNetworkLogos && <NetworkLabel chainId={tokenBChainId} />}
         <Flex centered row justifyContent="space-between">
           <Flex>
             <Text variant="heading3">{tokenDescriptorB}</Text>
             <ValueText value={usdValueB} isLoading={isLoadingB} />
           </Flex>
-          <CurrencyLogo hideNetworkLogo={hideNetworkLogos} currencyInfo={outputCurrency} size={iconSizes.icon40} />
+          <TransactionTokenContextMenu currencyInfo={outputCurrency} disabled={disableClick} onClose={onClose}>
+            <CurrencyLogo hideNetworkLogo={hideNetworkLogos} currencyInfo={outputCurrency} size={iconSizes.icon40} />
+          </TransactionTokenContextMenu>
         </Flex>
-      </TouchableArea>
+      </Flex>
     </Flex>
   )
 }

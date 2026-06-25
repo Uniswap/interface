@@ -3,10 +3,7 @@ import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDapp
 import { AssetCase, isRestTokenSpam } from 'uniswap/src/features/activity/utils/remote'
 import { TransactionType, UnknownTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 
-/**
- * Parse an unknown transaction from the REST API
- */
-export function parseRestUnknownTransaction(transaction: OnChainTransaction): UnknownTransactionInfo {
+export function parseUnknownTransaction(transaction: OnChainTransaction): UnknownTransactionInfo {
   const firstTransfer = transaction.transfers[0]
   let isSpam = false
   let tokenAddress

@@ -59,9 +59,12 @@ function PortfolioValue({
       return undefined
     }
     try {
-      const cached = apolloClient.readQuery<GraphQLApi.AccountListQuery, GraphQLApi.AccountListQueryVariables>({
-        query: GraphQLApi.AccountListDocument,
-        variables: { addresses: [address], valueModifiers, chains: gqlChains },
+      const cached = apolloClient.readQuery<
+        GraphQLApi.PortfoliosTotalValueQuery,
+        GraphQLApi.PortfoliosTotalValueQueryVariables
+      >({
+        query: GraphQLApi.PortfoliosTotalValueDocument,
+        variables: { ownerAddresses: [address], valueModifiers, chains: gqlChains },
       })
       return cached?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined
     } catch {

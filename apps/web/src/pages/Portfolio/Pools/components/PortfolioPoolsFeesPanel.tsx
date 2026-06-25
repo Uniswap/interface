@@ -15,6 +15,7 @@ import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { PortfolioPoolsSidebarCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsSidebarCard'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
@@ -71,7 +72,7 @@ export function PortfolioPoolsFeesPanel({
   const hiddenPositions = useExpando ? eligiblePositions.slice(COLLAPSED_VISIBLE_ROWS) : []
 
   return (
-    <Flex backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing20" gap="$gap16" width="100%">
+    <PortfolioPoolsSidebarCard gap="$gap16">
       <Flex gap="$gap8">
         <Text variant="body3" color="$neutral2">
           {t('pool.fees.totalEarned')}
@@ -121,7 +122,7 @@ export function PortfolioPoolsFeesPanel({
           )}
         </Flex>
       )}
-    </Flex>
+    </PortfolioPoolsSidebarCard>
   )
 }
 

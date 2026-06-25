@@ -15,7 +15,7 @@ import {
   PositionStatusFilterValue,
 } from 'uniswap/src/features/positions/components/PositionStatusFilter'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
-import { getPositionKey } from 'uniswap/src/features/positions/utils'
+import { filterAndSortPositions, getPositionKey } from 'uniswap/src/features/positions/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
@@ -79,12 +79,9 @@ export const PoolsTab = memo(function PoolsTabInner({
   const isLoadingFirstPage = isFetchingFirstPage && !hasData
   const hasErrorWithoutData = !!error && !hasData && !isFetchingFirstPage
 
-  const visiblePositions = useMemo(
-    () => positions.filter((position) => filterStatuses.includes(position.status)),
-    [positions, filterStatuses],
-  )
+  const visiblePositions = useMemo(() => filterAndSortPositions(positions, filterStatuses), [positions, filterStatuses])
   const filteredHiddenPositions = useMemo(
-    () => hiddenPositions.filter((position) => filterStatuses.includes(position.status)),
+    () => filterAndSortPositions(hiddenPositions, filterStatuses),
     [hiddenPositions, filterStatuses],
   )
 

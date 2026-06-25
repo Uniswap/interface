@@ -1,4 +1,5 @@
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Percent, Token, TradeType } from '@uniswap/sdk-core'
 import type {
   BridgeQuoteResponse,
   ChainedQuoteResponse,
@@ -27,6 +28,29 @@ import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 const SWAPPER = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
 const FEE_RECIPIENT = '0xbbbb44272dc658575Ba38f43C438447dDED45358'
 const DEADLINE = 1700000000
+
+// FOT (fee-on-transfer) currencies — taxes are sourced from these, not from the quote route.
+// Use values distinct from the route's `sellFeeBps`/`buyFeeBps` (250/300) to prove the route is ignored.
+const WETH_WITH_SELL_TAX = new Token(
+  WETH.chainId,
+  WETH.address,
+  WETH.decimals,
+  WETH.symbol,
+  WETH.name,
+  /* bypassChecksum */ false,
+  /* buyFeeBps */ undefined,
+  /* sellFeeBps */ BigNumber.from(111),
+)
+const USDC_WITH_BUY_TAX = new Token(
+  USDC_MAINNET.chainId,
+  USDC_MAINNET.address,
+  USDC_MAINNET.decimals,
+  USDC_MAINNET.symbol,
+  USDC_MAINNET.name,
+  /* bypassChecksum */ false,
+  /* buyFeeBps */ BigNumber.from(222),
+  /* sellFeeBps */ undefined,
+)
 
 const DEFAULT_INPUT = {
   amount: '100',
@@ -217,8 +241,8 @@ describe('trade factories', () => {
   it('creates classic trades with amounts, taxes, fees, and recipient output amounts', () => {
     const trade = createClassicTrade({
       quote: createClassicQuote(),
-      currencyIn: WETH,
-      currencyOut: USDC_MAINNET,
+      currencyIn: WETH_WITH_SELL_TAX,
+      currencyOut: USDC_WITH_BUY_TAX,
       tradeType: TradeType.EXACT_INPUT,
       deadline: DEADLINE,
     })
@@ -229,8 +253,9 @@ describe('trade factories', () => {
     expect(trade?.maxAmountIn.quotient.toString()).toBe('110')
     expect(trade?.minAmountOut.quotient.toString()).toBe('190')
     expect(trade?.swapFee?.amount).toBe('5')
-    expect(trade?.inputTax.equalTo(new Percent(250, 10000))).toBe(true)
-    expect(trade?.outputTax.equalTo(new Percent(300, 10000))).toBe(true)
+    // Taxes come from the input/output currencies, not the quote route (which carries 250/300).
+    expect(trade?.inputTax.equalTo(new Percent(111, 10000))).toBe(true)
+    expect(trade?.outputTax.equalTo(new Percent(222, 10000))).toBe(true)
     expect(trade?.quoteOutputAmount.quotient.toString()).toBe('200')
     expect(trade?.quoteOutputAmountUserWillReceive.quotient.toString()).toBe('190')
   })

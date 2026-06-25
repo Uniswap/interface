@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useState } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import {
   EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS,
+  EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX,
   EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX,
 } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 
@@ -75,7 +76,7 @@ export function ExpandableTableRowContainer({
       <Flex
         backgroundColor={isExpanded ? '$surface2' : '$surface1'}
         borderRadius="$rounded16"
-        gap="$spacing4"
+        gap={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX}
         hoverStyle={isExpanded ? { backgroundColor: '$surface2Hovered' } : undefined}
         minWidth={shellMinWidthPx ?? '100%'}
         p="$spacing4"

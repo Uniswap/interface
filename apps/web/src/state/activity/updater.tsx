@@ -32,6 +32,7 @@ import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpda
 import { useAppDispatch } from '~/state/hooks'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
+import type { TransactionDetails } from '~/state/transactions/types'
 import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 export function ActivityStateUpdater() {
@@ -52,6 +53,29 @@ function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: O
   useActivePlanTransactions(onActivityUpdate)
   usePollPendingPlanTransactions(onActivityUpdate)
   return null
+}
+
+function canFinalizeBaseTransactionUpdate({
+  original,
+  update,
+}: {
+  original: TransactionDetails
+  update: Extract<ActivityUpdate, { type: ActivityUpdateTransactionType.BaseTransaction }>['update']
+}): boolean {
+  // Bridge transactions that have been confirmed on the deposit side are finalized differently
+  // They complete cross-chain and don't have traditional receipts when successful
+  const isBridgeWithDepositConfirmed =
+    original.typeInfo.type === TransactionType.Bridge && original.typeInfo.depositConfirmed
+
+  // Batch transactions that are confirmed also don't have traditional receipts
+  const isBatchTransactionConfirmed = Boolean(original.batchInfo && update.hash)
+
+  // For successful bridge transactions with deposit confirmed or confirmed batch transactions, we don't require a receipt
+  // For all other transactions (including failed bridges), we need a receipt to finalize
+  const canFinalizeWithoutReceipt =
+    (isBridgeWithDepositConfirmed || isBatchTransactionConfirmed) && update.status === TransactionStatus.Success
+
+  return Boolean(update.receipt) || canFinalizeWithoutReceipt
 }
 
 function resolveSwapPriceSource({
@@ -114,24 +138,12 @@ function useOnActivityUpdate(): OnActivityUpdate {
           return
         }
 
-        // Bridge transactions that have been confirmed on the deposit side are finalized differently
-        // They complete cross-chain and don't have traditional receipts when successful
-        const isBridgeWithDepositConfirmed =
-          original.typeInfo.type === TransactionType.Bridge && original.typeInfo.depositConfirmed
-
-        // Batch transactions that are confirmed also don't have traditional receipts
-        const isBatchTransactionConfirmed = Boolean(original.batchInfo && update.hash)
-
-        // For successful bridge transactions with deposit confirmed or confirmed batch transactions, we don't require a receipt
-        // For all other transactions (including failed bridges), we need a receipt to finalize
-        const receipt = update.receipt
-        const canFinalizeWithoutReceipt =
-          (isBridgeWithDepositConfirmed || isBatchTransactionConfirmed) && update.status === TransactionStatus.Success
-
-        if (!receipt && !canFinalizeWithoutReceipt) {
+        if (!canFinalizeBaseTransactionUpdate({ original, update })) {
           // We should not finalize a transaction without a confirmed receipt (except for successful bridge and batch transactions)
           return
         }
+
+        const receipt = update.receipt
 
         const updatedTransaction: InterfaceTransactionDetails = {
           ...original,
@@ -140,6 +152,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
           networkFee: update.networkFee ?? original.networkFee,
           status: update.status,
           hash,
+          sponsorInfo: update.sponsorInfo ?? original.sponsorInfo,
         }
 
         if (!isFinalizedTx(updatedTransaction)) {
@@ -180,6 +193,12 @@ function useOnActivityUpdate(): OnActivityUpdate {
             swapStartTimestamp: original.typeInfo.swapStartTimestamp,
             planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
             transactedUSDValue: original.typeInfo.transactedUSDValue,
+            rwaAnalytics: {
+              market_closed: original.typeInfo.marketClosed,
+              price_warning: original.typeInfo.priceWarning,
+              token_in_stocks: original.typeInfo.tokenInStocks,
+              token_out_stocks: original.typeInfo.tokenOutStocks,
+            },
             priceSource: resolveSwapPriceSource({
               inputCurrencyId: original.typeInfo.inputCurrencyId,
               chainId,
@@ -200,6 +219,12 @@ function useOnActivityUpdate(): OnActivityUpdate {
             swapStartTimestamp: original.typeInfo.swapStartTimestamp,
             planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
             transactedUSDValue: original.typeInfo.transactedUSDValue,
+            rwaAnalytics: {
+              market_closed: original.typeInfo.marketClosed,
+              price_warning: original.typeInfo.priceWarning,
+              token_in_stocks: original.typeInfo.tokenInStocks,
+              token_out_stocks: original.typeInfo.tokenOutStocks,
+            },
             priceSource: resolveSwapPriceSource({
               inputCurrencyId: original.typeInfo.inputCurrencyId,
               chainId: bridgeChainIn,

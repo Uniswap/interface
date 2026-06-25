@@ -14,6 +14,7 @@ export type {
 } from '@universe/gating/src/configs'
 export {
   AllowedV4WethHookAddressesConfigKey,
+  AuctionFdvWarningConfigKey,
   BlockedAsyncSubmissionChainIdsConfigKey,
   ChainsConfigKey,
   CreateAuctionConfigKey,
@@ -44,7 +45,6 @@ export type { ExperimentProperties } from '@universe/gating/src/experiments'
 export {
   EthAsErc20UniswapXProperties,
   Experiments,
-  ExploreBackendSortingProperties,
   LayerProperties,
   Layers,
   NativeTokenPercentageBufferProperties,

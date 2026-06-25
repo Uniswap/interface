@@ -106,7 +106,7 @@ export function ExploreScreen(): JSX.Element {
   }, [navigation])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
-  const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
+  const canRenderList = useRenderNextFrame(isSheetReady)
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(chainId ?? null, ModalName.Search)

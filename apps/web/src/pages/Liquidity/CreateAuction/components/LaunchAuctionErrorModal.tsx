@@ -3,6 +3,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { getCreateAuctionErrorMessage } from '~/pages/Liquidity/CreateAuction/getCreateAuctionErrorMessage'
 import { AuctionStartTimePassedError } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 
 interface LaunchAuctionErrorModalProps {
@@ -23,14 +24,19 @@ export function LaunchAuctionErrorModal({
 }: LaunchAuctionErrorModalProps): JSX.Element {
   const { t } = useTranslation()
 
-  // Known pre-submission errors get specific, actionable copy; everything else surfaces a
-  // generic, localized reason rather than the raw error: backend messages are neither
-  // localized nor user-friendly.
+  // Known pre-submission errors get specific, actionable copy. Backend input-validation failures
+  // (e.g. an unsupported fee tier) carry a meaningful reason worth surfacing verbatim; everything
+  // else falls back to a generic, localized reason since raw backend messages aren't user-friendly.
+  // Verbatim backend reasons render on their own line; the generic reason stays inline.
+  const validationReason = getCreateAuctionErrorMessage(error)
   const genericReason = t('toucan.createAuction.launchError.genericReason')
   const subtext =
     error instanceof AuctionStartTimePassedError
       ? t('toucan.createAuction.launchError.startTimePassed', { tokenSymbol })
-      : t('toucan.createAuction.launchError.description', { tokenSymbol, reason: genericReason })
+      : t('toucan.createAuction.launchError.description', {
+          tokenSymbol,
+          reason: validationReason ? `\n${validationReason}` : genericReason,
+        })
 
   return (
     <Dialog

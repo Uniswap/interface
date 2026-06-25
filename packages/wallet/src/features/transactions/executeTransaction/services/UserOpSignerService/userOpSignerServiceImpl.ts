@@ -1,17 +1,12 @@
-import { ensure0xHex, HexString } from '@universe/encoding'
+import { ensure0xHex } from '@universe/encoding'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { buildPackedUserOpTypedData } from 'uniswap/src/features/smartWallet/userOp/buildUserOpTypedData'
+import { encodeCaliburUserOpSignature } from 'uniswap/src/features/smartWallet/userOp/caliburSignature'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
-import { type Address, encodeAbiParameters, pad, toHex } from 'viem'
+import { toHex } from 'viem'
 import type { PublicClient } from 'viem'
-import {
-  entryPoint08Address,
-  formatUserOperation,
-  formatUserOperationRequest,
-  getUserOperationTypedData,
-  type RpcUserOperation,
-} from 'viem/account-abstraction'
+import { entryPoint08Address, type RpcUserOperation } from 'viem/account-abstraction'
 import type { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
-import { createSignedAuthorization } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import type {
   PaymasterClient,
@@ -20,30 +15,6 @@ import type {
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import type { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-
-/**
- * Encodes a raw ECDSA signature into the Calibur format required by the AA module's
- * authorization scheme. This involves creating a bytes-encoded tuple of:
- *   - keyHash: ROOT_KEY_HASH = a consistent root key identifier (bytes32(0))
- *   - signature: the actual 65 byte ECDSA signature bytes
- *   - hookData: empty bytes
- */
-function encodeCaliburUserOpSignature(ecdsaSignature: HexString): HexString {
-  const ROOT_KEY_HASH = pad('0x0', { size: 32 })
-
-  return encodeAbiParameters(
-    [
-      { type: 'bytes32', name: 'keyHash' },
-      { type: 'bytes', name: 'signature' },
-      { type: 'bytes', name: 'hookData' },
-    ],
-    [
-      ROOT_KEY_HASH, // bytes32(0)
-      ecdsaSignature, // 65 bytes ECDSA signature
-      '0x', // empty bytes
-    ],
-  )
-}
 
 export function createBundledDelegationUserOpSignerService(ctx: {
   delegationInfo: DelegationCheckResult
@@ -63,35 +34,17 @@ export function createBundledDelegationUserOpSignerService(ctx: {
     rpcUserOp: RpcUserOperation<'0.8'>,
   ): Promise<RpcUserOperation<'0.8'>> => {
     const signer = await getSigner()
-    const account = ctx.getAccount()
     const viemClient = await ctx.getViemClient()
     const chainId = await viemClient.getChainId()
 
-    // Step 1: EIP-712 typed data signing over the PackedUserOperation
-
-    // Convert hex RPC form → bigint native form for viem signing utilities
-    // NOTE that eip7702Auth gets dropped in viem's formatUserOperation...
-    const nativeUserOp = { ...formatUserOperation(rpcUserOp) }
-    const typedData = getUserOperationTypedData({
-      chainId,
-      entryPointAddress: entryPoint08Address,
-      userOperation: nativeUserOp,
-    })
-
-    if (!typedData.domain) {
-      throw new Error('Typed data domain is required')
-    }
+    // Step 1: EIP-712 typed data signing over the PackedUserOperation.
+    const { domain, packedUserOperationFields, message } = buildPackedUserOpTypedData(rpcUserOp, chainId)
 
     const rawSignature = ensure0xHex(
       await signTypedData({
-        domain: typedData.domain,
-        types: {
-          PackedUserOperation: typedData.types.PackedUserOperation.map((field) => ({
-            name: field.name,
-            type: field.type,
-          })),
-        },
-        value: typedData.message,
+        domain,
+        types: { PackedUserOperation: packedUserOperationFields },
+        value: message,
         signer,
       }),
     )
@@ -99,25 +52,17 @@ export function createBundledDelegationUserOpSignerService(ctx: {
     // Step 2: Calibur signature encoding
     const encodedUserOpSignature = encodeCaliburUserOpSignature(rawSignature)
 
-    // Step 3: Attach 7702 authorization if the wallet still needs delegation.
-    let eip7702Auth = rpcUserOp.eip7702Auth
-    if (!eip7702Auth && ctx.delegationInfo.needsDelegation && ctx.delegationInfo.contractAddress) {
-      // TODO(SWAP-2460): Revisit eip7702Auths and 4337 UserOp nonces; this should be already attached before the encode4337
-      const authorizationNonce = await viemClient.getTransactionCount({
-        address: account.address as Address,
-      })
-      const signedAuthorization = await createSignedAuthorization({
-        signer,
-        walletAddress: account.address as Address,
-        chainId,
-        contractAddress: ctx.delegationInfo.contractAddress as Address,
-        nonce: authorizationNonce,
-      })
-      eip7702Auth = formatUserOperationRequest({ authorization: signedAuthorization }).eip7702Auth
+    // Step 3: the 7702 auth is bundled into the 4337 request up front (round-trips on
+    // `rpcUserOp.eip7702Auth`), never signed here — fail loudly if a delegation-needing userOp lacks it.
+    if (ctx.delegationInfo.needsDelegation && !rpcUserOp.eip7702Auth) {
+      throw new Error(
+        'UserOp requires an EIP-7702 delegation authorization, but none was bundled into the request. ' +
+          'The authorization must be attached before encode_4337/swap_4337, not at signing time.',
+      )
     }
 
-    // Step 4: Rebuild the final signed UserOperation.
-    return { ...rpcUserOp, signature: encodedUserOpSignature, ...(eip7702Auth ? { eip7702Auth } : {}) }
+    // Step 4: Rebuild the final signed UserOperation (preserving any round-tripped eip7702Auth).
+    return { ...rpcUserOp, signature: encodedUserOpSignature }
   }
 
   const sponsorUniswapUserOp: UserOpSigner['sponsorUniswapUserOp'] = async ({

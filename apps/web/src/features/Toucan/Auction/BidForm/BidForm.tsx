@@ -4,9 +4,12 @@ import { KycVerificationStatus } from '@uniswap/client-liquidity/dist/uniswap/li
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Flex, styled, useColorsFromTokenColor } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
@@ -33,6 +36,7 @@ import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuction
 import { useBidFormController } from '~/features/Toucan/Auction/hooks/useBidFormController'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { InlineAlertBanner } from '~/features/Toucan/Shared/InlineAlertBanner'
 import { KycActionButton } from '~/features/Toucan/Shared/KycActionButton'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
@@ -109,6 +113,19 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
   const accountAddress = useActiveAddress(chainId ?? UniverseChainId.Sepolia)
   const isWalletConnected = Boolean(accountAddress)
   const accountDrawer = useAccountDrawer()
+  const dispatch = useDispatch()
+
+  // Bidding requires the app's testnet mode to match the auction chain (see getRequiredTestnetMode).
+  // When it doesn't, the bid button becomes a one-tap CTA to flip testnet mode instead of failing at
+  // submission with "Failed to switch networks for Toucan bid".
+  const isModeMismatch = useIsModeMismatch(chainId)
+  const requiredTestnetMode = getRequiredTestnetMode({
+    isWalletConnected,
+    isActionAvailable: isAuctionInProgress,
+    isModeMismatch,
+    chainId,
+  })
+  const needsTestnetModeSwitch = requiredTestnetMode !== undefined
 
   const kycStatus = useAuctionKycStatus({
     walletAddress: accountAddress,
@@ -134,6 +151,10 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
       accountDrawer.open()
       return
     }
+    if (requiredTestnetMode !== undefined) {
+      dispatch(setIsTestnetModeEnabled(requiredTestnetMode))
+      return
+    }
     if (kycStatus.canBid) {
       handleReviewBidClick()
     } else if (kycStatus.onKycAction) {
@@ -141,15 +162,24 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     }
   }
 
-  const buttonLabel = !isWalletConnected
-    ? t('common.connectWallet.button')
-    : (kycStatus.kycButtonLabel ?? showDisabledState)
+  const buttonLabel = (() => {
+    if (!isWalletConnected) {
+      return t('common.connectWallet.button')
+    }
+    if (needsTestnetModeSwitch) {
+      return requiredTestnetMode ? t('toucan.action.enableTestnetMode') : t('toucan.action.disableTestnetMode')
+    }
+    return (kycStatus.kycButtonLabel ?? showDisabledState)
       ? t('toucan.auction.bidForm.auctionConcluded')
       : t('toucan.bidForm.reviewBid')
+  })()
 
-  const buttonDisabled = isWalletConnected
-    ? submitState.isDisabled || !isAuctionInProgress || shouldDisableBidForm || kycStatus.kycButtonDisabled
-    : false
+  // The testnet-mode-switch CTA stays tappable regardless of the bid inputs, since switching mode is
+  // always a valid action and is a prerequisite to bidding at all.
+  const buttonDisabled =
+    isWalletConnected && !needsTestnetModeSwitch
+      ? submitState.isDisabled || !isAuctionInProgress || shouldDisableBidForm || kycStatus.kycButtonDisabled
+      : false
 
   const shouldShowSwapBanner =
     isWalletConnected &&
@@ -272,7 +302,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
           {shouldShowTokenWarning && token && (
             <TokenWarningCard currencyInfo={token} onPress={() => setShowTokenWarningModal(true)} />
           )}
-          {isWalletConnected && (kycStatus.kycButtonLabel || kycStatus.whitelistLabel) ? (
+          {!needsTestnetModeSwitch && isWalletConnected && (kycStatus.kycButtonLabel || kycStatus.whitelistLabel) ? (
             <KycActionButton
               kycStatus={kycStatus}
               onPress={() =>

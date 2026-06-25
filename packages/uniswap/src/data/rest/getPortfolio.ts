@@ -22,7 +22,7 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
+import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
 import { removeExpiredBalanceOverrides } from 'uniswap/src/features/portfolio/slice/slice'
 import { type CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'

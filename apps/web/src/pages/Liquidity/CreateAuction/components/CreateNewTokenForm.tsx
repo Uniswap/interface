@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -20,9 +21,13 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { getAuctionTokenInfoEnteredProperties } from '~/pages/Liquidity/CreateAuction/analytics'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
 import { TokenAdditionalInfoSection } from '~/pages/Liquidity/CreateAuction/components/TokenAdditionalInfoSection'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
@@ -115,6 +120,22 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const canContinue = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
   const allowedNetworks = useCreateNewTokenAllowedNetworks()
   const address = useActiveAddress(Platform.EVM)
+  const trace = useTrace()
+
+  const handleContinue = useEvent(() => {
+    sendAnalyticsEvent(
+      AuctionEventName.AuctionTokenInfoEntered,
+      getAuctionTokenInfoEnteredProperties({ trace, tokenForm: createNew }),
+    )
+    commitTokenFormAndAdvance()
+  })
+
+  // The name display swaps to an edit input on press; fire the token-name click here because
+  // wrapping the container Flex in <Trace logPress> doesn't catch the inner TouchableArea's press.
+  const handleEnterNameEdit = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionTokenName })
+    setIsEditingName(true)
+  })
 
   // Testnet mode re-partitions the allowed networks, so the default selection (Unichain) can fall
   // out of the offered list; snap it back to a valid chain.
@@ -172,42 +193,44 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
       </Flex>
       <Flex gap="$spacing16">
         <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible">
-          <TouchableArea
-            width={80}
-            height={80}
-            borderRadius="$roundedFull"
-            backgroundColor="$surface3"
-            alignItems="center"
-            justifyContent="center"
-            overflow="hidden"
-            onPress={startImageUpload}
-            accessibilityRole="button"
-            accessibilityLabel={t('toucan.createAuction.step.tokenInfo.image.upload')}
-          >
-            {displayImageUri ? (
-              <UniversalImage
-                uri={displayImageUri}
-                size={{ width: 80, height: 80, resizeMode: UniversalImageResizeMode.Cover }}
-                allowLocalUri
-              />
-            ) : (
-              <ImageUpload color="$neutral2" size="$icon.24" />
-            )}
-            {isImageProcessing && (
-              <Flex
-                position="absolute"
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                alignItems="center"
-                justifyContent="center"
-                backgroundColor="$scrim"
-              >
-                <SpinningLoader color="$white" />
-              </Flex>
-            )}
-          </TouchableArea>
+          <Trace logPress element={ElementName.AuctionTokenImageUpload}>
+            <TouchableArea
+              width={80}
+              height={80}
+              borderRadius="$roundedFull"
+              backgroundColor="$surface3"
+              alignItems="center"
+              justifyContent="center"
+              overflow="hidden"
+              onPress={startImageUpload}
+              accessibilityRole="button"
+              accessibilityLabel={t('toucan.createAuction.step.tokenInfo.image.upload')}
+            >
+              {displayImageUri ? (
+                <UniversalImage
+                  uri={displayImageUri}
+                  size={{ width: 80, height: 80, resizeMode: UniversalImageResizeMode.Cover }}
+                  allowLocalUri
+                />
+              ) : (
+                <ImageUpload color="$neutral2" size="$icon.24" />
+              )}
+              {isImageProcessing && (
+                <Flex
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  right={0}
+                  bottom={0}
+                  alignItems="center"
+                  justifyContent="center"
+                  backgroundColor="$scrim"
+                >
+                  <SpinningLoader color="$white" />
+                </Flex>
+              )}
+            </TouchableArea>
+          </Trace>
           <Flex flex={1} gap="$spacing4" justifyContent="center">
             <Text variant="body3" color="$neutral2">
               {t('toucan.createAuction.step.tokenInfo.name')}
@@ -230,17 +253,12 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               />
             ) : (
               <Flex row alignItems="center" justifyContent="space-between">
-                <TouchableArea flex={1} minWidth={0} onPress={() => setIsEditingName(true)}>
+                <TouchableArea flex={1} minWidth={0} onPress={handleEnterNameEdit}>
                   <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
                     {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
                   </Text>
                 </TouchableArea>
-                <TouchableArea
-                  alignItems="center"
-                  px="$spacing12"
-                  py="$spacing8"
-                  onPress={() => setIsEditingName(true)}
-                >
+                <TouchableArea alignItems="center" px="$spacing12" py="$spacing8" onPress={handleEnterNameEdit}>
                   <Edit color="$neutral1" size="$icon.20" />
                 </TouchableArea>
               </Flex>
@@ -258,21 +276,23 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               <Text variant="body3" color="$neutral2">
                 {t('toucan.createAuction.step.tokenInfo.ticker')}
               </Text>
-              <Input
-                ref={symbolInputRef}
-                flex={1}
-                value={createNew.symbol}
-                onChangeText={(text) => updateCreateNewTokenField('symbol', text)}
-                placeholder={t('toucan.createAuction.step.tokenInfo.tickerPlaceholder')}
-                unstyled
-                outlineStyle="none"
-                fontFamily="$body"
-                fontSize={fonts.body1.fontSize}
-                lineHeight={fonts.body1.lineHeight}
-                fontWeight={fonts.body1.fontWeight}
-                color="$neutral1"
-                placeholderTextColor="$neutral3"
-              />
+              <Trace logFocus element={ElementName.AuctionTokenTicker}>
+                <Input
+                  ref={symbolInputRef}
+                  flex={1}
+                  value={createNew.symbol}
+                  onChangeText={(text) => updateCreateNewTokenField('symbol', text)}
+                  placeholder={t('toucan.createAuction.step.tokenInfo.tickerPlaceholder')}
+                  unstyled
+                  outlineStyle="none"
+                  fontFamily="$body"
+                  fontSize={fonts.body1.fontSize}
+                  lineHeight={fonts.body1.lineHeight}
+                  fontWeight={fonts.body1.fontWeight}
+                  color="$neutral1"
+                  placeholderTextColor="$neutral3"
+                />
+              </Trace>
             </Flex>
             <Flex flex={2}>
               <NetworkSelector
@@ -294,7 +314,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           <Button
             size="large"
             emphasis="primary"
-            onPress={commitTokenFormAndAdvance}
+            onPress={handleContinue}
             isDisabled={!canContinue}
             onDisabledPress={canContinue ? undefined : handleDisabledContinue}
             fill

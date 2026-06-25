@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/balances/hooks/useBalances'
 import { useTokenProjectTokensTvlPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { currencyId as getCurrencyId } from 'uniswap/src/utils/currencyId'
 
 interface HighestTvlChainResult {
@@ -36,10 +38,14 @@ export function useHighestTvlChain({
   const { data } = useTokenProjectTokensTvlPartsFragment({ currencyId })
   const projectTokens = data.project?.tokens
 
+  // Only consider platform-supported chains. Mobile doesn't support non-EVM chains.
+  const { chains: enabledChainIds } = useEnabledChains({ platform: Platform.EVM })
+
   const sortedChains = useMemo<SortedChainEntry[]>(() => {
     if (!projectTokens?.length) {
       return []
     }
+    const enabledChainIdSet = new Set(enabledChainIds)
     const entries: Array<SortedChainEntry & { tvl: number }> = []
     for (const token of projectTokens) {
       if (!token) {
@@ -50,14 +56,14 @@ export function useHighestTvlChain({
         continue
       }
       const chainId = fromGraphQLChain(token.chain)
-      if (!chainId) {
+      if (!chainId || !enabledChainIdSet.has(chainId)) {
         continue
       }
       entries.push({ chainId, address: token.address ?? null, tvl })
     }
     entries.sort((a, b) => b.tvl - a.tvl)
     return entries.map(({ chainId, address }) => ({ chainId, address }))
-  }, [projectTokens])
+  }, [projectTokens, enabledChainIds])
 
   const gasCurrencyIds = useMemo(() => {
     if (!accountAddress) {

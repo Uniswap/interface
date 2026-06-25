@@ -184,10 +184,11 @@ function AddLiquidityContent(): JSX.Element {
 
         {/* Two-column layout */}
         <Flex row gap="$spacing20" justifyContent="space-between" width="100%" mt="$spacing16">
-          {/* Left sidebar — hidden on mobile */}
+          {/* Left sidebar — hidden on mobile. The wrapper stretches to the full row height (no
+              alignSelf) so the sticky card inside has room to stick; see FormWrapper for the same pattern. */}
           {!media.xl && (
-            <Flex width={SIDEBAR_WIDTH} alignSelf="flex-start">
-              {flowState === 'browse' && <PoolProgressIndicator steps={browseSteps} />}
+            <Flex width={SIDEBAR_WIDTH}>
+              {flowState === 'browse' && <PoolProgressIndicator steps={browseSteps} stickyTopOffset={0} />}
               {flowState === 'form' && <PoolInfoCard poolData={poolData ?? undefined} loading={poolLoading} />}
             </Flex>
           )}

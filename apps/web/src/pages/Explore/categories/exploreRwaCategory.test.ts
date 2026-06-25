@@ -5,28 +5,29 @@ import {
   isRankedRwaExploreCategory,
   isRwaExploreCategory,
 } from '~/pages/Explore/categories/exploreRwaCategory'
+import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 describe('exploreCategoryToRankedRwaCategory', () => {
   it('maps ranked explore categories to data-api rwa categories', () => {
-    expect(exploreCategoryToRankedRwaCategory('stocks')).toBe(RwaCategory.STOCKS)
-    expect(exploreCategoryToRankedRwaCategory('etfs')).toBe(RwaCategory.ETFS)
+    expect(exploreCategoryToRankedRwaCategory(ExploreCategory.Stocks)).toBe(RwaCategory.STOCKS)
+    expect(exploreCategoryToRankedRwaCategory(ExploreCategory.Etfs)).toBe(RwaCategory.ETFS)
   })
 })
 
 describe('isRwaExploreCategory', () => {
   it('identifies stocks, commodities, and etfs as rwa categories', () => {
-    expect(isRwaExploreCategory('stocks')).toBe(true)
-    expect(isRwaExploreCategory('commodities')).toBe(true)
-    expect(isRwaExploreCategory('etfs')).toBe(true)
-    expect(isRwaExploreCategory('popular')).toBe(false)
+    expect(isRwaExploreCategory(ExploreCategory.Stocks)).toBe(true)
+    expect(isRwaExploreCategory(ExploreCategory.Commodities)).toBe(true)
+    expect(isRwaExploreCategory(ExploreCategory.Etfs)).toBe(true)
+    expect(isRwaExploreCategory(ExploreCategory.Popular)).toBe(false)
   })
 })
 
 describe('isRankedRwaExploreCategory', () => {
   it('identifies stocks and etfs as ranked categories', () => {
-    expect(isRankedRwaExploreCategory('stocks')).toBe(true)
-    expect(isRankedRwaExploreCategory('etfs')).toBe(true)
-    expect(isRankedRwaExploreCategory('commodities')).toBe(false)
-    expect(isRankedRwaExploreCategory('popular')).toBe(false)
+    expect(isRankedRwaExploreCategory(ExploreCategory.Stocks)).toBe(true)
+    expect(isRankedRwaExploreCategory(ExploreCategory.Etfs)).toBe(true)
+    expect(isRankedRwaExploreCategory(ExploreCategory.Commodities)).toBe(false)
+    expect(isRankedRwaExploreCategory(ExploreCategory.Popular)).toBe(false)
   })
 })

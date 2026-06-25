@@ -8,6 +8,7 @@ import {
   SERVICE_README_URL,
   TEAM,
   apmTagFilter,
+  rateDenominatorFloor,
   webResourceName,
 } from './constants'
 
@@ -148,12 +149,14 @@ const endpoints: EndpointSpec[] = [
 function endpointLatencyMonitor(spec: EndpointSpec): MonitorDefinition {
   const id = snakeCase(spec.name)
   const metric = `${APM_METRIC_PREFIX}_${spec.name}`
+  // Volume-gate: scale p95 by (hits / clamp_min(hits, floor)) so a lone slow request in a quiet window can't page.
+  const hits = `count:${metric}{${apmFilter}}.as_count()`
   return {
     id: `privy_embedded_wallet_${id}_latency_p95`,
     name: `P95 latency on ${spec.name}`,
     type: 'query alert',
-    query: `avg(last_5m):p95:${metric}{${apmFilter}} > ${spec.latency.critical}`,
-    alertBody: `P95 latency on \`${spec.name}\` exceeded ${spec.latency.critical}s over the last 5 minutes.${spec.notes ? `\n\n${spec.notes}` : ''}`,
+    query: `avg(last_5m):( p95:${metric}{${apmFilter}} * ${hits} / clamp_min(${hits}, ${MIN_REQUESTS_5M}) ) > ${spec.latency.critical}`,
+    alertBody: `P95 latency on \`${spec.name}\` exceeded ${spec.latency.critical}s over the last 5 minutes. Requires at least ${MIN_REQUESTS_5M} requests in the window before it can alert.${spec.notes ? `\n\n${spec.notes}` : ''}`,
     recoveryBody: `P95 latency on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,
@@ -175,6 +178,7 @@ function endpointErrorMonitor(spec: EndpointSpec): MonitorDefinition {
   const resource = webResourceName(spec.name)
   const errors = `sum:trace.web.request.errors{${apmFilter},resource_name:${resource}}.as_count()`
   const hits = `sum:trace.web.request.hits{${apmFilter},resource_name:${resource}}.as_count()`
+  const minRequests = rateDenominatorFloor(spec.errorRate.critical, MIN_REQUESTS_5M)
   return {
     id: `privy_embedded_wallet_${id}_error_rate`,
     name: `5xx error rate on ${spec.name}`,
@@ -183,8 +187,8 @@ function endpointErrorMonitor(spec: EndpointSpec): MonitorDefinition {
     // null, not zero (as_count() does not zero-fill), so the monitor stays silent via
     // `notifyNoData: false` below (do not flip it to true). The `hits` denominator is
     // floored via clamp_min so a lone 5xx in a low-traffic window cannot trip the rate.
-    query: `sum(last_5m):( ${errors} / clamp_min(${hits}, ${MIN_REQUESTS_5M}) ) * 100 > ${spec.errorRate.critical}`,
-    alertBody: `5xx (server) error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes. Handled 4xx (auth / origin / validation failures) are excluded; see the 4xx anomaly monitor for client-error spikes. Requires at least ${MIN_REQUESTS_5M} requests in the window before the rate can alert.`,
+    query: `sum(last_5m):( ${errors} / clamp_min(${hits}, ${minRequests}) ) * 100 > ${spec.errorRate.critical}`,
+    alertBody: `5xx (server) error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes. Handled 4xx (auth / origin / validation failures) are excluded; see the 4xx anomaly monitor for client-error spikes. Requires at least ${minRequests} requests in the window before the rate can alert.`,
     recoveryBody: `5xx error rate on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,

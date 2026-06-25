@@ -31,9 +31,7 @@
     "README.md"
   ],
   "scripts": {
-    "postinstall": "tsc || exit 0;",
     "typecheck": "nx typecheck hashcash-native",
-    "build": "nx build hashcash-native",
     "clean": "nx clean hashcash-native",
     "check": "nx check hashcash-native",
     "check:fast": "nx check:fast hashcash-native",

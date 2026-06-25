@@ -85,6 +85,10 @@ export {
   V1_TRADING_API_PATHS,
 } from '@universe/api/src/clients/trading/createTradingApiClient'
 export {
+  createTradingApiFetchClient,
+  type TradingApiFetchClientContext,
+} from '@universe/api/src/clients/trading/createTradingApiFetchClient'
+export {
   type BridgeQuoteResponse,
   type ChainedQuoteResponse,
   type ClassicQuoteResponse,

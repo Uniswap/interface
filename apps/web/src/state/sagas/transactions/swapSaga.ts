@@ -59,6 +59,12 @@ export function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGe
     swapStartTimestamp: analytics.swap_start_timestamp,
     planAnalytics: planAnalyticsToCamelCase(analytics),
     transactedUSDValue: analytics.token_in_amount_usd,
+    rwaAnalytics: {
+      marketClosed: analytics.market_closed,
+      priceWarning: analytics.price_warning,
+      tokenInStocks: analytics.token_in_stocks,
+      tokenOutStocks: analytics.token_out_stocks,
+    },
   })
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
@@ -114,6 +120,12 @@ export function createHandleSwapTransactionWalletCallStep(ctx: {
       swapStartTimestamp: analytics.swap_start_timestamp,
       planAnalytics: planAnalyticsToCamelCase(analytics),
       transactedUSDValue: analytics.token_in_amount_usd,
+      rwaAnalytics: {
+        marketClosed: analytics.market_closed,
+        priceWarning: analytics.price_warning,
+        tokenInStocks: analytics.token_in_stocks,
+        tokenOutStocks: analytics.token_out_stocks,
+      },
     })
 
     const batchId = yield* handleAtomicSendCalls({

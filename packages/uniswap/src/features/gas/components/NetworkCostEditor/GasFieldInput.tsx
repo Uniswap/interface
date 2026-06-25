@@ -35,16 +35,16 @@ export function GasFieldInput({
   })
 
   return (
-    <Flex gap="$spacing4">
+    <Flex gap="$spacing8">
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="body3" color="$neutral2">
+          <Text variant="body3" color="$neutral1">
             {label}
           </Text>
           <GasFieldTooltip tooltipKey={tooltipKey} />
         </Flex>
         {hint && (
-          <Text variant="body4" color="$neutral3">
+          <Text variant="body3" color="$neutral3">
             {hint}
           </Text>
         )}
@@ -52,7 +52,7 @@ export function GasFieldInput({
       <Flex
         row
         alignItems="center"
-        backgroundColor={error ? '$statusCritical2' : '$surface2'}
+        backgroundColor={error ? '$statusCritical2' : '$transparent'}
         borderColor={error ? '$statusCritical' : '$surface3'}
         borderRadius="$rounded12"
         borderWidth="$spacing1"
@@ -67,8 +67,8 @@ export function GasFieldInput({
           backgroundColor="$transparent"
           borderWidth={0}
           color="$neutral1"
-          fontFamily="$subHeading"
-          fontSize="$large"
+          fontFamily="$body"
+          fontSize="$medium"
           height="auto"
           keyboardType="decimal-pad"
           outlineColor="$transparent"

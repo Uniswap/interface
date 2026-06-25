@@ -13,6 +13,7 @@ import {
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import {
   type GeoRestrictionMode,
+  useGeoRestrictedTokenSymbol,
   useGeoRestrictionMode,
 } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getBalanceWarning'
@@ -37,12 +38,14 @@ export function getSwapWarnings({
   derivedSwapInfo,
   offline,
   geoRestrictionMode,
+  geoRestrictedTokenSymbol,
 }: {
   t: TFunction
   formatPercent: LocalizationContextState['formatPercent']
   derivedSwapInfo: DerivedSwapInfo
   offline: boolean
   geoRestrictionMode: GeoRestrictionMode
+  geoRestrictedTokenSymbol?: string
 }): Warning[] {
   const warnings: Warning[] = []
 
@@ -52,9 +55,12 @@ export function getSwapWarnings({
 
   const { trade } = derivedSwapInfo
 
-  // Geo-restriction wins over the generic token-blocked message — its CTA and card
-  // are more specific, so push it first to let `blockingWarning` pick it up.
-  const geoRestrictionWarning = getGeoRestrictionWarning(t, geoRestrictionMode)
+  // pushed before the generic token-blocked warning so its more specific CTA wins
+  const geoRestrictionWarning = getGeoRestrictionWarning({
+    t,
+    mode: geoRestrictionMode,
+    tokenSymbol: geoRestrictedTokenSymbol,
+  })
   if (geoRestrictionWarning) {
     warnings.push(geoRestrictionWarning)
   }
@@ -103,9 +109,10 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   const { formatPercent } = useLocalizationContext()
   const offline = useIsOffline()
   const geoRestrictionMode = useGeoRestrictionMode()
+  const geoRestrictedTokenSymbol = useGeoRestrictedTokenSymbol()
 
   return useMemoCompare(
-    () => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline, geoRestrictionMode }),
+    () => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline, geoRestrictionMode, geoRestrictedTokenSymbol }),
     isEqual,
   )
 }
@@ -116,6 +123,9 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
   const accountAddress = useActiveAddress(derivedSwapInfo.chainId)
 
   const gasFee = useSwapTxStore((s) => s.gasFee)
+  const isGasSponsored = useSwapTxStore(
+    (s) => s.trade && 'sponsorshipInfo' in s.trade.quote && s.trade.quote.sponsorshipInfo?.sponsored,
+  )
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
@@ -123,6 +133,7 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
     accountAddress,
     derivedInfo: derivedSwapInfo,
     gasFee: gasFee.value,
+    isGasSponsored,
   })
 
   const allWarnings = useMemo(() => {

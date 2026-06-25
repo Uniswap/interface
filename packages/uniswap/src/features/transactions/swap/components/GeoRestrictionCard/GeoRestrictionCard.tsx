@@ -5,23 +5,14 @@ import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { GeoRestrictionModal } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionModal'
 import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
 import {
+  useGeoRestrictedTokenSymbol,
   useGeoRestrictionMode,
-  useIsTokenGeoRestricted,
 } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function GeoRestrictionCard(): JSX.Element | null {
   const { t } = useTranslation()
   const mode = useGeoRestrictionMode()
-  const inputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currency)
-  const outputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.OUTPUT]?.currency)
-  // The restriction can be triggered by either side, so label the warning with the blocked
-  // token, preferring the input when it's the restricted side. The card returns null in
-  // `default` mode, so by the time this symbol is read at least one side is restricted; if it
-  // isn't the input, it's the output.
-  const isInputRestricted = useIsTokenGeoRestricted(inputCurrency)
-  const restrictedSymbol = (isInputRestricted ? inputCurrency : outputCurrency)?.symbol
+  const restrictedSymbol = useGeoRestrictedTokenSymbol()
   const { isOpen, open, close } = useGeoRestrictionModalStore((s) => ({
     isOpen: s.isOpen,
     open: s.open,
@@ -32,9 +23,7 @@ export function GeoRestrictionCard(): JSX.Element | null {
     return null
   }
 
-  // Use a complete generic string when the token symbol is unavailable rather than
-  // interpolating a translated fallback into another translated string (breaks grammar
-  // in some languages).
+  // Use a self-contained generic string when the symbol is unavailable; interpolating a fallback breaks grammar in some languages.
   const description = ((): string => {
     if (restrictedSymbol) {
       return mode === 'restricted'
@@ -51,6 +40,7 @@ export function GeoRestrictionCard(): JSX.Element | null {
       <TouchableArea onPress={open}>
         <InlineCard
           padding="$spacing16"
+          iconSize="$icon.16"
           CtaButtonIcon={ExternalLink}
           CtaButtonIconColor="$neutral2"
           Icon={GlobeFilled}

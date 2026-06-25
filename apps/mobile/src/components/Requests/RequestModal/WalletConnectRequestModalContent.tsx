@@ -7,6 +7,7 @@ import { ClientDetails, PermitInfo } from 'src/components/Requests/RequestModal/
 import {
   isBatchedTransactionRequest,
   isTransactionRequest,
+  isUserOpRequest,
   WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text } from 'ui/src'
@@ -295,6 +296,7 @@ function ScanningContent({
           confirmedRisk={confirmedRisk}
           tx={isBatchedTransactionRequest(request) ? { ...request.encodedTransaction, chainId } : undefined}
           gasOverrides={gasOverrides}
+          sponsorMetadata={isUserOpRequest(request) && request.gasSponsored ? request.sponsorMetadata : undefined}
           onConfirmRisk={onConfirmRisk}
           onChangeGasOverrides={onChangeGasOverrides}
           onRiskLevelChange={onRiskLevelChange}

@@ -50,7 +50,8 @@
         "dependencies",
         "{projectRoot}/src/clients/trading/api.json",
         "{projectRoot}/scripts/modifyTradingApiTypes.mts",
-        "{projectRoot}/src/clients/trading/types.ts"
+        "{projectRoot}/src/clients/trading/types.ts",
+        "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/clients/trading/__generated__"]
     },
@@ -75,7 +76,8 @@
         "{workspaceRoot}/apps/mobile/src/**/*.graphql",
         "{workspaceRoot}/apps/extension/src/**/*.graphql",
         "{workspaceRoot}/packages/wallet/src/**/*.graphql",
-        "{workspaceRoot}/packages/uniswap/src/**/*.graphql"
+        "{workspaceRoot}/packages/uniswap/src/**/*.graphql",
+        "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/clients/graphql/__generated__"]
     }

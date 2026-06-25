@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { connect } from '@wagmi/core'
 import { useDispatch } from 'react-redux'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -41,7 +42,6 @@ export function useOnCompleteEmbeddedWalletLogin(): (input: CompleteEmbeddedWall
     await connect(wagmiConfig, { connector })
     if (isCreate) {
       sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
-      accountDrawer.open()
     } else {
       sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
         result: WalletConnectionResult.Succeeded,
@@ -49,6 +49,13 @@ export function useOnCompleteEmbeddedWalletLogin(): (input: CompleteEmbeddedWall
         wallet_type: walletTypeToAmplitudeWalletType(connector.type),
         wallet_address: walletAddress,
       })
+    }
+    // On mobile web the mini portfolio should not be shown after login (close also resets
+    // the drawer's embedded login view state). On desktop it auto-opens after creation.
+    if (isMobileWeb) {
+      accountDrawer.close()
+    } else if (isCreate) {
+      accountDrawer.open()
     }
   })
 }

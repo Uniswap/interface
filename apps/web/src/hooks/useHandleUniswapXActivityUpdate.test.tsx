@@ -280,6 +280,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 
@@ -336,6 +342,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 
@@ -373,6 +385,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 

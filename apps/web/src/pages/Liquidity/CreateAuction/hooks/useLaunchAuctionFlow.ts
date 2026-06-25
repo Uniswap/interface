@@ -4,14 +4,17 @@ import { useNavigate } from 'react-router'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { AuctionCreateAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
+import type {
+  AuctionCreateAnalyticsProperties,
+  AuctionCreateFailedProperties,
+  AuctionCreateFailedStep,
+} from 'uniswap/src/features/telemetry/types'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import {
   type AuctionLaunchTransactionInfo,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import type { EVMAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -44,6 +47,14 @@ interface UseLaunchAuctionFlowParams {
     predictedAuctionAddress: string
     predictedTokenAddress: string
   }) => AuctionCreateAnalyticsProperties
+  /**
+   * Builds `Auction Create Failed` properties for the wallet / launch-transaction failure surface.
+   * Called in onFailure after user rejections are filtered out, so cancellations aren't counted.
+   */
+  getCreateFailedProperties?: (args: {
+    failedStep: AuctionCreateFailedStep
+    errorCode?: string | number
+  }) => AuctionCreateFailedProperties
 }
 
 interface LaunchSuccess {
@@ -60,6 +71,8 @@ export interface LaunchAuctionFlow {
   currentProgressStepIndex: number
   currentStepPending: boolean
   isLaunching: boolean
+  /** True while CreateAuction is prefetching after the review modal opens (drives the launch button spinner). */
+  isPreparing: boolean
   isErrorModalOpen: boolean
   /** The error behind the error modal, so it can map known errors to specific copy. */
   launchError?: Error
@@ -79,6 +92,7 @@ export function useLaunchAuctionFlow({
   tokenLogoUrl,
   launchSubmit,
   getLaunchAnalyticsProperties,
+  getCreateFailedProperties,
 }: UseLaunchAuctionFlowParams): LaunchAuctionFlow {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -86,7 +100,10 @@ export function useLaunchAuctionFlow({
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [isLaunching, setIsLaunching] = useState(false)
-  const [transactions, setTransactions] = useState<ValidatedTransactionRequest[]>([])
+  // CreateAuction is prefetched when the review modal opens so the calldata + transaction count are
+  // ready by the time the user confirms; the modal shows a pending spinner while this is true.
+  const [isPreparing, setIsPreparing] = useState(false)
+  const [preparedResult, setPreparedResult] = useState<CreateAuctionSubmitResult | undefined>(undefined)
   const [currentStep, setCurrentLaunchStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>(
     undefined,
   )
@@ -109,32 +126,47 @@ export function useLaunchAuctionFlow({
   const resetProgress = useCallback(() => {
     setIsLaunching(false)
     setCurrentLaunchStep(undefined)
-    setTransactions([])
   }, [])
 
-  const handleLaunchToken = useEvent(async () => {
+  // Kicks off CreateAuction (an idempotent calldata build — no on-chain side effects) as the review
+  // modal opens so the result is ready when the user confirms. Re-runs on every open/retry, picking
+  // up any config edits made after a previous open.
+  const prepareLaunch = useEvent(async () => {
     setLaunchWalletError(undefined)
     setIsErrorDismissed(false)
     setLaunchSuccess(undefined)
     setIsSuccessModalOpen(false)
     setAwaitingConfirmationRedirect(false)
     setCurrentLaunchStep(undefined)
-    setTransactions([])
+    setIsLaunching(false)
+    setPreparedResult(undefined)
 
+    setIsPreparing(true)
+    const result = await launchSubmit.onLaunch()
+    setIsPreparing(false)
+
+    // On failure, launchSubmit.error drives the error modal and preparedResult stays undefined, so
+    // the launch button remains disabled.
+    if (result) {
+      setPreparedResult(result)
+    }
+  })
+
+  const handleLaunchToken = useEvent(async () => {
     if (!evmAccount || !isSignerMnemonicAccountDetails(evmAccount)) {
       setLaunchWalletError(new Error(t('toucan.createAuction.walletRequired')))
       return
     }
 
-    setIsLaunching(true)
-
-    const result = await launchSubmit.onLaunch()
+    // Reuse the CreateAuction result captured when the modal opened. If it isn't ready (still
+    // preparing) or the prefetch failed, there's nothing to submit — the button is disabled in
+    // both of those states.
+    const result = preparedResult
     if (!result) {
-      setIsLaunching(false)
       return
     }
 
-    setTransactions(result.transactions)
+    setIsLaunching(true)
 
     const analyticsProperties = getLaunchAnalyticsProperties?.({
       predictedAuctionAddress: result.predictedAuctionAddress,
@@ -179,31 +211,41 @@ export function useLaunchAuctionFlow({
       onFailure: (error: Error) => {
         resetProgress()
         const err = coerceUnknownToError(error, 'Create auction launch failed')
-        // A user rejecting the wallet prompt isn't a launch failure: keep the review modal open.
+        // A user rejecting the wallet prompt isn't a launch failure: keep the review modal open with
+        // the prepared result intact so they can retry without re-fetching.
         if (didUserReject(err)) {
           return
+        }
+        const failedProps = getCreateFailedProperties?.({ failedStep: 'launch' })
+        if (failedProps) {
+          sendAnalyticsEvent(AuctionEventName.AuctionCreateFailed, failedProps)
         }
         setLaunchWalletError(err)
       },
     })
   })
 
-  const openReviewModal = useCallback(() => setIsReviewModalOpen(true), [])
-  const closeReviewModal = useCallback(() => {
+  const openReviewModal = useEvent(() => {
+    setIsReviewModalOpen(true)
+    void prepareLaunch()
+  })
+  const closeReviewModal = useEvent(() => {
     setIsReviewModalOpen(false)
+    setPreparedResult(undefined)
+    setIsPreparing(false)
     resetProgress()
-  }, [resetProgress])
+  })
 
   const handleCloseErrorModal = useCallback(() => {
     setIsErrorDismissed(true)
     setLaunchWalletError(undefined)
   }, [])
 
-  const handleRetry = useCallback(() => {
-    setIsErrorDismissed(true)
-    setLaunchWalletError(undefined)
+  const handleRetry = useEvent(() => {
+    // prepareLaunch clears the dismissed/error state and re-fetches a fresh CreateAuction result.
     setIsReviewModalOpen(true)
-  }, [])
+    void prepareLaunch()
+  })
 
   const navigateToAuction = useEvent(() => {
     if (!launchSuccess) {
@@ -239,14 +281,13 @@ export function useLaunchAuctionFlow({
     }
   }, [awaitingConfirmationRedirect, isLaunchConfirmed, navigateToAuction])
 
-  const progressSteps = useMemo<LaunchProgressStep[]>(
-    () =>
-      // The launch multicall is always last; any earlier txs are ERC20 approvals (existing-token path).
-      transactions.map((_, index) =>
-        index === transactions.length - 1 ? LaunchProgressStep.PendingConfirmation : LaunchProgressStep.ApproveToken,
-      ),
-    [transactions],
-  )
+  const progressSteps = useMemo<LaunchProgressStep[]>(() => {
+    // The launch multicall is always last; any earlier txs are ERC20 approvals (existing-token path).
+    const txs = preparedResult?.transactions ?? []
+    return txs.map((_, index) =>
+      index === txs.length - 1 ? LaunchProgressStep.PendingConfirmation : LaunchProgressStep.ApproveToken,
+    )
+  }, [preparedResult])
 
   const currentProgressStepIndex = useMemo<number>(() => {
     // Each step wraps the exact tx we passed in (createApprovalTransactionStep / createSwapTransactionStep),
@@ -255,8 +296,8 @@ export function useLaunchAuctionFlow({
     if (!step || !('txRequest' in step)) {
       return -1
     }
-    return transactions.findIndex((tx) => tx === step.txRequest)
-  }, [currentStep, transactions])
+    return (preparedResult?.transactions ?? []).findIndex((tx) => tx === step.txRequest)
+  }, [currentStep, preparedResult])
 
   return {
     isReviewModalVisible: isReviewModalOpen && !isErrorModalOpen,
@@ -267,6 +308,7 @@ export function useLaunchAuctionFlow({
     currentProgressStepIndex,
     currentStepPending: currentStep?.accepted ?? false,
     isLaunching,
+    isPreparing,
     isErrorModalOpen,
     launchError,
     handleCloseErrorModal,

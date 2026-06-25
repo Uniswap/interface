@@ -24,9 +24,9 @@ const IconWrapper = deprecatedStyled.div<{ size?: number }>`
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
   }
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+  @media (max-width: ${breakpoints.xl}px) {
     align-items: flex-end;
-  `};
+  }
 `
 
 const MINI_ICON_SIZE = 16

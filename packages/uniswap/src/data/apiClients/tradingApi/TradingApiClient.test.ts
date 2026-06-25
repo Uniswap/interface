@@ -22,6 +22,7 @@ import {
 import {
   checkWalletDelegation,
   getFeatureFlaggedHeaders,
+  TradingApiClient,
   TradingApiHeaders,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -572,6 +573,40 @@ describe('getFeatureFlaggedHeaders', () => {
           break
       }
     })
+  })
+})
+
+/**
+ * On web the session lives in an HttpOnly cookie, so every trading API request
+ * must run with credentials: 'include' for the backend to see the session.
+ * Guards against regressing to a fetch client that drops the cookie.
+ */
+describe('TradingApiClient web session credentials', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('sends credentials: include on fetchQuote so the session cookie reaches the backend', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: vi.fn().mockResolvedValue({ routing: TradingApi.Routing.CLASSIC, quote: {} }),
+    })
+
+    await TradingApiClient.fetchQuote({
+      type: TradingApi.TradeType.EXACT_INPUT,
+      amount: '1000000000000000000',
+      tokenInChainId: 1 as TradingApi.ChainId,
+      tokenOutChainId: 1 as TradingApi.ChainId,
+      tokenIn: '0x1234567890abcdef1234567890abcdef12345678',
+      tokenOut: '0xabcdef1234567890abcdef1234567890abcdef12',
+      swapper: '0x9876543210fedcba9876543210fedcba98765432',
+    })
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/quote'),
+      expect.objectContaining({ credentials: 'include' }),
+    )
   })
 })
 

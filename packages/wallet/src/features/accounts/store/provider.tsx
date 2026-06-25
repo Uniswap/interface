@@ -1,4 +1,5 @@
 import { ensure0xHex } from '@universe/encoding'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Account } from 'uniswap/src/features/accounts/store/types/Account'
@@ -21,6 +22,7 @@ import {
   ReadonlyWallet,
   WalletAppsAccountsData,
 } from 'wallet/src/features/accounts/store/types'
+import { buildSmartWalletCapabilities } from 'wallet/src/features/batchedTransactions/utils'
 import { useGetSwapDelegationInfoForActiveAccount } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import {
   Account as ReduxAccount,
@@ -192,6 +194,7 @@ function useCAIP25Session(activeAddress?: string): CAIP25Session {
   const { chains: enabledChains } = useEnabledChains()
 
   const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
+  const is7677GasSponsorshipEnabled = useFeatureFlag(FeatureFlags.Support7677GasSponsorship)
 
   return useMemo(() => {
     // 1. Create default scope
@@ -206,24 +209,35 @@ function useCAIP25Session(activeAddress?: string): CAIP25Session {
       },
     }
 
-    // 2. Add overrides if smart wallet upgrades are planned
+    // 2. Add overrides and capabilities
     const scopes: CAIP25Session['scopes'] = {}
     for (const chainId of enabledChains) {
       const swapDelegationInfo = getSwapDelegationInfo(chainId)
+      const status = swapDelegationInfo.isWalletDelegatedToUniswap
+        ? 'supported'
+        : swapDelegationInfo.delegationInclusion
+          ? 'ready'
+          : 'unsupported'
 
-      if (swapDelegationInfo.delegationInclusion) {
-        // Update the default scope to remove this chain we are overriding
-        defaultScope.chains = defaultScope.chains.filter((c) => c !== chainId.toString())
+      if (status === 'unsupported') {
+        continue
+      }
 
-        scopes[`${EVM_NAMESPACE_IDENTIFIER}:${chainId}`] = {
-          accounts: activeAddress ? [activeAddress] : [],
-          methods: [...DEFAULT_EVM_METHODS, 'wallet_sendCalls'],
-          notifications: [],
-          clientContext: {
-            directPrivateKeyAccess: true,
-            nextEvmUpgradeAddress: swapDelegationInfo.delegationAddress,
-          },
-        }
+      // Update the default scope to remove this chain we are overriding
+      defaultScope.chains = defaultScope.chains.filter((c) => c !== chainId.toString())
+
+      scopes[`${EVM_NAMESPACE_IDENTIFIER}:${chainId}`] = {
+        accounts: activeAddress ? [activeAddress] : [],
+        methods: [...DEFAULT_EVM_METHODS, 'wallet_sendCalls'],
+        notifications: [],
+        capabilities: buildSmartWalletCapabilities({ status, is7677GasSponsorshipEnabled }),
+        clientContext: {
+          directPrivateKeyAccess: true,
+          // Only chains pending a delegation upgrade carry the next upgrade address.
+          ...(swapDelegationInfo.delegationInclusion
+            ? { nextEvmUpgradeAddress: swapDelegationInfo.delegationAddress }
+            : {}),
+        },
       }
     }
 
@@ -241,5 +255,5 @@ function useCAIP25Session(activeAddress?: string): CAIP25Session {
         },
       },
     }
-  }, [activeAddress, enabledChains, getSwapDelegationInfo])
+  }, [activeAddress, enabledChains, getSwapDelegationInfo, is7677GasSponsorshipEnabled])
 }

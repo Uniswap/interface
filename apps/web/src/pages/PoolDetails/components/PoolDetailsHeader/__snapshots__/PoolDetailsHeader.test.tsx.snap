@@ -13,18 +13,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-gap1569"
       >
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -36,18 +24,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
         >
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -56,18 +32,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-200px _height-28--7999999991290300390 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
             />
           </div>
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -81,18 +45,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center _justifyContent-center"
       >
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -101,18 +53,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-42px _height-34px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
           />
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -121,18 +61,6 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-42px _height-34px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
           />
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"

@@ -4,6 +4,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const mockFragmentData = jest.fn()
 const mockUseBalances = jest.fn()
+const mockUseEnabledChains = jest.fn()
 
 jest.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
   useTokenProjectTokensTvlPartsFragment: () => ({ data: mockFragmentData() }),
@@ -13,10 +14,18 @@ jest.mock('uniswap/src/data/balances/hooks/useBalances', () => ({
   useBalances: (params: unknown) => mockUseBalances(params),
 }))
 
+jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: () => mockUseEnabledChains(),
+}))
+
+// Platform-supported (EVM) chains used across these tests. Solana is intentionally excluded.
+const ENABLED_EVM_CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]
+
 describe(useHighestTvlChain, () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseBalances.mockReturnValue(null)
+    mockUseEnabledChains.mockReturnValue({ chains: ENABLED_EVM_CHAINS })
   })
 
   it('returns the chain with the highest TVL', () => {
@@ -34,6 +43,38 @@ describe(useHighestTvlChain, () => {
 
     expect(result.current.chainId).toBe(UniverseChainId.Base)
     expect(result.current.address).toBe('0xBaseAddress')
+  })
+
+  it('excludes chains not supported by the platform (e.g. Solana on mobile)', () => {
+    // Even though Solana has the highest TVL, it is not an enabled (EVM) chain on mobile,
+    // so the Buy flow must not redirect there and dead-end at "Connect to Solana" (CONS-2395).
+    mockFragmentData.mockReturnValue({
+      project: {
+        tokens: [
+          { chain: 'SOLANA', address: 'SolAddress', market: { totalValueLocked: { value: 5_000_000 } } },
+          { chain: 'ETHEREUM', address: '0xEthAddress', market: { totalValueLocked: { value: 500_000 } } },
+          { chain: 'BASE', address: '0xBaseAddress', market: { totalValueLocked: { value: 2_000_000 } } },
+        ],
+      },
+    })
+
+    const { result } = renderHook(() => useHighestTvlChain({ currencyId: '1-0xEthAddress' }))
+
+    expect(result.current.chainId).toBe(UniverseChainId.Base)
+    expect(result.current.address).toBe('0xBaseAddress')
+  })
+
+  it('returns null when the only token with TVL is on an unsupported chain', () => {
+    mockFragmentData.mockReturnValue({
+      project: {
+        tokens: [{ chain: 'SOLANA', address: 'SolAddress', market: { totalValueLocked: { value: 5_000_000 } } }],
+      },
+    })
+
+    const { result } = renderHook(() => useHighestTvlChain({ currencyId: '1-0xEthAddress' }))
+
+    expect(result.current.chainId).toBeNull()
+    expect(result.current.address).toBeNull()
   })
 
   it('returns null when project tokens are empty', () => {

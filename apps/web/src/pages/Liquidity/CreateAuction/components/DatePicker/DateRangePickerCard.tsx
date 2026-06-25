@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CalendarModalTimeRow } from '~/pages/Liquidity/CreateAuction/components/DatePicker/CalendarModalTimeRow'
 import { CreateAuctionDayPicker } from '~/pages/Liquidity/CreateAuction/components/DatePicker/CreateAuctionDayPicker'
 import { SegmentedLocalDate } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DatePickerCard'
@@ -72,40 +74,42 @@ function DateInputCard({
     borderBottomRightRadius: position === 'end' ? outerRadius : innerRadius,
   }
   return (
-    <TouchableArea
-      flex={1}
-      flexBasis={0}
-      backgroundColor="$surface2"
-      borderWidth={2}
-      borderColor={active ? activeBorderColor : '$transparent'}
-      p="$spacing16"
-      gap="$spacing4"
-      cursor="pointer"
-      userSelect="none"
-      aria-label={ariaLabel}
-      onPress={onPress}
-      {...cornerRadii}
-    >
-      <Text variant="body3" color="$neutral2">
-        {label}
-      </Text>
-      <Flex row flexWrap="wrap" alignItems="center" minHeight={24} width="100%" gap="$spacing8">
-        {date ? (
-          <>
-            <Flex flexGrow={1} flexShrink={1} minWidth={0}>
-              <SegmentedLocalDate date={date} fieldOrder={fieldOrder} />
-            </Flex>
-            <Text variant="subheading1" color="$neutral2" flexShrink={0} ml="auto" textAlign="right">
-              {formatTimeForDisplay({ date, locale })}
+    <Trace logPress element={position === 'start' ? ElementName.AuctionStartDatetime : ElementName.AuctionEndDatetime}>
+      <TouchableArea
+        flex={1}
+        flexBasis={0}
+        backgroundColor="$surface2"
+        borderWidth={2}
+        borderColor={active ? activeBorderColor : '$transparent'}
+        p="$spacing16"
+        gap="$spacing4"
+        cursor="pointer"
+        userSelect="none"
+        aria-label={ariaLabel}
+        onPress={onPress}
+        {...cornerRadii}
+      >
+        <Text variant="body3" color="$neutral2">
+          {label}
+        </Text>
+        <Flex row flexWrap="wrap" alignItems="center" minHeight={24} width="100%" gap="$spacing8">
+          {date ? (
+            <>
+              <Flex flexGrow={1} flexShrink={1} minWidth={0}>
+                <SegmentedLocalDate date={date} fieldOrder={fieldOrder} />
+              </Flex>
+              <Text variant="subheading1" color="$neutral2" flexShrink={0} ml="auto" textAlign="right">
+                {formatTimeForDisplay({ date, locale })}
+              </Text>
+            </>
+          ) : (
+            <Text flex={1} variant="subheading1" color="$neutral3">
+              {placeholder}
             </Text>
-          </>
-        ) : (
-          <Text flex={1} variant="subheading1" color="$neutral3">
-            {placeholder}
-          </Text>
-        )}
-      </Flex>
-    </TouchableArea>
+          )}
+        </Flex>
+      </TouchableArea>
+    </Trace>
   )
 }
 

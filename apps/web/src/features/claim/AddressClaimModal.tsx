@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, View } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, View } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useENS } from 'uniswap/src/features/ens/useENS'
@@ -9,7 +9,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import Circle from '~/assets/images/blue-loader.svg'
 import tokenLogo from '~/assets/images/token-logo.png'
 import { isAddress } from '~/chains'
 import { AddressInputPanel } from '~/features/claim/AddressInputPanel'
@@ -18,9 +17,11 @@ import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection } from '
 import { useAccount } from '~/hooks/useAccount'
 import { ModalState } from '~/hooks/useModalState'
 import { useIsTransactionPending } from '~/state/transactions/hooks'
-import { CustomLightSpinner } from '~/theme/components/icons/spinner'
 import { UniTokenAnimated } from '~/theme/components/icons/uniTokenAnimated'
 import { ExternalLink } from '~/theme/components/Links'
+
+const CLAIM_LOADER_COLOR = '#2172E5'
+const CLAIM_LOADER_SIZE = 90
 
 export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
   const { t } = useTranslation()
@@ -143,7 +144,15 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
           </Flex>
           <Flex justifyContent="center" alignItems="center" py={60}>
             {!claimConfirmed ? (
-              <CustomLightSpinner src={Circle} alt={t('addressClaim.loaderAlt')} size="90px" />
+              <Flex
+                width={CLAIM_LOADER_SIZE}
+                height={CLAIM_LOADER_SIZE}
+                aria-label={t('addressClaim.loaderAlt')}
+                role="status"
+                $platform-web={{ color: CLAIM_LOADER_COLOR }}
+              >
+                <SpinningLoader unstyled size={CLAIM_LOADER_SIZE} />
+              </Flex>
             ) : (
               <UniTokenAnimated width="72px" src={tokenLogo} alt={t('addressClaim.uniLogoAlt')} />
             )}

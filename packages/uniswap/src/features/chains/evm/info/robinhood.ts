@@ -68,8 +68,7 @@ export const ROBINHOOD_CHAIN_INFO = {
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Robinhood)] },
     [RPCType.Default]: {
-      // TODO(SWAP-2703): set the canonical public mainnet RPC for Default before launch.
-      http: ['https://rpc.robinhood.com/'],
+      http: ['https://rpc.mainnet.chain.robinhood.com/'],
     },
     [RPCType.Interface]: { http: [getUniRpcEndpointUrl(UniverseChainId.Robinhood)] },
   },

@@ -12,12 +12,15 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/ba
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+import type { RWAWhitelist } from 'uniswap/src/features/rwa/types'
+import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { PriceSourceTag, SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
+import { getRwaSwapAnalyticsProperties } from 'uniswap/src/features/transactions/swap/rwaSwapAnalytics'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeInputTax, getTradeOutputTax } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -336,6 +339,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const queryClient = useQueryClient()
+  const rwaWhitelist = useRWAWhitelist()
 
   useEffect(() => {
     if (!trade) {
@@ -360,6 +364,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
         priceSource,
+        rwaWhitelist,
       }),
     )
 
@@ -374,6 +379,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
           portfolioBalanceUsd: portfolioData?.balanceUSD,
           trace,
           priceSource,
+          rwaWhitelist,
         }),
         category: trade.blockingError.category,
         error_code: trade.blockingError.code,
@@ -402,6 +408,7 @@ export function getBaseTradeAnalyticsProperties({
   swapStartTimestamp,
   isFinalStep,
   priceSource,
+  rwaWhitelist,
 }: {
   formatter: LocalizationContextState
   trade: Trade
@@ -418,6 +425,7 @@ export function getBaseTradeAnalyticsProperties({
   swapStartTimestamp?: number
   isFinalStep?: boolean
   priceSource?: PriceSourceTag
+  rwaWhitelist?: RWAWhitelist
 }) {
   const portionAmount = trade.swapFee?.amount
   const inputTax = getTradeInputTax(trade)
@@ -441,6 +449,12 @@ export function getBaseTradeAnalyticsProperties({
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     price_impact_basis_points: getPriceImpact(trade),
+    ...getRwaSwapAnalyticsProperties({
+      inputCurrency: trade.inputAmount.currency,
+      outputCurrency: trade.outputAmount.currency,
+      priceImpactBasisPoints: getPriceImpact(trade),
+      rwaWhitelist,
+    }),
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId

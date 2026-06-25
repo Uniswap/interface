@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Skeleton, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
-import { iconSizes, INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -16,12 +16,16 @@ import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, toHistoryDuration, TimePeriod } from '~/appGraphql/data/util'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
-import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
-import { SIDEBAR_WIDTH } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
+import {
+  SIDEBAR_STICKY_TOP_OFFSET,
+  SIDEBAR_WIDTH,
+} from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
+import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
 const DOT_RADIUS = 4
 const SPARKLINE_PADDING = DOT_RADIUS + 1
@@ -114,7 +118,7 @@ export function StatCell({ label, value, delta }: { label: string; value: string
         {delta !== undefined && delta !== 0 && (
           <Flex row alignItems="center" gap="$spacing2">
             <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} size={12} />
-            <Text variant="body4" color={delta < 0 ? '$statusCritical' : '$statusSuccess'}>
+            <Text variant="body4" color={getDeltaTextColor(delta)}>
               {formatPercent(Math.abs(delta))}
             </Text>
           </Flex>
@@ -139,12 +143,13 @@ function StatCellSkeleton({ label }: { label: string }) {
 
 function PoolInfoCardLoading() {
   const { t } = useTranslation()
+  const headerHeight = useAppHeaderHeight()
 
   return (
     <Flex
       width={SIDEBAR_WIDTH}
       alignSelf="flex-start"
-      $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}
+      $platform-web={{ position: 'sticky', top: headerHeight + SIDEBAR_STICKY_TOP_OFFSET }}
       borderRadius="$rounded24"
       borderColor="$surface3"
       borderWidth="$spacing1"
@@ -271,6 +276,7 @@ export function PoolInfoCard({
   onAddLiquidity?: () => void
 }) {
   const { t } = useTranslation()
+  const headerHeight = useAppHeaderHeight()
   const currency0 = useMemo(() => (poolData ? gqlToCurrency(poolData.token0) : undefined), [poolData])
   const currency1 = useMemo(() => (poolData ? gqlToCurrency(poolData.token1) : undefined), [poolData])
 
@@ -285,7 +291,7 @@ export function PoolInfoCard({
     <Flex
       width={SIDEBAR_WIDTH}
       alignSelf="flex-start"
-      $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}
+      $platform-web={{ position: 'sticky', top: headerHeight + SIDEBAR_STICKY_TOP_OFFSET }}
       borderRadius="$rounded24"
       borderColor="$surface3"
       borderWidth="$spacing1"

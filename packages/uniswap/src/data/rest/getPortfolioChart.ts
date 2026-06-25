@@ -4,7 +4,7 @@ import { QueryKey, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { GetPortfolioChartRequest, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
+import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
 import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
@@ -19,7 +19,7 @@ export type GetPortfolioChartInput = {
   enabled?: boolean
 }
 
-const portfolioChartClient = createPromiseClient(DataApiService, uniswapPostTransport)
+const portfolioChartClient = createPromiseClient(DataApiService, entryGatewayPostTransport)
 
 export const getPortfolioHistoricalValueChartQuery = ({
   input,

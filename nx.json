@@ -17,29 +17,19 @@
       "cache": true
     },
     "config:pull": {
+      "dependsOn": ["^prepare"],
       "cache": true,
       "inputs": [
         { "env": "USE_NEW_CONFIGS" },
         { "env": "CONFIG_ENV" },
         { "env": "SKIP_CONFIG_PULL" },
-        { "runtime": "date -u +%Y-%m-%dT%H" }
+        { "runtime": "date -u +%Y-%m-%dT%H" },
+        "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/.env.new"]
     },
-    "build": {
-      "dependsOn": ["^prepare", "prepare", "^build"],
-      "inputs": ["sourceFiles"],
-      "outputs": [
-        "{workspaceRoot}/dist/out-tsc/{projectRoot}",
-        "{projectRoot}/dist",
-        "{projectRoot}/build",
-        "{projectRoot}/.next",
-        "{projectRoot}/types"
-      ],
-      "cache": true
-    },
     "build:production": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["^prepare", "prepare"],
       "inputs": ["dependencies", "production"],
       "outputs": ["{projectRoot}/build"],
       "cache": true
@@ -49,7 +39,7 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["prepare"],
+      "dependsOn": ["^prepare", "prepare"],
       "cache": false
     },
     "typecheck:tsc": {
@@ -162,7 +152,7 @@
       "cache": true
     },
     "test": {
-      "dependsOn": ["^prepare"],
+      "dependsOn": ["^prepare", "prepare"],
       "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
@@ -170,17 +160,13 @@
       "dependsOn": ["^prepare", "prepare"],
       "cache": false
     },
+    "dev": {
+      "dependsOn": ["^prepare", "prepare"],
+      "cache": false
+    },
     "snapshots": {
       "dependsOn": ["^prepare", "prepare"],
       "cache": true
-    },
-    "storybook:test:standalone": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
-    "storybook:build": {
-      "dependsOn": ["^build"],
-      "cache": false
     },
     "graphql:schema": {
       "inputs": ["{workspaceRoot}/.env.production", "{projectRoot}/graphql.*.ts"],
@@ -240,14 +226,16 @@
       "{projectRoot}/**/*.json5"
     ],
     "dependencies": ["{workspaceRoot}/package.json", "{projectRoot}/package.json"],
-    "tsConfig": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json", "{projectRoot}/tsconfig*.json"]
+    "tsConfig": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json", "{projectRoot}/tsconfig*.json"],
+    "ciCacheBust": [{ "env": "GITHUB_RUN_ID" }, { "env": "GITHUB_RUN_ATTEMPT" }]
   },
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
   },
   "sync": {
-    "applyChanges": true
+    "applyChanges": true,
+    "globalGenerators": ["@nx/js:typescript-sync"]
   },
   "parallel": 6,
   "defaultProject": "@universe/web",
@@ -261,13 +249,8 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        },
-        "build": {
-          "targetName": "build",
-          "configName": "tsconfig.json"
-        }
+        "typecheck": false,
+        "build": false
       }
     }
   ],

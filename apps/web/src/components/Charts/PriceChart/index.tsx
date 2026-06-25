@@ -20,6 +20,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import {
   Chart,
+  ChartHoverCoordinates,
   ChartHoverData,
   ChartModel,
   ChartModelParams,
@@ -320,8 +321,8 @@ interface PriceChartBodyProps {
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
   onCrosshairChange?: (crosshairData?: PriceChartData) => void
-  /** Optional overlay render prop with access to the chart's current crosshair data. */
-  children?: (crosshairData?: PriceChartData) => ReactElement | null
+  /** Optional overlay render prop with access to the chart's crosshair data, hover pixel coordinates, and plot right edge. */
+  children?: (crosshairData?: PriceChartData, hover?: ChartHoverCoordinates | null) => ReactElement | null
 }
 
 export function PriceChartBody({

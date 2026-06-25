@@ -10,6 +10,7 @@ import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   getPlaywrightRpcUrls,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -76,7 +77,7 @@ export const MAINNET_CHAIN_INFO = {
           http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
         },
         [RPCType.Public]: {
-          http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          http: [getUniRpcEndpointUrl(UniverseChainId.Mainnet)],
         },
         // Default feeds the wallet-connector rpc maps (WalletConnect/Binance read
         // rpcUrls.default.http[0] from a cookieless in-page client), so it must be an
@@ -162,7 +163,7 @@ export const SEPOLIA_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.Sepolia)],
+      http: [getUniRpcEndpointUrl(UniverseChainId.Sepolia)],
     },
     [RPCType.Default]: {
       http: ['https://sepolia.gateway.tenderly.co'],

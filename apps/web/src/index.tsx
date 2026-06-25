@@ -47,9 +47,10 @@ import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { getLogger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- custom useAccount hook requires statsig
 import { useAccount } from 'wagmi'
-import { AssetActivityProvider } from '~/appGraphql/data/apollo/AssetActivityProvider'
+import { App } from '~/App'
+import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { apolloClient } from '~/appGraphql/data/apollo/client'
-import { TokenBalancesProvider } from '~/appGraphql/data/apollo/TokenBalancesProvider'
+import { TransactionWatcherProvider } from '~/appGraphql/data/apollo/TransactionWatcherProvider'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { getConfig, getPrivyConfig } from '~/config'
@@ -63,8 +64,6 @@ import { isPrivyConfigured } from '~/hooks/useMaybePrivy'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
 import { WebNotificationServiceManager } from '~/notification-service/WebNotificationService'
-import { App } from '~/pages/App'
-import { WebUniswapProvider } from '~/pages/App/WebUniswapContext'
 import { onHashcashSolveCompleted, onTurnstileSolveCompleted, sessionInitAnalytics } from '~/sessions/analytics'
 import store from '~/state'
 import { LivePricesProvider } from '~/state/livePrices/LivePricesProvider'
@@ -188,14 +187,9 @@ function Updaters() {
 const Web3Provider = createWeb3Provider({ wagmiConfig })
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <ApolloProvider client={apolloClient}>
-      <AssetActivityProvider>
-        <TokenBalancesProvider>{children}</TokenBalancesProvider>
-      </AssetActivityProvider>
-    </ApolloProvider>
-  )
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
 }
+
 function StatsigProvider({ children }: PropsWithChildren) {
   const account = useAccount()
 
@@ -275,27 +269,29 @@ const RootApp = (): JSX.Element => {
                                   <WebAccountsStoreProvider>
                                     <WebUniswapProvider>
                                       <GraphqlProviders>
-                                        <LivePricesProvider>
-                                          <LocalizationContextProvider>
-                                            <BlockNumberProvider>
-                                              <Updaters />
-                                              <ThemeProvider>
-                                                <TamaguiProvider>
-                                                  <PortalProvider>
-                                                    <WebNotificationServiceManager />
-                                                    <ThemedGlobalStyle />
-                                                    <App />
-                                                    {AgentationLazy && isDevEnv() && (
-                                                      <Suspense fallback={null}>
-                                                        <AgentationLazy />
-                                                      </Suspense>
-                                                    )}
-                                                  </PortalProvider>
-                                                </TamaguiProvider>
-                                              </ThemeProvider>
-                                            </BlockNumberProvider>
-                                          </LocalizationContextProvider>
-                                        </LivePricesProvider>
+                                        <TransactionWatcherProvider>
+                                          <LivePricesProvider>
+                                            <LocalizationContextProvider>
+                                              <BlockNumberProvider>
+                                                <Updaters />
+                                                <ThemeProvider>
+                                                  <TamaguiProvider>
+                                                    <PortalProvider>
+                                                      <WebNotificationServiceManager />
+                                                      <ThemedGlobalStyle />
+                                                      <App />
+                                                      {AgentationLazy && isDevEnv() && (
+                                                        <Suspense fallback={null}>
+                                                          <AgentationLazy />
+                                                        </Suspense>
+                                                      )}
+                                                    </PortalProvider>
+                                                  </TamaguiProvider>
+                                                </ThemeProvider>
+                                              </BlockNumberProvider>
+                                            </LocalizationContextProvider>
+                                          </LivePricesProvider>
+                                        </TransactionWatcherProvider>
                                       </GraphqlProviders>
                                     </WebUniswapProvider>
                                   </WebAccountsStoreProvider>

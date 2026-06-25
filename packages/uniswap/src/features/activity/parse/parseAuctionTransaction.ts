@@ -9,7 +9,7 @@ import {
   UnknownTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
-export function parseRestAuctionTransaction(
+export function parseAuctionTransaction(
   transaction: OnChainTransaction,
 ): AuctionBidTransactionInfo | AuctionClaimedTransactionInfo | AuctionExitedTransactionInfo | UnknownTransactionInfo {
   const { transfers, label, to } = transaction

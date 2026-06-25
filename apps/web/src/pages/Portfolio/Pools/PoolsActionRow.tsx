@@ -58,7 +58,7 @@ export function PoolsActionRow({
         onChangeText={onSearchChange}
         dataTestId={TestID.PortfolioPoolsSearchInput}
         placeholder={t('tokens.table.search.placeholder.pools')}
-        width={media.md ? '100%' : 360}
+        width={media.md ? '100%' : media.xl ? 280 : 360}
       />
     </Flex>
   )

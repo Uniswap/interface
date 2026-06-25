@@ -29,7 +29,7 @@ describe('getTokenLaunchTradeAvailabilityBlock', () => {
       getTokenLaunchTradeAvailabilityBlock({
         claimBlock: '200',
         hasLbpStrategyAddress: false,
-        migrationBlock: 300n,
+        migrationBlock: '300',
       }),
     ).toBeUndefined()
   })
@@ -39,7 +39,7 @@ describe('getTokenLaunchTradeAvailabilityBlock', () => {
       getTokenLaunchTradeAvailabilityBlock({
         claimBlock: '200',
         hasLbpStrategyAddress: true,
-        migrationBlock: 123n,
+        migrationBlock: '123',
       }),
     ).toBe(200)
   })
@@ -49,7 +49,7 @@ describe('getTokenLaunchTradeAvailabilityBlock', () => {
       getTokenLaunchTradeAvailabilityBlock({
         claimBlock: '200',
         hasLbpStrategyAddress: true,
-        migrationBlock: 300n,
+        migrationBlock: '300',
       }),
     ).toBe(300)
   })
@@ -59,21 +59,21 @@ describe('getTokenLaunchTradeAvailabilityBlock', () => {
       getTokenLaunchTradeAvailabilityBlock({
         claimBlock: undefined,
         hasLbpStrategyAddress: true,
-        migrationBlock: 300n,
+        migrationBlock: '300',
       }),
     ).toBe(300)
   })
 })
 
 describe('isTokenLaunchTradeAvailable', () => {
-  it('returns false for failed auctions', () => {
+  it('returns false for failed (ungraduated) auctions', () => {
     expect(
       isTokenLaunchTradeAvailable({
         claimBlock: undefined,
         currentBlockNumber: 10,
         hasLbpStrategyAddress: true,
         isGraduated: false,
-        migrationBlock: undefined,
+        hasMigrated: false,
       }),
     ).toBe(false)
   })
@@ -85,55 +85,55 @@ describe('isTokenLaunchTradeAvailable', () => {
         currentBlockNumber: undefined,
         hasLbpStrategyAddress: false,
         isGraduated: true,
-        migrationBlock: undefined,
+        hasMigrated: false,
       }),
     ).toBe(true)
   })
 
-  it('returns false for LBP graduated auctions while the current block is unavailable', () => {
+  it('returns false for LBP graduated auctions that have not migrated yet', () => {
     expect(
       isTokenLaunchTradeAvailable({
-        claimBlock: undefined,
-        currentBlockNumber: undefined,
+        claimBlock: '200',
+        currentBlockNumber: 5000,
         hasLbpStrategyAddress: true,
         isGraduated: true,
-        migrationBlock: 123n,
+        hasMigrated: false,
       }),
     ).toBe(false)
   })
 
-  it('returns false for LBP graduated auctions before the migration block', () => {
-    expect(
-      isTokenLaunchTradeAvailable({
-        claimBlock: undefined,
-        currentBlockNumber: 122,
-        hasLbpStrategyAddress: true,
-        isGraduated: true,
-        migrationBlock: 123n,
-      }),
-    ).toBe(false)
-  })
-
-  it('returns false for LBP graduated auctions before the claim block even after migration', () => {
+  it('returns false for a migrated LBP auction before its claim block', () => {
     expect(
       isTokenLaunchTradeAvailable({
         claimBlock: '200',
         currentBlockNumber: 150,
         hasLbpStrategyAddress: true,
         isGraduated: true,
-        migrationBlock: 123n,
+        hasMigrated: true,
       }),
     ).toBe(false)
   })
 
-  it('returns true for LBP graduated auctions once migration and claim blocks have passed', () => {
+  it('returns true for a migrated LBP auction once the claim block has passed', () => {
     expect(
       isTokenLaunchTradeAvailable({
         claimBlock: '200',
         currentBlockNumber: 200,
         hasLbpStrategyAddress: true,
         isGraduated: true,
-        migrationBlock: 123n,
+        hasMigrated: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('returns true for a migrated LBP auction when no claim block is set', () => {
+    expect(
+      isTokenLaunchTradeAvailable({
+        claimBlock: undefined,
+        currentBlockNumber: undefined,
+        hasLbpStrategyAddress: true,
+        isGraduated: true,
+        hasMigrated: true,
       }),
     ).toBe(true)
   })

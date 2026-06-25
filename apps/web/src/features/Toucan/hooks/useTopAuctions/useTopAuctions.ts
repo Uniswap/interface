@@ -20,7 +20,7 @@ import { isAuctionCompleted } from '~/features/Toucan/hooks/useTopAuctions/isAuc
 import { BlockTimestampRequest, useGetBlockTimestamps, useMultiChainBlockInfo } from '~/hooks/useMultiChainBlockInfo'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
-export const AUCTION_LIST_API_PAGE_SIZE = 100
+export const AUCTION_LIST_API_PAGE_SIZE = 200
 
 export function auctionCommittedVolumeComparator(a: EnrichedAuction, b: EnrichedAuction): number {
   // Use USD values for cross-currency comparison (follows portfolio balances pattern)

@@ -81,6 +81,12 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           swapStartTimestamp: extractTransactionTypeInfoAttribute(original.typeInfo, 'swapStartTimestamp'),
           planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
           transactedUSDValue: extractTransactionTypeInfoAttribute(original.typeInfo, 'transactedUSDValue'),
+          rwaAnalytics: {
+            market_closed: extractTransactionTypeInfoAttribute(original.typeInfo, 'marketClosed'),
+            price_warning: extractTransactionTypeInfoAttribute(original.typeInfo, 'priceWarning'),
+            token_in_stocks: extractTransactionTypeInfoAttribute(original.typeInfo, 'tokenInStocks'),
+            token_out_stocks: extractTransactionTypeInfoAttribute(original.typeInfo, 'tokenOutStocks'),
+          },
           priceSource: inputAddress
             ? getDisplayedPriceSource({
                 isCentralizedPricesEnabled,

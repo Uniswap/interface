@@ -70,6 +70,23 @@ export function isAtomicBatchingSupportedByChainId(
   return isAtomicBatchingSupported(chainCapabilities)
 }
 
+export function isAlternateGasFeesSupported(chainCapabilities: ChainCapabilities): boolean {
+  return chainCapabilities.alternateGasFees?.supported === true
+}
+
+export function isAlternateGasFeesSupportedByChainId(
+  chainCapabilitiesResult: GetCapabilitiesResult,
+  chainId: number,
+): boolean {
+  const key = ensure0xHex(numberToHex(chainId))
+  const chainCapabilities = chainCapabilitiesResult[key]
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
+  if (!chainCapabilities) {
+    return false
+  }
+  return isAlternateGasFeesSupported(chainCapabilities)
+}
+
 /**
  * Gets an array of chain IDs that support atomic batching
  * @param chainCapabilitiesResult The result from handleGetCapabilities

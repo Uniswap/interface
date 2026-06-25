@@ -1,6 +1,6 @@
 import { type TransactionRequest } from '@ethersproject/providers'
 import { CHAIN_TO_ADDRESSES_MAP, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
-import type { BlockaidScanJsonRpcRequest, GasFeeResult } from '@universe/api'
+import type { BlockaidScanJsonRpcRequest, GasFeeResult, TradingApi } from '@universe/api'
 import { numberToHex } from '@universe/encoding'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -108,6 +108,7 @@ interface DappSendCallsScanningContentProps {
    * 4337 sponsored-userOp flows have no concrete tx to estimate against.
    */
   tx?: TransactionRequest
+  sponsorMetadata?: TradingApi.SponsorMetadata
 }
 
 /**
@@ -129,6 +130,7 @@ export function DappSendCallsScanningContent({
   gasOverrides,
   onChangeGasOverrides,
   tx,
+  sponsorMetadata,
 }: DappSendCallsScanningContentProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -250,6 +252,7 @@ export function DappSendCallsScanningContent({
         showSmartWalletActivation={showSmartWalletActivation}
         tx={tx}
         gasOverrides={gasOverrides}
+        sponsorMetadata={sponsorMetadata}
         onChangeGasOverrides={onChangeGasOverrides}
         onConfirmRisk={onConfirmRisk}
       />

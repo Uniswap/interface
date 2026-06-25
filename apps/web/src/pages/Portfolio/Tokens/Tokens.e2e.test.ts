@@ -3,7 +3,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
 import { HAYDEN_ADDRESS } from '~/playwright/fixtures/wallets'
-import { Mocks, PortfolioBalancesMocks } from '~/playwright/mocks/mocks'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 // Token row IDs from GetPortfolio mock (chainId-address, lowercase)
 const USDT_TOKEN_ID = '1-0xdac17f958d2ee523a2206206994597c13d831ec7' // Tether USD / USDT
@@ -15,33 +15,25 @@ const test = getTest()
 
 async function goToPortfolioTokens({
   page,
-  graphql,
-  mock = Mocks.PortfolioBalances.hayden,
-  getPortfolioMock,
+  getPortfolioMock = Mocks.DataApiService.get_portfolio,
   externalAddress,
   chain,
 }: {
   page: Page
-  graphql: { intercept: (op: string, path: string) => Promise<void>; waitForResponse: (op: string) => Promise<void> }
-  mock?: string
   getPortfolioMock?: string
   externalAddress?: string
   chain?: string
 }): Promise<void> {
-  const portfolioMock =
-    getPortfolioMock ??
-    (mock === PortfolioBalancesMocks.empty
-      ? Mocks.DataApiService.get_portfolio_empty
-      : Mocks.DataApiService.get_portfolio)
+  await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
 
-  await graphql.intercept('PortfolioBalances', mock)
-  await mockGetPortfolioResponse({ page, mockPath: portfolioMock })
+  const getPortfolioResponse = page.waitForResponse((res) => res.request().url().includes('GetPortfolio'))
 
   const base = externalAddress ? `/portfolio/${externalAddress}/tokens` : '/portfolio/tokens'
   const params = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   const query = chain ? `${params}&chain=${chain}` : params
 
   await page.goto(`${base}?${query}`)
+  await getPortfolioResponse
 }
 
 test.describe(
@@ -55,8 +47,8 @@ test.describe(
   },
   () => {
     test.describe('Token Table Display', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolioTokens({ page })
       })
 
       test('should display tokens table with visible tokens', async ({ page }) => {
@@ -87,8 +79,8 @@ test.describe(
     })
 
     test.describe('Hidden Tokens', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolioTokens({ page })
       })
 
       test('should display hidden tokens expando row', async ({ page }) => {
@@ -126,8 +118,8 @@ test.describe(
     })
 
     test.describe('Search Functionality', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolioTokens({ page })
       })
 
       test('should filter tokens by name', async ({ page }) => {
@@ -176,8 +168,8 @@ test.describe(
     })
 
     test.describe('Token Row Interactions', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolioTokens({ page })
       })
 
       test('should navigate to token details when clicking a token row', async ({ page }) => {
@@ -206,15 +198,19 @@ test.describe(
     })
 
     test.describe('Empty States', () => {
-      test('should show empty state when wallet has no tokens', async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql, mock: PortfolioBalancesMocks.empty })
+      test('should show empty state when wallet has no tokens', async ({ page }) => {
+        await goToPortfolioTokens({ page, getPortfolioMock: Mocks.DataApiService.get_portfolio_empty })
 
         // Should show empty state message
         await expect(page.getByTestId(TestID.PortfolioTokensEmptyState)).toBeVisible()
       })
 
-      test('should show chain-specific empty state with filter', async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql, mock: PortfolioBalancesMocks.empty, chain: 'optimism' })
+      test('should show chain-specific empty state with filter', async ({ page }) => {
+        await goToPortfolioTokens({
+          page,
+          getPortfolioMock: Mocks.DataApiService.get_portfolio_empty,
+          chain: 'optimism',
+        })
 
         // Should show chain-specific empty state
         await expect(page.getByTestId(TestID.PortfolioTokensEmptyState)).toBeVisible()
@@ -223,8 +219,12 @@ test.describe(
         await expect(page.getByTestId(TestID.PortfolioTokensSeeAllNetworksButton)).toBeVisible()
       })
 
-      test('should navigate to all tokens when clicking "See all networks"', async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql, mock: PortfolioBalancesMocks.empty, chain: 'optimism' })
+      test('should navigate to all tokens when clicking "See all networks"', async ({ page }) => {
+        await goToPortfolioTokens({
+          page,
+          getPortfolioMock: Mocks.DataApiService.get_portfolio_empty,
+          chain: 'optimism',
+        })
 
         // Click "See all networks" button
         await page.getByTestId(TestID.PortfolioTokensSeeAllNetworksButton).click()
@@ -248,15 +248,15 @@ test.describe(
     })
 
     test.describe('External Wallet View', () => {
-      test('should show tokens for external wallet', async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql, externalAddress: HAYDEN_ADDRESS })
+      test('should show tokens for external wallet', async ({ page }) => {
+        await goToPortfolioTokens({ page, externalAddress: HAYDEN_ADDRESS })
 
         // Should show the wallet's tokens
         await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}${USDT_TOKEN_ID}`)).toBeVisible()
       })
 
-      test('should preserve external address in URL', async ({ page, graphql }) => {
-        await goToPortfolioTokens({ page, graphql, externalAddress: HAYDEN_ADDRESS })
+      test('should preserve external address in URL', async ({ page }) => {
+        await goToPortfolioTokens({ page, externalAddress: HAYDEN_ADDRESS })
 
         // URL should contain the external address
         expect(page.url()).toContain(HAYDEN_ADDRESS)
@@ -266,17 +266,17 @@ test.describe(
     test.describe('Responsive Behavior', () => {
       const MOBILE_VIEWPORT = { width: 375, height: 667 }
 
-      test('should display tokens on mobile', async ({ page, graphql }) => {
+      test('should display tokens on mobile', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT)
-        await goToPortfolioTokens({ page, graphql })
+        await goToPortfolioTokens({ page })
 
         // Tokens should still be visible
         await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}${USDT_TOKEN_ID}`)).toBeVisible()
       })
 
-      test('should have full-width search input on mobile', async ({ page, graphql }) => {
+      test('should have full-width search input on mobile', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT)
-        await goToPortfolioTokens({ page, graphql })
+        await goToPortfolioTokens({ page })
 
         // Search input should be visible and functional
         const searchInput = page.getByTestId(TestID.PortfolioTokensSearchInput)

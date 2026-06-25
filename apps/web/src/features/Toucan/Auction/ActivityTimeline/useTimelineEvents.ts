@@ -10,6 +10,7 @@ export type TimelineEventType =
   | 'general-sale-starts'
   | 'auction-ends'
   | 'tokens-claimable'
+  | 'auction-failed'
 
 export interface TimelineEventStrings {
   label: string
@@ -53,11 +54,13 @@ export function deriveTimelineEvents({
   strings,
   auctionHasPresale = false,
   allowlistEndBlock,
+  isAuctionFailed = false,
 }: {
   auctionDetails: AuctionDetails
   strings: Record<TimelineEventType, TimelineEventStrings>
   auctionHasPresale?: boolean
   allowlistEndBlock?: number
+  isAuctionFailed?: boolean
 }): TimelineEvent[] {
   const steps: AuctionStep[] = auctionDetails.parsedAuctionSteps
   const anchorBlock = Number(auctionDetails.creationBlock)
@@ -145,12 +148,15 @@ export function deriveTimelineEvents({
     time: toTimestamp(endBlock),
   })
 
+  // When the auction ended without graduating, the claim/trade milestone is
+  // replaced by a failure notice — no tokens are distributed, funds are withdrawable.
   const claimBlock = Number(auctionDetails.claimBlock)
+  const finalEventType: TimelineEventType = isAuctionFailed ? 'auction-failed' : 'tokens-claimable'
   events.push({
-    type: 'tokens-claimable',
-    label: strings['tokens-claimable'].label,
-    description: strings['tokens-claimable'].description,
-    futureDescription: strings['tokens-claimable'].futureDescription,
+    type: finalEventType,
+    label: strings[finalEventType].label,
+    description: strings[finalEventType].description,
+    futureDescription: strings[finalEventType].futureDescription,
     block: claimBlock,
     time: toTimestamp(claimBlock),
   })
@@ -167,16 +173,18 @@ export function useTimelineEvents({
   strings,
   auctionHasPresale = false,
   allowlistEndBlock,
+  isAuctionFailed = false,
 }: {
   auctionDetails: AuctionDetails | null
   strings: Record<TimelineEventType, TimelineEventStrings>
   auctionHasPresale?: boolean
   allowlistEndBlock?: number
+  isAuctionFailed?: boolean
 }): TimelineEvent[] {
   return useMemo(() => {
     if (!auctionDetails) {
       return []
     }
-    return deriveTimelineEvents({ auctionDetails, strings, auctionHasPresale, allowlistEndBlock })
-  }, [auctionDetails, strings, auctionHasPresale, allowlistEndBlock])
+    return deriveTimelineEvents({ auctionDetails, strings, auctionHasPresale, allowlistEndBlock, isAuctionFailed })
+  }, [auctionDetails, strings, auctionHasPresale, allowlistEndBlock, isAuctionFailed])
 }

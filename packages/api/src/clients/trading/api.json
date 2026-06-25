@@ -535,6 +535,10 @@
           },
           {
             "$ref": "#/components/parameters/chainIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/swapperParam",
+            "x-internal": true
           }
         ],
         "responses": {
@@ -2802,6 +2806,24 @@
           "EXPIRED"
         ]
       },
+      "SwapSponsorship": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Present only when `swapper` is supplied and the transaction's gas fees were sponsored by Uniswap. Use this to display \"Sponsored by Uniswap\" in activity history.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name of the sponsor."
+          },
+          "icon": {
+            "type": "string",
+            "description": "URL of the sponsor's logo or icon."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "GetSwapsResponse": {
         "type": "object",
         "properties": {
@@ -2841,6 +2863,10 @@
                 "paymaster": {
                   "$ref": "#/components/schemas/Address",
                   "description": "Paymaster address from the userOperation receipt. Present only for userOperation queries when the receipt is available and a paymaster was used."
+                },
+                "sponsorship": {
+                  "$ref": "#/components/schemas/SwapSponsorship",
+                  "x-internal": true
                 }
               }
             }
@@ -3896,10 +3922,10 @@
           324,
           480,
           1868,
-          4663,
-          5042,
           4217,
           4326,
+          4663,
+          5042,
           8453,
           10143,
           42161,

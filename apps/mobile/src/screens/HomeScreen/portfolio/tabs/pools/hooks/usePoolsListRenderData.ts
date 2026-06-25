@@ -13,10 +13,14 @@ import { usePendingLiquidityTransactionsChangeListener } from 'wallet/src/featur
 
 export interface PoolsListRenderData {
   positions: PositionInfo[]
+  hiddenPositions: PositionInfo[]
   hasData: boolean
   error: ConnectError | null
   isFetching: boolean
   isFetchingNextPage: boolean
+  isFetchingFirstPage: boolean
+  /** Errored with nothing already shown — the surface should swap to the retry CTA. */
+  hasErrorWithoutData: boolean
   hasNextPage: boolean
   refetch: () => void
   onListEndReached: () => void
@@ -32,16 +36,25 @@ export type PoolsTabRenderData = Omit<PoolsListRenderData, 'onListEndReached'>
 export function usePoolsListRenderData({ owner, skip }: { owner: string; skip: boolean }): PoolsListRenderData {
   const { chains } = useEnabledChains({ platform: Platform.EVM })
 
-  const { positions, hasData, error, refetch, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
-    useWalletPositions({
-      account: owner,
-      chainIds: chains,
-      statuses: POSITION_STATUS_FILTER_TO_STATUSES[PositionStatusFilterValue.All],
-      includeHidden: true,
-      autoFetchAllPages: false,
-      disabled: skip,
-      pollInterval: PollingInterval.Normal,
-    })
+  const {
+    positions,
+    hiddenPositions,
+    hasData,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useWalletPositions({
+    account: owner,
+    chainIds: chains,
+    statuses: POSITION_STATUS_FILTER_TO_STATUSES[PositionStatusFilterValue.All],
+    includeHidden: true,
+    autoFetchAllPages: false,
+    disabled: skip,
+    pollInterval: PollingInterval.Normal,
+  })
 
   usePendingLiquidityTransactionsChangeListener(refetch)
 
@@ -51,12 +64,18 @@ export function usePoolsListRenderData({ owner, skip }: { owner: string; skip: b
     }
   })
 
+  const isFetchingFirstPage = isFetching && !isFetchingNextPage
+  const hasErrorWithoutData = !!error && !hasData && !isFetchingFirstPage
+
   return {
     positions,
+    hiddenPositions,
     hasData,
     error,
     isFetching,
     isFetchingNextPage,
+    isFetchingFirstPage,
+    hasErrorWithoutData,
     hasNextPage,
     refetch,
     onListEndReached,

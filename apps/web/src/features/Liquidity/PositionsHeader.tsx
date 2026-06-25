@@ -273,7 +273,29 @@ export function PositionsHeader({
     media.sm,
   ])
 
-  if (!showTitle && !showFilters) {
+  const launchAuctionControl = useMemo(() => {
+    if (!showCreateButton) {
+      return null
+    }
+
+    return (
+      <Button
+        variant="default"
+        emphasis="secondary"
+        size="small"
+        icon={<Plus />}
+        fill={false}
+        width={shouldStackControls ? '100%' : undefined}
+        height={shouldStackControls ? '$spacing36' : undefined}
+        justifyContent={shouldLeftAlignCreateButton ? 'flex-start' : undefined}
+        onPress={() => navigate('/liquidity/launch-auction')}
+      >
+        {t('toucan.createAuction.launchAuction')}
+      </Button>
+    )
+  }, [showCreateButton, shouldStackControls, shouldLeftAlignCreateButton, navigate, t])
+
+  if (!showTitle && !showFilters && !showCreateButton) {
     return null
   }
 
@@ -293,6 +315,7 @@ export function PositionsHeader({
         {showFilters && (
           <>
             {createPositionControl}
+            {launchAuctionControl}
             <Flex
               row
               alignItems="center"

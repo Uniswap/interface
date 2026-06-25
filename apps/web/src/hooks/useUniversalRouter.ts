@@ -13,6 +13,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
@@ -83,6 +84,7 @@ export function useUniversalRouterSwapCallback({
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const rwaWhitelist = useRWAWhitelist()
 
   return useCallback(async (): Promise<{
     type: TradeFillType.Classic
@@ -166,6 +168,7 @@ export function useUniversalRouterSwapCallback({
           txHash: response.hash,
           portfolioBalanceUsd,
           trace: analyticsContext,
+          rwaWhitelist,
           priceSource: getDisplayedPriceSource({
             isCentralizedPricesEnabled,
             surface: 'usdc',
@@ -213,5 +216,6 @@ export function useUniversalRouterSwapCallback({
     blockNumber,
     isAutoSlippage,
     isCentralizedPricesEnabled,
+    rwaWhitelist,
   ])
 }

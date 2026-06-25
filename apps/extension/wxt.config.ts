@@ -16,16 +16,33 @@ process.env.APP_ID = 'extension'
 
 const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
 const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env.new')
-
-// Fail fast so a missing .env.new aborts the build instead of silently producing
-// a bundle with empty env values.
-if (USE_NEW_CONFIGS && !fs.existsSync(NEW_ENV_PATH)) {
-  throw new Error(`USE_NEW_CONFIGS=true but ${NEW_ENV_PATH} does not exist`)
-}
+const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.new.override')
 
 function parseEnvFile(filePath: string): Record<string, string> {
   return parseDotEnv(fs.readFileSync(filePath))
 }
+
+function buildNewConfigsEnv(): Record<string, string> {
+  // Read apps/extension/.env.new as the base layer (an empty object if it doesn't
+  // exist), then apply apps/extension/.env.new.override on top (overrides win).
+  const envVars = fs.existsSync(NEW_ENV_PATH) ? parseEnvFile(NEW_ENV_PATH) : {}
+
+  // Apply .env.new.override on top, logging every value it overrides
+  if (fs.existsSync(NEW_ENV_OVERRIDE_PATH)) {
+    const overrideVars = parseEnvFile(NEW_ENV_OVERRIDE_PATH)
+    for (const [key, value] of Object.entries(overrideVars)) {
+      if (key in envVars && envVars[key] !== value) {
+        // oxlint-disable-next-line no-console -- CLI output for env loading
+        console.log(`ENV_OVERRIDE: ${key}`)
+      }
+      envVars[key] = value
+    }
+  }
+
+  return envVars
+}
+
+const NEW_CONFIGS_ENV = USE_NEW_CONFIGS ? buildNewConfigsEnv() : {}
 
 const icons = {
   16: 'assets/icon16.png',
@@ -51,7 +68,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.76.0'
+const BASE_VERSION = '1.77.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -277,9 +294,10 @@ export default defineConfig({
   vite: (env) => {
     let envVars: Record<string, string>
     if (USE_NEW_CONFIGS) {
-      // New unified config: read only apps/extension/.env.new. Other env sources
-      // (monorepo-root .env / .env.defaults / etc.) are ignored.
-      envVars = parseEnvFile(NEW_ENV_PATH)
+      // New unified config (built once at module scope from apps/extension/.env.new
+      // + .env.new.override). Other env sources (monorepo-root .env / .env.defaults
+      // / etc.) are ignored.
+      envVars = NEW_CONFIGS_ENV
     } else {
       // Load ALL env variables (including those without VITE_ prefix): read the
       // monorepo-root `.env` (user-provided) AND the monorepo-root `.env.defaults`

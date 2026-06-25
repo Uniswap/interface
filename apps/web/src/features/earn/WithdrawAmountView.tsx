@@ -17,8 +17,15 @@ import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+  StyledNumericalInput,
+} from '~/components/NumericalInput/LargeAmountInput'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { EARN_SELECTOR_DROPDOWN_MAX_HEIGHT } from '~/features/earn/constants'
 import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
@@ -27,13 +34,6 @@ import {
   getWithdrawDestinationChainIds,
 } from '~/features/earn/withdrawDestinationChains'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
-import {
-  NumericalInputMimic,
-  NumericalInputSymbolContainer,
-  NumericalInputWrapper,
-  StyledNumericalInput,
-} from '~/pages/Swap/common/shared'
 
 const CHAR_WIDTH = 45
 const MAX_FONT_SIZE = 70

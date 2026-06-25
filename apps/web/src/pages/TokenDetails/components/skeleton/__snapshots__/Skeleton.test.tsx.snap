@@ -43,18 +43,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             </div>
           </span>
         </a>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -77,18 +65,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _gap-t-space-gap1569 _alignItems-center _minWidth-32px"
           >
-            <style>
-              
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-            </style>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _maxWidth-56px"
               style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -103,18 +79,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 class="_width-_sm_10037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-flex-end"
               >
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -124,18 +88,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   />
                 </div>
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -149,18 +101,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _justifyContent-center"
           >
-            <style>
-              
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-            </style>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _maxWidth-42px"
               style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -169,18 +109,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                 class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _height-34px _width-42px"
               />
             </div>
-            <style>
-              
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-            </style>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _maxWidth-42px"
               style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -382,18 +310,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           data-testid="token-details-stats-loading"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; gap: var(--t-space-gap20); transition: all 200ms ease-in-out;"
         >
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -408,18 +324,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -428,18 +332,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -452,18 +344,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -472,18 +352,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -496,18 +364,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -516,18 +372,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -540,18 +384,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -560,18 +392,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -584,18 +404,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -604,18 +412,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -628,18 +424,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               class="_flexBasis-_sm_5037 _display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexBasis-33--3337 _flexGrow-0 _flexShrink-0 _pr-t-space-spa1360334080"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665589"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -648,18 +432,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-80px"
                 />
               </div>
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -681,18 +453,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
             data-disable-theme="true"
           >
-            <style>
-              
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-            </style>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
               style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -703,18 +463,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             </div>
           </h2>
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -723,18 +471,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-10037"
           />
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -743,18 +479,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-10037"
           />
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa1360334047"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -766,18 +490,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
         >
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -786,18 +498,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-120px"
             />
           </div>
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -810,18 +510,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
         >
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -830,18 +518,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               class="_background-_platformweb_linear-grad2073760604 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-16px _width-120px"
             />
           </div>
-          <style>
-            
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-          </style>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _mb-t-space-spa94665591"
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"

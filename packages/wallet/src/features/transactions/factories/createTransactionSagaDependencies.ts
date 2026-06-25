@@ -13,7 +13,6 @@ import {
   createBundledDelegationTransactionSignerService,
   createTransactionSignerService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerServiceImpl'
-import { createUserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpServiceImpl'
 import { createBundledDelegationUserOpSignerService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerServiceImpl'
 import { createTransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import { createTransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
@@ -34,7 +33,6 @@ export function createTransactionSagaDependencies(): TransactionSagaDependencies
     createBundledDelegationTransactionSignerService,
     createBundledDelegationUserOpSignerService,
     createTransactionService,
-    createUserOpService,
     createAnalyticsService,
     createTransactionRepository: createTransactionRepositoryRedux,
     createFeatureFlagService,

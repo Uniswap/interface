@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Text } from 'ui/src'
 import { useFormatChartFiatDelta } from 'uniswap/src/features/fiatCurrency/hooks/useFormatChartFiatDelta'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { calculateDelta, DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { calculateDelta, DEFAULT_DELTA_COLOR, DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 
 interface PriceChartDeltaProps {
   startingPrice: number
@@ -16,6 +16,8 @@ interface PriceChartDeltaProps {
   isHovering?: boolean
   /** When true, hides the percentage but keeps the fiat delta amount */
   hidePercent?: boolean
+  /** When true, color the delta text green/red by sign (used while scrubbing for legibility) */
+  colorText?: boolean
 }
 
 export function PriceChartDelta({
@@ -27,6 +29,7 @@ export function PriceChartDelta({
   pricePercentChange,
   isHovering = false,
   hidePercent = false,
+  colorText = false,
 }: PriceChartDeltaProps) {
   const { formatPercent, convertFiatAmount } = useLocalizationContext()
   const { formatChartFiatDelta } = useFormatChartFiatDelta()
@@ -80,8 +83,10 @@ export function PriceChartDelta({
     isHovering,
   ])
 
+  const textColor = colorText ? getDeltaTextColor(delta) : DEFAULT_DELTA_COLOR
+
   return (
-    <Text variant="body2" color="$neutral2" display="flex" alignItems="center" gap="$gap4">
+    <Text variant="body2" color={textColor} display="flex" alignItems="center" gap="$gap4">
       {delta !== undefined && (!hidePercent || fiatDelta !== null) && (
         <DeltaArrow delta={delta} formattedDelta={formattedDelta} noColor={noColor} />
       )}

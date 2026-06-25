@@ -6,6 +6,7 @@ import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { NetworkLayer, RPCType, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
@@ -63,7 +64,7 @@ export const TEMPO_CHAIN_INFO = {
   supportsNFTs: false,
   urlParam: 'tempo',
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Tempo)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Tempo)] },
     [RPCType.Default]: { http: ['https://rpc.tempo.xyz'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Tempo)] },
   },

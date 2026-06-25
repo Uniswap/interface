@@ -1,23 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import {
   categoryFromParam,
+  ExploreCategory,
   getExploreStocksTableURL,
   getExploreTokensURL,
 } from '~/pages/Explore/categories/useExploreCategory'
 
 describe('categoryFromParam', () => {
   it('defaults to popular', () => {
-    expect(categoryFromParam(null)).toBe('popular')
+    expect(categoryFromParam(null)).toBe(ExploreCategory.Popular)
   })
 
   it('maps rwa category params', () => {
-    expect(categoryFromParam('stocks')).toBe('stocks')
-    expect(categoryFromParam('commodities')).toBe('commodities')
-    expect(categoryFromParam('etfs')).toBe('etfs')
+    expect(categoryFromParam('stocks')).toBe(ExploreCategory.Stocks)
+    expect(categoryFromParam('commodities')).toBe(ExploreCategory.Commodities)
+    expect(categoryFromParam('etfs')).toBe(ExploreCategory.Etfs)
   })
 
   it('maps unknown category values to popular', () => {
-    expect(categoryFromParam('unknown')).toBe('popular')
+    expect(categoryFromParam('unknown')).toBe(ExploreCategory.Popular)
   })
 })
 

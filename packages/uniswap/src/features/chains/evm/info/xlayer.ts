@@ -7,6 +7,7 @@ import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
@@ -64,7 +65,7 @@ export const XLAYER_CHAIN_INFO = {
   blockTimeMs: 3000,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.XLayer)] },
     // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
     [RPCType.Default]: { http: ['https://xlayer.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },

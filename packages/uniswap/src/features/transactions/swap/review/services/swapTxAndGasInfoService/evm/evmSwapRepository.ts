@@ -2,7 +2,7 @@ import { TransactionRequest } from '@ethersproject/providers'
 import { GasEstimate, TradingApi } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { SignDelegationAuthorizationFn, SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { transformTradingApiUserOpToRpcUserOp } from 'uniswap/src/features/smartWallet/userOp/transformTradingApiUserOp'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import type { RpcUserOperation } from 'viem/account-abstraction'
@@ -93,32 +93,61 @@ export function create5792EVMSwapRepository(): EVMSwapRepository {
   }
 }
 
-export function convertSwap4337ResponseToSwapData(response: TradingApi.Swap4337Response): SwapData {
+export function convertSwap4337ResponseToSwapData(
+  response: TradingApi.Swap4337Response,
+  includesDelegation?: boolean,
+): SwapData {
   return {
     requestId: response.requestId,
     unsignedUserOperation: transformTradingApiUserOpToRpcUserOp(response.userOperation),
     requestUniswapGasSponsorship: response.gasSponsored,
+    includesDelegation,
     // Since this is an internal wallet endpoint, paymaster URL is assumed to be our own paymaster endpoint
     paymasterService: { context: response.paymasterServiceContext },
   }
 }
 
-export function create4337EVMSwapRepository(): EVMSwapRepository {
+export function create4337EVMSwapRepository(ctx?: {
+  getSwapDelegationInfo?: (chainId?: UniverseChainId) => SwapDelegationInfo
+  signDelegationAuthorization?: SignDelegationAuthorizationFn
+}): EVMSwapRepository {
   return {
     fetchSwapData: async (params: SwapRequestParams) => {
       const sender = params.quote.swapper
       if (!sender) {
         throw new Error('create4337EVMSwapRepository: quote.swapper is required to populate Swap4337Request.sender')
       }
+
+      const chainId = tradingApiToUniverseChainId(params.quote.chainId)
+      const delegationInfo = ctx?.getSwapDelegationInfo?.(chainId)
+
+      // When this swap activates the delegation (first sponsored swap on an
+      // undelegated account), sign the 7702 authorization up front so the backend's
+      // paymaster + bundler simulation runs against a delegated account. The signed auth
+      // round-trips back on the returned UserOp, so the later signUserOp step reuses it.
+      const eip7702Auth =
+        chainId && delegationInfo?.delegationInclusion && delegationInfo.delegationAddress
+          ? await ctx?.signDelegationAuthorization?.({
+              chainId,
+              sender,
+              delegationAddress: delegationInfo.delegationAddress,
+            })
+          : undefined
+
       const swap4337Params: TradingApi.Swap4337Request = {
         quote: params.quote,
         sender,
         permitData: params.permitData,
         deadline: params.deadline,
         sponsorshipInfo: params.sponsorshipInfo,
-        // TODO(SWAP-2460): eip7702Auth should be attached BEFORE the paymaster call
+        eip7702Auth,
       }
-      return convertSwap4337ResponseToSwapData(await TradingApiClient.fetchSwap4337(swap4337Params))
+      // The label "Includes smart wallet activation" is gated on includesDelegation; mirror the
+      // 7702 path and surface it here whenever this swap actually bundles a delegation authorization.
+      return convertSwap4337ResponseToSwapData(
+        await TradingApiClient.fetchSwap4337(swap4337Params),
+        Boolean(eip7702Auth),
+      )
     },
   }
 }

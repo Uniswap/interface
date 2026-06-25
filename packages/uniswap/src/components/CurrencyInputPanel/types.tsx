@@ -60,4 +60,6 @@ export type CurrencyInputPanelProps = {
   balanceVariant?: TextProps['variant']
   /** Gas fee in wei from backend simulation, used for accurate max amount in liquidity flows. */
   actualGasFee?: string
+  /** When gas is sponsored/paymaster-covered, "Max" spends the full native balance (no gas reservation). */
+  isGasCovered?: boolean
 }

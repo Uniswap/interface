@@ -1,5 +1,7 @@
 import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
 
+export { DEFAULT_DELTA_COLOR, getDeltaTextColor } from 'uniswap/src/utils/getDeltaTextColor'
+
 export function calculateDelta(start: number, current: number): number | undefined {
   const delta = (current / start - 1) * 100
   return isValidDelta(delta) ? delta : undefined

@@ -7,7 +7,7 @@ import { WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOncha
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { SignDelegationAuthorizationFn, SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -60,7 +60,12 @@ interface UniswapContextValue {
   getIsUniswapXSupported?: (chainId: UniverseChainId | undefined) => boolean
   handleOnPressUniswapXUnsupported?: () => void
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
+  // wallet pays gas via a non-native method, so a native balance isn't required to swap
+  getHasAlternateGasFees?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
+  // Signs an EIP-7702 delegation authorization to bundle into 4337 swap/approval requests.
+  // Provided by wallet environments only; undefined elsewhere.
+  signDelegationAuthorization?: SignDelegationAuthorizationFn
   useAccountsStoreContextHook: () => AccountsStore
 }
 
@@ -88,7 +93,9 @@ export function UniswapProvider({
   getIsUniswapXSupported,
   handleOnPressUniswapXUnsupported,
   getCanBatchTransactions,
+  getHasAlternateGasFees,
   getSwapDelegationInfo,
+  signDelegationAuthorization,
   useAccountsStoreContextHook,
 }: PropsWithChildren<
   Omit<UniswapContextValue, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
@@ -136,7 +143,9 @@ export function UniswapProvider({
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
+      getHasAlternateGasFees,
       getSwapDelegationInfo,
+      signDelegationAuthorization,
       useAccountsStoreContextHook,
     }),
     [
@@ -162,7 +171,9 @@ export function UniswapProvider({
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
+      getHasAlternateGasFees,
       getSwapDelegationInfo,
+      signDelegationAuthorization,
       onSwapChainsChanged,
       useAccountsStoreContextHook,
     ],
@@ -195,4 +206,9 @@ export function useProvider(chainId: number): JsonRpcProvider | undefined {
 /** Cross-platform util for getting a signer for the active account/wallet, regardless of platform/environment. */
 export function useSigner(): Signer | undefined {
   return useUniswapContext().signer
+}
+
+/** Cross-platform util for signing a 7702 delegation authorization to bundle into 4337 requests. */
+export function useSignDelegationAuthorization(): SignDelegationAuthorizationFn | undefined {
+  return useUniswapContext().signDelegationAuthorization
 }

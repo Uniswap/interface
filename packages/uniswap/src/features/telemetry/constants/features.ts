@@ -73,6 +73,15 @@ export enum AuctionEventName {
   AuctionWithdrawSubmitted = 'Auction Withdraw Submitted',
   AuctionBidSubmitted = 'Auction Bid Submitted',
   AuctionBidInputted = 'Auction Bid Inputted',
+  // Launch-auction (CCA supply-side) creation funnel
+  AuctionTokenInfoEntered = 'Auction Token Info Entered',
+  AuctionVerifyCompleted = 'Auction Verify Completed',
+  AuctionDetailsInfoEntered = 'Auction Details Info Entered',
+  PoolDetailsInfoEntered = 'Pool Details Info Entered',
+  AuctionCustomPriceRangeAdded = 'Auction Custom Price Range Added',
+  // Fired only from the launch-auction flow; the shared fee-tier modal forwards a CCA-only callback.
+  FeeTierCreated = 'Fee Tier Created',
   AuctionCreateSubmitted = 'Auction Create Submitted',
+  AuctionCreateFailed = 'Auction Create Failed',
   AuctionCreateCompleted = 'Auction Create Completed',
 }

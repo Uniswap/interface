@@ -58,8 +58,8 @@ describe('getExpandableSearchRowHeightPx', () => {
   it('expanded estimate = budgeted header + shell chrome + parent↔panel gap + search panel, as absolute px', () => {
     // The native FlashList cell estimate. Spelled out from the design values, independent of the helper's own
     // expressions, so any shell/gap/panel change fails here:
-    //   header 64 + shell (p8 ×2 = 16 + border 1 ×2 = 2) + gap 4 + panel(3) [border 2 + 3×56 + 2×2 = 174] = 260.
-    expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(260)
+    //   header 64 + shell (p8 ×2 = 16 + border 1 ×2 = 2) + gap 8 + panel(3) [border 2 + 3×56 + 2×2 = 174] = 264.
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(264)
   })
 })
 
@@ -76,9 +76,9 @@ describe('height invariance with the context-menu affordance', () => {
   })
 
   it('expanded search-row height is unchanged for the expandable cases (2..4 issuers)', () => {
-    expect(getExpandableSearchRowHeightPx({ issuerCount: 2, expanded: true })).toBe(202)
-    expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(260)
-    expect(getExpandableSearchRowHeightPx({ issuerCount: 4, expanded: true })).toBe(318)
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 2, expanded: true })).toBe(206)
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 3, expanded: true })).toBe(264)
+    expect(getExpandableSearchRowHeightPx({ issuerCount: 4, expanded: true })).toBe(322)
   })
 
   it('collapsed row height stays the bare min-height for 1..4 issuers (the single-issuer Stocks-shelf row included)', () => {

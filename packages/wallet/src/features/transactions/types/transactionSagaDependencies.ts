@@ -18,7 +18,6 @@ import type { TransactionConfigService } from 'wallet/src/features/transactions/
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
 import type { PaymasterClient } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/paymasterClient'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
@@ -78,8 +77,8 @@ export interface TransactionSagaDependencies {
     analyticsService: AnalyticsService
     logger: Logger
     getProvider: () => Promise<Provider>
+    userOpSigner?: UserOpSigner
   }) => TransactionService
-  createUserOpService: (params: { userOpSigner: UserOpSigner; logger: Logger }) => UserOpService
   createAnalyticsService: (params: {
     sendAnalyticsEvent: typeof sendAnalyticsEvent
     logger: Logger

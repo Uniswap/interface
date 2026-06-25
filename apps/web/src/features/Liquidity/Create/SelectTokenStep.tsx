@@ -32,7 +32,6 @@ import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { ErrorCallout } from '~/components/ErrorCallout'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
@@ -57,7 +56,7 @@ import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVers
 import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { serializeSwapStateToURLParameters } from '~/pages/Swap/state/tradeQueryParams'
+import { serializeSwapStateToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -387,203 +386,198 @@ export function SelectTokensStep({
           }}
         />
       )}
-      <PrefetchBalancesWrapper>
-        <Flex gap="$spacing32" {...rest}>
-          <Flex gap="$spacing16">
-            <Flex gap="$spacing12">
-              <Flex>
-                <Text variant="subheading1">{tokensLocked ? t('pool.tokenPair') : t('pool.selectPair')}</Text>
-                <Text variant="body3" color="$neutral2">
-                  {tokensLocked ? t('position.migrate.liquidity') : t('position.provide.liquidity')}
-                </Text>
-              </Flex>
-              {tokensLocked && token0 && token1 ? (
-                <Flex row gap="$gap16" py="$spacing4" alignItems="center">
-                  <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
-                  <Flex grow>
-                    <Text variant="heading3">
-                      {token0.symbol} / {token1.symbol}
-                    </Text>
-                  </Flex>
-                </Flex>
-              ) : (
-                <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
-                  <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
-                    <CurrencySelector
-                      loading={loadingA}
-                      currencyInfo={token0CurrencyInfo}
-                      onPress={() => handleOpenTokenSelector('tokenA')}
-                    />
-                  </Flex>
-                  <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
-                    <CurrencySelector
-                      loading={loadingB}
-                      currencyInfo={token1CurrencyInfo}
-                      onPress={() => handleOpenTokenSelector('tokenB')}
-                    />
-                  </Flex>
-                </Flex>
-              )}
-              <SelectStepError
-                isUnsupportedTokenSelected={isUnsupportedTokenSelected}
-                unsupportedChainId={unsupportedChainId}
-                protocolVersion={protocolVersion}
-                wrappedNativeWarning={undefined}
-                fotToken={fotErrorToken}
-                blockedTokenSymbols={blockedTokenSymbols}
-              />
-              {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
-            </Flex>
-          </Flex>
-          <Flex gap="$spacing24">
+      <Flex gap="$spacing32" {...rest}>
+        <Flex gap="$spacing16">
+          <Flex gap="$spacing12">
             <Flex>
-              <Text variant="subheading1">{t('fee.tier')}</Text>
+              <Text variant="subheading1">{tokensLocked ? t('pool.tokenPair') : t('pool.selectPair')}</Text>
               <Text variant="body3" color="$neutral2">
-                {protocolVersion === ProtocolVersion.V2 ? t('fee.tier.description.v2') : t('fee.tier.description')}
+                {tokensLocked ? t('position.migrate.liquidity') : t('position.provide.liquidity')}
               </Text>
             </Flex>
+            {tokensLocked && token0 && token1 ? (
+              <Flex row gap="$gap16" py="$spacing4" alignItems="center">
+                <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
+                <Flex grow>
+                  <Text variant="heading3">
+                    {token0.symbol} / {token1.symbol}
+                  </Text>
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
+                <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
+                  <CurrencySelector
+                    loading={loadingA}
+                    currencyInfo={token0CurrencyInfo}
+                    onPress={() => handleOpenTokenSelector('tokenA')}
+                  />
+                </Flex>
+                <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
+                  <CurrencySelector
+                    loading={loadingB}
+                    currencyInfo={token1CurrencyInfo}
+                    onPress={() => handleOpenTokenSelector('tokenB')}
+                  />
+                </Flex>
+              </Flex>
+            )}
+            <SelectStepError
+              isUnsupportedTokenSelected={isUnsupportedTokenSelected}
+              unsupportedChainId={unsupportedChainId}
+              protocolVersion={protocolVersion}
+              wrappedNativeWarning={undefined}
+              fotToken={fotErrorToken}
+              blockedTokenSymbols={blockedTokenSymbols}
+            />
+            {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
+          </Flex>
+        </Flex>
+        <Flex gap="$spacing24">
+          <Flex>
+            <Text variant="subheading1">{t('fee.tier')}</Text>
+            <Text variant="body3" color="$neutral2">
+              {protocolVersion === ProtocolVersion.V2 ? t('fee.tier.description.v2') : t('fee.tier.description')}
+            </Text>
+          </Flex>
 
-            {protocolVersion !== ProtocolVersion.V2 && (
-              <FeeTierSelector
-                selectedFee={fee}
-                onFeeSelect={handleFeeTierSelect}
-                feeTiers={defaultFeeTiers}
-                disabled={
-                  hasError ||
-                  !currencyInputs.tokenA ||
-                  !currencyInputs.tokenB ||
-                  Boolean(migratingPosition?.isOutOfRange)
-                }
-                isLpIncentivesEnabled={isLpIncentivesEnabled}
-                hasLpRewards={feeTierHasLpRewards}
-                allowDynamicFee={!!hook}
-                isExpanded={isShowMoreFeeTiersEnabled}
-                onToggleExpand={toggleShowMoreFeeTiersEnabled}
-                headerInlineContent={
-                  <>
-                    {fee &&
-                    currentFeeTierKey ===
-                      (mostUsedFeeTier &&
-                        getFeeTierKey({
-                          feeTier: mostUsedFeeTier.fee.feeAmount,
-                          tickSpacing: mostUsedFeeTier.fee.tickSpacing,
-                          isDynamicFee: mostUsedFeeTier.fee.isDynamic,
-                        })) ? (
-                      <MouseoverTooltip text={t('fee.tier.recommended.description')}>
-                        <Flex
-                          justifyContent="center"
-                          borderRadius="$rounded6"
-                          backgroundColor="$surface3"
-                          px={7}
-                          py="$spacing2"
-                          $md={{ display: 'none' }}
-                        >
-                          <Text variant="buttonLabel4">{t('fee.tier.highestTvl')}</Text>
-                        </Flex>
-                      </MouseoverTooltip>
-                    ) : currentFeeTierKey && !feeTierData[currentFeeTierKey]?.created ? (
-                      <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
-                        <Text variant="buttonLabel4">{t('fee.tier.new')}</Text>
-                      </Flex>
-                    ) : null}
-                    {fee && lpIncentiveRewardApr && (
-                      <LpIncentivesAprDisplay
-                        lpIncentiveRewardApr={lpIncentiveRewardApr}
+          {protocolVersion !== ProtocolVersion.V2 && (
+            <FeeTierSelector
+              selectedFee={fee}
+              onFeeSelect={handleFeeTierSelect}
+              feeTiers={defaultFeeTiers}
+              disabled={
+                hasError || !currencyInputs.tokenA || !currencyInputs.tokenB || Boolean(migratingPosition?.isOutOfRange)
+              }
+              isLpIncentivesEnabled={isLpIncentivesEnabled}
+              hasLpRewards={feeTierHasLpRewards}
+              allowDynamicFee={!!hook}
+              isExpanded={isShowMoreFeeTiersEnabled}
+              onToggleExpand={toggleShowMoreFeeTiersEnabled}
+              headerInlineContent={
+                <>
+                  {fee &&
+                  currentFeeTierKey ===
+                    (mostUsedFeeTier &&
+                      getFeeTierKey({
+                        feeTier: mostUsedFeeTier.fee.feeAmount,
+                        tickSpacing: mostUsedFeeTier.fee.tickSpacing,
+                        isDynamicFee: mostUsedFeeTier.fee.isDynamic,
+                      })) ? (
+                    <MouseoverTooltip text={t('fee.tier.recommended.description')}>
+                      <Flex
+                        justifyContent="center"
+                        borderRadius="$rounded6"
+                        backgroundColor="$surface3"
+                        px={7}
+                        py="$spacing2"
                         $md={{ display: 'none' }}
-                        isSmall
-                      />
-                    )}
-                  </>
-                }
-                headerSubContent={
-                  lpIncentiveRewardApr ? (
+                      >
+                        <Text variant="buttonLabel4">{t('fee.tier.highestTvl')}</Text>
+                      </Flex>
+                    </MouseoverTooltip>
+                  ) : currentFeeTierKey && !feeTierData[currentFeeTierKey]?.created ? (
+                    <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
+                      <Text variant="buttonLabel4">{t('fee.tier.new')}</Text>
+                    </Flex>
+                  ) : null}
+                  {fee && lpIncentiveRewardApr && (
                     <LpIncentivesAprDisplay
                       lpIncentiveRewardApr={lpIncentiveRewardApr}
-                      display="none"
-                      $md={{ display: 'flex' }}
+                      $md={{ display: 'none' }}
                       isSmall
                     />
-                  ) : undefined
-                }
-                expandedFooterContent={
-                  protocolVersion === ProtocolVersion.V4 ? (
-                    <AdvancedButton
-                      title={t('fee.tier.search')}
-                      Icon={Search}
-                      onPress={() => {
-                        setFeeTierSearchModalOpen(true)
-                      }}
-                    />
-                  ) : undefined
-                }
-                footerContent={
-                  !lpIncentiveRewardApr && feeTierHasLpRewards && !isShowMoreFeeTiersEnabled ? (
-                    <Flex
-                      row
-                      alignItems="center"
-                      gap="$spacing12"
-                      mt="$spacing4"
-                      p="$spacing12"
-                      $sm={{ p: '$spacing6', gap: '$spacing6' }}
-                      backgroundColor="$accent2"
-                      borderBottomLeftRadius="$rounded12"
-                      borderBottomRightRadius="$rounded12"
-                      width="100%"
-                    >
-                      <InfoCircleFilled color="$accent1" size="$icon.16" />
-                      <Text variant="body3" color="$accent1" mt="$spacing2" $sm={{ variant: 'body4', mt: '$spacing1' }}>
-                        {t('pool.incentives.similarPoolHasRewards')}
-                      </Text>
-                      <Text
-                        mt="$spacing2"
-                        variant="body3"
-                        color="$neutral1"
-                        $sm={{ variant: 'body4', mt: '$spacing1' }}
-                        {...ClickableTamaguiStyle}
-                        onPress={toggleShowMoreFeeTiersEnabled}
-                      >
-                        {t('pool.incentives.switchPools')}
-                      </Text>
-                    </Flex>
-                  ) : undefined
-                }
-              />
-            )}
-          </Flex>
-          {poolAlreadyExists ? <PoolAlreadyCreatedInfo /> : <CreatingPoolInfo />}
-          <Flex row>
-            <Button
-              size="large"
-              key="SelectTokensStep-continue"
-              onPress={handleOnContinue}
-              loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
-              isDisabled={
-                !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
+                  )}
+                </>
               }
-            >
-              {poolAlreadyExists ? t('common.addLiquidity') : t('common.button.continue')}
-            </Button>
-          </Flex>
-          <PoolParsingError formComplete={Boolean(token0 && token1 && fee)} />
-          {showWrappedNativeWarning && wrappedNativeWarning && (
-            <SelectStepError
-              isUnsupportedTokenSelected={false}
-              protocolVersion={protocolVersion}
-              wrappedNativeWarning={wrappedNativeWarning}
-              fotToken={undefined}
+              headerSubContent={
+                lpIncentiveRewardApr ? (
+                  <LpIncentivesAprDisplay
+                    lpIncentiveRewardApr={lpIncentiveRewardApr}
+                    display="none"
+                    $md={{ display: 'flex' }}
+                    isSmall
+                  />
+                ) : undefined
+              }
+              expandedFooterContent={
+                protocolVersion === ProtocolVersion.V4 ? (
+                  <AdvancedButton
+                    title={t('fee.tier.search')}
+                    Icon={Search}
+                    onPress={() => {
+                      setFeeTierSearchModalOpen(true)
+                    }}
+                  />
+                ) : undefined
+              }
+              footerContent={
+                !lpIncentiveRewardApr && feeTierHasLpRewards && !isShowMoreFeeTiersEnabled ? (
+                  <Flex
+                    row
+                    alignItems="center"
+                    gap="$spacing12"
+                    mt="$spacing4"
+                    p="$spacing12"
+                    $sm={{ p: '$spacing6', gap: '$spacing6' }}
+                    backgroundColor="$accent2"
+                    borderBottomLeftRadius="$rounded12"
+                    borderBottomRightRadius="$rounded12"
+                    width="100%"
+                  >
+                    <InfoCircleFilled color="$accent1" size="$icon.16" />
+                    <Text variant="body3" color="$accent1" mt="$spacing2" $sm={{ variant: 'body4', mt: '$spacing1' }}>
+                      {t('pool.incentives.similarPoolHasRewards')}
+                    </Text>
+                    <Text
+                      mt="$spacing2"
+                      variant="body3"
+                      color="$neutral1"
+                      $sm={{ variant: 'body4', mt: '$spacing1' }}
+                      {...ClickableTamaguiStyle}
+                      onPress={toggleShowMoreFeeTiersEnabled}
+                    >
+                      {t('pool.incentives.switchPools')}
+                    </Text>
+                  </Flex>
+                ) : undefined
+              }
             />
           )}
         </Flex>
+        {poolAlreadyExists ? <PoolAlreadyCreatedInfo /> : <CreatingPoolInfo />}
+        <Flex row>
+          <Button
+            size="large"
+            key="SelectTokensStep-continue"
+            onPress={handleOnContinue}
+            loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
+            isDisabled={
+              !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
+            }
+          >
+            {poolAlreadyExists ? t('common.addLiquidity') : t('common.button.continue')}
+          </Button>
+        </Flex>
+        <PoolParsingError formComplete={Boolean(token0 && token1 && fee)} />
+        {showWrappedNativeWarning && wrappedNativeWarning && (
+          <SelectStepError
+            isUnsupportedTokenSelected={false}
+            protocolVersion={protocolVersion}
+            wrappedNativeWarning={wrappedNativeWarning}
+            fotToken={undefined}
+          />
+        )}
+      </Flex>
 
-        <CurrencySearchModal
-          isOpen={currencySearchInputState !== undefined}
-          onDismiss={() => setCurrencySearchInputState(undefined)}
-          switchNetworkAction={SwitchNetworkAction.LP}
-          onCurrencySelect={handleCurrencySelect}
-          chainIds={supportedChains}
-          flow={TokenSelectorFlow.Liquidity}
-        />
-      </PrefetchBalancesWrapper>
+      <CurrencySearchModal
+        isOpen={currencySearchInputState !== undefined}
+        onDismiss={() => setCurrencySearchInputState(undefined)}
+        switchNetworkAction={SwitchNetworkAction.LP}
+        onCurrencySelect={handleCurrencySelect}
+        chainIds={supportedChains}
+        flow={TokenSelectorFlow.Liquidity}
+      />
     </>
   )
 }

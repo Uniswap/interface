@@ -32,7 +32,7 @@ import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { ExternalLink } from '~/theme/components/Links'
 

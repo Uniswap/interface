@@ -1,11 +1,11 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo } from 'react'
 import { Flex, styled } from 'ui/src'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
-import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
-import { useSimplePagination } from '~/hooks/useSimplePagination'
+import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
 import {
   TokenTableSortStoreContextProvider,
@@ -30,12 +30,18 @@ function TopTokensTableContent(): JSX.Element {
     [sortMethod, sortAscending, filterString, timePeriod],
   )
 
-  const backendSortingEnabled = useExploreBackendSortingEnabled()
+  const tokenV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
   const { topTokens, tokenSortRank, isLoading, sparklines, isError, loadMore } = useListTokens(chainId, options)
 
-  const { page, loadMore: clientLoadMore } = useSimplePagination()
+  // Legacy path paginates already-loaded data client-side; useSimplePagination paces the reveal
+  // (so the load-more indicator shows) and gates loadMore once all rows are displayed. Backend
+  // sorting uses its own async loadMore, so clientLoadMore is unused there.
+  const { page, loadMore: clientLoadMore } = useSimplePagination({
+    totalCount: topTokens.length,
+    pageSize: TABLE_PAGE_SIZE,
+  })
   const effectiveLoadMore = loadMore ?? clientLoadMore
-  const displayedTokens = backendSortingEnabled ? topTokens : topTokens.slice(0, page * TABLE_PAGE_SIZE)
+  const displayedTokens = tokenV2EndpointsEnabled ? topTokens : topTokens.slice(0, page * TABLE_PAGE_SIZE)
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">

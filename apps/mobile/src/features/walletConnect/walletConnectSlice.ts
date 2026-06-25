@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { TradingApi } from '@universe/api'
 import { type ProposalTypes, type SessionTypes } from '@walletconnect/types'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, type EthSignMethod } from 'uniswap/src/features/dappRequests/types'
@@ -85,7 +86,7 @@ export interface WalletSendCallsUserOperationRequest extends WalletSendCallsRequ
   unsignedUserOperation: RpcUserOperation<'0.8'>
   requestId: string
   gasSponsored: boolean
-  sponsorMetadata?: { name?: string; icon?: string }
+  sponsorMetadata?: TradingApi.SponsorMetadata
   paymasterServiceUrl: string
   paymasterServiceContext?: Record<string, unknown>
 }

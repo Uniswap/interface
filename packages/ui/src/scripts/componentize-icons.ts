@@ -48,7 +48,9 @@ const TAG_MAP: Record<string, string> = {
 // Main Loop
 
 async function run(): Promise<void> {
-  const skipExisting = process.argv.length > 2 && process.argv[2] === '--skip-existing'
+  const args = process.argv.slice(2)
+  const skipExisting = args.includes('--skip-existing')
+  const silent = args.includes('--silent')
   const srcDir = join(__dirname, '..')
   const assetsDir = join(srcDir, 'assets')
 
@@ -63,12 +65,12 @@ async function run(): Promise<void> {
     },
   ]
 
-  await Promise.all(svgDirPairs.map((dirPair) => createSVGComponents(dirPair, skipExisting)))
+  await Promise.all(svgDirPairs.map((dirPair) => createSVGComponents(dirPair, skipExisting, silent)))
 }
 
 // Logic Functions
 
-async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): Promise<void> {
+async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean, silent: boolean): Promise<void> {
   // Ensure output directory exists
   await mkdir(dirs.output, { recursive: true })
 
@@ -88,7 +90,9 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
       const svg = await readFile(inputPath, 'utf-8')
       const element = generateSVGComponentString(svg, fileName)
       if (element) {
-        console.log(`🦄 ${fileName}`)
+        if (!silent) {
+          console.log(`🦄 ${fileName}`)
+        }
         await writeFile(outputPath, element, 'utf-8')
       }
     }),
@@ -117,7 +121,9 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
   }
 
   // Write index file (without formatting)
-  console.log('Writing index file...')
+  if (!silent) {
+    console.log('Writing index file...')
+  }
   const indexPath = join(dirs.output, 'exported.ts')
   await writeFile(indexPath, indexFile, 'utf-8')
 }

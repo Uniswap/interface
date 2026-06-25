@@ -9,22 +9,22 @@ import { renderHookWithProviders } from 'uniswap/src/test/render'
 const {
   mockUseEnabledChains,
   mockUseCurrencyIdToVisibility,
-  mockUseGetPortfolioQuery,
+  mockUseGetWalletBalancesQuery,
   mockUseHideSmallBalancesSetting,
   mockUseHideSpamTokensSetting,
   mockUsePlatformBasedFetchPolicy,
 } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseCurrencyIdToVisibility: vi.fn(),
-  mockUseGetPortfolioQuery: vi.fn(),
+  mockUseGetWalletBalancesQuery: vi.fn(),
   mockUseHideSmallBalancesSetting: vi.fn(),
   mockUseHideSpamTokensSetting: vi.fn(),
   mockUsePlatformBasedFetchPolicy: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getPortfolio', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getPortfolio')>()),
-  useGetPortfolioQuery: mockUseGetPortfolioQuery,
+vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/rest/getWalletBalances/getWalletBalances')>()),
+  useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -255,7 +255,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns the raw error state when the portfolio total request errors before any cached data exists', () => {
-    mockUseGetPortfolioQuery.mockReturnValue({
+    mockUseGetWalletBalancesQuery.mockReturnValue({
       data: undefined,
       isFetching: false,
       refetch: vi.fn(),
@@ -277,7 +277,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns cached portfolio total data alongside the raw error metadata', () => {
-    mockUseGetPortfolioQuery.mockReturnValue({
+    mockUseGetWalletBalancesQuery.mockReturnValue({
       data: {
         balanceUSD: 100,
         percentChange: 2,

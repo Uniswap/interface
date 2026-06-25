@@ -77,9 +77,6 @@ export const BAR_STYLE = {
   SPACING: 1, // Gap between adjacent bars in pixels (reduced from 2px per design)
 } as const
 
-// Demand background gap behavior
-export const DEMAND_BACKGROUND_GAP_MAX_VISIBLE_TICKS = 30
-
 // Zoom configuration
 export const ZOOM_DEFAULTS = {
   INITIAL_TICK_COUNT: 20, // Number of ticks to show in initial view

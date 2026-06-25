@@ -9,6 +9,7 @@ jest.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'common.auto': 'Auto',
         'gas.override.title': 'Network cost',
+        'swap.warning.networkFee.includesDelegation': 'Includes smart wallet activation',
       }
       return translations[key] ?? key
     },
@@ -97,5 +98,32 @@ describe('DappNetworkCostRow', () => {
       />,
     )
     expect(getByText('$1.54')).toBeTruthy()
+  })
+
+  it('renders the smart wallet activation subtitle when showSmartWalletActivation is true', () => {
+    const { getByText } = renderWithProviders(
+      <DappNetworkCostRow
+        chainId={1}
+        gasFee={undefined}
+        tx={undefined}
+        showSmartWalletActivation
+        gasOverrides={undefined}
+        onChangeGasOverrides={jest.fn()}
+      />,
+    )
+    expect(getByText('Includes smart wallet activation')).toBeTruthy()
+  })
+
+  it('does not render the subtitle when showSmartWalletActivation is omitted', () => {
+    const { queryByText } = renderWithProviders(
+      <DappNetworkCostRow
+        chainId={1}
+        gasFee={undefined}
+        tx={undefined}
+        gasOverrides={undefined}
+        onChangeGasOverrides={jest.fn()}
+      />,
+    )
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
   })
 })

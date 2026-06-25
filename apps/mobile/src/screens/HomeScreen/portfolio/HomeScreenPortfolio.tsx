@@ -29,6 +29,10 @@ import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { Flex, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
+import {
+  PositionStatusFilterButton,
+  PositionStatusFilterValue,
+} from 'uniswap/src/features/positions/components/PositionStatusFilter'
 import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -75,6 +79,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   const [hasInteractionAttachedTabs, setHasInteractionAttachedTabs] = useState(false)
   const [hasVisitedNfts, setHasVisitedNfts] = useState(activeKey === HomeTab.NFTs)
   const [hasVisitedPools, setHasVisitedPools] = useState(activeKey === HomeTab.Pools)
+  const [poolsStatusFilter, setPoolsStatusFilter] = useState<PositionStatusFilterValue>(PositionStatusFilterValue.Open)
 
   useEffect(() => {
     if (activeKey === HomeTab.NFTs) {
@@ -103,6 +108,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
     owner: activeAccount.address,
     skip: !shouldLoadPools,
   })
+  const poolsHasErrorWithoutData = poolsListRenderData.hasErrorWithoutData
 
   useEffect(() => {
     if (!shouldLoadNfts) {
@@ -204,6 +210,15 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
             <HomeScreenPortfolioStickyTabBar
               routes={routes}
               tabIndex={tabIndex}
+              rightAccessory={
+                activeKey === HomeTab.Pools && shouldShowPoolsTab ? (
+                  <PositionStatusFilterButton
+                    value={poolsStatusFilter}
+                    disabled={poolsHasErrorWithoutData}
+                    onChange={setPoolsStatusFilter}
+                  />
+                ) : null
+              }
               onTabIndexChange={handleTabIndexChange}
             />
           )
@@ -221,7 +236,9 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
               shouldLoadNfts={shouldLoadNfts}
               shouldLoadPools={shouldLoadPools}
               poolsListRenderData={poolsListRenderData}
+              poolsStatusFilter={poolsStatusFilter}
               tabIndex={tabIndex}
+              onPoolsStatusFilterChange={setPoolsStatusFilter}
               onTabIndexChange={handleTabIndexChange}
               onTabInteractionStart={attachInactiveTabs}
             />
@@ -242,6 +259,10 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
       shouldDetachInactiveTabs,
       showEmptyWalletState,
       tabIndex,
+      activeKey,
+      shouldShowPoolsTab,
+      poolsStatusFilter,
+      poolsHasErrorWithoutData,
       nftListRenderData,
       shouldLoadNfts,
       shouldLoadPools,

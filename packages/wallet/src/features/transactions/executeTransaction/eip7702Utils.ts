@@ -1,8 +1,10 @@
+import { TradingApi } from '@universe/api'
 import { ensure0xHex, HexString, isValidHexString } from '@universe/encoding'
 import { providers, utils } from 'ethers'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
+  numberToHex,
   parseSignature,
   SignedAuthorization,
   serializeTransaction,
@@ -244,4 +246,64 @@ function reconstructAuthorization({
     })
     throw error
   }
+}
+
+/**
+ * Converts a viem `SignedAuthorization` into the Trading API `Eip7702Authorization`
+ * wire shape (hex-encoded chainId/nonce/yParity), suitable for embedding in
+ * `Swap4337Request` / `Encode4337Request` / `CheckApproval4337Request`.
+ */
+export function toTradingApiEip7702Auth(auth: SignedAuthorization): TradingApi.Eip7702Authorization {
+  return {
+    address: auth.address,
+    chainId: numberToHex(auth.chainId),
+    nonce: numberToHex(auth.nonce),
+    r: auth.r,
+    s: auth.s,
+    yParity: numberToHex(auth.yParity ?? 0),
+  }
+}
+
+/**
+ * Signs a fresh EIP-7702 delegation authorization for `walletAddress` using the EOA's
+ * *pending* transaction nonce, returned in Trading API wire format.
+ *
+ * Attach this to a 4337 request (swap/encode/approval) BEFORE the backend's paymaster +
+ * bundler simulation: an undelegated account is then simulated as delegated,
+ * so a first sponsored swap/approval gets correct sponsorship + gas estimates. The signed
+ * auth round-trips back on the returned UserOp, so the later `signUserOp` step reuses it.
+ *
+ * Returns `undefined` when no `contractAddress` is provided (nothing to delegate to).
+ */
+export async function prepareDelegationAuthorization({
+  signer,
+  provider,
+  walletAddress,
+  chainId,
+  contractAddress,
+}: {
+  signer: NativeSigner
+  provider: providers.Provider
+  walletAddress: string
+  chainId: number
+  contractAddress?: string
+}): Promise<TradingApi.Eip7702Authorization | undefined> {
+  if (!contractAddress) {
+    return undefined
+  }
+
+  // EOA transaction nonce (distinct from the 4337 UserOp nonce). `pending` accounts for
+  // any in-flight EOA tx; a race between this read and bundler submission can still
+  // invalidate the auth.
+  const nonce = await provider.getTransactionCount(walletAddress, 'pending')
+
+  const signedAuthorization = await createSignedAuthorization({
+    signer,
+    walletAddress: walletAddress as Address,
+    chainId,
+    contractAddress: contractAddress as Address,
+    nonce,
+  })
+
+  return toTradingApiEip7702Auth(signedAuthorization)
 }

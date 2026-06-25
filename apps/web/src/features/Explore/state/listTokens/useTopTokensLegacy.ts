@@ -4,6 +4,7 @@ import {
   PriceHistory,
   TokenStats,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { PricePoint, TimePeriod } from '~/appGraphql/data/util'
@@ -11,7 +12,6 @@ import { TokenSortMethod } from '~/components/Tokens/constants'
 import { useExploreChainId } from '~/features/Explore/state'
 import { UseListTokensOptions, type UseListTokensSortOptions } from '~/features/Explore/state/listTokens/types'
 import { TokenSortMethods } from '~/features/Explore/state/listTokens/utils/sortTokens'
-import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
 import { TokenStat } from '~/types/explore'
 
 function convertPriceHistoryToPricePoints(priceHistory?: PriceHistory): PricePoint[] | undefined {
@@ -101,7 +101,7 @@ export function useTopTokensLegacy({
 }) {
   const { filterTimePeriod: duration, sortMethod, sortAscending } = options
   const chainId = useExploreChainId()
-  const backendSorting = useExploreBackendSortingEnabled()
+  const tokensV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   const {
     data,
@@ -109,7 +109,7 @@ export function useTopTokensLegacy({
     error: isError,
   } = useExploreStatsQuery<ExploreStatsResponse>({
     input: { chainId, multichain },
-    enabled: enabled && !backendSorting,
+    enabled: enabled && !tokensV2EndpointsEnabled,
   })
 
   const tokenStats = useMemo(() => {

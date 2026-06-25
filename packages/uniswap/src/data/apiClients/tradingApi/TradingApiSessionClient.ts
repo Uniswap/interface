@@ -1,6 +1,6 @@
 import {
-  createFetchClient,
   createTradingApiClient,
+  createTradingApiFetchClient,
   createWithSessionRetry,
   getEntryGatewayUrl,
   provideSessionService,
@@ -39,7 +39,8 @@ const withSessionRetry = createWithSessionRetry({
   },
 })
 
-const entryGatewayTradingFetchClientWithSession = createFetchClient({
+// The factory sets credentials: 'include' so web requests carry the session cookie.
+const entryGatewayTradingFetchClientWithSession = createTradingApiFetchClient({
   getBaseUrl: getEntryGatewayUrl,
   getHeaders,
   getSessionService: () =>
@@ -50,9 +51,6 @@ const entryGatewayTradingFetchClientWithSession = createFetchClient({
     }),
   getSession: tryProvideSession,
   source: SessionGateSource.FetchTrading,
-  defaultOptions: {
-    credentials: 'include',
-  },
 })
 
 const BaseTradingApiSessionClient: PlanEndpoints = createTradingApiClient({

@@ -7,6 +7,7 @@ import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
@@ -72,7 +73,7 @@ export const ARBITRUM_CHAIN_INFO = {
   supportsNFTs: true,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.ArbitrumOne],
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.ArbitrumOne)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.ArbitrumOne)] },
     [RPCType.Default]: { http: ['https://arb1.arbitrum.io/rpc'] },
     [RPCType.Fallback]: { http: ['https://arbitrum.public-rpc.com'] },
     [RPCType.Interface]: {

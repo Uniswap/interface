@@ -8,6 +8,8 @@ import { fonts } from 'ui/src/theme'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import {
   commitDraftToFloorPrice,
@@ -416,29 +418,31 @@ export function FloorPriceSelector({
       <Flex gap="$spacing4" width="100%">
         <Flex row gap="$spacing4" alignItems="center" width="100%" minWidth={0}>
           {isFocused ? (
-            <Input
-              ref={inputRef}
-              autoFocus
-              unstyled
-              outlineStyle="none"
-              $platform-web={{
-                fieldSizing: 'content',
-                minWidth: '1ch',
-                maxWidth: '100%',
-              }}
-              value={focusedDisplayValue}
-              onChangeText={handleChange}
-              onBlur={handleBlur}
-              placeholder={`0${decimalSeparator}00`}
-              placeholderTextColor="$neutral3"
-              keyboardType="decimal-pad"
-              fontFamily="$heading"
-              fontSize={fonts.heading3.fontSize}
-              lineHeight={fonts.heading3.lineHeight}
-              fontWeight={fonts.heading3.fontWeight}
-              color="$neutral1"
-              backgroundColor="$transparent"
-            />
+            <Trace logFocus element={ElementName.AuctionFloorPrice}>
+              <Input
+                ref={inputRef}
+                autoFocus
+                unstyled
+                outlineStyle="none"
+                $platform-web={{
+                  fieldSizing: 'content',
+                  minWidth: '1ch',
+                  maxWidth: '100%',
+                }}
+                value={focusedDisplayValue}
+                onChangeText={handleChange}
+                onBlur={handleBlur}
+                placeholder={`0${decimalSeparator}00`}
+                placeholderTextColor="$neutral3"
+                keyboardType="decimal-pad"
+                fontFamily="$heading"
+                fontSize={fonts.heading3.fontSize}
+                lineHeight={fonts.heading3.lineHeight}
+                fontWeight={fonts.heading3.fontWeight}
+                color="$neutral1"
+                backgroundColor="$transparent"
+              />
+            </Trace>
           ) : unfocusedNumeric === null ? (
             <Text variant="heading3" color="$neutral3" cursor="text" onPress={handleFocus}>
               {`0${decimalSeparator}00`}

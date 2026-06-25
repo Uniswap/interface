@@ -159,6 +159,8 @@ export type TransactionStatusResult = {
   status: TransactionStatus
   /** On-chain tx hash resolved from the /swaps response (relevant for 4337 UserOps where the mined hash differs from the userOpHash) */
   txHash?: string
+  sponsorInfo?: TradingApi.SponsorMetadata
+  paymaster?: string
 }
 
 /**
@@ -179,7 +181,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
   const isUserOp = !!userOpHash
 
   const isMaybeBridgeTransaction = isMaybeBridge(
-    'options' in transaction ? transaction.options.request.to?.toString() : undefined,
+    'options' in transaction ? transaction.options.request?.to?.toString() : undefined,
     transaction.chainId,
   )
 
@@ -189,6 +191,8 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
   let swapStatus: TradingApi.SwapStatus | undefined
   let resolvedTxHash: string | undefined
+  let resolvedSponsorInfo: TradingApi.SponsorMetadata | undefined
+  let resolvedPaymaster: string | undefined
 
   // User-op time to inclusion is longer: ~30s for p90
   // Classic swaps also have a updateTransactionWithReceipt backup mechanism, which userOps do not
@@ -215,6 +219,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
     const data = yield* call(TradingApiClient.fetchSwaps, {
       ...(userOpHash ? { userOpHashes: [userOpHash] } : txHash ? { txHashes: [txHash] } : {}),
       chainId,
+      swapper: transaction.from,
     })
 
     const swapItem = data.swaps?.[0]
@@ -222,6 +227,14 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
     if (swapItem?.txHash) {
       resolvedTxHash = swapItem.txHash
+    }
+
+    if (swapItem?.paymaster) {
+      resolvedPaymaster = swapItem.paymaster
+    }
+
+    if (swapItem?.sponsorship) {
+      resolvedSponsorInfo = swapItem.sponsorship
     }
 
     logger.debug(
@@ -251,7 +264,12 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
         updatedTransaction.status,
       )
 
-      return { status: updatedTransaction.status, txHash: resolvedTxHash }
+      return {
+        status: updatedTransaction.status,
+        txHash: resolvedTxHash,
+        sponsorInfo: resolvedSponsorInfo,
+        paymaster: resolvedPaymaster,
+      }
     }
 
     pollIndex++
@@ -264,5 +282,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
   return {
     status: swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed,
     txHash: resolvedTxHash,
+    sponsorInfo: resolvedSponsorInfo,
+    paymaster: resolvedPaymaster,
   }
 }

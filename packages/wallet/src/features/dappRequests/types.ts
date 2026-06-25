@@ -49,11 +49,15 @@ export const GetCallsStatusTransactionReceiptLogSchema = z.object({
 })
 
 export const GetCallsStatusTransactionReceiptSchema = z.object({
-  logs: z.array(GetCallsStatusTransactionReceiptLogSchema),
+  // logs/blockHash/blockNumber/gasUsed are optional: the embedded-wallet web flow
+  // resolves status via the Trading API `/swaps` feed, which returns the tx hash
+  // and success/failure but not the full receipt. Store-backed (mobile/extension)
+  // receipts still populate them.
+  logs: z.array(GetCallsStatusTransactionReceiptLogSchema).optional(),
   status: z.string(), // Hex 1 or 0 for success or failure
-  blockHash: z.string(),
-  blockNumber: z.string(),
-  gasUsed: z.string(),
+  blockHash: z.string().optional(),
+  blockNumber: z.string().optional(),
+  gasUsed: z.string().optional(),
   transactionHash: z.string(),
 })
 
@@ -62,6 +66,7 @@ export const GetCallsStatusResultSchema = z.object({
   id: z.string(),
   chainId: z.string(),
   status: z.number(), // Status codes as per EIP-5792
+  atomic: z.boolean().optional(),
   receipts: z.array(GetCallsStatusTransactionReceiptSchema).optional(),
   capabilities: z
     .looseObject({

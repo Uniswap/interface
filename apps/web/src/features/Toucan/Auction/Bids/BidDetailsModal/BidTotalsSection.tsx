@@ -11,8 +11,9 @@ interface BidTotalsSectionProps {
   refundBudgetLabel: string
   refundBudgetAmount: number
   refundBudgetSubtext: string
-  isGraduated: boolean
-  isAuctionEnded: boolean
+  // When the auction ended without graduating, no tokens are distributed — the
+  // figure shown is what the bid would have received, so the label is reframed.
+  isAuctionFailed: boolean
 }
 
 export function BidTotalsSection({
@@ -24,31 +25,27 @@ export function BidTotalsSection({
   refundBudgetLabel,
   refundBudgetAmount,
   refundBudgetSubtext,
-  isGraduated,
-  isAuctionEnded,
+  isAuctionFailed,
 }: BidTotalsSectionProps): JSX.Element {
   const { t } = useTranslation()
-
-  // Hide bid details when auction has ended but not graduated
-  const shouldHideBidDetails = isAuctionEnded && !isGraduated
 
   return (
     <Flex row gap="$spacing12" width="100%">
       <Flex backgroundColor="$surface2" borderRadius="$rounded16" padding="$spacing12" gap="$spacing4" flex={1}>
         <Text variant="body4" color="$neutral2">
-          {t('toucan.bidDetails.label.totalReceived', { symbol: tokenSymbol })}
+          {isAuctionFailed
+            ? t('toucan.bidDetails.label.totalWouldHaveReceived', { symbol: tokenSymbol })
+            : t('toucan.bidDetails.label.totalReceived', { symbol: tokenSymbol })}
         </Text>
         <Text variant="heading3" color="$neutral1">
-          {shouldHideBidDetails ? '-' : totalTokensReceivedDisplay}
+          {totalTokensReceivedDisplay}
         </Text>
-        {!shouldHideBidDetails && (
-          <Text variant="body4" color="$neutral2">
-            {filledPercentageDisplay}
-          </Text>
-        )}
+        <Text variant="body4" color="$neutral2">
+          {filledPercentageDisplay}
+        </Text>
       </Flex>
 
-      {!shouldHideBidDetails && showUnusedBudget ? (
+      {showUnusedBudget ? (
         <Flex backgroundColor="$surface2" borderRadius="$rounded16" padding="$spacing12" gap="$spacing4" width={184}>
           <Text variant="body4" color="$neutral2">
             {refundBudgetLabel}

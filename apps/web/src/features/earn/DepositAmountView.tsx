@@ -14,16 +14,16 @@ import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import { DepositTokenSelector } from '~/features/earn/DepositTokenSelector'
-import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
-import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
   NumericalInputWrapper,
   StyledNumericalInput,
-} from '~/pages/Swap/common/shared'
+} from '~/components/NumericalInput/LargeAmountInput'
+import { DepositTokenSelector } from '~/features/earn/DepositTokenSelector'
+import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
+import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 
 const CHAR_WIDTH = 45
 const MAX_FONT_SIZE = 70

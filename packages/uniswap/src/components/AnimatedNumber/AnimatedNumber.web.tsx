@@ -102,7 +102,7 @@ const AnimatedNumber = ({
           </Text>
         </Shine>
         {EndElement && (
-          <Flex height={DIGIT_HEIGHT} justifyContent="center" ml={endElementGap}>
+          <Flex height={DIGIT_HEIGHT} justifyContent="center" ml={endElementGap ?? '$spacing4'}>
             {EndElement}
           </Flex>
         )}

@@ -14,7 +14,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type GeoRestrictionMode = 'default' | 'unrestricted' | 'restricted'
 
-/** Maps a swap currency to the compliance API token shape (native sentinel, lowercased EVM address). */
 export function toComplianceTokenRef(currency: Currency | undefined): ComplianceTokenInput | undefined {
   if (!currency) {
     return undefined
@@ -32,45 +31,57 @@ function classifyReasons(reasons: RestrictionReason[]): GeoRestrictionMode {
   if (isAckGated(reasons)) {
     return 'unrestricted'
   }
-  // A future `RestrictionReason` we don't model yet: fail safe to the most restrictive mode.
-  // Recognized non-geo reasons (e.g. `UNSPECIFIED`, the generic unsupported-token block) fall
-  // through to `default` so the standard blocked-token UX handles them.
+  // Fail safe: a future `RestrictionReason` we don't model yet maps to the most restrictive mode.
   if (hasUnrecognizedReason(reasons)) {
     return 'restricted'
   }
   return 'default'
 }
 
-/** Whether the geo-restriction UX should take over for this token. Fails open while the API loads. */
-export function useIsTokenGeoRestricted(currency: Currency | undefined): boolean {
+/** Geo-restriction mode for a single currency, the shared basis for both the symbol and the swap-wide mode. */
+function useCurrencyGeoRestrictionMode(currency: Currency | undefined): GeoRestrictionMode {
   const { reasons } = useTokenComplianceStatus(toComplianceTokenRef(currency))
-  // INTERIM: until the compliance v2 service returns data, the `rwa_geo_blocked` Statsig flag +
-  // RWA whitelist stand in for the region hard block. Remove `useIsRWAGeoBlocked` once the API is
-  // the source of truth.
+  // INTERIM: the `rwa_geo_blocked` Statsig flag stands in for the region hard block until
+  // compliance v2 is the source of truth. Remove `useIsRWAGeoBlocked` once it is.
   const isRWAGeoBlocked = useIsRWAGeoBlocked(currency)
-  // The geo UX owns region hard blocks, the acknowledgement path, and unrecognized future
-  // reasons. Generic non-geo blocks (e.g. `UNSPECIFIED`) are left to the standard blocked-token UX.
-  return isRWAGeoBlocked || isHardBlocked(reasons) || isAckGated(reasons) || hasUnrecognizedReason(reasons)
+  return isRWAGeoBlocked ? 'restricted' : classifyReasons(reasons)
+}
+
+export function useIsTokenGeoRestricted(currency: Currency | undefined): boolean {
+  return useCurrencyGeoRestrictionMode(currency) !== 'default'
 }
 
 /**
- * Resolves the geo-restriction mode for the current swap from the compliance API,
- * combining input and output with precedence `restricted > unrestricted > default`.
- * Fails open to `default` while the API loads or errors.
+ * Symbol of the geo-restricted token in the current swap. Tracks the same `restricted > unrestricted`
+ * precedence as {@link useGeoRestrictionMode} so the label always names the side that drives the mode.
+ */
+export function useGeoRestrictedTokenSymbol(): string | undefined {
+  const inputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currency)
+  const outputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.OUTPUT]?.currency)
+  const inputMode = useCurrencyGeoRestrictionMode(inputCurrency)
+  const outputMode = useCurrencyGeoRestrictionMode(outputCurrency)
+
+  for (const mode of ['restricted', 'unrestricted'] as const) {
+    if (inputMode === mode) {
+      return inputCurrency?.symbol
+    }
+    if (outputMode === mode) {
+      return outputCurrency?.symbol
+    }
+  }
+  return undefined
+}
+
+/**
+ * Resolves the geo-restriction mode for the current swap, combining input and output with
+ * precedence `restricted > unrestricted > default`. Fails open to `default` while the API loads.
  */
 export function useGeoRestrictionMode(): GeoRestrictionMode {
   const inputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currency)
   const outputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.OUTPUT]?.currency)
 
-  const { reasons: inputReasons } = useTokenComplianceStatus(toComplianceTokenRef(inputCurrency))
-  const { reasons: outputReasons } = useTokenComplianceStatus(toComplianceTokenRef(outputCurrency))
-
-  // INTERIM: an `rwa_geo_blocked` RWA is treated as a region hard block until compliance v2 is live.
-  const inputRWAGeoBlocked = useIsRWAGeoBlocked(inputCurrency)
-  const outputRWAGeoBlocked = useIsRWAGeoBlocked(outputCurrency)
-
-  const inputMode = inputRWAGeoBlocked ? 'restricted' : classifyReasons(inputReasons)
-  const outputMode = outputRWAGeoBlocked ? 'restricted' : classifyReasons(outputReasons)
+  const inputMode = useCurrencyGeoRestrictionMode(inputCurrency)
+  const outputMode = useCurrencyGeoRestrictionMode(outputCurrency)
 
   if (inputMode === 'restricted' || outputMode === 'restricted') {
     return 'restricted'

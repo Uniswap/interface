@@ -1,11 +1,12 @@
 import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SMART_WALLET_DELEGATION_GAS_FEE } from 'uniswap/src/features/gas/hooks'
+import { fetchGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import {
   checkEmbeddedWalletDelegation,
   type DelegationResult,
   sendDelegatedTransaction,
 } from 'uniswap/src/features/passkey/embeddedWalletDelegation'
 import { sign7702AuthorizationWithPasskey, sign7702TransactionWithPasskey } from 'uniswap/src/features/passkey/signing'
+import { getAddress } from 'viem'
 import { type MockedFunction, vi } from 'vitest'
 
 vi.mock('uniswap/src/data/apiClients/tradingApi/TradingApiClient', () => ({
@@ -13,6 +14,10 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/TradingApiClient', () => ({
   TradingApiClient: {
     fetchWalletEncoding7702: vi.fn(),
   },
+}))
+
+vi.mock('uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery', () => ({
+  fetchGasFeeQuery: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/signing', () => ({
@@ -28,6 +33,7 @@ const mockCheckWalletDelegation = checkWalletDelegation as MockedFunction<typeof
 const mockFetchWalletEncoding7702 = TradingApiClient.fetchWalletEncoding7702 as MockedFunction<
   typeof TradingApiClient.fetchWalletEncoding7702
 >
+const mockFetchGasFeeQuery = fetchGasFeeQuery as MockedFunction<typeof fetchGasFeeQuery>
 const mockSign7702Auth = sign7702AuthorizationWithPasskey as MockedFunction<typeof sign7702AuthorizationWithPasskey>
 const mockSign7702Tx = sign7702TransactionWithPasskey as MockedFunction<typeof sign7702TransactionWithPasskey>
 
@@ -199,6 +205,10 @@ describe('embeddedWalletDelegation', () => {
           maxPriorityFeePerGas: undefined,
         },
       } as any)
+      mockFetchGasFeeQuery.mockResolvedValue({
+        value: '12345',
+        params: { gasLimit: '250000', maxFeePerGas: '3000', maxPriorityFeePerGas: '300' },
+      } as any)
     })
 
     it('uses 7702 signing flow when needsDelegation is true', async () => {
@@ -278,9 +288,11 @@ describe('embeddedWalletDelegation', () => {
 
       // Trading API gasLimit is used directly without buffer (already padded server-side)
       expect(mockSign7702Tx).toHaveBeenCalledWith(expect.objectContaining({ gas: '200000' }))
+      // Fast path: the gas service is not consulted when encode_7702 already returns gas.
+      expect(mockFetchGasFeeQuery).not.toHaveBeenCalled()
     })
 
-    it('falls back to originalTx.gas + overhead when no encoded gasLimit', async () => {
+    it('uses the gas service with the delegation address when no encoded gasLimit', async () => {
       mockSign7702Auth.mockResolvedValue({
         contractAddress: MOCK_DELEGATION_ADDRESS,
         chainId: MOCK_CHAIN_ID,
@@ -296,7 +308,38 @@ describe('embeddedWalletDelegation', () => {
         delegationResult: { needsDelegation: true, contractAddress: MOCK_DELEGATION_ADDRESS },
       })
 
-      const expectedGas = ((BigInt(100000) + BigInt(SMART_WALLET_DELEGATION_GAS_FEE)) * BigInt(12)) / BigInt(10)
+      // Gas is estimated through the gas service with the delegation contract as a state override.
+      expect(mockFetchGasFeeQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          smartContractDelegationAddress: getAddress(MOCK_DELEGATION_ADDRESS),
+          tx: expect.objectContaining({ from: MOCK_ADDRESS, to: MOCK_ADDRESS, data: '0xabcdef1234' }),
+        }),
+      )
+      // Gas service gasLimit + fees are used directly — no client buffer or delegation surcharge.
+      expect(mockSign7702Tx).toHaveBeenCalledWith(
+        expect.objectContaining({ gas: '250000', maxFeePerGas: '3000', maxPriorityFeePerGas: '300' }),
+      )
+    })
+
+    it('falls back to a buffered client estimate when the gas service returns no params', async () => {
+      mockFetchGasFeeQuery.mockResolvedValue({ value: '12345' } as any)
+      mockSign7702Auth.mockResolvedValue({
+        contractAddress: MOCK_DELEGATION_ADDRESS,
+        chainId: MOCK_CHAIN_ID,
+        nonce: 6,
+        r: '0xr',
+        s: '0xs',
+        yParity: 0,
+      })
+      mockSign7702Tx.mockResolvedValue('0xabcdef1234567890')
+
+      await sendDelegatedTransaction({
+        ...baseCtx,
+        delegationResult: { needsDelegation: true, contractAddress: MOCK_DELEGATION_ADDRESS },
+      })
+
+      // originalTx.gas (100000) buffered by 20% — no delegation surcharge added.
+      const expectedGas = (BigInt(100000) * BigInt(12)) / BigInt(10)
       expect(mockSign7702Tx).toHaveBeenCalledWith(expect.objectContaining({ gas: expectedGas.toString() }))
     })
 

@@ -97,7 +97,8 @@ export function GetTheAppModal() {
         isOpen={isOpen}
         onClose={isDismissible ? close : undefined}
         maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
-        p="$spacing24"
+        px="$spacing24"
+        pb="$spacing24"
       >
         <Flex pb={keyboardHeight ? `${keyboardHeight}px` : undefined}>{content}</Flex>
       </WebBottomSheet>

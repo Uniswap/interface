@@ -4,16 +4,8 @@ import type {
   InterfaceTransactionDetails,
   TransactionReceipt,
   TransactionStatus,
-  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-
-/**
- * Re-export for backward compatibility
- *
- * @deprecated Use TransactionTypeInfo
- */
-export type TransactionInfo = TransactionTypeInfo
 
 // Web-specific pending transaction details with guaranteed pending status
 export type PendingTransactionDetails = InterfaceTransactionDetails & {

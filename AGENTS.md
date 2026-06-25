@@ -33,7 +33,6 @@ bun extension start     # Extension
 ### Building
 
 ```bash
-bun g:build                      # Build all packages
 bun web build:production    # Web production build
 bun mobile ios:bundle            # iOS bundle
 bun mobile android:release       # Android release

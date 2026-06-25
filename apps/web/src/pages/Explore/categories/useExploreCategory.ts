@@ -1,7 +1,12 @@
 import { useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
 
-export type ExploreCategory = 'popular' | 'stocks' | 'commodities' | 'etfs'
+export enum ExploreCategory {
+  Popular = 'popular',
+  Stocks = 'stocks',
+  Commodities = 'commodities',
+  Etfs = 'etfs',
+}
 
 /** Sticky Explore nav offset when scrolling to the token section. */
 export const EXPLORE_STICKY_SCROLL_OFFSET_PX = 90
@@ -9,13 +14,17 @@ export const EXPLORE_STICKY_SCROLL_OFFSET_PX = 90
 /** URL query param backing the Explore category tabs so the selection is shareable. */
 const CATEGORY_PARAM = 'category'
 
-const CATEGORY_PARAM_VALUES: ReadonlySet<ExploreCategory> = new Set(['stocks', 'commodities', 'etfs'])
+const CATEGORY_PARAM_VALUES: ReadonlySet<ExploreCategory> = new Set([
+  ExploreCategory.Stocks,
+  ExploreCategory.Commodities,
+  ExploreCategory.Etfs,
+])
 
 export function categoryFromParam(value: string | null): ExploreCategory {
-  if (value === 'stocks' || value === 'commodities' || value === 'etfs') {
+  if (value === ExploreCategory.Stocks || value === ExploreCategory.Commodities || value === ExploreCategory.Etfs) {
     return value
   }
-  return 'popular'
+  return ExploreCategory.Popular
 }
 
 /** Explore Tokens tab with the default (Popular) category (all networks). */
@@ -25,7 +34,7 @@ export function getExploreTokensURL(): string {
 
 /** Explore Tokens tab with the Stocks category chip selected (all networks). */
 export function getExploreStocksTableURL(): string {
-  return `${getExploreTokensURL()}?${CATEGORY_PARAM}=stocks`
+  return `${getExploreTokensURL()}?${CATEGORY_PARAM}=${ExploreCategory.Stocks}`
 }
 
 /** DOM id of the Explore token section (tab nav), used as the "View all" scroll target. */

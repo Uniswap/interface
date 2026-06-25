@@ -1,2 +1,2 @@
-export { ClickableStyle, ClickableTamaguiStyle } from './clickable'
-export { EllipsisStyle, EllipsisTamaguiStyle } from './ellipsis'
+export { ClickableTamaguiStyle } from './clickable'
+export { EllipsisTamaguiStyle } from './ellipsis'

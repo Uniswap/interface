@@ -18,9 +18,9 @@ interface GetPortfolioRelativeChangeDisplayParams {
 }
 
 /**
- * Decides what to render for the portfolio 1D percent change. The unavailable/omit branches are
- * gated behind the `PortfolioPoolsBalances` flag and scoped to surfaces that show the raw backend
- * value (no chart-derived override); they will go away once the flag is removed.
+ * Decides what to render for the portfolio 1D percent change. The unavailable/omit branches apply
+ * only when opt-in categories were requested (`enabled`) and on surfaces that show the raw backend
+ * value (no chart-derived override).
  */
 export function getPortfolioRelativeChangeDisplay({
   enabled,

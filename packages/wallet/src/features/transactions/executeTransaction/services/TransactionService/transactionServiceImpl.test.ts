@@ -1,4 +1,5 @@
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
+import { TradingApi } from '@universe/api'
 import { ensure0xHex } from '@universe/encoding'
 import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -12,6 +13,9 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
+import type { Address } from 'viem'
+import type { RpcUserOperation } from 'viem/account-abstraction'
+import { entryPoint08Address } from 'viem/account-abstraction'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
@@ -25,6 +29,17 @@ import {
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
+
+type RequestSubmitTransactionParamsWithTypeInfo = Exclude<
+  SubmitTransactionParamsWithTypeInfo,
+  { userOp: RpcUserOperation<'0.8'> }
+>
+
+type UserOpSubmitTransactionParamsWithTypeInfo = Extract<
+  SubmitTransactionParamsWithTypeInfo,
+  { userOp: RpcUserOperation<'0.8'> }
+>
 
 // Mock external utilities
 jest.mock('wallet/src/features/providers/utils', () => ({
@@ -149,8 +164,8 @@ describe('TransactionService', () => {
   })
 
   const createSubmitTransactionParams = (
-    overrides: Partial<SubmitTransactionParams> = {},
-  ): SubmitTransactionParamsWithTypeInfo => {
+    overrides: Partial<RequestSubmitTransactionParamsWithTypeInfo> = {},
+  ): RequestSubmitTransactionParamsWithTypeInfo => {
     const defaultValidatedRequest = {
       to: '0xabcdef1234567890123456789012345678901234',
       value: '0x1234',
@@ -1887,5 +1902,226 @@ describe('TransactionService', () => {
         byzantium: true,
         confirmations: 1,
       }) as unknown as TransactionReceipt
+  })
+
+  describe('executeUserOp', () => {
+    const mockSignUserOp = jest.fn()
+    const mockSendUserOp = jest.fn()
+    const mockSponsorUniswapUserOp = jest.fn()
+
+    const mockUserOpSigner: UserOpSigner = {
+      signUserOp: mockSignUserOp,
+      sendUserOp: mockSendUserOp,
+      sponsorUniswapUserOp: mockSponsorUniswapUserOp,
+    }
+
+    const userOpHash = '0xuserophash'
+
+    const paymasterFields = {
+      paymaster: '0x2222222222222222222222222222222222222222' as Address,
+      paymasterData: '0xabcd' as const,
+      paymasterVerificationGasLimit: '0x186a0' as const,
+      paymasterPostOpGasLimit: '0x186a0' as const,
+    }
+
+    const buildUserOp = (overrides: Partial<RpcUserOperation<'0.8'>> = {}): RpcUserOperation<'0.8'> =>
+      ({
+        sender: '0x1111111111111111111111111111111111111111',
+        nonce: '0x0',
+        callData: '0x',
+        callGasLimit: '0x186a0',
+        verificationGasLimit: '0x186a0',
+        preVerificationGas: '0x5208',
+        maxFeePerGas: '0x59682f00',
+        maxPriorityFeePerGas: '0x59682f00',
+        signature: '0x',
+        ...overrides,
+      }) as RpcUserOperation<'0.8'>
+
+    const swapTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.Swap,
+      tradeType: 0,
+      inputCurrencyId: 'eth',
+      outputCurrencyId: 'usdc',
+      inputCurrencyAmountRaw: '1000000000000000000',
+      expectedOutputCurrencyAmountRaw: '1700000000',
+      minimumOutputCurrencyAmountRaw: '1683000000',
+    }
+
+    const sendCallsTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.SendCalls,
+      unsignedUserOperation: buildUserOp(),
+      dappInfo: { name: 'Test Dapp' },
+    }
+
+    const createUserOpService = (): TransactionService =>
+      createTransactionService({
+        transactionRepository: mockTransactionRepository,
+        transactionSigner: mockTransactionSigner,
+        analyticsService: mockAnalyticsService,
+        configService: mockConfigService,
+        logger: mockLogger,
+        getProvider: jest.fn().mockResolvedValue(mockBaseProvider),
+        userOpSigner: mockUserOpSigner,
+      })
+
+    const createExecuteUserOpParams = (
+      overrides: Partial<UserOpSubmitTransactionParamsWithTypeInfo> = {},
+    ): UserOpSubmitTransactionParamsWithTypeInfo => ({
+      userOp: buildUserOp(),
+      chainId: UniverseChainId.Mainnet,
+      account: createMockAccount(),
+      typeInfo: sendCallsTypeInfo,
+      transactionOriginType: TransactionOriginType.External,
+      requestUniswapGasSponsorship: false,
+      options: { request: {} },
+      ...overrides,
+    })
+
+    beforeEach(() => {
+      mockSignUserOp.mockImplementation((userOp: RpcUserOperation<'0.8'>) =>
+        Promise.resolve({ ...userOp, signature: '0xsigned' }),
+      )
+      mockSendUserOp.mockResolvedValue(userOpHash)
+      mockSponsorUniswapUserOp.mockImplementation(({ initialUserOp }: { initialUserOp: RpcUserOperation<'0.8'> }) =>
+        Promise.resolve({ ...initialUserOp, ...paymasterFields }),
+      )
+    })
+
+    it('should throw when the service was created without a userOpSigner', async () => {
+      const service = createTestService() // no userOpSigner
+
+      await expect(service.executeUserOp(createExecuteUserOpParams())).rejects.toThrow('requires a userOpSigner')
+      expect(mockTransactionRepository.addTransaction).not.toHaveBeenCalled()
+    })
+
+    it('should register the pending transaction, submit, and persist the userOpHash on success', async () => {
+      const service = createUserOpService()
+
+      const result = await service.executeUserOp(createExecuteUserOpParams())
+
+      // addTransaction on entry (pending, no hash/userOpHash yet)
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          status: TransactionStatus.Pending,
+          typeInfo: sendCallsTypeInfo,
+        }),
+      })
+
+      // updateTransaction with the userOpHash on success
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          userOpHash,
+          status: TransactionStatus.Pending,
+        }),
+        skipProcessing: false,
+      })
+      expect(mockTransactionRepository.finalizeTransaction).not.toHaveBeenCalled()
+      expect(result).toEqual({ userOpHash })
+    })
+
+    it('should skip the paymaster when sponsorship is not requested', async () => {
+      const service = createUserOpService()
+      const userOp = buildUserOp()
+
+      await service.executeUserOp(createExecuteUserOpParams({ userOp, requestUniswapGasSponsorship: false }))
+
+      expect(mockSponsorUniswapUserOp).not.toHaveBeenCalled()
+      expect(mockSignUserOp).toHaveBeenCalledWith(userOp)
+      expect(mockSendUserOp).toHaveBeenCalledTimes(1)
+    })
+
+    it('should request sponsorship before signing when requested and userOp has no paymaster', async () => {
+      const service = createUserOpService()
+      const userOp = buildUserOp()
+
+      await service.executeUserOp(createExecuteUserOpParams({ userOp, requestUniswapGasSponsorship: true }))
+
+      expect(mockSponsorUniswapUserOp).toHaveBeenCalledWith({
+        initialUserOp: userOp,
+        entryPoint: entryPoint08Address,
+        paymasterServiceContext: undefined,
+        chainId: UniverseChainId.Mainnet,
+      })
+      const sponsorOrder = mockSponsorUniswapUserOp.mock.invocationCallOrder[0] as number
+      const signOrder = mockSignUserOp.mock.invocationCallOrder[0] as number
+      expect(sponsorOrder).toBeLessThan(signOrder)
+
+      // Paymaster fields are merged into the signed userOp
+      const signedArg = mockSignUserOp.mock.calls[0]?.[0] as RpcUserOperation<'0.8'>
+      expect(signedArg.paymaster).toBe(paymasterFields.paymaster)
+    })
+
+    it('should skip the paymaster when the userOp already has paymaster fields', async () => {
+      const service = createUserOpService()
+      const preFilledUserOp = buildUserOp({ paymaster: '0x3333333333333333333333333333333333333333' as Address })
+
+      await service.executeUserOp(
+        createExecuteUserOpParams({ userOp: preFilledUserOp, requestUniswapGasSponsorship: true }),
+      )
+
+      expect(mockSponsorUniswapUserOp).not.toHaveBeenCalled()
+      expect(mockSignUserOp).toHaveBeenCalledWith(preFilledUserOp)
+    })
+
+    it('should finalize the transaction as failed and log when the bundler submission throws', async () => {
+      const service = createUserOpService()
+      mockSendUserOp.mockRejectedValue(new Error('bundler rejected'))
+
+      await expect(service.executeUserOp(createExecuteUserOpParams())).rejects.toThrow('Failed to send transaction')
+
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+      expect(mockLogger.warn).toHaveBeenCalled()
+      expect(mockLogger.error).toHaveBeenCalled()
+    })
+
+    it('should finalize as failed without signing or sending when sponsorship throws', async () => {
+      const service = createUserOpService()
+      mockSponsorUniswapUserOp.mockRejectedValue(new Error('paymaster down'))
+
+      await expect(
+        service.executeUserOp(createExecuteUserOpParams({ requestUniswapGasSponsorship: true })),
+      ).rejects.toThrow('Failed to send transaction')
+
+      expect(mockSignUserOp).not.toHaveBeenCalled()
+      expect(mockSendUserOp).not.toHaveBeenCalled()
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+    })
+
+    it('should track swap analytics when given swap typeInfo and analytics', async () => {
+      const service = createUserOpService()
+
+      const analytics = {
+        token_in_symbol: 'ETH',
+        token_out_symbol: 'USDC',
+        token_in_amount: '1.0',
+        token_out_amount: '1700.0',
+        routing: 'classic' as const,
+        transactionOriginType: 'internal',
+      }
+
+      await service.executeUserOp(
+        createExecuteUserOpParams({
+          typeInfo: swapTypeInfo,
+          transactionOriginType: TransactionOriginType.Internal,
+          analytics,
+        }),
+      )
+
+      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
+        expect.objectContaining({
+          typeInfo: swapTypeInfo,
+          userOpHash,
+        }),
+        analytics,
+      )
+    })
   })
 })

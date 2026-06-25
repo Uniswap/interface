@@ -7,7 +7,7 @@ import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getPlaywrightRpcUrls,
-  getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
@@ -72,7 +72,7 @@ export const BASE_CHAIN_INFO = {
   rpcUrls: isE2eTestEnv()
     ? getPlaywrightRpcUrls(LOCAL_BASE_PLAYWRIGHT_RPC_URL)
     : {
-        [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Base)] },
+        [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Base)] },
         [RPCType.Default]: { http: ['https://mainnet.base.org/'] },
         [RPCType.Fallback]: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
         [RPCType.Interface]: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },

@@ -1,4 +1,5 @@
 import { Flex } from 'ui/src'
+import { EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { ExpandableSearchRow } from 'uniswap/src/features/expandableAsset/ExpandableSearchRow'
 import type { ExpandableSearchRowContainerProps } from 'uniswap/src/features/expandableAsset/ExpandableSearchRowContainer'
 
@@ -28,7 +29,7 @@ export function ExpandableSearchRowContainer({
       header={header}
       panelSlot={
         showShell ? (
-          <Flex pt="$spacing4" width="100%">
+          <Flex pt={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX} width="100%">
             {issuerPanel}
           </Flex>
         ) : null

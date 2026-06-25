@@ -146,6 +146,11 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       transactedUSDValue,
       swap_start_timestamp: typeInfo.swapStartTimestamp,
+      // RWA analytics captured at submit (see getRwaSwapAnalyticsProperties)
+      market_closed: typeInfo.marketClosed,
+      price_warning: typeInfo.priceWarning,
+      token_in_stocks: typeInfo.tokenInStocks,
+      token_out_stocks: typeInfo.tokenOutStocks,
       // Chained action analytics fields
       plan_id: typeInfo.planId,
       step_index: typeInfo.stepIndex,
@@ -286,7 +291,7 @@ export function logTransactionTimeout(transaction: TransactionDetails): void {
 function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
   const { gasEstimate } = transaction.typeInfo
   const currentTimeMs = Date.now()
-  const transactionGasLimit = getOptionalTransactionProperty(transaction, (options) => options.request.gasLimit)
+  const transactionGasLimit = getOptionalTransactionProperty(transaction, (options) => options.request?.gasLimit)
   const userSubmissionTimestampMs = getOptionalTransactionProperty(
     transaction,
     (options) => options.userSubmissionTimestampMs,

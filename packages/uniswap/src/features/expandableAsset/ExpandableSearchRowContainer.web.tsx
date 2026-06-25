@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Flex } from 'ui/src'
-import { spacing } from 'ui/src/theme/spacing'
-import { EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
+import {
+  EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS,
+  EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX,
+} from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { ExpandableSearchRow } from 'uniswap/src/features/expandableAsset/ExpandableSearchRow'
 import type { ExpandableSearchRowContainerProps } from 'uniswap/src/features/expandableAsset/ExpandableSearchRowContainer'
 
@@ -27,7 +29,7 @@ export function ExpandableSearchRowContainer({
 }: ExpandableSearchRowContainerProps): JSX.Element {
   const shouldExpand = canExpand && isExpanded
   // Include the parent↔panel gap in the animated height so it reveals with the panel (no discrete gap pop).
-  const expandedRevealPx = spacing.spacing4 + issuerPanelHeightPx
+  const expandedRevealPx = EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX + issuerPanelHeightPx
 
   const [animatedHeightPx, setAnimatedHeightPx] = useState(shouldExpand ? expandedRevealPx : 0)
   const [shouldRenderPanel, setShouldRenderPanel] = useState(shouldExpand)
@@ -98,7 +100,7 @@ export function ExpandableSearchRowContainer({
         }
       }}
     >
-      <Flex pt="$spacing4" width="100%">
+      <Flex pt={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX} width="100%">
         {issuerPanel}
       </Flex>
     </div>

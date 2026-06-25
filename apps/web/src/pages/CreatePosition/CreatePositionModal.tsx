@@ -20,7 +20,7 @@ import { getPoolIdOrAddressFromCreatePositionInfo } from '~/features/Liquidity/u
 import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 
 export function CreatePositionModal({

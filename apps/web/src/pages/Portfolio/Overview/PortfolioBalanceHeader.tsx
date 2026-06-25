@@ -19,6 +19,7 @@ import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 import { BalanceBreakdownPopover } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/BalanceBreakdownPopover'
 import { chartPeriodToHistoryDuration } from '~/pages/Portfolio/Overview/chartPeriodToHistoryDuration'
+import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 
 type ChartPercentChange = ReturnType<typeof getPortfolioChartPercentChange>
 
@@ -28,7 +29,11 @@ interface PortfolioBalanceHeaderProps {
   poolsValue?: PortfolioTotalValue
   series: PriceChartData[]
   chartPercentChange: ChartPercentChange
+  /** Period percent change per category, shown on the breakdown popover rows at rest. */
+  tokensPercentChange: number | undefined
+  poolsPercentChange: number | undefined
   selectedPeriod: ChartPeriod
+  selectedCategory: PortfolioChartCategory
   isPortfolioZero: boolean
   isLoading: boolean
   hoveredData?: PriceChartData
@@ -40,7 +45,10 @@ export function PortfolioBalanceHeader({
   poolsValue,
   series,
   chartPercentChange,
+  tokensPercentChange,
+  poolsPercentChange,
   selectedPeriod,
+  selectedCategory,
   isPortfolioZero,
   isLoading,
   hoveredData,
@@ -62,15 +70,22 @@ export function PortfolioBalanceHeader({
   const latestChartData = series.length ? series[series.length - 1] : undefined
   const displayedChartData = hoveredData ?? latestChartData
   const zeroPortfolioBalance = isPortfolioZero ? 0 : undefined
+  const isTotalCategory = selectedCategory === PortfolioChartCategory.Total
   // `undefined` means server omitted the field (unavailable); `0` is a valid zero.
   const poolsUnavailable = !!poolsValue && poolsValue.balanceUSD === undefined
   const fallbackBalanceUSD = poolsUnavailable ? tokensValue?.balanceUSD : undefined
-  const balance =
-    hoveredData?.value ??
-    fallbackBalanceUSD ??
-    portfolioTotalBalanceUSD ??
-    latestChartData?.close ??
-    zeroPortfolioBalance
+  const categoryBalanceUSD = useMemo(() => {
+    switch (selectedCategory) {
+      case PortfolioChartCategory.Tokens:
+        return tokensValue?.balanceUSD
+      case PortfolioChartCategory.Pools:
+        return poolsValue?.balanceUSD
+      case PortfolioChartCategory.Total:
+      default:
+        return fallbackBalanceUSD ?? portfolioTotalBalanceUSD
+    }
+  }, [selectedCategory, tokensValue, poolsValue, fallbackBalanceUSD, portfolioTotalBalanceUSD])
+  const balance = hoveredData?.value ?? categoryBalanceUSD ?? latestChartData?.close ?? zeroPortfolioBalance
   const isHovering = !!hoveredData
   const showDelta = !isLoading && !isPortfolioZero && series.length >= 2 && !!displayedChartData
   const shouldTreatAsStablecoin = useMemo(() => {
@@ -81,7 +96,13 @@ export function PortfolioBalanceHeader({
   return (
     <Flex gap="$gap8" pb="$spacing4" testID={TestID.PortfolioBalanceHeader}>
       <Flex row alignItems="center" gap="$spacing8">
-        <BalanceBreakdownPopover tokens={tokensValue} pools={poolsValue}>
+        <BalanceBreakdownPopover
+          tokens={tokensValue}
+          pools={poolsValue}
+          tokensPercentChange={tokensPercentChange}
+          poolsPercentChange={poolsPercentChange}
+          disabled={!isTotalCategory}
+        >
           <Coachmark
             open={shouldShowCoachmark}
             onDismiss={dismissCoachmark}
@@ -97,7 +118,7 @@ export function PortfolioBalanceHeader({
             </Text>
           </Coachmark>
         </BalanceBreakdownPopover>
-        {poolsUnavailable && <PoolsUnavailableIndicator />}
+        {isTotalCategory && poolsUnavailable && <PoolsUnavailableIndicator />}
       </Flex>
       {showDelta && (
         <Flex row gap="$gap8" alignItems="center">
@@ -108,6 +129,7 @@ export function PortfolioBalanceHeader({
             shouldTreatAsStablecoin={shouldTreatAsStablecoin}
             pricePercentChange={chartPercentChange?.percentChange}
             isHovering={isHovering}
+            colorText={isHovering}
             hidePercent={selectedPeriod === ChartPeriod.MAX}
           />
           {isHovering ? (

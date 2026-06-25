@@ -106,4 +106,31 @@ describe('createEmbeddedWalletApiClient', () => {
       expect(result).toEqual({ found: false })
     })
   })
+
+  describe('fetchReportDecryptionResult', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.reportDecryptionResult).mockResolvedValue({ cooldownSeconds: 0 } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      await client.fetchReportDecryptionResult({ success: false, authMethodId: 'amid' }, 'fake-token')
+
+      expect(rpcClient.reportDecryptionResult).toHaveBeenCalledWith(
+        { success: false, authMethodId: 'amid' },
+        { headers: { Authorization: 'Bearer fake-token' } },
+      )
+    })
+
+    it('forwards the response from the rpc client', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.reportDecryptionResult).mockResolvedValue({ cooldownSeconds: 30 } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const result = await client.fetchReportDecryptionResult(
+        { success: true, authMethodId: 'a', newPasskeyPublicKey: 'pk' },
+        'tok',
+      )
+      expect(result).toEqual({ cooldownSeconds: 30 })
+    })
+  })
 })

@@ -7,6 +7,7 @@ import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { Capability } from 'wallet/src/features/dappRequests/types'
+import type { SmartWalletCapabilityStatus } from 'wallet/src/features/smartWallet/delegation/types'
 import { isFreshDelegation } from 'wallet/src/features/smartWallet/delegation/utils'
 
 /**
@@ -46,6 +47,23 @@ export function transformCallsToTransactionRequests({
     .filter((call): call is TradingApi.TransactionRequest => !!call)
 }
 
+export function buildSmartWalletCapabilities({
+  status,
+  is7677GasSponsorshipEnabled,
+}: {
+  status: SmartWalletCapabilityStatus
+  is7677GasSponsorshipEnabled: boolean
+}): Capability {
+  const chainCapability: Capability = { atomic: { status } }
+
+  // TODO(SWAP-2460): ensure delegation is included in userOp when isFreshDelegation
+  if (is7677GasSponsorshipEnabled && status !== 'unsupported') {
+    chainCapability['paymasterService'] = { supported: true }
+  }
+
+  return chainCapability
+}
+
 export function getCapabilitiesForDelegationStatus(
   delegationStatus: TradingApi.ChainDelegationMap | undefined,
   hasSmartWalletConsent: boolean,
@@ -56,12 +74,10 @@ export function getCapabilitiesForDelegationStatus(
   const is7677GasSponsorshipEnabled = getFeatureFlag(FeatureFlags.Support7677GasSponsorship)
   const capabilities: Record<string, Capability> = {}
   for (const [chainId, delegationStatusForChain] of Object.entries(delegationStatus)) {
-    const chainCapability: Capability = {}
-
     const isDelegated = delegationStatusForChain.isWalletDelegatedToUniswap
     const isFresh = isFreshDelegation(delegationStatusForChain)
 
-    let status: 'unsupported' | 'supported' | 'ready' = 'unsupported'
+    let status: SmartWalletCapabilityStatus = 'unsupported'
     if (hasSmartWalletConsent) {
       // If the user has consented to smart wallets, we can use the delegation status to determine the capabilities
       // & if the wallet is delegated to Uniswap, it's supported, even if the delegation address is outdated
@@ -72,15 +88,10 @@ export function getCapabilitiesForDelegationStatus(
       }
     }
 
-    chainCapability['atomic'] = { status }
-
-    const isPaymasterEligible = status !== 'unsupported'
-    // TODO(SWAP-2460): ensure delegation is included in userOp when isFreshDelegation
-    if (is7677GasSponsorshipEnabled && isPaymasterEligible) {
-      chainCapability['paymasterService'] = { supported: true }
-    }
-
-    capabilities[numberToHex(parseInt(chainId, 10))] = chainCapability
+    capabilities[numberToHex(parseInt(chainId, 10))] = buildSmartWalletCapabilities({
+      status,
+      is7677GasSponsorshipEnabled,
+    })
   }
   return capabilities
 }

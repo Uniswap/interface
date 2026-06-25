@@ -12,6 +12,7 @@ import {
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  RwaSwapAnalytics,
   TransactionType,
   TransactionTypeInfo,
   WrapTransactionInfo,
@@ -30,12 +31,15 @@ export function tradeToTransactionInfo({
   gasEstimate,
   swapStartTimestamp,
   isFinalStep,
+  rwaAnalytics,
 }: {
   trade: Trade
   transactedUSDValue?: number
   gasEstimate?: GasEstimate
   swapStartTimestamp?: number
   isFinalStep?: boolean
+  /** RWA analytics computed at submit, persisted so the finalization-time Completed event can report them. */
+  rwaAnalytics?: RwaSwapAnalytics
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo | WrapTransactionInfo {
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
@@ -57,6 +61,7 @@ export function tradeToTransactionInfo({
       gasEstimate,
       swapStartTimestamp,
       isFinalStep,
+      ...rwaAnalytics,
     }
   }
 
@@ -83,6 +88,7 @@ export function tradeToTransactionInfo({
     gasEstimate,
     swapStartTimestamp,
     isFinalStep,
+    ...rwaAnalytics,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

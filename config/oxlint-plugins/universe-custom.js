@@ -1055,9 +1055,13 @@ const importBoundary = {
 // It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
-  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel.ts',
+  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseApproval.ts',
+  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel.ts',
+  'apps/web/src/connection/bundlerClient.ts',
   'apps/web/src/connection/EmbeddedWalletConnector.ts',
   'apps/web/src/connection/EmbeddedWalletProvider.ts',
+  'apps/web/src/connection/sendCalls.ts',
+  'apps/web/src/connection/userOpSigning.ts',
   'apps/web/src/connection/rejectableConnector.ts',
   'apps/web/src/connection/wagmiConfig.ts',
   'apps/web/src/constants/providers.ts',

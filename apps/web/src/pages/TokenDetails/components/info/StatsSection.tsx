@@ -122,7 +122,10 @@ function Stat({
     <StatWrapper tableRow data-cy={`${testID}`} data-testid={`${testID}`}>
       <Text variant="body3" color="$neutral2" tag="td">
         <MouseoverTooltip disabled={!description} text={description}>
-          {title}
+          {/* Wrap in a colored Text: MouseoverTooltip re-wraps string children in its own uncolored Text, which would otherwise default the label to $neutral1. */}
+          <Text variant="body3" color="$neutral2">
+            {title}
+          </Text>
         </MouseoverTooltip>
       </Text>
       <Text

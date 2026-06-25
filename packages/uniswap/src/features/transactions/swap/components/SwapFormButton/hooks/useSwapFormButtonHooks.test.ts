@@ -90,6 +90,10 @@ vi.mock('uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowled
   useNeedsGeoAcknowledgment: vi.fn(() => false),
 }))
 
+vi.mock('uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode', () => ({
+  useGeoRestrictionMode: vi.fn(() => 'default'),
+}))
+
 vi.mock(
   'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage',
   () => ({
@@ -136,6 +140,7 @@ import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
+import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { usePrepareSwap } from 'uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap'
@@ -169,6 +174,7 @@ describe('swap form button hooks', () => {
   const mockUseIsTokenSelectionInvalid = useIsTokenSelectionInvalid as Mock
   const mockUseIsTradeIndicative = useIsTradeIndicative as Mock
   const mockUseParsedSwapWarnings = useParsedSwapWarnings as Mock
+  const mockUseGeoRestrictionMode = useGeoRestrictionMode as Mock
   const mockGetActionText = getActionText as Mock
   const mockUseSwapFormStore = useSwapFormStore as Mock
   const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as Mock
@@ -295,6 +301,7 @@ describe('swap form button hooks', () => {
 
     setSubmitting(false)
     setDerivedSwapInfo()
+    mockUseGeoRestrictionMode.mockReturnValue('default')
     mockUseIsBlockingWithCustomMessage.mockReturnValue(false)
     mockUseColorsFromTokenColor.mockReturnValue({
       validTokenColor: '$token',
@@ -537,6 +544,16 @@ describe('swap form button hooks', () => {
       const { result } = renderHook(() => useSwapFormButtonColors())
       expect(result.current.backgroundColor).toBe('$tokenLight')
       expect(result.current.emphasis).toBe('secondary')
+    })
+
+    it('uses neutral blocked styling for a geo-restricted token, even without an active account', () => {
+      mockUseGeoRestrictionMode.mockReturnValue('restricted')
+      mockUseIsSwapButtonDisabled.mockReturnValue(true)
+      setActiveAccount(false)
+      const { result } = renderHook(() => useSwapFormButtonColors())
+      expect(result.current.variant).toBe('default')
+      expect(result.current.emphasis).toBe('secondary')
+      expect(result.current.buttonTextColor).toBeUndefined()
     })
 
     it('handles missing token colors', () => {

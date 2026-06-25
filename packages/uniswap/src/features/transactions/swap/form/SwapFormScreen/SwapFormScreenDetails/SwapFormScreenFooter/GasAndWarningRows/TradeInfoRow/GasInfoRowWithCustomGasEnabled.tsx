@@ -3,7 +3,7 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { SponsoredFee, UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { useGasOverridesWarningState } from 'uniswap/src/features/gas/components/NetworkCostEditor/useGasOverridesWarningState'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
@@ -103,6 +103,22 @@ function CustomGasChip({
 
   const uniswapXSavings = gasInfo.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
   const isGasFeeFree = gasInfo.gasFee.value !== undefined && isZero(gasInfo.gasFee.value)
+
+  // Do not render custom gas tap handler for sponsored swaps
+  if (gasInfo.sponsorMetadata) {
+    return (
+      <Flex
+        centered
+        row
+        gap="$spacing4"
+        animation="quick"
+        enterStyle={{ opacity: 0 }}
+        opacity={gasInfo.isLoading ? 0.6 : 1}
+      >
+        <SponsoredFee sponsorMetadata={gasInfo.sponsorMetadata} preSavingsGasFee={gasInfo.fiatPriceFormatted} />
+      </Flex>
+    )
+  }
 
   // UniswapX trades have no editable EVM tx (txRequests is forced to undefined
   // upstream), so opening the editor would yield no recommended baseline and

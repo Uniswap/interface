@@ -24,7 +24,9 @@ export function createGithubOidcAuthService() {
     }
 
     try {
+      console.log('Minting GitHub OIDC token')
       const token = await core.getIDToken(OIDC_AUDIENCE)
+      console.log('GitHub OIDC token minted')
       return Result.ok(token)
     } catch (cause) {
       return Result.err(new NetworkError({ message: `Failed to obtain GitHub OIDC token: ${errorToString(cause)}` }))

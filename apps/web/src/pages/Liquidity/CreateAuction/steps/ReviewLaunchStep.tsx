@@ -5,6 +5,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { AuctionCreateFailedStep } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -17,7 +18,10 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isAddress, zeroAddress } from '~/chains'
 import { BIPS_BASE } from '~/constants/misc'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
-import { getAuctionCreateAnalyticsProperties } from '~/pages/Liquidity/CreateAuction/analytics'
+import {
+  getAuctionCreateAnalyticsProperties,
+  getAuctionCreateFailedProperties,
+} from '~/pages/Liquidity/CreateAuction/analytics'
 import { LaunchAuctionErrorModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionErrorModal'
 import { LaunchAuctionReviewModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionReviewModal'
 import { LaunchAuctionSuccessModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionSuccessModal'
@@ -57,6 +61,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
   const { setStep } = useCreateAuctionStoreActions()
   const activeAddress = useActiveAddress(Platform.EVM)
   const { evmAccount } = useWallet()
+  const trace = useTrace()
 
   const handleEditTokenInfo = useCallback(() => setStep(CreateAuctionStep.ADD_TOKEN_INFO), [setStep])
   const handleEditAuctionConfig = useCallback(() => setStep(CreateAuctionStep.CONFIGURE_AUCTION), [setStep])
@@ -149,6 +154,11 @@ export function ReviewLaunchStep(): JSX.Element | null {
   const currencyAddress =
     configureAuction.raiseCurrency === RaiseCurrency.ETH ? zeroAddress : getChainInfo(chainId).tokens.USDC?.address
 
+  const getCreateFailedProperties = useEvent(
+    (args: { failedStep: AuctionCreateFailedStep; errorCode?: string | number }) =>
+      getAuctionCreateFailedProperties({ trace, chainId, tokenMode: tokenForm.mode, ...args }),
+  )
+
   const launchSubmit = useCreateAuctionSubmit({
     tokenForm,
     configureAuction,
@@ -156,9 +166,9 @@ export function ReviewLaunchStep(): JSX.Element | null {
     walletAddress: activeAddress ?? undefined,
     currencyAddress,
     xVerificationToken: xVerification?.xVerificationToken,
+    getCreateFailedProperties,
   })
 
-  const trace = useTrace()
   const getLaunchAnalyticsProperties = useEvent(
     (addresses: { predictedAuctionAddress: string; predictedTokenAddress: string }) =>
       getAuctionCreateAnalyticsProperties({
@@ -189,6 +199,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
     evmAccount,
     chainId,
     getLaunchAnalyticsProperties,
+    getCreateFailedProperties,
     launchSubmit,
     tokenName: launchTokenName,
     tokenSymbol: tokenSymbol || undefined,
@@ -320,6 +331,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
         currentProgressStepIndex={launchFlow.currentProgressStepIndex}
         currentStepPending={launchFlow.currentStepPending}
         isLaunching={launchFlow.isLaunching}
+        isPreparing={launchFlow.isPreparing}
         onLaunchToken={launchFlow.handleLaunchToken}
       />
 

@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,7 +6,11 @@ import { Flex, Input, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import {
@@ -139,13 +144,15 @@ export function AuctionSupplySelector({
     onAmountChange(clamped)
   }, [rawInput, currency, tokenTotalSupply, minAuctionSupplyAmount, onAmountChange])
 
+  const trace = useTrace()
   const handleSelectPercent = useCallback(
     (percent: number) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionSupplyPreset })
       setIsFocused(false)
       setRawInput('')
       onSelectPercent(percent)
     },
-    [onSelectPercent],
+    [onSelectPercent, trace],
   )
 
   const media = useMedia()
@@ -168,28 +175,30 @@ export function AuctionSupplySelector({
       {/* Amount input — always takes the full row */}
       <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
         {isFocused ? (
-          <Input
-            ref={inputRef}
-            autoFocus
-            unstyled
-            outlineStyle="none"
-            $platform-web={{
-              fieldSizing: 'content',
-              minWidth: '1ch',
-              maxWidth: '100%',
-            }}
-            value={focusedDisplay}
-            onChangeText={handleChange}
-            onBlur={handleBlur}
-            placeholder="0"
-            placeholderTextColor="$neutral3"
-            fontFamily="$heading"
-            fontSize={fonts.heading3.fontSize}
-            lineHeight={fonts.heading3.lineHeight}
-            fontWeight={fonts.heading3.fontWeight}
-            color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
-            backgroundColor="$transparent"
-          />
+          <Trace logFocus element={ElementName.AuctionSupplyAmount}>
+            <Input
+              ref={inputRef}
+              autoFocus
+              unstyled
+              outlineStyle="none"
+              $platform-web={{
+                fieldSizing: 'content',
+                minWidth: '1ch',
+                maxWidth: '100%',
+              }}
+              value={focusedDisplay}
+              onChangeText={handleChange}
+              onBlur={handleBlur}
+              placeholder="0"
+              placeholderTextColor="$neutral3"
+              fontFamily="$heading"
+              fontSize={fonts.heading3.fontSize}
+              lineHeight={fonts.heading3.lineHeight}
+              fontWeight={fonts.heading3.fontWeight}
+              color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
+              backgroundColor="$transparent"
+            />
+          </Trace>
         ) : (
           <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
             {displayUnfocused}

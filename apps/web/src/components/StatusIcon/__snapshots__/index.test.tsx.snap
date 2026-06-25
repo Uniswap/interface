@@ -2,7 +2,7 @@
 
 exports[`StatusIcon > with account > renders children in correct order 1`] = `
 <div
-  class="sc-bRKDuR ljfgSf"
+  class="sc-bRKDuR cQXXZd"
   data-testid="StatusIconRoot"
   size="16"
 >
@@ -44,7 +44,7 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
 
 exports[`StatusIcon > with no account > renders children in correct order 1`] = `
 <div
-  class="sc-bRKDuR ljfgSf"
+  class="sc-bRKDuR cQXXZd"
   data-testid="StatusIconRoot"
   size="16"
 >

@@ -1,7 +1,7 @@
 /* oxlint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { GasEstimate, GraphQLApi, TradingApi } from '@universe/api'
+import { GasEstimate, TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -24,10 +24,6 @@ export interface TransactionId {
    */
   id: string
 }
-
-export type TransactionListQueryResponse = NonNullable<
-  NonNullable<NonNullable<GraphQLApi.TransactionListQuery['portfolios']>[0]>['assetActivities']
->[0]
 
 /**
  * Marks if a transaction was initiated natively within app, or from external source.
@@ -64,6 +60,8 @@ export interface TransactionDetailsCore extends TransactionId {
    */
   receipt?: TransactionReceipt
   networkFee?: TransactionNetworkFee
+  paymaster?: string
+  sponsorInfo?: TradingApi.SponsorMetadata
   /** Block number for polling optimization */
   lastCheckedBlockNumber?: number
 }
@@ -256,7 +254,8 @@ export type FinalizedTransactionDetails =
   | FinalizedPlanTXDetails
 
 export type TransactionOptions = {
-  request: providers.TransactionRequest
+  // Present only for EOA-submitted txs; absent for 4337 userOps, which track via `userOpHash`.
+  request?: providers.TransactionRequest
   userSubmissionTimestampMs?: number
   rpcSubmissionTimestampMs?: number
   rpcSubmissionDelayMs?: number
@@ -423,7 +422,16 @@ export type PlanSwapTransactionInfoFields = {
   stepRouting?: SwapRouting
 }
 
-export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
+/** RWA analytics captured at submit so the Swap Transaction Completed event (built at finalization) can
+ *  report them. See `getRwaSwapAnalyticsProperties`. */
+export interface RwaSwapAnalytics {
+  marketClosed?: boolean
+  priceWarning?: boolean
+  tokenInStocks?: boolean
+  tokenOutStocks?: boolean
+}
+
+export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields, RwaSwapAnalytics {
   type: TransactionType.Swap
   tradeType?: TradeType
   inputCurrencyId: string
@@ -447,7 +455,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTr
   swapStartTimestamp?: number
 }
 
-export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
+export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields, RwaSwapAnalytics {
   type: TransactionType.Bridge
   inputCurrencyId: string
   inputCurrencyAmountRaw: string

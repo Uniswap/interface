@@ -20,6 +20,8 @@ import {
 } from '~/pages/Explore/rwa/shelf/assetCardConstants'
 import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
 import { AssetSparkline } from '~/pages/Explore/rwa/table/AssetSparkline'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 export function AssetCard({
   rwa,
@@ -29,6 +31,7 @@ export function AssetCard({
 }: ExploreStockShelfItem & { cardWidth: number; onAssetClick?: AssetCardClickHandler }): JSX.Element {
   const navigate = useNavigate()
   const { chains: enabledChainIds } = useEnabledChains()
+  const exploreFilterChainId = useChainIdFromUrlParam()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
 
   const change = issuer.priceChange24hPct
@@ -46,6 +49,7 @@ export function AssetCard({
       getTokenDetailsURL({
         address: primaryChain.address,
         chain: toGraphQLChain(primaryChain.chainId),
+        chainQueryParam: exploreFilterChainId ? undefined : TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
       }),
     )
   })

@@ -112,10 +112,12 @@ export async function exportSeedPhrase({
 export async function exportSeedPhraseWithRecovery({
   authPrivateKey,
   authMethodId,
+  accessToken,
   generateAuthorizationSignature,
 }: {
   authPrivateKey: Uint8Array
   authMethodId: string
+  accessToken: string
   generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
 }): Promise<string> {
   const { suite, keypair, publicKeyBase64 } = await generateHpkeKeypair()
@@ -123,6 +125,7 @@ export async function exportSeedPhraseWithRecovery({
     authPrivateKey,
     authMethodId,
     encryptionKey: publicKeyBase64,
+    accessToken,
     generateAuthorizationSignature,
   })
   return decryptHpkeCiphertext({ suite, keypair, ciphertext, encapsulatedKey })

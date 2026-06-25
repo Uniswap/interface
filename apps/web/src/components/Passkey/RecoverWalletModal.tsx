@@ -61,7 +61,16 @@ export function RecoverWalletModal(): JSX.Element {
   const privy = useRecoveryPrivyAuth({ onOAuthError: handleOAuthError })
 
   const onPinDecryptSuccess = useEvent(
-    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+    async ({
+      authPrivateKey,
+      authMethodId,
+      accessToken,
+    }: {
+      authPrivateKey: Uint8Array
+      authMethodId: string
+      email: string
+      accessToken: string
+    }) => {
       let passkeyUsername: string | undefined
       if (flow.recoveryWalletAddress) {
         try {
@@ -82,6 +91,7 @@ export function RecoverWalletModal(): JSX.Element {
       const recoveryResult = await executeRecovery({
         authPrivateKey,
         authMethodId,
+        accessToken,
         newPasskeyCredential: credential,
         newPasskeyPublicKey,
         generateAuthorizationSignature: privy.generateAuthorizationSignature,

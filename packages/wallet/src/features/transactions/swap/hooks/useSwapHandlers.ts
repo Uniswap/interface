@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -41,6 +42,7 @@ export function useSwapHandlers(): SwapHandlers {
   const evmAddress = useActiveAddress(Platform.EVM)
 
   const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
+  const rwaWhitelist = useRWAWhitelist()
 
   const caip25Info = useAccountsStore((state) => {
     return state.getActiveConnector(Platform.EVM).session?.caip25Info
@@ -87,6 +89,7 @@ export function useSwapHandlers(): SwapHandlers {
         includesDelegation: swapTxContext.includesDelegation,
         isSmartWalletTransaction,
         swapStartTimestamp,
+        rwaWhitelist,
       })
 
       // Clear signing state after getting the transaction
@@ -131,7 +134,7 @@ export function useSwapHandlers(): SwapHandlers {
       // Reset swap start timestamp
       dispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info],
+    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info, rwaWhitelist],
   )
 
   return useMemo(

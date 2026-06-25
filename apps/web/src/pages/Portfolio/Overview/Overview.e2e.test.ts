@@ -13,34 +13,25 @@ const test = getTest()
 // Token row ID from portfolio mock (chainId-address, lowercase) for Tether USD
 const USDT_TOKEN_ID = '1-0xdac17f958d2ee523a2206206994597c13d831ec7'
 
-type GraphqlFixture = {
-  intercept: (op: string, path: string) => Promise<void>
-  waitForResponse: (op: string) => Promise<void>
-}
 type DataApiFixture = {
   intercept: (method: { service: { typeName: string }; name: string }, mockPath: string) => Promise<void>
 }
 
 async function goToPortfolioOverview({
   page,
-  graphql,
   dataApi,
-  portfolioBalancesMock = Mocks.PortfolioBalances.hayden,
   getPortfolioMock = Mocks.DataApiService.get_portfolio,
   externalAddress,
   waitForGetPortfolio = true,
   waitForListTransactions = true,
 }: {
   page: Page
-  graphql: GraphqlFixture
   dataApi?: DataApiFixture
-  portfolioBalancesMock?: string
   getPortfolioMock?: string | null
   externalAddress?: string
   waitForGetPortfolio?: boolean
   waitForListTransactions?: boolean
 }): Promise<void> {
-  await graphql.intercept('PortfolioBalances', portfolioBalancesMock)
   if (dataApi) {
     await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
   }
@@ -48,7 +39,7 @@ async function goToPortfolioOverview({
     await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
   }
 
-  const waits: Promise<unknown>[] = [graphql.waitForResponse('PortfolioBalances')]
+  const waits: Promise<unknown>[] = []
   if (waitForGetPortfolio) {
     waits.push(page.waitForResponse((res) => res.request().url().includes('GetPortfolio')))
   }
@@ -78,8 +69,8 @@ test.describe(
   },
   () => {
     test.describe('Portfolio Chart', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display portfolio value', async ({ page }) => {
@@ -105,8 +96,8 @@ test.describe(
     })
 
     test.describe('Action Tiles - Connected Wallet', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display all action tiles for connected wallet', async ({ page }) => {
@@ -124,10 +115,9 @@ test.describe(
     })
 
     test.describe('Action Tiles - External Wallet', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           externalAddress: HAYDEN_ADDRESS,
           waitForListTransactions: false,
@@ -151,9 +141,9 @@ test.describe(
     })
 
     test.describe('Mini Tokens Table', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Token rows come from GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display tokens section header', async ({ page }) => {
@@ -181,10 +171,9 @@ test.describe(
     })
 
     test.describe('Mini Activity Table', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           getPortfolioMock: null,
           waitForGetPortfolio: false,
@@ -206,12 +195,10 @@ test.describe(
     })
 
     test.describe('Empty Portfolio State', () => {
-      test.beforeEach(async ({ page, graphql }) => {
+      test.beforeEach(async ({ page }) => {
         // No dataApi: useActivityData is skipped when isPortfolioZero, so ListTransactions is never called.
         await goToPortfolioOverview({
           page,
-          graphql,
-          portfolioBalancesMock: Mocks.PortfolioBalances.empty,
           getPortfolioMock: Mocks.DataApiService.get_portfolio_empty,
           waitForListTransactions: false,
         })
@@ -247,11 +234,10 @@ test.describe(
     })
 
     test.describe('External Wallet View', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Token row and share UI need GetPortfolio only.
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           externalAddress: HAYDEN_ADDRESS,
           waitForListTransactions: false,
@@ -273,9 +259,9 @@ test.describe(
     })
 
     test.describe('Network Filter Integration', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Filter and View all tokens link need GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should filter overview data by network', async ({ page }) => {
@@ -308,10 +294,10 @@ test.describe(
     test.describe('Responsive Behavior', () => {
       const MOBILE_VIEWPORT = { width: 375, height: 667 }
 
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await page.setViewportSize(MOBILE_VIEWPORT)
         // Chart, tiles, token row need GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display overview chart on mobile', async ({ page }) => {

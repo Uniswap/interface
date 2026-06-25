@@ -5,7 +5,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Separator, styled, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { X } from 'ui/src/components/icons/X'
@@ -25,23 +25,21 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel'
 import {
   CancellationState,
   CancelOrdersDialog,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/cancel/CancelOrdersDialog'
 import {
   OffchainOrderLineItem,
   OffchainOrderLineItemProps,
   OffchainOrderLineItemType,
 } from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AmountHeader } from '~/components/AmountHeader'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { useCurrency } from '~/hooks/Tokens'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
-import { Divider } from '~/theme/components/Dividers'
-
 type SelectedOrderInfo = {
   modalOpen?: boolean
   order?: UniswapXOrderDetails
@@ -73,7 +71,7 @@ const Wrapper = styled(Flex, {
   backgroundColor: '$surface1',
 })
 
-const OffchainModalDivider = styled(Divider, {
+const OffchainModalDivider = styled(Separator, {
   my: '$spacing28',
 })
 

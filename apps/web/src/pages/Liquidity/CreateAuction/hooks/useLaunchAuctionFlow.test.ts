@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import {
   type AuctionLaunchTransactionInfo,
@@ -55,6 +56,16 @@ vi.mock('~/utils/swapErrorToUserReadableMessage', async (importOriginal) => ({
   didUserReject: (...args: unknown[]) => mockDidUserReject(...args),
 }))
 
+const mockSendAnalyticsEvent = vi.fn()
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: (...args: unknown[]) => mockSendAnalyticsEvent(...args),
+}))
+
+/** Minimal stand-in for the `Auction Create Failed` props the Review step would build. */
+const FAILED_PROPS = { token_source: 'new', chain_id: 1, failed_step: 'launch' } as NonNullable<
+  ReturnType<NonNullable<Parameters<typeof useLaunchAuctionFlow>[0]['getCreateFailedProperties']>>
+>
+
 vi.mock('~/utils/params/chainParams', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/utils/params/chainParams')>()),
   getChainUrlParam: () => 'ethereum',
@@ -84,6 +95,7 @@ function submitResult(transactions: ValidatedTransactionRequest[]): CreateAuctio
 function setup(
   launchSubmitOverride: Partial<{ onLaunch: () => Promise<CreateAuctionSubmitResult | undefined>; error?: Error }> = {},
   tokenMetadata: Partial<Pick<AuctionLaunchTransactionInfo, 'tokenName' | 'tokenSymbol' | 'tokenLogoUrl'>> = {},
+  extra: Partial<Pick<Parameters<typeof useLaunchAuctionFlow>[0], 'getCreateFailedProperties'>> = {},
 ) {
   const onLaunch = vi.fn<() => Promise<CreateAuctionSubmitResult | undefined>>().mockResolvedValue(undefined)
   const launchSubmit = { onLaunch, ...launchSubmitOverride }
@@ -94,6 +106,7 @@ function setup(
       tokenSymbol: 'TKN',
       ...tokenMetadata,
       launchSubmit,
+      ...extra,
     }),
   )
   return { ...utils, onLaunch: launchSubmit.onLaunch }
@@ -105,19 +118,68 @@ beforeEach(() => {
   mockNavigate.mockClear()
   mockIsSigner.mockReturnValue(true)
   mockDidUserReject.mockReturnValue(false)
+  mockSendAnalyticsEvent.mockClear()
   mockUseTransaction.mockReturnValue({ status: TransactionStatus.Success })
 })
 
+// Opens the review modal and flushes the prefetch (CreateAuction) that openReviewModal kicks off.
+async function openAndPrepare(result: { current: { openReviewModal: () => void } }): Promise<void> {
+  await act(async () => {
+    result.current.openReviewModal()
+  })
+}
+
 describe('useLaunchAuctionFlow', () => {
-  it('opens and closes the review modal', () => {
-    const { result } = setup()
+  it('opens and closes the review modal', async () => {
+    const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
     expect(result.current.isReviewModalVisible).toBe(false)
 
-    act(() => result.current.openReviewModal())
+    await openAndPrepare(result)
     expect(result.current.isReviewModalVisible).toBe(true)
 
     act(() => result.current.closeReviewModal())
     expect(result.current.isReviewModalVisible).toBe(false)
+  })
+
+  it('prefetches CreateAuction when the review modal opens', async () => {
+    const { result, onLaunch } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
+
+    expect(onLaunch).not.toHaveBeenCalled()
+
+    await openAndPrepare(result)
+
+    // The result is ready before the user confirms, so progressSteps reflects the single launch tx.
+    expect(onLaunch).toHaveBeenCalledOnce()
+    expect(result.current.isPreparing).toBe(false)
+    expect(result.current.progressSteps).toEqual([LaunchProgressStep.PendingConfirmation])
+  })
+
+  it('reflects isPreparing while CreateAuction is in flight, then clears it', async () => {
+    let resolvePrep: (r: CreateAuctionSubmitResult | undefined) => void = () => {}
+    const pending = new Promise<CreateAuctionSubmitResult | undefined>((res) => {
+      resolvePrep = res
+    })
+    const { result } = setup({ onLaunch: vi.fn().mockReturnValue(pending) })
+
+    expect(result.current.isPreparing).toBe(false)
+    act(() => result.current.openReviewModal())
+    expect(result.current.isPreparing).toBe(true)
+
+    await act(async () => {
+      resolvePrep(submitResult([tx()]))
+      await pending
+    })
+    expect(result.current.isPreparing).toBe(false)
+  })
+
+  it('re-prefetches each time the modal is reopened (picks up config edits)', async () => {
+    const { result, onLaunch } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
+
+    await openAndPrepare(result)
+    act(() => result.current.closeReviewModal())
+    await openAndPrepare(result)
+
+    expect(onLaunch).toHaveBeenCalledTimes(2)
   })
 
   it('blocks launch and surfaces the error modal when the account cannot sign', async () => {
@@ -133,16 +195,42 @@ describe('useLaunchAuctionFlow', () => {
     expect(result.current.isLaunching).toBe(false)
   })
 
-  it('does not dispatch when onLaunch returns no result, and stops the launching state', async () => {
-    const { result, onLaunch } = setup({ onLaunch: vi.fn().mockResolvedValue(undefined) })
+  it('does not dispatch a launch before a prefetched result is available', async () => {
+    // No openReviewModal() -> no prefetch -> nothing to submit when launch is invoked.
+    const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
 
     await act(async () => {
       await result.current.handleLaunchToken()
     })
 
+    expect(mockSubmitLaunchTransactions).not.toHaveBeenCalled()
+    expect(result.current.isLaunching).toBe(false)
+  })
+
+  it('does not dispatch when the prefetch returns no result', async () => {
+    const { result, onLaunch } = setup({ onLaunch: vi.fn().mockResolvedValue(undefined) })
+
+    await openAndPrepare(result)
+    await act(async () => {
+      await result.current.handleLaunchToken()
+    })
+
+    // onLaunch ran once on open; the launch reuses the (empty) result rather than calling it again.
     expect(onLaunch).toHaveBeenCalledOnce()
     expect(mockSubmitLaunchTransactions).not.toHaveBeenCalled()
     expect(result.current.isLaunching).toBe(false)
+  })
+
+  it('reuses the prefetched result on launch without calling CreateAuction again', async () => {
+    const { result, onLaunch } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
+
+    await openAndPrepare(result)
+    await act(async () => {
+      await result.current.handleLaunchToken()
+    })
+
+    expect(onLaunch).toHaveBeenCalledOnce()
+    expect(mockSubmitLaunchTransactions).toHaveBeenCalledOnce()
   })
 
   it('submits launch activity with the captured token metadata', async () => {
@@ -155,6 +243,7 @@ describe('useLaunchAuctionFlow', () => {
       },
     )
 
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })
@@ -172,7 +261,7 @@ describe('useLaunchAuctionFlow', () => {
     mockDidUserReject.mockReturnValue(true)
     const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
 
-    act(() => result.current.openReviewModal())
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })
@@ -190,7 +279,7 @@ describe('useLaunchAuctionFlow', () => {
   it('opens the error modal (and hides the review modal) on a non-rejection failure, then retry reopens review', async () => {
     const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
 
-    act(() => result.current.openReviewModal())
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })
@@ -199,15 +288,59 @@ describe('useLaunchAuctionFlow', () => {
     expect(result.current.isErrorModalOpen).toBe(true)
     expect(result.current.isReviewModalVisible).toBe(false)
 
-    act(() => result.current.handleRetry())
+    // Retry re-prefetches a fresh result and reopens the review modal.
+    await act(async () => {
+      result.current.handleRetry()
+    })
     expect(result.current.isErrorModalOpen).toBe(false)
     expect(result.current.isReviewModalVisible).toBe(true)
+  })
+
+  it('fires Auction Create Failed (launch) on a non-rejection failure', async () => {
+    const getCreateFailedProperties = vi.fn(() => FAILED_PROPS)
+    const { result } = setup(
+      { onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) },
+      {},
+      {
+        getCreateFailedProperties,
+      },
+    )
+
+    await openAndPrepare(result)
+    await act(async () => {
+      await result.current.handleLaunchToken()
+    })
+    act(() => lastSubmit?.onFailure(new Error('revert')))
+
+    expect(getCreateFailedProperties).toHaveBeenCalledWith({ failedStep: 'launch' })
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionCreateFailed, FAILED_PROPS)
+  })
+
+  it('does not fire Auction Create Failed when the user rejects the wallet prompt', async () => {
+    mockDidUserReject.mockReturnValue(true)
+    const getCreateFailedProperties = vi.fn(() => FAILED_PROPS)
+    const { result } = setup(
+      { onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) },
+      {},
+      {
+        getCreateFailedProperties,
+      },
+    )
+
+    await openAndPrepare(result)
+    await act(async () => {
+      await result.current.handleLaunchToken()
+    })
+    act(() => lastSubmit?.onFailure(new Error('user rejected')))
+
+    expect(getCreateFailedProperties).not.toHaveBeenCalled()
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
   })
 
   it('records success, opens the success modal, and navigates on view or confirmed dismiss', async () => {
     const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
 
-    act(() => result.current.openReviewModal())
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })
@@ -233,7 +366,7 @@ describe('useLaunchAuctionFlow', () => {
     mockUseTransaction.mockReturnValue({ status: TransactionStatus.Pending })
     const { result, rerender } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
 
-    act(() => result.current.openReviewModal())
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })
@@ -255,6 +388,8 @@ describe('useLaunchAuctionFlow', () => {
     const launchTx = tx({ to: '0xlauncher' })
     const { result } = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([approveTx, launchTx])) })
 
+    // progressSteps is populated by the prefetch on open; the launch dispatch wires up setCurrentStep.
+    await openAndPrepare(result)
     await act(async () => {
       await result.current.handleLaunchToken()
     })

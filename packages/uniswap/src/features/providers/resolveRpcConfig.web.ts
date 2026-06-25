@@ -1,5 +1,5 @@
 import { getEntryGatewayUrl, provideDeviceIdService, provideSessionStorage } from '@universe/api'
-import { createRpcConfigResolver, createUniRpcConfigResolver } from '@universe/chains'
+import { createRpcConfigResolver, createUniRpcConfigResolver, type RpcConfig } from '@universe/chains'
 import { isE2eTestEnv, isExtensionApp, REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -45,21 +45,38 @@ const webResolveUniRpcConfig = createUniRpcConfigResolver({
   credentials: 'include',
 })
 
+// Extension is header-based (can't share the web origin's cookie jar).
+const resolveExtensionUniRpcHeaders = async (): Promise<Record<string, string>> => {
+  const [session, deviceId] = await Promise.all([provideSessionStorage().get(), provideDeviceIdService().getDeviceId()])
+  return {
+    ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
+    ...(deviceId && { 'X-Device-ID': deviceId }),
+  }
+}
+
 const extensionResolveUniRpcConfig = createUniRpcConfigResolver({
   ...SHARED_UNI_RPC_CONFIG,
-  getRequestHeaders: async () => {
-    const [session, deviceId] = await Promise.all([
-      provideSessionStorage().get(),
-      provideDeviceIdService().getDeviceId(),
-    ])
-    return {
-      ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
-      ...(deviceId && { 'X-Device-ID': deviceId }),
-    }
-  },
+  getRequestHeaders: resolveExtensionUniRpcHeaders,
 })
+
+// Public RPCs now point at the entry gateway; when the legacy path returns one,
+// authenticate it the same way the primary path does — cookie on web, header on extension.
+const asUniRpcConfig = (config: RpcConfig): RpcConfig => {
+  if (!config.rpcUrl.startsWith(`${getEntryGatewayUrl()}/rpc/`)) {
+    return config
+  }
+  const promoted: RpcConfig = {
+    ...config,
+    isUniRpc: true,
+    headers: { 'x-request-source': REQUEST_SOURCE, ...config.headers },
+  }
+  return isExtensionApp
+    ? { ...promoted, getRequestHeaders: resolveExtensionUniRpcHeaders }
+    : { ...promoted, credentials: 'include' }
+}
 
 export const defaultResolveRpcConfig = createRpcConfigResolver({
   resolveUniRpcConfig: isExtensionApp ? extensionResolveUniRpcConfig : webResolveUniRpcConfig,
   selectLegacyRpcUrl: selectRpcUrl,
+  asUniRpcConfig,
 })

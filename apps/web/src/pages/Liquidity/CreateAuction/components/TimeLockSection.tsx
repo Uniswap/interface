@@ -1,8 +1,12 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Switch, Text } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { FORMAT_DATE_LONG, useFormattedDate, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { DatePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DatePickerCard'
 import { TimeLockPreset } from '~/pages/Liquidity/CreateAuction/types'
@@ -103,6 +107,19 @@ export function TimeLockSection({
     [onTimeLockPresetChange],
   )
 
+  const trace = useTrace()
+  // Dropdown is a custom component that doesn't forward an injected onPress, so the
+  // timelock-duration click is fired here when the selector opens.
+  const handleDropdownToggle = useCallback(
+    (open: boolean) => {
+      if (open) {
+        sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionTimelockDuration })
+      }
+      setDropdownOpen(open)
+    },
+    [trace],
+  )
+
   return (
     <Flex gap="$spacing12">
       <Flex row alignItems="flex-start" justifyContent="space-between" gap="$spacing12">
@@ -121,7 +138,7 @@ export function TimeLockSection({
           <Flex flex={1} flexBasis={0} minWidth={0} width="100%">
             <Dropdown
               isOpen={dropdownOpen}
-              toggleOpen={setDropdownOpen}
+              toggleOpen={handleDropdownToggle}
               isTriggerStyled={false}
               chevronSize="$icon.20"
               allowFlip

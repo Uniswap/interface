@@ -8,7 +8,7 @@ import { Nut } from 'ui/src/components/icons/Nut'
 import { Ranking } from 'ui/src/components/icons/Ranking'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
+import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 interface ExploreCategoryChipsProps {
   value: ExploreCategory
@@ -58,41 +58,41 @@ export function ExploreCategoryChips({ value, onChange }: ExploreCategoryChipsPr
   const options: readonly SegmentedControlOption<ExploreCategory>[] = useMemo(
     () => [
       {
-        value: 'popular',
+        value: ExploreCategory.Popular,
         display: (
           <CategoryOptionDisplay
-            active={value === 'popular'}
-            icon={<Ranking size="$icon.16" color={value === 'popular' ? '$neutral1' : '$neutral2'} />}
+            active={value === ExploreCategory.Popular}
+            icon={<Ranking size="$icon.16" color={value === ExploreCategory.Popular ? '$neutral1' : '$neutral2'} />}
             label={t('common.popular')}
           />
         ),
       },
       {
-        value: 'stocks',
+        value: ExploreCategory.Stocks,
         display: (
           <CategoryOptionDisplay
-            active={value === 'stocks'}
-            icon={<Briefcase size="$icon.16" color={value === 'stocks' ? '$neutral1' : '$neutral2'} />}
+            active={value === ExploreCategory.Stocks}
+            icon={<Briefcase size="$icon.16" color={value === ExploreCategory.Stocks ? '$neutral1' : '$neutral2'} />}
             label={t('common.stocks')}
           />
         ),
       },
       {
-        value: 'commodities',
+        value: ExploreCategory.Commodities,
         display: (
           <CategoryOptionDisplay
-            active={value === 'commodities'}
-            icon={<Nut size="$icon.16" color={value === 'commodities' ? '$neutral1' : '$neutral2'} />}
+            active={value === ExploreCategory.Commodities}
+            icon={<Nut size="$icon.16" color={value === ExploreCategory.Commodities ? '$neutral1' : '$neutral2'} />}
             label={t('common.commodities')}
           />
         ),
       },
       {
-        value: 'etfs',
+        value: ExploreCategory.Etfs,
         display: (
           <CategoryOptionDisplay
-            active={value === 'etfs'}
-            icon={<Etf size="$icon.16" color={value === 'etfs' ? '$neutral1' : '$neutral2'} />}
+            active={value === ExploreCategory.Etfs}
+            icon={<Etf size="$icon.16" color={value === ExploreCategory.Etfs ? '$neutral1' : '$neutral2'} />}
             label={t('common.etfs')}
           />
         ),

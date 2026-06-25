@@ -2,9 +2,17 @@ import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getAuctionCreateTokenSource } from '~/pages/Liquidity/CreateAuction/analytics'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { zeroAddress } from '~/chains'
+import {
+  getAuctionCreateTokenSource,
+  getAuctionDetailsInfoEnteredProperties,
+} from '~/pages/Liquidity/CreateAuction/analytics'
 import { AuctionAdvancedSettings } from '~/pages/Liquidity/CreateAuction/components/AuctionAdvancedSettings'
 import { AuctionDistributionSection } from '~/pages/Liquidity/CreateAuction/components/AuctionDistributionSection'
 import { AuctionSupplySection } from '~/pages/Liquidity/CreateAuction/components/AuctionSupplySection'
@@ -33,6 +41,7 @@ import {
   CreateAuctionStep,
   type InputCurrency,
   PostAuctionLiquidityAllocationType,
+  RaiseCurrency,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
   percentOfSoldToLiquidityFromDepositAndLiquidityAmount,
@@ -97,6 +106,37 @@ export function ConfigureAuctionStep() {
   // doesn't drift to "$99,990" on the next oracle tick. Re-snapshots only on raise-currency
   // change. Single source of truth — children receive this instead of calling useUSDCPrice themselves.
   const usdPriceNum = useStableRaiseUsdPrice({ raiseCurrency, chainId: committed?.totalSupply.currency.chainId ?? 1 })
+
+  // Analytics snapshot inputs for `Auction Details Info Entered`, mirroring the Review step's
+  // FDV math and raise-currency resolution so the step-level event agrees with Submitted/Completed.
+  const trace = useTrace()
+  const detailsChainId = committed?.totalSupply.currency.chainId
+  const maxFdv = useMemo(() => {
+    if (!configureAuction.floorPrice || !committed) {
+      return undefined
+    }
+    return parseFloat(configureAuction.floorPrice) * parseFloat(committed.totalSupply.toExact())
+  }, [configureAuction.floorPrice, committed])
+  const raiseCurrencyAddress =
+    detailsChainId === undefined
+      ? undefined
+      : raiseCurrency === RaiseCurrency.ETH
+        ? zeroAddress
+        : getChainInfo(detailsChainId).tokens.USDC?.address
+  const handleContinue = useEvent(() => {
+    sendAnalyticsEvent(
+      AuctionEventName.AuctionDetailsInfoEntered,
+      getAuctionDetailsInfoEnteredProperties({
+        trace,
+        tokenMode,
+        configureAuction,
+        raiseCurrencyAddress,
+        raiseUsdPrice: usdPriceNum,
+        maxFdv,
+      }),
+    )
+    goToNextStep()
+  })
 
   // Active currency for price/milestone inputs. UI-only — not part of submitted config.
   // Defaults to USD when a price oracle is available; falls back to raise-token on testnets
@@ -261,7 +301,7 @@ export function ConfigureAuctionStep() {
           <Button
             size="medium"
             emphasis="primary"
-            onPress={goToNextStep}
+            onPress={handleContinue}
             isDisabled={isNextStepDisabled}
             onDisabledPress={isNextStepDisabled ? handleDisabledContinue : undefined}
             fill

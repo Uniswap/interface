@@ -30,6 +30,8 @@ interface PostPinArgs {
   authPrivateKey: Uint8Array
   authMethodId: string
   email: string
+  // Forwarded to the recovery RPCs, which now require a Bearer token.
+  accessToken: string
 }
 
 interface UseRecoveryFlowOptions {
@@ -247,6 +249,16 @@ export function useRecoveryFlow({
   })
 
   const runPostPinAction = useEvent(async (key: Uint8Array) => {
+    if (!accessToken) {
+      // Unreachable in practice (a successful decrypt implies a token); guards the
+      // type since the post-PIN RPCs now require it.
+      logger.error(new Error('Missing access token for post-PIN action'), {
+        tags: { file: 'useRecoveryFlow', function: 'runPostPinAction' },
+      })
+      setAuthPrivateKey(null)
+      setStep(RecoveryStep.Login)
+      return
+    }
     setStep(RecoveryStep.Recovering)
     setFinalStepError(undefined)
     try {
@@ -254,6 +266,7 @@ export function useRecoveryFlow({
         authPrivateKey: key,
         authMethodId: hashAuthMethodId(effectiveEmail),
         email: effectiveEmail,
+        accessToken,
       })
       setAuthPrivateKey(null)
     } catch (e) {

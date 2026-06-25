@@ -10,7 +10,6 @@ import {
   createActivityMapByHash,
   createGroups,
   getActivityNonce,
-  getCurrencyAddress,
   haveSameNonce,
   parseTokenAmount,
 } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils'
@@ -444,53 +443,6 @@ describe('activityMapping utilities', () => {
       expect(map['0xduplicatehash']?.id).toBe('id-2')
       expect(map['0xduplicatehash']?.status).toBe(TransactionStatus.Success)
     })
-  })
-})
-
-describe('getCurrencyAddress', () => {
-  it('should return token address when available', () => {
-    const token = {
-      id: 'token-id',
-      address: '0x1234567890123456789012345678901234567890',
-      chain: GraphQLApi.Chain.Ethereum,
-      symbol: 'TEST',
-      decimals: 18,
-      standard: GraphQLApi.TokenStandard.Erc20,
-    } as any
-
-    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
-    expect(result).toBe('0x1234567890123456789012345678901234567890')
-  })
-
-  it('should return native address when token address is null', () => {
-    const token = {
-      id: 'token-id',
-      address: null,
-      chain: GraphQLApi.Chain.Ethereum,
-      symbol: 'ETH',
-      decimals: 18,
-      standard: GraphQLApi.TokenStandard.Native,
-    } as any
-
-    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
-    // getNativeAddress for mainnet returns the NATIVE_ADDRESS constant
-    expect(result).toBeTruthy()
-    expect(result).not.toBe('')
-  })
-
-  it('should return native address when token address is undefined', () => {
-    const token = {
-      id: 'token-id',
-      address: undefined,
-      chain: GraphQLApi.Chain.Ethereum,
-      symbol: 'ETH',
-      decimals: 18,
-      standard: GraphQLApi.TokenStandard.Native,
-    } as any
-
-    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
-    expect(result).toBeTruthy()
-    expect(result).not.toBe('')
   })
 })
 

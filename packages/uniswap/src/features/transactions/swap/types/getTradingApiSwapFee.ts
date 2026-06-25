@@ -5,6 +5,14 @@ import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 
+// Integrator fee basis points may be fractional (e.g. 12.5). `new Percent`
+// rejects a non-integer numerator (sdk-core/JSBI throws), so for fractional bps
+// scale by 100 and adjust the denominator: 12.5 -> 1250 / 1_000_000, identical in
+// value to 12.5 / 10_000. Integer bps keep the original bips / 10_000 form.
+function bipsToPercent(bips: number): Percent {
+  return Number.isInteger(bips) ? new Percent(bips, 10_000) : new Percent(Math.round(bips * 100), 1_000_000)
+}
+
 export function getTradingApiSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee | undefined {
   if (!quoteResponse || isWrap(quoteResponse)) {
     return undefined
@@ -23,7 +31,7 @@ export function getTradingApiSwapFee(quoteResponse?: DiscriminatedQuoteResponse)
 
     return {
       recipient: quote.portionRecipient,
-      percent: new Percent(quote.portionBips, '10000'),
+      percent: bipsToPercent(quote.portionBips),
       amount: quote.portionAmount,
       feeField: CurrencyField.OUTPUT,
     }
@@ -52,7 +60,7 @@ export function getTradingApiSwapFee(quoteResponse?: DiscriminatedQuoteResponse)
 
   return {
     recipient: ulFee.recipient,
-    percent: new Percent(ulFee.bps, '10000'),
+    percent: bipsToPercent(ulFee.bps),
     amount: ulFee.amount,
     feeField: CurrencyField.OUTPUT,
   }

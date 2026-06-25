@@ -16,8 +16,15 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import type { Account, PublicClient } from 'viem'
+import type { RpcUserOperation } from 'viem/account-abstraction'
+import type { Capability, GetCallsStatusResult } from 'wallet/src/features/dappRequests/types'
 import type { Hash, SignableMessage } from '~/chains'
+import { getEmbeddedWalletCallsStatus } from '~/connection/getCallsStatus'
+import { getEmbeddedWalletCapabilities } from '~/connection/getCapabilities'
+import { sendEmbeddedWalletCalls, type WalletSendCallsRequest } from '~/connection/sendCalls'
+import { prepareDelegationAuthorization, signUserOpWithEmbeddedWallet } from '~/connection/userOpSigning'
 import { getEmbeddedWalletState, setChainId } from '~/state/embeddedWallet/store'
+import { assume0xAddress } from '~/utils/wagmi'
 
 export type Listener = (payload: any) => void
 
@@ -91,6 +98,12 @@ export class EmbeddedWalletProvider {
         return this.getBlockNumber()
       case 'eth_getCode':
         return this.getCode(args)
+      case 'wallet_getCapabilities':
+        return this.getCapabilities(args.params?.[1])
+      case 'wallet_sendCalls':
+        return this.sendCalls(args.params?.[0])
+      case 'wallet_getCallsStatus':
+        return this.getCallsStatus(args.params?.[0])
       default: {
         throw NoWalletFoundError
       }
@@ -267,7 +280,8 @@ export class EmbeddedWalletProvider {
       logger.error(e, {
         tags: { file: 'EmbeddedWalletProvider.ts', function: 'sendTransaction' },
       })
-      return undefined
+      // Propagate so callers can tell user rejection from network/estimation failures.
+      throw e
     }
   }
 
@@ -306,6 +320,21 @@ export class EmbeddedWalletProvider {
     const signedTx = await account.signTransaction(tx)
     const txHash = await publicClient.sendRawTransaction({ serializedTransaction: signedTx })
     return txHash
+  }
+
+  /**
+   * EIP-5792 `wallet_getCapabilities`. Delegation-status-derived capability map
+   * lives in {@link getEmbeddedWalletCapabilities}. Rollout is controlled by the
+   * existing flow-level gates (`batched_swaps`, `liquidity_batched_transactions`,
+   * `support_7677_gas_sponsorship`) — consumers ignore these capabilities until
+   * those flags enable the batched paths.
+   */
+  async getCapabilities(requestedChainIds?: string[]): Promise<Record<string, Capability>> {
+    const account = this.getAccount()
+    if (!account) {
+      return {}
+    }
+    return getEmbeddedWalletCapabilities({ address: account.address, requestedChainIds })
   }
 
   updateChainId(chainId: UniverseChainId) {
@@ -403,5 +432,68 @@ export class EmbeddedWalletProvider {
     }
 
     return await account.signTypedData(JSON.parse(args.params[1]))
+  }
+
+  /**
+   * Sign an ERC-4337 PackedUserOperation with the embedded wallet. Full flow
+   * (EIP-712 typed data → passkey `eth_signTypedData_v4` → Calibur envelope → optional
+   * EIP-7702 authorization) lives in {@link signUserOpWithEmbeddedWallet}.
+   */
+  async signUserOp(rpcUserOp: RpcUserOperation<'0.8'>): Promise<RpcUserOperation<'0.8'>> {
+    const account = this.getAccount()
+    const { walletId } = getEmbeddedWalletState()
+    if (!account || !walletId) {
+      logger.error(NoWalletFoundError, {
+        tags: { file: 'EmbeddedWalletProvider.ts', function: 'signUserOp' },
+      })
+      throw NoWalletFoundError
+    }
+    return signUserOpWithEmbeddedWallet({
+      rpcUserOp,
+      address: assume0xAddress(account.address),
+      chainId: this.chainId,
+      walletId,
+      publicClient: this.getPublicClient(this.chainId),
+    })
+  }
+
+  /**
+   * EIP-5792 `wallet_getCallsStatus`. Status resolution (Trading API `/swaps`
+   * feed, covering both 4337 userOp hashes and 7702 tx hashes) lives in
+   * {@link getEmbeddedWalletCallsStatus}.
+   */
+  async getCallsStatus(batchId: string | undefined): Promise<GetCallsStatusResult> {
+    return getEmbeddedWalletCallsStatus({ batchId, chainId: this.chainId })
+  }
+
+  /**
+   * EIP-5792 `wallet_sendCalls`. Dispatch (sponsored 4337 vs Calibur multicall)
+   * lives in {@link sendEmbeddedWalletCalls}.
+   */
+  async sendCalls(params: WalletSendCallsRequest | undefined): Promise<{ id: string }> {
+    if (!params) {
+      throw new Error('wallet_sendCalls: missing params')
+    }
+    const account = this.getAccount()
+    if (!account) {
+      logger.error(NoWalletFoundError, {
+        tags: { file: 'EmbeddedWalletProvider.ts', function: 'sendCalls' },
+      })
+      throw NoWalletFoundError
+    }
+    return sendEmbeddedWalletCalls({
+      params,
+      activeChainId: this.chainId,
+      account: account.address,
+      signUserOp: (userOp) => this.signUserOp(userOp),
+      sendTransaction: (transactions) => this.sendTransaction(transactions),
+      prepareDelegationAuth: (sender, chainId) =>
+        prepareDelegationAuthorization({
+          address: assume0xAddress(sender),
+          chainId,
+          walletId: getEmbeddedWalletState().walletId ?? undefined,
+          publicClient: this.getPublicClient(chainId),
+        }),
+    })
   }
 }

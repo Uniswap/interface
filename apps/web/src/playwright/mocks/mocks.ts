@@ -1,14 +1,5 @@
 import path from 'path'
 
-const portfolioBalancesDir = (name: string) =>
-  path.resolve(__dirname, `../mocks/graphql/PortfolioBalances/${name}.json`)
-
-export const PortfolioBalancesMocks = {
-  test_wallet: portfolioBalancesDir('test_wallet'),
-  hayden: portfolioBalancesDir('hayden'),
-  empty: portfolioBalancesDir('empty'),
-} as const
-
 export const Mocks = {
   FiatOnRamp: {
     get_country: path.resolve(__dirname, '../mocks/fiatOnRamp/get-country.json'),
@@ -23,7 +14,6 @@ export const Mocks = {
     filledOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/filled_orders.json'),
     expiredOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/expired_orders.json'),
   },
-  PortfolioBalances: PortfolioBalancesMocks,
   Token: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
     search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
@@ -39,7 +29,6 @@ export const Mocks = {
   },
   TokenWeb: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
-    uni_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/uni_token.json'),
     sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/sepolia_yay_token.json'),
   },
   Search: {
@@ -51,11 +40,8 @@ export const Mocks = {
     get_v4_position: path.resolve(__dirname, '../mocks/rest/positions/get_v4_position.json'),
   },
   Account: {
-    tokens: path.resolve(__dirname, '../mocks/graphql/Account/tokens.json'),
     nfts: path.resolve(__dirname, '../mocks/graphql/Account/nfts.json'),
     nfts_empty: path.resolve(__dirname, '../mocks/graphql/Account/nfts_empty.json'),
-    full_activity_history: path.resolve(__dirname, '../mocks/graphql/Account/full_activity.json'),
-    activity_history: path.resolve(__dirname, '../mocks/graphql/Account/activity_history.json'),
   },
   DataApiService: {
     get_portfolio: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio.json'),

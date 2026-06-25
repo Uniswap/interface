@@ -1,7 +1,5 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import dayjs from 'dayjs'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -13,13 +11,6 @@ import { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/
 interface ActivityGroup {
   title: string
   transactions: Array<Activity>
-}
-
-/**
- * Helper function to get currency address with proper fallback for native tokens
- */
-export function getCurrencyAddress(token: GraphQLApi.TokenAssetPartsFragment, chainId: UniverseChainId): string {
-  return token.address || getNativeAddress(chainId) || ''
 }
 
 /**

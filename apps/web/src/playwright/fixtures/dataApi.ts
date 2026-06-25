@@ -1,7 +1,8 @@
 import path from 'path'
 // oxlint-disable-next-line no-restricted-imports -- Data API fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
-import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { getPortfolio, listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 // TransactionTypeFilter enum values from client-data-api (used in ListTransactions request filter)
 const TRANSACTION_TYPE_FILTER_SEND = 'TRANSACTION_TYPE_FILTER_SEND'
@@ -18,6 +19,7 @@ function getServiceMethodPath(method: DataApiMethodDescriptor): string {
 }
 
 type DataApiFixture = {
+  interceptLongRunning: void
   dataApi: {
     /**
      * Intercepts a Data API endpoint and responds with a mock response.
@@ -108,4 +110,13 @@ export const test = base.extend<DataApiFixture>({
     // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
     await use({ intercept })
   },
+  // Default GetPortfolio mock for connected-wallet e2e (replaces legacy PortfolioBalances GraphQL intercept).
+  interceptLongRunning: [
+    // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
+    async ({ dataApi }, use) => {
+      await dataApi.intercept(getPortfolio, Mocks.DataApiService.get_portfolio)
+      await use(undefined)
+    },
+    { auto: true },
+  ],
 })

@@ -54,8 +54,8 @@ export function formatTransactionsByDate(
     }
 
     // sort based on nonce if available, highest nonce first for reverse chronological order.
-    const nonceA = a.options.request.nonce
-    const nonceB = b.options.request.nonce
+    const nonceA = a.options.request?.nonce
+    const nonceB = b.options.request?.nonce
     return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1
   })
 

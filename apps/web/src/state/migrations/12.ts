@@ -1,8 +1,8 @@
 import { GraphQLApi } from '@universe/api'
 import { PersistState } from 'redux-persist'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { createPersistState, createSafeMigration } from 'uniswap/src/state/createSafeMigration'
-import { TransactionInfo } from '~/state/transactions/types'
 
 interface SerializableTransactionReceipt {
   to: string
@@ -32,7 +32,7 @@ interface BaseTransactionDetails {
   batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
   addedTime: number
   from: string
-  info: TransactionInfo
+  info: TransactionTypeInfo
   nonce?: number
   cancelled?: true
 }

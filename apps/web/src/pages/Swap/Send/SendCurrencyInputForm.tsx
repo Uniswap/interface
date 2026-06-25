@@ -22,13 +22,16 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { isInputGreaterThanDecimals } from '~/components/NumericalInput'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  StyledNumericalInput,
+} from '~/components/NumericalInput/LargeAmountInput'
+import { isInputGreaterThanDecimals } from '~/components/NumericalInput/NumericalInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import type { CurrencyState } from '~/features/Swap/state/types'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
-import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInput } from '~/pages/Swap/common/shared'
 import { SendInputError } from '~/pages/Swap/Send/state/hooks'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
@@ -323,53 +326,46 @@ export function SendCurrencyInputForm({
           </Flex>
         </Flex>
       </InputWrapper>
-      <PrefetchBalancesWrapper>
-        <CurrencyInputWrapper>
-          <Flex
-            row
-            justifyContent="space-between"
-            {...ClickableTamaguiStyle}
-            onPress={() => setTokenSelectorOpen(true)}
-          >
-            <Flex row alignItems="center" gap="$gap12">
-              <Flex alignItems="center" row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
-                {inputCurrency && (
-                  <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
-                )}
-                <Flex row width="100%">
-                  <Flex>
-                    <Text variant="body2">{inputCurrency?.symbol ?? inputCurrency?.name}</Text>
-                    <Flex row gap="$gap4" width="100%">
-                      {currencyBalance && (
-                        <Text variant="body4" color="$neutral2">
-                          {t('swap.balance.amount', { amount: formattedBalance })}
-                        </Text>
-                      )}
-                      {Boolean(fiatBalanceValue) && (
-                        <Text variant="body4" color="$neutral3">
-                          {`(${convertFiatAmountFormatted(fiatBalanceValue?.toExact(), NumberType.FiatTokenPrice)})`}
-                        </Text>
-                      )}
-                    </Flex>
+      <CurrencyInputWrapper>
+        <Flex row justifyContent="space-between" {...ClickableTamaguiStyle} onPress={() => setTokenSelectorOpen(true)}>
+          <Flex row alignItems="center" gap="$gap12">
+            <Flex alignItems="center" row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
+              {inputCurrency && (
+                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
+              )}
+              <Flex row width="100%">
+                <Flex>
+                  <Text variant="body2">{inputCurrency?.symbol ?? inputCurrency?.name}</Text>
+                  <Flex row gap="$gap4" width="100%">
+                    {currencyBalance && (
+                      <Text variant="body4" color="$neutral2">
+                        {t('swap.balance.amount', { amount: formattedBalance })}
+                      </Text>
+                    )}
+                    {Boolean(fiatBalanceValue) && (
+                      <Text variant="body4" color="$neutral3">
+                        {`(${convertFiatAmountFormatted(fiatBalanceValue?.toExact(), NumberType.FiatTokenPrice)})`}
+                      </Text>
+                    )}
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
-            <Flex row>
-              {showMaxButton && (
-                <Trace logPress element={ElementName.SendMaxButton}>
-                  <Flex centered>
-                    <Flex row mr="$spacing4">
-                      <MaxButton onPress={handleMaxInput} />
-                    </Flex>
-                  </Flex>
-                </Trace>
-              )}
-              <RotatableChevron direction="down" />
-            </Flex>
           </Flex>
-        </CurrencyInputWrapper>
-      </PrefetchBalancesWrapper>
+          <Flex row>
+            {showMaxButton && (
+              <Trace logPress element={ElementName.SendMaxButton}>
+                <Flex centered>
+                  <Flex row mr="$spacing4">
+                    <MaxButton onPress={handleMaxInput} />
+                  </Flex>
+                </Flex>
+              </Trace>
+            )}
+            <RotatableChevron direction="down" />
+          </Flex>
+        </Flex>
+      </CurrencyInputWrapper>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}

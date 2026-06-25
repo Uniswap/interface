@@ -6,7 +6,7 @@ import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
-  getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
@@ -66,7 +66,7 @@ export const OPTIMISM_CHAIN_INFO = {
   blockTimeMs: 2000,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Optimism)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Optimism)] },
     [RPCType.PublicAlt]: { http: ['https://mainnet.optimism.io'] },
     [RPCType.Default]: { http: ['https://mainnet.optimism.io/'] },
     [RPCType.Fallback]: { http: ['https://rpc.ankr.com/optimism'] },

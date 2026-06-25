@@ -1,35 +1,20 @@
-import { PropsWithChildren, useEffect } from 'react'
+import { PropsWithChildren } from 'react'
 import { Flex } from 'ui/src'
+import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
-// Inject CSS keyframes for spinning animation once
 const SPINNER_KEYFRAMES_ID = 'uniswap-spinner-keyframes'
-
-function injectSpinnerKeyframes(): void {
-  if (typeof document === 'undefined') {
-    return
-  }
-  if (document.getElementById(SPINNER_KEYFRAMES_ID)) {
-    return
-  }
-  const style = document.createElement('style')
-  style.id = SPINNER_KEYFRAMES_ID
-  style.textContent = `
+const SPINNER_KEYFRAMES_CSS = `
     @keyframes uniswap-spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
   `
-  document.head.appendChild(style)
-}
 
 export function SpinningBorderIcon({
   children,
   layoutSize,
 }: PropsWithChildren<{ children: React.ReactNode; layoutSize: number }>): JSX.Element {
-  // Inject keyframes on first render
-  useEffect(() => {
-    injectSpinnerKeyframes()
-  }, [])
+  useInjectSingleStylesheet({ id: SPINNER_KEYFRAMES_ID, css: SPINNER_KEYFRAMES_CSS })
 
   const outerRadius = layoutSize * 0.8
   const spinnerWidth = outerRadius / 10

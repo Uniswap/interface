@@ -1,8 +1,13 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, Tooltip, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { fonts } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import { PostAuctionLiquidityAllocationPopover } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityAllocationPopover'
 import { PostAuctionLiquidityTieredEditor } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityTieredEditor'
@@ -172,26 +177,28 @@ function PostAuctionLiquiditySingleAllocationEditor({
       >
         <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
           {isFocused ? (
-            <Input
-              ref={inputRef}
-              autoFocus
-              unstyled
-              outlineStyle="none"
-              value={`${rawInput}%`}
-              onChangeText={(value: string) => onChange(value.replace(/%/g, ''))}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              onSelectionChange={onSelectionChange}
-              placeholder="0%"
-              placeholderTextColor="$neutral3"
-              fontFamily="$heading"
-              fontSize={fonts.heading3.fontSize}
-              lineHeight={fonts.heading3.lineHeight}
-              fontWeight={fonts.heading3.fontWeight}
-              color={isInvalid ? '$statusCritical' : '$neutral1'}
-              backgroundColor="$transparent"
-              width="100%"
-            />
+            <Trace logFocus element={ElementName.AuctionLpPct}>
+              <Input
+                ref={inputRef}
+                autoFocus
+                unstyled
+                outlineStyle="none"
+                value={`${rawInput}%`}
+                onChangeText={(value: string) => onChange(value.replace(/%/g, ''))}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onSelectionChange={onSelectionChange}
+                placeholder="0%"
+                placeholderTextColor="$neutral3"
+                fontFamily="$heading"
+                fontSize={fonts.heading3.fontSize}
+                lineHeight={fonts.heading3.lineHeight}
+                fontWeight={fonts.heading3.fontWeight}
+                color={isInvalid ? '$statusCritical' : '$neutral1'}
+                backgroundColor="$transparent"
+                width="100%"
+              />
+            </Trace>
           ) : (
             <Text variant="heading3" color="$neutral1" cursor="text" onPress={onPercentDisplayPress}>
               {`${formatPostAuctionPercentForUi(postAuctionLiquidityPercent) || '0'}%`}
@@ -361,14 +368,16 @@ export function PostAuctionLiquiditySelector({
     onSelectPercent(Math.min(Math.max(parsed, MIN_POST_AUCTION_LIQUIDITY_PERCENT), MAX_POST_AUCTION_LIQUIDITY_PERCENT))
   }, [onSelectPercent, rawInput])
 
+  const trace = useTrace()
   const handleSelectPercent = useCallback(
     (percent: number) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionLpPctPreset })
       setIsFocused(false)
       setRawInput('')
       setShowMinTooltip(false)
       onSelectPercent(percent)
     },
-    [onSelectPercent],
+    [onSelectPercent, trace],
   )
 
   const isMinActive = postAuctionLiquidityPercent === MIN_POST_AUCTION_LIQUIDITY_PERCENT

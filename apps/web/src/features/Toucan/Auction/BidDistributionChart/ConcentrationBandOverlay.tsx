@@ -23,6 +23,7 @@ export function ConcentrationBandOverlay({
   concentration,
   priceRange,
   scaleFactor,
+  tokenColor,
   height,
 }: ConcentrationBandOverlayProps): JSX.Element | null {
   const bandStyle = useMemo(() => {
@@ -71,11 +72,11 @@ export function ConcentrationBandOverlay({
         height: bandStyle.height,
       }}
       pointerEvents="none"
-      borderTopWidth={1}
-      borderBottomWidth={1}
+      borderTopWidth={2}
+      borderBottomWidth={2}
       borderLeftWidth={0}
       borderRightWidth={0}
-      borderColor="$surface3"
+      borderColor={tokenColor || '$neutral2'}
       borderStyle="dashed"
     />
   )

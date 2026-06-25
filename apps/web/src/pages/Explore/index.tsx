@@ -345,6 +345,14 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   {t('toucan.auctions')}
                 </Text>
                 <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+                  <Button
+                    size="small"
+                    icon={<Plus />}
+                    fill={false}
+                    onPress={() => navigate('/liquidity/launch-auction')}
+                  >
+                    {t('toucan.createAuction.launchAuction')}
+                  </Button>
                   <TableNetworkFilter networks={TOUCAN_AUCTION_SUPPORTED_CHAINS} />
                   <AuctionVerificationFilterComponent />
                   <AuctionStatusFilterComponent />

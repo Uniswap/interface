@@ -19,6 +19,7 @@ import { LP_INCENTIVES_CHAIN_IDS, LP_INCENTIVES_DUST_THRESHOLD } from '~/feature
 import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/useEffectivelyClaimed'
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
+import { PortfolioPoolsSidebarCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsSidebarCard'
 
 export function PortfolioPoolsRewardsCard({
   walletAddress,
@@ -99,7 +100,7 @@ export function PortfolioPoolsRewardsCard({
 
   return (
     <>
-      <Flex backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing20" gap="$gap8" width="100%">
+      <PortfolioPoolsSidebarCard gap="$gap8">
         <Flex row gap="$gap4" alignItems="center">
           <Text variant="body3" color="$neutral2">
             {t('pool.rewards')}
@@ -156,7 +157,7 @@ export function PortfolioPoolsRewardsCard({
             </Button>
           )}
         </Flex>
-      </Flex>
+      </PortfolioPoolsSidebarCard>
       <LpIncentiveClaimModal
         isOpen={isModalOpen}
         onClose={closeModal}

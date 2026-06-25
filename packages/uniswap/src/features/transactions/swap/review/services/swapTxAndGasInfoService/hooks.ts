@@ -9,7 +9,10 @@ import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
-import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type {
+  SignDelegationAuthorizationFn,
+  SwapDelegationInfo,
+} from 'uniswap/src/features/smartWallet/delegation/types'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
@@ -65,19 +68,21 @@ function useSwapConfig(): {
   gasStrategy: GasStrategy
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
+  signDelegationAuthorization?: SignDelegationAuthorizationFn
 } {
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const gasStrategy = useActiveGasStrategy(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
-  const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
+  const { getCanBatchTransactions, getSwapDelegationInfo, signDelegationAuthorization } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
       gasStrategy,
       getCanBatchTransactions,
       getSwapDelegationInfo,
+      signDelegationAuthorization,
     }),
-    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo],
+    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo, signDelegationAuthorization],
   )
 }
 

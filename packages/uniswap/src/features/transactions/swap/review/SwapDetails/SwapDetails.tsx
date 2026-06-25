@@ -42,6 +42,7 @@ interface SwapDetailsProps {
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
   NetworkCostRowSlot?: React.ReactNode
+  sponsorMetadata?: TradingApi.SponsorMetadata
 }
 
 export function SwapDetails({
@@ -62,6 +63,7 @@ export function SwapDetails({
   txSimulationErrors,
   includesDelegation,
   NetworkCostRowSlot,
+  sponsorMetadata,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -135,6 +137,7 @@ export function SwapDetails({
         txSimulationErrors={txSimulationErrors}
         includesDelegation={includesDelegation}
         NetworkCostRowSlot={NetworkCostRowSlot}
+        sponsorMetadata={sponsorMetadata}
         CollapsedInfoRow={
           showCollapsedPriceImpactRow ? <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
         }

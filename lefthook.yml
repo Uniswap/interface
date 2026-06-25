@@ -13,8 +13,6 @@ pre-commit:
       env:
         CI: "true"
         FORCE_COLOR: "0"
-        # Skip remote config fetching during pre-commit
-        SKIP_CONFIG_PULL: "true"
       run: TERM=dumb bun g:check:fast
       fail_text: "If this is a fresh git worktree, run 'bun install' first — fast-checks needs node_modules/."
       stage_fixed: true
@@ -54,8 +52,8 @@ pre-commit:
         if [ -n "$STAGED_FILES" ]; then
           echo "Checking i18n strings (found modified TS/TSX files)..."
 
-          # Run i18n extraction
-          bun run i18n:extract
+          # Run i18n extraction (--silent suppresses per-file [read]/[write] logs)
+          bun run i18n:extract --silent
 
           # Check if the i18n source file was modified
           if git diff --exit-code packages/uniswap/src/i18n/locales/source/en-US.json > /dev/null 2>&1; then

@@ -5,20 +5,13 @@
       "executor": "nx:noop",
       "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
     },
-    "build": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["prepare", "^build", "graphql:generate"]
-    },
     "contracts:compile:abi": {
       "command": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
       "options": {
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["{projectRoot}/src/abis/**/*.json", "!{projectRoot}/src/abis/types/**"],
+      "inputs": ["{projectRoot}/src/abis/**/*.json", "!{projectRoot}/src/abis/types/**", "ciCacheBust"],
       "outputs": ["{projectRoot}/src/abis/types/*.ts", "{projectRoot}/src/abis/types/factories"]
     },
     "contracts:compile:v3": {
@@ -27,7 +20,7 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["{projectRoot}/package.json", "{projectRoot}/src/abis/v3-type-filepaths.txt"],
+      "inputs": ["{projectRoot}/package.json", "{projectRoot}/src/abis/v3-type-filepaths.txt", "ciCacheBust"],
       "outputs": ["{projectRoot}/src/abis/types/v3/**"]
     },
     "check:deps:usage": {},

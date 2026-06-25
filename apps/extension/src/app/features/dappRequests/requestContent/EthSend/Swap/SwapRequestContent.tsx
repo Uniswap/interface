@@ -1,4 +1,4 @@
-import { GasFeeResult } from '@universe/api'
+import { GasFeeResult, TradingApi } from '@universe/api'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
@@ -42,6 +42,7 @@ interface SwapRequestContentProps {
   transactionGasFeeResult: GasFeeResult
   parsedCalldata: UniversalRouterCall
   showSmartWalletActivation?: boolean
+  sponsorMetadata?: TradingApi.SponsorMetadata
   onCancel: () => Promise<void>
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
 }
@@ -50,6 +51,7 @@ export function SwapRequestContent({
   transactionGasFeeResult,
   parsedCalldata,
   showSmartWalletActivation,
+  sponsorMetadata,
   onCancel,
   onConfirm,
 }: SwapRequestContentProps): JSX.Element {
@@ -99,6 +101,7 @@ export function SwapRequestContent({
       outputAmount={outputAmount}
       outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
+      sponsorMetadata={sponsorMetadata}
       showSmartWalletActivation={showSmartWalletActivation}
       isWrap={false}
       isUnwrap={false}

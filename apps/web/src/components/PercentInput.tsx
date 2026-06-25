@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { InputProps, localeUsesComma, StyledInput } from '~/components/NumericalInput'
+import { InputProps, localeUsesComma, StyledInput } from '~/components/NumericalInput/NumericalInput'
 
 type PercentInputRef = React.ElementRef<typeof StyledInput>
 

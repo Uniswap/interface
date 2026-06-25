@@ -7,6 +7,7 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPanel(): JSX.Element {
@@ -57,6 +58,13 @@ export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPan
 
   const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.INPUT)
 
+  // When gas is sponsored, "Max" should spend the full native balance.
+  // alternateGasFees (wallet capability) is handled inside useMaxAmountSpend.
+  // TODO(review): sponsored is read from the current quote, which is amount-dependent.
+  const isGasCovered = useSwapTxStore((s) =>
+    Boolean(s.trade?.quote && 'sponsorshipInfo' in s.trade.quote && s.trade.quote.sponsorshipInfo?.sponsored),
+  )
+
   return (
     <Trace section={SectionName.CurrencyInputPanel}>
       <Flex
@@ -75,6 +83,7 @@ export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPan
           currencyBalance={currencyBalances[CurrencyField.INPUT]}
           currencyField={CurrencyField.INPUT}
           currencyInfo={currencies[CurrencyField.INPUT]}
+          isGasCovered={isGasCovered}
           // We do not want to force-focus the input when the token selector is open.
           focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
           isFiatMode={isFiatMode && exactFieldIsInput}

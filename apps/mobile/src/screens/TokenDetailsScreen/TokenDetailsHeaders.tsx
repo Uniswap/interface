@@ -62,7 +62,12 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
   )
 })
 
-const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
+const EXCLUDED_ACTIONS = [
+  TokenMenuActionType.Swap,
+  TokenMenuActionType.Send,
+  TokenMenuActionType.Receive,
+  TokenMenuActionType.ViewDetails,
+]
 
 export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Element {
   const {

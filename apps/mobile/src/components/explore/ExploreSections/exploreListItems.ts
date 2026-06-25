@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import type { TokenItemData } from 'src/components/explore/TokenItemData'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
@@ -5,6 +6,9 @@ import type { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 export const EXPLORE_TOKEN_ROW_HEIGHT = 67.25
 export const EXPLORE_LIST_DRAW_ROWS = 60
 export const EXPLORE_SKELETON_ROW_COUNT = 12
+export const EXPLORE_LIST_INITIAL_ITEM_COUNT = 20
+export const EXPLORE_LIST_ITEM_REVEAL_STEP = 25
+export const EXPLORE_LIST_TRAILING_SKELETON_COUNT = 3
 
 export type ExploreSkeletonRow = {
   rowType: 'skeleton'
@@ -77,4 +81,18 @@ export function exploreListItemsAreEqual(prev: ExploreListItem, next: ExploreLis
     prev.tokenMetadataDisplayType === next.tokenMetadataDisplayType &&
     tokenItemDataAreEqual(prev.tokenItemData, next.tokenItemData)
   )
+}
+
+export function scheduleAfterPaint(callback: () => void): () => void {
+  const raf = { id: 0 }
+  raf.id = requestAnimationFrame(() => {
+    if (isAndroid) {
+      raf.id = requestAnimationFrame(callback)
+    } else {
+      callback()
+    }
+  })
+  return () => {
+    cancelAnimationFrame(raf.id)
+  }
 }

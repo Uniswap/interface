@@ -43,11 +43,21 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
   const privyAppId = getPrivyConfig().appId
 
   const onPinDecryptSuccess = useEvent(
-    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+    async ({
+      authPrivateKey,
+      authMethodId,
+      accessToken,
+    }: {
+      authPrivateKey: Uint8Array
+      authMethodId: string
+      email: string
+      accessToken: string
+    }) => {
       try {
         const mnemonic = await exportSeedPhraseWithRecovery({
           authPrivateKey,
           authMethodId,
+          accessToken,
           generateAuthorizationSignature: privy.generateAuthorizationSignature,
         })
         const importedAddress = await Keyring.importMnemonic(mnemonic)

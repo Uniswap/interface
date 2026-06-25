@@ -1,7 +1,6 @@
 import { ApolloProvider } from '@apollo/client/react/context'
 import { PropsWithChildren } from 'react'
 import { localStorage } from 'redux-persist-webextension-storage'
-import { getReduxStore } from 'src/store/store'
 // oxlint-disable-next-line no-restricted-imports -- Direct wallet import needed for Apollo client setup in extension context
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
@@ -12,7 +11,6 @@ export function GraphqlProvider({ children }: PropsWithChildren<unknown>): JSX.E
   const apolloClient = usePersistedApolloClient({
     storageWrapper: localStorage,
     maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
-    reduxStore: getReduxStore(),
   })
 
   if (!apolloClient) {

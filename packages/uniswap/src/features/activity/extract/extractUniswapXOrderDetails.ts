@@ -1,94 +1,103 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
-import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
-  ConfirmedSwapTransactionInfo,
+  UniswapXOrderType,
+  UniswapXTransaction,
+  UniswapXTransactionStatus,
+} from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
+import {
   TransactionDetails,
-  TransactionDetailsType,
-  TransactionListQueryResponse,
   TransactionOriginType,
+  TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { remoteOrderStatusToLocalTxStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
 
-export function extractUniswapXOrderDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
-  if (transaction?.details.__typename !== TransactionDetailsType.UniswapXOrder) {
-    return null
-  }
-
-  const typeInfo = parseUniswapXOrderTransaction(transaction)
-  const routing =
-    transaction.details.swapOrderType === GraphQLApi.SwapOrderType.Limit
-      ? TradingApi.Routing.DUTCH_LIMIT
-      : TradingApi.Routing.DUTCH_V2
-
-  // TODO (MOB-3609): Parse and show pending limit orders in Activity feed
-  if (!typeInfo || transaction.details.swapOrderType === GraphQLApi.SwapOrderType.Limit) {
-    return null
-  }
-
-  return {
-    routing,
-    id: transaction.details.id,
-    // TODO: WALL-4919: Remove hardcoded Mainnet
-    chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
-    addedTime: transaction.timestamp * 1000, // convert to ms,
-    status: remoteOrderStatusToLocalTxStatus(transaction.details.orderStatus),
-    from: transaction.details.offerer, // This transaction is not on-chain, so use the offerer address as the from address
-    orderHash: transaction.details.hash,
-    encodedOrder: transaction.details.encodedOrder,
-    typeInfo,
-    transactionOriginType: TransactionOriginType.Internal,
+function mapUniswapXStatusToLocalTxStatus(status: UniswapXTransactionStatus): TransactionStatus {
+  switch (status) {
+    case UniswapXTransactionStatus.FILLED:
+      return TransactionStatus.Success
+    case UniswapXTransactionStatus.OPEN:
+      return TransactionStatus.Pending
+    case UniswapXTransactionStatus.CANCELLED:
+      return TransactionStatus.Canceled
+    case UniswapXTransactionStatus.INSUFFICIENT_FUNDS:
+      return TransactionStatus.InsufficientFunds
+    case UniswapXTransactionStatus.ERROR:
+    case UniswapXTransactionStatus.EXPIRED:
+      return TransactionStatus.Failed
+    default:
+      return TransactionStatus.Unknown
   }
 }
 
-export default function parseUniswapXOrderTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>,
-): ConfirmedSwapTransactionInfo | null {
-  if (transaction.details.__typename !== TransactionDetailsType.UniswapXOrder) {
+/**
+ * Parse a Uniswap X transaction from the REST API
+ */
+export default function extractUniswapXOrderDetails(transaction: UniswapXTransaction): TransactionDetails | null {
+  try {
+    const {
+      chainId,
+      offerer,
+      orderHash,
+      timestampMillis,
+      inputToken,
+      inputTokenAmount,
+      outputToken,
+      outputTokenAmount,
+      status,
+      orderType,
+      encodedOrder,
+      expiryMillis,
+    } = transaction
+
+    if (!orderHash || !chainId || !inputToken || !outputToken) {
+      return null
+    }
+
+    const inputCurrencyId = buildCurrencyId(chainId, inputToken.address)
+    const outputCurrencyId = buildCurrencyId(chainId, outputToken.address)
+
+    return {
+      id: orderHash,
+      // TODO(CONS-722): update to only TradingApi.Routing.DUTCH_V2 once limit orders can be excluded from REST query
+      routing: orderType === UniswapXOrderType.LIMIT ? TradingApi.Routing.DUTCH_LIMIT : TradingApi.Routing.DUTCH_V2,
+      chainId,
+      orderHash,
+      encodedOrder: encodedOrder || undefined,
+      addedTime: Number(timestampMillis),
+      status: mapUniswapXStatusToLocalTxStatus(status),
+      from: offerer, // This transaction is not on-chain, so use the offerer address as the from address
+      expiry: expiryMillis ? Number(expiryMillis) / 1000 : undefined,
+      // TODO(CONS-722): remove special limit typeInfo once limit orders can be excluded from REST query
+      typeInfo:
+        orderType === UniswapXOrderType.LIMIT
+          ? {
+              type: TransactionType.Swap,
+              tradeType: TradeType.EXACT_INPUT, // Limit orders are always exact input
+              inputCurrencyId,
+              outputCurrencyId,
+              inputCurrencyAmountRaw: inputTokenAmount?.raw ?? '0',
+              expectedOutputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0',
+              minimumOutputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0', // For limit orders, expected and minimum are the same
+            }
+          : {
+              type: TransactionType.Swap,
+              inputCurrencyId,
+              outputCurrencyId,
+              inputCurrencyAmountRaw: inputTokenAmount?.raw ?? '0',
+              outputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0',
+            },
+      transactionOriginType: TransactionOriginType.Internal,
+    }
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'extractRestUniswapXOrderDetails',
+        function: 'extractRestUniswapXOrderDetails',
+      },
+    })
     return null
-  }
-
-  const chainId = fromGraphQLChain(transaction.chain)
-  if (!chainId) {
-    return null
-  }
-
-  // Token swap
-  const inputCurrencyId = transaction.details.inputToken.address
-    ? buildCurrencyId(chainId, transaction.details.inputToken.address)
-    : null
-  const outputCurrencyId = transaction.details.outputToken.address
-    ? buildCurrencyId(chainId, transaction.details.outputToken.address)
-    : null
-
-  const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
-    tokenStandard: GraphQLApi.TokenStandard.Erc20,
-    chain: transaction.chain,
-    address: transaction.details.inputToken.address,
-    decimals: transaction.details.inputToken.decimals,
-    quantity: transaction.details.inputTokenQuantity,
-  })
-
-  const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
-    tokenStandard: GraphQLApi.TokenStandard.Erc20,
-    chain: transaction.chain,
-    address: transaction.details.outputToken.address,
-    decimals: transaction.details.outputToken.decimals,
-    quantity: transaction.details.outputTokenQuantity,
-  })
-
-  if (!inputCurrencyId || !outputCurrencyId) {
-    return null
-  }
-
-  return {
-    type: TransactionType.Swap,
-    inputCurrencyId,
-    outputCurrencyId,
-    inputCurrencyAmountRaw,
-    outputCurrencyAmountRaw,
   }
 }

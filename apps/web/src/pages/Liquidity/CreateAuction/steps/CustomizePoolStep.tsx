@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
@@ -6,20 +7,31 @@ import { Button, Flex, Separator, Text } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import type { FeeData } from 'uniswap/src/features/positions/types'
+import { AuctionEventName, ElementName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { getSortedCurrenciesForProtocol } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
 import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
-import { getDefaultFeeTiersWithData } from '~/features/Liquidity/utils/feeTiers'
+import { getCommonFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
+import {
+  getAuctionCustomPriceRangeAddedProperties,
+  getAuctionFeeTierCreatedProperties,
+  getAuctionPoolDetailsInfoEnteredProperties,
+} from '~/pages/Liquidity/CreateAuction/analytics'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
 import { BuybackAndBurnSection } from '~/pages/Liquidity/CreateAuction/components/BuybackAndBurnSection'
 import { PoolOwnerSection } from '~/pages/Liquidity/CreateAuction/components/PoolOwnerSection'
@@ -35,8 +47,10 @@ import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hook
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import {
   CreateAuctionStep,
+  type CustomPriceRangePreset,
   NEW_TOKEN_DECIMALS,
   NEW_TOKEN_PLACEHOLDER_ADDRESS,
+  PriceRangeStrategy,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
@@ -75,6 +89,7 @@ export function CustomizePoolStep() {
   } = useCreateAuctionStoreActions()
   const locale = useCurrentLocale()
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
+  const [feeTierModalCreateMode, setFeeTierModalCreateMode] = useState(false)
   const tokenSummaryCardProps = useTokenSummaryCardProps()
   const activeAddress = useActiveAddress(Platform.EVM)
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
@@ -123,10 +138,44 @@ export function CustomizePoolStep() {
     hook: ZERO_ADDRESS,
   })
 
-  const defaultFeeTiers = useMemo(
-    () => getDefaultFeeTiersWithData({ chainId, feeTierData, protocolVersion: ProtocolVersion.V4 }),
+  // Auctions require a brand-new pool, so we always show the common fee tiers and disable any that
+  // already have a pool (rather than the regular flow's top-N-by-TVL selection).
+  const existingPoolWarning = t('toucan.createAuction.step.customizePool.feeTier.existingPoolWarning')
+  const existingPoolWarningLearnMoreUrl = UniswapHelpUrls.articles.toucanLaunchAuctionCustomizePoolHelp
+
+  const commonFeeTiers = useMemo(
+    () => getCommonFeeTiersWithData({ chainId, feeTierData, protocolVersion: ProtocolVersion.V4 }),
     [chainId, feeTierData],
   )
+
+  const feeTierOptions = useMemo(
+    () =>
+      commonFeeTiers.map((tier) => ({
+        value: tier.value,
+        title: tier.title,
+        tvl: undefined,
+        disabledReason: tier.created ? existingPoolWarning : undefined,
+        disabledReasonLearnMoreUrl: tier.created ? existingPoolWarningLearnMoreUrl : undefined,
+      })),
+    [commonFeeTiers, existingPoolWarning, existingPoolWarningLearnMoreUrl],
+  )
+
+  const allCommonTiersExist = commonFeeTiers.length > 0 && commonFeeTiers.every((tier) => tier.created)
+
+  // A pool already exists for the selected tier — treat as no selection so the user must pick a free tier
+  const selectedFeeHasExistingPool = useMemo(() => {
+    const key = getFeeTierKey({
+      feeTier: customizePool.fee.feeAmount,
+      tickSpacing: customizePool.fee.tickSpacing,
+      isDynamicFee: customizePool.fee.isDynamic,
+    })
+    return key ? Boolean(feeTierData[key]?.created) : false
+  }, [customizePool.fee, feeTierData])
+
+  const selectedFee = selectedFeeHasExistingPool ? undefined : customizePool.fee
+
+  // Block continuing until a fee tier with no existing pool is selected
+  const isContinueDisabled = isNextStepDisabled || !selectedFee
 
   const { committed, startTime, endTime } = configureAuction
   const { timeLockEnabled, timeLockPreset, timeLockDurationDays, feesRecipientAddress, buybackAndBurnEnabled } =
@@ -163,6 +212,81 @@ export function CustomizePoolStep() {
     },
     [auctionEndDate, setTimeLockDurationDays],
   )
+
+  const trace = useTrace()
+  const handleContinue = useEvent(() => {
+    sendAnalyticsEvent(
+      AuctionEventName.PoolDetailsInfoEntered,
+      getAuctionPoolDetailsInfoEnteredProperties({ trace, customizePool, timelockUnlockDate: unlockDate }),
+    )
+    goToNextStep()
+  })
+
+  // Fee-tier grid selection reuses the shared `Select Liquidity Pool Fee Tier` event, tagged with
+  // origin so CCA-flow selections are distinguishable. The fee-tier search modal fires its own copy
+  // of this event (without origin) and is intentionally left unchanged.
+  const handleFeeSelect = useEvent((fee: FeeData) => {
+    sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+      ...trace,
+      action: FeePoolSelectAction.Manual,
+      fee_tier: fee.feeAmount,
+      origin: 'cca-supply',
+    })
+    setFee(fee)
+  })
+
+  const handleFeeTierMorePress = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionFeeTierMore })
+    setFeeTierModalCreateMode(false)
+    setFeeTierSearchModalOpen(true)
+  })
+
+  // The create-fee-tier popup lives inside the shared FeeTierSearchModal; these CCA-only callbacks fire
+  // the launch-auction analytics without changing the modal's behavior for other flows.
+  const handleCreateFeeTierClick = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionCreateFeeTier })
+  })
+
+  // When every common tier already has a pool, the header CTA opens the modal straight into create mode
+  const handleCreateFeeTierDirect = useEvent(() => {
+    handleCreateFeeTierClick()
+    setFeeTierModalCreateMode(true)
+    setFeeTierSearchModalOpen(true)
+  })
+
+  const handleFeeTierCreated = useEvent((feeAmount: number) => {
+    sendAnalyticsEvent(AuctionEventName.FeeTierCreated, getAuctionFeeTierCreatedProperties({ trace, feeAmount }))
+  })
+
+  const handlePriceRangeStrategySelect = useEvent((strategy: PriceRangeStrategy) => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.AuctionPriceRangeStrategy,
+      range_type: strategy,
+    })
+    setPriceRangeStrategy(strategy)
+  })
+
+  const handleAddCustomPriceRangePreset = useEvent((preset: CustomPriceRangePreset) => {
+    sendAnalyticsEvent(
+      AuctionEventName.AuctionCustomPriceRangeAdded,
+      getAuctionCustomPriceRangeAddedProperties({
+        trace,
+        preset,
+        rangeCountBeforeAdd: customizePool.customPriceRanges.length,
+      }),
+    )
+    addCustomPriceRangePreset(preset)
+  })
+
+  const handleTimeLockEnabledChange = useEvent((nextEnabled: boolean) => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.AuctionTimelockToggle,
+      timelock_enabled: nextEnabled,
+    })
+    setTimeLockEnabled(nextEnabled)
+  })
 
   if (!committed || !startTime) {
     return null
@@ -210,15 +334,26 @@ export function CustomizePoolStep() {
             </Text>
           </Flex>
           <FeeTierSelector
-            selectedFee={customizePool.fee}
-            onFeeSelect={setFee}
-            feeTiers={defaultFeeTiers}
+            selectedFee={selectedFee}
+            onFeeSelect={handleFeeSelect}
+            feeTiers={allCommonTiersExist ? [] : feeTierOptions}
+            headerAction={
+              allCommonTiersExist ? (
+                <Button
+                  fill={false}
+                  size="xsmall"
+                  maxWidth="fit-content"
+                  emphasis="secondary"
+                  onPress={handleCreateFeeTierDirect}
+                >
+                  {t('fee.tier.create')}
+                </Button>
+              ) : undefined
+            }
             expandedFooterContent={
-              <AdvancedButton
-                title={t('fee.tier.search')}
-                Icon={Search}
-                onPress={() => setFeeTierSearchModalOpen(true)}
-              />
+              allCommonTiersExist ? undefined : (
+                <AdvancedButton title={t('fee.tier.search')} Icon={Search} onPress={handleFeeTierMorePress} />
+              )
             }
           />
           <FeeTierSearchModal
@@ -228,9 +363,15 @@ export function CustomizePoolStep() {
             protocolVersion={ProtocolVersion.V4}
             hook={ZERO_ADDRESS}
             sdkCurrencies={sortedCurrencies}
-            selectedFee={customizePool.fee}
+            selectedFee={selectedFee}
             onSelectFee={setFee}
             createDescription={t('toucan.createAuction.step.customizePool.feeTier.createDescription')}
+            onCreateFeeTierClick={handleCreateFeeTierClick}
+            onFeeTierCreated={handleFeeTierCreated}
+            initialCreateModeEnabled={feeTierModalCreateMode}
+            blockExistingPools
+            existingPoolWarning={existingPoolWarning}
+            existingPoolWarningLearnMoreUrl={existingPoolWarningLearnMoreUrl}
           />
         </Flex>
 
@@ -245,10 +386,10 @@ export function CustomizePoolStep() {
           </Flex>
           <PriceRangeStrategySelector
             selectedStrategy={customizePool.priceRangeStrategy}
-            onStrategySelect={setPriceRangeStrategy}
+            onStrategySelect={handlePriceRangeStrategySelect}
             histogramBarColor={tokenColor ?? colors.statusSuccess.val}
             customPriceRanges={customizePool.customPriceRanges}
-            onAddCustomPriceRangePreset={addCustomPriceRangePreset}
+            onAddCustomPriceRangePreset={handleAddCustomPriceRangePreset}
             onUpdateCustomPriceRangeLiquidityPercent={updateCustomPriceRangeLiquidityPercent}
             onUpdateCustomPriceRangeBounds={updateCustomPriceRangeBounds}
             onRemoveCustomPriceRange={removeCustomPriceRange}
@@ -264,7 +405,7 @@ export function CustomizePoolStep() {
         {SHOW_TIMELOCK_SECTION && (
           <TimeLockSection
             enabled={timeLockEnabled}
-            onEnabledChange={setTimeLockEnabled}
+            onEnabledChange={handleTimeLockEnabledChange}
             timeLockPreset={timeLockPreset}
             onTimeLockPresetChange={setTimeLockPreset}
             unlockDate={unlockDate}
@@ -304,9 +445,9 @@ export function CustomizePoolStep() {
             fill
             size="medium"
             emphasis="primary"
-            onPress={goToNextStep}
-            isDisabled={isNextStepDisabled}
-            backgroundColor={isNextStepDisabled ? undefined : tokenColor}
+            onPress={handleContinue}
+            isDisabled={isContinueDisabled}
+            backgroundColor={isContinueDisabled ? undefined : tokenColor}
           >
             {t('toucan.createAuction.reviewLaunch')}
           </Button>

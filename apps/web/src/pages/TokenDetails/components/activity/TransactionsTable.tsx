@@ -13,6 +13,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -221,7 +222,7 @@ export function TransactionsTable({
           header: () => (
             <HeaderCell justifyContent="flex-end">
               <Text variant="body3" color="$neutral2">
-                ${unwrappedReferenceToken.symbol}
+                {getSymbolDisplayText(unwrappedReferenceToken.symbol)}
               </Text>
             </HeaderCell>
           ),

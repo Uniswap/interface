@@ -132,8 +132,9 @@ const slice = createSlice({
     setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
-    setPoolsBalanceCoachmarkDismissed: (state) => {
-      state.hasDismissedPoolsBalanceCoachmark = true
+    // Payload defaults to `true` (dismiss). Pass `false` to re-show the coachmark, e.g. from a dev tool.
+    setPoolsBalanceCoachmarkDismissed: (state, action: PayloadAction<boolean | undefined>) => {
+      state.hasDismissedPoolsBalanceCoachmark = action.payload ?? true
     },
   },
 })

@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, GeneratedIcon, IconProps, InlineCard, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -27,6 +27,9 @@ type InlineWarningCardProps = {
   Icon?: GeneratedIcon
   heroIcon?: boolean
   inlineLearnMore?: boolean
+  iconSize?: IconProps['size']
+  padding?: FlexProps['p']
+  descriptionMaxWidth?: FlexProps['maxWidth']
 }
 
 export function InlineWarningCard({
@@ -45,6 +48,9 @@ export function InlineWarningCard({
   analyticsProperties,
   Icon,
   inlineLearnMore,
+  iconSize,
+  padding,
+  descriptionMaxWidth,
 }: InlineWarningCardProps): JSX.Element | null {
   const { t } = useTranslation()
   const [checkedFallback, setCheckedFallback] = useState(false)
@@ -96,7 +102,7 @@ export function InlineWarningCard({
   }
 
   const inlineDescriptionElement = (description || learnMoreUrl) && (
-    <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
+    <Text color="$neutral2" variant="body3" maxWidth={descriptionMaxWidth} testID={descriptionTestId}>
       {description}
       {description && learnMoreUrl ? ' ' : ''}
       {learnMoreUrl && (
@@ -108,7 +114,7 @@ export function InlineWarningCard({
   const stackedDescriptionElement = (
     <>
       {description && (
-        <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
+        <Text color="$neutral2" variant="body3" maxWidth={descriptionMaxWidth} testID={descriptionTestId}>
           {description}
         </Text>
       )}
@@ -130,6 +136,8 @@ export function InlineWarningCard({
     <InlineCard
       CtaButtonIcon={shouldShowCtaIcon ? InfoCircleFilled : undefined}
       Icon={Icon ?? WarningIcon}
+      iconSize={iconSize}
+      padding={padding}
       color={textColor}
       description={
         <Flex gap="$spacing8">

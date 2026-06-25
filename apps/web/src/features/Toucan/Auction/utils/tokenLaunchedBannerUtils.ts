@@ -11,7 +11,8 @@ interface IsTokenLaunchTradeAvailableParams {
   currentBlockNumber: number | undefined
   hasLbpStrategyAddress: boolean
   isGraduated: boolean
-  migrationBlock: bigint | undefined
+  // Whether the post-auction LBP migration has actually run (data-api lbp_migration_tx_hash).
+  hasMigrated: boolean
 }
 
 export function isTokenLaunchTradeAvailable({
@@ -19,7 +20,7 @@ export function isTokenLaunchTradeAvailable({
   currentBlockNumber,
   hasLbpStrategyAddress,
   isGraduated,
-  migrationBlock,
+  hasMigrated,
 }: IsTokenLaunchTradeAvailableParams): boolean {
   if (!isGraduated) {
     return false
@@ -29,21 +30,27 @@ export function isTokenLaunchTradeAvailable({
     return true
   }
 
-  if (currentBlockNumber === undefined || migrationBlock === undefined) {
+  // For LBP auctions the tradeable pool only exists once migration has actually run — not merely
+  // once the scheduled migration block has passed, since migrate() is permissionless and may lag.
+  if (!hasMigrated) {
     return false
   }
 
+  // Migration is always scheduled after the claim block (migrationBlock = endBlock + delay,
+  // claimBlock = endBlock), so a migrated auction has necessarily passed its claim block. This
+  // guard is defensive and also covers any future where that ordering changes.
   const claimBlockNumber = claimBlock ? Number(claimBlock) : undefined
-  const hasReachedClaimBlock =
-    claimBlockNumber === undefined || (Number.isFinite(claimBlockNumber) && currentBlockNumber >= claimBlockNumber)
-
-  return BigInt(currentBlockNumber) >= migrationBlock && hasReachedClaimBlock
+  return (
+    claimBlockNumber === undefined ||
+    (currentBlockNumber !== undefined && Number.isFinite(claimBlockNumber) && currentBlockNumber >= claimBlockNumber)
+  )
 }
 
 interface GetTokenLaunchTradeAvailabilityBlockParams {
   claimBlock: string | undefined
   hasLbpStrategyAddress: boolean
-  migrationBlock: bigint | undefined
+  // Scheduled migration block from data-api (lbp_migration_block), as a block-number string.
+  migrationBlock: string | undefined
 }
 
 export function getTokenLaunchTradeAvailabilityBlock({

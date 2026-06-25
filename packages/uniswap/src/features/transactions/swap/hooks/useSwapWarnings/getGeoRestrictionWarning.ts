@@ -7,7 +7,15 @@ import {
 } from 'uniswap/src/components/modals/WarningModal/types'
 import type { GeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 
-export function getGeoRestrictionWarning(t: TFunction, mode: GeoRestrictionMode): Warning | undefined {
+export function getGeoRestrictionWarning({
+  t,
+  mode,
+  tokenSymbol,
+}: {
+  t: TFunction
+  mode: GeoRestrictionMode
+  tokenSymbol?: string
+}): Warning | undefined {
   if (mode !== 'restricted') {
     return undefined
   }
@@ -16,6 +24,6 @@ export function getGeoRestrictionWarning(t: TFunction, mode: GeoRestrictionMode)
     type: WarningLabel.GeoRestricted,
     severity: WarningSeverity.Blocked,
     action: WarningAction.DisableReview,
-    buttonText: t('common.notAvailableInRegion.error'),
+    buttonText: tokenSymbol ? t('swap.geoRestriction.button', { tokenSymbol }) : t('common.notAvailableInRegion.error'),
   }
 }

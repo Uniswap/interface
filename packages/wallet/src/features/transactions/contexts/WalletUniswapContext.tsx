@@ -6,6 +6,7 @@ import { getDelegationService } from 'uniswap/src/domains/services'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delegation/hooks/useUpdateDelegateState'
+import type { SignDelegationAuthorizationFn } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import type {
   HasMismatchInput,
@@ -25,8 +26,9 @@ import {
   useGetSwapDelegationInfoForActiveAccount,
   WalletDelegationProvider,
 } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { prepareDelegationAuthorization } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
-import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
+import { useProvider, useProviderManager, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccount, useActiveSignerAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
@@ -119,6 +121,24 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
   const getCanSignPermits = useGetCanSignPermits()
   const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
 
+  // Signs the 7702 delegation auth up front so it can be bundled into 4337 swap/approval
+  // requests before the backend's paymaster + bundler simulation.
+  const providerManager = useProviderManager()
+  const signDelegationAuthorization: SignDelegationAuthorizationFn = useEvent(
+    async ({ chainId, sender, delegationAddress }: Parameters<SignDelegationAuthorizationFn>[0]) => {
+      if (!signer) {
+        return undefined
+      }
+      return prepareDelegationAuthorization({
+        signer,
+        provider: providerManager.getProvider(chainId),
+        walletAddress: sender,
+        chainId,
+        contractAddress: delegationAddress,
+      })
+    },
+  )
+
   return (
     <UniswapProvider
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
@@ -138,6 +158,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       getIsUniswapXSupported={getIsUniswapXSupported}
       getCanSignPermits={getCanSignPermits}
       getSwapDelegationInfo={getSwapDelegationInfo}
+      signDelegationAuthorization={signDelegationAuthorization}
       useAccountsStoreContextHook={useAccountsStoreContext}
       onSwapChainsChanged={showSwapNetworkNotification}
     >

@@ -37,6 +37,7 @@ yarn-error.log*
 .env.local
 .env.defaults.local
 .env.new
+.env.new.override
 
 # turbo
 .turbo

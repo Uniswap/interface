@@ -290,9 +290,6 @@ export function FeatureFlagModal(): JSX.Element {
         networkRequestsConfig: <NetworkRequestsConfig />,
         layerOptions: (
           <Flex ml="$padding8" gap="$gap8">
-            <FeatureFlagGroup name={Layers.ExplorePage}>
-              <LayerOption layerName={Layers.ExplorePage} />
-            </FeatureFlagGroup>
             <FeatureFlagGroup name={Layers.SwapPage}>
               <LayerOption layerName={Layers.SwapPage} />
             </FeatureFlagGroup>

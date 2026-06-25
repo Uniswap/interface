@@ -27,7 +27,7 @@ export const EXPANDABLE_ASSET_INNER_PADDING_Y_PX = spacing.spacing4
 export const EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX = spacing.spacing4
 
 /** Gap between the parent metrics row and the inner issuer block inside the same container. */
-export const EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX = spacing.spacing4
+export const EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX = spacing.spacing8
 
 /**
  * Height of the inner issuer list (surface1 block only).
@@ -69,8 +69,8 @@ export function getExpandableIssuerPanelHeightPx({
  * deliberately not pinned). This ~20px OVER-estimate is intentional — don't "tighten" it: that height is
  * locale/font-fragile and an under-estimate would clip on native.
  *
- * Keep in sync with `ExpandableSearchRow.tsx` (`p="$spacing8"`, `borderWidth="$spacing1"`) and the `pt="$spacing4"`
- * parent↔panel gap in the platform `ExpandableSearchRowContainer`s.
+ * Keep in sync with `ExpandableSearchRow.tsx` (`p="$spacing8"`, `borderWidth="$spacing1"`) and the
+ * `EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX` parent↔panel gap in the platform `ExpandableSearchRowContainer`s.
  */
 export function getExpandableSearchRowHeightPx({
   issuerCount,
@@ -88,8 +88,8 @@ export function getExpandableSearchRowHeightPx({
 
   // Search-shell vertical padding (`p="$spacing8"`) + border (`borderWidth="$spacing1"`), top + bottom.
   const shell = 2 * spacing.spacing8 + 2 * spacing.spacing1
-  // Parent row ↔ issuer-panel gap (`gap="$spacing4"`), present only when the issuer panel renders.
-  const gap = spacing.spacing4
+  // Parent row ↔ issuer-panel gap, present only when the issuer panel renders.
+  const gap = EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX
 
   return parent + shell + gap + getExpandableIssuerPanelHeightPx({ issuerCount, variant: 'search' })
 }

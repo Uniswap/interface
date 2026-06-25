@@ -1,9 +1,9 @@
 import { HexString, isValidHexString } from '@universe/encoding'
 import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SMART_WALLET_DELEGATION_GAS_FEE } from 'uniswap/src/features/gas/hooks'
-import { applyGasBuffer } from 'uniswap/src/features/gas/utils'
+import { applyGasBuffer, getIsStatsigReady } from 'uniswap/src/features/gas/utils'
 import { sign7702AuthorizationWithPasskey, sign7702TransactionWithPasskey } from 'uniswap/src/features/passkey/signing'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, Address, type Hash, getAddress } from 'viem'
@@ -107,17 +107,19 @@ export async function sendDelegatedTransaction(ctx: {
     throw new Error('No transaction provided')
   }
 
+  // `originalTx` is the source of truth for tx-level fields (nonce, gas, fees) —
+  // those apply to the outer EIP-7702 transaction, not per-call. The full
+  // `transactions` array maps into the inner `calls` payload so Calibur's
+  // `execute(Call[])` runs them atomically as a single multicall.
   const contractAddress = getAddress(delegationResult.contractAddress)
   const { encoded } = await TradingApiClient.fetchWalletEncoding7702({
-    calls: [
-      {
-        from: account.address,
-        to: originalTx.to ?? '',
-        data: originalTx.data || '0x',
-        value: originalTx.value ?? '0',
-        chainId: Number(chainId),
-      },
-    ],
+    calls: transactions.map((tx) => ({
+      from: account.address,
+      to: tx.to ?? '',
+      data: tx.data || '0x',
+      value: tx.value ?? '0',
+      chainId: Number(chainId),
+    })),
     smartContractDelegationAddress: contractAddress,
     walletAddress: account.address,
   })
@@ -127,7 +129,9 @@ export async function sendDelegatedTransaction(ctx: {
   }
   const encodedData: HexString = encoded.data
   const encodedValue = BigInt(encoded.value)
-  // Use gas values from Trading API response when available, fall back to client-side estimation
+  // encode_7702 returns calldata only (no gas fields today), so gas/fees are resolved below.
+  // This guard stays forward-compatible: if the encoder ever returns padded gas, skip the
+  // client-side fee estimate and reuse those values.
   const hasEncodedGasValues = encoded.gasLimit && encoded.maxFeePerGas && encoded.maxPriorityFeePerGas
   const [feePerGasEstimates, nonce] = await Promise.all([
     hasEncodedGasValues ? Promise.resolve(null) : publicClient.estimateFeesPerGas({ chain: getChainInfo(chainId) }),
@@ -160,24 +164,55 @@ export async function sendDelegatedTransaction(ctx: {
     })
 
     // Step 2: Sign the full EIP-7702 transaction (backend handles type-4 signing + serialization)
-    // Gas estimation: prefer encode_7702 response (already buffered) > original swap tx gas > client-side estimate.
-    // Only apply applyGasBuffer for client-side estimates — the Trading API response is already padded.
+    // Gas resolution:
+    //  1. If encode_7702 ever returns a gasLimit, use it directly — a forward-compatible
+    //     guard. Today the encoder returns calldata only, so this branch is inert.
+    //  2. Otherwise estimate via the gas service with the delegation contract passed as
+    //     `smartContractDelegationAddress` — the same path the in-wallet wallet_sendCalls /
+    //     WalletConnect delegation flow uses. The gas service applies a state override that
+    //     simulates the account as delegated (and adds its own first-delegation buffer),
+    //     replacing the old client-side self-call estimate + hardcoded delegation surcharge,
+    //     which risked double-counting delegation gas and under-estimated the undelegated case.
     let gas: bigint
+    // Default to the fees resolved above; the gas service may return more accurate ones.
+    let signedMaxFeePerGas = maxFeePerGas
+    let signedMaxPriorityFeePerGas = maxPriorityFeePerGas
+
     if (encoded.gasLimit) {
       gas = BigInt(encoded.gasLimit)
-    } else if (originalTx.gas) {
-      gas = applyGasBuffer(BigInt(originalTx.gas) + BigInt(SMART_WALLET_DELEGATION_GAS_FEE))
     } else {
-      // WARNING: the account is not yet delegated — estimateGas will treat this as an EOA
-      // self-call and likely under-estimate. Prefer providing originalTx.gas or relying
-      // on the Trading API's encoded.gasLimit instead of reaching this branch.
-      const baseGas = await publicClient.estimateGas({
-        account: account.address,
-        to: account.address,
-        data: encodedData,
-        value: encodedValue,
+      const gasFeeResult = await fetchGasFeeQuery({
+        tx: {
+          from: account.address,
+          to: account.address,
+          data: encodedData,
+          value: encodedValue.toString(),
+          chainId: numericChainId,
+        },
+        smartContractDelegationAddress: contractAddress,
+        isStatsigReady: getIsStatsigReady(),
       })
-      gas = applyGasBuffer(baseGas + BigInt(SMART_WALLET_DELEGATION_GAS_FEE))
+      const gasFeeParams = gasFeeResult.params
+      if (gasFeeParams?.gasLimit) {
+        // The gas service already applies strategy-based limit inflation, so no client buffer.
+        gas = BigInt(gasFeeParams.gasLimit)
+        if ('maxFeePerGas' in gasFeeParams) {
+          signedMaxFeePerGas = BigInt(gasFeeParams.maxFeePerGas)
+          signedMaxPriorityFeePerGas = BigInt(gasFeeParams.maxPriorityFeePerGas)
+        }
+      } else {
+        // Gas service returned no gas params (estimation failed) — fall back to a
+        // best-effort buffered client estimate so the swap can still proceed.
+        const baseGas = originalTx.gas
+          ? BigInt(originalTx.gas)
+          : await publicClient.estimateGas({
+              account: account.address,
+              to: account.address,
+              data: encodedData,
+              value: encodedValue,
+            })
+        gas = applyGasBuffer(baseGas)
+      }
     }
 
     const signedTxHex = await sign7702TransactionWithPasskey({
@@ -186,8 +221,8 @@ export async function sendDelegatedTransaction(ctx: {
       value: encodedValue.toString(),
       chainId: numericChainId,
       gas: gas.toString(),
-      maxFeePerGas: maxFeePerGas.toString(),
-      maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
+      maxFeePerGas: signedMaxFeePerGas.toString(),
+      maxPriorityFeePerGas: signedMaxPriorityFeePerGas.toString(),
       nonce: txNonce,
       authorization: authResult,
       walletId,
@@ -201,9 +236,9 @@ export async function sendDelegatedTransaction(ctx: {
   }
 
   // Already delegated — standard self-call with encoded data.
-  // Unlike the needsDelegation path, we don't add SMART_WALLET_DELEGATION_GAS_FEE or check
-  // originalTx.gas here: the account IS delegated, so estimateGas runs against the delegation
-  // contract code and captures execution cost accurately.
+  // No gas-service state override is needed here: the account IS delegated on-chain, so a
+  // client-side estimateGas already runs against the delegation contract code and captures
+  // execution cost accurately (buffered for headroom).
   const selfCallGas = encoded.gasLimit
     ? BigInt(encoded.gasLimit)
     : applyGasBuffer(

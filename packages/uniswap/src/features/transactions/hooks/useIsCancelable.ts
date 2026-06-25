@@ -119,7 +119,7 @@ export function useIsCancelable(tx: TransactionDetails): boolean {
   // Non-plan logic
   const isSentBridge = isBridge(tx) && tx.sendConfirmed
   const isPending = tx.status === TransactionStatus.Pending
-  const wasSubmitted = isUniswapX(tx) || isChained(tx) || Object.keys(tx.options.request).length > 0
+  const wasSubmitted = isUniswapX(tx) || isChained(tx) || Object.keys(tx.options.request ?? {}).length > 0
 
   // Non-native connectors can only cancel UniswapX orders
   if (!isNativeAccess) {

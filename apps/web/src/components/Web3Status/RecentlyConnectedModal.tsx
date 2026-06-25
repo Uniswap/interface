@@ -6,6 +6,7 @@ import {
   Button,
   Flex,
   Portal,
+  TamaguiElement,
   Text,
   TouchableArea,
   useMedia,
@@ -68,12 +69,22 @@ function RecentlyConnectedModalUI({
   const { t } = useTranslation()
   const shadowProps = useShadowPropsShort()
   const modalRef = useRef<HTMLDivElement>(null)
+  const loginButtonRef = useRef<TamaguiElement>(null)
   useOnClickOutside({
     node: modalRef,
     handler: onClose,
   })
   const isMobile = useIsMobile()
   const media = useMedia()
+
+  // The popover's focus scope auto-focuses the first tabbable element on open, which is the X
+  // close button. Redirect initial focus to the primary Log in action instead.
+  const handleOpenAutoFocus = useEvent((event: Event) => {
+    event.preventDefault()
+    if (loginButtonRef.current instanceof HTMLElement) {
+      loginButtonRef.current.focus()
+    }
+  })
 
   // Belt-and-suspenders: stop mousedown bubble inside the card so useOnClickOutside's document
   // listener cannot fire before Button.onPress runs.
@@ -168,7 +179,12 @@ function RecentlyConnectedModalUI({
   }
 
   return (
-    <AdaptiveWebPopoverContent isOpen={isOpen} id="recently-connected-modal" backgroundColor="transparent">
+    <AdaptiveWebPopoverContent
+      isOpen={isOpen}
+      id="recently-connected-modal"
+      backgroundColor="transparent"
+      onOpenAutoFocus={handleOpenAutoFocus}
+    >
       <Flex
         ref={modalRef}
         backgroundColor="$surface1"
@@ -198,7 +214,7 @@ function RecentlyConnectedModalUI({
       >
         <Flex row gap="$spacing12" overflow="hidden">
           <StatusIcon address={walletAddress} size={isMobile ? 40 : 48} />
-          <Flex gap="$spacing4" width="75%" justifyContent="center">
+          <Flex gap="$spacing4" flex={1} minWidth={0} justifyContent="center">
             <Flex row gap="$spacing4" alignItems="center">
               <Text variant="body1" numberOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
                 {displayName}
@@ -208,9 +224,6 @@ function RecentlyConnectedModalUI({
                   <Unitag size={22} />
                 </Flex>
               )}
-              <TouchableArea onPress={onClose} ml="auto" flexShrink={0}>
-                <X size={20} color="$neutral3" />
-              </TouchableArea>
             </Flex>
             {showShortAddress && (
               <Text variant="body3" color="$neutral2">
@@ -218,9 +231,12 @@ function RecentlyConnectedModalUI({
               </Text>
             )}
           </Flex>
+          <TouchableArea onPress={onClose} alignSelf="flex-start" flexShrink={0}>
+            <X size={20} color="$neutral3" />
+          </TouchableArea>
         </Flex>
         <Flex row alignSelf="stretch">
-          <Button variant="default" py="$spacing8" emphasis="primary" onPress={onSignIn}>
+          <Button ref={loginButtonRef} variant="default" py="$spacing8" emphasis="primary" onPress={onSignIn}>
             <Text variant="buttonLabel3" color="$surface1" lineHeight="20px">
               {t('nav.logIn.button')}
             </Text>

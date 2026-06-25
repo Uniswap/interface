@@ -4,17 +4,14 @@ import type { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/typ
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isUserOpSwap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import {
-  ExecuteUserOpParams,
-  executeUserOpSaga,
-} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { ExecuteUserOpParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
+import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import type { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 export type UserOpSwapParams = {
@@ -38,7 +35,6 @@ export function createExecuteUserOpSwapSaga(dependencies: TransactionSagaDepende
 
       const account = { address, type: AccountType.SignerMnemonic } as const
       const chainId = trade.inputAmount.currency.chainId
-      const transactionId = txId ?? createTransactionId()
 
       const typeInfo = tradeToTransactionInfo({
         trade,
@@ -58,30 +54,33 @@ export function createExecuteUserOpSwapSaga(dependencies: TransactionSagaDepende
         }),
       )
 
+      // TransactionService.executeUserOp registers the pending tx, submits the userOp, persists the
+      // userOpHash, finalizes on failure, and fires swap analytics — no manual addTransaction needed.
+      const { transactionService } = yield* call(createTransactionServices, dependencies, {
+        account,
+        chainId,
+        submitViaPrivateRpc: false,
+        delegationType: DelegationType.Auto,
+        includeUserOpServices: true,
+      })
+
       const executeUserOpParams: ExecuteUserOpParams = {
         userOp: unsignedUserOperation,
         account,
         chainId,
         typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        options: {
+          userSubmissionTimestampMs: Date.now(),
+          includesDelegation: swapTxContext.includesDelegation,
+          isSmartWalletTransaction: true,
+        },
+        txId,
+        analytics,
         requestUniswapGasSponsorship,
         paymasterServiceContext: paymasterService?.context,
       }
-      const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
-
-      yield* put(
-        addTransaction({
-          routing: trade.routing,
-          id: transactionId,
-          chainId,
-          typeInfo,
-          from: account.address,
-          addedTime: Date.now(),
-          status: TransactionStatus.Pending,
-          userOpHash,
-          options: { request: {} },
-          transactionOriginType: TransactionOriginType.Internal,
-        }),
-      )
+      yield* call([transactionService, transactionService.executeUserOp], executeUserOpParams)
 
       yield* call(onSuccess)
     } catch (error) {

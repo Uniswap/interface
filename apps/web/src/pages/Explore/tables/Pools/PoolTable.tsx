@@ -40,7 +40,7 @@ import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTab
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
 import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
-import { useSimplePagination } from '~/hooks/useSimplePagination'
+import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
@@ -273,8 +273,10 @@ const TopPoolTable = memo(function TopPoolTable({
 }) {
   const { topPools, isLoading, isError, loadMore: backendLoadMore } = topPoolData
 
-  // Client-side pagination fallback (for legacy mode when loadMore is undefined)
-  const { page, loadMore: clientLoadMore } = useSimplePagination()
+  // Client-side pagination fallback (for legacy mode when backend loadMore is undefined).
+  // useSimplePagination paces the reveal so the load-more indicator shows, and gates loadMore once
+  // all loaded rows are displayed.
+  const { page, loadMore: clientLoadMore } = useSimplePagination({ totalCount: topPools?.length, pageSize })
 
   // Use backend loadMore if available, otherwise fall back to client-side slicing
   const effectiveLoadMore = backendLoadMore ?? clientLoadMore

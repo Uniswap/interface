@@ -12,8 +12,8 @@ vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
   storeEncryptedBlob: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/deriveArgon2InWorker', () => ({
-  deriveArgon2InWorker: vi.fn(),
+vi.mock('uniswap/src/features/passkey/deriveArgon2', () => ({
+  deriveArgon2: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/pinCrypto', async (importOriginal) => {
@@ -26,7 +26,7 @@ vi.mock('uniswap/src/features/passkey/pinCrypto', async (importOriginal) => {
 })
 
 const { blindPin, finalizeOprf } = await import('uniswap/src/features/passkey/pinCrypto')
-const { deriveArgon2InWorker } = await import('uniswap/src/features/passkey/deriveArgon2InWorker')
+const { deriveArgon2 } = await import('uniswap/src/features/passkey/deriveArgon2')
 
 describe('encryptAndStoreRecovery', () => {
   const params = {
@@ -61,7 +61,7 @@ describe('encryptAndStoreRecovery', () => {
       evaluatedElement: 'eval',
     } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(storeEncryptedBlob).mockResolvedValue({ keyId: 'encrypted-key-id' })
 
     const result = await encryptAndStoreRecovery(params)
@@ -79,7 +79,7 @@ describe('encryptAndStoreRecovery', () => {
       evaluatedElement: 'eval',
     } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(storeEncryptedBlob).mockResolvedValue({ keyId: 'encrypted-key-id' })
 
     await encryptAndStoreRecovery(params)
@@ -99,7 +99,7 @@ describe('encryptAndStoreRecovery', () => {
       evaluatedElement: 'eval',
     } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(storeEncryptedBlob).mockResolvedValue({ keyId: 'encrypted-key-id' })
 
     await encryptAndStoreRecovery({ ...params, onProgress })

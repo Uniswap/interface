@@ -27,18 +27,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
               data-testid="passkey-loading-row"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -54,18 +42,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -78,18 +54,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
                     />
                   </div>
                 </div>
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -108,18 +72,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
               data-testid="passkey-loading-row"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -135,18 +87,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -159,18 +99,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
                     />
                   </div>
                 </div>
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -189,18 +117,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
               data-testid="passkey-loading-row"
             >
-              <style>
-                
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-              </style>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -216,18 +132,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -240,18 +144,6 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
                     />
                   </div>
                 </div>
-                <style>
-                  
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-                </style>
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"

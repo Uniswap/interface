@@ -9,9 +9,12 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { zeroAddress } from '~/chains'
 import {
   FloorPriceSelector,
   type FloorPriceSelectorHandle,
@@ -110,72 +113,87 @@ export const PriceSettingsSection = forwardRef<PriceSettingsSectionHandle, Price
         </Flex>
         <Flex gap="$spacing8">
           <Flex row gap="$spacing8" width="100%">
-            <HookTileContainer
-              flex={1}
-              flexBasis={0}
-              minWidth={0}
-              onPress={handleSelectEth}
-              background={raiseCurrency === RaiseCurrency.ETH ? '$surface3' : '$surface1'}
+            <Trace
+              logPress
+              element={ElementName.AuctionRaiseCurrency}
+              properties={{ raise_currency: RaiseCurrency.ETH, raise_currency_address: zeroAddress }}
             >
-              <Flex row alignItems="center" gap="$spacing8" position="relative">
-                <Flex width={LOGO_SIZE} height={LOGO_SIZE} flexShrink={0}>
-                  {nativeCurrencyInfo ? (
-                    <CurrencyLogo hideNetworkLogo currencyInfo={nativeCurrencyInfo} size={LOGO_SIZE} />
-                  ) : (
-                    <Flex
-                      width={LOGO_SIZE}
-                      height={LOGO_SIZE}
-                      borderRadius="$roundedFull"
-                      backgroundColor="$surface3"
-                    />
+              <HookTileContainer
+                flex={1}
+                flexBasis={0}
+                minWidth={0}
+                onPress={handleSelectEth}
+                background={raiseCurrency === RaiseCurrency.ETH ? '$surface3' : '$surface1'}
+              >
+                <Flex row alignItems="center" gap="$spacing8" position="relative">
+                  <Flex width={LOGO_SIZE} height={LOGO_SIZE} flexShrink={0}>
+                    {nativeCurrencyInfo ? (
+                      <CurrencyLogo hideNetworkLogo currencyInfo={nativeCurrencyInfo} size={LOGO_SIZE} />
+                    ) : (
+                      <Flex
+                        width={LOGO_SIZE}
+                        height={LOGO_SIZE}
+                        borderRadius="$roundedFull"
+                        backgroundColor="$surface3"
+                      />
+                    )}
+                  </Flex>
+                  <Text variant="buttonLabel3" color="$neutral1">
+                    {nativeCurrencyInfo?.currency.symbol}
+                  </Text>
+                  {raiseCurrency === RaiseCurrency.ETH && (
+                    <Flex position="absolute" top={-4} right={-4}>
+                      <CheckCircleFilled size="$icon.20" />
+                    </Flex>
                   )}
                 </Flex>
-                <Text variant="buttonLabel3" color="$neutral1">
-                  {nativeCurrencyInfo?.currency.symbol}
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.createAuction.step.configureAuction.raiseCurrency.eth.description')}
                 </Text>
-                {raiseCurrency === RaiseCurrency.ETH && (
-                  <Flex position="absolute" top={-4} right={-4}>
-                    <CheckCircleFilled size="$icon.20" />
-                  </Flex>
-                )}
-              </Flex>
-              <Text variant="body4" color="$neutral2">
-                {t('toucan.createAuction.step.configureAuction.raiseCurrency.eth.description')}
-              </Text>
-            </HookTileContainer>
-            <HookTileContainer
-              flex={1}
-              flexBasis={0}
-              minWidth={0}
-              onPress={handleSelectUsdc}
-              background={raiseCurrency === RaiseCurrency.USDC ? '$surface3' : '$surface1'}
+              </HookTileContainer>
+            </Trace>
+            <Trace
+              logPress
+              element={ElementName.AuctionRaiseCurrency}
+              properties={{
+                raise_currency: RaiseCurrency.USDC,
+                raise_currency_address: getChainInfo(chainId).tokens.USDC?.address,
+              }}
             >
-              <Flex row alignItems="center" gap="$spacing8" position="relative">
-                <Flex width={LOGO_SIZE} height={LOGO_SIZE} flexShrink={0}>
-                  {usdcCurrencyInfo ? (
-                    <CurrencyLogo hideNetworkLogo currencyInfo={usdcCurrencyInfo} size={LOGO_SIZE} />
-                  ) : (
-                    <Flex
-                      width={LOGO_SIZE}
-                      height={LOGO_SIZE}
-                      borderRadius="$roundedFull"
-                      backgroundColor="$surface3"
-                    />
+              <HookTileContainer
+                flex={1}
+                flexBasis={0}
+                minWidth={0}
+                onPress={handleSelectUsdc}
+                background={raiseCurrency === RaiseCurrency.USDC ? '$surface3' : '$surface1'}
+              >
+                <Flex row alignItems="center" gap="$spacing8" position="relative">
+                  <Flex width={LOGO_SIZE} height={LOGO_SIZE} flexShrink={0}>
+                    {usdcCurrencyInfo ? (
+                      <CurrencyLogo hideNetworkLogo currencyInfo={usdcCurrencyInfo} size={LOGO_SIZE} />
+                    ) : (
+                      <Flex
+                        width={LOGO_SIZE}
+                        height={LOGO_SIZE}
+                        borderRadius="$roundedFull"
+                        backgroundColor="$surface3"
+                      />
+                    )}
+                  </Flex>
+                  <Text variant="buttonLabel3" color="$neutral1">
+                    {usdcCurrencyInfo?.currency.symbol}
+                  </Text>
+                  {raiseCurrency === RaiseCurrency.USDC && (
+                    <Flex position="absolute" top={-4} right={-4}>
+                      <CheckCircleFilled size="$icon.20" />
+                    </Flex>
                   )}
                 </Flex>
-                <Text variant="buttonLabel3" color="$neutral1">
-                  {usdcCurrencyInfo?.currency.symbol}
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.createAuction.step.configureAuction.raiseCurrency.usdc.description')}
                 </Text>
-                {raiseCurrency === RaiseCurrency.USDC && (
-                  <Flex position="absolute" top={-4} right={-4}>
-                    <CheckCircleFilled size="$icon.20" />
-                  </Flex>
-                )}
-              </Flex>
-              <Text variant="body4" color="$neutral2">
-                {t('toucan.createAuction.step.configureAuction.raiseCurrency.usdc.description')}
-              </Text>
-            </HookTileContainer>
+              </HookTileContainer>
+            </Trace>
           </Flex>
           <FloorPriceSelector
             ref={floorPriceSelectorRef}

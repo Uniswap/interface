@@ -4,7 +4,7 @@ import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { call, delay, spawn } from 'typed-redux-saga'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { refetchRestQueriesViaOnchainOverrideVariant } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
+import { refetchQueriesViaOnchainOverrideVariant } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants/features'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { JupiterExecuteError } from 'uniswap/src/features/transactions/errors'
@@ -68,7 +68,7 @@ function* refetchBalancesWithDelay({
   // and it should take 1-2 seconds for the balance to update onchain.
   yield* delay(3 * ONE_SECOND_MS)
 
-  yield* call(refetchRestQueriesViaOnchainOverrideVariant, {
+  yield* call(refetchQueriesViaOnchainOverrideVariant, {
     transaction,
     activeAddress,
     apolloClient: null,

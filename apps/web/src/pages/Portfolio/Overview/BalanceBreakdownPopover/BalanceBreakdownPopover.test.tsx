@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { useIsTouchDevice } from 'ui/src'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
@@ -25,23 +24,30 @@ vi.mock('ui/src', async (importOriginal) => {
     ...actual,
     Popover: MockPopover,
     AdaptiveWebPopoverContent: ({ children }: { children: ReactNode }) => <>{children}</>,
-    useIsTouchDevice: vi.fn(() => false),
   }
 })
 
-function renderPopover(props: { tokens?: PortfolioTotalValue; pools?: PortfolioTotalValue }) {
+function renderPopover(props: {
+  tokens?: PortfolioTotalValue
+  pools?: PortfolioTotalValue
+  tokensPercentChange?: number
+  poolsPercentChange?: number
+  disabled?: boolean
+}) {
   return render(
-    <BalanceBreakdownPopover tokens={props.tokens} pools={props.pools}>
+    <BalanceBreakdownPopover
+      tokens={props.tokens}
+      pools={props.pools}
+      tokensPercentChange={props.tokensPercentChange}
+      poolsPercentChange={props.poolsPercentChange}
+      disabled={props.disabled}
+    >
       <span>{TRIGGER_TEXT}</span>
     </BalanceBreakdownPopover>,
   )
 }
 
 describe('BalanceBreakdownPopover (visibility gate)', () => {
-  beforeEach(() => {
-    vi.mocked(useIsTouchDevice).mockReturnValue(false)
-  })
-
   it('renders only the children when tokens value is undefined', () => {
     renderPopover({ tokens: undefined, pools: poolsValue })
 
@@ -83,30 +89,30 @@ describe('BalanceBreakdownPopover (visibility gate)', () => {
     expect(screen.getByTestId(TestID.BalanceBreakdownPopover)).toBeInTheDocument()
   })
 
+  it('renders only the children when disabled, even with both sides positive', () => {
+    renderPopover({ tokens: tokensValue, pools: poolsValue, disabled: true })
+
+    expect(screen.getByText(TRIGGER_TEXT)).toBeInTheDocument()
+    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
+  })
+
   it('renders both balance rows through the popover content wiring', () => {
     renderPopover({ tokens: tokensValue, pools: poolsValue })
 
     expect(screen.getByTestId(TestID.BalanceBreakdownRowTokens)).toBeInTheDocument()
     expect(screen.getByTestId(TestID.BalanceBreakdownRowPools)).toBeInTheDocument()
   })
-
-  it('renders only the children on touch devices', () => {
-    vi.mocked(useIsTouchDevice).mockReturnValue(true)
-
-    renderPopover({ tokens: tokensValue, pools: poolsValue })
-
-    expect(screen.getByText(TRIGGER_TEXT)).toBeInTheDocument()
-    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
-  })
 })
 
 describe(buildBalanceBreakdownRows, () => {
+  const noPercents = { tokensPercentChange: undefined, poolsPercentChange: undefined }
+
   it('returns an empty list when tokens is undefined', () => {
-    expect(buildBalanceBreakdownRows({ tokens: undefined, pools: poolsValue })).toEqual([])
+    expect(buildBalanceBreakdownRows({ tokens: undefined, pools: poolsValue, ...noPercents })).toEqual([])
   })
 
   it('returns an empty list when pools is undefined', () => {
-    expect(buildBalanceBreakdownRows({ tokens: tokensValue, pools: undefined })).toEqual([])
+    expect(buildBalanceBreakdownRows({ tokens: tokensValue, pools: undefined, ...noPercents })).toEqual([])
   })
 
   it.each([
@@ -118,11 +124,11 @@ describe(buildBalanceBreakdownRows, () => {
       label: 'tokens balanceUSD undefined',
     },
   ] as const)('returns an empty list when $label', ({ tokens, pools }) => {
-    expect(buildBalanceBreakdownRows({ tokens, pools })).toEqual([])
+    expect(buildBalanceBreakdownRows({ tokens, pools, ...noPercents })).toEqual([])
   })
 
   it('orders rows tokens-first when tokens balance > pools balance', () => {
-    const rows = buildBalanceBreakdownRows({ tokens: tokensValue, pools: poolsValue })
+    const rows = buildBalanceBreakdownRows({ tokens: tokensValue, pools: poolsValue, ...noPercents })
 
     expect(rows.map((r) => r.kind)).toEqual(['tokens', 'pools'])
   })
@@ -131,21 +137,27 @@ describe(buildBalanceBreakdownRows, () => {
     const rows = buildBalanceBreakdownRows({
       tokens: { balanceUSD: 100, percentChange: 0.5, absoluteChangeUSD: 1 },
       pools: { balanceUSD: 9999, percentChange: 12.5, absoluteChangeUSD: 1000 },
+      ...noPercents,
     })
 
     expect(rows.map((r) => r.kind)).toEqual(['pools', 'tokens'])
   })
 
-  it('forwards the percentChange field as percentChange1d on the row', () => {
-    const [tokenRow] = buildBalanceBreakdownRows({ tokens: tokensValue, pools: poolsValue })
+  it('uses the period percent change rather than the wallet-balance 24h value', () => {
+    const [tokenRow] = buildBalanceBreakdownRows({
+      tokens: tokensValue,
+      pools: poolsValue,
+      tokensPercentChange: 3.21,
+      poolsPercentChange: -0.5,
+    })
 
-    expect(tokenRow).toEqual({ kind: 'tokens', valueUSD: 8368.94, percentChange1d: -6.09 })
+    expect(tokenRow).toEqual({ kind: 'tokens', valueUSD: 8368.94, percentChange: 3.21 })
   })
 })
 
 describe(BalanceBreakdownRow, () => {
   it('renders the tokens row with the formatted USD value, percent, and tokens-row testID', () => {
-    render(<BalanceBreakdownRow kind="tokens" valueUSD={8368.94} percentChange1d={-6.09} />)
+    render(<BalanceBreakdownRow kind="tokens" valueUSD={8368.94} percentChange={-6.09} />)
 
     expect(screen.getByTestId(TestID.BalanceBreakdownRowTokens)).toBeInTheDocument()
     expect(screen.getByLabelText('Token balance')).toBeInTheDocument()
@@ -154,7 +166,7 @@ describe(BalanceBreakdownRow, () => {
   })
 
   it('renders the pools row with the formatted USD value, percent, and pools-row testID', () => {
-    render(<BalanceBreakdownRow kind="pools" valueUSD={7373.05} percentChange1d={1.02} />)
+    render(<BalanceBreakdownRow kind="pools" valueUSD={7373.05} percentChange={1.02} />)
 
     expect(screen.getByTestId(TestID.BalanceBreakdownRowPools)).toBeInTheDocument()
     expect(screen.getByLabelText('Pools balance')).toBeInTheDocument()
@@ -163,7 +175,7 @@ describe(BalanceBreakdownRow, () => {
   })
 
   it('renders a placeholder percent when the change is undefined', () => {
-    render(<BalanceBreakdownRow kind="tokens" valueUSD={100} percentChange1d={undefined} />)
+    render(<BalanceBreakdownRow kind="tokens" valueUSD={100} percentChange={undefined} />)
 
     expect(screen.getByText('-')).toBeInTheDocument()
   })

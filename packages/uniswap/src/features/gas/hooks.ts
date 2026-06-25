@@ -14,6 +14,7 @@ import {
   WarningSeverity,
 } from 'uniswap/src/components/modals/WarningModal/types'
 import { type PollingInterval } from 'uniswap/src/constants/misc'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -35,8 +36,6 @@ import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swa
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
 export type CancellationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
@@ -231,13 +230,20 @@ export function useTransactionGasWarning({
   accountAddress,
   derivedInfo,
   gasFee,
+  isGasSponsored,
 }: {
   accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
+  /** When gas is sponsored we skip the native gas-token balance check entirely. */
+  isGasSponsored?: boolean
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
+
+  // Wallets that pay gas via a non-native method don't need a native balance to swap.
+  const hasAlternateGasFees = useUniswapContextSelector((ctx) => ctx.getHasAlternateGasFees?.(chainId)) ?? false
+  const skipGasBalanceCheck = hasAlternateGasFees || Boolean(isGasSponsored)
 
   const { gasToken, gasBalance } = useChainGasToken({ chainId, accountAddress })
 
@@ -260,6 +266,10 @@ export function useTransactionGasWarning({
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
   return useMemo(() => {
+    if (skipGasBalanceCheck) {
+      return undefined
+    }
+
     // if balance is already insufficient, dont need to show warning about network fee
     if (isSmartContractAddress || balanceInsufficient || !gasBalance) {
       return undefined
@@ -289,7 +299,7 @@ export function useTransactionGasWarning({
       message: undefined,
       currency: gasBalance.currency,
     }
-  }, [gasFee, isSmartContractAddress, balanceInsufficient, gasBalance, hasGasFunds, t])
+  }, [gasFee, isSmartContractAddress, balanceInsufficient, gasBalance, hasGasFunds, skipGasBalanceCheck, t])
 }
 
 type GasFeeFormattedAmounts<T extends string | undefined> = T extends string

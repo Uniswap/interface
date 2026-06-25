@@ -1,13 +1,6 @@
 {
   "tags": ["scope:utilities", "type:lib"],
   "targets": {
-    "build": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["^build"]
-    },
     "check:deps:usage": {
       "dependsOn": ["check-promise-version"]
     },

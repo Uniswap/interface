@@ -8,12 +8,6 @@
     "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
-    "build": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "clean": {
       "command": "rm -rf android/build node_modules/**/android/build lib",
       "options": {

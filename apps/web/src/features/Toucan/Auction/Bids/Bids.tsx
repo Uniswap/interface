@@ -13,7 +13,11 @@ import { useBidsListData } from '~/features/Toucan/Auction/hooks/useBidsListData
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { AuctionProgressState, type UserBid } from '~/features/Toucan/Auction/store/types'
-import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
+import {
+  useAuctionStore,
+  useAuctionStoreActions,
+  useIsAuctionFailed,
+} from '~/features/Toucan/Auction/store/useAuctionStore'
 import { InlineAlertBanner } from '~/features/Toucan/Shared/InlineAlertBanner'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 
@@ -38,7 +42,7 @@ export function Bids(): JSX.Element {
 
   const isAuctionEnded = auctionProgress === AuctionProgressState.ENDED
   const isAuctionInProgress = auctionProgress === AuctionProgressState.IN_PROGRESS
-  const isAuctionFailedToGraduate = isAuctionEnded && !isGraduated
+  const isAuctionFailedToGraduate = useIsAuctionFailed()
 
   const { bidItems, isLoading, hasErrors } = useBidsListData()
 
@@ -172,7 +176,9 @@ export function Bids(): JSX.Element {
             description={
               allBidsExited
                 ? t('toucan.auction.myBids.failedToLaunch.description.withdrawn')
-                : t('toucan.auction.myBids.failedToLaunch.description')
+                : t('toucan.auction.myBids.failedToLaunch.description', {
+                    token: auctionDetails?.token?.currency.symbol ?? auctionDetails?.tokenSymbol,
+                  })
             }
           />
         </Flex>

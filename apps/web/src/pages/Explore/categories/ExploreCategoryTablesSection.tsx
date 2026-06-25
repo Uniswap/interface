@@ -7,7 +7,7 @@ import {
   isRankedRwaExploreCategory,
 } from '~/pages/Explore/categories/exploreRwaCategory'
 import { ExploreRwaDisclaimer } from '~/pages/Explore/categories/ExploreRwaDisclaimer'
-import { useExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
+import { ExploreCategory, useExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 import { useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { CommoditiesTable } from '~/pages/Explore/rwa/table/CommoditiesTable'
@@ -17,7 +17,7 @@ import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
 import { ExploreTab } from '~/types/explore'
 
 function ExploreCategoryTable({ category }: { category: ReturnType<typeof useExploreCategory>[0] }): JSX.Element {
-  if (category === 'commodities') {
+  if (category === ExploreCategory.Commodities) {
     return <CommoditiesTable />
   }
   if (isRankedRwaExploreCategory(category)) {
@@ -26,7 +26,7 @@ function ExploreCategoryTable({ category }: { category: ReturnType<typeof useExp
         key={category}
         category={exploreCategoryToRankedRwaCategory(category)}
         // Client-side column sorting is stocks-only for this sprint; ETFs use API order.
-        enableSorting={category === 'stocks'}
+        enableSorting={category === ExploreCategory.Stocks}
       />
     )
   }

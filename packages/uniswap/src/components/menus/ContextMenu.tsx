@@ -39,6 +39,7 @@ export type MenuOptionItem = {
  * @property sectionName - section name for analytics tracking
  * @property trackItemClicks - whether to track menu item clicks in analytics
  * @property adaptToSheet - When false, never show as bottom sheet on small viewports. Only applies in web app (never in extension). Defaults to true when undefined.
+ * @property dimBackground - When true, dims the screen behind the open menu with a scrim. Native only.
  */
 export type ContextMenuProps = {
   menuItems: MenuOptionItem[]
@@ -59,6 +60,7 @@ export type ContextMenuProps = {
   trackItemClicks?: boolean
   /** When false, never show as bottom sheet on small viewports. Only applies in web app (never in extension). */
   adaptToSheet?: boolean
+  dimBackground?: boolean
 }
 
 export function ContextMenu(_: PropsWithChildren<ContextMenuProps>): JSX.Element {

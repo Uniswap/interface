@@ -296,12 +296,18 @@ export function createEmbeddedWalletApiClient({
     return await rpcClient.executeRecovery(params)
   }
 
-  const fetchReportDecryptionResult = (params: {
-    success: boolean
-    authMethodId: string
-    newPasskeyPublicKey?: string
-    encryptionKey?: string
-  }): Promise<ReportDecryptionResultResponse> => rpcClient.reportDecryptionResult(params)
+  const fetchReportDecryptionResult = (
+    params: {
+      success: boolean
+      authMethodId: string
+      newPasskeyPublicKey?: string
+      encryptionKey?: string
+    },
+    accessToken: string,
+  ): Promise<ReportDecryptionResultResponse> =>
+    rpcClient.reportDecryptionResult(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
 
   const fetchExportSeedPhraseWithRecovery = (params: {
     authMethodId: string

@@ -103,9 +103,9 @@ describe('top auctions table sorting', () => {
     expect(sorted.map((auction) => auction.id)).toEqual([
       'verified-live-high-volume',
       'verified-live-low-volume',
+      'unverified-live',
       'verified-coming-soon',
       'verified-completed-high-volume',
-      'unverified-live',
       'unverified-completed',
     ])
   })

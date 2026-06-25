@@ -30,7 +30,6 @@ export type UseSortedPortfolioBalancesOptions = {
   evmAddress?: Address
   svmAddress?: Address
   pollInterval?: PollingInterval
-  onCompleted?: () => void
   chainIds?: UniverseChainId[]
   /** When true, request multichain from backend. Default false. */
   requestMultichainFromBackend?: boolean

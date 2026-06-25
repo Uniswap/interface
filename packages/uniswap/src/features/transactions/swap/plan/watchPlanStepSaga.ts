@@ -4,7 +4,7 @@ import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/
 import extractPlanResponseDetails from 'uniswap/src/features/activity/extract/extractPlanResponseDetails'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { refetchRestQueriesViaOnchainOverrideVariant } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
+import { refetchQueriesViaOnchainOverrideVariant } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { addOrUpdatePlanTransaction } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
 import { isPlanCancelledCheck } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
@@ -144,7 +144,7 @@ function* refetchBalancesForStep({
 
   const step = planTransaction.typeInfo.stepDetails[stepIndex]
   if (step?.typeInfo.type === TransactionType.Swap || step?.typeInfo.type === TransactionType.Bridge) {
-    yield* refetchRestQueriesViaOnchainOverrideVariant({
+    yield* refetchQueriesViaOnchainOverrideVariant({
       transaction: step,
       activeAddress: address,
       apolloClient: null, // Skip NFT refetch for intermediate steps

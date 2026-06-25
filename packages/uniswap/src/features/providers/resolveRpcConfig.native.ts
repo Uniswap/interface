@@ -17,6 +17,16 @@ export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains
  * to share with a web origin, so each request resolves a session/device header
  * pair from the platform storage.
  */
+// Native session auth is header-based (no shared cookie jar): resolve the
+// session/device pair from platform storage per request.
+const resolveUniRpcHeaders = async (): Promise<Record<string, string>> => {
+  const [session, deviceId] = await Promise.all([provideSessionStorage().get(), provideDeviceIdService().getDeviceId()])
+  return {
+    ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
+    ...(deviceId && { 'X-Device-ID': deviceId }),
+  }
+}
+
 export const defaultResolveRpcConfig = createRpcConfigResolver({
   resolveUniRpcConfig: createUniRpcConfigResolver({
     // UniRPC-only chains (Arc/Robinhood) always route through UniRPC; everything
@@ -27,16 +37,18 @@ export const defaultResolveRpcConfig = createRpcConfigResolver({
       isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled)),
     getEntryGatewayUrl,
     requestSource: REQUEST_SOURCE,
-    getRequestHeaders: async () => {
-      const [session, deviceId] = await Promise.all([
-        provideSessionStorage().get(),
-        provideDeviceIdService().getDeviceId(),
-      ])
-      return {
-        ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
-        ...(deviceId && { 'X-Device-ID': deviceId }),
-      }
-    },
+    getRequestHeaders: resolveUniRpcHeaders,
   }),
   selectLegacyRpcUrl: selectRpcUrl,
+  // Public RPCs now point at the entry gateway; when the legacy path returns one,
+  // attach the session headers so it authenticates like the primary UniRPC path.
+  asUniRpcConfig: (config) =>
+    config.rpcUrl.startsWith(`${getEntryGatewayUrl()}/rpc/`)
+      ? {
+          ...config,
+          isUniRpc: true,
+          headers: { 'x-request-source': REQUEST_SOURCE, ...config.headers },
+          getRequestHeaders: resolveUniRpcHeaders,
+        }
+      : config,
 })

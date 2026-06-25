@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { dataApiServiceClient, type ListTokensParams } from 'uniswap/src/data/apiClients/dataApiService/listTokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -14,7 +15,6 @@ import {
 } from '~/features/Explore/state/listTokens/types'
 import { useTopTokensLegacy } from '~/features/Explore/state/listTokens/useTopTokensLegacy'
 import { processMultichainTokensForDisplay } from '~/features/Explore/state/listTokens/utils/processMultichainTokensForDisplay'
-import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
 
 /**
  * Runs both legacy (useTopTokensLegacy) and backend (infinite query) data paths and returns
@@ -29,7 +29,7 @@ export function useListTokensService(
 ): UseListTokensServiceResult {
   const effectiveOptions = getEffectiveListTokensOptions(options)
   const { chains: enabledChainIds } = useEnabledChains()
-  const backendSorting = useExploreBackendSortingEnabled()
+  const tokensV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   const chainIds = useMemo(() => (chainId !== undefined ? [chainId] : enabledChainIds), [chainId, enabledChainIds])
 
@@ -50,8 +50,8 @@ export function useListTokensService(
     ],
   )
   const listTokensQueryKey = useMemo(
-    () => ['topTokens', chainIds, ...optionsKeySegment, backendSorting] as const,
-    [chainIds, optionsKeySegment, backendSorting],
+    () => ['topTokens', chainIds, ...optionsKeySegment, tokensV2EndpointsEnabled] as const,
+    [chainIds, optionsKeySegment, tokensV2EndpointsEnabled],
   )
   const legacyQueryKey = useMemo(
     () => ['topTokens', 'legacy', { multichain: true }, chainIds, ...optionsKeySegment] as const,
@@ -59,14 +59,14 @@ export function useListTokensService(
   )
 
   const legacyResult = useTopTokensLegacy({
-    enabled: !backendSorting,
+    enabled: !tokensV2EndpointsEnabled,
     options: effectiveOptions,
     multichain: true,
   })
   const getTokenStats = useEvent(() => legacyResult.topTokens)
 
   const getSourceType = useEvent((): 'legacy' | 'backend_sorted' => {
-    return backendSorting ? 'backend_sorted' : 'legacy'
+    return tokensV2EndpointsEnabled ? 'backend_sorted' : 'legacy'
   })
 
   const listTokens = useEvent((params: ListTokensParams) => dataApiServiceClient.listTokens(params))
@@ -99,7 +99,7 @@ export function useListTokensService(
       }),
     getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
     initialPageParam: '',
-    enabled: backendSorting,
+    enabled: tokensV2EndpointsEnabled,
   })
 
   const {
@@ -115,15 +115,15 @@ export function useListTokensService(
         pageSize: EXPLORE_API_PAGE_SIZE,
         pageToken: '',
       }),
-    enabled: !backendSorting && !legacyResult.isLoading,
+    enabled: !tokensV2EndpointsEnabled && !legacyResult.isLoading,
   })
 
   const { topTokens, tokenSortRank } = useMemo(() => {
-    const flat = backendSorting
+    const flat = tokensV2EndpointsEnabled
       ? (data?.pages ?? []).flatMap((p) => p.multichainTokens)
       : (legacyData?.multichainTokens ?? [])
     return processMultichainTokensForDisplay(flat, effectiveOptions)
-  }, [backendSorting, data?.pages, effectiveOptions, legacyData?.multichainTokens])
+  }, [tokensV2EndpointsEnabled, data?.pages, effectiveOptions, legacyData?.multichainTokens])
 
   const loadMore = useInfiniteLoadMore({
     fetchNextPage,
@@ -134,16 +134,16 @@ export function useListTokensService(
 
   const legacyPathLoading = legacyResult.isLoading
   const legacyPathError = legacyResult.isError
-  const isLoading = backendSorting ? isBackendLoading : legacyPathLoading || isLegacyQueryLoading
-  const isError = backendSorting ? !!backendError : !!legacyPathError || isLegacyQueryError
+  const isLoading = tokensV2EndpointsEnabled ? isBackendLoading : legacyPathLoading || isLegacyQueryLoading
+  const isError = tokensV2EndpointsEnabled ? !!backendError : !!legacyPathError || isLegacyQueryError
 
   return {
     topTokens,
     tokenSortRank,
     isLoading,
     isError,
-    loadMore: backendSorting ? loadMore : undefined,
-    hasNextPage: backendSorting ? hasNextPage : false,
-    isFetchingNextPage: backendSorting ? isFetchingNextPage : false,
+    loadMore: tokensV2EndpointsEnabled ? loadMore : undefined,
+    hasNextPage: tokensV2EndpointsEnabled ? hasNextPage : false,
+    isFetchingNextPage: tokensV2EndpointsEnabled ? isFetchingNextPage : false,
   }
 }

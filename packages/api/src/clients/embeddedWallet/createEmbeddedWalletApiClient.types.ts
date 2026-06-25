@@ -59,7 +59,10 @@ export interface EmbeddedWalletClientContext {
     ) => Promise<CheckRecoveryAvailabilityResponse>
     setupRecovery: (req: Record<string, unknown>) => Promise<SetupRecoveryResponse>
     executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
-    reportDecryptionResult: (req: Record<string, unknown>) => Promise<ReportDecryptionResultResponse>
+    reportDecryptionResult: (
+      req: Record<string, unknown>,
+      options?: CallOptions,
+    ) => Promise<ReportDecryptionResultResponse>
     getRecoveryConfig: (req: Record<string, unknown>, options?: CallOptions) => Promise<GetRecoveryConfigResponse>
     deleteRecovery: (req: Record<string, unknown>) => Promise<DeleteRecoveryResponse>
     sign7702Authorization: (req: Record<string, unknown>) => Promise<Sign7702AuthorizationResponse>
@@ -183,14 +186,17 @@ export interface EmbeddedWalletApiClient {
     authKeySignature: string
     recoveryAuthSignature: string
   }) => Promise<ExecuteRecoveryResponse>
-  fetchReportDecryptionResult: (params: {
-    success: boolean
-    authMethodId: string
-    newPasskeyPublicKey?: string
-    // Ephemeral HPKE SPKI (base64) for the recovery-based export flow. Server uses it to
-    // generate an export signing payload instead of a passkey-registration payload.
-    encryptionKey?: string
-  }) => Promise<ReportDecryptionResultResponse>
+  fetchReportDecryptionResult: (
+    params: {
+      success: boolean
+      authMethodId: string
+      newPasskeyPublicKey?: string
+      // Ephemeral HPKE SPKI (base64) for the recovery-based export flow. Server uses it to
+      // generate an export signing payload instead of a passkey-registration payload.
+      encryptionKey?: string
+    },
+    accessToken: string,
+  ) => Promise<ReportDecryptionResultResponse>
   fetchGetRecoveryConfig: (params: { authMethodId: string }, accessToken: string) => Promise<GetRecoveryConfigResponse>
   fetchDeleteRecovery: (params: { credential: string }) => Promise<DeleteRecoveryResponse>
   fetchExportSeedPhraseWithRecovery: (params: {

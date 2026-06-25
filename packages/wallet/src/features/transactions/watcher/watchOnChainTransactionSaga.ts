@@ -114,14 +114,25 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   // 4337 UserOp path: poll Trading API /swaps with userOpHashes
   if (transaction.userOpHash) {
-    const { status: userOpStatus, txHash: resolvedHash } = yield* call(waitForTransactionStatus, transaction)
+    const {
+      status: userOpStatus,
+      txHash: resolvedHash,
+      sponsorInfo: resolvedSponsorInfo,
+      paymaster: resolvedPaymaster,
+    } = yield* call(waitForTransactionStatus, transaction)
     const resolvedTxHash = resolvedHash ?? transaction.hash
 
     if (resolvedTxHash) {
       yield* spawn(updateTransactionWithReceipt, { ...transaction, hash: resolvedTxHash }, provider)
     }
 
-    return { ...transaction, status: userOpStatus, hash: resolvedTxHash }
+    return {
+      ...transaction,
+      status: userOpStatus,
+      hash: resolvedTxHash,
+      sponsorInfo: resolvedSponsorInfo ?? transaction.sponsorInfo,
+      paymaster: resolvedPaymaster ?? transaction.paymaster,
+    }
   }
 
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
@@ -180,7 +191,8 @@ export function* checkIfTransactionInvalidated(
   transaction: OnChainTransactionDetails,
   provider: providers.Provider,
 ): Generator<unknown, boolean> {
-  if (transaction.options.request.nonce === undefined || !transaction.hash) {
+  const nonce = transaction.options.request?.nonce
+  if (nonce === undefined || !transaction.hash) {
     // We can't check if the transaction is invalidated
     return false
   }
@@ -198,7 +210,7 @@ export function* checkIfTransactionInvalidated(
     return true
   }
 
-  const requestNonce = BigNumber.from(transaction.options.request.nonce).toNumber()
+  const requestNonce = BigNumber.from(nonce).toNumber()
   const nextNonce = yield* call([provider, provider.getTransactionCount], transaction.from)
   if (nextNonce > requestNonce) {
     // Transaction nonce is not valid anymore, it can't be included in a future block
@@ -310,7 +322,7 @@ export function* waitForSameNonceFinalized({ chainId, id, nonce }: WaitForParams
       !isUniswapX(payload) && // UniswapX transactions are submitted by a filler, so they cannot invalidate a transaction sent by a user.
       payload.chainId === chainId &&
       payload.id !== id &&
-      payload.options.request.nonce === nonce
+      payload.options.request?.nonce === nonce
     ) {
       return true
     }
@@ -332,7 +344,7 @@ export function* waitForBridgeSendCompleted({ chainId, id, nonce }: WaitForParam
       payload.sendConfirmed &&
       payload.chainId === chainId &&
       payload.id !== id &&
-      payload.options.request.nonce === nonce
+      payload.options.request?.nonce === nonce
     ) {
       return true
     }
@@ -419,7 +431,7 @@ export function* watchTransaction({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request.nonce }),
+    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request?.nonce }),
     ...(listenForAppBackgrounded ? { appBackgrounded: call(watchForAppBackgrounded) } : {}),
   })
 

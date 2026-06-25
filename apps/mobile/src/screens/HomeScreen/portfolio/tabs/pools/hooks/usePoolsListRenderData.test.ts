@@ -52,6 +52,15 @@ describe('usePoolsListRenderData', () => {
     expect(result.current.hasData).toBe(true)
   })
 
+  it('forwards hidden positions from useWalletPositions', () => {
+    const hiddenPositions = [{ poolId: 'h' }] as unknown as ReturnType<typeof useWalletPositions>['hiddenPositions']
+    mockUseWalletPositions.mockReturnValue({ ...baseResult, hiddenPositions })
+
+    const { result } = renderHook(() => usePoolsListRenderData({ owner: '0xabc', skip: false }))
+
+    expect(result.current.hiddenPositions).toBe(hiddenPositions)
+  })
+
   it('fetches all statuses + hidden and forwards `skip` as the disabled flag', () => {
     renderHook(() => usePoolsListRenderData({ owner: '0xabc', skip: true }))
 

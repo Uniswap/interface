@@ -15,6 +15,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getPortfolioBalanceDisplayQuantity } from 'uniswap/src/features/portfolio/balances/getPortfolioBalanceDisplayQuantity'
+import { TokenMenuActionType } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
 import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -41,6 +42,9 @@ interface TokenBalanceItemProps {
 }
 
 const MULTICHAIN_BALANCES_SLOT_HEIGHT = 20
+
+/** Row tap navigates to TDP — View details in the long-press menu is redundant. */
+const EXCLUDED_ACTIONS = [TokenMenuActionType.ViewDetails]
 
 /**
  * Estimated row height for list virtualization (FlatList `getItemLayout`, scroll windowing).
@@ -179,6 +183,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
       <TokenBalanceItemContextMenu
         portfolioBalance={portfolioBalanceForMenu}
         isMultichainAsset={isMultichainAsset}
+        excludedActions={EXCLUDED_ACTIONS}
         copyAddressToClipboard={contextMenuActions.copyAddressToClipboard}
         openReportTokenModal={contextMenuActions.openReportTokenModal}
         onPressToken={handleMenuRowPress}

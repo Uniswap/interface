@@ -3671,7 +3671,7 @@ PODS:
   - react-native-appsflyer (6.13.1):
     - AppsFlyerFramework (= 6.13.1)
     - React
-  - react-native-compat (2.23.0):
+  - react-native-compat (2.23.9):
     - boost
     - DoubleConversion
     - fast_float
@@ -3699,6 +3699,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+    - YttriumWrapper (= 0.10.50)
   - react-native-context-menu-view (1.15.0):
     - React
   - react-native-get-random-values (1.11.0):
@@ -4821,6 +4822,7 @@ PODS:
     - React
   - UIImageColors (2.1.0)
   - Yoga (0.0.0)
+  - YttriumWrapper (0.10.50)
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
   - ZXingObjC/All (3.6.9)
@@ -5031,6 +5033,7 @@ SPEC REPOS:
     - SDWebImageWebPCoder
     - SocketRocket
     - UIImageColors
+    - YttriumWrapper
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -5448,7 +5451,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 4649384414066eb77e30a3124dbb48732a3aa173
   React-microtasksnativemodule: e39f94cc96d61b8174a5cfb2d5862a73fa8c0d35
   react-native-appsflyer: 2cc1f96348065fc23e976fc7a27e371789fb349e
-  react-native-compat: 4aa95aad39e424da2441bdabc246a212688233b4
+  react-native-compat: f358b840778f0629515767bd62945fc910fe94e0
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-image-picker: e30f93ca3c3068def102cb6143ca9abf34cb3064
@@ -5524,6 +5527,7 @@ SPEC CHECKSUMS:
   sparkfabrik-react-native-idfa-aaid: 1b72a6264a2175473e309ffa6434db87c58af264
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
   Yoga: cc4a6600d61e4e9276e860d4d68eebb834a050ba
+  YttriumWrapper: d7f63336830536f1da41b745ed8bacedb04228c4
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 6d73af70ff03513631f3015f2013969d8ed533e1

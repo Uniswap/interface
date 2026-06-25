@@ -8,7 +8,6 @@ import type { PublicClient } from 'viem'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
 import { createAlchemyPaymasterClient } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/paymasterClient'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type {
@@ -22,7 +21,6 @@ export type CreateTransactionServicesResult = {
   transactionSigner: TransactionSigner
   transactionService: TransactionService
   userOpSigner?: UserOpSigner
-  userOpService?: UserOpService
 }
 
 /**
@@ -108,17 +106,7 @@ export function* createTransactionServices(
     logger: dependencies.logger,
   })
 
-  const transactionService = dependencies.createTransactionService({
-    transactionRepository,
-    transactionSigner,
-    configService: transactionConfigService,
-    analyticsService,
-    logger: dependencies.logger,
-    getProvider,
-  })
-
   let userOpSigner: UserOpSigner | undefined
-  let userOpService: UserOpService | undefined
 
   if (input.includeUserOpServices) {
     const paymasterClient = createAlchemyPaymasterClient({
@@ -133,12 +121,18 @@ export function* createTransactionServices(
       getSignerManager: () => signerManager,
       getPaymasterClient: () => paymasterClient,
     })
-
-    userOpService = dependencies.createUserOpService({
-      userOpSigner,
-      logger: dependencies.logger,
-    })
   }
 
-  return { transactionSigner, transactionService, userOpSigner, userOpService }
+  const transactionService = dependencies.createTransactionService({
+    transactionRepository,
+    transactionSigner,
+    configService: transactionConfigService,
+    analyticsService,
+    logger: dependencies.logger,
+    getProvider,
+    // Enables `transactionService.executeUserOp` for the 4337 path.
+    userOpSigner,
+  })
+
+  return { transactionSigner, transactionService, userOpSigner }
 }

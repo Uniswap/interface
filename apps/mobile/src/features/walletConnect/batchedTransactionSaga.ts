@@ -3,11 +3,15 @@ import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { getInternalError, getSdkError } from '@walletconnect/utils'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
-import { WalletSendCallsUserOperationRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { addRequest, WalletSendCallsRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  addRequest,
+  WalletSendCallsRequest,
+  WalletSendCallsUserOperationRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
@@ -22,6 +26,9 @@ import {
 } from 'wallet/src/features/batchedTransactions/utils'
 import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
+import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
+import { prepareDelegationAuthorization } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
+import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 /**
@@ -100,6 +107,40 @@ export function* handleGetCallsStatus({
 }
 
 /**
+ * Signs the 7702 delegation authorization for a sponsored sendCalls userOp when
+ * the wallet isn't yet delegated to Uniswap on `chainId`, so it can be bundled into the
+ * encode_4337 request. The backend runs paymaster + bundler simulation server-side, so the
+ * account must already appear delegated there. Returns undefined when no delegation is needed.
+ */
+export function* getSendCallsDelegationAuth({
+  accountAddress,
+  chainId,
+}: {
+  accountAddress: string
+  chainId: UniverseChainId
+}) {
+  const delegationDetails = yield* call(getAccountDelegationDetails, accountAddress, chainId)
+  if (!delegationDetails.needsDelegation || !delegationDetails.contractAddress) {
+    return undefined
+  }
+
+  const signerManager = yield* call(getSignerManager)
+  const signer = yield* call([signerManager, signerManager.getSignerForAccount], {
+    address: accountAddress,
+    type: AccountType.SignerMnemonic,
+  })
+  const provider = yield* call(getProvider, chainId)
+
+  return yield* call(prepareDelegationAuthorization, {
+    signer,
+    provider,
+    walletAddress: accountAddress,
+    chainId,
+    contractAddress: delegationDetails.contractAddress,
+  })
+}
+
+/**
  * Handles the WalletConnect request to send a batch of calls
  * @param topic WalletConnect session topic
  * @param requestId ID of the request
@@ -128,7 +169,6 @@ export function* handleSendCalls({
       paymasterCapability && typeof paymasterUrl === 'string' && getFeatureFlag(FeatureFlags.Support7677GasSponsorship)
 
     if (shouldUse4337) {
-      // TODO(SWAP-2460): should handle signing&attaching eip7702 auth BEFORE the encode4337
       const rawPaymasterContext: unknown = paymasterCapability['context']
       if (
         rawPaymasterContext !== undefined &&
@@ -152,6 +192,13 @@ export function* handleSendCalls({
         return
       }
 
+      // Bundle the 7702 delegation auth into encode_4337 (signed up front) so the
+      // backend's server-side paymaster + bundler simulation runs against a delegated account.
+      const eip7702Auth = yield* call(getSendCallsDelegationAuth, {
+        accountAddress: request.account,
+        chainId: request.chainId,
+      })
+
       const {
         requestId: encode4337RequestId,
         userOperation,
@@ -167,6 +214,7 @@ export function* handleSendCalls({
         chainId,
         paymasterUrl,
         paymasterServiceContext,
+        eip7702Auth,
       })
 
       const requestWithEncodedUserOp: WalletSendCallsUserOperationRequest = {

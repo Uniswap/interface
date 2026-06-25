@@ -7,7 +7,10 @@ import type {
   WrapQuoteResponse,
 } from '@universe/api'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type {
+  SignDelegationAuthorizationFn,
+  SwapDelegationInfo,
+} from 'uniswap/src/features/smartWallet/delegation/types'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import type {
   EVMSwapRepository,
@@ -45,6 +48,8 @@ interface EVMSwapInstructionsServiceContext {
   presignPermit?: PresignPermitFn
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
+  /** Signs the 7702 delegation auth to bundle into the sponsored /swap_4337 request. */
+  signDelegationAuthorization?: SignDelegationAuthorizationFn
 }
 
 function createLegacyEVMSwapInstructionsService(
@@ -128,7 +133,10 @@ export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsService
 
   const userOp4337InstructionService = createBatchedEVMSwapInstructionsService({
     ...ctx,
-    swapRepository: create4337EVMSwapRepository(),
+    swapRepository: create4337EVMSwapRepository({
+      getSwapDelegationInfo: ctx.getSwapDelegationInfo,
+      signDelegationAuthorization: ctx.signDelegationAuthorization,
+    }),
   })
 
   const legacyInstructionsService = createLegacyEVMSwapInstructionsService({

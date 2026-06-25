@@ -1,7 +1,6 @@
-import { CellContainer, FlashList } from '@shopify/flash-list'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { StyleProp, ViewStyle } from 'react-native'
+import { FlatList, type StyleProp, type ViewStyle } from 'react-native'
 import { Flex, UniversalImage } from 'ui/src'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
 import { Buy as BuyIcon } from 'ui/src/components/icons/Buy'
@@ -22,7 +21,7 @@ enum ActionOption {
 }
 
 const ICON_SIZE = 28
-const ICON_SHIFT = -10
+const ICON_SHIFT = 10
 
 type PortfolioEmptyStateProps = {
   onPressReceive: () => void
@@ -101,6 +100,9 @@ function ReceiveCryptoIcon(): JSX.Element {
       centered
       shrink
       backgroundColor="$surface1"
+      borderColor="$surface1"
+      borderWidth="$spacing1"
+      overflow="hidden"
       style={{
         ...iconContainerStyle,
         borderRadius: borderRadii.roundedFull,
@@ -124,12 +126,9 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       key={uri}
       centered
       shrink
-      animation="quick"
       backgroundColor="$surface1"
       borderColor="$surface1"
       borderWidth="$spacing2"
-      enterStyle={{ opacity: 0 }}
-      exitStyle={{ opacity: 0 }}
       style={iconContainerStyle}
     >
       <UniversalImage
@@ -162,12 +161,20 @@ const LogoRendererComponent = ({
   index: number
   style: StyleProp<ViewStyle>
 }): JSX.Element => {
-  const cellStyle = [style, { zIndex: -index }]
-
   return (
-    <CellContainer index={index} style={cellStyle} {...props}>
+    <Flex
+      centered
+      animation="quick"
+      animateOnly={['opacity']}
+      enterStyle={{ opacity: 0 }}
+      exitStyle={{ opacity: 0 }}
+      marginEnd={-ICON_SHIFT}
+      zIndex={-index}
+      style={[style, { overflow: 'visible' }]}
+      {...props}
+    >
       {children}
-    </CellContainer>
+    </Flex>
   )
 }
 
@@ -178,12 +185,13 @@ function renderItem({ item }: { item: string }): JSX.Element {
 function OverlappingLogos({ logos }: { logos: string[] }): JSX.Element {
   return (
     <Flex height={ICON_SIZE}>
-      <FlashList
+      <FlatList
         horizontal
         CellRendererComponent={LogoRendererComponent}
         contentContainerStyle={{
-          paddingRight: -ICON_SHIFT,
+          marginEnd: ICON_SHIFT,
         }}
+        showsHorizontalScrollIndicator={false}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={['icon', ...logos]}
@@ -195,7 +203,6 @@ function OverlappingLogos({ logos }: { logos: string[] }): JSX.Element {
 const iconContainerStyle = {
   borderRadius: borderRadii.rounded8,
   height: ICON_SIZE,
-  marginRight: ICON_SHIFT,
   overflow: 'hidden',
   width: ICON_SIZE,
 }

@@ -1,8 +1,10 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import type { RWAWhitelist } from 'uniswap/src/features/rwa/types'
 import { PriceSourceTag, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
+import { getRwaSwapAnalyticsProperties } from 'uniswap/src/features/transactions/swap/rwaSwapAnalytics'
 import {
   BridgeTrade,
   ChainedActionTrade,
@@ -155,6 +157,7 @@ export function formatCommonPropertiesForTrade({
   isBatched,
   batchId,
   includedPermitTransactionStep,
+  rwaWhitelist,
 }: {
   trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
@@ -162,10 +165,17 @@ export function formatCommonPropertiesForTrade({
   isBatched?: boolean
   batchId?: string
   includedPermitTransactionStep?: boolean
+  rwaWhitelist?: RWAWhitelist
 }): SwapTradeBaseProperties {
   const isUniversalSwapFlow = isUniversalSwapFlowTrade(trade)
 
   return {
+    ...getRwaSwapAnalyticsProperties({
+      inputCurrency: trade.inputAmount.currency,
+      outputCurrency: trade.outputAmount.currency,
+      priceImpactBasisPoints: getPriceImpactBasisPoints(trade),
+      rwaWhitelist,
+    }),
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
     type: trade.tradeType,
     ura_quote_id: getAnalyticsQuoteId(trade),
@@ -212,6 +222,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   includedPermitTransactionStep,
   planAnalytics,
   priceSource,
+  rwaWhitelist,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
@@ -225,6 +236,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   includedPermitTransactionStep?: boolean
   planAnalytics?: PlanSwapTransactionInfoFields
   priceSource?: PriceSourceTag
+  rwaWhitelist?: RWAWhitelist
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -242,6 +254,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
     isBatched,
     batchId,
     includedPermitTransactionStep,
+    rwaWhitelist,
   }),
   // Override routing with per-step routing for plan steps
   ...(planAnalytics?.stepRouting ? { routing: planAnalytics.stepRouting } : {}),

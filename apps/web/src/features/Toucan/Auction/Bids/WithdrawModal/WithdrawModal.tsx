@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -7,7 +8,9 @@ import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWithdrawBidAndClaimTokensReviewData } from '~/features/Toucan/Auction/Bids/WithdrawModal/useWithdrawBidAndClaimTokensReviewData'
@@ -15,6 +18,7 @@ import { useWithdrawModalData } from '~/features/Toucan/Auction/Bids/WithdrawMod
 import { useWithdrawBidAndClaimTokensFormSubmit } from '~/features/Toucan/Auction/hooks/useWithdrawBidAndClaimTokensFormSubmit'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { useWithdrawBidAndClaimTokens } from '~/hooks/useWithdrawBidAndClaimTokens'
 
@@ -119,11 +123,28 @@ export function WithdrawModal({
   const isSubmitting = submissionStatus !== 'idle'
   const isWaitingForWallet = submissionStatus === 'waitingForWallet'
 
+  // Withdrawing calls selectChain just like bidding, so a testnet/mainnet mode mismatch dead-ends the
+  // withdraw saga with "Failed to switch networks for Toucan withdraw". When the app's mode doesn't
+  // match the auction chain, the button becomes a one-tap CTA to flip testnet mode (see
+  // getRequiredTestnetMode) instead of letting the user hit that error.
+  const dispatch = useDispatch()
+  const isModeMismatch = useIsModeMismatch(auctionDetails?.chainId)
+  const requiredTestnetMode = getRequiredTestnetMode({
+    isWalletConnected: Boolean(accountAddress),
+    isActionAvailable: hasAnyTokens,
+    isModeMismatch,
+    chainId: auctionDetails?.chainId,
+  })
+  const needsTestnetModeSwitch = requiredTestnetMode !== undefined
+
   const helpLink = UniswapHelpUrls.articles.toucanWithdrawHelp
 
   const modalTitle = t('toucan.withdraw.title')
 
   const withdrawButtonLabel = useMemo(() => {
+    if (needsTestnetModeSwitch) {
+      return requiredTestnetMode ? t('toucan.action.enableTestnetMode') : t('toucan.action.disableTestnetMode')
+    }
     if (isPreparing) {
       return t('common.loading')
     }
@@ -136,9 +157,22 @@ export function WithdrawModal({
         : t('toucan.auction.withdrawTokens.withdrawingFunds')
     }
     return t('toucan.withdraw.title')
-  }, [hasAuctionTokens, isAwaitingWithdrawalConfirmation, isPreparing, isWaitingForWallet, isWithdrawalPending, t])
+  }, [
+    needsTestnetModeSwitch,
+    requiredTestnetMode,
+    hasAuctionTokens,
+    isAwaitingWithdrawalConfirmation,
+    isPreparing,
+    isWaitingForWallet,
+    isWithdrawalPending,
+    t,
+  ])
 
   const handleSubmit = useEvent(async () => {
+    if (requiredTestnetMode !== undefined) {
+      dispatch(setIsTestnetModeEnabled(requiredTestnetMode))
+      return
+    }
     if (!preparedWithdrawBidAndClaimTokens || isConfirmDisabled || isSubmitting) {
       return
     }
@@ -249,13 +283,17 @@ export function WithdrawModal({
           onPress={handleSubmit}
           shouldUseBranded
           isDisabled={
-            isConfirmDisabled ||
-            isSubmitting ||
-            isWithdrawalPending ||
-            isAwaitingWithdrawalConfirmation ||
-            !hasAnyTokens
+            !needsTestnetModeSwitch &&
+            (isConfirmDisabled ||
+              isSubmitting ||
+              isWithdrawalPending ||
+              isAwaitingWithdrawalConfirmation ||
+              !hasAnyTokens)
           }
-          loading={isPreparing || isWaitingForWallet || isWithdrawalPending || isAwaitingWithdrawalConfirmation}
+          loading={
+            !needsTestnetModeSwitch &&
+            (isPreparing || isWaitingForWallet || isWithdrawalPending || isAwaitingWithdrawalConfirmation)
+          }
         />
       </Flex>
     </Modal>

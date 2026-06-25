@@ -173,7 +173,7 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
   )
 }
 
-function getIsStatsigReady(): boolean {
+export function getIsStatsigReady(): boolean {
   return getStatsigClient().loadingStatus === 'Ready'
 }
 

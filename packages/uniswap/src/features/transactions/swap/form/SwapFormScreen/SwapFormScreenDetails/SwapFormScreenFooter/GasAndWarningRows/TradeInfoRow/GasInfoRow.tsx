@@ -1,13 +1,17 @@
 import { isWebApp } from '@universe/environment'
 import { Flex, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { SponsoredFee, UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isZero } from 'uniswap/src/utils/number'
 
 function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element | null {
+  if (gasInfo?.sponsorMetadata) {
+    return <SponsoredFee sponsorMetadata={gasInfo.sponsorMetadata} preSavingsGasFee={gasInfo.fiatPriceFormatted} />
+  }
+
   if (!gasInfo?.fiatPriceFormatted) {
     return null
   }
@@ -29,7 +33,7 @@ function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Eleme
 }
 
 export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boolean }): JSX.Element | null {
-  if (!gasInfo.fiatPriceFormatted) {
+  if (!gasInfo.sponsorMetadata && !gasInfo.fiatPriceFormatted) {
     return null
   }
 

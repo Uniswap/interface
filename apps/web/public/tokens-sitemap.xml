@@ -12225,4 +12225,39 @@
     <lastmod>2026-06-12T22:04:05.404Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/xlayer/0x1e4a5963abfd975d8c9021ce480b42188849d41d</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/solana/SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0xe76c5b78f93909d34404e9eb4c1f19e7582a5de1</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x526526528f35ac738177003b8773b402b8df8143</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/base/0x9c5c365e764829876243d0b289733b9d2b729685</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/bnb/0xed9ae3def8d6f052971bb8b6d1975ff267cf9aad</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/solana/SPCXwBHVrKpRqMRawL3NNvt1sXP2Yf3edwRbta53N69</loc>
+    <lastmod>2026-06-18T19:48:42.532Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

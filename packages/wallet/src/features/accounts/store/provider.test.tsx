@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { useFeatureFlag } from '@universe/gating'
 import { Provider } from 'react-redux'
 import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { AccessPattern, ConnectorErrorType, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { AccountType as ReduxAccountType } from 'uniswap/src/features/accounts/types'
+import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { AccountsStoreContextProvider, useAccountsStoreContext } from 'wallet/src/features/accounts/store/provider'
 import {
   Account as ReduxAccount,
@@ -36,18 +39,26 @@ jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   })),
 }))
 
-// Mock the swap delegation provider
+// Mock the swap delegation provider. Default: no delegation; individual tests override per chain.
+const mockGetSwapDelegationInfo = jest.fn(
+  (_chainId?: number): SwapDelegationInfo => ({
+    delegationInclusion: false,
+    delegationAddress: undefined,
+  }),
+)
 jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
-  useGetSwapDelegationInfoForActiveAccount: jest.fn(
-    () => (): { delegationInclusion: boolean; delegationAddress: undefined } => ({
-      delegationInclusion: false,
-      delegationAddress: undefined,
-    }),
-  ),
+  useGetSwapDelegationInfoForActiveAccount: () => mockGetSwapDelegationInfo,
+}))
+
+// Mock the gas sponsorship feature flag (defaults to off in beforeEach)
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
+  useFeatureFlag: jest.fn(),
 }))
 
 const mockUseActiveReduxAccount = useActiveReduxAccount as jest.MockedFunction<typeof useActiveReduxAccount>
 const mockSelectFinishedOnboarding = selectFinishedOnboarding as jest.MockedFunction<typeof selectFinishedOnboarding>
+const mockUseFeatureFlag = useFeatureFlag as jest.MockedFunction<typeof useFeatureFlag>
 
 const createTestStore = (walletState: Partial<WalletState['wallet']> = {}) => {
   return configureStore({
@@ -111,6 +122,8 @@ const renderWithProvider = (
 describe('Wallet Accounts Store Provider', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockUseFeatureFlag.mockReturnValue(false)
+    mockGetSwapDelegationInfo.mockReturnValue({ delegationInclusion: false, delegationAddress: undefined })
   })
 
   describe('when no active account', () => {
@@ -351,6 +364,88 @@ describe('Wallet Accounts Store Provider', () => {
       expect(Object.keys(wallets)).toHaveLength(2)
       expect(wallets['stored_mnemonic_wallet']).toBeDefined()
       expect(wallets['readonly_import_wallet-0xabcdefabcdefabcdefabcdefabcdefabcdefabcd']).toBeDefined()
+    })
+  })
+
+  describe('CAIP-25 session paymaster capability', () => {
+    const DELEGATION_ADDRESS = '0xdelegatedelegatedelegatedelegatedelegate'
+
+    const getCaip25Info = (): CAIP25Session => {
+      const mnemonicAccount = createMnemonicAccount()
+      mockUseActiveReduxAccount.mockReturnValue(mnemonicAccount)
+      mockSelectFinishedOnboarding.mockReturnValue(true)
+
+      const { result } = renderWithProvider({
+        accounts: { [mnemonicAccount.address]: mnemonicAccount },
+      })
+
+      const connector = result.current.getState().getActiveConnector(Platform.EVM)
+      return connector?.session?.caip25Info as CAIP25Session
+    }
+
+    it('advertises atomic (ready) and paymasterService for a chain pending delegation when sponsorship is enabled', () => {
+      mockUseFeatureFlag.mockReturnValue(true)
+      mockGetSwapDelegationInfo.mockImplementation((chainId?: number) =>
+        chainId === 1
+          ? { delegationInclusion: true, delegationAddress: DELEGATION_ADDRESS, isWalletDelegatedToUniswap: false }
+          : { delegationInclusion: false, delegationAddress: undefined },
+      )
+
+      const caip25Info = getCaip25Info()
+      const chainScope = caip25Info.scopes['eip155:1']
+
+      expect(chainScope?.capabilities).toEqual({
+        atomic: { status: 'ready' },
+        paymasterService: { supported: true },
+      })
+      expect(chainScope?.methods).toContain('wallet_sendCalls')
+      expect(chainScope?.clientContext?.nextEvmUpgradeAddress).toBe(DELEGATION_ADDRESS)
+      // Promoted chain is removed from the multi-chain default scope.
+      expect(caip25Info.scopes.eip155?.chains).not.toContain('1')
+    })
+
+    it('advertises atomic (supported) without an upgrade address for an already-delegated chain', () => {
+      mockUseFeatureFlag.mockReturnValue(true)
+      mockGetSwapDelegationInfo.mockImplementation((chainId?: number) =>
+        chainId === 1
+          ? { delegationInclusion: false, delegationAddress: undefined, isWalletDelegatedToUniswap: true }
+          : { delegationInclusion: false, delegationAddress: undefined },
+      )
+
+      const caip25Info = getCaip25Info()
+      const chainScope = caip25Info.scopes['eip155:1']
+
+      expect(chainScope?.capabilities).toEqual({
+        atomic: { status: 'supported' },
+        paymasterService: { supported: true },
+      })
+      expect(chainScope?.clientContext?.nextEvmUpgradeAddress).toBeUndefined()
+    })
+
+    it('still advertises atomic but omits paymasterService when sponsorship flag is disabled', () => {
+      mockUseFeatureFlag.mockReturnValue(false)
+      mockGetSwapDelegationInfo.mockImplementation((chainId?: number) =>
+        chainId === 1
+          ? { delegationInclusion: true, delegationAddress: DELEGATION_ADDRESS, isWalletDelegatedToUniswap: false }
+          : { delegationInclusion: false, delegationAddress: undefined },
+      )
+
+      const caip25Info = getCaip25Info()
+      const chainScope = caip25Info.scopes['eip155:1']
+
+      // atomic is always mirrored; only paymasterService is gated by the sponsorship flag.
+      expect(chainScope?.capabilities).toEqual({ atomic: { status: 'ready' } })
+      expect(chainScope?.clientContext?.nextEvmUpgradeAddress).toBe(DELEGATION_ADDRESS)
+    })
+
+    it('keeps a non-eligible chain in the default multi-chain scope', () => {
+      mockUseFeatureFlag.mockReturnValue(true)
+      // No delegation and not delegated -> not eligible on any chain.
+
+      const caip25Info = getCaip25Info()
+
+      expect(caip25Info.scopes['eip155:1']).toBeUndefined()
+      expect(caip25Info.scopes.eip155?.chains).toContain('1')
     })
   })
 

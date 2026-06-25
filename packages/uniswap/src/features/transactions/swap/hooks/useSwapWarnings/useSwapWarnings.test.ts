@@ -209,6 +209,31 @@ describe(getSwapWarnings, () => {
     expect(warnings.map((w) => w.type)).toContain(WarningLabel.GeoRestricted)
   })
 
+  it('labels the geo restriction CTA with the restricted token symbol when available', () => {
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: swapState,
+      offline: false,
+      geoRestrictionMode: 'restricted',
+      geoRestrictedTokenSymbol: 'OUSG',
+    })
+    const geoWarning = warnings.find((w) => w.type === WarningLabel.GeoRestricted)
+    expect(geoWarning?.buttonText).toBe(i18n.t('swap.geoRestriction.button', { tokenSymbol: 'OUSG' }))
+  })
+
+  it('falls back to the generic geo restriction CTA when no token symbol is available', () => {
+    const warnings = getSwapWarnings({
+      t: i18n.t,
+      formatPercent,
+      derivedSwapInfo: swapState,
+      offline: false,
+      geoRestrictionMode: 'restricted',
+    })
+    const geoWarning = warnings.find((w) => w.type === WarningLabel.GeoRestricted)
+    expect(geoWarning?.buttonText).toBe(i18n.t('common.notAvailableInRegion.error'))
+  })
+
   it('does not add a geo restriction warning when mode is unrestricted', () => {
     const warnings = getSwapWarnings({
       t: i18n.t,

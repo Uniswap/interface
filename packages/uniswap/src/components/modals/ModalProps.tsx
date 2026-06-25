@@ -59,6 +59,7 @@ export type ModalProps = PropsWithChildren<{
   zIndex?: number
   borderWidth?: number
   borderColor?: ColorTokens
+  borderRadius?: ComponentProps<typeof View>['borderRadius']
   overlayOpacity?: number
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
   testID?: string

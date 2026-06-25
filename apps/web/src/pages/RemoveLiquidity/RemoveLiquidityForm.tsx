@@ -4,6 +4,11 @@ import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 import { ErrorCallout } from '~/components/ErrorCallout'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+} from '~/components/NumericalInput/LargeAmountInput'
 import { StyledPercentInput } from '~/components/PercentInput'
 import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
@@ -14,7 +19,6 @@ import {
 } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from '~/pages/Swap/common/shared'
 
 const isValidPercentageInput = (value: string): boolean => {
   const numValue = Number(value)

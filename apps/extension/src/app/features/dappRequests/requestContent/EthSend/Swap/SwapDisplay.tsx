@@ -1,4 +1,4 @@
-import { GasFeeResult } from '@universe/api'
+import { GasFeeResult, TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { Flex, Separator, Text } from 'ui/src'
@@ -20,6 +20,7 @@ export function SwapDisplay({
   outputCurrencyInfo,
   chainId,
   transactionGasFeeResult,
+  sponsorMetadata,
   showSmartWalletActivation,
   onCancel,
   onConfirm,
@@ -33,6 +34,7 @@ export function SwapDisplay({
   outputCurrencyInfo: Maybe<CurrencyInfo>
   chainId: UniverseChainId | null
   transactionGasFeeResult?: GasFeeResult
+  sponsorMetadata?: TradingApi.SponsorMetadata
   showSmartWalletActivation?: boolean
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>
@@ -94,6 +96,7 @@ export function SwapDisplay({
       isUniswapX={isUniswapX}
       title={title}
       transactionGasFeeResult={transactionGasFeeResult}
+      sponsorMetadata={sponsorMetadata}
       showSmartWalletActivation={showSmartWalletActivation}
       onCancel={onCancel}
       onConfirm={onConfirm}

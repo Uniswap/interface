@@ -36,7 +36,7 @@ import type {
 } from '~/features/accounts/store/types'
 import { normalizeWalletName } from '~/features/wallet/connection/connectors/multiplatform'
 import { useConnectWalletMutation } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
-import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
+import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'
 
 /**
  * Web package implementation of the unified accounts store architecture.

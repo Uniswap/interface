@@ -5,7 +5,7 @@
       "dependsOn": ["build:icons"]
     },
     "build:icons": {
-      "command": "bun run ./src/scripts/componentize-icons.ts && oxfmt --threads=2 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
+      "command": "bun run ./src/scripts/componentize-icons.ts --silent && oxfmt --threads=2 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -14,12 +14,13 @@
         "lintConfig",
         "{projectRoot}/src/scripts/componentize-icons.ts",
         "{projectRoot}/src/assets/icons/**",
-        "{projectRoot}/src/assets/logos/**"
+        "{projectRoot}/src/assets/logos/**",
+        "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
     },
     "build:icons:missing": {
-      "command": "bun run ./src/scripts/componentize-icons.ts --skip-existing && oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
+      "command": "bun run ./src/scripts/componentize-icons.ts --skip-existing --silent && oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -27,7 +28,8 @@
       "inputs": [
         "{projectRoot}/src/scripts/componentize-icons.ts",
         "{projectRoot}/src/assets/icons/**",
-        "{projectRoot}/src/assets/logos/**"
+        "{projectRoot}/src/assets/logos/**",
+        "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
     },

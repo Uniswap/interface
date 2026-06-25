@@ -2,6 +2,8 @@ import { isWebPlatform } from '@universe/environment'
 import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Flex, Input, Text, TouchableArea } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   formatPriceRangeBound,
   normalizeSignedInput,
@@ -67,42 +69,44 @@ export function LiquidityPercentInput({
 
   return (
     <RangeField isActive={isActive}>
-      <Input
-        unstyled
-        value={rawInput}
-        onChangeText={(nextValue) => {
-          if (!isValidPartialPercentInput(nextValue)) {
-            return
-          }
-          setRawInput(nextValue)
-          const parsed = Number(nextValue)
-          if (Number.isFinite(parsed)) {
+      <Trace logFocus element={ElementName.AuctionCustomRangeLpPct}>
+        <Input
+          unstyled
+          value={rawInput}
+          onChangeText={(nextValue) => {
+            if (!isValidPartialPercentInput(nextValue)) {
+              return
+            }
+            setRawInput(nextValue)
+            const parsed = Number(nextValue)
+            if (Number.isFinite(parsed)) {
+              onValueChange(parsed)
+            }
+          }}
+          onBlur={() => {
+            if (rawInput.trim().length === 0) {
+              onValueChange(0)
+              setRawInput(formatFinitePercentValue(0))
+              return
+            }
+            const parsed = Number(rawInput)
+            if (!Number.isFinite(parsed)) {
+              setRawInput(formatFinitePercentValue(latestValueRef.current))
+              return
+            }
             onValueChange(parsed)
-          }
-        }}
-        onBlur={() => {
-          if (rawInput.trim().length === 0) {
-            onValueChange(0)
-            setRawInput(formatFinitePercentValue(0))
-            return
-          }
-          const parsed = Number(rawInput)
-          if (!Number.isFinite(parsed)) {
-            setRawInput(formatFinitePercentValue(latestValueRef.current))
-            return
-          }
-          onValueChange(parsed)
-          syncDisplayedPercentFromStoreAfterBlur()
-        }}
-        placeholder="0"
-        placeholderTextColor="$neutral3"
-        color="$neutral1"
-        outlineStyle="none"
-        fontSize={14}
-        lineHeight={18}
-        flex={1}
-        minWidth={0}
-      />
+            syncDisplayedPercentFromStoreAfterBlur()
+          }}
+          placeholder="0"
+          placeholderTextColor="$neutral3"
+          color="$neutral1"
+          outlineStyle="none"
+          fontSize={14}
+          lineHeight={18}
+          flex={1}
+          minWidth={0}
+        />
+      </Trace>
       <Text variant="body3" color="$neutral3" flexShrink={0}>
         %
       </Text>
@@ -160,61 +164,66 @@ export function PriceBoundInput({
     >
       <RangeField isActive={isActive}>
         <Flex row flex={1} minWidth={0} alignItems="center" gap="$spacing4">
-          <Input
-            unstyled
-            value={rawInput}
-            onChangeText={(nextValue) => {
-              const normalized = normalizeSignedInput(nextValue)
-              if (!isValidPartialSignedPercentInput(normalized)) {
-                return
-              }
-              setRawInput(normalized)
-              // Keep the store value stable while the field is empty so the placeholder "0"
-              // can show during editing instead of being overwritten by `useLayoutEffect`.
-              if (normalized.length === 0) {
-                return
-              }
-              const parsed = Number(normalized)
-              if (Number.isFinite(parsed)) {
+          <Trace
+            logFocus
+            element={side === 'min' ? ElementName.AuctionCustomRangeMinPrice : ElementName.AuctionCustomRangeMaxPrice}
+          >
+            <Input
+              unstyled
+              value={rawInput}
+              onChangeText={(nextValue) => {
+                const normalized = normalizeSignedInput(nextValue)
+                if (!isValidPartialSignedPercentInput(normalized)) {
+                  return
+                }
+                setRawInput(normalized)
+                // Keep the store value stable while the field is empty so the placeholder "0"
+                // can show during editing instead of being overwritten by `useLayoutEffect`.
+                if (normalized.length === 0) {
+                  return
+                }
+                const parsed = Number(normalized)
+                if (Number.isFinite(parsed)) {
+                  onValueChange(parsed)
+                }
+              }}
+              onFocus={() => {
+                setIsFocused(true)
+                valueOnFocusRef.current = value
+              }}
+              onBlur={() => {
+                setIsFocused(false)
+                const normalized = normalizeSignedInput(rawInput)
+                if (normalized.length === 0) {
+                  onValueChange(0)
+                  setRawInput(formatPriceRangeBound(0, formatFinitePercentValue))
+                  return
+                }
+                // The `+∞` button writes `+∞` into the input (the keyboard validator
+                // rejects the symbol, so it can only get there via the button). Preserve it.
+                if (!isMinBound && normalized.includes('∞')) {
+                  onValueChange(CUSTOM_PRICE_RANGE_POSITIVE_INFINITY)
+                  setRawInput(formatPriceRangeBound(CUSTOM_PRICE_RANGE_POSITIVE_INFINITY, formatFinitePercentValue))
+                  return
+                }
+                const parsed = Number(normalized)
+                if (!Number.isFinite(parsed) || !finiteValueIncludesClearingPrice(parsed)) {
+                  onValueChange(valueOnFocusRef.current)
+                  setRawInput(formatPriceRangeBound(valueOnFocusRef.current, formatFinitePercentValue))
+                  return
+                }
                 onValueChange(parsed)
-              }
-            }}
-            onFocus={() => {
-              setIsFocused(true)
-              valueOnFocusRef.current = value
-            }}
-            onBlur={() => {
-              setIsFocused(false)
-              const normalized = normalizeSignedInput(rawInput)
-              if (normalized.length === 0) {
-                onValueChange(0)
-                setRawInput(formatPriceRangeBound(0, formatFinitePercentValue))
-                return
-              }
-              // The `+∞` button writes `+∞` into the input (the keyboard validator
-              // rejects the symbol, so it can only get there via the button). Preserve it.
-              if (!isMinBound && normalized.includes('∞')) {
-                onValueChange(CUSTOM_PRICE_RANGE_POSITIVE_INFINITY)
-                setRawInput(formatPriceRangeBound(CUSTOM_PRICE_RANGE_POSITIVE_INFINITY, formatFinitePercentValue))
-                return
-              }
-              const parsed = Number(normalized)
-              if (!Number.isFinite(parsed) || !finiteValueIncludesClearingPrice(parsed)) {
-                onValueChange(valueOnFocusRef.current)
-                setRawInput(formatPriceRangeBound(valueOnFocusRef.current, formatFinitePercentValue))
-                return
-              }
-              onValueChange(parsed)
-            }}
-            placeholder="0"
-            placeholderTextColor="$neutral3"
-            color="$neutral1"
-            outlineStyle="none"
-            fontSize={16}
-            lineHeight={20}
-            flex={1}
-            minWidth={0}
-          />
+              }}
+              placeholder="0"
+              placeholderTextColor="$neutral3"
+              color="$neutral1"
+              outlineStyle="none"
+              fontSize={16}
+              lineHeight={20}
+              flex={1}
+              minWidth={0}
+            />
+          </Trace>
           {!isMinBound && (
             <TouchableArea
               backgroundColor="$surface3"

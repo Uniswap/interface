@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
+import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useStickyHeaderBorder } from '~/hooks/useStickyHeaderBorder'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
@@ -13,16 +14,29 @@ interface PoolProgressStep {
 }
 
 export const SIDEBAR_WIDTH = 360
+// Gap (px) between the sticky app header and a sticky sidebar. Default breathing room; pass 0 to sit
+// flush with the header so the sidebar aligns with a sticky sibling such as a table header.
+export const SIDEBAR_STICKY_TOP_OFFSET = 25
 
-export function PoolProgressIndicator({ steps }: { steps: PoolProgressStep[] }) {
+export function PoolProgressIndicator({
+  steps,
+  stickyTopOffset = SIDEBAR_STICKY_TOP_OFFSET,
+}: {
+  steps: PoolProgressStep[]
+  // See SIDEBAR_STICKY_TOP_OFFSET. Pass 0 to align with a sticky sibling such as a table header.
+  stickyTopOffset?: number
+}) {
   const { t } = useTranslation()
+  // Stick below the full app header (nav + any top-level banners), matching the pools table header.
+  // INTERFACE_NAV_HEIGHT alone ignores the banner and tucks the indicator underneath it.
+  const headerHeight = useAppHeaderHeight()
   assert(steps.length > 0, 'PoolProgressIndicator: steps must have at least one step')
 
   return (
     <Flex
       width={SIDEBAR_WIDTH}
       alignSelf="flex-start"
-      $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}
+      $platform-web={{ position: 'sticky', top: headerHeight + stickyTopOffset }}
       borderRadius="$rounded24"
       py="$padding8"
       borderColor="$surface3"

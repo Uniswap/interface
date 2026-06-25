@@ -92,6 +92,8 @@ export interface TradingApiClient {
     txHashes?: TransactionHash[]
     userOpHashes?: string[]
     chainId: ChainId
+    // When provided, the endpoint decorates matching sponsored swaps with `sponsorship` metadata.
+    swapper?: string
   }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
@@ -259,6 +261,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
       txHashes?: TransactionHash[]
       userOpHashes?: string[]
       chainId: ChainId
+      swapper?: string
     },
     GetSwapsResponse
   >({
@@ -270,6 +273,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
       params: {
         ...(params.txHashes ? { txHashes: params.txHashes.join(',') } : {}),
         ...(params.userOpHashes ? { userOpHashes: params.userOpHashes.join(',') } : {}),
+        ...(params.swapper ? { swapper: params.swapper } : {}),
         chainId: params.chainId,
       },
     }),

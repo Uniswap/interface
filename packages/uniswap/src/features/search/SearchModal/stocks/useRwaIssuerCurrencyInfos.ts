@@ -8,6 +8,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { dedupeCurrencyIds } from 'uniswap/src/features/search/SearchModal/utils/dedupeCurrencyIds'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -30,16 +31,10 @@ export function collectRwaIssuerPrimaryCurrencyIds({
   rwa: Rwa
   enabledChainIds: readonly UniverseChainId[]
 }): string[] {
-  const out: string[] = []
-  const seen = new Set<string>()
-  for (const issuer of rwa.issuerTokens) {
-    const id = issuerPrimaryCurrencyId({ issuer, enabledChainIds })
-    if (id && !seen.has(normalizeCurrencyIdForMapLookup(id))) {
-      seen.add(normalizeCurrencyIdForMapLookup(id))
-      out.push(id)
-    }
-  }
-  return out
+  const ids = rwa.issuerTokens
+    .map((issuer) => issuerPrimaryCurrencyId({ issuer, enabledChainIds }))
+    .filter((id): id is string => Boolean(id))
+  return dedupeCurrencyIds(ids)
 }
 
 export function gatherRwaIssuerPrimaryCurrencyIds({
@@ -49,21 +44,12 @@ export function gatherRwaIssuerPrimaryCurrencyIds({
   options: SearchModalOption[]
   enabledChainIds: readonly UniverseChainId[]
 }): string[] {
-  const out: string[] = []
-  const seen = new Set<string>()
-  for (const option of options) {
-    if (option.type !== OnchainItemListOptionType.RwaCollection) {
-      continue
-    }
-    for (const id of collectRwaIssuerPrimaryCurrencyIds({ rwa: option.rwa, enabledChainIds })) {
-      const k = normalizeCurrencyIdForMapLookup(id)
-      if (!seen.has(k)) {
-        seen.add(k)
-        out.push(id)
-      }
-    }
-  }
-  return out
+  const ids = options.flatMap((option) =>
+    option.type === OnchainItemListOptionType.RwaCollection
+      ? collectRwaIssuerPrimaryCurrencyIds({ rwa: option.rwa, enabledChainIds })
+      : [],
+  )
+  return dedupeCurrencyIds(ids)
 }
 
 /** The Map key for an issuer's resolved primary-chain CurrencyInfo (undefined → no enabled chain → no menu). */

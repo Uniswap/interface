@@ -9,6 +9,7 @@ import type { PoolsTabRenderData } from 'src/screens/HomeScreen/portfolio/tabs/p
 import { HomeScreenTokensTab } from 'src/screens/HomeScreen/portfolio/tabs/tokens/HomeScreenTokensTab'
 import { HomeTab, type HomeRoute, type NftTabRenderData } from 'src/screens/HomeScreen/portfolio/types'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import type { PositionStatusFilterValue } from 'uniswap/src/features/positions/components/PositionStatusFilter'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface TabViewBodyProps {
@@ -23,6 +24,8 @@ interface TabViewBodyProps {
   nftListRenderData: NftTabRenderData
   shouldLoadPools: boolean
   poolsListRenderData: PoolsTabRenderData
+  poolsStatusFilter: PositionStatusFilterValue
+  onPoolsStatusFilterChange: (value: PositionStatusFilterValue) => void
   onTabInteractionStart: () => void
 }
 
@@ -38,6 +41,8 @@ export const TabViewBody = memo(function TabViewBodyInner({
   nftListRenderData,
   shouldLoadPools,
   poolsListRenderData,
+  poolsStatusFilter,
+  onPoolsStatusFilterChange,
   onTabInteractionStart,
 }: TabViewBodyProps): JSX.Element {
   const { fullWidth, fullHeight } = useDeviceDimensions()
@@ -112,9 +117,11 @@ export const TabViewBody = memo(function TabViewBodyInner({
                   testID={TestID.PoolsTab}
                   bodyOffsetY={bodyOffsetY}
                   poolsListRenderData={poolsListRenderData}
+                  statusFilter={poolsStatusFilter}
                   feedScrollValue={feedScrollValue}
                   shouldLoadPools={shouldLoadPools}
                   viewportHeight={fullHeight}
+                  onStatusFilterChange={onPoolsStatusFilterChange}
                   onHeightChange={onPoolsHeightChange}
                 />
               </Freeze>
@@ -141,6 +148,8 @@ export const TabViewBody = memo(function TabViewBodyInner({
       nftListRenderData,
       shouldLoadPools,
       poolsListRenderData,
+      poolsStatusFilter,
+      onPoolsStatusFilterChange,
       tabIndex,
     ],
   )

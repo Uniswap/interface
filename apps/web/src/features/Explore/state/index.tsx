@@ -1,11 +1,11 @@
 import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, useContext, useMemo } from 'react'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
 
 export const TABLE_PAGE_SIZE = 20
 
@@ -24,11 +24,11 @@ export function useExploreChainId(): string {
 /** Hook that runs the explore-stats query. Deduplicated by React Query. */
 export function useExploreStats() {
   const chainId = useExploreChainId()
-  const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
+  const poolsV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsPools)
 
   return useExploreStatsQuery<ExploreStatsResponse>({
     input: { chainId, multichain: true },
-    enabled: !isExploreBackendSortingEnabled,
+    enabled: !poolsV2EndpointsEnabled,
   })
 }
 

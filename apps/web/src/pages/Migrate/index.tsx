@@ -50,7 +50,7 @@ import {
 import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'

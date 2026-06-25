@@ -12,9 +12,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
-import { SwapCurrencyInput } from '~/components/NumericalInput'
+import { SwapCurrencyInput } from '~/components/NumericalInput/NumericalInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
@@ -160,48 +159,46 @@ export function SwapCurrencyInputPanel({
               width="100%"
             />
           </Flex>
-          <PrefetchBalancesWrapper>
-            <Flex ml="$spacing12" width="fit-content">
-              <CurrencySelectButton
-                disabled={!chainAllowed}
-                tokenSelected={Boolean(currency)}
-                selectorVisible={currency !== undefined}
-                data-testid={`currency-${currency?.chainId}-${currency?.symbol}`}
-                className="open-currency-select-button"
-                {...shadowPropsShort}
-                onPress={() => {
-                  if (onCurrencySelect) {
-                    openModal()
-                  }
-                }}
-              >
-                <Flex row alignItems="center" justifyContent="space-between" width="100%">
-                  <Flex row position="relative" width="fit-content">
-                    <AnimatePresence>
-                      <Flex
-                        row
-                        alignItems="center"
-                        gap="$spacing6"
-                        animation="300ms"
-                        exitStyle={{ opacity: 0 }}
-                        enterStyle={{ opacity: 0 }}
-                      >
-                        {currency ? <CurrencyLogo currency={currency} size={iconSizes.icon24} /> : null}
-                        <Text className="token-symbol-container" variant="buttonLabel2">
-                          {currency ? formatCurrencySymbol(currency) : t('tokens.selector.button.choose')}
-                        </Text>
-                      </Flex>
-                    </AnimatePresence>
-                  </Flex>
-                  {onCurrencySelect ? (
-                    <Flex centered mr="$spacing6" ml="$spacing8">
-                      <RotatableChevron direction="down" size="$icon.16" color={currency ? '$neutral1' : '$white'} />
+          <Flex ml="$spacing12" width="fit-content">
+            <CurrencySelectButton
+              disabled={!chainAllowed}
+              tokenSelected={Boolean(currency)}
+              selectorVisible={currency !== undefined}
+              data-testid={`currency-${currency?.chainId}-${currency?.symbol}`}
+              className="open-currency-select-button"
+              {...shadowPropsShort}
+              onPress={() => {
+                if (onCurrencySelect) {
+                  openModal()
+                }
+              }}
+            >
+              <Flex row alignItems="center" justifyContent="space-between" width="100%">
+                <Flex row position="relative" width="fit-content">
+                  <AnimatePresence>
+                    <Flex
+                      row
+                      alignItems="center"
+                      gap="$spacing6"
+                      animation="300ms"
+                      exitStyle={{ opacity: 0 }}
+                      enterStyle={{ opacity: 0 }}
+                    >
+                      {currency ? <CurrencyLogo currency={currency} size={iconSizes.icon24} /> : null}
+                      <Text className="token-symbol-container" variant="buttonLabel2">
+                        {currency ? formatCurrencySymbol(currency) : t('tokens.selector.button.choose')}
+                      </Text>
                     </Flex>
-                  ) : null}
+                  </AnimatePresence>
                 </Flex>
-              </CurrencySelectButton>
-            </Flex>
-          </PrefetchBalancesWrapper>
+                {onCurrencySelect ? (
+                  <Flex centered mr="$spacing6" ml="$spacing8">
+                    <RotatableChevron direction="down" size="$icon.16" color={currency ? '$neutral1' : '$white'} />
+                  </Flex>
+                ) : null}
+              </Flex>
+            </CurrencySelectButton>
+          </Flex>
         </Flex>
         <Flex row alignItems="center" justifyContent="flex-end" minHeight="$spacing24" pt="$spacing8">
           <Flex row width="100%" justifyContent="flex-end" alignItems="center">

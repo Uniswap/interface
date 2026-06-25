@@ -38,7 +38,7 @@ export function* attemptReplaceTransaction({
   const replacementTxnId = createTransactionId()
 
   try {
-    const { from, nonce } = options.request
+    const { from, nonce } = options.request ?? {}
     if (!from || !nonce || !BigNumber.from(nonce).gte(0)) {
       throw new Error(`Cannot replace invalid transaction: ${hash}`)
     }

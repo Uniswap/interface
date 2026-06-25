@@ -4,6 +4,7 @@ import { fonts, IconSizeTokens } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getDeltaTextColor } from 'uniswap/src/utils/getDeltaTextColor'
 import { NumberType } from 'utilities/src/format/types'
 
 interface RelativeChangeProps {
@@ -61,7 +62,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       )}
       <Flex>
         <Text
-          color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : color}
+          color={semanticColor ? getDeltaTextColor(directionValue) : color}
           loading={loading}
           loadingPlaceholderText="▲ 00.00 (0.00)%"
           testID={TestID.PortfolioRelativeChange}

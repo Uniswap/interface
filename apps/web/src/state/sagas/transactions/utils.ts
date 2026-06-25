@@ -55,12 +55,14 @@ import type {
   InterfaceTransactionDetails,
   Permit2ApproveTransactionInfo,
   PlanSwapTransactionInfoFields,
+  RwaSwapAnalytics,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
@@ -77,7 +79,7 @@ import { clientToProvider } from '~/hooks/useEthersProvider'
 import { getRoutingForTransaction } from '~/state/activity/utils'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
-import type { TransactionDetails, TransactionInfo, VitalTxFields } from '~/state/transactions/types'
+import type { TransactionDetails, VitalTxFields } from '~/state/transactions/types'
 import { isPendingTx } from '~/state/transactions/utils'
 import { signTypedData } from '~/utils/signing'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
@@ -435,7 +437,7 @@ function* findDuplicativeTx({
   chainId,
   allowDuplicativeTx,
 }: {
-  info: TransactionInfo
+  info: TransactionTypeInfo
   address: Address
   chainId: number
   allowDuplicativeTx?: boolean
@@ -551,29 +553,34 @@ export function getSwapTransactionInfo(params: {
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(params: {
   trade: UniswapXTrade
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo & { isUniswapXOrder: true }
 export function getSwapTransactionInfo({
   trade,
   swapStartTimestamp,
   planAnalytics,
   transactedUSDValue,
+  rwaAnalytics,
 }: {
   trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo | BridgeTransactionInfo {
   const commonAttributes = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
     outputCurrencyId: currencyId(trade.outputAmount.currency),
     swapStartTimestamp,
     transactedUSDValue,
+    ...rwaAnalytics,
     ...planAnalytics,
   }
 

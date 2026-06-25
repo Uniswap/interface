@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import type { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import type { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import type { EarnDepositAmountModalState } from 'src/components/earn/EarnDepositAmountModalState'
 import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModalState'
@@ -173,6 +174,12 @@ export type AppStackParamList = {
   [MobileScreens.Home]?: { tab?: HomeScreenTabIndex }
   [MobileScreens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [MobileScreens.PortfolioChartDetails]: undefined
+  [MobileScreens.PositionDetails]: {
+    poolId: string
+    tokenId?: string
+    chainId: UniverseChainId
+    protocolVersion: ProtocolVersion
+  }
   [MobileScreens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
   [MobileScreens.TokenDetails]: {

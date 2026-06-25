@@ -2,6 +2,9 @@ import {
   TRADING_API_PATHS,
   TradingApi,
   createTradingApiClient,
+  createTradingApiFetchClient,
+  provideSessionService,
+  tryProvideSession,
   type TradingApiClient as TradingApiClientType,
 } from '@universe/api'
 import { ChainId } from '@universe/api/src/clients/trading/__generated__'
@@ -11,22 +14,33 @@ import {
   FeatureFlags,
   getExperimentValueFromLayer,
   getFeatureFlag,
+  getIsSessionServiceEnabled,
   Layers,
   waitForStatsigReady,
 } from '@universe/gating'
+import { SessionGateSource } from '@universe/sessions'
 import { config } from 'uniswap/src/config'
 import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
-import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
-const TradingFetchClient = createUniswapFetchClient({
-  baseUrl: getUniswapServiceUrls(config).tradingApiUrl,
-  additionalHeaders: {
+// Built through the trading factory so web requests carry the session cookie.
+const TradingFetchClient = createTradingApiFetchClient({
+  getBaseUrl: () => getUniswapServiceUrls(config).tradingApiUrl,
+  getHeaders: () => ({
+    ...BASE_UNISWAP_HEADERS,
     'x-api-key': config.tradingApiKey,
-  },
+  }),
+  getSessionService: () =>
+    provideSessionService({
+      getBaseUrl: () => getUniswapServiceUrls(config).apiBaseUrlV2,
+      getIsSessionServiceEnabled,
+    }),
+  getSession: tryProvideSession,
+  source: SessionGateSource.FetchUniswap,
 })
 
 /**

@@ -1,4 +1,5 @@
 import { ColorTokens } from 'ui/src'
+import { getDeltaTextColor } from 'uniswap/src/utils/getDeltaTextColor'
 
 // Cap at $1T — values beyond this indicate a calculation error
 export const MAX_REASONABLE_USD_VALUE = 1e12
@@ -27,6 +28,6 @@ export function getValueSignInfo(value: number | undefined): {
   }
 
   const isPositive = value > 0
-  const arrowColor: ColorTokens = isPositive ? '$statusSuccess' : '$statusCritical'
+  const arrowColor: ColorTokens = getDeltaTextColor(value)
   return { hasReasonableValue, isPositive, arrowColor }
 }

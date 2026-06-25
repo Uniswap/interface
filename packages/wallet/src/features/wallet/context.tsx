@@ -32,7 +32,7 @@ interface WalletContextValue {
 
 export const walletContextValue: WalletContextValue = {
   contracts: new ContractManager(),
-  providers: new ProviderManager(createProvider),
+  providers: new ProviderManager(createProvider, defaultResolveRpcConfig),
   viemClients,
   signers: new SignerManager(),
 }

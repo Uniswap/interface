@@ -13,10 +13,13 @@ type SingleSelectContextMenuProps<T extends string | number> = {
   options: SingleSelectOption<T>[]
   selectedValue: T
   onSelect: (value: T) => void
-  /** The trigger element (e.g. a pill or chart label) that opens the menu. */
-  children: ReactNode
+  /** The trigger element (e.g. a pill or chart label) that opens the menu. Pass a function to receive the open state (e.g. to animate a chevron). */
+  children: ReactNode | ((state: { isOpen: boolean }) => ReactNode)
   isPlacementAbove?: boolean
   isPlacementRight?: boolean
+  offsetY?: number
+  dimBackground?: boolean
+  disabled?: boolean
 }
 
 /**
@@ -30,6 +33,9 @@ export function SingleSelectContextMenu<T extends string | number>({
   children,
   isPlacementAbove,
   isPlacementRight,
+  offsetY,
+  dimBackground,
+  disabled,
 }: SingleSelectContextMenuProps<T>): JSX.Element {
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
 
@@ -59,8 +65,11 @@ export function SingleSelectContextMenu<T extends string | number>({
       closeMenu={closeMenu}
       isPlacementAbove={isPlacementAbove}
       isPlacementRight={isPlacementRight}
+      offsetY={offsetY}
+      dimBackground={dimBackground}
+      disabled={disabled}
     >
-      {children}
+      {typeof children === 'function' ? children({ isOpen }) : children}
     </ContextMenu>
   )
 }

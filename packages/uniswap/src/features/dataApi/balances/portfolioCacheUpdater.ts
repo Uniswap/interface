@@ -5,7 +5,10 @@ import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import type { GetPortfolioInput } from 'uniswap/src/data/rest/getPortfolio'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  PortfolioBalancePart,
+  useWalletBalancesIncludeCategories,
+} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { createWalletBalancesVisibilityUpdater } from 'uniswap/src/data/rest/getWalletBalances/walletBalancesVisibility'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -113,6 +116,7 @@ export const createPortfolioCacheUpdater =
 export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
   const { chains: chainIds } = useEnabledChains()
   const queryClient = useQueryClient()
+  const includeCategories = useWalletBalancesIncludeCategories()
 
   // TODO(CONS-1074): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
@@ -124,10 +128,16 @@ export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: strin
       updateData: (input, dataUpdater) => {
         queryClient.setQueryData(getPortfolioQuery({ input }).queryKey, dataUpdater)
       },
+      // The wallet-balances entry the header reads is keyed by `includeCategories`, so the optimistic
+      // token-side delta must carry the same categories to hit it (rather than the tokens-only key).
       updateWalletBalancesForDelta: ({ input, deltaUsd }) =>
-        writeWalletBalancesDelta({ input, deltaUsd, part: PortfolioBalancePart.Tokens }),
+        writeWalletBalancesDelta({
+          input: { ...input, includeCategories },
+          deltaUsd,
+          part: PortfolioBalancePart.Tokens,
+        }),
     })
-  }, [queryClient])
+  }, [queryClient, includeCategories])
 
   return useEvent((hidden: boolean, portfolioBalance?: PortfolioBalance) =>
     cacheUpdater({ evmAddress, svmAddress, chainIds, modifier })({ hidden, portfolioBalance }),

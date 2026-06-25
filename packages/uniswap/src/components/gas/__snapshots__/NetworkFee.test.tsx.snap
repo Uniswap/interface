@@ -47,18 +47,6 @@ exports[`NetworkFee > renders a NetworkFee in a loading state 1`] = `
             </div>
           </div>
         </div>
-        <style>
-          
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-
-        </style>
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"

@@ -1,5 +1,4 @@
 import { ApolloClient, ApolloLink, from, NormalizedCacheObject } from '@apollo/client'
-import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { useMutation } from '@tanstack/react-query'
 import { isMobileApp } from '@universe/environment'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
@@ -12,7 +11,6 @@ import {
   getPerformanceLink,
   getRestLink,
 } from 'uniswap/src/data/links'
-import { getInstantTokenBalanceUpdateApolloLink } from 'uniswap/src/features/portfolio/portfolioUpdates/getInstantTokenBalanceUpdateApolloLink'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'
@@ -66,12 +64,10 @@ export const usePersistedApolloClient = ({
   storageWrapper,
   maxCacheSizeInBytes,
   customEndpoint,
-  reduxStore,
 }: {
   storageWrapper: PersistentStorage<string>
   maxCacheSizeInBytes: number
   customEndpoint?: CustomEndpoint
-  reduxStore: ToolkitStore
 }): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const signerManager = useWalletSigners()
@@ -83,11 +79,10 @@ export const usePersistedApolloClient = ({
         storageWrapper,
         maxCacheSizeInBytes,
         customEndpoint,
-        reduxStore,
         accounts,
         signerManager,
       }),
-    [storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore, accounts, signerManager],
+    [storageWrapper, maxCacheSizeInBytes, customEndpoint, accounts, signerManager],
   )
 
   const mutation = useMutation({
@@ -125,11 +120,10 @@ function makeApolloClientInit(ctx: {
   storageWrapper: PersistentStorage<string>
   maxCacheSizeInBytes: number
   customEndpoint?: CustomEndpoint
-  reduxStore: ToolkitStore
   accounts: ReturnType<typeof useAccounts>
   signerManager: ReturnType<typeof useWalletSigners>
 }): () => Promise<ApolloClient<NormalizedCacheObject>> {
-  const { storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore } = ctx
+  const { storageWrapper, maxCacheSizeInBytes, customEndpoint } = ctx
   const apolloLink = customEndpoint ? getCustomGraphqlHttpLink(customEndpoint) : getGraphqlHttpLink()
 
   const init = async (): Promise<ApolloClient<NormalizedCacheObject>> => {
@@ -150,7 +144,6 @@ function makeApolloClientInit(ctx: {
       // requires typing outside of wallet package
       // oxlint-disable-next-line typescript/no-explicit-any -- PerformanceLink args come from Apollo and require typing outside wallet package
       getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
-      getInstantTokenBalanceUpdateApolloLink({ reduxStore }),
       restLink,
     ]
     if (isMobileApp) {

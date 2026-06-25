@@ -28,8 +28,8 @@ export async function fetchBalancesAndUnitags({
   }))
 
   const [balancesResponse, unitagsResponse] = await Promise.all([
-    apolloClient.query<GraphQLApi.SelectWalletScreenQuery>({
-      query: GraphQLApi.SelectWalletScreenDocument,
+    apolloClient.query<GraphQLApi.PortfoliosTotalValueQuery>({
+      query: GraphQLApi.PortfoliosTotalValueDocument,
       variables: { ownerAddresses: addresses, chains: gqlChains, valueModifiers },
     }),
     unitagsApiClient.fetchUnitagsByAddresses({ addresses }),

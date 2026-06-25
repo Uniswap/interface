@@ -382,18 +382,21 @@ const ReanimatedNumber = ({
     }
   }, [scale, containerWidth])
 
+  // Scale the number down enough to leave room for the EndElement inside the overflow-hidden container
+  const endElementReservedWidth = EndElement ? (endElementGap ?? 0) + DIGIT_MAX_WIDTH : 0
+
   useEffect(() => {
     if (textWidth <= 0 || containerWidth <= 0) {
       return
     }
 
-    const newScale = containerWidth / textWidth
+    const newScale = (containerWidth - endElementReservedWidth) / textWidth
     if (newScale < 1) {
       scale.value = withTiming(newScale)
     } else if (scale.value < 1) {
       scale.value = withTiming(1)
     }
-  }, [containerWidth, scale, textWidth])
+  }, [containerWidth, scale, textWidth, endElementReservedWidth])
 
   useEffect(() => {
     if (balance && value && value !== prevValue) {
@@ -434,12 +437,13 @@ const ReanimatedNumber = ({
     })
   }, [chars])
 
-  const endElementLeft = charsSizes[chars.length - 1] || 0
-  const iconAnimatedLeft = useAnimatedStyle(
+  // Must be absolutely positioned: an in-flow sibling lands after the MAX_DEVICE_WIDTH chars row,
+  // past the container's clipped edge
+  const endElementAnimatedLeft = useAnimatedStyle(
     () => ({
-      marginLeft: withTiming(endElementLeft + (endElementGap ?? 0)),
+      left: withTiming(textWidth + (endElementGap ?? 0)),
     }),
-    [endElementLeft, endElementGap],
+    [textWidth, endElementGap],
   )
 
   if (loading) {
@@ -494,23 +498,19 @@ const ReanimatedNumber = ({
           >
             {value}
           </Animated.Text>
-          {EndElement && (
-            <Animated.View key="refresh-icon" style={{ height: DIGIT_HEIGHT }}>
-              <Animated.View
-                style={[
-                  {
-                    height: DIGIT_HEIGHT,
-                    width: DIGIT_MAX_WIDTH,
-                    position: 'absolute',
-                    marginVertical: 'auto',
-                    justifyContent: 'center',
-                  },
-                  AnimatedCharStyles.wrapperStyle,
-                  iconAnimatedLeft,
-                ]}
-              >
-                {EndElement}
-              </Animated.View>
+          {EndElement && textWidth > 0 && (
+            <Animated.View
+              style={[
+                {
+                  position: 'absolute',
+                  top: 0,
+                  height: DIGIT_HEIGHT,
+                  justifyContent: 'center',
+                },
+                endElementAnimatedLeft,
+              ]}
+            >
+              {EndElement}
             </Animated.View>
           )}
         </Flex>

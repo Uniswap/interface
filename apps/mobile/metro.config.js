@@ -1,3 +1,5 @@
+const crypto = require('crypto')
+const fs = require('fs')
 const path = require('path')
 const withStorybook = require('@storybook/react-native/metro/withStorybook')
 const { mergeConfig } = require('@react-native/metro-config')
@@ -83,5 +85,29 @@ finalConfig.resolver.resolveRequest = (context, moduleName, platform) => {
   }
   return context.resolveRequest(context, moduleName, platform)
 }
+
+// Env values are inlined into modules by transform-inline-environment-variables and then
+// baked into Metro's per-module transform cache. Metro doesn't key that cache on .env file
+// contents, so editing them leaves stale values in cached modules until `--reset-cache`.
+// Fold a hash of those files into Metro's cacheVersion so any change busts the cache
+// automatically. The file list must mirror what babel.config.js loads for the active mode.
+function getEnvCacheVersion() {
+  const envFiles =
+    process.env.USE_NEW_CONFIGS === 'true'
+      ? [path.resolve(__dirname, '.env.new'), path.resolve(__dirname, '.env.new.override')]
+      : [path.resolve(__dirname, '../../.env.defaults'), path.resolve(__dirname, '../../.env.defaults.local')]
+  const hash = crypto.createHash('md5')
+  for (const filePath of envFiles) {
+    if (fs.existsSync(filePath)) {
+      hash.update(filePath)
+      hash.update(fs.readFileSync(filePath))
+    }
+  }
+  return `env-${hash.digest('hex').slice(0, 16)}`
+}
+
+// Bust Metro's transform cache whenever the env files change (see getEnvCacheVersion).
+// Append to any existing cacheVersion rather than overwriting it.
+finalConfig.cacheVersion = [finalConfig.cacheVersion, getEnvCacheVersion()].filter(Boolean).join('-')
 
 module.exports = finalConfig

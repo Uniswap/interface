@@ -8,6 +8,7 @@ vi.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'common.auto': 'Auto',
         'gas.override.title': 'Network cost',
+        'swap.warning.networkFee.includesDelegation': 'Includes smart wallet activation',
       }
       return translations[key] ?? key
     },
@@ -87,5 +88,49 @@ describe('NetworkCostRow', () => {
     // (no TouchableArea wraps it).
     fireEvent.press(getByText('$1.54'))
     expect(onPress).not.toHaveBeenCalled()
+  })
+
+  it('renders the smart wallet activation subtitle when includesDelegation is true', () => {
+    const { getByText } = renderWithProviders(
+      <NetworkCostRow
+        gasFeeUsd="$1.54"
+        enableCustomGasFeeEntry
+        hasOverrides={false}
+        hasWarning={false}
+        includesDelegation
+        pressable={false}
+        onPress={vi.fn()}
+      />,
+    )
+    expect(getByText('Includes smart wallet activation')).toBeTruthy()
+  })
+
+  it('hides the smart wallet activation subtitle when includesDelegation is omitted', () => {
+    const { queryByText } = renderWithProviders(
+      <NetworkCostRow
+        gasFeeUsd="$1.54"
+        enableCustomGasFeeEntry
+        hasOverrides={false}
+        hasWarning={false}
+        onPress={vi.fn()}
+      />,
+    )
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
+  })
+
+  it('renders both the amber warning icon and the delegation subtitle together', () => {
+    const { getByTestId, getByText } = renderWithProviders(
+      <NetworkCostRow
+        gasFeeUsd="$1.54"
+        enableCustomGasFeeEntry
+        hasOverrides
+        hasWarning
+        includesDelegation
+        pressable={false}
+        onPress={vi.fn()}
+      />,
+    )
+    expect(getByTestId('network-cost-warning-icon')).toBeTruthy()
+    expect(getByText('Includes smart wallet activation')).toBeTruthy()
   })
 })

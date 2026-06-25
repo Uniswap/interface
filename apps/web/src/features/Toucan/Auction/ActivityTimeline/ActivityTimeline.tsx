@@ -15,7 +15,10 @@ import {
 } from '~/features/Toucan/Auction/ActivityTimeline/useTimelineEvents'
 import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
-import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
+import { useAuctionStore, useIsAuctionFailed } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { formatTokenAmountWithSymbol } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
 
 const TRACK_WIDTH = 20
@@ -178,6 +181,7 @@ export function ActivityTimeline() {
     auctionDetails: state.auctionDetails,
     currentBlockNumber: state.currentBlockNumber,
   }))
+  const isAuctionFailed = useIsAuctionFailed()
 
   const surface3 = useColorHexFromThemeKey('surface3')
   const { effectiveTokenColor } = useAuctionTokenColor()
@@ -188,6 +192,32 @@ export function ActivityTimeline() {
     chainId: auctionDetails?.chainId,
     currentBlockNumber,
   })
+
+  const { bidTokenInfo } = useBidTokenInfo({
+    bidTokenAddress: auctionDetails?.currency,
+    chainId: auctionDetails?.chainId,
+  })
+
+  // Currency amount the auction needed to raise in order to graduate (e.g. "3.333M USDC").
+  const requiredAmountFormatted = useMemo(() => {
+    const requiredRaw = auctionDetails?.requiredCurrencyRaised
+    if (!requiredRaw || !bidTokenInfo) {
+      return ''
+    }
+    return formatTokenAmountWithSymbol({
+      raw: BigInt(requiredRaw),
+      decimals: bidTokenInfo.decimals,
+      symbol: bidTokenInfo.symbol,
+    })
+  }, [auctionDetails?.requiredCurrencyRaised, bidTokenInfo])
+
+  // When trading is restricted until TGE (same gating as the token launched banner),
+  // the claim event represents tokens being claimable but not yet tradeable.
+  const tokenAddress = auctionDetails?.tokenAddress
+  const chainId = auctionDetails?.chainId
+  const tradingRestrictedUntilTge = Boolean(
+    tokenAddress && chainId && getAuctionMetadata({ chainId, tokenAddress })?.tradingRestrictedUntilTge,
+  )
 
   const strings = useMemo(
     (): Record<TimelineEventType, TimelineEventStrings> => ({
@@ -219,16 +249,27 @@ export function ActivityTimeline() {
         description: t('toucan.timeline.auctionEnds.description'),
         futureDescription: t('toucan.timeline.auctionEnds.description.future'),
       },
-      'tokens-claimable': {
-        label: t('toucan.timeline.tokensClaimable'),
-        description: t('toucan.timeline.tokensClaimable.description'),
-        futureDescription: t('toucan.timeline.tokensClaimable.description.future'),
+      'tokens-claimable': tradingRestrictedUntilTge
+        ? {
+            label: t('toucan.timeline.tokensClaimable.restricted'),
+            description: t('toucan.timeline.tokensClaimable.restricted.description'),
+            futureDescription: t('toucan.timeline.tokensClaimable.restricted.description.future'),
+          }
+        : {
+            label: t('toucan.timeline.tokensClaimable'),
+            description: t('toucan.timeline.tokensClaimable.description'),
+            futureDescription: t('toucan.timeline.tokensClaimable.description.future'),
+          },
+      'auction-failed': {
+        label: t('toucan.timeline.auctionFailed'),
+        description: t('toucan.timeline.auctionFailed.description', { requiredAmount: requiredAmountFormatted }),
+        futureDescription: t('toucan.timeline.auctionFailed.description', { requiredAmount: requiredAmountFormatted }),
       },
     }),
-    [t],
+    [t, tradingRestrictedUntilTge, requiredAmountFormatted],
   )
 
-  const events = useTimelineEvents({ auctionDetails, strings, auctionHasPresale, allowlistEndBlock })
+  const events = useTimelineEvents({ auctionDetails, strings, auctionHasPresale, allowlistEndBlock, isAuctionFailed })
   const activeIndex = getActiveEventIndex(events, currentBlockNumber)
 
   if (events.length === 0) {

@@ -2,6 +2,7 @@ import { providers as ethersProviders, Signer } from 'ethers'
 import { Task } from 'redux-saga'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CreateEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import type { RpcConfigResolver } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { logger } from 'utilities/src/logger/logger'
 
 enum ProviderStatus {
@@ -13,6 +14,10 @@ enum ProviderStatus {
 interface ProviderDetails {
   provider: ethersProviders.JsonRpcProvider
   status: ProviderStatus
+  // The resolved RPC URL the cached provider was built with. Used to detect
+  // when the route has changed (e.g. the UniRPC gate flipping on after boot)
+  // so the cached provider can be rebuilt instead of serving a stale endpoint.
+  rpcUrl?: string
   blockWatcher?: Task
 }
 
@@ -31,11 +36,13 @@ type ChainIdToProvider = Partial<Record<UniverseChainId, ProviderInfo>>
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
   private readonly providerFactory: CreateEthersProvider
+  private readonly resolveRpcConfig: RpcConfigResolver
 
   private onUpdate: (() => void) | null = null
 
-  constructor(providerFactory: CreateEthersProvider) {
+  constructor(providerFactory: CreateEthersProvider, resolveRpcConfig: RpcConfigResolver) {
     this.providerFactory = providerFactory
+    this.resolveRpcConfig = resolveRpcConfig
   }
 
   setOnUpdate(onUpdate: () => void): void {
@@ -52,7 +59,20 @@ export class ProviderManager {
 
   getProvider(chainId: UniverseChainId): ethersProviders.JsonRpcProvider {
     const cachedProviderDetails = this._providers[chainId]?.public
-    if (!cachedProviderDetails || cachedProviderDetails.status !== ProviderStatus.Connected) {
+    // Re-resolve the route every call and rebuild when it changes. `initProviders`
+    // eagerly constructs providers at boot, before Statsig's flag registry is
+    // ready — the UniRPC gate reads false and the cache captures the legacy
+    // (QuickNode) URL, pinning the chain to it for the whole session even after
+    // the gate turns on. ViemClientManager.getViemClient solves the same problem
+    // by re-resolving; this is its ethers counterpart, but keyed on the URL so a
+    // new provider is built only when the endpoint actually changes (ethers
+    // provider construction is heavier than viem's), not on every call.
+    const targetRpcUrl = this.resolveRpcConfig({ chainId, rpcType: RPCType.Public })?.rpcUrl
+    if (
+      !cachedProviderDetails ||
+      cachedProviderDetails.status !== ProviderStatus.Connected ||
+      cachedProviderDetails.rpcUrl !== targetRpcUrl
+    ) {
       this.createProvider(chainId)
     }
 
@@ -90,9 +110,10 @@ export class ProviderManager {
       return
     }
 
+    const rpcUrl = this.resolveRpcConfig({ chainId, rpcType: RPCType.Public })?.rpcUrl
     this._providers[chainId] = {
       ...this._providers[chainId],
-      public: { provider, status: ProviderStatus.Connected },
+      public: { provider, status: ProviderStatus.Connected, rpcUrl },
     }
     this.onUpdate?.()
   }

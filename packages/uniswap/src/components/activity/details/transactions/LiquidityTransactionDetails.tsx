@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { TransactionTokenContextMenu } from 'uniswap/src/components/activity/details/transactions/TransactionTokenContextMenu'
 import {
   TwoTokenDetails,
   useTokenAmountInfo,
   ValueText,
 } from 'uniswap/src/components/activity/details/transactions/utilityComponents'
-import { useTokenDetailsNavigation } from 'uniswap/src/components/activity/hooks/useTokenDetailsNavigation'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -50,8 +50,6 @@ export function LiquidityTransactionContent({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const onPressToken0 = useTokenDetailsNavigation(currency0, onClose)
-
   const {
     descriptor: token0Descriptor,
     value: token0Value,
@@ -87,6 +85,7 @@ export function LiquidityTransactionContent({
             {t('common.and')}
           </Text>
         }
+        onClose={onClose}
       />
     )
   }
@@ -95,16 +94,15 @@ export function LiquidityTransactionContent({
 
   return (
     <Flex gap="$spacing16" px="$spacing8" py="$spacing12">
-      <TouchableArea cursor="pointer" onPress={onPressToken0}>
-        <Flex centered row justifyContent="space-between">
-          <Flex>
-            <Text variant="heading3">{token0Descriptor}</Text>
-            <ValueText value={token0Value} isLoading={isLoading0} />
-          </Flex>
-          <CurrencyLogo hideNetworkLogo currencyInfo={currency0} size={iconSizes.icon40} />
+      <Flex centered row justifyContent="space-between">
+        <Flex>
+          <Text variant="heading3">{token0Descriptor}</Text>
+          <ValueText value={token0Value} isLoading={isLoading0} />
         </Flex>
-      </TouchableArea>
-      <Flex />
+        <TransactionTokenContextMenu currencyInfo={currency0} onClose={onClose}>
+          <CurrencyLogo hideNetworkLogo currencyInfo={currency0} size={iconSizes.icon40} />
+        </TransactionTokenContextMenu>
+      </Flex>
     </Flex>
   )
 }

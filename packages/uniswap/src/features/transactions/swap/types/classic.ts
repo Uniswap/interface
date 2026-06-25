@@ -48,8 +48,8 @@ export function createClassicTrade({
     deadline,
     slippageTolerance: quote.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
     swapFee: getTradingApiSwapFee(quote),
-    inputTax: getClassicInputTax(quote),
-    outputTax: getClassicOutputTax(quote),
+    inputTax: getClassicInputTax(currencyIn),
+    outputTax: getClassicOutputTax(currencyOut),
     priceImpact: getClassicPriceImpact(quote),
     quoteOutputAmount: getQuoteOutputAmount(quote, outputCurrency),
     quoteOutputAmountUserWillReceive: getQuoteOutputAmountUserWillReceive({
@@ -61,15 +61,17 @@ export function createClassicTrade({
   }
 }
 
-function getClassicInputTax(quote: ClassicQuoteResponse): Percent {
-  const sellFeeBps = quote.quote.route?.[0]?.[0]?.tokenIn?.sellFeeBps
-  return sellFeeBps ? new PercentValue(sellFeeBps, '10000') : ZERO_PERCENT
+// FOT (fee-on-transfer) taxes are read from the input/output currencies, which carry
+// `buyFeeBps`/`sellFeeBps` populated from token fee data (see `buildCurrency`), rather than
+// from the quote response route.
+function getClassicInputTax(currencyIn: Currency): Percent {
+  const sellFeeBps = currencyIn.wrapped.sellFeeBps
+  return sellFeeBps?.gt(0) ? new PercentValue(sellFeeBps.toString(), '10000') : ZERO_PERCENT
 }
 
-function getClassicOutputTax(quote: ClassicQuoteResponse): Percent {
-  const route = quote.quote.route?.[0]
-  const buyFeeBps = route?.[route.length - 1]?.tokenOut?.buyFeeBps
-  return buyFeeBps ? new PercentValue(buyFeeBps, '10000') : ZERO_PERCENT
+function getClassicOutputTax(currencyOut: Currency): Percent {
+  const buyFeeBps = currencyOut.wrapped.buyFeeBps
+  return buyFeeBps?.gt(0) ? new PercentValue(buyFeeBps.toString(), '10000') : ZERO_PERCENT
 }
 
 function getClassicPriceImpact(quote: ClassicQuoteResponse): Percent | undefined {

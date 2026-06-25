@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { CreateAuctionTokenLogo } from '~/pages/Liquidity/CreateAuction/components/CreateAuctionTokenLogo'
 import {
@@ -35,6 +38,8 @@ interface LaunchAuctionReviewModalProps {
   currentProgressStepIndex: number
   currentStepPending: boolean
   isLaunching: boolean
+  /** True while CreateAuction is prefetching after the modal opens — keeps the launch button in a pending spinner. */
+  isPreparing: boolean
   onLaunchToken: () => void
 }
 
@@ -73,12 +78,23 @@ export function LaunchAuctionReviewModal({
   currentProgressStepIndex,
   currentStepPending,
   isLaunching,
+  isPreparing,
   onLaunchToken,
 }: LaunchAuctionReviewModalProps): JSX.Element {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
-  const showProgress = currentProgressStepIndex >= 0 && progressSteps.length > 0
+  const [hasAcknowledgedCompliance, setHasAcknowledgedCompliance] = useState(false)
+  const onToggleCompliance = useEvent(() => setHasAcknowledgedCompliance((prev) => !prev))
+
+  // Only render the step indicator for multi-transaction launches (existing-token path: approve +
+  // launch). A single-transaction launch (new-token path) doesn't need a one-row progress list, so
+  // the review content + loading launch button carries it through to the success/error modal.
+  const showProgress = currentProgressStepIndex >= 0 && progressSteps.length > 1
+
+  // Spin the launch button both while CreateAuction prefetches (isPreparing) and while the launch
+  // is in flight (isLaunching), so a single-transaction launch reads as one continuous pending state.
+  const isLaunchButtonBusy = isLaunching || isPreparing
 
   const postAuctionTokenAmount = formatNumberOrString({
     value: committed.postAuctionLiquidityAmount.toExact(),
@@ -91,6 +107,7 @@ export function LaunchAuctionReviewModal({
       isModalOpen={isOpen}
       onClose={onClose}
       maxWidth={420}
+      borderRadius="$rounded24"
       padding="$spacing0"
       pt="$spacing12"
       pb="$spacing8"
@@ -187,18 +204,40 @@ export function LaunchAuctionReviewModal({
         </Flex>
 
         {showProgress ? null : (
-          <Flex row>
-            <Button
-              size="large"
-              emphasis="primary"
-              fill
-              backgroundColor={isLaunching ? undefined : tokenColor}
-              loading={isLaunching}
-              isDisabled={isLaunching}
-              onPress={onLaunchToken}
-            >
-              {t('toucan.createAuction.launchToken')}
-            </Button>
+          <Flex gap="$spacing12">
+            <Flex gap="$spacing2" px="$spacing12">
+              <Text variant="body4" color="$neutral2">
+                {t('toucan.createAuction.reviewModal.legalDisclaimer')}
+              </Text>
+              <Flex
+                row
+                alignItems="center"
+                gap="$spacing8"
+                py="$spacing8"
+                testID={TestID.LaunchAuctionLegalAcknowledge}
+              >
+                <Checkbox size="$icon.16" checked={hasAcknowledgedCompliance} onPress={onToggleCompliance} />
+                <TouchableArea onPress={onToggleCompliance}>
+                  <Text variant="buttonLabel4" color="$neutral2">
+                    {t('common.button.understand')}
+                  </Text>
+                </TouchableArea>
+              </Flex>
+            </Flex>
+            <Flex row>
+              <Button
+                testID={TestID.LaunchAuctionConfirmButton}
+                size="large"
+                emphasis="primary"
+                fill
+                backgroundColor={isLaunchButtonBusy ? undefined : tokenColor}
+                loading={isLaunchButtonBusy}
+                isDisabled={isLaunchButtonBusy || !hasAcknowledgedCompliance}
+                onPress={onLaunchToken}
+              >
+                {t('toucan.createAuction.launchAuction')}
+              </Button>
+            </Flex>
           </Flex>
         )}
       </Flex>

@@ -44,6 +44,7 @@ export const mockTransactionService: jest.Mocked<TransactionService> = {
   submitTransaction: jest.fn(),
   submitTransactionSync: jest.fn(),
   executeTransaction: jest.fn(),
+  executeUserOp: jest.fn(),
 }
 
 export const mockTransactionSigner: jest.Mocked<TransactionSigner> = {
@@ -102,7 +103,6 @@ export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDepende
   createBundledDelegationTransactionSignerService: jest.fn(),
   createBundledDelegationUserOpSignerService: jest.fn(),
   createTransactionService: jest.fn(),
-  createUserOpService: jest.fn(),
   createAnalyticsService: jest.fn(),
   createTransactionRepository: jest.fn(),
   createFeatureFlagService: jest.fn(),

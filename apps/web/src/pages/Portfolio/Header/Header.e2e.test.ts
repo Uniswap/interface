@@ -3,6 +3,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { expect, getTest } from '~/playwright/fixtures'
+import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { HAYDEN_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
@@ -11,21 +12,24 @@ const test = getTest()
 
 async function goToPortfolio({
   page,
-  graphql,
   eagerlyConnect,
   externalAddress,
+  getPortfolioMock = Mocks.DataApiService.get_portfolio,
 }: {
   page: Page
-  graphql: { intercept: (op: string, path: string) => Promise<void>; waitForResponse: (op: string) => Promise<void> }
   eagerlyConnect: boolean
   externalAddress?: string
+  getPortfolioMock?: string
 }): Promise<void> {
-  await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
+  await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
+
+  const getPortfolioResponse = page.waitForResponse((res) => res.request().url().includes('GetPortfolio'))
+
   const baseUrl = externalAddress ? `/portfolio/${externalAddress}` : '/portfolio'
   await page.goto(
     eagerlyConnect ? `${baseUrl}?eagerlyConnectAddress=${HAYDEN_ADDRESS}` : `${baseUrl}?eagerlyConnect=false`,
   )
-  await graphql.waitForResponse('PortfolioBalances')
+  await getPortfolioResponse
 }
 
 test.describe(
@@ -39,8 +43,8 @@ test.describe(
   },
   () => {
     test.describe('Tab Navigation', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: true })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: true })
       })
 
       test('should display all portfolio tabs', async ({ page }) => {
@@ -77,8 +81,8 @@ test.describe(
     })
 
     test.describe('Demo View (Disconnected User)', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: false })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: false })
       })
 
       test('should show demo wallet display when not connected', async ({ page }) => {
@@ -102,8 +106,8 @@ test.describe(
     })
 
     test.describe('Connected User Address Display', () => {
-      test('should display connected wallet address in portfolio header', async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: true })
+      test('should display connected wallet address in portfolio header', async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: true })
 
         // Wait for portfolio page to load (connected view shows tabs; demo view does not show Overview tab in same way)
         await expect(page.getByTestId(TestID.PortfolioTabOverview)).toBeVisible()
@@ -116,16 +120,16 @@ test.describe(
     })
 
     test.describe('External Wallet View', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: false, externalAddress: HAYDEN_ADDRESS })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: false, externalAddress: HAYDEN_ADDRESS })
       })
 
-      test('should show share button when viewing external wallet', async ({ page, graphql }) => {
+      test('should show share button when viewing external wallet', async ({ page }) => {
         // Share button should be visible for external wallets
         await expect(page.getByTestId(TestID.PortfolioShareButton)).toBeVisible()
       })
 
-      test('should preserve external address when navigating tabs', async ({ page, graphql }) => {
+      test('should preserve external address when navigating tabs', async ({ page }) => {
         // Navigate to tokens tab
         await page.getByTestId(TestID.PortfolioTabTokens).click()
 
@@ -138,8 +142,8 @@ test.describe(
     })
 
     test.describe('Network Filter', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: true })
+      test.beforeEach(async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: true })
       })
 
       test('should filter by Ethereum network and update URL', async ({ page }) => {
@@ -178,16 +182,16 @@ test.describe(
         await page.setViewportSize(MOBILE_VIEWPORT)
       })
 
-      test('should display tabs on mobile', async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: true })
+      test('should display tabs on mobile', async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: true })
 
         // Tabs should still be visible on mobile
         await expect(page.getByTestId(TestID.PortfolioTabOverview)).toBeVisible()
         await expect(page.getByTestId(TestID.PortfolioTabTokens)).toBeVisible()
       })
 
-      test('should show share button on mobile for external wallet', async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: false, externalAddress: HAYDEN_ADDRESS })
+      test('should show share button on mobile for external wallet', async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: false, externalAddress: HAYDEN_ADDRESS })
 
         // Wait for portfolio page to load (external view) before asserting on header elements
         await expect(page.getByTestId(TestID.PortfolioHeader)).toBeVisible()
@@ -196,8 +200,8 @@ test.describe(
         await expect(page.getByTestId(TestID.PortfolioShareButton)).toBeVisible({ timeout: 15000 })
       })
 
-      test('should navigate tabs on mobile', async ({ page, graphql }) => {
-        await goToPortfolio({ page, graphql, eagerlyConnect: true })
+      test('should navigate tabs on mobile', async ({ page }) => {
+        await goToPortfolio({ page, eagerlyConnect: true })
 
         await page.getByTestId(TestID.PortfolioTabActivity).click()
         await expect(page).toHaveURL(/\/portfolio\/activity/)

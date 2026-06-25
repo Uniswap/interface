@@ -1,13 +1,8 @@
-import { css, keyframes } from '~/lib/deprecated-styled'
+import { css } from '~/lib/deprecated-styled'
 
 export const flexColumnNoWrap = css`
   display: flex;
   flex-flow: column nowrap;
-`
-
-export const flexRowNoWrap = css`
-  display: flex;
-  flex-flow: row nowrap;
 `
 
 export enum TRANSITION_DURATIONS {
@@ -29,16 +24,3 @@ export const transitions = {
     inOut: 'ease-in-out',
   },
 }
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`
-
-export const textFadeIn = css`
-  animation: ${fadeIn} ${transitions.duration.fast} ${transitions.timing.in};
-`

@@ -7,6 +7,7 @@ import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -58,7 +59,7 @@ export const MONAD_CHAIN_INFO = {
   supportsNFTs: false,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Monad],
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Monad)] },
     // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
     [RPCType.Default]: { http: ['https://monad.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },

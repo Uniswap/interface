@@ -92,6 +92,9 @@ export function ExpandableRows(): JSX.Element | null {
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
           uniswapXGasBreakdown={gasFeeBreakdown}
+          sponsorMetadata={
+            'sponsorshipInfo' in trade.trade.quote ? trade.trade.quote.sponsorshipInfo?.sponsorMetadata : undefined
+          }
           RateInfo={
             showPriceImpactWarning ? (
               <Flex row alignItems="center" justifyContent="space-between">

@@ -35,6 +35,12 @@ const strings: Record<TimelineEventType, TimelineEventStrings> = {
     description: 'Tokens become claimable',
     futureDescription: 'Tokens will become claimable',
   },
+  'auction-failed': {
+    label: 'Auction failed to launch.',
+    description: 'This auction did not raise the required amount (3.333M USDC) and no tokens will be distributed.',
+    futureDescription:
+      'This auction did not raise the required amount (3.333M USDC) and no tokens will be distributed.',
+  },
 }
 
 function makeStep(mps: number, startBlock: string): AuctionStep {
@@ -180,6 +186,34 @@ describe('deriveTimelineEvents', () => {
     expect(events[0].time.getTime()).toBe(1735690800000)
     expect(events[1].time.getTime()).toBe(1735694400000)
     expect(events[2].time.getTime()).toBe(1735695600000)
+  })
+
+  it('replaces the tokens-claimable event with auction-failed when the auction failed to graduate', () => {
+    const details = makeAuctionDetails({
+      parsedAuctionSteps: [makeStep(10, '200')],
+      endBlock: '500',
+      claimBlock: '600',
+    })
+
+    const events = deriveTimelineEvents({ auctionDetails: details, strings, isAuctionFailed: true })
+
+    expect(events.map((e) => e.type)).toEqual(['auction-started', 'auction-ends', 'auction-failed'])
+    const failedEvent = events[events.length - 1]
+    expect(failedEvent.block).toBe(600)
+    expect(failedEvent.label).toBe('Auction failed to launch.')
+    expect(failedEvent.description).toContain('3.333M USDC')
+  })
+
+  it('keeps the tokens-claimable event when the auction has not failed', () => {
+    const details = makeAuctionDetails({
+      parsedAuctionSteps: [makeStep(10, '200')],
+      endBlock: '500',
+      claimBlock: '600',
+    })
+
+    const events = deriveTimelineEvents({ auctionDetails: details, strings, isAuctionFailed: false })
+
+    expect(events[events.length - 1].type).toBe('tokens-claimable')
   })
 
   it('handles multiple contiguous pre-sale steps', () => {

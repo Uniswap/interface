@@ -1,5 +1,5 @@
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
+import { deriveArgon2 } from 'uniswap/src/features/passkey/deriveArgon2'
 import { attemptPinDecryption, executeRecoveryExport } from 'uniswap/src/features/passkey/recoveryExecute'
 
 vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
@@ -10,8 +10,8 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
   },
 }))
 
-vi.mock('uniswap/src/features/passkey/deriveArgon2InWorker', () => ({
-  deriveArgon2InWorker: vi.fn(),
+vi.mock('uniswap/src/features/passkey/deriveArgon2', () => ({
+  deriveArgon2: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/pinCrypto', async (importOriginal) => {
@@ -123,7 +123,7 @@ describe('attemptPinDecryption', () => {
     } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(fakeOprfOutput)
     // Return wrong pinKey so GCM fails
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockResolvedValue({
       cooldownSeconds: 0,
       errorMessage: 'Wrong PIN',
@@ -131,10 +131,13 @@ describe('attemptPinDecryption', () => {
 
     const result = await attemptPinDecryption({ pin: '9999', email, accessToken, encryptedBlob: blob })
     expect(result).toMatchObject({ success: false, error: 'wrong_pin' })
-    expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith({
-      success: false,
-      authMethodId: hashAuthMethodId(email),
-    })
+    expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith(
+      {
+        success: false,
+        authMethodId: hashAuthMethodId(email),
+      },
+      accessToken,
+    )
   })
 
   it('wrong_pin with cooldown includes cooldownSeconds', async () => {
@@ -149,7 +152,7 @@ describe('attemptPinDecryption', () => {
     })
     vi.mocked(EmbeddedWalletApiClient.fetchOprfEvaluate).mockResolvedValue({ evaluatedElement: 'eval' } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(fakeOprfOutput)
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockResolvedValue({
       cooldownSeconds: 60,
       errorMessage: 'Too many attempts',
@@ -172,12 +175,10 @@ describe('attemptPinDecryption', () => {
     })
     vi.mocked(EmbeddedWalletApiClient.fetchOprfEvaluate).mockResolvedValue({ evaluatedElement: 'eval' } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(fakeOprfOutput)
-    vi.mocked(deriveArgon2InWorker).mockRejectedValue(
-      new Error('Argon2 worker crashed — device may not have enough memory'),
-    )
+    vi.mocked(deriveArgon2).mockRejectedValue(new Error('Argon2 derivation failed — device may not have enough memory'))
 
     await expect(attemptPinDecryption({ pin: '1234', email, accessToken, encryptedBlob: blob })).rejects.toThrow(
-      'Argon2 worker crashed',
+      'Argon2 derivation failed',
     )
     expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).not.toHaveBeenCalled()
   })
@@ -195,7 +196,7 @@ describe('attemptPinDecryption', () => {
     })
     vi.mocked(EmbeddedWalletApiClient.fetchOprfEvaluate).mockResolvedValue({ evaluatedElement: 'eval' } as never)
     vi.mocked(finalizeOprf).mockResolvedValue(fakeOprfOutput)
-    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
     vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockRejectedValue(new Error('network'))
 
     // Should propagate, not silently eat the error — report failing is an unexpected error
@@ -208,6 +209,7 @@ describe('attemptPinDecryption', () => {
 describe('executeRecoveryExport', () => {
   const authMethodId = 'auth-method-1'
   const encryptionKey = 'enc-key-1'
+  const accessToken = 'tok'
 
   beforeEach(() => {
     vi.resetAllMocks()
@@ -235,15 +237,19 @@ describe('executeRecoveryExport', () => {
       authPrivateKey,
       authMethodId,
       encryptionKey,
+      accessToken,
       generateAuthorizationSignature,
     })
 
     expect(result).toEqual({ ciphertext: 'ct', encapsulatedKey: 'ek' })
-    expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith({
-      success: true,
-      authMethodId,
-      encryptionKey,
-    })
+    expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith(
+      {
+        success: true,
+        authMethodId,
+        encryptionKey,
+      },
+      accessToken,
+    )
     expect(generateAuthorizationSignature).toHaveBeenCalled()
     expect(EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -266,6 +272,7 @@ describe('executeRecoveryExport', () => {
         authPrivateKey,
         authMethodId,
         encryptionKey,
+        accessToken,
         generateAuthorizationSignature: vi.fn(),
       }),
     ).rejects.toThrow(/export signing payload/i)

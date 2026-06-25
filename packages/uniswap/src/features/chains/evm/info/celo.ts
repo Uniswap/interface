@@ -3,7 +3,7 @@ import { SwapConfigKey } from '@universe/gating'
 import { CELO_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
-import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { getUniRpcEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
@@ -63,7 +63,7 @@ export const CELO_CHAIN_INFO = {
   supportsNFTs: false,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Celo],
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Celo)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Celo)] },
     [RPCType.Default]: { http: [`https://forno.celo.org`] },
     [RPCType.Interface]: { http: [`https://celo-mainnet.infura.io/v3/${config.infuraKey}`] },
   },

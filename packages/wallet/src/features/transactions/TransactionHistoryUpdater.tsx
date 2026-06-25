@@ -1,12 +1,15 @@
 import { useApolloClient } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
+import { useQueryClient } from '@tanstack/react-query'
+import { Transaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import dayjs from 'dayjs'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { parseDataResponseToTransactionDetails } from 'uniswap/src/features/activity/parseRestResponse'
+import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
 import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/slice/selectors'
 import {
   pushNotification,
@@ -17,83 +20,49 @@ import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/s
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
-import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
-import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 /**
  * For all imported accounts, checks for new transactions and updates
  * the notification status in redux.
  */
 export function TransactionHistoryUpdater(): JSX.Element | null {
-  const allAccounts = useAccounts()
-
   const activeAccountAddress = useActiveAccountAddress()
-  const nonActiveAccountAddresses = useMemo(() => {
-    // Filter out any empty/falsy addresses to prevent validation errors
-    return Object.keys(allAccounts).filter((address) => address && address !== activeAccountAddress)
-  }, [activeAccountAddress, allAccounts])
+  const { chains } = useEnabledChains()
 
-  const { gqlChains } = useEnabledChains()
-
-  // Poll at different intervals to reduce requests made for non active accounts.
-  // IMPORTANT: Disable polling when no addresses to prevent race condition where
-  // empty arrays are sent to GraphQL before skip condition is evaluated.
-
-  const activeAddresses = activeAccountAddress ? [activeAccountAddress] : []
-  const shouldSkipActiveQuery = activeAddresses.length === 0
-
-  const { data: activeAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAddresses, chains: gqlChains },
-    pollInterval: shouldSkipActiveQuery ? 0 : PollingInterval.KindaFast,
-    fetchPolicy: 'network-only', // Ensure latest data.
+  // Poll for the active account only
+  const shouldSkipActiveQuery = !activeAccountAddress
+  const { data: activeAccountTransactions } = useListTransactions({
+    evmAddress: activeAccountAddress ?? undefined,
+    chainIds: chains,
     skip: shouldSkipActiveQuery,
+    refetchInterval: shouldSkipActiveQuery ? 0 : PollingInterval.KindaFast,
   })
 
-  const shouldSkipNonActiveQuery = nonActiveAccountAddresses.length === 0
-
-  const { data: nonActiveAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
-    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
-    pollInterval: shouldSkipNonActiveQuery ? 0 : PollingInterval.Normal,
-    fetchPolicy: 'network-only', // Ensure latest data.
-    skip: shouldSkipNonActiveQuery,
-  })
-
-  const combinedPortfoliosData = [...(activeAccountData?.portfolios ?? []), ...(nonActiveAccountData?.portfolios ?? [])]
-
-  if (!combinedPortfoliosData.length) {
+  if (!activeAccountTransactions?.length || !activeAccountAddress) {
     return null
   }
 
   return (
-    <>
-      {combinedPortfoliosData.map((portfolio) => {
-        if (!portfolio?.ownerAddress || !portfolio.assetActivities) {
-          return null
-        }
-
-        return (
-          <View key={portfolio.ownerAddress} testID={`AddressTransactionHistoryUpdater/${portfolio.ownerAddress}`}>
-            <AddressTransactionHistoryUpdater activities={portfolio.assetActivities} address={portfolio.ownerAddress} />
-          </View>
-        )
-      })}
-    </>
+    <View key={activeAccountAddress} testID={`AddressTransactionHistoryUpdater/${activeAccountAddress}`}>
+      <AddressTransactionHistoryUpdater transactions={activeAccountTransactions} address={activeAccountAddress} />
+    </View>
   )
 }
 
 function AddressTransactionHistoryUpdater({
   address,
-  activities,
+  transactions,
 }: {
   address: string
-  activities: NonNullable<
-    NonNullable<
-      NonNullable<NonNullable<GraphQLApi.TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
-    >['assetActivities']
-  >
+  transactions: TransactionDetails[]
 }): JSX.Element | null {
   const dispatch = useDispatch()
   const apolloClient = useApolloClient()
@@ -115,17 +84,13 @@ function AddressTransactionHistoryUpdater({
       let newTransactionsFound = false
 
       // Parse txns and address from portfolio.
-      activities.forEach((activity) => {
-        if (!activity) {
-          return
-        }
-
+      transactions.forEach((transaction) => {
         if (!lastTxNotificationUpdateTimestamp) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: dayjs().valueOf() })) // Note this is in ms
           return
         }
 
-        const updatedTimestampMs = activity.timestamp * ONE_SECOND_MS // convert api response from s -> ms
+        const updatedTimestampMs = transaction.addedTime
         const hasNewTxn = updatedTimestampMs > lastTxNotificationUpdateTimestamp
 
         if (hasNewTxn) {
@@ -134,7 +99,7 @@ function AddressTransactionHistoryUpdater({
           // Dont flag notification status for txns submitted from app, this is handled in transactionWatcherSaga.
           const confirmedLocally = localTransactions?.some(
             // oxlint-disable-next-line max-nested-callbacks
-            (localTx) => activity.details.__typename === 'TransactionDetails' && localTx.hash === activity.details.hash,
+            (localTx) => localTx.hash === transaction.hash,
           )
           if (!confirmedLocally) {
             dispatch(setNotificationStatus({ address, hasNotifications: true }))
@@ -148,13 +113,16 @@ function AddressTransactionHistoryUpdater({
       // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (newTransactionsFound && address === activeAccountAddress) {
         // Fetch full recent txn history and dispatch receive notification if needed.
-        await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp, hideSpamTokens)
+        await fetchAndDispatchReceiveNotification({
+          address,
+          lastTxNotificationUpdateTimestamp,
+          hideSpamTokens,
+        })
         await apolloClient.refetchQueries({ include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE })
       }
     }).catch(() => undefined)
   }, [
     activeAccountAddress,
-    activities,
     address,
     apolloClient,
     dispatch,
@@ -162,6 +130,7 @@ function AddressTransactionHistoryUpdater({
     hideSpamTokens,
     lastTxNotificationUpdateTimestamp,
     localTransactions,
+    transactions,
   ])
 
   return null
@@ -175,30 +144,36 @@ function AddressTransactionHistoryUpdater({
  * want to submit every polling interval - only fetch this data if new txn is detected. This ideally gets
  * replaced with a subscription to new transactions with more full txn data.
  */
-// oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
-export function useFetchAndDispatchReceiveNotification(): (
-  address: string,
-  lastTxNotificationUpdateTimestamp: number | undefined,
-  hideSpamTokens: boolean,
-) => Promise<void> {
-  const [fetchFullTransactionData] = GraphQLApi.useTransactionListLazyQuery()
+export function useFetchAndDispatchReceiveNotification(): (params: {
+  address: string
+  lastTxNotificationUpdateTimestamp: number | undefined
+  hideSpamTokens?: boolean
+}) => Promise<void> {
   const dispatch = useDispatch()
-  const { gqlChains } = useEnabledChains()
+  const { chains } = useEnabledChains()
+  const queryClient = useQueryClient()
 
-  // oxlint-disable-next-line max-params
-  return async (
-    address: string,
-    lastTxNotificationUpdateTimestamp: number | undefined,
-    hideSpamTokens = false,
-  ): Promise<void> => {
+  return async ({
+    address,
+    lastTxNotificationUpdateTimestamp,
+    hideSpamTokens,
+  }: {
+    address: string
+    lastTxNotificationUpdateTimestamp: number | undefined
+    hideSpamTokens?: boolean
+  }): Promise<void> => {
     // Fetch full transaction history for user address.
-    const { data: fullTransactionData } = await fetchFullTransactionData({
-      variables: { address, chains: gqlChains },
-      fetchPolicy: 'network-only', // Ensure latest data.
-    })
+    const listTransactionsResponse = await queryClient.fetchQuery(
+      getListTransactionsQuery({
+        input: {
+          evmAddress: address,
+          chainIds: chains,
+        },
+      }),
+    )
 
     const notification = getReceiveNotificationFromData({
-      data: fullTransactionData,
+      transactions: listTransactionsResponse?.transactions ?? [],
       address,
       lastTxNotificationUpdateTimestamp,
       hideSpamTokens,
@@ -211,22 +186,22 @@ export function useFetchAndDispatchReceiveNotification(): (
 }
 
 export function getReceiveNotificationFromData({
-  data,
+  transactions,
   address,
   lastTxNotificationUpdateTimestamp,
   hideSpamTokens = false,
 }: {
-  data?: GraphQLApi.TransactionListQuery
+  transactions: Transaction[]
   address: Address
   lastTxNotificationUpdateTimestamp?: number
   hideSpamTokens?: boolean
 }): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
-  if (!data || !lastTxNotificationUpdateTimestamp) {
+  if (!lastTxNotificationUpdateTimestamp || !transactions.length) {
     return undefined
   }
 
-  const parsedTxHistory = parseDataResponseToTransactionDetails({
-    data,
+  const parsedTxHistory = parseToTransactionDetails({
+    transactions,
     hideSpamTokens,
   })
   if (!parsedTxHistory) {

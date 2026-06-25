@@ -7,6 +7,7 @@ import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -24,7 +25,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccountsStore, useActiveAccount } from '~/features/accounts/store/hooks'
 import { useSelectChain } from '~/hooks/useSelectChain'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { useGetOnPressRetry } from '~/state/sagas/transactions/retry'
 import {
   createHandleSwapTransactionWalletCallStep,
@@ -73,6 +74,7 @@ export function useSwapCallback(): SwapCallback {
   })
 
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const rwaWhitelist = useRWAWhitelist()
 
   return useCallback(
     (args: SwapCallbackParams) => {
@@ -118,6 +120,7 @@ export function useSwapCallback(): SwapCallback {
         includedPermitTransactionStep,
         swapStartTimestamp,
         priceSource,
+        rwaWhitelist,
       })
 
       const account = getActiveAccount(trade.inputAmount.currency.chainId)
@@ -201,6 +204,7 @@ export function useSwapCallback(): SwapCallback {
       updateSwapForm,
       caip25Info,
       isCentralizedPricesEnabled,
+      rwaWhitelist,
     ],
   )
 }

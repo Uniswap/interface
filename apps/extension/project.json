@@ -2,27 +2,36 @@
   "tags": ["scope:extension", "type:app"],
   "targets": {
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["^build", "prepare"]
-    },
-    "build:firefox": {
-      "command": "wxt build -b firefox",
+      "command": "echo 'Specify a configuration, e.g. nx build extension -c production' && exit 1",
       "options": {
         "cwd": "{projectRoot}"
-      }
-    },
-    "build:wxt": {
-      "command": "wxt build",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "build:production": {
-      "command": "wxt build",
-      "options": {
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production"
+      },
+      "dependsOn": ["^prepare", "prepare", "config:pull"],
+      "cache": true,
+      "inputs": ["production", "^production", "!{projectRoot}/.output"],
+      "outputs": ["{projectRoot}/.output"],
+      "configurations": {
+        "production": {
+          "command": "wxt build",
+          "env": { "NODE_ENV": "production" }
+        },
+        "development": {
+          "command": "wxt build",
+          "env": { "NODE_ENV": "production" }
+        },
+        "staging": {
+          "command": "wxt build",
+          "env": { "NODE_ENV": "production" }
+        },
+        "e2e": {
+          "command": "wxt build -b chrome --mode production",
+          "env": { "NODE_ENV": "production", "BUILD_ENV": "dev", "BUILD_NUM": "0" }
+        },
+        "chrome": {
+          "command": "wxt build"
+        },
+        "firefox": {
+          "command": "wxt build -b firefox"
         }
       }
     },
@@ -43,12 +52,12 @@
       "command": "wxt",
       "options": {
         "cwd": "{projectRoot}"
-      }
-    },
-    "dev:firefox": {
-      "command": "wxt -b firefox",
-      "options": {
-        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "prepare", "config:pull"],
+      "configurations": {
+        "dev-firefox": {
+          "command": "wxt -b firefox"
+        }
       }
     },
     "env:local:download": {
@@ -75,30 +84,33 @@
     "lint:fix": {},
     "check": {},
     "check:fast": {},
-    "postinstall": {
-      "command": "wxt prepare",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "prepare": {
       "command": "wxt prepare",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["config:pull"],
       "cache": true,
       "inputs": [
         "{projectRoot}/wxt.config.ts",
         "{projectRoot}/config/**",
         "{projectRoot}/src/entrypoints/**/*",
-        "{projectRoot}/package.json"
+        "{projectRoot}/package.json",
+        "{projectRoot}/.env.*"
       ],
       "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
     },
     "config:pull": {
       "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\"; fi",
-      "options": { "cwd": "{workspaceRoot}" }
+      "options": { "cwd": "{workspaceRoot}" },
+      "defaultConfiguration": "development",
+      "configurations": {
+        "development": {},
+        "staging": { "env": { "CONFIG_ENV": "staging" } },
+        "production": { "env": { "CONFIG_ENV": "production" } },
+        "chrome": { "env": { "CONFIG_ENV": "production" } },
+        "firefox": { "env": { "CONFIG_ENV": "production" } },
+        "e2e": { "env": { "CONFIG_ENV": "production" } }
+      }
     },
     "snapshots": {
       "command": "jest -u",
@@ -110,39 +122,27 @@
       "command": "wxt",
       "options": {
         "cwd": "{projectRoot}"
-      }
-    },
-    "start:absolute": {
-      "command": "bun run scripts/startAbsolute.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start:absolute:no-browser": {
-      "command": "bun run scripts/startAbsolute.ts",
-      "options": {
-        "cwd": "{projectRoot}",
-        "env": {
-          "WXT_NO_OPEN_BROWSER": "true"
+      },
+      "dependsOn": ["^prepare", "prepare", "config:pull"],
+      "configurations": {
+        "absolute": {
+          "command": "bun run scripts/startAbsolute.ts"
+        },
+        "absolute-no-browser": {
+          "command": "bun run scripts/startAbsolute.ts",
+          "env": {
+            "WXT_NO_OPEN_BROWSER": "true"
+          }
+        },
+        "absolute-mac": {
+          "command": "WXT_ABSOLUTE_OUTDIR=/Users/Shared/stretch wxt"
+        },
+        "absolute-windows": {
+          "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt"
+        },
+        "absolute-linux": {
+          "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt"
         }
-      }
-    },
-    "start:absolute:mac": {
-      "command": "WXT_ABSOLUTE_OUTDIR=/Users/Shared/stretch wxt",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start:absolute:windows": {
-      "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start:absolute:linux": {
-      "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt",
-      "options": {
-        "cwd": "{projectRoot}"
       }
     },
     "test": {
@@ -166,21 +166,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "build:e2e": {
-      "command": "wxt build -b chrome --mode production",
-      "options": {
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production",
-          "BUILD_ENV": "dev",
-          "BUILD_NUM": "0"
-        }
-      },
-      "inputs": ["sourceFiles"],
-      "outputs": ["{projectRoot}/.output/chrome-mv3"],
-      "cache": true,
-      "dependsOn": ["^build", "prepare"]
-    },
     "playwright:test": {
       "command": "playwright test --config=e2e/config/playwright.config.ts",
       "options": {
@@ -201,22 +186,26 @@
     },
     "e2e": {
       "command": "nx playwright:test extension",
-      "dependsOn": ["build:e2e"]
+      "dependsOn": ["build"],
+      "configurations": { "e2e": {} }
     },
     "e2e:smoke": {
       "command": "nx playwright:test:smoke extension",
-      "dependsOn": ["build:e2e"]
+      "dependsOn": ["build"],
+      "configurations": { "e2e": {} }
     },
     "e2e:ui": {
       "command": "nx playwright:ui extension",
-      "dependsOn": ["build:e2e"]
+      "dependsOn": ["build"],
+      "configurations": { "e2e": {} }
     },
     "validate:build": {
       "command": "bun run scripts/validateBuildOutput.ts",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["build:wxt"]
+      "dependsOn": ["build"],
+      "configurations": { "chrome": {} }
     },
     "validate:build:dev": {
       "command": "bun run scripts/validateBuildOutput.ts --dev",
@@ -229,7 +218,8 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["build:wxt"]
+      "dependsOn": ["build"],
+      "configurations": { "chrome": {} }
     }
   }
 }

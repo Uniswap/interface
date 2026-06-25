@@ -1,67 +1,44 @@
 {
   "tags": ["scope:mobile", "type:app"],
   "targets": {
-    "build": {
-      "executor": "nx:noop"
-    },
     "android": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebug --app-id=com.uniswap.mobile.dev",
+      "command": "echo 'Specify a configuration, e.g. nx android mobile -c dev' && exit 1",
       "options": {
         "cwd": "{projectRoot}"
-      }
-    },
-    "android:dev:optimized": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebugOptimized --app-id=com.uniswap.mobile.dev",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:release": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:beta": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaDebug --app-id=com.uniswap.mobile.beta",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:beta:release": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaRelease --app-id=com.uniswap.mobile.beta",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:prod": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodDebug",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:prod:release": {
-      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodRelease",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:beta:release:local": {
-      "command": "bash ./scripts/runAndroidLocal.sh beta",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:dev:release:local": {
-      "command": "bash ./scripts/runAndroidLocal.sh dev",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "android:prod:release:local": {
-      "command": "bash ./scripts/runAndroidLocal.sh prod",
-      "options": {
-        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "config:pull"],
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebug --app-id=com.uniswap.mobile.dev"
+        },
+        "dev-optimized": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebugOptimized --app-id=com.uniswap.mobile.dev"
+        },
+        "dev-release": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev"
+        },
+        "beta": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaDebug --app-id=com.uniswap.mobile.beta"
+        },
+        "beta-release": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaRelease --app-id=com.uniswap.mobile.beta"
+        },
+        "prod": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodDebug"
+        },
+        "prod-release": {
+          "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodRelease"
+        },
+        "dev-local": {
+          "command": "bash ./scripts/runAndroidLocal.sh dev"
+        },
+        "beta-local": {
+          "command": "bash ./scripts/runAndroidLocal.sh beta"
+        },
+        "prod-local": {
+          "command": "bash ./scripts/runAndroidLocal.sh prod"
+        }
       }
     },
     "check:bundlesize": {
@@ -145,7 +122,7 @@
     },
     "e2e:prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["e2e:generate-ids", "e2e:build-js"]
+      "dependsOn": ["^prepare", "e2e:generate-ids", "e2e:build-js"]
     },
     "e2e:generate-ids": {
       "command": "mkdir -p .maestro/scripts/dist && bun run .maestro/scripts/tooling/generateTestIds.ts > .maestro/scripts/dist/testIds.js",
@@ -157,28 +134,27 @@
       "command": "bun run .maestro/scripts/tooling/buildPerformanceScripts.ts",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["^prepare"]
     },
     "e2e": {
-      "command": "maestro test .maestro",
+      "command": "echo 'Specify a suite, e.g. nx e2e mobile -c e2e' && exit 1",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["e2e:prepare"]
-    },
-    "e2e:onboarding": {
-      "command": "maestro test .maestro/flows/onboarding",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["e2e:prepare"]
-    },
-    "e2e:swap": {
-      "command": "maestro test .maestro/flows/swap",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["e2e:prepare"]
+      "dependsOn": ["e2e:prepare", "config:pull"],
+      "defaultConfiguration": "e2e",
+      "configurations": {
+        "e2e": {
+          "command": "maestro test .maestro"
+        },
+        "e2e-onboarding": {
+          "command": "maestro test .maestro/flows/onboarding"
+        },
+        "e2e-swap": {
+          "command": "maestro test .maestro/flows/swap"
+        }
+      }
     },
     "e2e:clear-logs": {
       "command": "rm -rf $HOME/.maestro/tests",
@@ -231,55 +207,41 @@
       }
     },
     "ios": {
-      "command": "bunx expo run:ios --scheme Uniswap --configuration DebugOptimized",
+      "command": "echo 'Specify a configuration, e.g. nx ios mobile -c dev' && exit 1",
       "options": {
         "cwd": "{projectRoot}"
-      }
-    },
-    "ios:debug": {
-      "command": "bunx expo run:ios --scheme Uniswap --configuration Debug",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:interactive": {
-      "command": "bun run scripts/ios-build-interactive/main.ts",
-      "options": {
-        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "config:pull"],
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "bunx expo run:ios --scheme Uniswap --configuration DebugOptimized"
+        },
+        "debug": {
+          "command": "bunx expo run:ios --scheme Uniswap --configuration Debug"
+        },
+        "dev-release": {
+          "command": "bunx expo run:ios --configuration Dev"
+        },
+        "smol": {
+          "command": "bunx expo run:ios --device=\"iPhone SE (3rd generation)\""
+        },
+        "beta": {
+          "command": "bunx expo run:ios --configuration Beta"
+        },
+        "release": {
+          "command": "bunx expo run:ios --configuration Release"
+        },
+        "bundle": {
+          "command": "bunx react-native bundle --entry-file apps/mobile/index.js --platform ios --dev false --bundle-output ./ios/main.jsbundle --assets-dest ./ios --sourcemap-output ./ios/main.jsbundle.map"
+        },
+        "interactive": {
+          "command": "bun run scripts/ios-build-interactive/main.ts"
+        }
       }
     },
     "ios:signing:local": {
       "command": "bun run scripts/setupLocalDeviceSigning.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:smol": {
-      "command": "bunx expo run:ios --device=\"iPhone SE (3rd generation)\"",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:dev:release": {
-      "command": "bunx expo run:ios --configuration Dev",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:beta": {
-      "command": "bunx expo run:ios --configuration Beta",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:bundle": {
-      "command": "bunx react-native bundle --entry-file apps/mobile/index.js --platform ios --dev false --bundle-output ./ios/main.jsbundle --assets-dest ./ios --sourcemap-output ./ios/main.jsbundle.map",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "ios:release": {
-      "command": "bunx expo run:ios --configuration Release",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -301,21 +263,15 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
-    },
-    "start:e2e": {
-      "command": "NODE_ENV=development IS_E2E_TEST=true bunx expo start",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
-    },
-    "start:production": {
-      "command": "NODE_ENV=production bunx expo start --reset-cache",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["^prepare", "prepare", "pod:ensure", "android:ensure"]
+      "dependsOn": ["^prepare", "config:pull", "pod:ensure", "android:ensure"],
+      "configurations": {
+        "e2e": {
+          "command": "NODE_ENV=development IS_E2E_TEST=true bunx expo start"
+        },
+        "production": {
+          "command": "NODE_ENV=production bunx expo start --reset-cache"
+        }
+      }
     },
     "test": {
       "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
@@ -339,13 +295,26 @@
     "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
-    "prepare": {
-      "executor": "nx:noop",
-      "dependsOn": ["config:pull"]
-    },
     "config:pull": {
       "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
-      "options": { "cwd": "{workspaceRoot}" }
+      "options": { "cwd": "{workspaceRoot}" },
+      "defaultConfiguration": "development",
+      "configurations": {
+        "development": {},
+        "staging": { "env": { "CONFIG_ENV": "staging" } },
+        "production": { "env": { "CONFIG_ENV": "production" } },
+        "beta": { "env": { "CONFIG_ENV": "staging" } },
+        "beta-release": { "env": { "CONFIG_ENV": "staging" } },
+        "beta-local": { "env": { "CONFIG_ENV": "staging" } },
+        "prod": { "env": { "CONFIG_ENV": "production" } },
+        "prod-release": { "env": { "CONFIG_ENV": "production" } },
+        "prod-local": { "env": { "CONFIG_ENV": "production" } },
+        "release": { "env": { "CONFIG_ENV": "production" } },
+        "bundle": { "env": { "CONFIG_ENV": "production" } },
+        "e2e": { "env": { "CONFIG_ENV": "production" } },
+        "e2e-onboarding": { "env": { "CONFIG_ENV": "production" } },
+        "e2e-swap": { "env": { "CONFIG_ENV": "production" } }
+      }
     },
     "unicons": {
       "command": "cd scripts && python3 populate_svgs.py && cd .. && bun run lint --fix",

@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
-import { config as dotenvConfig } from 'dotenv'
+import { config as dotenvConfig, parse as dotenvParse } from 'dotenv'
 import { defineConfig, loadEnv, type ViteDevServer } from 'vite'
 import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
@@ -31,10 +31,20 @@ const ENABLE_REACT_COMPILER = process.env.ENABLE_REACT_COMPILER === 'true'
 const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
 }
-const DEPLOY_TARGET = process.env.DEPLOY_TARGET || 'cloudflare'
+const DEPLOY_TARGET = process.env.DEPLOY_TARGET
 const DISABLE_SOURCEMAP = (process.env.DISABLE_SOURCEMAP ?? process.env.VITE_DISABLE_SOURCEMAP) === 'true'
 const DEBUG_PROXY = (process.env.DEBUG_PROXY ?? process.env.VITE_DEBUG_PROXY) === 'true'
 const ENABLE_PROXY = (process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY) === 'true'
+
+// Env vars that should be read directly from process.env instead of .env files
+const PROCESS_ENV_OVERRIDES = [
+  'CI',
+  'IS_E2E_TEST',
+  'JEST_WORKER_ID',
+  'VITEST_WORKER_ID',
+  'SKIP_CSP',
+  'DISABLE_SOURCEMAP',
+]
 
 const DEFAULT_PORT = 3000
 
@@ -147,18 +157,44 @@ export default defineConfig(({ mode, isPreview }) => {
   let env: Record<string, string> = {}
 
   if (process.env.USE_NEW_CONFIGS === 'true') {
-    // New unified config: read a single .env.new file. Other env sources are
+    // New unified config: read .env.new as the base layer, then apply
+    // .env.new.overrides on top (overrides win). Other env sources are
     // ignored; direct process.env reads elsewhere in this file are unaffected.
     const newEnvPath = path.resolve(__dirname, '.env.new')
-    if (!fs.existsSync(newEnvPath)) {
-      throw new Error(`USE_NEW_CONFIGS=true but ${newEnvPath} does not exist`)
+    if (fs.existsSync(newEnvPath)) {
+      try {
+        // Use dotenv.parse (not dotenv.config) so .env.new values populate `env`
+        // without mutating process.env
+        env = dotenvParse(fs.readFileSync(newEnvPath))
+      } catch (error) {
+        throw new Error(`Failed to parse ${newEnvPath}: ${error instanceof Error ? error.message : String(error)}`)
+      }
     }
-    const result = dotenvConfig({ path: newEnvPath })
-    if (result.error) {
-      throw new Error(`Failed to parse ${newEnvPath}: ${result.error.message}`)
+
+    // Apply .env.new.overrides on top, logging every value it overrides
+    const overridesEnvPath = path.resolve(__dirname, '.env.new.override')
+    if (fs.existsSync(overridesEnvPath)) {
+      let overridesEnv: Record<string, string> = {}
+      try {
+        overridesEnv = dotenvParse(fs.readFileSync(overridesEnvPath))
+      } catch (error) {
+        throw new Error(
+          `Failed to parse ${overridesEnvPath}: ${error instanceof Error ? error.message : String(error)}`,
+        )
+      }
+      for (const [key, value] of Object.entries(overridesEnv)) {
+        if (key in env && env[key] !== value) {
+          console.log(`ENV_OVERRIDE: ${key}`)
+        }
+        env[key] = value
+      }
     }
-    if (result.parsed) {
-      env = { ...result.parsed }
+
+    // Add in values that come from process.env directly instead of .env files
+    for (const key of PROCESS_ENV_OVERRIDES) {
+      if (process.env[key] !== undefined) {
+        env[key] = process.env[key]
+      }
     }
     // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
     // (and emitting "Using vars defined in ..." logs). The .env.new values are forwarded
@@ -224,6 +260,7 @@ export default defineConfig(({ mode, isPreview }) => {
   const isProduction = mode === 'production'
   const isStaging = mode === 'staging'
   const isVercelDeploy = DEPLOY_TARGET === 'vercel'
+  const isCloudflareDeploy = DEPLOY_TARGET === 'cloudflare'
   const root = path.resolve(__dirname)
 
   // External package aliases only
@@ -475,7 +512,7 @@ export default defineConfig(({ mode, isPreview }) => {
       // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and
       // chokes when one env's build dir is missing (e.g. after switching between
       // build:production and build:staging). See INFRA-1874.
-      (DEPLOY_TARGET === 'cloudflare' || mode === 'development') && !isPreview
+      (isCloudflareDeploy || mode === 'development') && !isPreview
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // When USE_NEW_CONFIGS is on, forward .env.new values to the Worker as vars
@@ -562,7 +599,7 @@ export default defineConfig(({ mode, isPreview }) => {
           secure: true,
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
         },
-        ...(ENABLE_PROXY ? createEntryGatewayProxies({ getLogger }) : {}),
+        ...(ENABLE_PROXY ? createEntryGatewayProxies({ getLogger, env }) : {}),
       },
     },
 

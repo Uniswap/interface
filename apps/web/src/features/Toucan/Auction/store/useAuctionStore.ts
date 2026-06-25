@@ -3,7 +3,7 @@ import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 import { AuctionStoreContext } from '~/features/Toucan/Auction/store/AuctionStoreContext'
 import { AuctionStore } from '~/features/Toucan/Auction/store/createAuctionStore'
-import { AuctionStoreState } from '~/features/Toucan/Auction/store/types'
+import { AuctionProgressState, AuctionStoreState } from '~/features/Toucan/Auction/store/types'
 
 function useAuctionStoreBase(): AuctionStore {
   const context = useContext(AuctionStoreContext)
@@ -19,6 +19,15 @@ export function useAuctionStore<T>(selector: (state: Omit<AuctionStoreState, 'ac
   const store = useAuctionStoreBase()
 
   return useStore(store, useShallow(selector))
+}
+
+/**
+ * Single source of truth for "the auction ended without graduating". Shared by
+ * the bids list, bid details, and timeline so the failed-launch condition is
+ * defined in one place rather than re-derived from different signals.
+ */
+export function useIsAuctionFailed(): boolean {
+  return useAuctionStore((state) => state.progress.state === AuctionProgressState.ENDED && !state.progress.isGraduated)
 }
 
 export function useAuctionStoreActions(): AuctionStoreState['actions'] {

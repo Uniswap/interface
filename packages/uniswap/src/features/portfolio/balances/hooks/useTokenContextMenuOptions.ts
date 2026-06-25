@@ -59,6 +59,7 @@ interface TokenMenuParams {
   onPressCopyAddressOverride?: () => void
   closeMenu: () => void
   disableNotifications?: boolean
+  analyticsSection?: SectionName
   recipient?: Address // Pre-filled recipient address for send action
   /**
    * Multichain aggregate row: allow "Copy address" when the primary deployment is native, as long as
@@ -85,6 +86,7 @@ export function useTokenContextMenuOptions({
   onPressCopyAddressOverride,
   closeMenu,
   disableNotifications,
+  analyticsSection = SectionName.HomeTokensTab,
   recipient,
   multichainWithCopyAddressList,
   allNativeMultichain,
@@ -134,10 +136,10 @@ export function useTokenContextMenuOptions({
   const onPressViewDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
-      section: SectionName.HomeTokensTab,
+      section: analyticsSection,
     })
     navigateToTokenDetails(currencyId, isMultichainAsset ? { type: TdpChainSelectionType.Multichain } : undefined)
-  }, [navigateToTokenDetails, currencyId, isMultichainAsset])
+  }, [navigateToTokenDetails, currencyId, isMultichainAsset, analyticsSection])
 
   const onPressShare = useCallback(async () => {
     handleShareToken({ currencyId })
@@ -224,7 +226,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (isWebPlatform && !isTestnetModeEnabled) {
+    if (!isTestnetModeEnabled) {
       actions.push({
         id: TokenMenuActionType.ViewDetails,
         label: t('common.button.viewDetails'),

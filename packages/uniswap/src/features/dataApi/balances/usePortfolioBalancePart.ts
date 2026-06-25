@@ -1,14 +1,13 @@
 import type { WatchQueryFetchPolicy } from '@apollo/client'
-import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
-import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import {
   PortfolioBalancePart,
   selectPortfolioBalanceBreakdown,
   selectorForPart,
   useGetWalletBalancesQuery,
+  useWalletBalancesIncludeCategories,
   type PortfolioBalanceBreakdown,
 } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -18,7 +17,6 @@ import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/bala
 import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult } from 'uniswap/src/features/dataApi/types'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
-import { useEvent } from 'utilities/src/react/hooks'
 
 type UsePortfolioBalancePartParams = {
   part: PortfolioBalancePart
@@ -33,15 +31,15 @@ type UsePortfolioBalancePartParams = {
 export type UsePortfolioTotalValueParams = Omit<UsePortfolioBalancePartParams, 'part'>
 
 type PortfolioBalanceQueryConfig = {
-  portfolioPoolsBalancesEnabled: boolean
+  /** Opt-in categories sent with the request, so a missing slice can be told apart from "not requested". */
+  requestedCategories: WalletBalanceCategory[]
   queryInput: {
     evmAddress?: Address
     svmAddress?: Address
     chainIds: UniverseChainId[]
+    includeCategories: WalletBalanceCategory[]
     modifier: ReturnType<typeof useRestPortfolioValueModifier>
   }
-  // TODO(CONS-1952): Collapse to a single enabled value once PortfolioPoolsBalances is removed.
-  portfolioQueryEnabled: boolean
   walletBalancesQueryEnabled: boolean
   refetchInterval: number | undefined
 }
@@ -54,7 +52,7 @@ function usePortfolioBalanceQueryConfig({
   enabled = true,
   chainIds,
 }: UsePortfolioTotalValueParams): PortfolioBalanceQueryConfig {
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const includeCategories = useWalletBalancesIncludeCategories()
   const walletAddress = evmAddress ?? svmAddress
   const queryEnabled = !!walletAddress && enabled
 
@@ -66,14 +64,16 @@ function usePortfolioBalanceQueryConfig({
     pollInterval,
   })
 
-  // TODO(CONS-1074): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
-  const modifier = useRestPortfolioValueModifier(queryEnabled ? walletAddress : undefined)
+  // Compute the modifier even when disabled: GetWalletBalances omits it from the query key, so all
+  // observers share one query, and a disabled, modifier-less observer would clobber the shared queryFn —
+  // dropping include/exclude overrides on option-less refetches (invalidateQueries).
+  // TODO(CONS-1074): GetWalletBalances REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(walletAddress)
 
   return {
-    portfolioPoolsBalancesEnabled,
-    queryInput: { evmAddress, svmAddress, chainIds: effectiveChainIds, modifier },
-    portfolioQueryEnabled: queryEnabled && !portfolioPoolsBalancesEnabled,
-    walletBalancesQueryEnabled: queryEnabled && portfolioPoolsBalancesEnabled,
+    requestedCategories: includeCategories,
+    queryInput: { evmAddress, svmAddress, chainIds: effectiveChainIds, includeCategories, modifier },
+    walletBalancesQueryEnabled: queryEnabled,
     refetchInterval: internalPollInterval,
   }
 }
@@ -90,40 +90,13 @@ export function usePortfolioBalancePart({
   enabled = true,
   chainIds,
 }: UsePortfolioBalancePartParams): PortfolioTotalValueResult {
-  const {
-    portfolioPoolsBalancesEnabled,
-    queryInput,
-    portfolioQueryEnabled,
-    walletBalancesQueryEnabled,
-    refetchInterval,
-  } = usePortfolioBalanceQueryConfig({
+  const { queryInput, walletBalancesQueryEnabled, refetchInterval } = usePortfolioBalanceQueryConfig({
     evmAddress,
     svmAddress,
     pollInterval,
     fetchPolicy,
     enabled,
     chainIds,
-  })
-
-  const selectPortfolioTotalFromGetPortfolio = useEvent((portfolioData: GetPortfolioResponse | undefined) => {
-    if (!portfolioData?.portfolio) {
-      return undefined
-    }
-
-    const portfolio = portfolioData.portfolio
-
-    return {
-      balanceUSD: portfolio.totalValueUsd,
-      percentChange: portfolio.totalValuePercentChange1d,
-      absoluteChangeUSD: portfolio.totalValueAbsoluteChange1d,
-    }
-  })
-
-  const portfolioResult = useGetPortfolioQuery({
-    input: queryInput,
-    enabled: portfolioQueryEnabled,
-    refetchInterval,
-    select: selectPortfolioTotalFromGetPortfolio,
   })
 
   const selectFromWalletBalances = useMemo(() => selectorForPart(part), [part])
@@ -135,15 +108,13 @@ export function usePortfolioBalancePart({
     select: selectFromWalletBalances,
   })
 
-  const active = portfolioPoolsBalancesEnabled ? walletBalancesResult : portfolioResult
-
   return {
-    data: active.data,
-    loading: active.isFetching,
-    networkStatus: mapRestStatusToNetworkStatus(active.status),
-    refetch: active.refetch,
-    error: active.error || undefined,
-    dataUpdatedAt: active.dataUpdatedAt || undefined,
+    data: walletBalancesResult.data,
+    loading: walletBalancesResult.isFetching,
+    networkStatus: mapRestStatusToNetworkStatus(walletBalancesResult.status),
+    refetch: walletBalancesResult.refetch,
+    error: walletBalancesResult.error || undefined,
+    dataUpdatedAt: walletBalancesResult.dataUpdatedAt || undefined,
   }
 }
 
@@ -157,8 +128,15 @@ export function usePortfolioTotalValue(params: UsePortfolioTotalValueParams): Po
 
 export type UsePortfolioBalanceBreakdownParams = Omit<UsePortfolioBalancePartParams, 'part'>
 
+export type UsePortfolioBalanceBreakdownResult = BaseResult<PortfolioBalanceBreakdown | undefined> & {
+  /** Opt-in categories included in the request, so a missing slice can be told apart from "not requested". */
+  requestedCategories: WalletBalanceCategory[]
+}
+
 /**
  * Reads the total, token, and pool balance slices from the shared wallet-balances query.
+ * `requestedCategories` reports which opt-in categories were included so consumers can distinguish
+ * "slice omitted because we didn't ask" from "slice unavailable from the backend".
  */
 export function usePortfolioBalanceBreakdown({
   evmAddress,
@@ -167,8 +145,8 @@ export function usePortfolioBalanceBreakdown({
   fetchPolicy,
   enabled = true,
   chainIds,
-}: UsePortfolioBalanceBreakdownParams): BaseResult<PortfolioBalanceBreakdown | undefined> {
-  const { portfolioPoolsBalancesEnabled, queryInput, walletBalancesQueryEnabled, refetchInterval } =
+}: UsePortfolioBalanceBreakdownParams): UsePortfolioBalanceBreakdownResult {
+  const { requestedCategories, queryInput, walletBalancesQueryEnabled, refetchInterval } =
     usePortfolioBalanceQueryConfig({
       evmAddress,
       svmAddress,
@@ -186,11 +164,12 @@ export function usePortfolioBalanceBreakdown({
   })
 
   return {
-    data: portfolioPoolsBalancesEnabled ? result.data : undefined,
+    data: result.data,
     loading: result.isFetching,
     networkStatus: mapRestStatusToNetworkStatus(result.status),
     refetch: result.refetch,
     error: result.error || undefined,
     dataUpdatedAt: result.dataUpdatedAt || undefined,
+    requestedCategories,
   }
 }

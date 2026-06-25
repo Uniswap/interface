@@ -358,5 +358,38 @@ export enum ElementName {
   WalletQRCode = 'wallet-qr-code',
   WalletTypeOption = 'wallet-type-option',
   Wrap = 'wrap',
+  XProfileConnect = 'x-profile-connect',
+
+  // Launch-auction (CCA supply-side) creation-flow field & control clicks. These all fire the
+  // shared SharedEventName.ELEMENT_CLICKED event; `page` (set by each step's
+  // <Trace logImpression page=…>) disambiguates which step the element was clicked on.
+  AuctionAdvancedSettingsToggle = 'advanced-settings-toggle',
+  AuctionCreateFeeTier = 'create-fee-tier',
+  AuctionCustomRangeLpPct = 'custom-range-lp-pct',
+  AuctionCustomRangeMaxPrice = 'custom-range-max-price',
+  AuctionCustomRangeMinPrice = 'custom-range-min-price',
+  AuctionEndDatetime = 'end-datetime',
+  AuctionFeeForwardAddress = 'fee-forward-address',
+  AuctionFeeTierMore = 'fee-tier-more',
+  AuctionFloorPrice = 'floor-price',
+  AuctionLpBracketMilestone = 'lp-bracket-milestone',
+  AuctionLpBracketPercent = 'lp-bracket-percent',
+  AuctionLpPct = 'lp-pct',
+  AuctionLpPctPreset = 'lp-pct-preset',
+  AuctionOwnerAddress = 'owner-address',
+  AuctionPriceRangeStrategy = 'price-range-strategy',
+  AuctionRaiseCurrency = 'raise-currency',
+  AuctionStartDatetime = 'start-datetime',
+  AuctionSupplyAmount = 'supply-amount',
+  AuctionSupplyPreset = 'supply-preset',
+  AuctionTimelockDuration = 'timelock-duration',
+  AuctionTimelockToggle = 'timelock-toggle',
+  AuctionTokenDescription = 'token-description',
+  AuctionTokenImageUpload = 'token-image-upload',
+  AuctionTokenName = 'token-name',
+  AuctionTokenSearch = 'token-search',
+  AuctionTokenSourceToggle = 'token-source-toggle',
+  AuctionTokenTicker = 'token-ticker',
+  AuctionValidationHookAddress = 'validation-hook-address',
   // alphabetize additional values.
 }

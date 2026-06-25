@@ -98,7 +98,13 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'Embedded Wallet',
-      flags: [{ flag: FeatureFlags.EmbeddedWallet, label: 'Add internal embedded wallet functionality' }],
+      flags: [
+        { flag: FeatureFlags.EmbeddedWallet, label: 'Add internal embedded wallet functionality' },
+        {
+          flag: FeatureFlags.Support7677GasSponsorship,
+          label: 'Advertise EIP-7677 paymaster sponsorship in wallet_getCapabilities',
+        },
+      ],
       extra: extras.extensionDropdown,
     },
     {
@@ -126,6 +132,17 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.TraceJsonRpc, label: 'Enables JSON-RPC tracing' },
         { flag: FeatureFlags.AATestWeb, label: 'A/A Test for Web' },
         ...(isE2eTestEnv() ? [{ flag: FeatureFlags.DummyFlagTest, label: 'Dummy Flag Test' } satisfies FlagDef] : []),
+      ],
+    },
+    {
+      name: 'V2 Endpoints',
+      flags: [
+        { flag: FeatureFlags.V2EndpointsTokens, label: 'Enable V2 Endpoints Tokens' },
+        { flag: FeatureFlags.V2EndpointsTransactions, label: 'Enable V2 Endpoints Transactions' },
+        { flag: FeatureFlags.V2EndpointsPools, label: 'Enable V2 Endpoints Pools' },
+        { flag: FeatureFlags.V2EndpointsPositions, label: 'Enable V2 Endpoints Positions' },
+        { flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' },
+        { flag: FeatureFlags.V2EndpointsSearch, label: 'Enable V2 Endpoints Search' },
       ],
     },
     {

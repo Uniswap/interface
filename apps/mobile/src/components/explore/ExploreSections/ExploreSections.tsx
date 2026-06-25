@@ -24,12 +24,16 @@ import { StartEarningSection } from 'src/components/earn/StartEarningSection'
 import {
   type ExploreListItem,
   EXPLORE_LIST_DRAW_ROWS,
+  EXPLORE_LIST_INITIAL_ITEM_COUNT,
+  EXPLORE_LIST_ITEM_REVEAL_STEP,
+  EXPLORE_LIST_TRAILING_SKELETON_COUNT,
   EXPLORE_SKELETON_LIST_ITEMS,
   EXPLORE_TOKEN_ROW_HEIGHT,
   exploreListItemKey,
   exploreListItemsAreEqual,
   getExploreListItemSize,
   getExploreListItemType,
+  scheduleAfterPaint,
   tokenItemDataKey,
 } from 'src/components/explore/ExploreSections/exploreListItems'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
@@ -81,6 +85,9 @@ function ExploreSectionsInner({
 
   // Network filtering
   const [selectedNetwork, setSelectedNetwork] = useState<UniverseChainId | null>(null)
+
+  const [drawnItemCount, setDrawnItemCount] = useState(EXPLORE_LIST_INITIAL_ITEM_COUNT)
+  const [hasPaintedSkeleton, setHasPaintedSkeleton] = useState(false)
 
   // Track scroll position for double-tap behavior
   const handleScroll = useEvent((event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -145,9 +152,30 @@ function ExploreSectionsInner({
     setSelectedNetwork(network)
   }, [])
 
+  // Display a skeleton instead of freezing during list render when returning from search. 2 frames are required on Android
+  useEffect(() => {
+    return scheduleAfterPaint(() => setHasPaintedSkeleton(true))
+  }, [])
+
   const hasAllData = !!data
   const isLoadingOrFetching = isLoading || isFetching
-  const showFullScreenLoadingState = (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
+  const showFullScreenLoadingState =
+    !hasPaintedSkeleton || (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
+
+  useEffect(() => {
+    setDrawnItemCount(EXPLORE_LIST_INITIAL_ITEM_COUNT)
+  }, [orderBy, selectedNetwork])
+
+  // Reduce initial load time by partially drawing items
+  const allItemsRevealed = drawnItemCount >= topTokenItems.length
+
+  const onEndReached = useEvent((): void => {
+    if (showFullScreenLoadingState || allItemsRevealed) {
+      return
+    }
+
+    setDrawnItemCount((count) => Math.min(count + EXPLORE_LIST_ITEM_REVEAL_STEP, topTokenItems.length))
+  })
 
   const listData: ExploreListItem[] = useMemo(() => {
     if (showFullScreenLoadingState) {
@@ -156,19 +184,18 @@ function ExploreSectionsInner({
 
     // Generate unique key; using an index in it causes recycling state bugs.
     const seenCounts = new Map<string, number>()
-
-    return topTokenItems.map((item) => {
+    return topTokenItems.slice(0, drawnItemCount).map((item): ExploreListItem => {
       const baseKey = tokenItemDataKey(item.tokenItemData)
       const count = seenCounts.get(baseKey) ?? 0
       seenCounts.set(baseKey, count + 1)
 
       return {
-        rowType: 'token' as const,
+        rowType: 'token',
         key: count === 0 ? baseKey : `${baseKey}-${count}`,
         ...item,
       }
     })
-  }, [showFullScreenLoadingState, topTokenItems])
+  }, [showFullScreenLoadingState, topTokenItems, drawnItemCount])
 
   const contentContainerStyle = useMemo(() => {
     return {
@@ -183,6 +210,22 @@ function ExploreSectionsInner({
 
     return <TokenListEmptyComponent />
   }, [showFullScreenLoadingState, topTokenItems.length])
+
+  const listFooter = useMemo(() => {
+    if (showFullScreenLoadingState || allItemsRevealed) {
+      return null
+    }
+
+    return (
+      <Flex>
+        {Array.from({ length: EXPLORE_LIST_TRAILING_SKELETON_COUNT }, (_, index) => (
+          <Flex key={index} height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing24">
+            <Loader.Token />
+          </Flex>
+        ))}
+      </Flex>
+    )
+  }, [showFullScreenLoadingState, allItemsRevealed])
 
   const renderItem = useCallback(({ item, index }: { item: ExploreListItem; index: number }): JSX.Element => {
     if (item.rowType === 'skeleton') {
@@ -238,6 +281,7 @@ function ExploreSectionsInner({
         refScrollView={listRef}
         itemsAreEqual={exploreListItemsAreEqual}
         ListEmptyComponent={listEmptyComponent}
+        ListFooterComponent={listFooter}
         ListHeaderComponent={listHeader}
         ListHeaderComponentStyle={styles.foreground}
         contentContainerStyle={contentContainerStyle}
@@ -252,6 +296,8 @@ function ExploreSectionsInner({
         drawDistance={EXPLORE_TOKEN_ROW_HEIGHT * EXPLORE_LIST_DRAW_ROWS}
         estimatedListSize={dimensions}
         onScroll={handleScroll}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.3}
       />
     </Flex>
   )

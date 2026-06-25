@@ -7,6 +7,10 @@ import ms from 'ms'
 // This ensures the VSCode Playwright extension has access to env vars
 config({ path: path.resolve(__dirname, '.env') })
 
+// __DEV__ is a build-time constant injected by Vite/Vitest; the Playwright
+// worker has no such define so set it here to avoid loud errors from utilities/logger.ts
+;(globalThis as Record<string, unknown>).__DEV__ ??= false
+
 const IS_CI = process.env.CI === 'true'
 
 // Handle asset files and platform-specific imports for Node.js

@@ -1,7 +1,6 @@
 /* oxlint-disable max-lines */
 import { type Provider } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
-import { TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
@@ -53,14 +52,11 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionOriginType,
-  TransactionStatus,
   TransactionType,
   type TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
@@ -71,11 +67,11 @@ import {
   type ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import {
-  ExecuteUserOpParams,
-  executeUserOpSaga,
-} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
+import type { ExecuteUserOpParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { createTransactionSagaDependencies } from 'wallet/src/features/transactions/factories/createTransactionSagaDependencies'
+import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
+import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -633,29 +629,27 @@ export function* handleSendCalls({
           icon: dappInfo.iconUrl,
         },
       }
+      // TransactionService.executeUserOp registers the pending tx, submits the userOp, persists the
+      // userOpHash, and finalizes on failure — no manual addTransaction needed. addWalletCallTransaction
+      // stays below: it tracks the EIP-5792 batchId → userOpHash mapping, which is dapp-specific.
+      const { transactionService } = yield* call(createTransactionServices, createTransactionSagaDependencies(), {
+        account: activeAccount,
+        chainId,
+        submitViaPrivateRpc: false,
+        delegationType: DelegationType.Auto,
+        includeUserOpServices: true,
+      })
+
       const executeUserOpParams: ExecuteUserOpParams = {
         userOp: unsignedUserOperation,
         account: activeAccount,
         chainId,
         typeInfo,
+        transactionOriginType: TransactionOriginType.External,
+        options: { userSubmissionTimestampMs: Date.now(), isSmartWalletTransaction: true },
         requestUniswapGasSponsorship: false,
       }
-      const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
-
-      yield* put(
-        addTransaction({
-          routing: TradingApi.Routing.CLASSIC,
-          id: createTransactionId(),
-          chainId,
-          typeInfo,
-          from: activeAccount.address,
-          addedTime: Date.now(),
-          status: TransactionStatus.Pending,
-          userOpHash,
-          options: { request: {} },
-          transactionOriginType: TransactionOriginType.External,
-        }),
-      )
+      const { userOpHash } = yield* call([transactionService, transactionService.executeUserOp], executeUserOpParams)
 
       yield* put(
         addWalletCallTransaction({

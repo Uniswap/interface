@@ -31,7 +31,6 @@ import { AuctionGraduated } from '~/features/Toucan/Auction/Bids/AuctionGraduate
 import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
 import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
 import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
-import { useLbpMigrationBlock } from '~/features/Toucan/Auction/hooks/useLbpMigrationBlock'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
 import { AuctionDetails, AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
@@ -89,12 +88,10 @@ function useTokenLaunchedBannerState({
   isGraduated: boolean
 }) {
   const isAuctionEnded = auctionState === AuctionProgressState.ENDED
-  const shouldReadMigrationBlock = isAuctionEnded && isGraduated && Boolean(auctionDetails?.lbpStrategyAddress)
-  const { migrationBlock } = useLbpMigrationBlock({
-    chainId: auctionDetails?.chainId,
-    enabled: shouldReadMigrationBlock,
-    lbpStrategyAddress: auctionDetails?.lbpStrategyAddress,
-  })
+  // The scheduled migration block and whether migration has actually run are both served by
+  // data-api now (lbp_migration_block / lbp_migration_tx_hash), so no on-chain lookup is needed.
+  const migrationBlock = auctionDetails?.lbpMigrationBlock
+  const hasMigrated = Boolean(auctionDetails?.lbpMigrationTxHash)
   const shouldShowTokenLaunchedBanner =
     auctionDetails !== null &&
     getShouldShowTokenLaunchedBanner({
@@ -107,7 +104,7 @@ function useTokenLaunchedBannerState({
       currentBlockNumber,
       hasLbpStrategyAddress: Boolean(auctionDetails.lbpStrategyAddress),
       isGraduated,
-      migrationBlock,
+      hasMigrated,
     })
   const tradeAvailabilityBlock =
     auctionDetails !== null && !isTradeAvailable

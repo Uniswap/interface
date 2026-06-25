@@ -1,34 +1,50 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
+import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
 import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
+import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
-import { useTokenBalancesQuery } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
-import { useAccount } from '~/hooks/useAccount'
 
 export function useReportTotalBalancesUsdForAnalytics() {
-  const account = useAccount()
+  const { evmAccount } = useWallet()
+  const evmAddress = evmAccount?.address
+  const { chains: chainIds } = useEnabledChains()
+  const modifier = useRestPortfolioValueModifier(evmAddress)
+
+  const portfolioQuery = useGetPortfolioQuery({
+    input: { evmAddress, chainIds, modifier },
+    enabled: false, // ensures we only read from cache
+  })
+
   const totalBalancesUsd = useTotalBalancesUsdForAnalytics()
-  const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(useTokenBalancesQuery({ cacheOnly: true }))
-  const { trackConversions } = useConversionTracking(account.address)
+
+  const totalBalancesUsdPerChain = useMemo(
+    () => calculateTotalBalancesUsdPerChainRest(portfolioQuery.data),
+    [portfolioQuery.data],
+  )
+
+  const { trackConversions } = useConversionTracking(evmAccount?.address)
 
   const sendBalancesReport = useCallback(async () => {
     reportBalancesForAnalytics({
       balances: totalBalancesUsd ? [totalBalancesUsd] : [],
       totalBalancesUsd,
       totalBalancesUsdPerChain,
-      wallet: account.address,
-      wallets: account.address ? [account.address] : [],
+      wallet: evmAddress,
+      wallets: evmAddress ? [evmAddress] : [],
     })
 
-    if (account.connector?.name === CONNECTION_PROVIDER_NAMES.UNISWAP_EXTENSION) {
+    if (evmAccount?.walletMeta.name === CONNECTION_PROVIDER_NAMES.UNISWAP_EXTENSION) {
       trackConversions(CONVERSION_EVENTS.Extension.WalletFunded)
     }
 
     trackConversions(CONVERSION_EVENTS.Web.WalletFunded)
-  }, [totalBalancesUsd, totalBalancesUsdPerChain, account.address, account.connector?.name, trackConversions])
+  }, [totalBalancesUsd, totalBalancesUsdPerChain, trackConversions, evmAccount?.walletMeta.name, evmAddress])
 
   useEffect(() => {
     if (totalBalancesUsd !== undefined && totalBalancesUsdPerChain !== undefined) {

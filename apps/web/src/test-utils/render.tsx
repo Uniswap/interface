@@ -10,15 +10,14 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
-import { AssetActivityProvider } from '~/appGraphql/data/apollo/AssetActivityProvider'
-import { TokenBalancesProvider } from '~/appGraphql/data/apollo/TokenBalancesProvider'
+import { WebUniswapProvider } from '~/app/WebUniswapContext'
+import { TransactionWatcherProvider } from '~/appGraphql/data/apollo/TransactionWatcherProvider'
 import { TestWeb3Provider } from '~/components/Web3Provider/TestWeb3Provider'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { WebAccountsStoreUpdater } from '~/features/accounts/store/updater'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from '~/lib/hooks/useBlockNumber'
-import { WebUniswapProvider } from '~/pages/App/WebUniswapContext'
 import store from '~/state'
 import { ThemeProvider } from '~/theme'
 import { TamaguiProvider } from '~/theme/tamaguiProvider'
@@ -49,22 +48,20 @@ function MockedMismatchProvider({ children }: PropsWithChildren) {
 function CommonTestProviders({ children }: PropsWithChildren) {
   return (
     <MockedProvider showWarnings={false}>
-      <AssetActivityProvider>
-        <TokenBalancesProvider>
-          <ReactRouterUrlProvider>
-            <MockedBlockNumberProvider>
-              <ThemeProvider>
-                <TamaguiProvider>
-                  <PriceServiceProvider queryClient={SharedQueryClient}>
-                    <WebAccountsStoreUpdater />
-                    <MockedMismatchProvider>{children}</MockedMismatchProvider>
-                  </PriceServiceProvider>
-                </TamaguiProvider>
-              </ThemeProvider>
-            </MockedBlockNumberProvider>
-          </ReactRouterUrlProvider>
-        </TokenBalancesProvider>
-      </AssetActivityProvider>
+      <TransactionWatcherProvider>
+        <ReactRouterUrlProvider>
+          <MockedBlockNumberProvider>
+            <ThemeProvider>
+              <TamaguiProvider>
+                <PriceServiceProvider queryClient={SharedQueryClient}>
+                  <WebAccountsStoreUpdater />
+                  <MockedMismatchProvider>{children}</MockedMismatchProvider>
+                </PriceServiceProvider>
+              </TamaguiProvider>
+            </ThemeProvider>
+          </MockedBlockNumberProvider>
+        </ReactRouterUrlProvider>
+      </TransactionWatcherProvider>
     </MockedProvider>
   )
 }

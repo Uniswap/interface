@@ -10,7 +10,11 @@ type XOAuthMessage =
   | { type: 'x_oauth_success'; xHandle: string; xVerificationToken: string }
   | { type: 'x_oauth_error'; message: string }
 
-export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; error: string | null } {
+export function useXOAuthFlow({ onVerified }: { onVerified?: () => void } = {}): {
+  connectX: () => void
+  isLoading: boolean
+  error: string | null
+} {
   const { t } = useTranslation()
   const address = useActiveAddress(Platform.EVM)
   const { setXVerification } = useCreateAuctionStoreActions()
@@ -29,6 +33,7 @@ export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; err
     const handler = (event: MessageEvent<XOAuthMessage>) => {
       if (event.data.type === 'x_oauth_success') {
         setXVerification({ xHandle: event.data.xHandle, xVerificationToken: event.data.xVerificationToken })
+        onVerified?.()
       } else {
         setError(event.data.message)
       }
@@ -41,7 +46,7 @@ export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; err
       channel.removeEventListener('message', handler)
       channel.close()
     }
-  }, [setXVerification])
+  }, [setXVerification, onVerified])
 
   // Reset loading if the user dismisses the popup without completing the flow. Deliberately does not touch
   // the channel above — a late success/error message can still arrive after the popup window closes.

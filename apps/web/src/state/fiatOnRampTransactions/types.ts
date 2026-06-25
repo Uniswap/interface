@@ -1,22 +1,8 @@
-import { GraphQLApi } from '@universe/api'
-
 export enum FiatOnRampTransactionStatus {
   INITIATED = 'INITIATED',
   PENDING = 'PENDING',
   COMPLETE = 'COMPLETE',
   FAILED = 'FAILED',
-}
-
-// oxlint-disable-next-line typescript/consistent-return
-export function backendStatusToFiatOnRampStatus(status: GraphQLApi.TransactionStatus) {
-  switch (status) {
-    case GraphQLApi.TransactionStatus.Confirmed:
-      return FiatOnRampTransactionStatus.COMPLETE
-    case GraphQLApi.TransactionStatus.Pending:
-      return FiatOnRampTransactionStatus.PENDING
-    case GraphQLApi.TransactionStatus.Failed:
-      return FiatOnRampTransactionStatus.FAILED
-  }
 }
 
 export enum FiatOnRampTransactionType {

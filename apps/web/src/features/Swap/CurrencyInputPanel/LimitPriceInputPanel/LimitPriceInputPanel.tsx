@@ -13,10 +13,9 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { parseUnits } from '~/chains'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
-import { SwapCurrencyInput } from '~/components/NumericalInput'
+import { SwapCurrencyInput } from '~/components/NumericalInput/NumericalInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import {
   LimitCustomMarketPriceButton,
@@ -205,36 +204,34 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
             onUserInput={changeLimitPrice}
           />
           {quoteCurrency && (
-            <PrefetchBalancesWrapper>
-              <Flex alignItems="center" justifyContent="center">
-                <TouchableArea onPress={() => setCurrencySelectModalField('outputCurrency')}>
-                  <Flex
-                    row
-                    gap="$spacing4"
-                    width="unset"
-                    userSelect="none"
-                    alignItems="center"
-                    overflow="hidden"
+            <Flex alignItems="center" justifyContent="center">
+              <TouchableArea onPress={() => setCurrencySelectModalField('outputCurrency')}>
+                <Flex
+                  row
+                  gap="$spacing4"
+                  width="unset"
+                  userSelect="none"
+                  alignItems="center"
+                  overflow="hidden"
+                  flexShrink={1}
+                  minWidth={0}
+                  maxWidth="100%"
+                >
+                  <CurrencyLogo currency={quoteCurrency} size={iconSizes.icon16} />
+                  <Text
+                    variant="body2"
+                    color="$neutral1"
+                    className="token-symbol-container"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                     flexShrink={1}
                     minWidth={0}
-                    maxWidth="100%"
                   >
-                    <CurrencyLogo currency={quoteCurrency} size={iconSizes.icon16} />
-                    <Text
-                      variant="body2"
-                      color="$neutral1"
-                      className="token-symbol-container"
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      flexShrink={1}
-                      minWidth={0}
-                    >
-                      {formatCurrencySymbol(quoteCurrency)}
-                    </Text>
-                  </Flex>
-                </TouchableArea>
-              </Flex>
-            </PrefetchBalancesWrapper>
+                    {formatCurrencySymbol(quoteCurrency)}
+                  </Text>
+                </Flex>
+              </TouchableArea>
+            </Flex>
           )}
         </Flex>
         <Flex row mt="$spacing8" width="100%" justifyContent="space-between" alignItems="center">

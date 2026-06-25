@@ -19,7 +19,7 @@ import { noop } from 'utilities/src/react/noop'
 import {
   getFORTransactionToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/queryOptions'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -170,28 +170,26 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
               <AlertTriangleFilled color="$neutral2" size="$icon.32" />
             </Flex>
           )}
-          <Flex justifyContent="center" gap="$gap4" fill>
-            <Flex row alignItems="center" gap="$gap8" minWidth={0}>
+          <Flex justifyContent="center" gap="$gap4" fill minWidth={0}>
+            <Flex row gap="$gap4">
               {activity.isUniswapX ? (
                 <Flex flexShrink={0} alignItems="center" justifyContent="center">
                   <UniswapX size="$icon.12" />
                 </Flex>
               ) : null}
-              <Flex gap="$gap4" flex={1} minWidth={0}>
-                <Text variant="body2" color="$neutral1">
-                  {activity.title}
-                </Text>
-                {typeof activity.descriptor === 'string' ? (
-                  <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
-                    {activity.descriptor}
-                  </Text>
-                ) : (
-                  <Flex overflow="hidden" maxHeight={28}>
-                    {activity.descriptor}
-                  </Flex>
-                )}
-              </Flex>
+              <Text variant="body2" color="$neutral1">
+                {activity.title}
+              </Text>
             </Flex>
+            {typeof activity.descriptor === 'string' ? (
+              <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
+                {activity.descriptor}
+              </Text>
+            ) : (
+              <Flex overflow="hidden" maxHeight={28}>
+                {activity.descriptor}
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </TouchableArea>

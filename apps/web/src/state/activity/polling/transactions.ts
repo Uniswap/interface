@@ -27,6 +27,8 @@ import { isPendingTx } from '~/state/transactions/utils'
 interface ReceiptWithStatus {
   status: 'success' | 'reverted'
   receipt: TransactionReceipt
+  /** Resolved sponsor metadata from the /swaps `sponsorship` field, when the swap was gas-sponsored */
+  sponsorInfo?: TradingApi.SponsorMetadata
 }
 
 function usePendingTransactions(chainId?: UniverseChainId): PendingTransactionDetails[] {
@@ -84,10 +86,12 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         if (!tx.hash) {
           throw new Error(`Invalid transaction hash: hash not defined`)
         }
-        return TradingApiClient.fetchSwaps({ txHashes: [tx.hash], chainId })
+        return TradingApiClient.fetchSwaps({ txHashes: [tx.hash], chainId, swapper: account.address })
           .then(async (res) => {
-            const status = res.swaps?.[0]?.status
+            const swap = res.swaps?.[0]
+            const status = swap?.status
             const finalizedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined
+            const sponsorInfo = swap?.sponsorship
 
             if (!finalizedStatus) {
               if (account.isConnected) {
@@ -140,14 +144,14 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               }
             }
 
-            return { status: finalizedStatus, receipt: adaptedReceipt } as ReceiptWithStatus
+            return { status: finalizedStatus, receipt: adaptedReceipt, sponsorInfo } as ReceiptWithStatus
           })
           .catch((_error) => {
             throw new RetryableError()
           })
       }, retryOptions) as { promise: Promise<ReceiptWithStatus>; cancel: () => void }
     },
-    [account.chainId, account.isConnected, blockTimestamp, removeTransaction, publicClient],
+    [account.chainId, account.address, account.isConnected, blockTimestamp, removeTransaction, publicClient],
   )
 
   useEffect(() => {
@@ -160,7 +164,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       .map((tx) => {
         const { promise, cancel } = getReceiptWithTradingApi(tx)
         promise
-          .then(({ status, receipt }) => {
+          .then(({ status, receipt, sponsorInfo }) => {
             if (!account.chainId) {
               return
             }
@@ -174,6 +178,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
                 receipt,
                 hash: tx.hash,
                 networkFee: tx.networkFee,
+                sponsorInfo,
               },
             })
           })

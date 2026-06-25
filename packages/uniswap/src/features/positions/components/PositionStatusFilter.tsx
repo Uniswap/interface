@@ -1,9 +1,11 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { spacing } from 'ui/src/theme'
 import { SingleSelectContextMenu, type SingleSelectOption } from 'uniswap/src/components/menus/SingleSelectContextMenu'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export enum PositionStatusFilterValue {
   All = 'all',
@@ -18,8 +20,8 @@ export const POSITION_STATUS_FILTER_TO_STATUSES: Record<PositionStatusFilterValu
   [PositionStatusFilterValue.Closed]: [PositionStatus.CLOSED],
 }
 
-/** Shared "Status" row: a label plus a pill that opens the Open/Closed/All single-select dropdown. */
-export function PositionStatusFilter({
+/** Standalone Open/Closed/All filter pill. {@link PositionStatusFilter} composes this with a "Status" label. */
+export function PositionStatusFilterButton({
   value,
   onChange,
   disabled,
@@ -49,19 +51,16 @@ export function PositionStatusFilter({
   )
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      justifyContent="space-between"
-      px="$spacing8"
-      opacity={disabled ? 0.4 : 1}
-      pointerEvents={disabled ? 'none' : 'auto'}
+    <SingleSelectContextMenu
+      dimBackground
+      options={options}
+      selectedValue={value}
+      offsetY={spacing.spacing8}
+      disabled={disabled}
+      onSelect={onChange}
     >
-      <Text variant="body3" color="$neutral1">
-        {t('common.status')}
-      </Text>
-      <SingleSelectContextMenu options={options} selectedValue={value} onSelect={onChange}>
-        <TouchableArea
+      {({ isOpen }) => (
+        <Flex
           row
           alignItems="center"
           alignSelf="flex-end"
@@ -73,13 +72,46 @@ export function PositionStatusFilter({
           pl="$spacing12"
           pr="$spacing8"
           py="$spacing6"
+          cursor="pointer"
+          opacity={disabled ? 0.4 : 1}
+          pointerEvents={disabled ? 'none' : 'auto'}
+          testID={TestID.PoolsStatusFilter}
         >
           <Text variant="buttonLabel4" color="$neutral1" numberOfLines={1} flexShrink={0}>
             {labelByValue[value]}
           </Text>
-          <RotatableChevron direction="down" size="$icon.16" color="$neutral2" />
-        </TouchableArea>
-      </SingleSelectContextMenu>
+          <RotatableChevron animation="200ms" direction={isOpen ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
+        </Flex>
+      )}
+    </SingleSelectContextMenu>
+  )
+}
+
+/** Shared "Status" row: a label plus a pill that opens the Open/Closed/All single-select dropdown. */
+export function PositionStatusFilter({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: PositionStatusFilterValue
+  onChange: (value: PositionStatusFilterValue) => void
+  disabled?: boolean
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <Flex
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      px="$spacing8"
+      opacity={disabled ? 0.4 : 1}
+      pointerEvents={disabled ? 'none' : 'auto'}
+    >
+      <Text variant="body3" color="$neutral1">
+        {t('common.status')}
+      </Text>
+      <PositionStatusFilterButton value={value} onChange={onChange} />
     </Flex>
   )
 }

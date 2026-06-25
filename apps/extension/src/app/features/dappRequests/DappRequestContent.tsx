@@ -1,4 +1,4 @@
-import { type GasFeeResult } from '@universe/api'
+import { type GasFeeResult, type TradingApi } from '@universe/api'
 import { type PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Animated } from 'react-native'
@@ -46,6 +46,7 @@ interface DappRequestFooterProps {
   showSmartWalletActivation?: boolean
   showAddressFooter?: boolean
   transactionGasFeeResult?: GasFeeResult
+  sponsorMetadata?: TradingApi.SponsorMetadata
   isUniswapX?: boolean
   disableConfirm?: boolean
   contentHorizontalPadding?: number | Animated.AnimatedNode | GetThemeValueForKey<'paddingHorizontal'> | null
@@ -91,6 +92,7 @@ export function DappRequestContent({
   showNetworkCost,
   showSmartWalletActivation,
   transactionGasFeeResult,
+  sponsorMetadata,
   children,
   isUniswapX,
   disableConfirm,
@@ -130,6 +132,7 @@ export function DappRequestContent({
         showSmartWalletActivation={showSmartWalletActivation}
         showAddressFooter={showAddressFooter}
         transactionGasFeeResult={transactionGasFeeResult}
+        sponsorMetadata={sponsorMetadata}
         disableConfirm={disableConfirm}
         onCancel={onCancel}
         onConfirm={onConfirm}
@@ -151,6 +154,7 @@ function DappRequestFooter({
   showSmartWalletActivation,
   showAddressFooter,
   transactionGasFeeResult,
+  sponsorMetadata,
   isUniswapX,
   disableConfirm,
 }: DappRequestFooterProps): JSX.Element {
@@ -265,6 +269,7 @@ function DappRequestFooter({
             showNetworkLogo={!!transactionGasFeeResult}
             requestMethod={request.dappRequest.type}
             showSmartWalletActivation={showSmartWalletActivation}
+            sponsorMetadata={sponsorMetadata}
           />
         )}
         {showAddressFooter && (

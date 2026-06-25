@@ -104,6 +104,7 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
 import { PortfolioChartDetailsScreen } from 'src/screens/PortfolioChartDetailsScreen'
+import { PositionDetailsScreen } from 'src/screens/PositionDetailsScreen/PositionDetailsScreen'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
@@ -398,6 +399,7 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={UnitagStackNavigator} name={MobileScreens.UnitagStack} />
       <AppStack.Screen component={ExternalProfileScreen} name={MobileScreens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+      <AppStack.Screen component={PositionDetailsScreen} name={MobileScreens.PositionDetails} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
       <AppStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />

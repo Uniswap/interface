@@ -22,6 +22,13 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import useResizeObserver from 'use-resize-observer'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+  StyledNumericalInput,
+} from '~/components/NumericalInput/LargeAmountInput'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { PAGE_WRAPPER_MAX_WIDTH } from '~/features/Swap/styled'
@@ -35,15 +42,8 @@ import { fallbackCurrencyInfo, useOffRampTransferDetailsRequest } from '~/pages/
 import { OffRampConfirmTransferModal } from '~/pages/Swap/Buy/OffRampConfirmTransferModal'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { resolveInitialBuyFormToken } from '~/pages/Swap/Buy/resolveInitialBuyFormToken'
+import { SelectTokenPanel } from '~/pages/Swap/Buy/SelectTokenPanel'
 import { formatFiatOnRampFiatAmount, getCountryFromLocale } from '~/pages/Swap/Buy/shared'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
-import { SelectTokenPanel } from '~/pages/Swap/common/SelectTokenPanel'
-import {
-  NumericalInputMimic,
-  NumericalInputSymbolContainer,
-  NumericalInputWrapper,
-  StyledNumericalInput,
-} from '~/pages/Swap/common/shared'
 import { popupRegistry } from '~/state/popups/registry'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { getChainUrlParam } from '~/utils/params/chainParams'

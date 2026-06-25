@@ -26,22 +26,10 @@ import {
   SearchHistoryResult,
 } from 'uniswap/src/features/search/SearchHistoryResult'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { dedupeCurrencyIds } from 'uniswap/src/features/search/SearchModal/utils/dedupeCurrencyIds'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-
-function dedupeCurrencyIds(ids: string[]): string[] {
-  const seen = new Set<string>()
-  const out: string[] = []
-  for (const id of ids) {
-    const k = normalizeCurrencyIdForMapLookup(id)
-    if (!seen.has(k)) {
-      seen.add(k)
-      out.push(id)
-    }
-  }
-  return out
-}
 
 function multichainHistoryToTokenOption(
   history: MultichainTokenSearchHistoryResult,

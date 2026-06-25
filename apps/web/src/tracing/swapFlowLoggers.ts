@@ -2,7 +2,7 @@ import { TradingApi } from '@universe/api'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { PriceSourceTag, SwapRouting } from 'uniswap/src/features/telemetry/types'
+import type { PriceSourceTag, SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import {
@@ -34,6 +34,7 @@ export function logSwapFinalized({
   planAnalytics,
   transactedUSDValue,
   priceSource,
+  rwaAnalytics,
 }: {
   id: string
   hash: string | undefined
@@ -47,6 +48,10 @@ export function logSwapFinalized({
   priceSource?: PriceSourceTag
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: Pick<
+    SwapTradeBaseProperties,
+    'market_closed' | 'price_warning' | 'token_in_stocks' | 'token_out_stocks'
+  >
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -72,6 +77,7 @@ export function logSwapFinalized({
     swap_start_timestamp: swapStartTimestamp,
     transactedUSDValue,
     price_source: priceSource,
+    ...rwaAnalytics,
     ...planAnalyticsToSnakeCase(planAnalytics),
     ...analyticsContext,
   })
@@ -107,6 +113,7 @@ export function logUniswapXSwapFinalized({
   planAnalytics,
   transactedUSDValue,
   priceSource,
+  rwaAnalytics,
 }: {
   id: string
   hash?: string
@@ -119,6 +126,10 @@ export function logUniswapXSwapFinalized({
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
   priceSource?: PriceSourceTag
+  rwaAnalytics?: Pick<
+    SwapTradeBaseProperties,
+    'market_closed' | 'price_warning' | 'token_in_stocks' | 'token_out_stocks'
+  >
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -142,6 +153,7 @@ export function logUniswapXSwapFinalized({
     swap_start_timestamp: swapStartTimestamp,
     transactedUSDValue,
     price_source: priceSource,
+    ...rwaAnalytics,
     ...planAnalyticsToSnakeCase(planAnalytics),
     ...analyticsContext,
   })

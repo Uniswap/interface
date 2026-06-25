@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CreateAuctionTokenLogo } from '~/pages/Liquidity/CreateAuction/components/CreateAuctionTokenLogo'
 
 function LaunchIcon(): JSX.Element {
@@ -56,7 +57,13 @@ export function LaunchAuctionProgressIndicator({
   const iconSize = getTokenValue(STEP_ROW_ICON_SIZE)
 
   return (
-    <Flex enterStyle={{ opacity: 0 }} animation="quicker" animateOnly={['transform', 'opacity']} gap="$spacing16">
+    <Flex
+      testID={TestID.LaunchAuctionProgressIndicator}
+      enterStyle={{ opacity: 0 }}
+      animation="quicker"
+      animateOnly={['transform', 'opacity']}
+      gap="$spacing16"
+    >
       <Flex row gap="$spacing12" alignItems="center">
         <Separator my="$spacing12" />
         <Text color="$neutral2" variant="body3">

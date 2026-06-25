@@ -87,9 +87,6 @@ const webConfigValues = {
   /** GIT_COMMIT_HASH — from `git rev-parse HEAD` */
   gitCommitHash: process.env.GIT_COMMIT_HASH ?? process.env.REACT_APP_GIT_COMMIT_HASH,
 
-  /** DEPLOY_TARGET — determines build output format */
-  deployTarget: process.env.DEPLOY_TARGET,
-
   /** ENABLE_REACT_COMPILER — opt-in to React Compiler babel plugin */
   enableReactCompiler: process.env.ENABLE_REACT_COMPILER,
 
@@ -151,10 +148,6 @@ const webConfigSchema = z.object({
   storybookExtension: boolFromString.describe('Is Storybook extension mode enabled'),
 
   // Build Settings
-  deployTarget: z
-    .enum(['vercel', 'cloudflare'])
-    .default('cloudflare')
-    .describe('Deployment target platform, defaults to cloudflare'),
   enableReactCompiler: boolFromString.describe('Is the React Compiler babel plugin enabled'),
   disableSourcemap: boolFromString.describe('Is sourcemap generation disabled'),
   debugProxy: boolFromString.describe('Is verbose entry-gateway proxy logging enabled'),
