@@ -6,6 +6,7 @@ import { AuctionSupplySelector } from '~/pages/Liquidity/CreateAuction/component
 interface AuctionSupplySectionProps {
   auctionSupplyAmount: CurrencyAmount<Currency>
   tokenTotalSupply: CurrencyAmount<Currency>
+  maxAuctionSupplyAmount: CurrencyAmount<Currency>
   minAuctionSupplyAmount: CurrencyAmount<Currency>
   tokenSymbol: string
   onSelectAuctionSupplyPercent: (percent: number) => void
@@ -15,6 +16,7 @@ interface AuctionSupplySectionProps {
 export function AuctionSupplySection({
   auctionSupplyAmount,
   tokenTotalSupply,
+  maxAuctionSupplyAmount,
   minAuctionSupplyAmount,
   tokenSymbol,
   onSelectAuctionSupplyPercent,
@@ -35,6 +37,7 @@ export function AuctionSupplySection({
       <AuctionSupplySelector
         auctionSupplyAmount={auctionSupplyAmount}
         tokenTotalSupply={tokenTotalSupply}
+        maxAuctionSupplyAmount={maxAuctionSupplyAmount}
         minAuctionSupplyAmount={minAuctionSupplyAmount}
         tokenSymbol={tokenSymbol}
         onSelectPercent={onSelectAuctionSupplyPercent}

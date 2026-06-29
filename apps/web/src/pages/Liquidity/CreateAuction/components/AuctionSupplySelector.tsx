@@ -40,6 +40,12 @@ function parseSuffixedAmount(input: string, currency: Currency): CurrencyAmount<
 interface AuctionSupplySelectorProps {
   auctionSupplyAmount: CurrencyAmount<Currency>
   tokenTotalSupply: CurrencyAmount<Currency>
+  /**
+   * Ceiling the deposit is clamped to. For a new token this is the full minted supply; for an
+   * existing token it is the connected wallet's held balance (what the auction can actually pull).
+   * The "Max" preset and percent presets are computed against this, not the total supply.
+   */
+  maxAuctionSupplyAmount: CurrencyAmount<Currency>
   /** Smallest deposit whose sold/LP split keeps both legs at >= 1 base unit; clamped to on blur. */
   minAuctionSupplyAmount: CurrencyAmount<Currency>
   tokenSymbol: string
@@ -50,6 +56,7 @@ interface AuctionSupplySelectorProps {
 export function AuctionSupplySelector({
   auctionSupplyAmount,
   tokenTotalSupply,
+  maxAuctionSupplyAmount,
   minAuctionSupplyAmount,
   tokenSymbol,
   onSelectPercent,
@@ -93,11 +100,11 @@ export function AuctionSupplySelector({
       if (!parsed) {
         return
       }
-      // Live-update with exact amount; cap to total supply so the store stays valid
-      const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
+      // Live-update with exact amount; cap to the deposit ceiling so the store stays valid
+      const capped = parsed.greaterThan(maxAuctionSupplyAmount) ? maxAuctionSupplyAmount : parsed
       onAmountChange(capped)
     },
-    [currency, tokenTotalSupply, onAmountChange],
+    [currency, maxAuctionSupplyAmount, onAmountChange],
   )
 
   const {
@@ -115,7 +122,7 @@ export function AuctionSupplySelector({
     () => (isFocused ? parseSuffixedAmount(rawInput, currency) : null),
     [isFocused, rawInput, currency],
   )
-  const exceedsTotalSupply = parsedAmount !== null && parsedAmount.greaterThan(tokenTotalSupply)
+  const exceedsMax = parsedAmount !== null && parsedAmount.greaterThan(maxAuctionSupplyAmount)
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -132,17 +139,17 @@ export function AuctionSupplySelector({
       return
     }
 
-    // Clamp into [min, totalSupply] on blur: the lower bound keeps the sold/LP split from
-    // rounding a leg to zero base units (a degenerate auction that divides by zero in the
-    // percent math); the upper bound keeps the deposit within the available supply. Raise to
-    // the min first, then cap at total supply, so the supply ceiling always wins — in the
-    // pathological case where min > totalSupply (a token with fewer base units than the
-    // minimum two-leg deposit) the result never exceeds what exists, and the step's own
-    // validation disables Continue since the deposit stays below the minimum.
+    // Clamp into [min, max] on blur: the lower bound keeps the sold/LP split from rounding a leg to
+    // zero base units (a degenerate auction that divides by zero in the percent math); the upper
+    // bound is the deposit ceiling (full supply for a new token, wallet balance for an existing one).
+    // Raise to the min first, then cap at the ceiling, so the ceiling always wins — in the
+    // pathological case where min > max (a token with fewer base units than the minimum two-leg
+    // deposit, or a wallet holding too little) the result never exceeds the ceiling, and the step's
+    // own validation disables Continue since the deposit stays below the minimum.
     const raised = parsed.lessThan(minAuctionSupplyAmount) ? minAuctionSupplyAmount : parsed
-    const clamped = raised.greaterThan(tokenTotalSupply) ? tokenTotalSupply : raised
+    const clamped = raised.greaterThan(maxAuctionSupplyAmount) ? maxAuctionSupplyAmount : raised
     onAmountChange(clamped)
-  }, [rawInput, currency, tokenTotalSupply, minAuctionSupplyAmount, onAmountChange])
+  }, [rawInput, currency, maxAuctionSupplyAmount, minAuctionSupplyAmount, onAmountChange])
 
   const trace = useTrace()
   const handleSelectPercent = useCallback(
@@ -195,7 +202,7 @@ export function AuctionSupplySelector({
               fontSize={fonts.heading3.fontSize}
               lineHeight={fonts.heading3.lineHeight}
               fontWeight={fonts.heading3.fontWeight}
-              color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
+              color={exceedsMax ? '$statusCritical' : '$neutral1'}
               backgroundColor="$transparent"
             />
           </Trace>
@@ -237,13 +244,13 @@ export function AuctionSupplySelector({
             <PercentButton
               key={pillPercent}
               label={`${pillPercent}%`}
-              isActive={auctionSupplyAmount.equalTo(percentOfAmount(tokenTotalSupply, pillPercent))}
+              isActive={auctionSupplyAmount.equalTo(percentOfAmount(maxAuctionSupplyAmount, pillPercent))}
               onPress={handleSelectPercent.bind(null, pillPercent)}
             />
           ))}
           <PercentButton
             label={t('common.max')}
-            isActive={auctionSupplyAmount.equalTo(tokenTotalSupply)}
+            isActive={auctionSupplyAmount.equalTo(maxAuctionSupplyAmount)}
             onPress={handleSelectPercent.bind(null, 100)}
           />
         </Flex>

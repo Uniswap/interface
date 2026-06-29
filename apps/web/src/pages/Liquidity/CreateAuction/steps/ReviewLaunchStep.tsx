@@ -39,6 +39,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useCreateAuctionSubmit } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import { useExistingTokenWalletBalance } from '~/pages/Liquidity/CreateAuction/hooks/useExistingTokenWalletBalance'
 import { useLaunchAuctionFlow } from '~/pages/Liquidity/CreateAuction/hooks/useLaunchAuctionFlow'
 import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import {
@@ -162,6 +163,16 @@ export function ReviewLaunchStep(): JSX.Element | null {
 
   const getFailedDiagnostics = useEvent(() => getAuctionCreateFailedDiagnostics({ configureAuction, customizePool }))
 
+  // Final guard against an existing-token deposit that exceeds the wallet's held balance at launch
+  // time (e.g. tokens moved out after the Configure step). The request builder clamps to this.
+  const existingTokenCurrency =
+    tokenForm.mode === TokenMode.EXISTING ? tokenForm.existingTokenCurrencyInfo?.currency : undefined
+  const { balance: existingTokenWalletBalance } = useExistingTokenWalletBalance(existingTokenCurrency)
+  const existingTokenWalletBalanceRaw =
+    tokenForm.mode === TokenMode.EXISTING && existingTokenWalletBalance
+      ? BigInt(existingTokenWalletBalance.quotient.toString())
+      : undefined
+
   const launchSubmit = useCreateAuctionSubmit({
     tokenForm,
     configureAuction,
@@ -169,6 +180,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
     walletAddress: activeAddress ?? undefined,
     currencyAddress,
     xVerificationToken: xVerification?.xVerificationToken,
+    existingTokenWalletBalanceRaw,
     getCreateFailedProperties,
   })
 

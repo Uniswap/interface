@@ -26,6 +26,18 @@ export class AuctionStartTimePassedError extends Error {
   }
 }
 
+/**
+ * Thrown at launch time when the wallet holds fewer tokens than the configured deposit — the auction
+ * pulls the deposit from the wallet, so the backend would reject it. Mapped to actionable copy in
+ * `LaunchAuctionErrorModal`.
+ */
+export class AuctionInsufficientBalanceError extends Error {
+  constructor() {
+    super('Wallet token balance is insufficient to fund the auction')
+    this.name = 'AuctionInsufficientBalanceError'
+  }
+}
+
 export interface CreateAuctionSubmitResult {
   predictedTokenAddress: string
   predictedAuctionAddress: string
@@ -45,6 +57,12 @@ interface UseCreateAuctionSubmitParams {
   currencyAddress: string | undefined
   /** From X OAuth / VerifyXCallback when the creator linked their handle. */
   xVerificationToken?: string | null
+  /**
+   * Existing-token only: the connected wallet's on-chain balance in base units. Used for the
+   * build-time insufficient-balance check so a deposit larger than the held balance can't hit the
+   * backend's "insufficient balance" rejection.
+   */
+  existingTokenWalletBalanceRaw?: bigint
   /**
    * Builds `Auction Create Failed` properties. Called by this hook at pre-submission failure points
    * (`build_request` for local validation, `create_auction_request` when the endpoint throws).
@@ -119,6 +137,7 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
     walletAddress,
     currencyAddress,
     xVerificationToken,
+    existingTokenWalletBalanceRaw,
     getCreateFailedProperties,
   } = params
   const createAuctionMutation = useCreateAuctionMutation()
@@ -148,6 +167,19 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
 
     if (configureAuction.startTime && configureAuction.startTime.getTime() <= Date.now()) {
       const err = new AuctionStartTimePassedError()
+      setError(err)
+      reportAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request', error: err, diagnostics })
+      return undefined
+    }
+
+    // Existing tokens pull the deposit from the wallet, so a deposit larger than the held balance
+    // can't be funded — fail here instead of letting the backend reject it.
+    if (
+      existingTokenWalletBalanceRaw !== undefined &&
+      configureAuction.committed &&
+      BigInt(configureAuction.committed.auctionSupplyAmount.quotient.toString()) > existingTokenWalletBalanceRaw
+    ) {
+      const err = new AuctionInsufficientBalanceError()
       setError(err)
       reportAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request', error: err, diagnostics })
       return undefined

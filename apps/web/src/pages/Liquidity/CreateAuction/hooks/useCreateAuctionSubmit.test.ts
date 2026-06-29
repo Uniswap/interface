@@ -1,12 +1,17 @@
 import { act, renderHook } from '@testing-library/react'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { zeroAddress } from '~/chains'
 import {
+  AuctionInsufficientBalanceError,
   AuctionStartTimePassedError,
   useCreateAuctionSubmit,
 } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
+import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 import { MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 const WALLET = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
@@ -47,6 +52,37 @@ function buildableParams(overrides: Partial<Params> = {}): Params {
   actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
   actions.setEndTime(new Date(Date.now() + 4 * MS_PER_DAY))
   actions.setFloorPrice('0.1')
+  const { tokenForm, configureAuction, customizePool } = store.getState()
+  return {
+    tokenForm,
+    configureAuction,
+    customizePool,
+    walletAddress: WALLET,
+    currencyAddress: zeroAddress,
+    ...overrides,
+  }
+}
+
+const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+
+/** Buildable params for an existing token (UNI) with a configured deposit of `depositRaw` base units. */
+function existingTokenParams(depositRaw: string, overrides: Partial<Params> = {}): Params {
+  const store = createCreateAuctionStore()
+  const { actions } = store.getState()
+  const uni = new Token(UniverseChainId.Mainnet, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  actions.setTokenForm({
+    mode: TokenMode.EXISTING,
+    existingTokenCurrencyInfo: { currency: uni } as CurrencyInfo,
+    description: '',
+    xProfile: '',
+    websiteLink: '',
+    totalSupply: CurrencyAmount.fromRawAmount(uni, '1000000000000000000000000000'),
+  })
+  actions.commitTokenFormAndAdvance()
+  actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
+  actions.setEndTime(new Date(Date.now() + 4 * MS_PER_DAY))
+  actions.setFloorPrice('0.1')
+  actions.setAuctionConfig({ auctionSupplyAmount: CurrencyAmount.fromRawAmount(uni, depositRaw) })
   const { tokenForm, configureAuction, customizePool } = store.getState()
   return {
     tokenForm,
@@ -128,6 +164,21 @@ describe('useCreateAuctionSubmit', () => {
     expect(returned).toBeUndefined()
     expect(mockMutateAsync).not.toHaveBeenCalled()
     expect(result.current.error).toBeInstanceOf(AuctionStartTimePassedError)
+  })
+
+  it('errors without calling the mutation when the deposit exceeds the wallet balance', async () => {
+    // Configured to deposit 1000 base units but the wallet only holds 600.
+    const params = existingTokenParams('1000', { existingTokenWalletBalanceRaw: 600n })
+    const { result } = renderHook(() => useCreateAuctionSubmit(params))
+
+    let returned: Awaited<ReturnType<typeof result.current.onLaunch>>
+    await act(async () => {
+      returned = await result.current.onLaunch()
+    })
+
+    expect(returned).toBeUndefined()
+    expect(mockMutateAsync).not.toHaveBeenCalled()
+    expect(result.current.error).toBeInstanceOf(AuctionInsufficientBalanceError)
   })
 
   it('returns the validated result on success', async () => {

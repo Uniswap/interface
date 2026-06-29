@@ -1,4 +1,4 @@
-import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
@@ -29,6 +29,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import { useCreateAuctionTokenLogoNode } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenLogoNode'
+import { useExistingTokenWalletBalance } from '~/pages/Liquidity/CreateAuction/hooks/useExistingTokenWalletBalance'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import {
@@ -42,6 +43,7 @@ import {
   type InputCurrency,
   PostAuctionLiquidityAllocationType,
   RaiseCurrency,
+  TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
   percentOfSoldToLiquidityFromDepositAndLiquidityAmount,
@@ -60,6 +62,9 @@ export function ConfigureAuctionStep() {
   })
   const configureAuction: ConfigureAuctionFormState = useCreateAuctionStore((state) => state.configureAuction)
   const tokenMode = useCreateAuctionStore((state) => state.tokenForm.mode)
+  const existingTokenCurrency = useCreateAuctionStore((state) =>
+    state.tokenForm.mode === TokenMode.EXISTING ? state.tokenForm.existingTokenCurrencyInfo?.currency : undefined,
+  )
 
   const {
     goToPreviousStep,
@@ -165,15 +170,53 @@ export function ConfigureAuctionStep() {
     [setStartTime, setEndTime],
   )
 
+  // Existing tokens deposit tokens pulled from the wallet, so the auction can only be funded up to
+  // the connected wallet's held balance — not the token's total supply. (New tokens mint their own
+  // supply at launch, so the wallet balance is irrelevant.) Cap the deposit input ceiling to the
+  // held balance; the build-time check enforces it at launch.
+  const isExistingToken = tokenMode === TokenMode.EXISTING
+  const { balance: heldBalance } = useExistingTokenWalletBalance(existingTokenCurrency)
+  const committedTotalSupply = committed?.totalSupply
+  // Rebase the balance onto the committed currency so CurrencyAmount comparisons share an identity.
+  const walletBalance = useMemo(
+    () =>
+      isExistingToken && heldBalance && committedTotalSupply
+        ? CurrencyAmount.fromRawAmount(committedTotalSupply.currency, heldBalance.quotient)
+        : undefined,
+    [isExistingToken, heldBalance, committedTotalSupply],
+  )
+  // Defensive cap to total supply (balanceOf should never exceed totalSupply, but a malformed token
+  // could report otherwise). New tokens keep the full minted supply as the ceiling.
+  const maxAuctionSupplyAmount = useMemo(() => {
+    if (!committedTotalSupply) {
+      return undefined
+    }
+    if (!isExistingToken || !walletBalance) {
+      return committedTotalSupply
+    }
+    return walletBalance.greaterThan(committedTotalSupply) ? committedTotalSupply : walletBalance
+  }, [isExistingToken, walletBalance, committedTotalSupply])
+
+  // Clamp a stale deposit (e.g. the existing-token default of 100% of total supply) down to the held
+  // balance once it resolves, so the input never starts above what the wallet can fund.
+  useEffect(() => {
+    if (!committed || !maxAuctionSupplyAmount) {
+      return
+    }
+    if (committed.auctionSupplyAmount.greaterThan(maxAuctionSupplyAmount)) {
+      setAuctionConfig({ auctionSupplyAmount: maxAuctionSupplyAmount })
+    }
+  }, [committed, maxAuctionSupplyAmount, setAuctionConfig])
+
   const handleAuctionSupplyPercentChange = useCallback(
     (percent: number) => {
-      if (!committed) {
+      if (!committed || !maxAuctionSupplyAmount) {
         return
       }
-      const newAuctionSupply = percentOfAmount(committed.totalSupply, percent)
+      const newAuctionSupply = percentOfAmount(maxAuctionSupplyAmount, percent)
       setAuctionConfig({ auctionSupplyAmount: newAuctionSupply })
     },
-    [committed, setAuctionConfig],
+    [committed, maxAuctionSupplyAmount, setAuctionConfig],
   )
 
   const handleAuctionSupplyAmountChange = useCallback(
@@ -239,6 +282,7 @@ export function ConfigureAuctionStep() {
           <AuctionSupplySection
             auctionSupplyAmount={auctionSupplyAmount}
             tokenTotalSupply={totalSupply}
+            maxAuctionSupplyAmount={maxAuctionSupplyAmount ?? totalSupply}
             minAuctionSupplyAmount={minAuctionSupplyAmount}
             tokenSymbol={tokenSymbol}
             onSelectAuctionSupplyPercent={handleAuctionSupplyPercentChange}
