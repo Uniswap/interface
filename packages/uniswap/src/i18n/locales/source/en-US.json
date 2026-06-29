@@ -2370,6 +2370,8 @@
   "swap.route.optimizedGasCost": "This route considers split routes, multiple hops, and network costs of each step.",
   "swap.router.label.client": "Uniswap Client",
   "swap.routing.jupiter.description": "Jupiter aggregates liquidity from multiple sources to provide you with the most competitive prices.",
+  "swap.routing.poolsAndVersions_one": "Routing through {{count}} pool using Uniswap {{versions}}",
+  "swap.routing.poolsAndVersions_other": "Routing through {{count}} pools using Uniswap {{versions}}",
   "swap.routing.uniswapAutoRouter.description": "The Uniswap Auto Router considers the most efficient routes and network costs to provide you with the most competitive prices.",
   "swap.settings.deadline.tooltip": "Your transaction will revert if it is pending for more than this period of time. (Maximum: 3 days).",
   "swap.settings.deadline.warning": "High deadline",

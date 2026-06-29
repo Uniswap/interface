@@ -573,6 +573,19 @@ describe('getFeatureFlaggedHeaders', () => {
           break
       }
     })
+
+    it(`Endpoint: ${path} should/should not include RequestSwapSteps header when feature flag is enabled`, async () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.RequestSwapSteps)
+      const headers = await getFeatureFlaggedHeaders(path)
+      switch (path) {
+        case TRADING_API_PATHS.quote:
+          expect(headers).toHaveProperty(TradingApiHeaders.RequestSwapSteps, 'true')
+          break
+        default:
+          expect(headers).not.toHaveProperty(TradingApiHeaders.RequestSwapSteps)
+          break
+      }
+    })
   })
 })
 

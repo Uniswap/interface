@@ -21,7 +21,8 @@ import {
   BestRouteUniswapXTooltip,
 } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/BestRouteTooltip'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { summarizeSwapSteps } from 'uniswap/src/utils/routingDiagram/routingProviders/uniswapRoutingProvider'
 import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -44,6 +45,18 @@ export function RoutingHopInfo({
   const routingProvider = useRoutingProvider({ routing: trade.routing })
   const isUniswapXTrade = isUniswapX(trade)
 
+  const swapStepsSummary = useMemo(() => {
+    const steps = isClassic(trade) ? trade.quote.quote.swapSteps : undefined
+    if (!steps?.length) {
+      return undefined
+    }
+    const { pools, versions } = summarizeSwapSteps(steps)
+    if (pools <= 0 || versions.length === 0) {
+      return undefined
+    }
+    return { pools, versions }
+  }, [trade])
+
   const caption = useMemo(() => {
     const textVariant = isWebPlatform ? 'body4' : 'body2'
     const textAlign = isWebPlatform ? 'left' : 'center'
@@ -61,6 +74,17 @@ export function RoutingHopInfo({
               ),
             }}
           />
+        </Text>
+      )
+    }
+
+    if (swapStepsSummary) {
+      return (
+        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
+          {t('swap.routing.poolsAndVersions', {
+            count: swapStepsSummary.pools,
+            versions: swapStepsSummary.versions.join(', '),
+          })}
         </Text>
       )
     }
@@ -86,7 +110,7 @@ export function RoutingHopInfo({
       )
     }
     return null
-  }, [t, trade, routes, gasFeeFormatted, routingProvider, isUniswapXTrade])
+  }, [t, trade, routes, gasFeeFormatted, routingProvider, isUniswapXTrade, swapStepsSummary])
 
   const modalTitle =
     !isUniswapXTrade && routingProvider?.name
@@ -96,15 +120,15 @@ export function RoutingHopInfo({
   const ModalIcon = routingProvider?.icon ?? OrderRouting
   const modalIconColor = routingProvider?.iconColor ?? '$neutral1'
 
-  const mobileLearnMore =
-    isMobileApp && !isUniswapXTrade ? (
-      <LearnMoreLink textVariant="buttonLabel3" url={UniswapHelpUrls.articles.routingSettings} />
+  const learnMoreLink =
+    !isUniswapXTrade && (isMobileApp || swapStepsSummary || !routes || routes.length === 0) ? (
+      <LearnMoreLink textVariant="buttonLabel4" textColor="$neutral1" url={UniswapHelpUrls.articles.routingSettings} />
     ) : undefined
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <WarningInfo
-        infoButton={mobileLearnMore}
+        infoButton={learnMoreLink}
         modalProps={{
           modalName: ModalName.SwapReview,
           captionComponent: caption,
@@ -118,6 +142,8 @@ export function RoutingHopInfo({
         tooltipProps={{
           text: isUniswapXTrade ? (
             <BestRouteUniswapXTooltip />
+          ) : swapStepsSummary ? (
+            caption
           ) : routes && routes.length > 0 ? (
             <BestRouteTooltip />
           ) : (

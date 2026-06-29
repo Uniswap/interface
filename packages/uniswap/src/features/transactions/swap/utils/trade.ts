@@ -209,15 +209,76 @@ export function getRateToDisplay({
   return showInverseRate ? rate : inverseRate
 }
 
+/**
+ * Derives the protocol version-set from a quote's `swapSteps` and maps it to a single `Protocol`.
+ * A single version maps to its matching protocol; multiple versions are reported as MIXED. Returns
+ * undefined when no swap versions are present (e.g. pure wrap/unwrap steps), letting the caller fall
+ * back to route-based inference.
+ *
+ * Reads `swapSteps` directly rather than reusing `summarizeSwapSteps` (which also computes pool
+ * counts and lives alongside the UI/routing-diagram layer) to keep this data util free of that
+ * dependency — importing it introduces a circular dependency through `swap/utils/routing`.
+ */
+function getProtocolFromSwapSteps(steps: readonly TradingApi.SwapStep[]): Protocol | undefined {
+  const versions = new Set<Protocol.V2 | Protocol.V3 | Protocol.V4>()
+
+  for (const step of steps) {
+    switch (step.type) {
+      case 'V2_SWAP_EXACT_IN':
+      case 'V2_SWAP_EXACT_OUT':
+        versions.add(Protocol.V2)
+        break
+      case 'V3_SWAP_EXACT_IN':
+      case 'V3_SWAP_EXACT_OUT':
+        versions.add(Protocol.V3)
+        break
+      case 'V4_SWAP':
+        for (const action of step.v4Actions) {
+          switch (action.action) {
+            case 'SWAP_EXACT_IN':
+            case 'SWAP_EXACT_OUT':
+            case 'SWAP_EXACT_IN_SINGLE':
+            case 'SWAP_EXACT_OUT_SINGLE':
+              versions.add(Protocol.V4)
+              break
+            // SETTLE / TAKE action variants contribute no protocol version.
+          }
+        }
+        break
+      // WRAP_ETH / UNWRAP_WETH steps contribute no protocol version.
+    }
+  }
+
+  if (versions.size === 0) {
+    return undefined
+  }
+  if (versions.size > 1) {
+    return Protocol.MIXED
+  }
+  const [version] = versions
+  return version
+}
+
 export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined {
   if (!isClassic(trade)) {
     return undefined
   }
 
+  // Prefer the new `swapSteps` routing field when present: it is the canonical Universal Router
+  // step sequence and correctly distinguishes V4 (which the route-based fallback below cannot).
+  // Only populated when the GuideStar quoter wins the hybrid quote race.
+  const { swapSteps } = trade.quote.quote
+  if (swapSteps?.length) {
+    const protocol = getProtocolFromSwapSteps(swapSteps)
+    if (protocol) {
+      return protocol
+    }
+  }
+
+  // Fallback for quotes without `swapSteps`: infer from the classic quote route hop types.
+  // Note: route hops cannot express V4, so V4 is only detectable via `swapSteps` above.
   const route = trade.quote.quote.route ?? []
   const protocols = new Set(route.flatMap((hops) => hops.map((hop) => hop.type)))
-
-  // TODO(SWAP-2724): Update to properly extract from newer routing response types
   if (protocols.size === 0) {
     return undefined
   }

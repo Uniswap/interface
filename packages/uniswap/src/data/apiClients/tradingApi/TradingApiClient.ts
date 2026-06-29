@@ -55,6 +55,7 @@ function addHeaderIfEnabled(params: { headers: Record<string, string>; key: stri
 
 export enum TradingApiHeaders {
   UniversalRouterVersion = 'x-universal-router-version',
+  RequestSwapSteps = 'x-universal-router-swapsteps',
   UniquoteEnabled = 'x-uniquote-enabled',
   ViemProviderEnabled = 'x-viem-provider-enabled',
   Erc20EthEnabled = 'x-erc20eth-enabled',
@@ -91,6 +92,7 @@ export const getFeatureFlaggedHeaders = async (
 
   const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
   const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
+  const shouldRequestSwapSteps = getFeatureFlag(FeatureFlags.RequestSwapSteps)
   const ethAsErc20UniswapXEnabled = getExperimentValueFromLayer<
     typeof Layers.SwapPage,
     Experiments.EthAsErc20UniswapX,
@@ -108,6 +110,7 @@ export const getFeatureFlaggedHeaders = async (
       headers[TradingApiHeaders.UniroutePulumiEnabled] = 'true'
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.RequestSwapSteps, enabled: shouldRequestSwapSteps })
       addHeaderIfEnabled({
         headers,
         key: TradingApiHeaders.DisableUniswapInterfaceFees,

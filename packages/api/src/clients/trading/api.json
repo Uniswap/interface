@@ -6474,6 +6474,15 @@
         ],
         "description": "The protocol of the pool."
       },
+      "ProtocolItemsAmm": {
+        "type": "string",
+        "enum": [
+          "V2",
+          "V3",
+          "V4"
+        ],
+        "description": "The protocol of the pool."
+      },
       "encodedOrder": {
         "type": "string",
         "description": "An encoded copy of the order details which will be submitted to the filler network along with the signed permit."

@@ -53,6 +53,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.GasFeeOverrides, label: 'Enable Custom Gas Fee Overrides' },
         { flag: FeatureFlags.UniquoteEnabled, label: 'Enable Uniquote' },
         { flag: FeatureFlags.UnirouteEnabled, label: 'Enable Uniroute' },
+        { flag: FeatureFlags.RequestSwapSteps, label: 'Request SwapSteps in classic quotes' },
         { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },
         { flag: FeatureFlags.ViemProviderEnabled, label: 'Enable Viem Provider' },
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },

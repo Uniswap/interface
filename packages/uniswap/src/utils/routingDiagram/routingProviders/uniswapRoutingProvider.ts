@@ -75,6 +75,62 @@ function parseRouteHop(pool: ApiPool): RoutingHop {
   }
 }
 
+// V3 packed path layout: 20-byte token + 3-byte fee repeating, ending with 20-byte token.
+// Total bytes = 20 + 23 * numPools, so a valid path has (bytes - 20) divisible by 23 and bytes >= 43.
+const V3_TOKEN_BYTES = 20
+const V3_HOP_BYTES = 23
+const V3_MIN_PATH_BYTES = V3_TOKEN_BYTES + V3_HOP_BYTES
+
+export function summarizeSwapSteps(steps: readonly TradingApi.SwapStep[]): {
+  pools: number
+  versions: ('V2' | 'V3' | 'V4')[]
+} {
+  const versions = new Set<'V2' | 'V3' | 'V4'>()
+  let pools = 0
+
+  for (const step of steps) {
+    switch (step.type) {
+      case 'V2_SWAP_EXACT_IN':
+      case 'V2_SWAP_EXACT_OUT':
+        pools += Math.max(0, step.path.length - 1)
+        versions.add('V2')
+        break
+      case 'V3_SWAP_EXACT_IN':
+      case 'V3_SWAP_EXACT_OUT': {
+        const hex = step.path.startsWith('0x') ? step.path.slice(2) : step.path
+        const bytes = hex.length / 2
+        if (bytes >= V3_MIN_PATH_BYTES && (bytes - V3_TOKEN_BYTES) % V3_HOP_BYTES === 0) {
+          pools += (bytes - V3_TOKEN_BYTES) / V3_HOP_BYTES
+        }
+        versions.add('V3')
+        break
+      }
+      case 'V4_SWAP':
+        for (const action of step.v4Actions) {
+          switch (action.action) {
+            case 'SWAP_EXACT_IN':
+            case 'SWAP_EXACT_OUT':
+              pools += action.path.length
+              versions.add('V4')
+              break
+            case 'SWAP_EXACT_IN_SINGLE':
+            case 'SWAP_EXACT_OUT_SINGLE':
+              pools += 1
+              versions.add('V4')
+              break
+            // SETTLE, SETTLE_ALL, TAKE, TAKE_ALL, TAKE_PORTION contribute 0 pools.
+          }
+        }
+        break
+      case 'WRAP_ETH':
+      case 'UNWRAP_WETH':
+        break
+    }
+  }
+
+  return { pools, versions: [...versions].sort() }
+}
+
 export const uniswapRoutingProvider: RoutingProvider = {
   name: 'Uniswap API',
   icon: UniswapLogo,
