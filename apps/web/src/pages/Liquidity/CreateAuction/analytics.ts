@@ -249,6 +249,38 @@ export function getAuctionCreateFailedProperties({
   }
 }
 
+/**
+ * Datadog-only diagnostic snapshot attached to create-auction failure logs (NOT the Amplitude event).
+ * Pairs the backend rejection reason with the config that produced it so we can see which gap to fix —
+ * e.g. an "Unsupported price range strategy" rejection shows `range_type`, an emission overshoot shows
+ * `auction_window_seconds`, and the message names the rest.
+ */
+export function getAuctionCreateFailedDiagnostics({
+  configureAuction,
+  customizePool,
+}: {
+  configureAuction: ConfigureAuctionFormState
+  customizePool: CustomizePoolState
+}): Record<string, unknown> {
+  const { committed, startTime, endTime } = configureAuction
+  return {
+    fee_tier: customizePool.fee.feeAmount,
+    fee_pct: customizePool.fee.feeAmount / BIPS_BASE,
+    range_type: customizePool.priceRangeStrategy,
+    custom_range_count:
+      customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE
+        ? customizePool.customPriceRanges.length
+        : undefined,
+    raise_currency: configureAuction.raiseCurrency,
+    auction_supply_pct: committed ? amountToPercent(committed.totalSupply, committed.auctionSupplyAmount) : undefined,
+    lp_allocation_type: configureAuction.postAuctionLiquidityAllocation.type,
+    has_kyc_hook: Boolean(configureAuction.kycValidationHookAddress),
+    timelock_enabled: customizePool.timeLockEnabled,
+    auction_window_seconds:
+      startTime && endTime ? Math.round((endTime.getTime() - startTime.getTime()) / 1000) : undefined,
+  }
+}
+
 /** Builds analytics properties for `Auction Custom Price Range Added` (Pool Details). */
 export function getAuctionCustomPriceRangeAddedProperties({
   trace,

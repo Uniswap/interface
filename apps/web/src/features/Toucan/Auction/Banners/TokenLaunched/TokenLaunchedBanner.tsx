@@ -8,9 +8,11 @@ import { TokenLaunchedBannerInner } from '~/features/Toucan/Auction/Banners/Toke
 import { TokenLaunchedBannerSkeleton } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerSkeleton'
 import { TokenLaunchFailedBannerContent } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchFailedBannerContent'
 import { TokenRestrictedBannerContent } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenRestrictedBannerContent'
+import { useRealTokenMarketInfo } from '~/features/Toucan/Auction/Banners/TokenLaunched/useRealTokenMarketInfo'
 import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerColorData'
 import { useTokenLaunchedBannerPriceData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerPriceData'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
+import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDurationRemaining'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
@@ -62,6 +64,16 @@ export function TokenLaunchedBanner({
     tokenAddress && chainId && getAuctionMetadata({ chainId, tokenAddress })?.tradingRestrictedUntilTge,
   )
 
+  // Redeemable virtual-token auctions present the REAL (underlying) token instead: its price/chart,
+  // name, FDV, and TDP link. The real token address is read on-chain (gated by a config override).
+  const { isRedeemable, realTokenAddress, loading: redemptionLoading } = useAuctionRedemption()
+  const priceTokenAddress = isRedeemable ? realTokenAddress : tokenAddress
+  const {
+    fdvUsd: realTokenFdvUsd,
+    name: realTokenName,
+    loading: realTokenInfoLoading,
+  } = useRealTokenMarketInfo({ tokenAddress: realTokenAddress, chainId, skip: !isRedeemable })
+
   const { bannerGradient, accentColor } = useTokenLaunchedBannerColorData({
     tokenColor: isGraduated ? tokenColor : colors.statusCritical.val,
     tokenColorLoading,
@@ -74,9 +86,9 @@ export function TokenLaunchedBanner({
     loading: priceLoading,
     error: priceError,
   } = useTokenLaunchedBannerPriceData({
-    tokenAddress,
+    tokenAddress: priceTokenAddress,
     chainId,
-    skip: !isGraduated || tradingRestrictedUntilTge || !tokenAddress || !chainId,
+    skip: !isGraduated || tradingRestrictedUntilTge || !priceTokenAddress || !chainId,
   })
 
   // Fetch bid token info (needed for clearing price fallback conversion to USD)
@@ -162,14 +174,19 @@ export function TokenLaunchedBanner({
   }
 
   // Show loading skeleton while data is being fetched
-  const isLoading = priceLoading || bidTokenLoading || (needsFallback && clearingHistoryLoading)
+  const isLoading =
+    priceLoading ||
+    bidTokenLoading ||
+    (needsFallback && clearingHistoryLoading) ||
+    (isRedeemable && (redemptionLoading || realTokenInfoLoading))
   if (isLoading) {
     return <TokenLaunchedBannerSkeleton />
   }
 
   // Don't render a tradeable banner if no data is available (neither primary nor fallback).
   // Pre-trade banners should still render because their purpose is status, not price discovery.
-  if (isTradeAvailable && !effectivePriceData) {
+  // Redeem banners also always render — they carry the real token's FDV + link, not a price chart.
+  if (isTradeAvailable && !effectivePriceData && !isRedeemable) {
     logger.warn('TokenLaunchedBanner', 'TokenLaunchedBanner', 'No price data available (primary or fallback)', {
       hasPriceData: !!priceData,
       hasFallbackPriceData: !!fallbackPriceData,
@@ -185,7 +202,7 @@ export function TokenLaunchedBanner({
   // Show success state with price data
   return (
     <TokenLaunchedBannerInner
-      tokenName={tokenName}
+      tokenName={isRedeemable ? (realTokenName ?? tokenName) : tokenName}
       tokenColor={tokenColor}
       totalSupply={totalSupply}
       auctionTokenDecimals={auctionTokenDecimals}
@@ -201,6 +218,8 @@ export function TokenLaunchedBanner({
       }
       bannerGradient={bannerGradient}
       accentColor={accentColor}
+      fdvUsdOverride={isRedeemable ? (realTokenFdvUsd ?? null) : undefined}
+      tokenDetailsAddress={isRedeemable ? realTokenAddress : undefined}
     />
   )
 }

@@ -16,6 +16,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
@@ -126,6 +127,9 @@ const AuctionTokenInfo = ({
 
 export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) => {
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
+  // For redeemable virtual-token auctions, link the token name/logo to the real token — consistent
+  // with the token-launched banner (both resolve through useAuctionRedemption).
+  const { isRedeemable, realTokenAddress } = useAuctionRedemption()
 
   const verifiedAuctionIds: string[] = useDynamicConfigValue({
     config: DynamicConfigs.VerifiedAuctions,
@@ -147,10 +151,10 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
     }
     const chainInfo = getChainInfo(auctionDetails.chainId)
     return getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: isRedeemable && realTokenAddress ? realTokenAddress : auctionDetails.tokenAddress,
       chainUrlParam: chainInfo.urlParam,
     })
-  }, [auctionDetails])
+  }, [auctionDetails, isRedeemable, realTokenAddress])
 
   if (!auctionDetails) {
     return null

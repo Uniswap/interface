@@ -17,6 +17,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { EVMAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAuctionLaunch } from '~/hooks/useAuctionLaunch'
 import { LaunchProgressStep } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator'
@@ -55,6 +56,12 @@ interface UseLaunchAuctionFlowParams {
     failedStep: AuctionCreateFailedStep
     errorCode?: string | number
   }) => AuctionCreateFailedProperties
+  /**
+   * Config snapshot (Datadog only) attached to the launch-failure log, mirroring the two
+   * pre-submission paths in `useCreateAuctionSubmit` so all three failure points group by the
+   * same inputs. Launch reverts can be config-driven (e.g. the target pool already exists).
+   */
+  getFailedDiagnostics?: () => Record<string, unknown>
 }
 
 interface LaunchSuccess {
@@ -93,6 +100,7 @@ export function useLaunchAuctionFlow({
   launchSubmit,
   getLaunchAnalyticsProperties,
   getCreateFailedProperties,
+  getFailedDiagnostics,
 }: UseLaunchAuctionFlowParams): LaunchAuctionFlow {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -220,6 +228,11 @@ export function useLaunchAuctionFlow({
         if (failedProps) {
           sendAnalyticsEvent(AuctionEventName.AuctionCreateFailed, failedProps)
         }
+        // Wallet/launch failures are shown in the error modal but never reach Datadog otherwise.
+        logger.error(err, {
+          tags: { file: 'useLaunchAuctionFlow', function: 'handleLaunchToken' },
+          extra: { failedStep: 'launch', errorMessage: err.message, ...failedProps, ...getFailedDiagnostics?.() },
+        })
         setLaunchWalletError(err)
       },
     })

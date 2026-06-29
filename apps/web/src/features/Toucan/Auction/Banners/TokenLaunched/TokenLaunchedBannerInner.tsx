@@ -21,6 +21,9 @@ interface TokenLaunchedBannerInnerProps {
   accentColor: string
   isTradeAvailable: boolean
   tradeAvailabilityDurationRemaining: string | undefined
+  // See TokenLaunchedBannerContent — set for redeemable virtual tokens to present the real token.
+  fdvUsdOverride?: number | null
+  tokenDetailsAddress?: string
 }
 
 export function TokenLaunchedBannerInner({
@@ -32,6 +35,8 @@ export function TokenLaunchedBannerInner({
   accentColor,
   isTradeAvailable,
   tradeAvailabilityDurationRemaining,
+  fdvUsdOverride,
+  tokenDetailsAddress,
 }: TokenLaunchedBannerInnerProps) {
   const navigate = useNavigate()
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
@@ -41,11 +46,11 @@ export function TokenLaunchedBannerInner({
       return
     }
     const tokenDetailsURL = getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
       chain: toGraphQLChain(auctionDetails.chainId),
     })
     navigate(tokenDetailsURL)
-  }, [auctionDetails, navigate])
+  }, [auctionDetails, navigate, tokenDetailsAddress])
 
   const canPress = Boolean(auctionDetails && isTradeAvailable)
 
@@ -60,6 +65,8 @@ export function TokenLaunchedBannerInner({
           currentTickValue={priceData?.currentTickValue}
           isTradeAvailable={isTradeAvailable}
           tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
+          fdvUsdOverride={fdvUsdOverride}
+          tokenDetailsAddress={tokenDetailsAddress}
         />
       </TouchableArea>
     </TokenLaunchedBannerWrapper>

@@ -9,6 +9,7 @@ import { validateTransactionRequest } from 'uniswap/src/features/transactions/sw
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { getAuctionCreateFailedDiagnostics } from '~/pages/Liquidity/CreateAuction/analytics'
 import { buildCreateAuctionRequest } from '~/pages/Liquidity/CreateAuction/buildCreateAuctionRequest'
 import { ConfigureAuctionFormState, CustomizePoolState, TokenFormState } from '~/pages/Liquidity/CreateAuction/types'
 
@@ -65,15 +66,34 @@ function extractErrorCode(e: unknown): string | number | undefined {
   return undefined
 }
 
-function sendAuctionCreateFailed(args: {
+function reportAuctionCreateFailed(args: {
   getCreateFailedProperties: UseCreateAuctionSubmitParams['getCreateFailedProperties']
   failedStep: AuctionCreateFailedStep
+  error?: unknown
   errorCode?: string | number
+  /** Config snapshot (Datadog only) so a failure can be tied to the inputs that produced it. */
+  diagnostics?: Record<string, unknown>
 }): void {
   const props = args.getCreateFailedProperties?.({ failedStep: args.failedStep, errorCode: args.errorCode })
   if (props) {
     sendAnalyticsEvent(AuctionEventName.AuctionCreateFailed, props)
   }
+  // These failures are handled in-UI (error modal) and otherwise never reach Datadog. Log here so they
+  // stay visible in RUM with the backend reason + config snapshot — enough to identify which gap to fix
+  // (group by failed_step + errorMessage, then read the diagnostics for the offending input).
+  const error = args.error instanceof Error ? args.error : new Error(`Auction create failed at ${args.failedStep}`)
+  logger.error(error, {
+    tags: { file: 'useCreateAuctionSubmit', function: 'onLaunch' },
+    extra: {
+      failedStep: args.failedStep,
+      errorCode: args.errorCode,
+      // Backend's human-readable reason (e.g. "Unsupported fee tier: 30000") — the primary gap signal,
+      // surfaced as a field so it's filterable, not only buried inside the error object.
+      errorMessage: args.error instanceof Error ? args.error.message : undefined,
+      ...props,
+      ...args.diagnostics,
+    },
+  })
 }
 
 interface UseCreateAuctionSubmitResult {
@@ -114,6 +134,8 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
 
   const onLaunch = useEvent(async (): Promise<CreateAuctionSubmitResult | undefined> => {
     setError(undefined)
+    // Config snapshot logged alongside every failure below so Datadog shows which inputs triggered it.
+    const diagnostics = getAuctionCreateFailedDiagnostics({ configureAuction, customizePool })
 
     if (!walletAddress) {
       // Unreachable on first open (the launch button is gated on a connected wallet), but a wallet
@@ -125,8 +147,9 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
     }
 
     if (configureAuction.startTime && configureAuction.startTime.getTime() <= Date.now()) {
-      setError(new AuctionStartTimePassedError())
-      sendAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request' })
+      const err = new AuctionStartTimePassedError()
+      setError(err)
+      reportAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request', error: err, diagnostics })
       return undefined
     }
 
@@ -141,8 +164,9 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
     })
 
     if (!request) {
-      setError(new Error('Auction configuration is incomplete'))
-      sendAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request' })
+      const err = new Error('Auction configuration is incomplete')
+      setError(err)
+      reportAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request', error: err, diagnostics })
       return undefined
     }
 
@@ -176,12 +200,13 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
     } catch (e) {
       const err = e instanceof Error ? e : new Error('Failed to create auction')
       setError(err)
-      sendAuctionCreateFailed({
+      reportAuctionCreateFailed({
         getCreateFailedProperties,
         failedStep: 'create_auction_request',
+        error: e,
         errorCode: extractErrorCode(e),
+        diagnostics,
       })
-      logger.error(err, { tags: { file: 'useCreateAuctionSubmit', function: 'onLaunch' } })
       return undefined
     }
   })

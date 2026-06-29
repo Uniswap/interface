@@ -20,6 +20,7 @@ import { BIPS_BASE } from '~/constants/misc'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import {
   getAuctionCreateAnalyticsProperties,
+  getAuctionCreateFailedDiagnostics,
   getAuctionCreateFailedProperties,
 } from '~/pages/Liquidity/CreateAuction/analytics'
 import { LaunchAuctionErrorModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionErrorModal'
@@ -159,6 +160,8 @@ export function ReviewLaunchStep(): JSX.Element | null {
       getAuctionCreateFailedProperties({ trace, chainId, tokenMode: tokenForm.mode, ...args }),
   )
 
+  const getFailedDiagnostics = useEvent(() => getAuctionCreateFailedDiagnostics({ configureAuction, customizePool }))
+
   const launchSubmit = useCreateAuctionSubmit({
     tokenForm,
     configureAuction,
@@ -200,6 +203,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
     chainId,
     getLaunchAnalyticsProperties,
     getCreateFailedProperties,
+    getFailedDiagnostics,
     launchSubmit,
     tokenName: launchTokenName,
     tokenSymbol: tokenSymbol || undefined,

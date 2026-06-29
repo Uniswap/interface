@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import type { EVMAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { logger } from 'utilities/src/logger/logger'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { LaunchProgressStep } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator'
 import type { CreateAuctionSubmitResult } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
@@ -56,6 +57,12 @@ vi.mock('~/utils/swapErrorToUserReadableMessage', async (importOriginal) => ({
   didUserReject: (...args: unknown[]) => mockDidUserReject(...args),
 }))
 
+// Non-rejection launch failures now log to Datadog via logger.error (which calls console.error in tests).
+// Mock the logger so jest-fail-on-console doesn't fail; the launch-failure test asserts the log fires.
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: { error: vi.fn(), debug: vi.fn(), warn: vi.fn(), info: vi.fn() },
+}))
+
 const mockSendAnalyticsEvent = vi.fn()
 vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: (...args: unknown[]) => mockSendAnalyticsEvent(...args),
@@ -95,7 +102,9 @@ function submitResult(transactions: ValidatedTransactionRequest[]): CreateAuctio
 function setup(
   launchSubmitOverride: Partial<{ onLaunch: () => Promise<CreateAuctionSubmitResult | undefined>; error?: Error }> = {},
   tokenMetadata: Partial<Pick<AuctionLaunchTransactionInfo, 'tokenName' | 'tokenSymbol' | 'tokenLogoUrl'>> = {},
-  extra: Partial<Pick<Parameters<typeof useLaunchAuctionFlow>[0], 'getCreateFailedProperties'>> = {},
+  extra: Partial<
+    Pick<Parameters<typeof useLaunchAuctionFlow>[0], 'getCreateFailedProperties' | 'getFailedDiagnostics'>
+  > = {},
 ) {
   const onLaunch = vi.fn<() => Promise<CreateAuctionSubmitResult | undefined>>().mockResolvedValue(undefined)
   const launchSubmit = { onLaunch, ...launchSubmitOverride }
@@ -298,11 +307,13 @@ describe('useLaunchAuctionFlow', () => {
 
   it('fires Auction Create Failed (launch) on a non-rejection failure', async () => {
     const getCreateFailedProperties = vi.fn(() => FAILED_PROPS)
+    const getFailedDiagnostics = vi.fn(() => ({ fee_tier: 3000, range_type: 'full_range' }))
     const { result } = setup(
       { onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) },
       {},
       {
         getCreateFailedProperties,
+        getFailedDiagnostics,
       },
     )
 
@@ -314,6 +325,14 @@ describe('useLaunchAuctionFlow', () => {
 
     expect(getCreateFailedProperties).toHaveBeenCalledWith({ failedStep: 'launch' })
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionCreateFailed, FAILED_PROPS)
+    // The failure is also logged to Datadog with the step, error message, and config snapshot so it's
+    // queryable by the same inputs as the two pre-submission failure paths.
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({
+        extra: expect.objectContaining({ failedStep: 'launch', fee_tier: 3000, range_type: 'full_range' }),
+      }),
+    )
   })
 
   it('does not fire Auction Create Failed when the user rejects the wallet prompt', async () => {

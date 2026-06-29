@@ -21,6 +21,13 @@ interface TokenLaunchedBannerContentProps {
   currentTickValue?: number
   isTradeAvailable: boolean
   tradeAvailabilityDurationRemaining: string | undefined
+  // Redeemable virtual tokens display the real token's FDV from indexed market data rather than
+  // computing it from currentTickValue x totalSupply (which would use the virtual token's supply).
+  // `number` → show it; `null` → redeem mode but FDV unavailable, show "--"; `undefined` → compute.
+  fdvUsdOverride?: number | null
+  // TDP address for the "Trade now" link. Defaults to the auctioned token; set to the real token
+  // when the auctioned token is a redeemable virtual token.
+  tokenDetailsAddress?: string
 }
 
 export function TokenLaunchedBannerContent({
@@ -31,6 +38,8 @@ export function TokenLaunchedBannerContent({
   currentTickValue,
   isTradeAvailable,
   tradeAvailabilityDurationRemaining,
+  fdvUsdOverride,
+  tokenDetailsAddress,
 }: TokenLaunchedBannerContentProps) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -38,6 +47,9 @@ export function TokenLaunchedBannerContent({
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
 
   const displayValue = useMemo(() => {
+    if (fdvUsdOverride !== undefined) {
+      return fdvUsdOverride === null ? '--' : convertFiatAmountFormatted(fdvUsdOverride, NumberType.FiatTokenStats)
+    }
     if (currentTickValue === undefined) {
       return '--'
     }
@@ -57,18 +69,18 @@ export function TokenLaunchedBannerContent({
     }
 
     return convertFiatAmountFormatted(currentFdvUsd, NumberType.FiatTokenStats)
-  }, [auctionTokenDecimals, convertFiatAmountFormatted, currentTickValue, totalSupply])
+  }, [auctionTokenDecimals, convertFiatAmountFormatted, currentTickValue, fdvUsdOverride, totalSupply])
 
   const onPress = useCallback(() => {
     if (!auctionDetails) {
       return
     }
     const tokenDetailsURL = getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
       chain: toGraphQLChain(auctionDetails.chainId),
     })
     navigate(tokenDetailsURL)
-  }, [auctionDetails, navigate])
+  }, [auctionDetails, navigate, tokenDetailsAddress])
 
   const canPress = Boolean(auctionDetails && isTradeAvailable)
   const isCountingDown = !isTradeAvailable && Boolean(tradeAvailabilityDurationRemaining)
