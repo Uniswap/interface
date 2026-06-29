@@ -52,9 +52,9 @@ export const ROBINHOOD_CHAIN_INFO = {
     url: 'https://robinhoodchain.blockscout.com/',
   },
   interfaceName: 'robinhood',
-  label: 'Robinhood',
+  label: 'Robinhood Chain',
   logo: ROBINHOOD_LOGO,
-  name: 'Robinhood',
+  name: 'Robinhood Chain',
   nativeCurrency: {
     name: 'Robinhood ETH',
     symbol: 'ETH',
