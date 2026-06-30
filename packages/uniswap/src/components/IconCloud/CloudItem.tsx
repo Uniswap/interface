@@ -1,8 +1,7 @@
-import { startTransition, useEffect, useState } from 'react'
+import { startTransition, useEffect, useMemo, useState } from 'react'
 import { Flex, type FlexProps, styled } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { ItemData, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
-import { randomChoice } from 'uniswap/src/components/IconCloud/utils'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 function TokenIconPositioner({
@@ -170,6 +169,24 @@ export function CloudItem<T extends ItemData>({
   const borderRadius = size / 8
   const duration = 200 / (22 - rotation)
 
+  // Memoize the $group-item-hover style objects so they keep a stable identity across re-renders.
+  // A theme toggle re-renders every CloudItem; handing the Tamagui animation driver a brand-new
+  // hover-style object on each render (while an item is hovered) caused an animation/render feedback
+  // loop that froze the tab. Inputs (rotation, onPress) are stable per point, so the objects are too.
+  const itemHoverStyle = useMemo(
+    () => ({
+      opacity: 1,
+      scale: 1.2,
+      rotate: `${-rotation}deg`,
+      filter: 'blur(0)',
+      cursor: onPress ? ('pointer' as const) : undefined,
+    }),
+    [rotation, onPress],
+  )
+
+  const innerRingHoverStyle = useMemo(() => ({ opacity: 0.3, scale: 1.2 }), [])
+  const outerRingHoverStyle = useMemo(() => ({ opacity: 0.1, scale: 1.4 }), [])
+
   return (
     <Flex position="absolute" group="item" top={y} left={x} width={size} height={size} transformOrigin="center center">
       <Flex animation="bouncy" enterStyle={{ y: 30 }}>
@@ -205,13 +222,7 @@ export function CloudItem<T extends ItemData>({
                 logoUrl={point.itemData.logoUrl}
                 opacity={opacity}
                 borderRadius={borderRadius}
-                $group-item-hover={{
-                  opacity: 1,
-                  scale: 1.2,
-                  rotate: `${randomChoice([0 - rotation, 0 - rotation])}deg`,
-                  filter: 'blur(0)',
-                  cursor: onPress ? 'pointer' : undefined,
-                }}
+                $group-item-hover={itemHoverStyle}
                 onPress={onPress ? (): void => onPress(point) : undefined}
               >
                 {getElementRounded && (
@@ -219,10 +230,7 @@ export function CloudItem<T extends ItemData>({
                     <TokenIconRing
                       opacity={0}
                       animation="bouncy"
-                      $group-item-hover={{
-                        opacity: 0.3,
-                        scale: 1.2,
-                      }}
+                      $group-item-hover={innerRingHoverStyle}
                       size={size}
                       rounded={getElementRounded(point)}
                       borderColor={validColor(color)}
@@ -231,10 +239,7 @@ export function CloudItem<T extends ItemData>({
                     <TokenIconRing
                       opacity={0}
                       animation="bouncy"
-                      $group-item-hover={{
-                        opacity: 0.1,
-                        scale: 1.4,
-                      }}
+                      $group-item-hover={outerRingHoverStyle}
                       size={size}
                       rounded={getElementRounded(point)}
                       borderColor={validColor(color)}
