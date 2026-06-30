@@ -1,6 +1,6 @@
-/** Maps issuer slug → display suffix (e.g. ondo → `.o` for `TSLA.o`). */
+/** Maps issuer slug → display suffix (e.g. ondo → `.on` for `TSLA.on`). */
 const ISSUER_DISPLAY_SUFFIX: Record<string, string> = {
-  ondo: 'o',
+  ondo: 'on',
   backed: 'b',
   superstate: 's',
   xstocks: 'x',

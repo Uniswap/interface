@@ -2,7 +2,7 @@ import { formatIssuerDisplaySymbol, formatIssuerLabel } from 'uniswap/src/data/r
 
 describe('formatIssuerDisplaySymbol', () => {
   it('composes ondo suffix', () => {
-    expect(formatIssuerDisplaySymbol({ baseSymbol: 'TSLA', issuer: 'ondo', apiSymbol: 'TSLAON' })).toBe('TSLA.o')
+    expect(formatIssuerDisplaySymbol({ baseSymbol: 'TSLA', issuer: 'ondo', apiSymbol: 'TSLAON' })).toBe('TSLA.on')
   })
 
   it('falls back to api symbol for unknown issuers', () => {
