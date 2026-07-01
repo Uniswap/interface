@@ -30,10 +30,19 @@ export function AddBackupLoginCard(): JSX.Element | null {
   const onPressCard = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddBackupLogin }))
   })
+  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
+  const isRecoveryDisabled = true
 
   const showCard =
-    isEmbeddedWallet && !isPortfolioZero && !isLoading && !isError && !hasRecoveryMethod && !!getPrivyAppId()
+    isEmbeddedWallet &&
+    !isPortfolioZero &&
+    !isLoading &&
+    !isError &&
+    !hasRecoveryMethod &&
+    !!getPrivyAppId() &&
+    !isRecoveryDisabled
 
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   if (!showCard) {
     return null
   }

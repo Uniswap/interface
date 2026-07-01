@@ -279,6 +279,9 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
     }
   }, [])
 
+  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
+  const isRecoveryDisabled = true
+
   return (
     <Trace logImpression modal={ModalName.PasskeyManagement}>
       <SlideOutMenu
@@ -327,7 +330,11 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
           </Flex>
 
           {getPrivyAppId() ? (
-            <Flex gap="$spacing16">
+            <Flex
+              gap="$spacing16"
+              // oxlint-disable-next-line typescript/no-unnecessary-condition
+              display={isRecoveryDisabled && recoveryMethods.length === 0 ? 'none' : 'flex'}
+            >
               <Text variant="subheading2" color="$neutral1">
                 {t('account.passkey.sections.backupLogin')}
               </Text>
