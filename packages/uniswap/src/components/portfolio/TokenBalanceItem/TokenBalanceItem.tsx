@@ -1,9 +1,11 @@
 import { isExtensionApp, isWebPlatform } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, useIsDarkMode } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
@@ -299,6 +301,7 @@ function TokenBalanceRightSideColumn({
   svmAddress?: string
   portfolioBalance?: PortfolioMultichainBalance
 }): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -331,9 +334,15 @@ function TokenBalanceRightSideColumn({
           </Flex>
         ) : (
           <Flex alignItems="flex-end" pl="$spacing8">
-            <Text color="$neutral1" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>
-              {balanceFormatted}
-            </Text>
+            <AnimatedNumber
+              alignRight
+              numericValue={balanceUSD}
+              value={balanceFormatted}
+              loadingPlaceholderText="$0.00"
+              textVariant={isWebPlatform ? '$body2' : '$body1'}
+              disableAnimations={!isDataLivelinessEnabled}
+              warmLoading={isLoading}
+            />
             <RelativeChange
               alignRight
               change={relativeChange24 ?? undefined}

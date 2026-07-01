@@ -8,6 +8,7 @@ import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPanel(): JSX.Element {
@@ -60,10 +61,7 @@ export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPan
 
   // When gas is sponsored, "Max" should spend the full native balance.
   // alternateGasFees (wallet capability) is handled inside useMaxAmountSpend.
-  // TODO(review): sponsored is read from the current quote, which is amount-dependent.
-  const isGasCovered = useSwapTxStore((s) =>
-    Boolean(s.trade?.quote && 'sponsorshipInfo' in s.trade.quote && s.trade.quote.sponsorshipInfo?.sponsored),
-  )
+  const isGasCovered = useSwapTxStore((s) => isSponsorableSwap(s) && s.trade?.quote.sponsorshipInfo?.sponsored)
 
   return (
     <Trace section={SectionName.CurrencyInputPanel}>

@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { useQueries } from '@tanstack/react-query'
 import type { GetEarnPositionResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
@@ -6,7 +7,7 @@ import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 
 // lifetime_pnl_usd is only on GetEarnPosition (not ListEarnPositions), so fan out per vault
 // and sum client-side.
-const selectLifetimePnlUsd = (data: GetEarnPositionResponse | undefined): number | undefined =>
+const selectLifetimePnlUsd = (data: PlainMessage<GetEarnPositionResponse> | undefined): number | undefined =>
   data?.position?.lifetimePnlUsd
 
 interface UseEarnLifetimeEarningsUsdParams {

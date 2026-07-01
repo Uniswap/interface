@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
@@ -10,6 +11,7 @@ import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -50,6 +52,7 @@ export const TokenItem = memo(function TokenItemInner({
   overlay,
   onPriceWrapperLayout,
 }: TokenItemProps) {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -114,7 +117,16 @@ export const TokenItem = memo(function TokenItemInner({
     <ContextMenu actions={menuActions} previewBackgroundColor={colors.surface1.val} onPress={onContextMenuPress}>
       <TouchableArea testID={`token-item-${name}`} onPress={onPress}>
         {overlay}
-        <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
+        <AnimatedFlex
+          grow
+          row
+          alignItems="center"
+          gap="$spacing12"
+          px="$spacing24"
+          py="$spacing8"
+          backgroundColor="$surface1"
+          {...containerProps}
+        >
           <Flex centered row gap="$spacing4">
             {!hideNumberedList && (
               <Flex minWidth={spacing.spacing16} mr="$spacing8">
@@ -142,9 +154,13 @@ export const TokenItem = memo(function TokenItemInner({
           {showChart && <TokenItemChart height={20} tokenItemData={tokenItemData} width={40} />}
           <Flex row alignItems="center" justifyContent="flex-end" onLayout={onLayout} {...priceWrapperProps}>
             <TokenMetadata>
-              <Text lineHeight={24} testID="token-item/price" variant="body1">
-                {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
-              </Text>
+              <AnimatedNumber
+                numericValue={price}
+                value={convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
+                textVariant="$body1"
+                containerTestID="token-item/price"
+                disableAnimations={!isDataLivelinessEnabled}
+              />
               <RelativeChange change={pricePercentChange24h} variant="body2" />
             </TokenMetadata>
           </Flex>

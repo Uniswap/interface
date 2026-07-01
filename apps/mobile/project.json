@@ -102,18 +102,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "env:local:download": {
-      "command": "bash ../../scripts/downloadEnvLocal.sh xmznnx7ozuojy5lnohcmt73aee ../../.env.defaults.local && bun run env:local:copy:swift",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "env:local:upload": {
-      "command": "bash ../../scripts/uploadEnvLocal.sh xmznnx7ozuojy5lnohcmt73aee ../../.env.defaults.local",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "env:local:copy:swift": {
       "command": "python3 scripts/copy_env_vars_to_swift.py",
       "options": {
@@ -296,7 +284,7 @@
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$USE_NEW_CONFIGS\" != \"false\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
       "options": { "cwd": "{workspaceRoot}" },
       "defaultConfiguration": "development",
       "configurations": {

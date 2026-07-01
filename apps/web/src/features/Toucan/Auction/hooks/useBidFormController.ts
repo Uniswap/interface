@@ -61,6 +61,7 @@ export function useBidFormController({
     auctionContractAddress,
     auctionDetails,
     checkpointData,
+    totalCleared,
     floorPrice,
     tickSize,
     selectedTickPrice,
@@ -76,6 +77,7 @@ export function useBidFormController({
     auctionContractAddress: state.auctionAddress,
     auctionDetails: state.auctionDetails,
     checkpointData: state.checkpointData,
+    totalCleared: state.totalCleared,
     floorPrice: state.auctionDetails?.floorPrice,
     tickSize: state.auctionDetails?.tickSize,
     selectedTickPrice: state.selectedTickPrice,
@@ -240,7 +242,7 @@ export function useBidFormController({
     }
 
     const totalSupplyRaw = BigInt(totalSupply)
-    const totalClearedRaw = checkpointData?.totalCleared ? BigInt(checkpointData.totalCleared) : 0n
+    const totalClearedRaw = totalCleared ? BigInt(totalCleared) : 0n
     const remainingRaw = totalSupplyRaw - totalClearedRaw
     const safeRemainingRaw = remainingRaw > 0n ? remainingRaw : 0n
 
@@ -248,7 +250,7 @@ export function useBidFormController({
       raw: safeRemainingRaw,
       decimals: auctionTokenDecimals,
     })
-  }, [auctionTokenDecimals, checkpointData?.totalCleared, totalSupply])
+  }, [auctionTokenDecimals, totalCleared, totalSupply])
 
   // Initialize submit hook
   const { submitState } = useBidFormSubmit({

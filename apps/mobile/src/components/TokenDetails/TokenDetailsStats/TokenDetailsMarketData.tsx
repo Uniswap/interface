@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -10,6 +11,7 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { ChartBar, ChartPie, ChartPyramid, GlobeFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
@@ -31,6 +33,7 @@ import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
 export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { t } = useTranslation()
   const colors = useSporeColors()
   const defaultTokenColor = colors.neutral3.get()
@@ -145,18 +148,26 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.marketCap')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={marketCap ?? undefined}
+          value={convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
         statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={fdv ?? undefined}
+          value={convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
@@ -164,27 +175,39 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
         labelAfter={maybeLimitedVolumeDataInfoIcon}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={volume ?? undefined}
+          value={convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.priceHighYear')}
         statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={high52w ?? undefined}
+          value={convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.priceLowYear')}
         statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={low52w ?? undefined}
+          value={convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <NetworkStatsRow

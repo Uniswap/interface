@@ -2,6 +2,7 @@ import { GraphQLApi, TradingApi } from '@universe/api'
 import { isWebApp, isE2eTestEnv } from '@universe/environment'
 import { BASE_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -35,6 +36,7 @@ export const BASE_CHAIN_INFO = {
   ...base,
   id: UniverseChainId.Base,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   backendChain: {
     chain: GraphQLApi.Chain.Base as GqlChainId,
     backendSupported: true,

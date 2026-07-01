@@ -1,5 +1,6 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { UseQueryResult } from '@tanstack/react-query'
-import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
 import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
 import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
@@ -14,7 +15,7 @@ import { useAccounts } from 'wallet/src/features/wallet/hooks'
 const PORTFOLIO_REFETCH_INTERVAL = ONE_MINUTE_MS
 
 interface PortfolioDataForReporting {
-  portfolioQuery: UseQueryResult<GetPortfolioResponse | undefined, Error>
+  portfolioQuery: UseQueryResult<PlainMessage<GetPortfolioResponse> | undefined, Error>
   signerAccountAddresses: string[]
   balances: number[]
   totalBalance: number

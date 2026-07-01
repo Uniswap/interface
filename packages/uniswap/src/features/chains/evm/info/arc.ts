@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { ARC_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS,
@@ -61,6 +62,7 @@ export const CIRBTC_ARC = new Token(
 export const ARC_CHAIN_INFO = {
   id: UniverseChainId.Arc,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   testnet: false,
   assetRepoNetworkName: 'arc',
   backendChain: {

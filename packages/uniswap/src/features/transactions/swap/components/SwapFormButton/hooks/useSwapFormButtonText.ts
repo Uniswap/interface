@@ -57,10 +57,6 @@ export const useSwapFormButtonText = (): string => {
     return blockingWarning.buttonText
   }
 
-  if (isWebFORNudgeEnabled) {
-    return t('empty.swap.button.text')
-  }
-
   if (isIndicative) {
     return t('swap.finalizingQuote')
   }
@@ -70,6 +66,10 @@ export const useSwapFormButtonText = (): string => {
       return t('common.getStarted')
     }
     return isEmbeddedWalletEnabled ? t('common.connect.button') : t('common.connectWallet.button')
+  }
+
+  if (isWebFORNudgeEnabled) {
+    return t('empty.swap.button.text')
   }
 
   if (isMissingPlatformWallet) {

@@ -1,14 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { ensure0xHex } from '@universe/encoding'
+import { CHAIN_TO_ADDRESSES_MAP, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { Erc721 } from 'uniswap/src/abis/types/Erc721'
-import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
-import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from '~/hooks/useContract'
+import { useReadContract } from 'wagmi'
+import { erc721Abi } from '~/chains'
+import { assume0xAddress } from '~/utils/wagmi'
 
 type TokenId = number | JSBI | bigint
 
@@ -33,13 +30,17 @@ type UsePositionTokenURIResult =
       loading: true
     }
 
-function useNFTPositionManagerContract(
-  version: ProtocolVersion,
-  chainId?: EVMUniverseChainId,
-): NonfungiblePositionManager | Erc721 | null {
-  const v3Contract = useV3NFTPositionManagerContract(false, chainId)
-  const v4Contract = useV4NFTPositionManagerContract(false, chainId)
-  return version === ProtocolVersion.V3 ? v3Contract : v4Contract
+/**
+ * Both v3 and v4 position manager contracts.
+ * Only the address differs by protocol version.
+ */
+function getPositionManagerAddress(version: ProtocolVersion, chainId?: EVMUniverseChainId): string | undefined {
+  if (!chainId) {
+    return undefined
+  }
+  return version === ProtocolVersion.V3
+    ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId]
+    : CHAIN_TO_ADDRESSES_MAP[chainId]?.v4PositionManagerAddress
 }
 
 export function usePositionTokenURI({
@@ -51,19 +52,22 @@ export function usePositionTokenURI({
   chainId?: EVMUniverseChainId
   version?: ProtocolVersion
 }): UsePositionTokenURIResult {
-  const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
-  const { data, isLoading, error } = useQuery(
-    persistableQueryOptions({
-      queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],
-      queryFn: async () => {
-        const input = typeof tokenId === 'bigint' ? ensure0xHex(tokenId.toString(16)) : tokenId?.toString(16)
-        if (!input) {
-          return null
-        }
-        return await contract?.tokenURI(input)
-      },
-    }),
-  )
+  const managerAddress = getPositionManagerAddress(version ?? ProtocolVersion.V3, chainId)
+  const tokenIdArg = tokenId === undefined ? undefined : BigInt(tokenId.toString())
+
+  const { data, isLoading, error } = useReadContract({
+    address: assume0xAddress(managerAddress),
+    chainId,
+    abi: erc721Abi,
+    functionName: 'tokenURI',
+    args: tokenIdArg === undefined ? undefined : [tokenIdArg],
+    query: {
+      enabled: tokenId !== undefined && Boolean(chainId) && Boolean(managerAddress),
+      // tokenURI is immutable per tokenId;
+      // we persist it across sessions.
+      meta: { persist: true },
+    },
+  })
 
   return useMemo(() => {
     if (error || !tokenId) {
@@ -85,7 +89,7 @@ export function usePositionTokenURI({
       }
     }
 
-    if (!data || !data.startsWith(STARTS_WITH)) {
+    if (!data.startsWith(STARTS_WITH)) {
       return {
         valid: false,
         loading: false,

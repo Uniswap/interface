@@ -33,8 +33,10 @@ function ExploreCategoryTable({ category }: { category: ReturnType<typeof useExp
   return <TopTokensTable />
 }
 
-/** Uniform vertical gap between stacked category controls, disclaimer, and table on mWeb (SWAP-2869). */
-const CATEGORY_SECTION_MWEB_GAP = '$spacing16'
+/** Uniform vertical gap between stacked category controls, disclaimer, and table on desktop. */
+const CATEGORY_SECTION_GAP = '$spacing12'
+/** Matches the mobile Explore carousel <-> tabs section rhythm. */
+const CATEGORY_SECTION_MWEB_GAP = '$spacing20'
 
 /** Popular | Stocks | Commodities | ETFs chips and category tables on Explore Tokens tab. */
 const CHIPS_EDGE_FADE_WIDTH_PX = 24
@@ -43,16 +45,16 @@ const CHIPS_EDGE_FADE_MASK = `linear-gradient(to right, black calc(100% - ${CHIP
 export function ExploreCategoryTablesSection(): JSX.Element {
   const [category, setCategory] = useExploreCategory()
   const { scrollerRef: chipsScrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const showRwaDisclaimer = isRankedRwaExploreCategory(category)
 
   return (
-    <Flex width="100%" $md={{ gap: CATEGORY_SECTION_MWEB_GAP }}>
+    <Flex width="100%" gap={CATEGORY_SECTION_GAP} $md={{ gap: CATEGORY_SECTION_MWEB_GAP }}>
       <Flex
         row
         width="100%"
         maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
         mx="auto"
         mt="$spacing8"
-        mb="$spacing4"
         alignItems="center"
         justifyContent="space-between"
         gap="$spacing12"
@@ -80,12 +82,16 @@ export function ExploreCategoryTablesSection(): JSX.Element {
           <SearchBar tab={ExploreTab.Tokens} />
         </Flex>
       </Flex>
-      {isRankedRwaExploreCategory(category) && (
-        <Flex width="100%" maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT} mx="auto" mb="$spacing12" $md={{ mb: 0 }}>
-          <ExploreRwaDisclaimer category={category} />
+      {showRwaDisclaimer ? (
+        <Flex width="100%">
+          <Flex width="100%" maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT} mx="auto" mb="$spacing4">
+            <ExploreRwaDisclaimer category={category} />
+          </Flex>
+          <ExploreCategoryTable category={category} />
         </Flex>
+      ) : (
+        <ExploreCategoryTable category={category} />
       )}
-      <ExploreCategoryTable category={category} />
     </Flex>
   )
 }

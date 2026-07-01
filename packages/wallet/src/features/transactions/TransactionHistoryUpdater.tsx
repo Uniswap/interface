@@ -173,7 +173,8 @@ export function useFetchAndDispatchReceiveNotification(): (params: {
     )
 
     const notification = getReceiveNotificationFromData({
-      transactions: listTransactionsResponse?.transactions ?? [],
+      // Cached data is a plain message; the activity parsers read concrete-typed message fields.
+      transactions: (listTransactionsResponse?.transactions ?? []) as Transaction[],
       address,
       lastTxNotificationUpdateTimestamp,
       hideSpamTokens,

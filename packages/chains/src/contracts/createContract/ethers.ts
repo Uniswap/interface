@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract, type ContractInterface } from '@ethersproject/contracts'
 import type { Abi, Hash } from 'viem'
 import { z } from 'zod'
-import type { ChainContract, EthersChainContractParams } from './shared'
+import { type ChainContract, type EthersChainContractParams, getWriteParameters } from './shared'
 
 type DecodedValue = string | number | boolean | null | undefined
 
@@ -96,7 +96,13 @@ function toViemResult(value: unknown): ViemDecodedValue {
  */
 export function createEthersContract<TAbi extends Abi>(params: EthersChainContractParams<TAbi>): ChainContract<TAbi> {
   const { address, abi, provider, signer } = params
-  const contract = new Contract(address, abi as unknown as ContractInterface, signer ?? provider)
+  // Writes go through an unchecked signer, implicit before w/ `getContract`.
+  // Matches viem (which returns the hash without polling afterwards.
+  const contract = new Contract(
+    address,
+    abi as unknown as ContractInterface,
+    signer ? signer.connectUnchecked() : provider,
+  )
 
   // Just a fancy way to dynamically dispatch. We don't know the
   // contract at compile time, we want to call anything at runtime.
@@ -116,8 +122,16 @@ export function createEthersContract<TAbi extends Abi>(params: EthersChainContra
     {},
     {
       get(_target, fnName: string) {
-        return async (args: readonly unknown[] = [], overrides?: object) => {
-          const tx = await contract[fnName]?.(...args, ...(overrides ? [overrides] : []))
+        return async (...parameters: readonly unknown[]) => {
+          const { args, options } = getWriteParameters(parameters)
+          // Caller expects viem types, but we might not be able to handle.
+          // `chain`/`account` are per-call overrides only the viem engine can
+          // honor, ethers binds both to the signer. Throw rather than send a
+          // transaction that silently ignores what the caller asked for.
+          if ('chain' in options || 'account' in options) {
+            throw new Error(`ethers doesn't support some write overrides`)
+          }
+          const tx = await contract[fnName]?.(...args, ...(Object.keys(options).length > 0 ? [options] : []))
           return tx.hash as Hash
         }
       },

@@ -14,7 +14,8 @@ import { getTsconfigAliases } from './config/getTsconfigAliases'
 // Tamagui static extractor can resolve it.
 process.env.APP_ID = 'extension'
 
-const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
+// New config system is enabled by default; opt out by explicitly setting USE_NEW_CONFIGS=false.
+const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS !== 'false'
 const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env.new')
 const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.new.override')
 
@@ -68,7 +69,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.77.0'
+const BASE_VERSION = '1.78.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`

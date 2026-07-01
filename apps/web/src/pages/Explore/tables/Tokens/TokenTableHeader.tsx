@@ -10,15 +10,36 @@ import { useExploreParams } from '~/pages/Explore/redirects'
 import { useTokenTableSortStoreActions } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
-function getHeaderText({ t, category }: { t: (key: string) => string; category: TokenSortMethod }): string {
-  const SORT_METHOD_LABEL_KEYS: Record<TokenSortMethod, string> = {
-    [TokenSortMethod.FULLY_DILUTED_VALUATION]: t('stats.fdv'),
-    [TokenSortMethod.PRICE]: t('common.price'),
-    [TokenSortMethod.VOLUME]: t('common.volume'),
-    [TokenSortMethod.HOUR_CHANGE]: t('common.oneHour.short'),
-    [TokenSortMethod.DAY_CHANGE]: t('common.oneDay.short'),
+type TokenSortMethodWithLookupLabel = Exclude<
+  TokenSortMethod,
+  TokenSortMethod.VOLUME | TokenSortMethod.HOUR_CHANGE | TokenSortMethod.DAY_CHANGE
+>
+
+const SORT_METHOD_LABEL_KEYS: Record<TokenSortMethodWithLookupLabel, string> = {
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: 'stats.fdv',
+  [TokenSortMethod.PRICE]: 'common.price',
+}
+
+export function getTokenSortMethodLabel({
+  t,
+  category,
+}: {
+  t: (key: string) => string
+  category: TokenSortMethod
+}): string {
+  if (category === TokenSortMethod.VOLUME) {
+    return t('common.volume')
   }
-  return SORT_METHOD_LABEL_KEYS[category]
+  // Keep this literal t() call so i18n extraction preserves common.oneDay.short.
+  if (category === TokenSortMethod.DAY_CHANGE) {
+    return t('common.oneDay.short')
+  }
+  // Keep this literal t() call so i18n extraction preserves common.oneHour.short.
+  if (category === TokenSortMethod.HOUR_CHANGE) {
+    return t('common.oneHour.short')
+  }
+
+  return t(SORT_METHOD_LABEL_KEYS[category])
 }
 
 export function TokenTableHeader({
@@ -32,7 +53,7 @@ export function TokenTableHeader({
 }) {
   const { t } = useTranslation()
   const { chainName } = useExploreParams()
-  const headerText = useMemo(() => getHeaderText({ t, category }), [t, category])
+  const headerText = useMemo(() => getTokenSortMethodLabel({ t, category }), [t, category])
   const { setSort } = useTokenTableSortStoreActions()
   const handleSortCategory = useCallback(() => setSort(category), [setSort, category])
 

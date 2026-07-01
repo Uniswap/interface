@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
@@ -122,7 +123,7 @@ export function LiquidityPositionFeeStats({
         <WrapChildrenForMediaSize>
           <FeeStat>
             {formattedUsdValue ? (
-              <PrimaryText>{formattedUsdValue}</PrimaryText>
+              <AnimatedNumber value={formattedUsdValue} textVariant="$body2" />
             ) : (
               <MouseoverTooltip text={t('position.valueUnavailable')} placement="top">
                 <PrimaryText>-</PrimaryText>
@@ -143,7 +144,7 @@ export function LiquidityPositionFeeStats({
                 </MouseoverTooltip>
               </Flex>
             ) : (
-              <PrimaryText>{earningsOrFees}</PrimaryText>
+              <AnimatedNumber value={earningsOrFees ?? '-'} textVariant="$body2" />
             )}
             <SecondaryText variant="body3" color="$neutral2">
               {hasRewards ? t('pool.earnings') : t('common.fees')}
@@ -266,7 +267,7 @@ function APRFeeStat({ apr }: { apr?: number }) {
 
   return (
     <FeeStat>
-      <PrimaryText>{apr ? formatPercent(apr) : '-'}</PrimaryText>
+      <AnimatedNumber value={apr ? formatPercent(apr) : '-'} numericValue={apr} textVariant="$body2" />
       <SecondaryText variant="body3" color="$neutral2">
         {t('pool.apr')}
       </SecondaryText>
@@ -308,9 +309,11 @@ function LPIncentiveFeeStat({
       >
         <>
           <Flex row gap="$spacing6" alignItems="center">
-            <Text variant="body2" color="$neutral1">
-              {poolApr ? formatPercent(poolApr) : '-'}
-            </Text>
+            <AnimatedNumber
+              value={poolApr ? formatPercent(poolApr) : '-'}
+              numericValue={poolApr}
+              textVariant="$body2"
+            />
             <LPIncentiveRewardsBadge formattedRewardApr={formatPercent(lpIncentiveRewardApr)} />
           </Flex>
           <SecondaryText variant="body3" color="$neutral2">

@@ -1,9 +1,15 @@
 import { act } from '@testing-library/react-native'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from '@universe/gating'
 import type { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import type { Mock } from 'vitest'
+
+vi.mock('uniswap/src/features/telemetry/send')
 
 const { mockUseFeatureFlag, mockUsePortfolioBalancePart } = vi.hoisted(() => ({
   mockUseFeatureFlag: vi.fn(),
@@ -136,5 +142,19 @@ describe(usePoolsBalanceCoachmarkVisibility, () => {
 
     expect(store.getState().uniswapBehaviorHistory.hasDismissedPoolsBalanceCoachmark).toBe(true)
     expect(result.current.shouldShow).toBe(false)
+  })
+
+  it('fires the coachmark dismiss analytics event on dismiss', () => {
+    const { result } = renderHookWithProviders(() => usePoolsBalanceCoachmarkVisibility({ evmAddress: WALLET_A }), {
+      preloadedState: asExistingUser(),
+    })
+
+    act(() => {
+      result.current.dismiss()
+    })
+
+    expect(sendAnalyticsEvent as Mock).toHaveBeenCalledWith(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.PoolsBalanceCoachmark,
+    })
   })
 })

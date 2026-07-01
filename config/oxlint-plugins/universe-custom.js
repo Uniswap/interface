@@ -900,6 +900,50 @@ const noToLowerCaseAddressCurrencyId = {
   },
 }
 
+// ── no-platform-gate-in-chain-flags ──────────────────────────────────
+// Platform restrictions belong in chain metadata (supportedApps), not feature flags.
+
+const CHAIN_FLAGS_FILE = 'useFeatureFlaggedChainIds.ts'
+const PLATFORM_GATE_IMPORTS = new Set(['isWebApp', 'isMobileApp', 'isExtensionApp'])
+
+const noPlatformGateInChainFlags = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Disallow platform booleans in useFeatureFlaggedChainIds — gate chains by app using supportedApps on chain info.',
+    },
+    schema: [],
+    messages: {
+      noPlatformGate:
+        'Do not use {{name}} as a chain gate in useFeatureFlaggedChainIds. Set supportedApps on the chain info instead.',
+    },
+  },
+  create(context) {
+    const filename = (context.filename ?? context.getFilename?.() ?? '').split(/[/\\]/).join('/')
+    if (!filename.endsWith(CHAIN_FLAGS_FILE)) {
+      return {}
+    }
+
+    return {
+      ImportDeclaration(node) {
+        if (node.source?.value !== '@universe/environment') {
+          return
+        }
+        for (const specifier of node.specifiers) {
+          if (specifier.type !== 'ImportSpecifier' || specifier.imported.type !== 'Identifier') {
+            continue
+          }
+          const name = specifier.imported.name
+          if (PLATFORM_GATE_IMPORTS.has(name)) {
+            context.report({ node: specifier, messageId: 'noPlatformGate', data: { name } })
+          }
+        }
+      },
+    }
+  },
+}
+
 // ── import-boundary (JSON) ─────────────────────────────────────────────
 // Modes:
 //   importerAllowlist — only paths matching allowedImporterPathMarkers may import
@@ -1055,7 +1099,6 @@ const importBoundary = {
 // It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
-  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseApproval.ts',
   'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel.ts',
   'apps/web/src/connection/bundlerClient.ts',
   'apps/web/src/connection/EmbeddedWalletConnector.ts',
@@ -1074,7 +1117,6 @@ const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/hooks/useEthersSigner.ts',
   'apps/web/src/hooks/useSelectChain.ts',
   'apps/web/src/pages/Swap/Limit/useLimitOrderCallback.tsx',
-  'apps/web/src/hooks/useTokenAllowance.ts',
   'apps/web/src/hooks/useTransactionDeadline.ts',
   'apps/web/src/hooks/useTransactionGasFee.ts',
   'apps/web/src/hooks/useUniswapXSwapCallback.ts',
@@ -1198,6 +1240,7 @@ const plugin = {
     'jsx-prop-order': jsxPropOrder,
     'enum-member-naming': enumMemberNaming,
     'no-tolowercase-address-currencyid': noToLowerCaseAddressCurrencyId,
+    'no-platform-gate-in-chain-flags': noPlatformGateInChainFlags,
   },
 }
 

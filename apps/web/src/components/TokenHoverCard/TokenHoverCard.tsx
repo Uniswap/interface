@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
@@ -34,6 +33,7 @@ type TokenHoverCardProps = {
   placement?: ComponentProps<typeof Popover>['placement']
   offset?: number
   containerWidth?: number
+  onNavigate?: () => void
 } & ({ token: GraphQLApi.Token; currencyInfo?: never } | { token?: never; currencyInfo: CurrencyInfo })
 
 const stopPressEventPropagation = {
@@ -49,6 +49,7 @@ export function TokenHoverCard({
   placement = 'bottom-start',
   offset,
   containerWidth,
+  onNavigate,
 }: TokenHoverCardProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const shadowProps = useShadowPropsMedium()
@@ -81,7 +82,7 @@ export function TokenHoverCard({
   // NATIVE_CHAIN_ID is a frontend sentinel — the backend expects undefined (not 'NATIVE') for native-token price queries
   const rawAddress = token
     ? unwrappedToken?.address
-    : currencyInfoProp.currency instanceof Token
+    : currencyInfoProp.currency.isToken
       ? currencyInfoProp.currency.address
       : undefined
   const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(gqlChain) : rawAddress
@@ -151,8 +152,9 @@ export function TokenHoverCard({
       address: rawAddress,
       chain: gqlChain,
     })
+    onNavigate?.()
     navigate(url)
-  }, [rawAddress, gqlChain, navigate])
+  }, [rawAddress, gqlChain, navigate, onNavigate])
 
   if (isTouchDevice || !currencyInfo || !isDataLivelinessUIEnabled) {
     return <>{children}</>

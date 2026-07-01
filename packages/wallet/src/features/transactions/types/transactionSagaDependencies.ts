@@ -46,10 +46,7 @@ export enum DelegationType {
 export interface TransactionSagaDependencies {
   // Core service factories
   createProviderService: (params: { getSignerManager: () => SignerManager }) => ProviderService
-  createTransactionConfigService: (params: {
-    featureFlagService: FeatureFlagService
-    logger: Logger
-  }) => TransactionConfigService
+  createTransactionConfigService: () => TransactionConfigService
   createTransactionSignerService: (params: {
     getAccount: () => SignerMnemonicAccountMeta
     getProvider: () => Promise<Provider>

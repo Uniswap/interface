@@ -227,7 +227,13 @@ interface TopPoolTableProps {
   isError: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }
-function ExploreTopPoolTableContent(): JSX.Element {
+function ExploreTopPoolTableContent({
+  staticSize,
+  pageSize,
+}: {
+  staticSize?: boolean
+  pageSize?: number
+}): JSX.Element {
   const chainId = useChainIdFromUrlParam()
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
     sortMethod: s.sortMethod,
@@ -249,13 +255,26 @@ function ExploreTopPoolTableContent(): JSX.Element {
     protocol: selectedProtocol,
   })
 
-  return <TopPoolTable topPoolData={{ topPools, isLoading, isError, loadMore }} />
+  return (
+    <TopPoolTable
+      topPoolData={{ topPools, isLoading, isError, loadMore }}
+      staticSize={staticSize}
+      pageSize={pageSize}
+    />
+  )
 }
 
-export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
+export const ExploreTopPoolTable = memo(function ExploreTopPoolTable({
+  staticSize,
+  pageSize,
+}: {
+  // Render a fixed set of rows with no infinite scroll / internal scroll area (e.g. discovery surfaces).
+  staticSize?: boolean
+  pageSize?: number
+} = {}) {
   return (
     <PoolTableStoreContextProvider>
-      <ExploreTopPoolTableContent />
+      <ExploreTopPoolTableContent staticSize={staticSize} pageSize={pageSize} />
     </PoolTableStoreContextProvider>
   )
 })
@@ -280,9 +299,11 @@ const TopPoolTable = memo(function TopPoolTable({
 
   // Use backend loadMore if available, otherwise fall back to client-side slicing
   const effectiveLoadMore = backendLoadMore ?? clientLoadMore
-  const displayedPools = backendLoadMore
-    ? topPools // Backend pagination: use all fetched pools
-    : topPools?.slice(0, page * pageSize) // Client-side: slice by page
+  const displayedPools = staticSize
+    ? topPools?.slice(0, pageSize) // Static: fixed number of rows, no pagination
+    : backendLoadMore
+      ? topPools // Backend pagination: use all fetched pools
+      : topPools?.slice(0, page * pageSize) // Client-side: slice by page
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
@@ -293,7 +314,6 @@ const TopPoolTable = memo(function TopPoolTable({
         loadMore={staticSize ? undefined : effectiveLoadMore}
         maxWidth={1200}
         forcePinning={forcePinning}
-        maxHeight={staticSize ? 1000 : undefined}
       />
     </TableWrapper>
   )

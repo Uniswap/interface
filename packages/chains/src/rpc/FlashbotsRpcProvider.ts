@@ -4,7 +4,13 @@ import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
 import { BlockTag, Networkish } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
-import { buildFlashbotsUrl, FLASHBOTS_SIGNATURE_HEADER, SignerInfo } from './FlashbotsCommon'
+import {
+  buildFlashbotsUrl,
+  DEFAULT_CALLDATA_HINTS_ENABLED,
+  FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  FLASHBOTS_SIGNATURE_HEADER,
+  SignerInfo,
+} from './FlashbotsCommon'
 import { InstrumentedJsonRpcProvider } from './observability/InstrumentedJsonRpcProvider'
 import { getRpcObserver } from './observability/rpcObserver'
 
@@ -30,13 +36,13 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
    * Create a Flashbots RPC provider.
    * @param signer - The signer to use for authenticated requests.
    * @param refundPercent - The percentage of the transaction fee to refund to the user. 0 <= refundPercent <= 100
-   *    @default 50
+   *    @default 90
    *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#refunds}
    */
   constructor({
     signerInfo,
-    refundPercent,
-    calldataHintsEnabled,
+    refundPercent = FLASHBOTS_DEFAULT_REFUND_PERCENT,
+    calldataHintsEnabled = DEFAULT_CALLDATA_HINTS_ENABLED,
     network,
   }: {
     signerInfo?: SignerInfo

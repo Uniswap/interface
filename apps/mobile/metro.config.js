@@ -93,7 +93,7 @@ finalConfig.resolver.resolveRequest = (context, moduleName, platform) => {
 // automatically. The file list must mirror what babel.config.js loads for the active mode.
 function getEnvCacheVersion() {
   const envFiles =
-    process.env.USE_NEW_CONFIGS === 'true'
+    process.env.USE_NEW_CONFIGS !== 'false'
       ? [path.resolve(__dirname, '.env.new'), path.resolve(__dirname, '.env.new.override')]
       : [path.resolve(__dirname, '../../.env.defaults'), path.resolve(__dirname, '../../.env.defaults.local')]
   const hash = crypto.createHash('md5')

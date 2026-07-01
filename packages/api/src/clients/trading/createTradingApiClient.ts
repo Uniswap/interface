@@ -4,6 +4,8 @@ import type {
   ApprovalRequest,
   ApprovalResponse,
   ChainId,
+  CheckApproval4337Request,
+  CheckApproval4337Response,
   CreateSwap5792Request,
   CreateSwap5792Response,
   CreateSwap7702Request,
@@ -38,6 +40,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 export const TRADING_API_PATHS = {
   approval: 'check_approval',
+  approval4337: 'check_approval_4337',
   order: 'order',
   orders: 'orders',
   quote: 'quote',
@@ -96,6 +99,7 @@ export interface TradingApiClient {
     swapper?: string
   }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
+  fetchCheckApproval4337: (params: CheckApproval4337Request) => Promise<CheckApproval4337Response>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
   fetchOrders: (params: { orderIds: string[] }) => Promise<GetOrdersResponse>
   fetchOrdersWithoutIds: (params: {
@@ -183,7 +187,10 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     url: getApiPath(TRADING_API_PATHS.swap5792),
     method: 'post',
     transformRequest: async ({ params }) => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap5792, params.quote.chainId),
+      headers: await getFeatureFlagHeaders(
+        TRADING_API_PATHS.swap5792,
+        'chainId' in params.quote ? params.quote.chainId : undefined,
+      ),
     }),
   })
 
@@ -202,6 +209,15 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     method: 'post',
     transformRequest: async ({ params }) => ({
       headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval, params.chainId),
+    }),
+  })
+
+  const fetchCheckApproval4337 = createFetcher<CheckApproval4337Request, CheckApproval4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.approval4337),
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval4337, params.chainId),
     }),
   })
 
@@ -373,6 +389,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchSwap7702,
     fetchSwaps,
     fetchCheckApproval,
+    fetchCheckApproval4337,
     submitOrder,
     fetchOrders,
     fetchOrdersWithoutIds,

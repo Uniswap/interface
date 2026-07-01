@@ -1,11 +1,12 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SegmentedControl, type SegmentedControlOption, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Briefcase } from 'ui/src/components/icons/Briefcase'
 import { Etf } from 'ui/src/components/icons/Etf'
 import { Nut } from 'ui/src/components/icons/Nut'
 import { Ranking } from 'ui/src/components/icons/Ranking'
+import { TouchableArea } from 'ui/src/components/touchable'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
@@ -15,24 +16,49 @@ interface ExploreCategoryChipsProps {
   onChange: (category: ExploreCategory) => void
 }
 
-function CategoryOptionDisplay({
+type CategoryOption = {
+  value: ExploreCategory
+  label: string
+  renderIcon: (color: '$neutral1' | '$neutral2') => JSX.Element
+}
+
+function CategoryChip({
   active,
-  icon,
-  label,
+  option,
+  onPress,
 }: {
   active: boolean
-  icon: JSX.Element
-  label: string
+  option: CategoryOption
+  onPress: () => void
 }): JSX.Element {
   const color = active ? '$neutral1' : '$neutral2'
 
   return (
-    <Flex row alignItems="center" gap="$spacing6">
-      {icon}
-      <Text variant="buttonLabel3" hoverStyle={{ color: '$neutral1' }} color={color}>
-        {label}
-      </Text>
-    </Flex>
+    <TouchableArea
+      group
+      row
+      alignItems="center"
+      borderRadius="$roundedFull"
+      backgroundColor={active ? '$surface3' : '$transparent'}
+      hoverStyle={{ backgroundColor: active ? '$surface3Hovered' : '$surface2Hovered' }}
+      px="$spacing12"
+      py="$spacing8"
+      height="$spacing36"
+      $platform-web={{ minWidth: 'max-content' }}
+      onPress={onPress}
+    >
+      <Flex row alignItems="center" gap="$spacing6">
+        {option.renderIcon(color)}
+        <Text
+          variant="buttonLabel3"
+          color={color}
+          $platform-web={{ whiteSpace: 'nowrap' }}
+          $group-hover={{ color: '$neutral1' }}
+        >
+          {option.label}
+        </Text>
+      </Flex>
+    </TouchableArea>
   )
 }
 
@@ -40,75 +66,54 @@ function CategoryOptionDisplay({
 export function ExploreCategoryChips({ value, onChange }: ExploreCategoryChipsProps): JSX.Element {
   const { t } = useTranslation()
 
-  // Log off the committed value, not onSelectOption: SegmentedControl fires it twice per click
-  // (Tabs.onValueChange + the tab's onPress). The ref holds the last logged value so only genuine
-  // changes fire, skipping the initial mount.
-  const lastLoggedCategory = useRef(value)
-  useEffect(() => {
-    if (value === lastLoggedCategory.current) {
-      return
-    }
-    lastLoggedCategory.current = value
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.ExploreRwaCategoryView,
-      tab: value,
-    })
-  }, [value])
-
-  const options: readonly SegmentedControlOption<ExploreCategory>[] = useMemo(
+  const options: readonly CategoryOption[] = useMemo(
     () => [
       {
         value: ExploreCategory.Popular,
-        display: (
-          <CategoryOptionDisplay
-            active={value === ExploreCategory.Popular}
-            icon={<Ranking size="$icon.16" color={value === ExploreCategory.Popular ? '$neutral1' : '$neutral2'} />}
-            label={t('common.popular')}
-          />
-        ),
+        label: t('common.popular'),
+        renderIcon: (color) => <Ranking size="$icon.16" color={color} $group-hover={{ color: '$neutral1' }} />,
       },
       {
         value: ExploreCategory.Stocks,
-        display: (
-          <CategoryOptionDisplay
-            active={value === ExploreCategory.Stocks}
-            icon={<Briefcase size="$icon.16" color={value === ExploreCategory.Stocks ? '$neutral1' : '$neutral2'} />}
-            label={t('common.stocks')}
-          />
-        ),
+        label: t('common.stocks'),
+        renderIcon: (color) => <Briefcase size="$icon.16" color={color} $group-hover={{ color: '$neutral1' }} />,
       },
       {
         value: ExploreCategory.Commodities,
-        display: (
-          <CategoryOptionDisplay
-            active={value === ExploreCategory.Commodities}
-            icon={<Nut size="$icon.16" color={value === ExploreCategory.Commodities ? '$neutral1' : '$neutral2'} />}
-            label={t('common.commodities')}
-          />
-        ),
+        label: t('common.commodities'),
+        renderIcon: (color) => <Nut size="$icon.16" color={color} $group-hover={{ color: '$neutral1' }} />,
       },
       {
         value: ExploreCategory.Etfs,
-        display: (
-          <CategoryOptionDisplay
-            active={value === ExploreCategory.Etfs}
-            icon={<Etf size="$icon.16" color={value === ExploreCategory.Etfs ? '$neutral1' : '$neutral2'} />}
-            label={t('common.etfs')}
-          />
-        ),
+        label: t('common.etfs'),
+        renderIcon: (color) => <Etf size="$icon.16" color={color} $group-hover={{ color: '$neutral1' }} />,
       },
     ],
-    [t, value],
+    [t],
   )
 
   return (
-    <SegmentedControl
-      outlined={false}
-      size="large"
-      gap="$spacing0"
-      options={options}
-      selectedOption={value}
-      onSelectOption={onChange}
-    />
+    <Flex row alignItems="center">
+      {options.map((option) => {
+        const active = option.value === value
+        return (
+          <CategoryChip
+            key={option.value}
+            active={active}
+            option={option}
+            onPress={() => {
+              if (active) {
+                return
+              }
+              sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+                element: ElementName.ExploreRwaCategoryView,
+                tab: option.value,
+              })
+              onChange(option.value)
+            }}
+          />
+        )
+      })}
+    </Flex>
   )
 }

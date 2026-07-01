@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import {
   AreaData,
   AreaSeriesPartialOptions,
@@ -45,6 +46,8 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
+  hideMinMaxLines?: boolean
+  v2HoverStyles?: boolean
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -61,6 +64,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private priceLineOptions: Partial<PriceLineOptions> | undefined
   private min: number
   private max: number
+  private hideMinMaxLines = false
 
   /**
    * Gets the screen coordinates for the last data point
@@ -168,8 +172,21 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, hideXAxis, yAxisFormatter, sparkline } =
-      params
+    const {
+      data,
+      colors,
+      type,
+      locale,
+      format,
+      tokenFormatType,
+      hideYAxis,
+      hideXAxis,
+      yAxisFormatter,
+      sparkline,
+      hideMinMaxLines,
+      v2HoverStyles,
+    } = params
+    this.hideMinMaxLines = hideMinMaxLines ?? false
     const { min, max } = getCandlestickPriceBounds(data)
 
     // Handles changes in time period
@@ -190,13 +207,22 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
           bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
         }
 
+    const crosshairOverride = sparkline
+      ? { crosshair: { mode: CrosshairMode.Hidden } }
+      : type === PriceChartType.LINE && v2HoverStyles
+        ? {
+            crosshair: {
+              horzLine: { visible: false, labelVisible: false },
+              vertLine: { color: colors.surface3.val, style: LineStyle.Solid, labelVisible: false },
+            },
+          }
+        : {}
+
     super.updateOptions(params, {
       timeScale: {
         visible: !sparkline && !hideXAxis,
       },
-      ...(sparkline && {
-        crosshair: { mode: CrosshairMode.Hidden },
-      }),
+      ...crosshairOverride,
       localization: {
         locale,
         priceFormatter: (price: BarPrice) => {
@@ -302,7 +328,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         this.minPriceLine = undefined
         this.maxPriceLine = undefined
       }
-    } else if (!this.minPriceLine && !this.maxPriceLine && this.min && this.max) {
+    } else if (!this.hideMinMaxLines && !this.minPriceLine && !this.maxPriceLine && this.min && this.max) {
       this.minPriceLine = this.series.createPriceLine({ price: this.min, ...this.priceLineOptions })
       this.maxPriceLine = this.series.createPriceLine({ price: this.max, ...this.priceLineOptions })
     }
@@ -320,6 +346,7 @@ interface PriceChartBodyProps {
   hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
+  hideMinMaxLines?: boolean
   onCrosshairChange?: (crosshairData?: PriceChartData) => void
   /** Optional overlay render prop with access to the chart's crosshair data, hover pixel coordinates, and plot right edge. */
   children?: (crosshairData?: PriceChartData, hover?: ChartHoverCoordinates | null) => ReactElement | null
@@ -336,15 +363,41 @@ export function PriceChartBody({
   hideXAxis,
   yAxisFormatter,
   sparkline,
+  hideMinMaxLines,
   onCrosshairChange,
   children,
 }: PriceChartBodyProps) {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+  const v2HoverStyles = !sparkline && type === PriceChartType.LINE && isDataLivelinessEnabled
+
   return (
     <Chart
       Model={PriceChartModel}
       params={useMemo(
-        () => ({ data, type, stale, timePeriod, hideYAxis, hideXAxis, yAxisFormatter, sparkline }),
-        [data, stale, type, timePeriod, hideYAxis, hideXAxis, yAxisFormatter, sparkline],
+        () => ({
+          data,
+          type,
+          stale,
+          timePeriod,
+          hideYAxis,
+          hideXAxis,
+          yAxisFormatter,
+          sparkline,
+          hideMinMaxLines,
+          v2HoverStyles,
+        }),
+        [
+          data,
+          stale,
+          type,
+          timePeriod,
+          hideYAxis,
+          hideXAxis,
+          yAxisFormatter,
+          sparkline,
+          hideMinMaxLines,
+          v2HoverStyles,
+        ],
       )}
       height={height}
       overrideColor={overrideColor}
@@ -352,7 +405,8 @@ export function PriceChartBody({
       onCrosshairChange={onCrosshairChange}
       showDottedBackground={true}
       showLeftFadeOverlay={type === PriceChartType.LINE}
-      showCustomHoverMarker={type === PriceChartType.LINE}
+      v2HoverStyles={v2HoverStyles}
+      disableScrubbing={sparkline}
     >
       {children}
     </Chart>

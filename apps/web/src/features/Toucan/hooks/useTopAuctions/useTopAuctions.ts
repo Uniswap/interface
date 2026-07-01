@@ -116,9 +116,9 @@ export function useTopAuctions(): {
   // Merge ListTopAuctions results with any verified auctions fetched individually via GetAuction.
   // The verified-only entries are appended with empty totalBidVolume so they sort to the end via
   // auctionCommittedVolumeComparator (USD volume missing/zero).
-  const mergedAuctions = useMemo<AuctionWithStats[]>(() => {
+  const mergedAuctions = useMemo<PlainMessage<AuctionWithStats>[]>(() => {
     const base = topAuctions?.auctions ?? []
-    const extras: AuctionWithStats[] = []
+    const extras: PlainMessage<AuctionWithStats>[] = []
     for (const q of missingVerifiedQueries) {
       const auction = q.data?.auctions[0]
       if (auction) {
@@ -234,7 +234,6 @@ export function useTopAuctions(): {
         }
 
         return {
-          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
           ...auction,
           verified: coreAuction ? verifiedSet.has(coreAuction.auctionId) : false,
           // `||` (not `??`) so an empty-string API image is treated as absent and doesn't

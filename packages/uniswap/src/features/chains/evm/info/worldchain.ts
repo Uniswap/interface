@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, WORLD_CHAIN_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -30,6 +31,7 @@ export const WORLD_CHAIN_INFO = {
   name: 'World Chain',
   id: UniverseChainId.WorldChain,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'worldcoin',
   backendChain: {
     chain: GraphQLApi.Chain.Worldchain as GqlChainId,

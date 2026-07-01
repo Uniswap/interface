@@ -80,6 +80,7 @@ exports[`TokenItem renders without error 1`] = `
       style={
         {
           "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
           "flexDirection": "row",
           "flexGrow": 1,
           "gap": 12,
@@ -294,18 +295,52 @@ exports[`TokenItem renders without error 1`] = `
             }
           >
             <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              style={
+              allowFontScaling={false}
+              collapsable={false}
+              jestAnimatedProps={
                 {
-                  "color": "#131313",
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "400",
-                  "lineHeight": 24.7,
+                  "value": {},
                 }
               }
-              suppressHighlighting={true}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              jestInlineStyle={
+                [
+                  null,
+                  null,
+                  {
+                    "fontFamily": "Basel Grotesk",
+                    "fontSize": 19,
+                    "fontWeight": "400",
+                    "height": 24.7,
+                    "lineHeight": 24.7,
+                    "top": 1,
+                  },
+                  {
+                    "color": "#131313",
+                  },
+                ]
+              }
+              style={
+                [
+                  null,
+                  null,
+                  {
+                    "fontFamily": "Basel Grotesk",
+                    "fontSize": 19,
+                    "fontWeight": "400",
+                    "height": 24.7,
+                    "lineHeight": 24.7,
+                    "top": 1,
+                  },
+                  {
+                    "color": "#131313",
+                  },
+                ]
+              }
               testID="token-item/price"
             >
               -

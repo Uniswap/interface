@@ -1,4 +1,4 @@
-import { type PartialMessage } from '@bufbuild/protobuf'
+import { type PartialMessage, type PlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
@@ -54,24 +54,21 @@ const BREAKDOWN_SLICE_BY_CATEGORY: Partial<Record<WalletBalanceCategory, keyof P
 }
 
 /**
- * True when the wallet holds no balance in any always-present slice (`tokens` is always returned;
- * `total` aggregates it). An empty wallet legitimately reports `undefined` for every value, which is
- * indistinguishable from a backend omission slice-by-slice, so it is resolved here at the wallet
- * level: with no populated total, a requested category arriving `undefined` is empty, not
- * unavailable. `?? 0` covers backends that send `0` and those that omit the field.
+ * True when the wallet's aggregate total is present and non-positive: an empty wallet. The total is
+ * set only when every requested category resolved, so an omitted total means data is missing, not
+ * that the wallet is empty.
  */
 export function isEmptyWalletBalance(breakdown: PortfolioBalanceBreakdown | undefined): boolean {
   if (!breakdown) {
     return false
   }
-  return (breakdown.total.balanceUSD ?? 0) <= 0 && (breakdown.tokens.balanceUSD ?? 0) <= 0
+  return breakdown.total.balanceUSD !== undefined && breakdown.total.balanceUSD <= 0
 }
 
 /**
  * Returns the requested categories whose breakdown slice the backend omitted (`balanceUSD` is
  * `undefined`), which means the aggregate total is incomplete. Categories that were not requested
- * are omitted by design and never reported. `0` is a valid balance, not a missing one. An empty
- * wallet reports nothing: there is no total for a missing slice to make incomplete.
+ * are omitted by design and never reported. `0` is a valid balance, not a missing one.
  */
 export function getUnavailableCategories({
   breakdown,
@@ -80,7 +77,7 @@ export function getUnavailableCategories({
   breakdown: PortfolioBalanceBreakdown | undefined
   requestedCategories: WalletBalanceCategory[]
 }): WalletBalanceCategory[] {
-  if (!breakdown || isEmptyWalletBalance(breakdown)) {
+  if (!breakdown) {
     return []
   }
   return requestedCategories.filter((category) => {
@@ -89,14 +86,14 @@ export function getUnavailableCategories({
   })
 }
 
-export type GetWalletBalancesInput<TSelectData = GetWalletBalancesResponse> = {
+export type GetWalletBalancesInput<TSelectData = PlainMessage<GetWalletBalancesResponse>> = {
   input?: WithoutWalletAccount<PartialMessage<GetWalletBalancesRequest>> & {
     evmAddress?: string
     svmAddress?: string
   }
   enabled?: boolean
   refetchInterval?: number | false
-  select?: (data: GetWalletBalancesResponse | undefined) => TSelectData
+  select?: (data: PlainMessage<GetWalletBalancesResponse> | undefined) => TSelectData
 }
 
 const dataApiClient = createDataApiServiceClient({
@@ -104,7 +101,7 @@ const dataApiClient = createDataApiServiceClient({
 })
 
 /** Wrapper around `DataApiService/GetWalletBalances`. The response is aggregate-only (no per-token entries). */
-export function useGetWalletBalancesQuery<TSelectData = GetWalletBalancesResponse>(
+export function useGetWalletBalancesQuery<TSelectData = PlainMessage<GetWalletBalancesResponse>>(
   params: GetWalletBalancesInput<TSelectData>,
 ): UseQueryResult<TSelectData, Error> {
   return useQuery(getWalletBalancesQuery(params))
@@ -116,14 +113,14 @@ type GetWalletBalancesQueryKey = readonly [
   Record<string, unknown>,
 ]
 
-type GetWalletBalancesQuery<TSelectData = GetWalletBalancesResponse> = QueryOptionsResult<
-  GetWalletBalancesResponse | undefined,
+type GetWalletBalancesQuery<TSelectData = PlainMessage<GetWalletBalancesResponse>> = QueryOptionsResult<
+  PlainMessage<GetWalletBalancesResponse> | undefined,
   Error,
   TSelectData,
   GetWalletBalancesQueryKey
 >
 
-export const getWalletBalancesQuery = <TSelectData = GetWalletBalancesResponse>({
+export const getWalletBalancesQuery = <TSelectData = PlainMessage<GetWalletBalancesResponse>>({
   input,
   enabled = true,
   refetchInterval,
@@ -141,32 +138,40 @@ export const getWalletBalancesQuery = <TSelectData = GetWalletBalancesResponse>(
   })
 }
 
-const mapBalanceComponent = (component: BalanceComponent | undefined): PortfolioTotalValue => ({
+const mapBalanceComponent = (component: PlainMessage<BalanceComponent> | undefined): PortfolioTotalValue => ({
   balanceUSD: component?.valueUsd,
   percentChange: component?.percentChange1d,
   absoluteChangeUSD: component?.absoluteChange1d,
   count: component?.count,
 })
 
-const getBalance = (data: GetWalletBalancesResponse | undefined): WalletBalance | undefined => data?.balance
+const getBalance = (
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
+): PlainMessage<WalletBalance> | undefined => data?.balance
 
-export const selectPortfolioTotal = (data: GetWalletBalancesResponse | undefined): PortfolioTotalValue | undefined => {
+export const selectPortfolioTotal = (
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
+): PortfolioTotalValue | undefined => {
   const balance = getBalance(data)
   return balance ? mapBalanceComponent(balance.total) : undefined
 }
 
-export const selectPortfolioTokens = (data: GetWalletBalancesResponse | undefined): PortfolioTotalValue | undefined => {
+export const selectPortfolioTokens = (
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
+): PortfolioTotalValue | undefined => {
   const balance = getBalance(data)
   return balance ? mapBalanceComponent(balance.tokens) : undefined
 }
 
-export const selectPortfolioPools = (data: GetWalletBalancesResponse | undefined): PortfolioTotalValue | undefined => {
+export const selectPortfolioPools = (
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
+): PortfolioTotalValue | undefined => {
   const balance = getBalance(data)
   return balance ? mapBalanceComponent(balance.pools) : undefined
 }
 
 export const selectPortfolioBalanceBreakdown = (
-  data: GetWalletBalancesResponse | undefined,
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
 ): PortfolioBalanceBreakdown | undefined => {
   const balance = getBalance(data)
   return balance
@@ -181,7 +186,7 @@ export const selectPortfolioBalanceBreakdown = (
 /** Resolves a part identifier to its selector. */
 export function selectorForPart(
   part: PortfolioBalancePart,
-): (data: GetWalletBalancesResponse | undefined) => PortfolioTotalValue | undefined {
+): (data: PlainMessage<GetWalletBalancesResponse> | undefined) => PortfolioTotalValue | undefined {
   switch (part) {
     case PortfolioBalancePart.Tokens:
       return selectPortfolioTokens

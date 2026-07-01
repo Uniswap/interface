@@ -3,7 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { type Currency, Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { Button, Flex, Separator, SpinningLoader, Text } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
@@ -131,11 +131,18 @@ export function CustomizePoolStep() {
     [token0, token1],
   )
 
-  const { feeTierData } = useAllFeeTierPoolData({
+  // Include the currently selected tier in the on-chain check in case it's a custom one not in the default set.
+  const customizePoolFeeTiersToCheck = useMemo(() => [customizePool.fee], [customizePool.fee])
+
+  const { feeTierData, isLoading: isFeeTierDataLoading } = useAllFeeTierPoolData({
     chainId,
     protocolVersion: ProtocolVersion.V4,
     sdkCurrencies: sortedCurrencies,
     hook: ZERO_ADDRESS,
+    // CCA requires a brand-new pool: verify existence on-chain so abandoned/zero-liquidity pools
+    // (which the indexed data omits) are still treated as existing.
+    checkOnChainPoolExistence: true,
+    additionalFeeTiersToCheck: customizePoolFeeTiersToCheck,
   })
 
   // Auctions require a brand-new pool, so we always show the common fee tiers and disable any that
@@ -174,8 +181,8 @@ export function CustomizePoolStep() {
 
   const selectedFee = selectedFeeHasExistingPool ? undefined : customizePool.fee
 
-  // Block continuing until a fee tier with no existing pool is selected
-  const isContinueDisabled = isNextStepDisabled || !selectedFee
+  // Block continuing until a fee tier with no existing pool is selected (and until existence is verified)
+  const isContinueDisabled = isNextStepDisabled || !selectedFee || isFeeTierDataLoading
 
   const { committed, startTime, endTime } = configureAuction
   const { timeLockEnabled, timeLockPreset, timeLockDurationDays, feesRecipientAddress, buybackAndBurnEnabled } =
@@ -333,29 +340,35 @@ export function CustomizePoolStep() {
               {t('fee.tier.description')}
             </Text>
           </Flex>
-          <FeeTierSelector
-            selectedFee={selectedFee}
-            onFeeSelect={handleFeeSelect}
-            feeTiers={allCommonTiersExist ? [] : feeTierOptions}
-            headerAction={
-              allCommonTiersExist ? (
-                <Button
-                  fill={false}
-                  size="xsmall"
-                  maxWidth="fit-content"
-                  emphasis="secondary"
-                  onPress={handleCreateFeeTierDirect}
-                >
-                  {t('fee.tier.create')}
-                </Button>
-              ) : undefined
-            }
-            expandedFooterContent={
-              allCommonTiersExist ? undefined : (
-                <AdvancedButton title={t('fee.tier.search')} Icon={Search} onPress={handleFeeTierMorePress} />
-              )
-            }
-          />
+          {isFeeTierDataLoading ? (
+            <Flex centered minHeight={92} borderRadius="$rounded12" borderWidth="$spacing1" borderColor="$surface3">
+              <SpinningLoader color="$neutral2" />
+            </Flex>
+          ) : (
+            <FeeTierSelector
+              selectedFee={selectedFee}
+              onFeeSelect={handleFeeSelect}
+              feeTiers={allCommonTiersExist ? [] : feeTierOptions}
+              headerAction={
+                allCommonTiersExist ? (
+                  <Button
+                    fill={false}
+                    size="xsmall"
+                    maxWidth="fit-content"
+                    emphasis="secondary"
+                    onPress={handleCreateFeeTierDirect}
+                  >
+                    {t('fee.tier.create')}
+                  </Button>
+                ) : undefined
+              }
+              expandedFooterContent={
+                allCommonTiersExist ? undefined : (
+                  <AdvancedButton title={t('fee.tier.search')} Icon={Search} onPress={handleFeeTierMorePress} />
+                )
+              }
+            />
+          )}
           <FeeTierSearchModal
             isOpen={feeTierSearchModalOpen}
             onClose={() => setFeeTierSearchModalOpen(false)}

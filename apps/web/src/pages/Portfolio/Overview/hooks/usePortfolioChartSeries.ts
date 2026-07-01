@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { ChartPeriod, ChartPoint, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
@@ -13,7 +14,7 @@ export enum PortfolioChartCategory {
 }
 
 interface UsePortfolioChartSeriesInput {
-  chartData: GetPortfolioChartResponse | undefined
+  chartData: PlainMessage<GetPortfolioChartResponse> | undefined
   selectedPeriod: ChartPeriod
   selectedCategory: PortfolioChartCategory
 }
@@ -39,7 +40,7 @@ function seriesPercentChange(series: PriceChartData[], selectedPeriod: ChartPeri
   return getPortfolioChartPercentChange(series.map((d) => d.close))
 }
 
-function convertPortfolioChartDataToPriceChartData(points: ChartPoint[]): PriceChartData[] {
+function convertPortfolioChartDataToPriceChartData(points: readonly PlainMessage<ChartPoint>[]): PriceChartData[] {
   return points.map((point) => {
     // UTCTimestamp expects seconds, and the API returns timestamps as bigint in seconds
     const time = Number(point.timestamp) as UTCTimestamp

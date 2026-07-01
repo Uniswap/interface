@@ -2,33 +2,29 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { Currency } from '@uniswap/sdk-core'
 import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, Tooltip, styled } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, SpinningLoader, Text, styled } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { LiquidityEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import useResizeObserver from 'use-resize-observer'
-import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from '~/components/NumericalInput/LargeAmountInput'
 import { StyledPercentInput } from '~/components/PercentInput'
+import { FeeTierSearchRow } from '~/features/Liquidity/FeeTierSearchRow'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
 import { useHoldToStepFeeValue } from '~/features/Liquidity/hooks/useHoldToStepFeeValue'
-import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import {
   calculateTickSpacingFromFeeAmount,
   getFeeTierKey,
@@ -38,6 +34,7 @@ import {
   validateFeeTier,
 } from '~/features/Liquidity/utils/feeTiers'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import type { FeeTierData } from '~/types/liquidity'
 
 const FeeTierPercentInput = styled(StyledPercentInput, {
   flexGrow: 0,
@@ -101,18 +98,38 @@ export function FeeTierSearchModal({
   const [searchValue, setSearchValue] = useState('')
   const [createFeeValue, setCreateFeeValue] = useState('')
   const [createModeEnabled, setCreateModeEnabled] = useState(false)
-  const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const withDynamicFeeTier = Boolean(hook)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-  const { feeTierData } = useAllFeeTierPoolData({
+
+  // When blocking existing pools (CCA), also check the user-entered custom tier on-chain so an
+  // abandoned/zero-liquidity pool the indexed data omits still blocks the "Create" action.
+  const createFeeTierToCheck = useMemo(() => {
+    const feeAmount = Math.round(parseFloat(createFeeValue) * 10000)
+    if (!Number.isFinite(feeAmount) || feeAmount <= 0) {
+      return undefined
+    }
+    return { isDynamic: false, feeAmount, tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount) }
+  }, [createFeeValue])
+  const additionalFeeTiersToCheck = useMemo(
+    () => (createFeeTierToCheck ? [createFeeTierToCheck] : []),
+    [createFeeTierToCheck],
+  )
+
+  const { feeTierData, isLoading: isFeeTierDataLoading } = useAllFeeTierPoolData({
     chainId,
     protocolVersion,
     sdkCurrencies,
     withDynamicFeeTier,
     hook: hook ?? ZERO_ADDRESS,
+    checkOnChainPoolExistence: Boolean(blockExistingPools),
+    additionalFeeTiersToCheck,
   })
+
+  // While the existing-pool check is settling, withhold the final create/select UI so an existing
+  // tier never momentarily appears selectable (CCA requires a brand-new pool).
+  const isExistingPoolCheckLoading = Boolean(blockExistingPools) && isFeeTierDataLoading
 
   // Stable stepper for the +/- buttons.
   const stepFee = useEvent((current: string, direction: 'up' | 'down'): string =>
@@ -141,6 +158,19 @@ export function FeeTierSearchModal({
   })
   const existingPoolForCreateFee = createFeeTierKey ? feeTierData[createFeeTierKey] : undefined
   const blockedByExistingPool = Boolean(blockExistingPools && existingPoolForCreateFee?.created)
+
+  const handleSelectExistingFeeTier = useEvent((pool: FeeTierData) => {
+    if (isDynamicFeeTier(pool.fee)) {
+      if (onSelectDynamicFee) {
+        onSelectDynamicFee(pool.fee)
+      } else {
+        onSelectFee(pool.fee)
+      }
+    } else {
+      onSelectFee({ isDynamic: pool.fee.isDynamic, feeAmount: pool.fee.feeAmount, tickSpacing: pool.fee.tickSpacing })
+    }
+    onClose()
+  })
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
     maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
@@ -251,7 +281,10 @@ export function FeeTierSearchModal({
             <Flex row>
               <Button
                 variant="default"
-                isDisabled={!createFeeValue || createFeeValue === '' || blockedByExistingPool}
+                isDisabled={
+                  !createFeeValue || createFeeValue === '' || blockedByExistingPool || isExistingPoolCheckLoading
+                }
+                loading={isExistingPoolCheckLoading && Boolean(createFeeValue)}
                 onPress={() => {
                   onSelectFee({
                     isDynamic: false,
@@ -339,119 +372,39 @@ export function FeeTierSearchModal({
               px="$spacing16"
               className="scrollbar-hidden"
             >
-              {Object.values(feeTierData)
-                .filter((data) => data.formattedFee.includes(searchValue) || (data.id && searchValue.includes(data.id)))
-                .map((pool) => {
-                  // Existing pools can't be used by the CCA flow — disable them with the same warning as the grid
-                  const blocked = Boolean(blockExistingPools && pool.created)
-                  const row = (
-                    <Flex
-                      row
-                      alignItems="center"
-                      gap="$spacing24"
-                      width="100%"
+              {isExistingPoolCheckLoading ? (
+                <Flex centered py="$spacing24" width="100%">
+                  <SpinningLoader color="$neutral2" />
+                </Flex>
+              ) : (
+                Object.values(feeTierData)
+                  .filter(
+                    (data) => data.formattedFee.includes(searchValue) || (data.id && searchValue.includes(data.id)),
+                  )
+                  .map((pool) => (
+                    <FeeTierSearchRow
                       key={pool.id + pool.formattedFee}
-                      py="$padding12"
-                      justifyContent="space-between"
-                      opacity={blocked ? 0.54 : 1}
-                      {...(blocked ? { cursor: 'default' as const } : ClickableTamaguiStyle)}
-                      onPress={
-                        blocked
-                          ? undefined
-                          : () => {
-                              if (isDynamicFeeTier(pool.fee)) {
-                                if (onSelectDynamicFee) {
-                                  onSelectDynamicFee(pool.fee)
-                                } else {
-                                  onSelectFee(pool.fee)
-                                }
-                              } else {
-                                onSelectFee({
-                                  isDynamic: pool.fee.isDynamic,
-                                  feeAmount: pool.fee.feeAmount,
-                                  tickSpacing: pool.fee.tickSpacing,
-                                })
-                              }
-
-                              onClose()
-                            }
-                      }
-                    >
-                      <Flex>
-                        <Flex row alignItems="center">
-                          <Text variant="subheading2">{pool.formattedFee}</Text>
-                          {isLpIncentivesEnabled && pool.boostedApr !== undefined && pool.boostedApr > 0 && (
-                            <Tooltip placement="right">
-                              <Tooltip.Trigger>
-                                <LpIncentivesAprDisplay lpIncentiveRewardApr={pool.boostedApr} isSmall ml="$spacing8" />
-                              </Tooltip.Trigger>
-                              <Tooltip.Content>
-                                <Tooltip.Arrow />
-                                <Text variant="body4" color="$neutral2" textAlign="center">
-                                  {t('pool.incentives.eligibleTooltip')}
-                                </Text>
-                              </Tooltip.Content>
-                            </Tooltip>
-                          )}
-                        </Flex>
-                        <Flex row gap="$gap12" alignItems="center">
-                          <Text variant="body3" color="$neutral2">
-                            {pool.totalLiquidityUsd === 0
-                              ? '0'
-                              : formatNumberOrString({
-                                  value: pool.totalLiquidityUsd,
-                                  type: NumberType.FiatTokenStats,
-                                })}{' '}
-                            {t('common.totalValueLocked')}
-                          </Text>
-                          <Text variant="body3" color="$neutral2">
-                            {pool.created
-                              ? t('fee.tier.percent.select', {
-                                  percentage: formatPercent(pool.percentage.toSignificant(), 3),
-                                })
-                              : t('common.notCreated.label')}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                      {getFeeTierKey({
-                        feeTier: pool.fee.feeAmount,
-                        tickSpacing: pool.fee.tickSpacing,
-                        isDynamicFee: pool.fee.isDynamic,
-                      }) ===
+                      pool={pool}
+                      blocked={Boolean(blockExistingPools && pool.created)}
+                      isSelected={
+                        getFeeTierKey({
+                          feeTier: pool.fee.feeAmount,
+                          tickSpacing: pool.fee.tickSpacing,
+                          isDynamicFee: pool.fee.isDynamic,
+                        }) ===
                         getFeeTierKey({
                           feeTier: selectedFee?.feeAmount,
                           tickSpacing: selectedFee?.tickSpacing,
                           isDynamicFee: selectedFee?.isDynamic,
-                        }) && <CheckCircleFilled size="$icon.24" color="$accent3" />}
-                    </Flex>
-                  )
-
-                  if (blocked && existingPoolWarning) {
-                    return (
-                      <Tooltip key={pool.id + pool.formattedFee} placement="top">
-                        <Tooltip.Trigger width="100%">{row}</Tooltip.Trigger>
-                        {/* pointerEvents="auto" lets the Learn more link receive clicks (see DisconnectButton) */}
-                        <Tooltip.Content maxWidth={280} pointerEvents="auto">
-                          <Tooltip.Arrow />
-                          <Flex gap="$spacing4">
-                            <Text variant="body4" color="$neutral1">
-                              {existingPoolWarning}
-                            </Text>
-                            {existingPoolWarningLearnMoreUrl && (
-                              <LearnMoreLink
-                                url={existingPoolWarningLearnMoreUrl}
-                                textVariant="buttonLabel4"
-                                textColor="$accent1"
-                              />
-                            )}
-                          </Flex>
-                        </Tooltip.Content>
-                      </Tooltip>
-                    )
-                  }
-
-                  return row
-                })}
+                        })
+                      }
+                      isLpIncentivesEnabled={isLpIncentivesEnabled}
+                      existingPoolWarning={existingPoolWarning}
+                      existingPoolWarningLearnMoreUrl={existingPoolWarningLearnMoreUrl}
+                      onSelect={handleSelectExistingFeeTier}
+                    />
+                  ))
+              )}
             </Flex>
             <Flex gap="$gap12" alignItems="center" $sm={{ pb: '$spacing12' }}>
               <Text variant="body3" color="$neutral2">

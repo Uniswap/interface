@@ -2,6 +2,7 @@ import { Token as SDKToken } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { memo, useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -41,11 +42,7 @@ function TokenAmountDisplayInner({ currencyInfo, formattedAmount, usdValue }: To
         <Text variant="body3" fontWeight="500">
           {formattedAmount}
         </Text>
-        {usdValue && (
-          <Text variant="body3" color="$neutral2">
-            {usdValue}
-          </Text>
-        )}
+        {usdValue && <AnimatedNumber value={usdValue} textVariant="$body3" color="$neutral2" />}
       </Flex>
     </Flex>
   )

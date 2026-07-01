@@ -96,7 +96,7 @@ function NavBubble(props: LoadingBubbleProps) {
 
 function TokenLogoBubble({ isCompact, ...props }: LoadingBubbleProps & { isCompact: boolean }) {
   const media = useMedia()
-  const size = getHeaderLogoSize({ isCompact, media })
+  const size = getHeaderLogoSize({ isCompact, media, scaleMobileOnScroll: true })
   return <DetailBubble width={size} height={size} round containerProps={{ maxWidth: size }} {...props} />
 }
 

@@ -12,6 +12,7 @@ import {
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { vi } from 'vitest'
 import { useAccount } from '~/hooks/useAccount'
+import { useTransactionAdderFromHash } from '~/state/transactions/adder'
 import {
   useHasPendingApproval,
   useHasPendingRevocation,
@@ -88,6 +89,38 @@ describe('Transactions hooks', () => {
 
       const state = store.getState()
       expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionId]).toBeDefined()
+    })
+  })
+
+  describe('useTransactionAdderFromHash', () => {
+    it('adds a pending transaction from a bare hash', () => {
+      const { result, store } = renderHookWithProviders(() => useTransactionAdderFromHash())
+      act(() => {
+        result.current({ hash: transactionHash, chainId: UniverseChainId.Mainnet }, mockTransactionInfo)
+      })
+      const transaction = store.getState().transactions[address][UniverseChainId.Mainnet]?.[transactionId]
+      expect(transaction).toBeDefined()
+      expect(transaction.status).toBe(TransactionStatus.Pending)
+      expect(transaction.hash).toBe(transactionHash)
+      expect(transaction.typeInfo).toEqual(mockTransactionInfo)
+      // The request snapshot is reduced to the fields known at submission
+      expect((transaction as { options?: { request?: unknown } }).options?.request).toEqual({
+        from: address,
+        chainId: UniverseChainId.Mainnet,
+      })
+    })
+
+    it('does not add a transaction when the account is disconnected', () => {
+      mocked(useAccount).mockReturnValue({
+        chainId: undefined,
+        address: undefined,
+        status: 'disconnected',
+      } as unknown as ReturnType<typeof useAccount>)
+      const { result, store } = renderHookWithProviders(() => useTransactionAdderFromHash())
+      act(() => {
+        result.current({ hash: transactionHash, chainId: UniverseChainId.Mainnet }, mockTransactionInfo)
+      })
+      expect(store.getState().transactions[address]?.[UniverseChainId.Mainnet]?.[transactionId]).toBeUndefined()
     })
   })
 

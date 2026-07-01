@@ -1,3 +1,4 @@
+import { isHoverable } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
@@ -38,7 +39,15 @@ export function ExpandableParentAssetIdentity({
       <Text variant="body3" color="$neutral2" numberOfLines={1}>
         {t('explore.rwa.issuerTokenCount', { count: issuerCount })}
       </Text>
-      {variant === 'table' && <ChevronsOut color="$neutral2" size="$icon.16" />}
+      {variant === 'table' && (
+        <ChevronsOut
+          color="$neutral2"
+          opacity={isHoverable ? 0 : 1}
+          size="$icon.16"
+          transition={isHoverable ? 'opacity 120ms ease-in-out' : undefined}
+          $group-hover={isHoverable ? { opacity: 1 } : undefined}
+        />
+      )}
     </Flex>
   )
 

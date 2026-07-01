@@ -176,15 +176,17 @@ describe('getUnavailableCategories', () => {
     ).toEqual([])
   })
 
-  it('reports nothing for an empty wallet, whose every slice is omitted', () => {
-    const emptyBreakdown: PortfolioBalanceBreakdown = {
+  it('reports a pools outage on a token-empty wallet (an omitted total is not an empty wallet)', () => {
+    // Token balance is 0 and the pools leg failed, so the backend omits both pools and the
+    // aggregate total. This must surface as unavailable, not be hidden as an empty wallet.
+    const outageBreakdown: PortfolioBalanceBreakdown = {
       total: slice(undefined),
-      tokens: slice(undefined),
+      tokens: slice(0),
       pools: slice(undefined),
     }
     expect(
-      getUnavailableCategories({ breakdown: emptyBreakdown, requestedCategories: [WalletBalanceCategory.POOLS] }),
-    ).toEqual([])
+      getUnavailableCategories({ breakdown: outageBreakdown, requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([WalletBalanceCategory.POOLS])
   })
 })
 
@@ -194,30 +196,26 @@ describe('isEmptyWalletBalance', () => {
     percentChange: undefined,
     absoluteChangeUSD: undefined,
   })
-  const breakdown = (total: number | undefined, tokens: number | undefined): PortfolioBalanceBreakdown => ({
+  const withTotal = (total: number | undefined): PortfolioBalanceBreakdown => ({
     total: slice(total),
-    tokens: slice(tokens),
-    pools: slice(undefined),
+    tokens: slice(0),
+    pools: slice(0),
   })
 
   it('returns false when the breakdown is undefined', () => {
     expect(isEmptyWalletBalance(undefined)).toBe(false)
   })
 
-  it('returns true when total and tokens are both omitted', () => {
-    expect(isEmptyWalletBalance(breakdown(undefined, undefined))).toBe(true)
+  it('returns true when the total is a defined zero', () => {
+    expect(isEmptyWalletBalance(withTotal(0))).toBe(true)
   })
 
-  it('returns true when total and tokens are both 0', () => {
-    expect(isEmptyWalletBalance(breakdown(0, 0))).toBe(true)
+  it('returns false when the total is omitted (a failed leg, not an empty wallet)', () => {
+    expect(isEmptyWalletBalance(withTotal(undefined))).toBe(false)
   })
 
-  it('returns false when tokens holds a balance, even if total was omitted', () => {
-    expect(isEmptyWalletBalance(breakdown(undefined, 600))).toBe(false)
-  })
-
-  it('returns false when total holds a balance', () => {
-    expect(isEmptyWalletBalance(breakdown(400, 0))).toBe(false)
+  it('returns false when the total holds a balance', () => {
+    expect(isEmptyWalletBalance(withTotal(400))).toBe(false)
   })
 })
 

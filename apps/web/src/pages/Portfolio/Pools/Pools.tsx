@@ -2,20 +2,27 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/d
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
+import { Anchor, Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { sortPositionsByStatusClosedLast } from 'uniswap/src/features/positions/utils'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import useResizeObserver from 'use-resize-observer'
 import { EmptyPositionsView } from '~/features/Liquidity/components/emptyStates/EmptyPositionsView'
 import { ErrorPositionsView } from '~/features/Liquidity/components/emptyStates/ErrorPositionsView'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
-import { DEFAULT_LP_POSITION_PROTOCOL_FILTER, DEFAULT_LP_POSITION_STATUS_FILTER } from '~/features/Liquidity/constants'
+import {
+  DEFAULT_LP_POSITION_PROTOCOL_FILTER,
+  DEFAULT_LP_POSITION_STATUS_FILTER,
+  LP_POSITION_PROTOCOL_VERSIONS,
+  LP_POSITION_STATUS_FILTER_OPTIONS,
+} from '~/features/Liquidity/constants'
 import { useWalletPositionsWeb } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
 import { LiquidityPositionCardLoader } from '~/features/Liquidity/LiquidityPositionCard'
 import { PositionsListSection } from '~/features/Liquidity/PositionsListSection'
@@ -33,16 +40,15 @@ import { buildImportV2PositionsHref } from '~/utils/importV2PositionsRoute'
 
 const POSITIONS_LIST_MAX_WIDTH = 768
 const POSITIONS_SIDEBAR_WIDTH = 360
+const FEE_CARD_STACKED_MAX_HEIGHT = 400
+const FEE_CARD_MIN_MAX_HEIGHT = 664
+const POSITION_STACK_HEIGHT_OFFSET = 110
 
 const PoolsPositionCountIndicator = memo(function PoolsPositionCountIndicator({ count }: { count: number }) {
   const { t } = useTranslation()
 
   return <PortfolioBalanceCountIndicator label={t('portfolio.pools.balance.totalPositions', { count })} />
 })
-
-function hasSameItems<T>(a: T[], b: T[]): boolean {
-  return a.length === b.length && a.every((item) => b.includes(item))
-}
 
 function positionMatchesSearch(position: PositionInfo, normalizedSearch: string): boolean {
   if (!normalizedSearch) {
@@ -69,6 +75,12 @@ export function PortfolioPools() {
   const { evmAddress: resolvedEvmAddress, svmAddress: resolvedSvmAddress } = useResolvedAddresses()
   const { chainId, externalAddress } = usePortfolioRoutes()
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const media = useMedia()
+  const { ref: positionsListRef, height: positionStackHeight } = useResizeObserver<HTMLElement>()
+  const twoColumnFeeCardMaxHeight = positionStackHeight
+    ? Math.max(positionStackHeight - POSITION_STACK_HEIGHT_OFFSET, FEE_CARD_MIN_MAX_HEIGHT)
+    : undefined
+  const feeCardMaxHeight = media.xl ? FEE_CARD_STACKED_MAX_HEIGHT : twoColumnFeeCardMaxHeight
 
   const [search, setSearch] = useState('')
   const [versionFilter, setVersionFilter] = useState(() => [...DEFAULT_LP_POSITION_PROTOCOL_FILTER])
@@ -89,6 +101,8 @@ export function PortfolioPools() {
     setStatusFilter([...DEFAULT_LP_POSITION_STATUS_FILTER])
   }, [])
 
+  // Fetch every status + version once and filter client-side, so toggling a filter never refetches and
+  // closed positions stay in memory for the count.
   const {
     visiblePositions,
     hiddenPositions,
@@ -102,8 +116,8 @@ export function PortfolioPools() {
   } = useWalletPositionsWeb({
     address: evmAddress,
     chainFilter: chainId ?? null,
-    versionFilter,
-    statusFilter,
+    versionFilter: LP_POSITION_PROTOCOL_VERSIONS,
+    statusFilter: LP_POSITION_STATUS_FILTER_OPTIONS,
   })
 
   const { data: poolsBalance } = usePortfolioBalancePart({
@@ -114,32 +128,46 @@ export function PortfolioPools() {
   const hasLoadedBalance = poolsBalance !== undefined
   const totalPoolsCount = poolsBalance?.count
 
+  // Backend count (open + closed) is the source of truth; only the Closed filter adjusts it, subtracting
+  // in-memory closed positions while it's off.
+  const closedStatusSelected = statusFilter.includes(PositionStatus.CLOSED)
+  const closedPositionsCount = useMemo(
+    () => visiblePositions.filter((position) => position.status === PositionStatus.CLOSED).length,
+    [visiblePositions],
+  )
+  const poolsPositionCount =
+    totalPoolsCount === undefined
+      ? undefined
+      : closedStatusSelected
+        ? totalPoolsCount
+        : Math.max(0, totalPoolsCount - closedPositionsCount)
+
   const hasSolanaOnlyWallet = !resolvedEvmAddress && !!resolvedSvmAddress
   const normalizedSearch = search.trim().toLowerCase()
-  const hasModifiedPositionFilters =
-    !hasSameItems(versionFilter, DEFAULT_LP_POSITION_PROTOCOL_FILTER) ||
-    !hasSameItems(statusFilter, DEFAULT_LP_POSITION_STATUS_FILTER)
+  const matchesPositionFilters = useCallback(
+    (position: PositionInfo): boolean =>
+      versionFilter.includes(position.version) &&
+      statusFilter.includes(position.status) &&
+      positionMatchesSearch(position, normalizedSearch),
+    [versionFilter, statusFilter, normalizedSearch],
+  )
   const filteredVisiblePositions = useMemo(
-    () => visiblePositions.filter((position) => positionMatchesSearch(position, normalizedSearch)),
-    [visiblePositions, normalizedSearch],
+    () => sortPositionsByStatusClosedLast(visiblePositions.filter(matchesPositionFilters)),
+    [visiblePositions, matchesPositionFilters],
   )
   const filteredHiddenPositions = useMemo(
-    () => hiddenPositions.filter((position) => positionMatchesSearch(position, normalizedSearch)),
-    [hiddenPositions, normalizedSearch],
+    () => sortPositionsByStatusClosedLast(hiddenPositions.filter(matchesPositionFilters)),
+    [hiddenPositions, matchesPositionFilters],
   )
   const hasLoadedPositions = !isLoadingPositions && !hasErrorWithoutData
-  const showEmptyState =
-    hasLoadedPositions &&
-    visiblePositions.length === 0 &&
-    hiddenPositions.length === 0 &&
-    !normalizedSearch &&
-    !hasModifiedPositionFilters
+  const walletHasAnyPositions = visiblePositions.length > 0 || hiddenPositions.length > 0
+  const showEmptyState = hasLoadedPositions && !walletHasAnyPositions
   const showNoResults =
     hasLoadedPositions &&
-    !showEmptyState &&
+    walletHasAnyPositions &&
+    !hasNextPage &&
     filteredVisiblePositions.length === 0 &&
-    filteredHiddenPositions.length === 0 &&
-    (!!normalizedSearch || hasModifiedPositionFilters)
+    filteredHiddenPositions.length === 0
 
   const portfolioPoolsUrl = buildPortfolioUrl({
     tab: PortfolioTab.Pools,
@@ -208,8 +236,8 @@ export function PortfolioPools() {
             chainIds={chainId ? [chainId] : undefined}
             endText={
               hasLoadedBalance ? (
-                totalPoolsCount !== undefined ? (
-                  <PoolsPositionCountIndicator count={totalPoolsCount} />
+                poolsPositionCount !== undefined ? (
+                  <PoolsPositionCountIndicator count={poolsPositionCount} />
                 ) : (
                   <PortfolioBalanceCountIndicator label="-" />
                 )
@@ -230,7 +258,7 @@ export function PortfolioPools() {
         </Flex>
         <Flex row gap="$spacing24" alignItems="flex-start" $xl={{ flexDirection: 'column-reverse' }}>
           <Flex grow shrink width="100%" maxWidth={POSITIONS_LIST_MAX_WIDTH} $xl={{ maxWidth: '100%' }}>
-            {renderListContent()}
+            <Flex ref={positionsListRef}>{renderListContent()}</Flex>
             {!isExternalWallet && (
               <Flex
                 row
@@ -263,7 +291,12 @@ export function PortfolioPools() {
             {isLpIncentivesEnabled && (
               <PortfolioPoolsRewardsCard walletAddress={evmAddress} isExternalWallet={isExternalWallet} />
             )}
-            <PortfolioPoolsFeesPanel walletAddress={evmAddress} chainId={chainId} isExternalWallet={isExternalWallet} />
+            <PortfolioPoolsFeesPanel
+              walletAddress={evmAddress}
+              chainId={chainId}
+              isExternalWallet={isExternalWallet}
+              maxHeight={feeCardMaxHeight}
+            />
           </Flex>
         </Flex>
       </Flex>

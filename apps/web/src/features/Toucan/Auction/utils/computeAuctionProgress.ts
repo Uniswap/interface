@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import type { AuctionDetails, AuctionProgressData } from '~/features/Toucan/Auction/store/types'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
@@ -66,7 +67,7 @@ export function computeAuctionProgress({
 }: {
   currentBlock: number | undefined
   auctionDetails: AuctionDetails | null
-  checkpointData: Checkpoint | null
+  checkpointData: PlainMessage<Checkpoint> | null
 }): AuctionProgressData {
   const startBlockNum = auctionDetails?.startBlock ? Number(auctionDetails.startBlock) : undefined
   const endBlockNum = auctionDetails?.endBlock ? Number(auctionDetails.endBlock) : undefined

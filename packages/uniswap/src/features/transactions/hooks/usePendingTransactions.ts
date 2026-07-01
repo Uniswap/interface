@@ -5,6 +5,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 
 export function usePendingTransactions({
   evmAddress,
@@ -20,9 +21,12 @@ export function usePendingTransactions({
     if (!transactions) {
       return undefined
     }
+    // Limit orders surface in their own view, not the generic pending list
     return transactions.filter(
-      (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
-        tx.status === TransactionStatus.Pending && !ignoreTransactionTypes.includes(tx.typeInfo.type),
+      (tx) =>
+        tx.status === TransactionStatus.Pending &&
+        !ignoreTransactionTypes.includes(tx.typeInfo.type) &&
+        !isLimitOrder(tx),
     )
   }, [ignoreTransactionTypes, transactions])
 }

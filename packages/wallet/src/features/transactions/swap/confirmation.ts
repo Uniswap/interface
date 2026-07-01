@@ -24,6 +24,22 @@ export function* waitForTransactionConfirmation(params: { hash: string }): SagaG
 }
 
 /**
+ * Like waitForTransactionConfirmation but keyed on userOpHash. A submitted UserOp's on-chain hash is unknown until the
+ * watcher resolves it, so sponsored 4337 approvals are waited on by userOpHash instead.
+ */
+export function* waitForUserOpConfirmation(params: { userOpHash: string }): SagaGenerator<{ success: boolean }> {
+  const { userOpHash } = params
+
+  while (true) {
+    const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
+
+    if (payload.userOpHash === userOpHash) {
+      return { success: payload.status === TransactionStatus.Success }
+    }
+  }
+}
+
+/**
  * Returns true if the swapper is a delegated EOA and transactions cannot be submitted simultaneously due to
  * the risk of node clients rejecting simultaneous pending transactions from the same account.
  *

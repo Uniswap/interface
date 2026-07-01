@@ -2,6 +2,7 @@ import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
@@ -11,6 +12,7 @@ import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/
 interface ExploreStatSectionData {
   label: string
   value: string
+  balance: number
   change: number
   protocolPopoverFormattedData?: {
     label: string
@@ -46,6 +48,7 @@ export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideSta
       {
         label: t('stats.volume.1d.long'),
         value: formatPrice(totalVolume),
+        balance: totalVolume,
         change: volume24hChangePercent,
         protocolPopoverFormattedData: [
           { label: t('common.protocol.v4'), value: protocolVolumes.v4 },
@@ -53,10 +56,30 @@ export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideSta
           { label: t('common.protocol.v2'), value: protocolVolumes.v2 },
         ],
       },
-      { label: t('common.totalUniswapTVL'), value: formatPrice(totalTVL), change: totalTVL24hrChangePercent },
-      { label: t('explore.v2TVL'), value: formatPrice(protocolTVL.v2), change: protocolChangePercent.v2 },
-      { label: t('explore.v3TVL'), value: formatPrice(protocolTVL.v3), change: protocolChangePercent.v3 },
-      { label: t('explore.v4TVL'), value: formatPrice(protocolTVL.v4), change: protocolChangePercent.v4 },
+      {
+        label: t('common.totalUniswapTVL'),
+        value: formatPrice(totalTVL),
+        balance: totalTVL,
+        change: totalTVL24hrChangePercent,
+      },
+      {
+        label: t('explore.v2TVL'),
+        value: formatPrice(protocolTVL.v2),
+        balance: protocolTVL.v2,
+        change: protocolChangePercent.v2,
+      },
+      {
+        label: t('explore.v3TVL'),
+        value: formatPrice(protocolTVL.v3),
+        balance: protocolTVL.v3,
+        change: protocolChangePercent.v3,
+      },
+      {
+        label: t('explore.v4TVL'),
+        value: formatPrice(protocolTVL.v4),
+        balance: protocolTVL.v4,
+        change: protocolChangePercent.v4,
+      },
     ]
 
     // oxlint-disable-next-line typescript/no-unnecessary-condition
@@ -131,13 +154,13 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
       <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
         {data.label}
       </Text>
-      {isLoading ? (
-        <LoadingBubble height="24px" width="80px" />
-      ) : (
-        <Text variant="subheading1" color="$neutral1">
-          {data.value}
-        </Text>
-      )}
+      <AnimatedNumber
+        numericValue={data.balance}
+        loading={isLoading}
+        loadingPlaceholderText="$0.00"
+        textVariant="$subheading1"
+        value={data.value}
+      />
       <Flex row alignItems="center" gap="$spacing2" style={{ fontSize: 12 }} minHeight="$spacing16">
         {isLoading ? (
           <LoadingBubble height="12px" width="60px" />

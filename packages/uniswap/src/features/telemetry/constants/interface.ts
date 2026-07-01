@@ -63,7 +63,6 @@ export enum InterfaceEventName {
   UniswapXSignatureRequested = 'UniswapX Signature Requested',
   WalletCapabilitiesDetected = 'Wallet Capabilities Detected',
   WalletConnected = 'Wallet Connected',
-  WalletProviderUsed = 'Wallet Provider Used',
   WalletSelected = 'Wallet Selected',
   WrapTokenTxnInvalidated = 'Wrap Token Transaction Invalidated',
   WrapTokenTxnSubmitted = 'Wrap Token Transaction Submitted',

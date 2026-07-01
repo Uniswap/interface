@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { FiatNumberType } from 'utilities/src/format/types'
@@ -10,7 +11,7 @@ import {
 interface UseCommittedVolumeBreakdownParams {
   bidDistributionData: BidDistributionData | null
   clearingPriceQ96: string | undefined
-  checkpoint: Checkpoint | null
+  checkpoint: PlainMessage<Checkpoint> | null
   auctionDetails: AuctionDetails | null
   bidTokenInfo: BidTokenInfo | undefined
   bidTokenMarketPriceUsd: number | undefined

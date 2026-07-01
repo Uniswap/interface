@@ -118,7 +118,7 @@ export function useLiquidityPositionDropdownOptions({
           if (liquidityPosition.chainId !== account.chainId) {
             await selectChain(liquidityPosition.chainId)
           }
-          navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
+          navigate(`/migrate/v2/${chainInfo.urlParam}/${liquidityPosition.liquidityToken.address}`)
         },
         label: t('pool.migrateLiquidity'),
         Icon: ArrowRight,

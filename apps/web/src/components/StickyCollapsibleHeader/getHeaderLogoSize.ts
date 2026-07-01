@@ -9,9 +9,20 @@ type HeaderLayoutMedia = Partial<Pick<MediaQueryState, 'sm' | 'md'>>
  * Resolves header logo size from sticky collapsible header state and viewport.
  * Used by token/pool/auction headers and skeletons for consistent sizing.
  */
-export function getHeaderLogoSize({ isCompact, media }: { isCompact: boolean; media: HeaderLayoutMedia }): number {
-  // if small breakpoint, return fixed small size
+export function getHeaderLogoSize({
+  isCompact,
+  media,
+  scaleMobileOnScroll = false,
+}: {
+  isCompact: boolean
+  media: HeaderLayoutMedia
+  // TDP grows the logo at rest and shrinks it on scroll; other headers keep a fixed small size on mobile web.
+  scaleMobileOnScroll?: boolean
+}): number {
   if (media.sm) {
+    if (scaleMobileOnScroll) {
+      return isCompact ? HEADER_LOGO_SIZE.mobileCompact : HEADER_LOGO_SIZE.mobile
+    }
     return HEADER_LOGO_SIZE.small
   }
 

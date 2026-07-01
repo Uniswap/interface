@@ -434,16 +434,23 @@ describe('swap form button hooks', () => {
         expect(result.current).toBe('common.getStarted')
       })
 
-      it('prioritizes web FOR nudge over indicative', () => {
+      it('prioritizes indicative over web FOR nudge', () => {
         setWebForNudge({ enabled: true })
         mockUseIsTradeIndicative.mockReturnValue(true)
         const { result } = renderHook(() => useSwapFormButtonText())
-        expect(result.current).toBe('empty.swap.button.text')
+        expect(result.current).toBe('swap.finalizingQuote')
       })
 
-      it('prioritizes web FOR nudge over disconnected', () => {
+      it('prioritizes disconnected over web FOR nudge', () => {
         setWebForNudge({ enabled: true })
         setConnection({ isDisconnected: true })
+        const { result } = renderHook(() => useSwapFormButtonText())
+        expect(result.current).toBe('common.connectWallet.button')
+      })
+
+      it('shows web FOR nudge when connected and not indicative', () => {
+        setWebForNudge({ enabled: true })
+        setConnection({ isDisconnected: false })
         const { result } = renderHook(() => useSwapFormButtonText())
         expect(result.current).toBe('empty.swap.button.text')
       })

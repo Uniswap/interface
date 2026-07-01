@@ -48,6 +48,12 @@ const mockGetSwapDelegationInfo = jest.fn(
 )
 jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
   useGetSwapDelegationInfoForActiveAccount: () => mockGetSwapDelegationInfo,
+  useWalletDelegationContext: () => ({
+    delegationDataQuery: { data: undefined },
+    getDelegationDetails: () => undefined,
+    refreshDelegationData: async () => {},
+    isLoading: false,
+  }),
 }))
 
 // Mock the gas sponsorship feature flag (defaults to off in beforeEach)

@@ -14,6 +14,7 @@ import {
   PositionStatusFilter,
   PositionStatusFilterValue,
 } from 'uniswap/src/features/positions/components/PositionStatusFilter'
+import { usePoolsPositionsReport } from 'uniswap/src/features/positions/hooks/usePoolsPositionsReport'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import { filterAndSortPositions, getPositionKey } from 'uniswap/src/features/positions/utils'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -54,6 +55,7 @@ export const PoolsTab = memo(function PoolsTabInner({
     hasNextPage,
     isFetching,
     isFetchingNextPage,
+    pagesLoaded,
   } = useWalletPositions({
     account: address,
     chainIds: chains,
@@ -79,6 +81,14 @@ export const PoolsTab = memo(function PoolsTabInner({
   const isLoadingFirstPage = isFetchingFirstPage && !hasData
   const hasErrorWithoutData = !!error && !hasData && !isFetchingFirstPage
 
+  usePoolsPositionsReport({
+    positions,
+    pagesLoaded,
+    hasMore: hasNextPage,
+    isLoading: isLoadingFirstPage,
+    enabled: !skip,
+  })
+
   const visiblePositions = useMemo(() => filterAndSortPositions(positions, filterStatuses), [positions, filterStatuses])
   const filteredHiddenPositions = useMemo(
     () => filterAndSortPositions(hiddenPositions, filterStatuses),
@@ -96,7 +106,9 @@ export const PoolsTab = memo(function PoolsTabInner({
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} width="100%">
-      <PositionStatusFilter value={statusFilter} onChange={setStatusFilter} disabled={hasErrorWithoutData} />
+      <Flex mb="$spacing8">
+        <PositionStatusFilter value={statusFilter} onChange={setStatusFilter} disabled={hasErrorWithoutData} />
+      </Flex>
 
       {hasErrorWithoutData ? (
         <BaseCard.ErrorState

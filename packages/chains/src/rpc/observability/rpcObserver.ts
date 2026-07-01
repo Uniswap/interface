@@ -8,7 +8,7 @@ export interface RpcRequestContext {
   params: unknown
   chainId: number
   url: string
-  transport: 'viem' | 'ethers' | 'solana'
+  transport: 'viem' | 'ethers' | 'solana' | 'wc'
 }
 
 export interface RpcResponseContext extends RpcRequestContext {

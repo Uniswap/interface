@@ -49,12 +49,12 @@ export function HomeScreenEarningSection({
     if (positionsQuery.isPlaceholderData) {
       return acc
     }
-    positionsQuery.data?.positions.forEach((dataApiPosition) => {
-      if (!dataApiPosition.vault) {
+    positionsQuery.data?.positions.forEach((plainPosition) => {
+      if (!plainPosition.vault) {
         return
       }
-      const vault = getEarnVaultInfo(dataApiPosition.vault)
-      const position = getEarnPositionInfo(dataApiPosition)
+      const vault = getEarnVaultInfo(plainPosition.vault)
+      const position = getEarnPositionInfo(plainPosition)
       if (!vault || !position || !hasEarnPosition(position)) {
         return
       }

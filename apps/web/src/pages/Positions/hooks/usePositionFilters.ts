@@ -14,6 +14,7 @@ export interface UsePositionFiltersResult {
   toggleVersion: (version: ProtocolVersion) => void
   statusFilter: PositionStatus[]
   toggleStatus: (status: PositionStatus) => void
+  setStatusFilter: (statuses: PositionStatus[]) => void
 }
 
 export function usePositionFilters(): UsePositionFiltersResult {
@@ -36,5 +37,6 @@ export function usePositionFilters(): UsePositionFiltersResult {
     toggleVersion,
     statusFilter,
     toggleStatus,
+    setStatusFilter,
   }
 }

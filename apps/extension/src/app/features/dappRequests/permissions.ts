@@ -97,7 +97,7 @@ export function* handleRequestPermissions(request: RequestPermissionsRequest, se
     sendAnalyticsEvent(ExtensionEventName.DappConnect, {
       dappUrl: accountInfo?.dappUrl ?? extractBaseUrl(senderTabInfo.url),
       chainId: accountInfo?.chainId,
-      activeConnectedAddress: accountInfo?.activeAccount.address,
+      activeConnectedAddress: accountInfo?.connectedAddresses[0],
       connectedAddresses: accountInfo?.connectedAddresses ?? [],
     })
   } else {

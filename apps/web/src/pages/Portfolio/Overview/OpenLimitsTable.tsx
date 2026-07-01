@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useScrollbarStyles } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -127,9 +128,7 @@ const LimitActionCell = memo(function LimitActionCell({ order }: { order: Uniswa
 
   return (
     <Flex alignItems="flex-end">
-      <Text variant="body3" color="$neutral1">
-        {outputAmountInfo.value}
-      </Text>
+      <AnimatedNumber value={outputAmountInfo.value} textVariant="$body3" />
       <Text variant="body4" color="$neutral2">
         {tokenAmountText}
       </Text>

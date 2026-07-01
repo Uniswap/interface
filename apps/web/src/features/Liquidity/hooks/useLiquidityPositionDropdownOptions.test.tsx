@@ -18,9 +18,11 @@ vi.mock('~/state/hooks', async (importOriginal) => ({
   useAppDispatch: vi.fn(),
 }))
 
+const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }))
+
 vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-router')>()),
-  useNavigate: () => vi.fn(),
+  useNavigate: () => mockNavigate,
 }))
 
 vi.mock('~/hooks/useAccount', () => ({ useAccount: vi.fn() }))
@@ -95,5 +97,27 @@ describe('useLiquidityPositionDropdownOptions', () => {
     expect(labels).toContain('Remove liquidity')
     expect(labels).toContain('Pool info')
     expect(labels).toContain('Hide position')
+  })
+
+  it('navigates to a chain-qualified /migrate/v2 URL when migrating a V2 position', async () => {
+    const { result } = renderHook(() =>
+      useLiquidityPositionDropdownOptions({
+        liquidityPosition: buildPosition({
+          version: ProtocolVersion.V2,
+          status: PositionStatus.IN_RANGE,
+          chainId: UniverseChainId.Mainnet,
+          liquidityToken: { isToken: true, address: '0xpair' },
+        } as unknown as Partial<PositionInfo>),
+        showVisibilityOption: true,
+        isVisible: true,
+        readOnly: false,
+      }),
+    )
+
+    const migrateOption = result.current.find((option) => option.label === 'Migrate liquidity')
+    expect(migrateOption).toBeDefined()
+    await migrateOption?.onPress()
+
+    expect(mockNavigate).toHaveBeenCalledWith('/migrate/v2/ethereum/0xpair')
   })
 })

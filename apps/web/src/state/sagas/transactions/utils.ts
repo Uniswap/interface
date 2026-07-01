@@ -27,7 +27,10 @@ import {
   interfaceUpdateTransactionInfo,
   type TransactionsState,
 } from 'uniswap/src/features/transactions/slice'
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import {
+  TokenApprovalTransactionStep,
+  TokenApprovalWalletCallStep,
+} from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import type {
@@ -387,8 +390,12 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
   })
 }
 
-function getApprovalTransactionInfo(
-  approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
+export function getApprovalTransactionInfo(
+  approvalStep:
+    | TokenApprovalTransactionStep
+    | TokenApprovalWalletCallStep
+    | TokenRevocationTransactionStep
+    | Permit2TransactionStep,
 ): ApproveTransactionInfo {
   const pair = 'pair' in approvalStep ? approvalStep.pair : undefined
   const explicitTokenSymbol = 'tokenSymbol' in approvalStep ? approvalStep.tokenSymbol : undefined
@@ -530,6 +537,20 @@ export function* waitForBatch(batchId: string, step: TransactionStep): SagaGener
   }
 
   return finalized?.hash
+}
+
+// waitForBatch that also races a flow interrupt.
+export function* waitForBatchInterruptible(batchId: string, step: TransactionStep): SagaGenerator<string | undefined> {
+  const { interrupt, batchResult } = yield* race({
+    batchResult: call(waitForBatch, batchId, step),
+    interrupt: take(interruptTransactionFlow.type),
+  })
+
+  if (interrupt) {
+    throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+  }
+
+  return batchResult
 }
 
 async function getProvider(): Promise<Web3Provider> {

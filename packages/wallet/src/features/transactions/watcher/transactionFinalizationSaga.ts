@@ -1,7 +1,11 @@
 import { type ApolloClient, type NormalizedCacheObject } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { SharedQueryClient } from '@universe/api'
-import { Experiments, getExperimentValue, PrivateRpcProperties } from '@universe/gating'
+import {
+  DEFAULT_CALLDATA_HINTS_ENABLED,
+  DEFAULT_FLASHBOTS_ENABLED,
+  FLASHBOTS_DEFAULT_REFUND_PERCENT,
+} from '@universe/chains'
 import { BigNumber } from 'ethers'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -9,11 +13,6 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { findLocalGasStrategy, getGasPrice } from 'uniswap/src/features/gas/utils'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
-import {
-  DEFAULT_CALLDATA_HINTS_ENABLED,
-  DEFAULT_FLASHBOTS_ENABLED,
-  FLASHBOTS_DEFAULT_REFUND_PERCENT,
-} from 'uniswap/src/features/providers/FlashbotsCommon'
 import { MobileAppsFlyerEvents, SwapEventName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
@@ -250,23 +249,9 @@ function logSend(typeInfo: SendTokenTransactionInfo, chainId: UniverseChainId): 
 }
 
 export function logTransactionTimeout(transaction: TransactionDetails): void {
-  const flashbotsEnabled = getExperimentValue({
-    experiment: Experiments.PrivateRpc,
-    param: PrivateRpcProperties.FlashbotsEnabled,
-    defaultValue: DEFAULT_FLASHBOTS_ENABLED,
-  })
-
-  const flashbotsRefundPercent = getExperimentValue({
-    experiment: Experiments.PrivateRpc,
-    param: PrivateRpcProperties.RefundPercent,
-    defaultValue: FLASHBOTS_DEFAULT_REFUND_PERCENT,
-  })
-
-  const calldataHintsEnabled = getExperimentValue({
-    experiment: Experiments.PrivateRpc,
-    param: PrivateRpcProperties.CalldataHintsEnabled,
-    defaultValue: DEFAULT_CALLDATA_HINTS_ENABLED,
-  })
+  const flashbotsEnabled = DEFAULT_FLASHBOTS_ENABLED
+  const flashbotsRefundPercent = FLASHBOTS_DEFAULT_REFUND_PERCENT
+  const calldataHintsEnabled = DEFAULT_CALLDATA_HINTS_ENABLED
 
   sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
     use_flashbots: flashbotsEnabled,

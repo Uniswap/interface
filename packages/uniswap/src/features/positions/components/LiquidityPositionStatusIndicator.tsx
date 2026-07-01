@@ -4,7 +4,13 @@ import { Flex, Text } from 'ui/src'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
 import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 
-export function LiquidityPositionStatusIndicator({ status }: { status: PositionStatus }): JSX.Element | null {
+export function LiquidityPositionStatusIndicator({
+  status,
+  textVariant = 'body3',
+}: {
+  status: PositionStatus
+  textVariant?: 'body3' | 'body4'
+}): JSX.Element | null {
   const { t } = useTranslation()
   const config = lpStatusConfig[status]
 
@@ -15,7 +21,7 @@ export function LiquidityPositionStatusIndicator({ status }: { status: PositionS
   return (
     <Flex row gap="$spacing6" alignItems="center">
       <StatusIndicatorCircle color={config.color} />
-      <Text variant="body3" color={config.color}>
+      <Text variant={textVariant} color={config.color}>
         {t(config.i18nKey)}
       </Text>
     </Flex>

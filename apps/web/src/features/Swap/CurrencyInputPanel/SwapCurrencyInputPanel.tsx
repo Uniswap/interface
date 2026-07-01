@@ -9,6 +9,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -151,6 +152,7 @@ export function SwapCurrencyInputPanel({
           <Flex fill minWidth={0}>
             <SwapCurrencyInput
               className="token-amount-input"
+              testId={currencyField === CurrencyField.INPUT ? TestID.AmountInputIn : TestID.AmountInputOut}
               value={value}
               onUserInput={onUserInput}
               disabled={isInputDisabled}

@@ -1,27 +1,36 @@
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { DynamicConfigs, getDynamicConfigValue, SyncTransactionSubmissionChainIdsConfigKey } from '@universe/gating'
-import { call, put } from 'typed-redux-saga'
-import { AccountType } from 'uniswap/src/features/accounts/types'
+import { call, put, type SagaGenerator } from 'typed-redux-saga'
+import { AccountType, type SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { type SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import { SponsoredApprovalType } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type {
   SwapGasFeeEstimation,
+  UniswapXSponsoredApproval,
   ValidatedSwapTxContext,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { ApproveTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { Logger } from 'utilities/src/logger/logger'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
+import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
+  waitForUserOpConfirmation,
 } from 'wallet/src/features/transactions/swap/confirmation'
 import { type createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
@@ -96,6 +105,66 @@ function* executeApprovalStep(params: {
     throw new Error('Approval transaction failed')
   }
   return result.hash
+}
+
+function* executeApprovalUserOpStep(params: {
+  sponsoredApproval: Extract<UniswapXSponsoredApproval, { type: SponsoredApprovalType.UserOp }>
+  transactionService: TransactionService
+  account: SignerMnemonicAccountMeta
+  chainId: UniverseChainId
+  tokenAddress: string
+  analytics: SwapTradeBaseProperties
+  swapTxId?: string
+  onFailure: () => void
+}): SagaGenerator<void> {
+  const { sponsoredApproval, transactionService, account, chainId, tokenAddress, analytics, swapTxId } = params
+
+  const typeInfo: ApproveTransactionInfo = {
+    type: TransactionType.Approve,
+    tokenAddress,
+    spender: permit2Address(chainId),
+    swapTxId,
+  }
+
+  const analyticsBase = { transport: SponsoredApprovalType.UserOp, chain_id: chainId } as const
+  const requestedAt = Date.now()
+  sendAnalyticsEvent(SwapEventName.SponsoredApprovalRequested, analyticsBase)
+
+  try {
+    const { userOpHash } = yield* call([transactionService, transactionService.executeUserOp], {
+      userOp: sponsoredApproval.unsignedUserOperation,
+      account,
+      chainId,
+      typeInfo,
+      transactionOriginType: TransactionOriginType.Internal,
+      txId: createTransactionId(),
+      analytics,
+      options: { userSubmissionTimestampMs: Date.now(), isSmartWalletTransaction: true },
+      requestUniswapGasSponsorship: sponsoredApproval.gasSponsored,
+      paymasterServiceContext: sponsoredApproval.paymasterServiceContext,
+    })
+    sendAnalyticsEvent(SwapEventName.SponsoredApprovalSubmitted, {
+      ...analyticsBase,
+      duration_ms: Date.now() - requestedAt,
+    })
+
+    const { success } = yield* call(waitForUserOpConfirmation, { userOpHash })
+    if (!success) {
+      throw new Error('Sponsored approval userOp failed on-chain')
+    }
+    sendAnalyticsEvent(SwapEventName.SponsoredApprovalConfirmed, {
+      ...analyticsBase,
+      duration_ms: Date.now() - requestedAt,
+    })
+  } catch (error) {
+    sendAnalyticsEvent(SwapEventName.SponsoredApprovalFailed, {
+      ...analyticsBase,
+      reason: error instanceof Error ? error.message : 'unknown',
+      duration_ms: Date.now() - requestedAt,
+    })
+    yield* call(params.onFailure)
+    throw error
+  }
 }
 
 /**
@@ -198,12 +267,24 @@ export function createExecuteSwapSaga(
 
       const chainId = preSignedTransaction.chainId
       const submitViaPrivateRpc = preSignedTransaction.metadata.submitViaPrivateRpc
+
+      // Sponsored UniswapX approval over 4337 (wallet). Present only when the account is delegated and sponsorship was granted.
+      const sponsoredApprovalUserOp =
+        'sponsoredApproval' in swapTxContext && swapTxContext.sponsoredApproval?.type === SponsoredApprovalType.UserOp
+          ? {
+              data: swapTxContext.sponsoredApproval,
+              tokenAddress: swapTxContext.trade.inputAmount.currency.wrapped.address,
+            }
+          : undefined
+
       const { transactionService } = yield* call(createTransactionServices, dependencies, {
         account,
         chainId,
         submitViaPrivateRpc,
         delegationType: swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto,
         request: 'txRequests' in swapTxContext ? swapTxContext.txRequests?.[0] : undefined,
+        // The 4337 approval path needs the userOp signer/paymaster services on the TransactionService.
+        includeUserOpServices: !!sponsoredApprovalUserOp,
       })
 
       // Create base context for transaction factory
@@ -234,16 +315,31 @@ export function createExecuteSwapSaga(
 
       const gasFeeEstimation = swapTxContext.gasFeeEstimation
 
-      // Execute approval transaction if needed
-      const approveTxHash = yield* executeApprovalStep({
-        preSignedTransaction,
-        factory,
-        executor,
-        gasFeeEstimation,
-        shouldWait,
-        swapTxId: txId,
-        onFailure,
-      })
+      // Execute approval if needed. Sponsored 4337 approvals run as a UserOp and block here until confirmed;
+      // the on-chain approval returns a hash the order submission waits on. They're mutually exclusive.
+      let approveTxHash: string | undefined
+      if (sponsoredApprovalUserOp) {
+        yield* call(executeApprovalUserOpStep, {
+          sponsoredApproval: sponsoredApprovalUserOp.data,
+          transactionService,
+          account,
+          chainId,
+          tokenAddress: sponsoredApprovalUserOp.tokenAddress,
+          analytics,
+          swapTxId: txId,
+          onFailure,
+        })
+      } else {
+        approveTxHash = yield* executeApprovalStep({
+          preSignedTransaction,
+          factory,
+          executor,
+          gasFeeEstimation,
+          shouldWait,
+          swapTxId: txId,
+          onFailure,
+        })
+      }
 
       // Execute permit transaction if needed
       yield* executePermitStep({

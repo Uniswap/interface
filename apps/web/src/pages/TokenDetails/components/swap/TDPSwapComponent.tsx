@@ -162,6 +162,7 @@ export function TDPSwapComponent() {
         <UniswapContext.Provider value={uniswapContextOverride}>
           <Swap
             syncTabToUrl={false}
+            hideChart={true}
             initialInputChainId={swapCurrency.chainId}
             initialInputCurrency={initialInputCurrency}
             initialOutputCurrency={initialOutputCurrency}

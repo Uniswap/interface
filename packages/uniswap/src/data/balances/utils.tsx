@@ -1,4 +1,5 @@
-import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { type PlainMessage } from '@bufbuild/protobuf'
+import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -6,7 +7,7 @@ import { logger } from 'utilities/src/logger/logger'
  * Computes the total balances in USD per chain for telemetry purposes
  */
 export function calculateTotalBalancesUsdPerChainRest(
-  portfolioData: GetPortfolioResponse | undefined,
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined,
 ): Record<string, number> | undefined {
   if (!portfolioData?.portfolio?.balances) {
     return undefined

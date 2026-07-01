@@ -17,6 +17,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { getConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
+import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
 import { usePendingUniswapXOrders } from '~/state/transactions/hooks'
 import { OrderQueryResponse, UniswapXBackendOrder } from '~/types/uniswapx'
 
@@ -163,6 +164,7 @@ function updateOrders({
         txHash: txHash ?? '',
         transactionType: pendingOrder.typeInfo.type,
         routing: tradeRoutingToFillType({ routing: pendingOrder.routing, indicative: false }),
+        ...getRwaSwapAnalyticsFromTypeInfo(pendingOrder.typeInfo),
       })
     }
 

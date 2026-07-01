@@ -19,7 +19,7 @@ import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo
 import { useAuctionStore, useIsAuctionFailed } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { formatTokenAmountWithSymbol } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
-import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
+import { createDottedBackgroundStyles } from '~/utils/createDottedBackgroundStyles'
 
 const TRACK_WIDTH = 20
 const DOT_SIZE = 8

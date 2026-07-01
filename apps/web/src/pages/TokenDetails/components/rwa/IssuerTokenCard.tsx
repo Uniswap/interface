@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Flex, Separator, Text } from 'ui/src'
@@ -8,8 +9,11 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
 
 interface IssuerTokenCardProps {
@@ -38,11 +42,21 @@ export function IssuerTokenCard({ token, assetName, marketData }: IssuerTokenCar
   const { priceUsd, marketCapUsd, volume24hUsd } = marketData
   // Logo + symbol come from the token's own per-issuer RWA branding, not the shared RWA asset branding.
   const tokenSymbol = token.symbol
+  const hideNetworkLogo = (token.networkCount ?? 1) > 1
 
   const url = getTokenDetailsURL({ address: token.address, chainUrlParam: getChainInfo(token.chainId).urlParam })
 
+  const onClick = useEvent((): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.TDPRwaTokenVariant,
+      issuer: token.issuer,
+      token_address: token.address,
+      token_symbol: token.symbol,
+    })
+  })
+
   return (
-    <Link to={url} style={{ textDecoration: 'none', flex: 1, minWidth: 0 }}>
+    <Link to={url} style={{ textDecoration: 'none', flex: 1, minWidth: 0 }} onClick={onClick}>
       <Flex
         fill
         borderWidth={1}
@@ -55,7 +69,14 @@ export function IssuerTokenCard({ token, assetName, marketData }: IssuerTokenCar
       >
         <Flex row alignItems="center" justifyContent="space-between" gap="$gap12">
           <Flex row alignItems="center" gap="$gap12" flexShrink={1} minWidth={0}>
-            <TokenLogo url={token.logoUrl} symbol={token.symbol} name={token.name} size={iconSizes.icon36} />
+            <TokenLogo
+              url={token.logoUrl}
+              symbol={token.symbol}
+              name={token.name}
+              chainId={token.chainId}
+              size={iconSizes.icon36}
+              hideNetworkLogo={hideNetworkLogo}
+            />
             <Flex flexShrink={1} minWidth={0}>
               <Flex row alignItems="baseline" gap="$gap8">
                 <Text variant="body2" color="$neutral1" numberOfLines={1}>

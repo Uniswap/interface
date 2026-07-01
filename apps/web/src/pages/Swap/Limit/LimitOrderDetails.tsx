@@ -5,6 +5,7 @@ import { Button, Flex, Separator, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
@@ -130,7 +131,7 @@ export function LimitOrderDetails({
           >
             <Button
               variant="branded"
-              data-testid="confirm-swap-button"
+              data-testid={TestID.ConfirmSwapButton}
               loading={isLoading}
               onPress={onConfirm}
               isDisabled={disabledConfirm}

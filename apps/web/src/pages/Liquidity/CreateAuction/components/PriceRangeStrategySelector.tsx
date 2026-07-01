@@ -8,7 +8,6 @@ import {
   type CustomPriceRangePreset,
   PriceRangeStrategy,
 } from '~/pages/Liquidity/CreateAuction/types'
-import { getRecommendedStrategy } from '~/pages/Liquidity/CreateAuction/utils'
 
 interface PriceRangeStrategySelectorProps {
   selectedStrategy: PriceRangeStrategy
@@ -35,8 +34,6 @@ export function PriceRangeStrategySelector({
   onRemoveCustomPriceRange,
 }: PriceRangeStrategySelectorProps) {
   const { t } = useTranslation()
-  const recommendedStrategy = getRecommendedStrategy()
-  const isRecommended = selectedStrategy === recommendedStrategy
 
   const title = (() => {
     if (selectedStrategy === PriceRangeStrategy.CONCENTRATED_FULL_RANGE) {
@@ -73,13 +70,6 @@ export function PriceRangeStrategySelector({
             <Text variant="subheading2" color="$neutral1">
               {title}
             </Text>
-            {isRecommended && (
-              <Flex backgroundColor="$surface3" borderRadius="$rounded6" px="$spacing6" py="$spacing2">
-                <Text variant="buttonLabel4" color="$neutral1">
-                  {t('toucan.createAuction.step.customizePool.priceRange.recommended')}
-                </Text>
-              </Flex>
-            )}
           </Flex>
           <Text variant="body3" color="$neutral2">
             {description}

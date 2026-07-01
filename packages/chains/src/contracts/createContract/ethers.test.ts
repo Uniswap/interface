@@ -1,7 +1,9 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BigNumber } from '@ethersproject/bignumber'
+import { JsonRpcProvider, type JsonRpcSigner } from '@ethersproject/providers'
 import { encodeFunctionResult } from 'viem'
 import { describe, expect, it, vi } from 'vitest'
 import { feeOnTransferDetectorAbi } from '../../abis/feeOnTransferDetectorAbi'
+import { wethAbi } from '../../abis/wethAbi'
 import { createEthersContract } from './ethers'
 
 // Fixture matched 1:1 with viem tests. Both tests decode the same
@@ -49,5 +51,60 @@ describe('createEthersContract — simulate', () => {
     })
     const { result } = await contract.simulate.batchValidate([[tokenA, tokenB], baseToken, amount])
     expect(result).toEqual(expectedFees)
+  })
+})
+
+describe('createEthersContract — write', () => {
+  const txHash = `0x${'34'.repeat(32)}`
+  const signerAddress = '0xCD2A3d9F938E13CD947Ec05Abc7FE734DF8DD826' as const
+
+  function makeWethWriteContract() {
+    const sendTransaction = vi.fn(async () => ({ hash: txHash, wait: vi.fn() }))
+    // The seam builds writes through an unchecked signer; return the same mock
+    // from `connectUnchecked` so `sendTransaction` stays the spy that's called.
+    const connectUnchecked = vi.fn()
+    // Duck-typed: ethers' `Signer.isSigner` only checks `_isSigner`.
+    const signer = {
+      _isSigner: true,
+      sendTransaction,
+      getAddress: async () => signerAddress,
+      connectUnchecked,
+    } as unknown as JsonRpcSigner
+    connectUnchecked.mockReturnValue(signer)
+    const contract = createEthersContract({
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+      abi: wethAbi,
+      provider: makeMockProvider(),
+      signer,
+      signerAddress,
+    })
+    return { contract, sendTransaction, connectUnchecked }
+  }
+
+  it('forwards viem-convention options to ethers as overrides', async () => {
+    const { contract, sendTransaction, connectUnchecked } = makeWethWriteContract()
+    const hash = await contract.write.deposit({ value: 123n })
+    expect(hash).toBe(txHash)
+    // Writes must use the unchecked signer (no post-broadcast getTransaction poll).
+    expect(connectUnchecked).toHaveBeenCalled()
+    expect(sendTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        // deposit() selector
+        data: '0xd0e30db0',
+        value: BigNumber.from(123),
+      }),
+    )
+  })
+
+  // `chain`/`account` are per-call overrides only the viem engine honors
+  it('throws on the viem-only chain/account overrides without sending', async () => {
+    const { contract, sendTransaction } = makeWethWriteContract()
+    await expect(contract.write.deposit({ value: 123n, chain: null })).rejects.toThrow(
+      /doesn't support some write overrides/,
+    )
+    await expect(contract.write.withdraw([1n], { account: signerAddress })).rejects.toThrow(
+      /doesn't support some write overrides/,
+    )
+    expect(sendTransaction).not.toHaveBeenCalled()
   })
 })

@@ -3,6 +3,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { SharedQueryClient } from '@universe/api'
 import { type PropsWithChildren } from 'react'
 import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
+import { jsonParse, jsonStringify } from 'utilities/src/serialization/json'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 const persistOptions: React.ComponentProps<typeof PersistQueryClientProvider>['persistOptions'] = {
@@ -11,7 +12,8 @@ const persistOptions: React.ComponentProps<typeof PersistQueryClientProvider>['p
   // any data from the old regime so users start fresh under the new rules.
   buster: 'v1',
   maxAge: MAX_REACT_QUERY_CACHE_TIME_MS,
-  persister: createSyncStoragePersister({ storage: localStorage }),
+  // Match the web/native persisters: BigInt-aware (de)serialization via the `__bigint__:` prefix.
+  persister: createSyncStoragePersister({ storage: localStorage, serialize: jsonStringify, deserialize: jsonParse }),
   dehydrateOptions: sharedDehydrateOptions,
 }
 

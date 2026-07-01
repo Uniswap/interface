@@ -23,7 +23,10 @@ import {
   WalletAppsAccountsData,
 } from 'wallet/src/features/accounts/store/types'
 import { buildSmartWalletCapabilities } from 'wallet/src/features/batchedTransactions/utils'
-import { useGetSwapDelegationInfoForActiveAccount } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import {
+  useGetSwapDelegationInfoForActiveAccount,
+  useWalletDelegationContext,
+} from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import {
   Account as ReduxAccount,
   SignerMnemonicAccount as ReduxSignerMnemonicAccount,
@@ -196,6 +199,9 @@ function useCAIP25Session(activeAddress?: string): CAIP25Session {
   const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
   const is7677GasSponsorshipEnabled = useFeatureFlag(FeatureFlags.Support7677GasSponsorship)
 
+  const { delegationDataQuery } = useWalletDelegationContext()
+  const delegationData = delegationDataQuery.data
+
   return useMemo(() => {
     // 1. Create default scope
     const defaultScope = {
@@ -255,5 +261,6 @@ function useCAIP25Session(activeAddress?: string): CAIP25Session {
         },
       },
     }
-  }, [activeAddress, enabledChains, getSwapDelegationInfo, is7677GasSponsorshipEnabled])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Trigger memo rebuild on delegationData changes
+  }, [activeAddress, enabledChains, getSwapDelegationInfo, is7677GasSponsorshipEnabled, delegationData])
 }

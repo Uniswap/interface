@@ -7,7 +7,10 @@ import type { CollectLpIncentiveRewardsSteps } from 'uniswap/src/features/transa
 import type { DecreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/decreaseLiquiditySteps'
 import type { IncreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/increaseLiquiditySteps'
 import type { MigrationSteps } from 'uniswap/src/features/transactions/liquidity/steps/migrationSteps'
-import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import type {
+  TokenApprovalTransactionStep,
+  TokenApprovalWalletCallStep,
+} from 'uniswap/src/features/transactions/steps/approve'
 import type { SignTypedDataStepFields } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
@@ -30,6 +33,8 @@ import type { ValidatedTransactionRequest } from 'uniswap/src/features/transacti
 
 export enum TransactionStepType {
   TokenApprovalTransaction = 'TokenApproval',
+  TokenApprovalWalletCall = 'TokenApprovalWalletCall', // web (5792)
+  TokenApprovalUserOp = 'TokenApprovalUserOp', // wallet (4337)
   TokenRevocationTransaction = 'TokenRevocation',
   SwapTransaction = 'SwapTransaction',
   SwapTransactionAsync = 'SwapTransactionAsync',
@@ -157,6 +162,12 @@ export interface HandleSwapWalletCallStepParams extends Omit<HandleOnChainStepPa
   trade: ClassicTrade | BridgeTrade | ChainedActionTrade
   analytics: PlanSagaAnalytics
   disableOneClickSwap: () => void
+}
+
+// Sponsored approval over 5792 (web)
+export interface HandleApprovalWalletCallStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
+  step: TokenApprovalWalletCallStep
+  disableOneClickSwap?: () => void
 }
 export interface HandleUniswapXPlanSignatureStepParams extends HandleSignatureStepParams<UniswapXPlanSignatureStep> {
   analytics: PlanSagaAnalytics

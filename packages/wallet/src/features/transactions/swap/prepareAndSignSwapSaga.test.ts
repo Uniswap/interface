@@ -32,23 +32,6 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 // Mock dependencies
 jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
 
-const mockPrivateRpcFlag = jest.fn().mockReturnValue(true)
-
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  getStatsigClient: jest.fn(() => ({
-    checkGate: jest.fn().mockImplementation((flagName: string) => {
-      if (flagName === 'mev-blocker') {
-        return mockPrivateRpcFlag()
-      }
-      return false // Default for other flags
-    }),
-    getLayer: jest.fn(() => ({
-      get: jest.fn(() => false),
-    })),
-  })),
-}))
-
 const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
 
@@ -122,7 +105,6 @@ describe('prepareAndSignSwapSaga', () => {
     mockTransactionService.getNextNonce.mockResolvedValue({ nonce: 1 })
     mockTransactionService.prepareAndSignTransaction.mockResolvedValue(mockSignedTransactionRequest)
     mockTransactionSigner.signTypedData.mockResolvedValue('0xsignedTypedData')
-    mockPrivateRpcFlag.mockReturnValue(true)
   })
 
   describe('Classic routing', () => {
@@ -629,24 +611,19 @@ describe('shouldSubmitViaPrivateRpc', () => {
     expect(result.returnValue).toBe(false)
   })
 
-  it('should return false when privateRpcFeatureEnabled is false', async () => {
-    mockPrivateRpcFlag.mockReturnValue(false)
-
-    const result = await expectSaga(shouldSubmitViaPrivateRpc, chainId)
-      .provide([
-        [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On],
-        [call(isPrivateRpcSupportedOnChain, chainId), true],
-      ])
-      .run()
-    expect(result.returnValue).toBe(false)
-  })
-
   it('should return false when privateRpcSupportedOnChain is false', async () => {
     const result = await expectSaga(shouldSubmitViaPrivateRpc, chainId)
       .provide([
         [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On],
         [call(isPrivateRpcSupportedOnChain, chainId), false],
       ])
+      .run()
+    expect(result.returnValue).toBe(false)
+  })
+
+  it('should return false when chainId is falsy', async () => {
+    const result = await expectSaga(shouldSubmitViaPrivateRpc, 0)
+      .provide([[select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On]])
       .run()
     expect(result.returnValue).toBe(false)
   })

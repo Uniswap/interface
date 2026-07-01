@@ -1,7 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import ms from 'ms'
 import { useMemo } from 'react'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenContract } from '~/hooks/useContract'
+import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useReadContracts } from 'wagmi'
+import { erc20Abi } from '~/chains'
+import { assume0xAddress } from '~/utils/wagmi'
 
 interface TokenMetadata {
   name?: string
@@ -25,51 +27,35 @@ export function useTokenInfoFromContract(
   loading: boolean
   error: Error | null
 } {
-  const tokenContract = useTokenContract({
-    tokenAddress,
-    withSignerIfPossible: false,
-    chainId,
+  const enabled = Boolean(tokenAddress && chainId)
+  const address = assume0xAddress(tokenAddress)
+  // ERC20 metadata only exists on EVM chains; narrow.
+  // We don't support/consider Solana (metadata).
+  const evmChainId = chainId as EVMUniverseChainId | undefined
+
+  const { data, isLoading, error } = useReadContracts({
+    contracts: [
+      { address, chainId: evmChainId, abi: erc20Abi, functionName: 'name' },
+      { address, chainId: evmChainId, abi: erc20Abi, functionName: 'symbol' },
+      { address, chainId: evmChainId, abi: erc20Abi, functionName: 'decimals' },
+    ],
+    // Token metadata rarely changes; cache and retry failures.
+    query: { enabled, staleTime: ms('1hr'), retry: 2 },
   })
 
-  const {
-    data: tokenMetadata,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: [chainId, tokenAddress],
-    queryFn: async (): Promise<TokenMetadata> => {
-      if (!tokenContract) {
-        throw new Error('Token contract not available')
-      }
-
-      try {
-        // Fetch all token metadata in parallel
-        const [name, symbol, decimals] = await Promise.all([
-          tokenContract.name(),
-          tokenContract.symbol(),
-          tokenContract.decimals(),
-        ])
-
-        return {
-          name,
-          symbol,
-          decimals,
+  return useMemo(() => {
+    const tokenMetadata: TokenMetadata | undefined = data
+      ? {
+          name: data[0].result,
+          symbol: data[1].result,
+          decimals: data[2].result,
         }
-      } catch (err) {
-        throw new Error(`Failed to fetch token metadata: ${err instanceof Error ? err.message : 'Unknown error'}`)
-      }
-    },
-    enabled: Boolean(tokenContract && tokenAddress && chainId),
-    staleTime: 1000 * 60 * 60, // 1 hour - token metadata rarely changes
-    retry: 2,
-  })
+      : undefined
 
-  return useMemo(
-    () => ({
+    return {
       tokenMetadata,
       loading: isLoading,
-      error: error as Error | null,
-    }),
-    [tokenMetadata, isLoading, error],
-  )
+      error: (error as Error | null) ?? null,
+    }
+  }, [data, isLoading, error])
 }

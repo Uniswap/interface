@@ -1,5 +1,6 @@
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, ZKSYNC_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -30,6 +31,7 @@ export const ZKSYNC_CHAIN_INFO = {
   ...zksync,
   id: UniverseChainId.Zksync,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'zksync',
   backendChain: {
     chain: GraphQLApi.Chain.Zksync as GqlChainId,

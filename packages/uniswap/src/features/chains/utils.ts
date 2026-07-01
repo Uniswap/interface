@@ -1,6 +1,7 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { AppId, getConfig } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ALL_CHAIN_IDS, getChainInfo, ORDERED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -222,6 +223,14 @@ export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
   })
 }
 
+export function isChainSupportedOnApp(chainId: UniverseChainId, appId: AppId): boolean {
+  return getChainInfo(chainId).supportedApps.includes(appId)
+}
+
+export function filterChainIdsByAppSupport(chainIds: UniverseChainId[], appId: AppId): UniverseChainId[] {
+  return chainIds.filter((chainId) => isChainSupportedOnApp(chainId, appId))
+}
+
 /**
  * Filters chain IDs by platform (EVM or SVM)
  * @param chainIds Array of chain IDs to filter (as numbers)
@@ -247,13 +256,21 @@ export function getEnabledChains({
   includeTestnets = false,
   isTestnetModeEnabled,
   featureFlaggedChainIds,
+  appId = getConfig().appId,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
   includeTestnets?: boolean
+  /** Override for tests; defaults to the running app's AppId. */
+  appId?: AppId
 }): EnabledChainsInfo {
   const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
+    // Filter by app support (structural — not a feature flag concern)
+    if (!chainInfo.supportedApps.includes(appId)) {
+      return false
+    }
+
     // Filter by platform
     if (platform !== undefined && platform !== chainInfo.platform) {
       return false

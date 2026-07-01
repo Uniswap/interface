@@ -21,7 +21,7 @@ export function useExpandableAssetTableExpandableRow(): {
     if (row.original.type === 'issuer') {
       return (
         <IssuerTableRowHoverProvider
-          alignColumnsWithParentRow
+          alignColumnsWithParentRow={row.depth > 0}
           hoverStyle={{ backgroundColor: '$surface1Hovered' }}
           onPress={(event) => {
             event.stopPropagation()

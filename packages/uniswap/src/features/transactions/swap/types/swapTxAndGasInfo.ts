@@ -38,6 +38,12 @@ export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxCon
   return validateSwapTxContext(swapTxContext) !== undefined
 }
 
+export function isSponsorableSwap(
+  swapTxContext: SwapTxAndGasInfo,
+): swapTxContext is ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo | BridgeSwapTxAndGasInfo | WrapSwapTxAndGasInfo {
+  return Boolean(swapTxContext.trade?.quote && 'sponsorshipInfo' in swapTxContext.trade.quote)
+}
+
 export type SwapGasFeeEstimation = {
   swapEstimate?: GasEstimate
   approvalEstimate?: GasEstimate
@@ -109,11 +115,34 @@ export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
 }
 
+export enum SponsoredApprovalType {
+  WalletCall = 'WalletCall', // web (5792)
+  UserOp = 'UserOp', // wallet (4337)
+}
+
+// A granted sponsored approval. Definitive non-delivery is surfaced as a SponsoredApprovalRejectedError on
+// gasFee.error (blocks the swap + shows a warning) rather than carried here.
+export type UniswapXSponsoredApproval =
+  | {
+      type: SponsoredApprovalType.WalletCall
+      walletCallTxRequests: PopulatedTransactionRequestArray
+      paymasterService: Partial<TradingApi.PaymasterServiceCapability>
+    }
+  | {
+      type: SponsoredApprovalType.UserOp
+      unsignedUserOperation: RpcUserOperation<'0.8'>
+      gasSponsored: boolean
+      paymasterServiceContext?: TradingApi.PaymasterServiceContext
+    }
+
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
   trade: UniswapXTrade
   permit: PermitTypedData | undefined
   gasFeeBreakdown: UniswapXGasBreakdown
+  sponsoredApproval?: UniswapXSponsoredApproval
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>
+  requestUniswapGasSponsorship?: boolean
 }
 
 export interface BridgeSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
@@ -235,11 +264,19 @@ export type ValidatedBridgeSwapTxAndGasInfo = Prettify<
 >
 
 export type ValidatedUniswapXSwapTxAndGasInfo = Prettify<
-  Required<Omit<UniswapXSwapTxAndGasInfo, 'includesDelegation'>> &
+  Required<
+    Omit<
+      UniswapXSwapTxAndGasInfo,
+      'includesDelegation' | 'sponsoredApproval' | 'paymasterService' | 'requestUniswapGasSponsorship'
+    >
+  > &
     BaseRequiredSwapTxContextFields & {
       // Permit should always be defined for UniswapX orders
       permit: PermitTypedData
-    } & Pick<UniswapXSwapTxAndGasInfo, 'includesDelegation'>
+    } & Pick<
+      UniswapXSwapTxAndGasInfo,
+      'includesDelegation' | 'sponsoredApproval' | 'paymasterService' | 'requestUniswapGasSponsorship'
+    >
 >
 
 export type ValidatedSolanaSwapTxAndGasInfo = Prettify<

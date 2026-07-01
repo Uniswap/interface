@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Coachmark, Flex, Text, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -113,9 +114,14 @@ export function PortfolioBalanceHeader({
             text={t('portfolio.poolsBalance.coachmark.body')}
             testID={TestID.PoolsBalanceCoachmark}
           >
-            <Text variant="heading2" color={isPortfolioZero ? '$neutral3' : '$neutral1'}>
-              {convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
-            </Text>
+            <AnimatedNumber
+              value={convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
+              numericValue={balance}
+              loading={isLoading}
+              textVariant="$heading2"
+              color={isPortfolioZero ? '$neutral3' : '$neutral1'}
+              disableAnimations={isHovering}
+            />
           </Coachmark>
         </BalanceBreakdownPopover>
         {isTotalCategory && poolsUnavailable && <PoolsUnavailableIndicator />}

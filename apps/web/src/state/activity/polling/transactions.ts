@@ -19,6 +19,7 @@ import { useCurrentBlockTimestamp } from '~/hooks/useCurrentBlockTimestamp'
 import { useBlockNumber } from '~/lib/hooks/useBlockNumber'
 import { CanceledError, RetryableError, retry } from '~/state/activity/polling/retry'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
+import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
 import { useAppDispatch } from '~/state/hooks'
 import { useMultichainTransactions, useTransactionRemover } from '~/state/transactions/hooks'
 import { PendingTransactionDetails } from '~/state/transactions/types'
@@ -117,6 +118,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               txHash: tx.hash ?? '',
               transactionType: tx.typeInfo.type,
               routing: 'classic',
+              ...getRwaSwapAnalyticsFromTypeInfo(tx.typeInfo),
             })
 
             let adaptedReceipt: TransactionReceipt | undefined

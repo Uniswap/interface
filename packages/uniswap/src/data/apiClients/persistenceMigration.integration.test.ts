@@ -16,10 +16,14 @@
  *   - The `hydrate()` step actually restoring the data we expect
  */
 
+import { PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { dehydrate, hydrate, QueryClient } from '@tanstack/react-query'
 import { type PersistedClient } from '@tanstack/react-query-persist-client'
+import { ListPositionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { createPersister } from 'uniswap/src/data/apiClients/createPersister.web'
 import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
@@ -36,17 +40,21 @@ vi.mock('idb-keyval', () => ({
   }),
 }))
 
-// Mock env so the dev-guard branch is exercised without depending on NODE_ENV.
-vi.mock('@universe/environment', () => ({
+// Force the dev-guard branch on without depending on NODE_ENV; keep all other
+// real exports (parseRestPosition's transitive deps use isWebApp, etc.).
+vi.mock('@universe/environment', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/environment')>()),
   isDevEnv: () => true,
   isTestEnv: () => false,
 }))
 
-// Mock the logger so warnings don't pollute output.
+// Mock the logger so warnings/errors don't pollute output.
 const loggerWarnMock = vi.fn()
+const loggerErrorMock = vi.fn()
 vi.mock('utilities/src/logger/logger', () => ({
   logger: {
     warn: (...args: unknown[]) => loggerWarnMock(...args),
+    error: (...args: unknown[]) => loggerErrorMock(...args),
   },
 }))
 
@@ -81,7 +89,46 @@ describe('persistence migration integration (dehydrate → persist → restore �
   beforeEach(() => {
     mockStorage = new Map<string, string>()
     loggerWarnMock.mockReset()
+    loggerErrorMock.mockReset()
   })
+
+  // Builds a real v3 Position with a oneof set and a numeric enum status — the
+  // exact shape that breaks under raw JSON serialization (oneof flattens, enum
+  // stringifies). chainId/address must be non-default for parseRestPosition to parse.
+  function buildV3Position(): Position {
+    const token = (address: string, symbol: string): Record<string, unknown> => ({
+      chainId: 1,
+      address,
+      decimals: 18,
+      symbol,
+      name: symbol,
+    })
+    return new Position({
+      status: PositionStatus.IN_RANGE,
+      valueUsd: 1000,
+      position: {
+        case: 'v3Position',
+        value: {
+          token0: token('0x1111111111111111111111111111111111111111', 'AAA'),
+          token1: token('0x2222222222222222222222222222222222222222', 'BBB'),
+          feeTier: '3000',
+          currentPrice: '79228162514264337593543950336',
+          currentLiquidity: '1000',
+          currentTick: '0',
+          tickSpacing: '60',
+          tickLower: '-120',
+          tickUpper: '120',
+          liquidity: '1000',
+          tokenId: '1',
+          poolId: '0xpool',
+          token0UncollectedFees: '0',
+          token1UncollectedFees: '0',
+          amount0: '500',
+          amount1: '500',
+        },
+      },
+    })
+  }
 
   /**
    * Asserts the allowlist semantics: a query tagged via persistableQueryOptions
@@ -396,5 +443,63 @@ describe('persistence migration integration (dehydrate → persist → restore �
     // But method access does NOT survive — this is the known limitation that
     // motivates `toPlainMessage(...)` inside queryFns (e.g., `getNotificationQueryOptions`).
     expect(typeof (rehydrated as unknown as FakeProtoMessage).getTotalBalance).not.toBe('function')
+  })
+
+  it('toPlainMessage-converted protobuf survives the round-trip: oneof case and numeric enum intact, parseRestPosition parses it', async () => {
+    // The durable fix: queryFns convert via toPlainMessage before caching, so the
+    // value is a plain object that round-trips faithfully — unlike a raw Message,
+    // whose toJSON() emits wire format (oneof flattens, enums stringify).
+    const client = new QueryClient()
+    const queryKey = [ReactQueryCacheKey.ListPositions, {}] as const
+
+    const plain = toPlainMessage(new ListPositionsResponse({ positions: [buildV3Position()] }))
+    primeQuery(client, { queryKey, meta: { persist: true } }, plain)
+
+    const persister = createPersister('test-plain-protobuf-key')
+    const dehydrated = dehydrate(client, {
+      shouldDehydrateQuery: sharedDehydrateOptions!.shouldDehydrateQuery!,
+    })
+    // Converted data passes the tripwire (no raw Message) and persists.
+    expect(dehydrated.queries).toHaveLength(1)
+    expect(loggerErrorMock).not.toHaveBeenCalled()
+
+    await persister.persistClient({ timestamp: Date.now(), buster: 'v1', clientState: dehydrated })
+    const restored = await persister.restoreClient()
+    const hydratedClient = new QueryClient()
+    hydrate(hydratedClient, restored!.clientState)
+
+    const data = hydratedClient.getQueryData<PlainMessage<ListPositionsResponse>>(queryKey)
+    const restoredPosition = data!.positions[0]!
+
+    // oneof preserved as { case, value } (NOT flattened to a top-level key).
+    expect(restoredPosition.position.case).toBe('v3Position')
+    // enum preserved as a number (NOT the wire-format string).
+    expect(restoredPosition.status).toBe(PositionStatus.IN_RANGE)
+    expect(typeof restoredPosition.status).toBe('number')
+
+    // The consumer that broke on restore now parses the restored value.
+    const parsed = parseRestPosition(restoredPosition)
+    expect(parsed?.version).toBe(ProtocolVersion.V3)
+  })
+
+  it('tripwire: a raw protobuf Message is rejected at dehydrate and logs an error', () => {
+    const client = new QueryClient()
+    const queryKey = [ReactQueryCacheKey.ListPositions, 'raw'] as const
+
+    // Raw (unconverted) Message — what a queryFn missing toPlainMessage would cache.
+    primeQuery(
+      client,
+      { queryKey, meta: { persist: true } },
+      new ListPositionsResponse({ positions: [buildV3Position()] }),
+    )
+
+    const dehydrated = dehydrate(client, {
+      shouldDehydrateQuery: sharedDehydrateOptions!.shouldDehydrateQuery!,
+    })
+
+    expect(dehydrated.queries).toHaveLength(0)
+    expect(loggerErrorMock).toHaveBeenCalledOnce()
+    const [error] = loggerErrorMock.mock.calls[0] as [Error]
+    expect(error.message).toContain(ListPositionsResponse.typeName)
   })
 })

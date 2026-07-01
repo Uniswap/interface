@@ -43,7 +43,7 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
 
   const {
     auctionDetails,
-    checkpointData,
+    totalCleared,
     tokenColor,
     concentrationBand,
     chartZoomStates,
@@ -51,7 +51,7 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
     tickDetails,
   } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
-    checkpointData: state.checkpointData,
+    totalCleared: state.totalCleared,
     tokenColor: state.tokenColor,
     concentrationBand: state.concentrationBand,
     chartZoomStates: state.chartZoomStates,
@@ -65,7 +65,7 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
   // Calculate progress as fraction of tokens cleared (totalCleared / auctionAmount)
   const progressPercentage = computeTotalClearedFraction({
-    totalCleared: checkpointData?.totalCleared,
+    totalCleared: totalCleared ?? undefined,
     auctionAmount: auctionDetails?.amount,
   })
   const percentSoldLabel = useMemo(() => formatPercent(progressPercentage * 100), [formatPercent, progressPercentage])

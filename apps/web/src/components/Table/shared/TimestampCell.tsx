@@ -1,6 +1,5 @@
-import { Anchor, styled } from 'ui/src'
+import { Anchor, styled, Text } from 'ui/src'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { TableText } from '~/components/Table/shared/TableText'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -54,7 +53,7 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <TableText>{abbreviatedTime}</TableText>
+        <Text variant="body2">{abbreviatedTime}</Text>
       </MouseoverTooltip>
     </StyledTimestampRow>
   )

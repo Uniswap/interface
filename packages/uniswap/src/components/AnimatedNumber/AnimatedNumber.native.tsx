@@ -2,7 +2,7 @@
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Platform } from 'react-native'
-import type { LayoutChangeEvent, TextStyle, ViewStyle } from 'react-native'
+import type { LayoutChangeEvent, TextStyle } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,18 +11,36 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { Flex, Shine, Text, TextLoaderWrapper, useSporeColors } from 'ui/src'
+import { getTextVariantKey, type ResolvedFontStyle, type TextVariantKey } from 'ui/src/theme'
 import { fonts } from 'ui/src/theme'
-import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient'
+import type { AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import { useBalanceChangeIndication } from 'uniswap/src/components/AnimatedNumber/hooks/useBalanceChangeIndication'
+import { useResolvedAnimatedNumberColors } from 'uniswap/src/components/AnimatedNumber/hooks/useResolvedAnimatedNumberColors'
+import { AnimatedCharStyles } from 'uniswap/src/components/AnimatedNumber/styles'
+import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
+import { isDigitChar } from 'uniswap/src/components/AnimatedNumber/utils/computeCharsSizes'
+import { getAnimatedNumberCharKey } from 'uniswap/src/components/AnimatedNumber/utils/getAnimatedNumberCharKey'
+import { getAnimatedNumberVariantMetrics } from 'uniswap/src/components/AnimatedNumber/utils/getAnimatedNumberVariantMetrics'
+import { getCharBaseColor } from 'uniswap/src/components/AnimatedNumber/utils/getCharDisplayColor'
+import { splitValueIntoChars } from 'uniswap/src/components/AnimatedNumber/utils/splitValueIntoChars'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-export const AnimatedCharStyles = {
-  wrapperStyle: {
-    overflow: 'hidden',
-  } satisfies ViewStyle,
-}
+export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+export const DIGIT_HEIGHT = 40
+export const DIGIT_MAX_WIDTH = 29
+export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
+
+// Native-specific duration for balance change color indication
+export const BALANCE_CHANGE_INDICATION_DURATION = ONE_SECOND_MS * 2
+
+const CHAR_SPACE_SIZE = 2
+
+// Extra breathing room added to each tabular digit cell so glyphs are not visually cramped.
+// Mirrors the web implementation (CharCell) so both platforms size digits identically.
+const DIGIT_CELL_PADDING_RATIO = 1 / 10
 
 const AnimatedFontStyles = {
   fontStyle: {
@@ -53,20 +71,45 @@ const StaticNumberStyles = {
   } satisfies TextStyle,
 }
 
-// Native-specific duration for balance change color indication
-export const BALANCE_CHANGE_INDICATION_DURATION = ONE_SECOND_MS * 2
+/** Fixed (tabular) width for a single digit cell so layout stays deterministic across digit changes. */
+function getDigitCellWidth(maxDigitWidthScaled: number): number {
+  return maxDigitWidthScaled + maxDigitWidthScaled * DIGIT_CELL_PADDING_RATIO
+}
 
-export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
-const SPACE_SIZE = 2
-export const DIGIT_HEIGHT = 40 // matches heading2 lineHeight
-export const DIGIT_MAX_WIDTH = 29
-export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
+function useDigitTextStyle({
+  variantFont,
+  digitHeight,
+  useHeadingTypography,
+}: {
+  variantFont: ResolvedFontStyle
+  digitHeight: number
+  useHeadingTypography: boolean
+}): TextStyle {
+  return useMemo(
+    () => getNativeAnimatedDigitTextStyle({ variantFont, digitHeight, useHeadingTypography }),
+    [variantFont, digitHeight, useHeadingTypography],
+  )
+}
 
-// TODO: remove need to manually define width of each character
-const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
-  (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize),
-)
+function getNativeAnimatedDigitTextStyle({
+  variantFont,
+  digitHeight,
+  useHeadingTypography,
+}: {
+  variantFont: ResolvedFontStyle
+  digitHeight: number
+  useHeadingTypography: boolean
+}): TextStyle {
+  return {
+    fontSize: variantFont.fontSize,
+    fontWeight: (useHeadingTypography ? '500' : variantFont.fontWeight) as TextStyle['fontWeight'],
+    lineHeight: variantFont.lineHeight,
+    top: 1,
+    height: digitHeight,
+    fontFamily: useHeadingTypography ? fonts.buttonLabel1.family : variantFont.family,
+    ...(Platform.OS === 'android' && !useHeadingTypography ? { includeFontPadding: false } : {}),
+  }
+}
 
 const RollNumber = ({
   digit,
@@ -76,7 +119,12 @@ const RollNumber = ({
   commonPrefixLength,
   shouldFadeDecimals,
   currency,
-  isRightToLeft,
+  digitHeight,
+  variantFont,
+  digitCellWidth,
+  baseColor,
+  decimalPartColor,
+  useHeadingTypography,
 }: {
   chars: string[]
   digit?: string
@@ -85,25 +133,35 @@ const RollNumber = ({
   commonPrefixLength: number
   shouldFadeDecimals: boolean
   currency: FiatCurrencyInfo
-  isRightToLeft: boolean
+  digitHeight: number
+  variantFont: ResolvedFontStyle
+  digitCellWidth: number
+  baseColor: string
+  decimalPartColor: string
+  useHeadingTypography: boolean
 }): JSX.Element => {
-  const colors = useSporeColors()
   const lastChars = useRef([''])
-  const decimalSeparatorIndex = chars.indexOf(currency.decimalSeparator) - 1
-  const fontColor = useSharedValue(
-    nextColor || (shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val),
-  )
-  // oxlint-disable-next-line typescript/no-unsafe-unary-minus -- biome-parity: oxlint is stricter here
-  const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
-
-  const margin = {
-    // add negative margin to the correct side of each character
-    marginRight: isRightToLeft ? 0 : -ADDITIONAL_WIDTH_FOR_ANIMATIONS,
-    marginLeft: isRightToLeft ? -ADDITIONAL_WIDTH_FOR_ANIMATIONS : 0,
-  }
+  const charBaseColor = getCharBaseColor({
+    index,
+    chars,
+    decimalSeparator: currency.decimalSeparator,
+    shouldFadeDecimals,
+    neutral1Color: baseColor,
+    fadedDecimalColor: decimalPartColor,
+  })
+  const fontColor = useSharedValue(nextColor || charBaseColor)
+  const yOffset = useSharedValue(digit && isDigitChar(digit) ? digitHeight * -Number(digit) : 0)
+  const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
 
   useEffect(() => {
-    const finishColor = shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
+    const finishColor = getCharBaseColor({
+      index,
+      chars,
+      decimalSeparator: currency.decimalSeparator,
+      shouldFadeDecimals,
+      neutral1Color: baseColor,
+      fadedDecimalColor: decimalPartColor,
+    })
     if (nextColor && index > commonPrefixLength - 1 && chars !== lastChars.current) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -116,15 +174,14 @@ const RollNumber = ({
   }, [
     digit,
     nextColor,
-    colors.neutral3,
     index,
     chars,
-    colors.neutral1,
+    baseColor,
+    decimalPartColor,
     commonPrefixLength,
     fontColor,
     shouldFadeDecimals,
     currency,
-    decimalSeparatorIndex,
   ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
@@ -135,29 +192,17 @@ const RollNumber = ({
 
   const numbers = NUMBER_ARRAY.map((char, idx) => {
     return (
-      <Animated.Text
-        key={idx}
-        allowFontScaling={false}
-        style={[
-          animatedFontStyle,
-          AnimatedFontStyles.fontStyle,
-          NativeNumberTextStyles.fontStyle,
-          { height: DIGIT_HEIGHT },
-        ]}
-      >
+      <Animated.Text key={idx} allowFontScaling={false} style={[animatedFontStyle, digitTextStyle]}>
         {char}
       </Animated.Text>
     )
   })
 
   useEffect(() => {
-    if (digit && Number(digit) >= 0) {
-      // oxlint-disable-next-line typescript/no-unsafe-unary-minus -- biome-parity: oxlint is stricter here
-      const newOffset = DIGIT_HEIGHT * -digit
-      yOffset.value = newOffset
+    if (digit && isDigitChar(digit)) {
+      yOffset.value = Number((digitHeight * -Number(digit)).toFixed(2))
     }
-    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [digit])
+  }, [digit, digitHeight, yOffset])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
     return {
@@ -165,31 +210,17 @@ const RollNumber = ({
     }
   }, [yOffset])
 
-  if (digit && !Number.isNaN(parseFloat(digit)) && Number(digit) >= 0) {
+  if (digit && isDigitChar(digit)) {
+    // Each digit column is a fixed-width, centered "rail" of 0-9 stacked vertically. The fixed width
+    // keeps the row's total width deterministic so it never reflows mid-animation when a digit rolls.
     return (
-      <Animated.View
-        style={[
-          animatedWrapperStyle,
-          {
-            width: (NUMBER_WIDTH_ARRAY_SCALED[Number(digit)] || 0) + ADDITIONAL_WIDTH_FOR_ANIMATIONS,
-            ...margin,
-          },
-        ]}
-      >
+      <Animated.View style={[animatedWrapperStyle, { width: digitCellWidth, alignItems: 'center' }]}>
         {numbers}
       </Animated.View>
     )
   } else {
     return (
-      <Animated.Text
-        allowFontScaling={false}
-        style={[
-          animatedFontStyle,
-          AnimatedFontStyles.fontStyle,
-          NativeNumberTextStyles.fontStyle,
-          { height: DIGIT_HEIGHT },
-        ]}
-      >
+      <Animated.Text allowFontScaling={false} style={[animatedFontStyle, digitTextStyle]}>
         {digit}
       </Animated.Text>
     )
@@ -200,107 +231,103 @@ const Char = ({
   index,
   chars,
   currency,
-  charsSizes,
   nextColor,
   commonPrefixLength,
   shouldFadeDecimals,
-  isRightToLeft,
+  digitHeight,
+  variantFont,
+  digitCellWidth,
+  baseColor,
+  decimalPartColor,
+  useHeadingTypography,
 }: {
   index: number
   chars: string[]
   currency: FiatCurrencyInfo
-  charsSizes: number[]
   nextColor?: string
   commonPrefixLength: number
   shouldFadeDecimals: boolean
-  isRightToLeft: boolean
+  digitHeight: number
+  variantFont: ResolvedFontStyle
+  digitCellWidth: number
+  baseColor: string
+  decimalPartColor: string
+  useHeadingTypography: boolean
 }): JSX.Element => {
-  const animatedLeft = useAnimatedStyle(
-    () => ({
-      marginLeft: withTiming(charsSizes[index - 1] || 0),
-    }),
-    [charsSizes, index],
+  const char = chars[index]
+  const isDigit = char != null && isDigitChar(char)
+  const rollNumber = (
+    <RollNumber
+      baseColor={baseColor}
+      chars={chars}
+      commonPrefixLength={commonPrefixLength}
+      currency={currency}
+      decimalPartColor={decimalPartColor}
+      digit={char}
+      digitCellWidth={digitCellWidth}
+      digitHeight={digitHeight}
+      index={index}
+      nextColor={nextColor}
+      shouldFadeDecimals={shouldFadeDecimals}
+      useHeadingTypography={useHeadingTypography}
+      variantFont={variantFont}
+    />
   )
+
+  // Non-digit characters (separators, currency symbols) flow naturally and size to their glyph.
+  if (!isDigit) {
+    return rollNumber
+  }
+
+  // Digit cells are fixed-width and clip the vertical rail so only the active digit shows.
   return (
-    <Animated.View style={{ height: DIGIT_HEIGHT }}>
-      <Animated.View
-        style={[
-          {
-            height: DIGIT_HEIGHT,
-            // Check if character can animate and if so make it DIGIT_MAX_WIDTH
-            // to make sure it won't be cropped during animation
-            width: NUMBER_WIDTH_ARRAY_SCALED[Number(chars[index])] && DIGIT_MAX_WIDTH,
-            position: NUMBER_WIDTH_ARRAY_SCALED[Number(chars[index])] ? 'absolute' : 'relative',
-          },
-          AnimatedCharStyles.wrapperStyle,
-          animatedLeft,
-        ]}
-      >
-        <RollNumber
-          chars={chars}
-          commonPrefixLength={commonPrefixLength}
-          currency={currency}
-          digit={chars[index]}
-          index={index}
-          nextColor={nextColor}
-          shouldFadeDecimals={shouldFadeDecimals}
-          isRightToLeft={isRightToLeft}
-        />
-      </Animated.View>
+    <Animated.View style={[{ height: digitHeight, width: digitCellWidth }, AnimatedCharStyles.wrapperStyle]}>
+      {rollNumber}
+      <TopAndBottomGradient height={digitHeight} />
     </Animated.View>
   )
 }
 
-function longestCommonPrefix(a: string, b: string): string {
-  let i = 0
-  while (a[i] && b[i] && a[i] === b[i]) {
-    i++
-  }
-  return a.substring(0, i)
-}
-
 const SCREEN_WIDTH_BUFFER = 50
 
-// Used for initial layout larger than all screen sizes
-const MAX_DEVICE_WIDTH = 1000
-
-type AnimatedNumberProps = {
-  loadingPlaceholderText: string
-  loading: boolean | 'no-shimmer'
-  value?: string
-  balance?: number
-  colorIndicationDuration: number
-  shouldFadeDecimals: boolean
-  warmLoading: boolean
-  disableAnimations?: boolean
-  isRightToLeft: boolean
-  EndElement?: JSX.Element
-  endElementGap?: number
-}
+const HEADING_TEXT_VARIANT_KEYS = new Set<TextVariantKey>(['heading1', 'heading2'])
 
 interface ReanimatedNumberProps extends AnimatedNumberProps {
   currency: FiatCurrencyInfo
 }
 
 const StaticNumber = ({
+  containerTestID,
   currency,
-  shouldFadeDecimals,
+  shouldFadeDecimals = false,
+  textVariant = '$heading2',
   value,
-}: Pick<ReanimatedNumberProps, 'currency' | 'shouldFadeDecimals' | 'value'>): JSX.Element => {
+  color,
+}: Pick<ReanimatedNumberProps, 'currency' | 'shouldFadeDecimals' | 'textVariant' | 'value' | 'color'> &
+  Pick<AnimatedNumberProps, 'containerTestID'>): JSX.Element => {
   const colors = useSporeColors()
+  const { baseColor, decimalPartColor } = useResolvedAnimatedNumberColors({
+    colors,
+    color,
+    shouldFadeDecimals,
+  })
   const amountOfCurrency = value?.split(currency.decimalSeparator)
+  const { digitHeight, variantFont } = useMemo(() => getAnimatedNumberVariantMetrics(textVariant), [textVariant])
+  const useHeadingTypography = HEADING_TEXT_VARIANT_KEYS.has(getTextVariantKey(textVariant))
+  const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
 
   // Keep the static path on native text primitives. On Android, routing this
   // through Tamagui Text uses different font metrics/padding and can introduce clipping.
   return (
     <Animated.Text
       allowFontScaling={false}
+      testID={containerTestID}
       style={[
-        AnimatedFontStyles.fontStyle,
-        StaticNumberStyles.fontStyle,
+        useHeadingTypography ? AnimatedFontStyles.fontStyle : null,
+        useHeadingTypography ? StaticNumberStyles.fontStyle : null,
+        digitTextStyle,
         {
-          color: colors.neutral1.val,
-          height: DIGIT_HEIGHT,
+          color: baseColor,
         },
       ]}
     >
@@ -309,10 +336,11 @@ const StaticNumber = ({
         <Animated.Text
           allowFontScaling={false}
           style={[
-            AnimatedFontStyles.fontStyle,
-            StaticNumberStyles.fontStyle,
+            useHeadingTypography ? AnimatedFontStyles.fontStyle : null,
+            useHeadingTypography ? StaticNumberStyles.fontStyle : null,
+            digitTextStyle,
             {
-              color: colors.neutral3.val,
+              color: decimalPartColor,
             },
           ]}
         >
@@ -328,133 +356,88 @@ const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
   const currency = useAppFiatCurrencyInfo()
 
   if (props.disableAnimations) {
-    return <StaticNumber currency={currency} shouldFadeDecimals={props.shouldFadeDecimals} value={props.value} />
+    return (
+      <StaticNumber
+        color={props.color}
+        containerTestID={props.containerTestID}
+        currency={currency}
+        shouldFadeDecimals={props.shouldFadeDecimals ?? false}
+        textVariant={props.textVariant}
+        value={props.value}
+      />
+    )
   }
 
   return <ReanimatedNumber {...props} currency={currency} />
 }
 
+type ReanimatedNumberRenderProps = {
+  chars: string[]
+  commonPrefixLength: number
+  currency: FiatCurrencyInfo
+  digitHeight: number
+  digitCellWidth: number
+  balanceChangeColor: string | undefined
+  shouldFadeDecimals: boolean
+  variantFont: ResolvedFontStyle
+  baseColor: string
+  decimalPartColor: string
+  useHeadingTypography: boolean
+}
+
 const ReanimatedNumber = ({
-  balance,
+  numericValue,
   currency,
   value,
   loading = false,
-  loadingPlaceholderText,
-  colorIndicationDuration,
-  shouldFadeDecimals,
-  warmLoading,
-  isRightToLeft,
+  loadingPlaceholderText = '-',
+  colorIndicationDuration = BALANCE_CHANGE_INDICATION_DURATION,
+  shouldFadeDecimals = false,
+  warmLoading = false,
+  textVariant = '$heading2',
+  color,
+  alignRight = false,
   EndElement,
   endElementGap,
+  containerTestID,
 }: ReanimatedNumberProps): JSX.Element => {
   const prevValue = usePrevious(value)
-  const prevBalance = usePrevious(balance)
-  const [commonPrefixLength, setCommonPrefixLength] = useState<number>(0)
-  const [nextColor, setNextColor] = useState<string>()
-  const scale = useSharedValue(1)
-
-  // Measure actual container width so scaling works when the component
-  // doesn't have full screen width (e.g. next to the portfolio chart).
-  const [containerWidth, setContainerWidth] = useState(SCREEN_WIDTH - SCREEN_WIDTH_BUFFER)
-  const [textWidth, setTextWidth] = useState(0)
-
-  const onContainerLayout = useCallback((e: LayoutChangeEvent) => {
-    const measuredContainerWidth = e.nativeEvent.layout.width
-    if (measuredContainerWidth > 0) {
-      setContainerWidth(measuredContainerWidth)
-    }
-  }, [])
-
-  const onTextLayout = useCallback((e: LayoutChangeEvent) => {
-    const measuredTextWidth = e.nativeEvent.layout.width
-    if (measuredTextWidth > 0) {
-      setTextWidth(measuredTextWidth)
-    }
-  }, [])
+  const prevBalance = usePrevious(numericValue)
 
   const colors = useSporeColors()
-
-  const scaleWrapper = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: -containerWidth / 2 }, { scale: scale.value }, { translateX: containerWidth / 2 }],
-      display: 'flex',
-      flexDirection: 'row',
-    }
-  }, [scale, containerWidth])
-
-  // Scale the number down enough to leave room for the EndElement inside the overflow-hidden container
-  const endElementReservedWidth = EndElement ? (endElementGap ?? 0) + DIGIT_MAX_WIDTH : 0
-
-  useEffect(() => {
-    if (textWidth <= 0 || containerWidth <= 0) {
-      return
-    }
-
-    const newScale = (containerWidth - endElementReservedWidth) / textWidth
-    if (newScale < 1) {
-      scale.value = withTiming(newScale)
-    } else if (scale.value < 1) {
-      scale.value = withTiming(1)
-    }
-  }, [containerWidth, scale, textWidth, endElementReservedWidth])
-
-  useEffect(() => {
-    if (balance && value && value !== prevValue) {
-      if (prevBalance && balance > prevBalance) {
-        setNextColor(colors.statusSuccess.val)
-      } else if (prevBalance && balance < prevBalance) {
-        setNextColor(colors.neutral2.val)
-      } else {
-        setNextColor(undefined)
-      }
-      setCommonPrefixLength(longestCommonPrefix(String(value), String(prevValue)).length)
-      setTimeout(() => {
-        setNextColor(undefined)
-      }, colorIndicationDuration)
-    }
-  }, [colorIndicationDuration, colors.neutral2, colors.statusSuccess.val, prevBalance, balance, prevValue, value])
-
-  const chars = useMemo(() => (value ? value.split('') : []), [value])
-  /**
-   * Since this component stitches together multiple characters in order to animate each
-   * character separately, we need to calculate the size and each character including the
-   * including the spacing between them.
-   */
-  const charsSizes = useMemo(() => {
-    let lastSize = 0
-    return chars.map((char) => {
-      let currentSize = 0
-      const isDigit = char >= '0' && char <= '9'
-      const isAWhiteSpace = /\s/.test(char)
-      if (isDigit) {
-        const digitWidth = NUMBER_WIDTH_ARRAY_SCALED[Number(char)] || 0
-        currentSize = lastSize + digitWidth + SPACE_SIZE
-      } else if (isAWhiteSpace) {
-        currentSize = lastSize + SPACE_SIZE
-      }
-      lastSize = currentSize
-      return currentSize
-    })
-  }, [chars])
-
-  // Must be absolutely positioned: an in-flow sibling lands after the MAX_DEVICE_WIDTH chars row,
-  // past the container's clipped edge
-  const endElementAnimatedLeft = useAnimatedStyle(
-    () => ({
-      left: withTiming(textWidth + (endElementGap ?? 0)),
-    }),
-    [textWidth, endElementGap],
+  const { variantFont, digitHeight, maxDigitWidthScaled } = useMemo(
+    () => getAnimatedNumberVariantMetrics(textVariant),
+    [textVariant],
   )
+  const digitCellWidth = useMemo(() => getDigitCellWidth(maxDigitWidthScaled), [maxDigitWidthScaled])
+  const textVariantKey = getTextVariantKey(textVariant)
+  const useHeadingTypography = HEADING_TEXT_VARIANT_KEYS.has(textVariantKey)
+  const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
+
+  const { nextColor, commonPrefixLength } = useBalanceChangeIndication({
+    balance: numericValue,
+    value,
+    prevValue,
+    prevBalance,
+    colorIndicationDuration,
+    statusSuccessColor: colors.statusSuccess.val,
+    neutral2Color: colors.neutral2.val,
+    requireTruthyBalanceAndValue: true,
+  })
+  const { baseColor, decimalPartColor, balanceChangeColor } = useResolvedAnimatedNumberColors({
+    colors,
+    color,
+    shouldFadeDecimals,
+    nextColor,
+  })
+
+  const chars = useMemo(() => splitValueIntoChars(value), [value])
 
   if (loading) {
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-        <Flex borderRadius="$rounded4" flexDirection="row">
-          <Text
-            allowFontScaling={false}
-            style={[AnimatedFontStyles.fontStyle, NativeNumberTextStyles.fontStyle, { height: DIGIT_HEIGHT }]}
-            opacity={0}
-          >
+        <Flex borderRadius="$rounded4" flexDirection="row" justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
+          <Text allowFontScaling={false} style={[digitTextStyle]} opacity={0}>
             {loadingPlaceholderText}
           </Text>
         </Flex>
@@ -462,59 +445,302 @@ const ReanimatedNumber = ({
     )
   }
 
+  const renderProps: ReanimatedNumberRenderProps = {
+    chars,
+    commonPrefixLength,
+    currency,
+    digitHeight,
+    digitCellWidth,
+    balanceChangeColor,
+    shouldFadeDecimals,
+    variantFont,
+    baseColor,
+    decimalPartColor,
+    useHeadingTypography,
+  }
+
+  if (HEADING_TEXT_VARIANT_KEYS.has(textVariantKey)) {
+    return (
+      <HeadingReanimatedNumber
+        {...renderProps}
+        EndElement={EndElement}
+        alignRight={alignRight}
+        containerTestID={containerTestID}
+        endElementGap={endElementGap}
+        value={value}
+        warmLoading={warmLoading}
+      />
+    )
+  }
+
   return (
-    <Flex overflow="hidden" onLayout={onContainerLayout}>
-      <Animated.View style={scaleWrapper}>
-        <Flex
-          group
-          row
-          alignItems="flex-start"
-          backgroundColor="$surface1"
-          borderRadius="$rounded4"
-          width={MAX_DEVICE_WIDTH}
-        >
-          <TopAndBottomGradient />
-          <Shine disabled={!warmLoading}>
-            <Flex row animation="fast" width={MAX_DEVICE_WIDTH}>
-              {chars.map((_, index) => (
-                <Char
-                  key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
-                  chars={chars}
-                  charsSizes={charsSizes}
-                  commonPrefixLength={commonPrefixLength}
-                  currency={currency}
-                  index={index}
-                  isRightToLeft={isRightToLeft}
-                  nextColor={nextColor}
-                  shouldFadeDecimals={shouldFadeDecimals}
-                />
-              ))}
-            </Flex>
-          </Shine>
-          <Animated.Text
-            allowFontScaling={false}
-            style={[AnimatedFontStyles.invisible, AnimatedFontStyles.fontStyle]}
-            onLayout={onTextLayout}
-          >
+    <CompactReanimatedNumber
+      {...renderProps}
+      EndElement={EndElement}
+      alignRight={alignRight}
+      containerTestID={containerTestID}
+      endElementGap={endElementGap}
+      value={value}
+      warmLoading={warmLoading}
+    />
+  )
+}
+
+const CharRow = ({
+  baseColor,
+  chars,
+  commonPrefixLength,
+  currency,
+  decimalPartColor,
+  digitCellWidth,
+  digitHeight,
+  balanceChangeColor,
+  shouldFadeDecimals,
+  useHeadingTypography,
+  variantFont,
+}: Pick<
+  ReanimatedNumberRenderProps,
+  | 'baseColor'
+  | 'chars'
+  | 'commonPrefixLength'
+  | 'currency'
+  | 'decimalPartColor'
+  | 'digitCellWidth'
+  | 'digitHeight'
+  | 'balanceChangeColor'
+  | 'shouldFadeDecimals'
+  | 'useHeadingTypography'
+  | 'variantFont'
+>): JSX.Element => {
+  return (
+    <>
+      {chars.map((_, index) => (
+        <Char
+          key={getAnimatedNumberCharKey({
+            index,
+            charsLength: chars.length,
+            signColor: baseColor,
+          })}
+          baseColor={baseColor}
+          chars={chars}
+          commonPrefixLength={commonPrefixLength}
+          currency={currency}
+          decimalPartColor={decimalPartColor}
+          digitCellWidth={digitCellWidth}
+          digitHeight={digitHeight}
+          index={index}
+          nextColor={balanceChangeColor}
+          shouldFadeDecimals={shouldFadeDecimals}
+          useHeadingTypography={useHeadingTypography}
+          variantFont={variantFont}
+        />
+      ))}
+    </>
+  )
+}
+
+const CompactReanimatedNumber = ({
+  alignRight,
+  baseColor,
+  balanceChangeColor,
+  chars,
+  commonPrefixLength,
+  containerTestID,
+  currency,
+  decimalPartColor,
+  digitCellWidth,
+  digitHeight,
+  EndElement,
+  endElementGap,
+  shouldFadeDecimals,
+  useHeadingTypography,
+  value,
+  variantFont,
+  warmLoading,
+}: ReanimatedNumberRenderProps &
+  Pick<
+    AnimatedNumberProps,
+    'EndElement' | 'alignRight' | 'containerTestID' | 'endElementGap' | 'value' | 'warmLoading'
+  >): JSX.Element => {
+  // Natural flex flow: the row sizes itself to the digit cells + separators, so the container
+  // always matches the content width exactly without any measurement or fixed phantom width.
+  return (
+    <Flex row justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="flex-start" testID={containerTestID}>
+      <Shine disabled={!warmLoading}>
+        <Flex row style={{ position: 'relative' }}>
+          <CharRow
+            balanceChangeColor={balanceChangeColor}
+            baseColor={baseColor}
+            chars={chars}
+            commonPrefixLength={commonPrefixLength}
+            currency={currency}
+            decimalPartColor={decimalPartColor}
+            digitCellWidth={digitCellWidth}
+            digitHeight={digitHeight}
+            shouldFadeDecimals={shouldFadeDecimals}
+            useHeadingTypography={useHeadingTypography}
+            variantFont={variantFont}
+          />
+          {/* Keeps the screen-reader/copy value intact since the visible chars are split into cells. */}
+          <Animated.Text allowFontScaling={false} style={AnimatedFontStyles.invisible}>
             {value}
           </Animated.Text>
-          {EndElement && textWidth > 0 && (
-            <Animated.View
-              style={[
-                {
-                  position: 'absolute',
-                  top: 0,
-                  height: DIGIT_HEIGHT,
-                  justifyContent: 'center',
-                },
-                endElementAnimatedLeft,
-              ]}
-            >
-              {EndElement}
-            </Animated.View>
-          )}
         </Flex>
-      </Animated.View>
+      </Shine>
+      {EndElement && (
+        <Flex height={digitHeight} justifyContent="center" style={{ marginLeft: endElementGap ?? CHAR_SPACE_SIZE }}>
+          {EndElement}
+        </Flex>
+      )}
+    </Flex>
+  )
+}
+
+const HeadingReanimatedNumber = ({
+  alignRight,
+  baseColor,
+  balanceChangeColor,
+  chars,
+  commonPrefixLength,
+  containerTestID,
+  currency,
+  decimalPartColor,
+  digitCellWidth,
+  digitHeight,
+  EndElement,
+  endElementGap,
+  shouldFadeDecimals,
+  useHeadingTypography,
+  value,
+  variantFont,
+  warmLoading,
+}: ReanimatedNumberRenderProps &
+  Pick<
+    AnimatedNumberProps,
+    'EndElement' | 'alignRight' | 'containerTestID' | 'endElementGap' | 'value' | 'warmLoading'
+  >): JSX.Element => {
+  const colors = useSporeColors()
+  const scale = useSharedValue(1)
+
+  // Measure the available container width so the balance can scale down to fit (e.g. next to the
+  // portfolio chart). This only changes on real layout changes, never per-value, so it never lags
+  // behind a digit-count change.
+  const [containerWidth, setContainerWidth] = useState(SCREEN_WIDTH - SCREEN_WIDTH_BUFFER)
+  // Width contributed by non-digit characters (currency symbol, separators). Measured once per
+  // unique non-digit composition, which is rare, so the synchronous content-width math below stays
+  // accurate without re-measuring on every digit roll.
+  const [staticWidth, setStaticWidth] = useState(0)
+
+  const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
+
+  const digitCount = useMemo(() => chars.reduce((count, char) => (isDigitChar(char) ? count + 1 : count), 0), [chars])
+  const nonDigitChars = useMemo(() => chars.filter((char) => !isDigitChar(char)).join(''), [chars])
+
+  // Deterministic and synchronous: digit cells are fixed-width and non-digit width is already
+  // measured, so the content width is known the moment the value changes. No async measurement of
+  // the full value means the number can never briefly overflow before the width catches up.
+  const contentWidth = digitCount * digitCellWidth + staticWidth
+
+  // Reserve room for the EndElement so the number scales to fit alongside it.
+  const endElementReservedWidth = EndElement ? (endElementGap ?? 0) + DIGIT_MAX_WIDTH : 0
+  const availableWidth = Math.max(containerWidth - endElementReservedWidth, 0)
+  const targetScale = contentWidth > 0 && availableWidth > 0 ? Math.min(1, availableWidth / contentWidth) : 1
+
+  const onContainerLayout = useCallback((e: LayoutChangeEvent) => {
+    const measured = e.nativeEvent.layout.width
+    if (measured > 0) {
+      setContainerWidth(measured)
+    }
+  }, [])
+
+  const onStaticLayout = useCallback((e: LayoutChangeEvent) => {
+    setStaticWidth(e.nativeEvent.layout.width)
+  }, [])
+
+  useEffect(() => {
+    scale.value = withTiming(targetScale)
+  }, [targetScale, scale])
+
+  // The layout box width and the content's scale transform are driven by the SAME shared value, so
+  // the scaled content always fills its box exactly. The container therefore hugs the content width
+  // and the number can never overflow, even mid-scale-animation.
+  const boxStyle = useAnimatedStyle(
+    () => ({
+      width: contentWidth * scale.value,
+      height: digitHeight,
+    }),
+    [contentWidth, digitHeight, scale],
+  )
+
+  const contentTransformStyle = useAnimatedStyle(() => {
+    // Anchor scaling to the leading edge (left for LTR/left-align, right for right-align) so the
+    // number stays pinned to the container edge as it scales.
+    const pivotX = (alignRight ? -1 : 1) * (contentWidth / 2)
+    return {
+      transform: [{ translateX: -pivotX }, { scale: scale.value }, { translateX: pivotX }],
+    }
+  }, [contentWidth, alignRight, scale])
+
+  return (
+    <Flex
+      row
+      alignItems="center"
+      justifyContent={alignRight ? 'flex-end' : 'flex-start'}
+      overflow="hidden"
+      testID={containerTestID}
+      onLayout={onContainerLayout}
+    >
+      <Shine disabled={!warmLoading}>
+        <Animated.View style={boxStyle}>
+          <Animated.View
+            style={[
+              contentTransformStyle,
+              {
+                position: 'absolute',
+                top: 0,
+                ...(alignRight ? { right: 0 } : { left: 0 }),
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                backgroundColor: colors.surface1.val,
+                borderRadius: 4,
+              },
+            ]}
+          >
+            <TopAndBottomGradient height={digitHeight} />
+            <CharRow
+              balanceChangeColor={balanceChangeColor}
+              baseColor={baseColor}
+              chars={chars}
+              commonPrefixLength={commonPrefixLength}
+              currency={currency}
+              decimalPartColor={decimalPartColor}
+              digitCellWidth={digitCellWidth}
+              digitHeight={digitHeight}
+              shouldFadeDecimals={shouldFadeDecimals}
+              useHeadingTypography={useHeadingTypography}
+              variantFont={variantFont}
+            />
+          </Animated.View>
+        </Animated.View>
+      </Shine>
+      {EndElement && (
+        <Flex height={digitHeight} justifyContent="center" style={{ marginLeft: endElementGap ?? CHAR_SPACE_SIZE }}>
+          {EndElement}
+        </Flex>
+      )}
+      {/* Invisible, out-of-flow measurer for the non-digit portion only. Updates rarely (when the
+          currency symbol or separator layout changes), keeping the content-width math accurate. */}
+      <Animated.Text
+        allowFontScaling={false}
+        style={[AnimatedFontStyles.invisible, digitTextStyle]}
+        onLayout={onStaticLayout}
+      >
+        {nonDigitChars}
+      </Animated.Text>
+      {/* Keeps the screen-reader/copy value intact since the visible chars are split into cells. */}
+      <Animated.Text allowFontScaling={false} style={AnimatedFontStyles.invisible}>
+        {value}
+      </Animated.Text>
     </Flex>
   )
 }

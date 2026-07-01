@@ -274,7 +274,9 @@ describe('useWalletPositionsWeb', () => {
 
       const { result } = renderHook(() => useWalletPositionsWeb(baseParams))
 
-      const tokenIds = result.current.visiblePositions.map((p) => p.tokenId).sort()
+      const tokenIds = result.current.visiblePositions
+        .map((p) => p.tokenId)
+        .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
       expect(tokenIds).toEqual(['be-only', 'saved-only'])
     })
   })

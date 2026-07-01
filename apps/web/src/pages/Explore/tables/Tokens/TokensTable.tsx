@@ -7,6 +7,7 @@ import { ReactElement, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
@@ -23,7 +24,7 @@ import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
-import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
+import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
@@ -49,7 +50,9 @@ interface TokenTableValue {
   percentChange1hr: ReactElement
   percentChange1d: ReactElement
   fdv: string
+  fdvRawValue?: number
   volume: string
+  volumeRawValue?: number
   sparkline: ReactElement
   link: string
   /** Used for pre-loading TDP with logo to extract color from */
@@ -67,7 +70,7 @@ function LivePriceCell({ token }: { token?: TokenStat }) {
   const price = livePrice ?? token?.price?.value
   const formatted = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : '-'
 
-  return <TableText>{formatted}</TableText>
+  return <AnimatedNumber numericValue={price} textVariant="$body2" value={formatted} />
 }
 
 export function TokenTable({
@@ -136,17 +139,19 @@ export function TokenTable({
             percentChange1hr: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1hr} formattedDelta={formatPercent(delta1hrAbs)} />
-                <TableText>{formatPercent(delta1hrAbs)}</TableText>
+                <AnimatedNumber numericValue={delta1hr} textVariant="$body2" value={formatPercent(delta1hrAbs)} />
               </Flex>
             ),
             percentChange1d: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1d} formattedDelta={formatPercent(delta1dAbs)} />
-                <TableText>{formatPercent(delta1dAbs)}</TableText>
+                <AnimatedNumber numericValue={delta1d} textVariant="$body2" value={formatPercent(delta1dAbs)} />
               </Flex>
             ),
             fdv: parseAmount(token.fullyDilutedValuation?.value, NumberType.FiatTokenStats),
+            fdvRawValue: token.fullyDilutedValuation?.value,
             volume: parseAmount(token.volume?.value, NumberType.FiatTokenStats),
+            volumeRawValue: token.volume?.value,
             sparkline: (
               <SparklineChart
                 width={80}
@@ -318,11 +323,19 @@ export function TokenTable({
             />
           </HeaderCell>
         ),
-        cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
-            <EllipsisText>{fdv.getValue?.()}</EllipsisText>
-          </Cell>
-        ),
+        cell: (fdv) => {
+          const row = fdv.row?.original as TokenTableValue | undefined
+          return (
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
+              <AnimatedNumber
+                ellipsis
+                numericValue={row?.fdvRawValue}
+                textVariant="$body2"
+                value={fdv.getValue?.() ?? '-'}
+              />
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((row) => row.volume, {
         id: 'volume',
@@ -342,7 +355,13 @@ export function TokenTable({
           if (!row) {
             return (
               <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
-                <EllipsisText>{volume.getValue?.()}</EllipsisText>
+                <AnimatedNumber
+                  ellipsis
+                  alignRight
+                  numericValue={undefined}
+                  textVariant="$body2"
+                  value={volume.getValue?.() ?? '-'}
+                />
               </Cell>
             )
           }
@@ -352,7 +371,13 @@ export function TokenTable({
               <Flex flex={1} minWidth={0} justifyContent="flex-end">
                 <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
                   <Flex position="relative">
-                    <EllipsisText textAlign="right">{volume.getValue?.()}</EllipsisText>
+                    <AnimatedNumber
+                      ellipsis
+                      alignRight
+                      numericValue={row.volumeRawValue}
+                      textVariant="$body2"
+                      value={volume.getValue?.() ?? '-'}
+                    />
                     {isMultichainAsset ? (
                       <Flex
                         centered

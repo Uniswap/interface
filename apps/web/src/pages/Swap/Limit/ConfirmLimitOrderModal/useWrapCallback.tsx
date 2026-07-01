@@ -12,7 +12,7 @@ import { formatToDecimal, getTokenAddress } from '~/lib/utils/analytics'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { useCurrencyBalance } from '~/state/connection/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { useTransactionAdder } from '~/state/transactions/hooks'
+import { useTransactionAdderFromHash } from '~/state/transactions/adder'
 
 const NOT_APPLICABLE = { wrapType: WrapType.NotApplicable }
 
@@ -42,7 +42,10 @@ export function useWrapCallback({
   const account = useAccount()
   const { chainId } = useMultichainContext()
 
-  const wethContract = useWETHContract(true, chainId)
+  const wethContract = useWETHContract({
+    withSignerIfPossible: true,
+    chainId,
+  })
   const wethContractRef = useRef(wethContract)
   wethContractRef.current = wethContract
 
@@ -52,7 +55,7 @@ export function useWrapCallback({
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
     [inputCurrency, typedValue],
   )
-  const addTransaction = useTransactionAdder()
+  const addTransaction = useTransactionAdderFromHash()
 
   // This allows an async error to propagate within the React lifecycle.
   // Without rethrowing it here, it would not show up in the UI - only the dev console.
@@ -92,15 +95,14 @@ export function useWrapCallback({
               if (!wethContract) {
                 throw new Error('wethContract is null')
               }
-              const network = await wethContract.provider.getNetwork()
-              if (
-                network.chainId !== chainId ||
-                wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
-              ) {
+              // The wallet's current chain is tracked by wagmi; if it moved
+              // away from the chain this contract was built for, bail out
+              // rather than signing on the wrong chain.
+              if (account.chainId !== chainId || wethContract.address !== weth.address) {
                 sendAnalyticsEvent(InterfaceEventName.WrapTokenTxnInvalidated, {
                   ...eventProperties,
                   contract_address: wethContract.address,
-                  contract_chain_id: network.chainId,
+                  contract_chain_id: account.chainId,
                   type: WrapType.Wrap,
                 })
                 // oxlint-disable-next-line no-shadow
@@ -109,18 +111,21 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                 setError(error)
                 throw error
               }
-              const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` })
-              addTransaction(txReceipt, {
-                type: TransactionType.Wrap,
-                unwrapped: false,
-                currencyAmountRaw: inputAmount.quotient.toString(),
-              })
+              const hash = await wethContract.write.deposit({ value: BigInt(inputAmount.quotient.toString()) })
+              addTransaction(
+                { hash, chainId },
+                {
+                  type: TransactionType.Wrap,
+                  unwrapped: false,
+                  currencyAmountRaw: inputAmount.quotient.toString(),
+                },
+              )
               sendAnalyticsEvent(InterfaceEventName.WrapTokenTxnSubmitted, {
                 ...eventProperties,
-                transaction_hash: txReceipt.hash,
+                transaction_hash: hash,
                 type: WrapType.Wrap,
               })
-              return txReceipt.hash
+              return hash
             }
           : undefined,
         inputError: sufficientBalance
@@ -140,18 +145,21 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                 if (!wethContract) {
                   throw new Error('wethContract is null')
                 }
-                const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
-                addTransaction(txReceipt, {
-                  type: TransactionType.Wrap,
-                  unwrapped: true,
-                  currencyAmountRaw: inputAmount.quotient.toString(),
-                })
+                const hash = await wethContract.write.withdraw([BigInt(inputAmount.quotient.toString())])
+                addTransaction(
+                  { hash, chainId },
+                  {
+                    type: TransactionType.Wrap,
+                    unwrapped: true,
+                    currencyAmountRaw: inputAmount.quotient.toString(),
+                  },
+                )
                 sendAnalyticsEvent(InterfaceEventName.WrapTokenTxnSubmitted, {
                   ...eventProperties,
-                  transaction_hash: txReceipt.hash,
+                  transaction_hash: hash,
                   type: WrapType.Unwrap,
                 })
-                return txReceipt.hash
+                return hash
                 // oxlint-disable-next-line no-shadow
               } catch (error) {
                 logger.warn('useWrapCallback', 'useWrapCallback', 'Failed to wrap', error)
@@ -168,5 +176,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [account.chainId, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

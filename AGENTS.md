@@ -15,10 +15,10 @@ Uniswap Universe is a monorepo containing all Uniswap front-end interfaces:
 ### Setup
 
 ```bash
-# Initial setup (requires 1Password CLI)
+# Initial setup
 bun install
 bun local:check
-bun lfg  # Sets up mobile and extension
+bun config:login
 ```
 
 ### Development Servers

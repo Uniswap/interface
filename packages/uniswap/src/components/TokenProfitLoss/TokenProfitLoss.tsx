@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { PnlInfoTrigger } from 'uniswap/src/components/ProfitLoss/PnlInfoTrigger'
 import { ProfitLossRow } from 'uniswap/src/components/ProfitLoss/ProfitLossRow'
 
 interface TokenProfitLossProps {
@@ -28,9 +29,12 @@ export function TokenProfitLoss({
   return (
     <Flex gap="$gap16" width="100%">
       <Flex row justifyContent="space-between" alignItems="center">
-        <Text variant="subheading2" color="$neutral2">
-          {title ?? t('pnl.title')}
-        </Text>
+        <Flex row alignItems="center" gap="$spacing4">
+          <Text variant="subheading2" color="$neutral2">
+            {title ?? t('pnl.title')}
+          </Text>
+          <PnlInfoTrigger />
+        </Flex>
       </Flex>
       <Flex gap="$gap12">
         <ProfitLossRow label={t('pnl.averageCost')} value={averageCost} isLoading={isLoading} />

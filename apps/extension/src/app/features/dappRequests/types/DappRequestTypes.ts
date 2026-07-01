@@ -283,6 +283,23 @@ export const GetCapabilitiesResponseSchema = BaseDappResponseSchema.extend({
 })
 export type GetCapabilitiesResponse = z.infer<typeof GetCapabilitiesResponseSchema>
 
+// Read-only JSON-RPC proxied to the background SW. chainId is the content script's active
+// chain (the dapp's read methods carry no chain param); result is the JSON-safe RPC result.
+export const ProviderDirectRequestSchema = BaseDappRequestSchema.extend({
+  type: z.literal(DappRequestType.ProviderDirect),
+  chainId: z.string(),
+  method: z.string(),
+  params: z.array(z.unknown()),
+})
+export type ProviderDirectRequest = z.infer<typeof ProviderDirectRequestSchema>
+
+export const ProviderDirectResponseSchema = BaseDappResponseSchema.extend({
+  type: z.literal(DappResponseType.ProviderDirectResponse),
+  result: z.unknown().optional(),
+  error: EthereumRpcErrorSchema.optional(),
+})
+export type ProviderDirectResponse = z.infer<typeof ProviderDirectResponseSchema>
+
 const BatchedSwapSendTransactionRequestSchema = SendCallsRequestSchema.extend({
   calls: z.array(ParsedCallSchema).refine(
     (calls) =>
@@ -315,6 +332,7 @@ export const DappRequestSchema = z.union([
   SendCallsRequestSchema,
   GetCallsStatusRequestSchema,
   GetCapabilitiesRequestSchema,
+  ProviderDirectRequestSchema,
 ])
 
 const DappResponseSchema = z.union([
@@ -332,6 +350,7 @@ const DappResponseSchema = z.union([
   SendCallsResponseSchema,
   GetCallsStatusResponseSchema,
   GetCapabilitiesResponseSchema,
+  ProviderDirectResponseSchema,
 ])
 
 export type DappRequest = z.infer<typeof DappRequestSchema>

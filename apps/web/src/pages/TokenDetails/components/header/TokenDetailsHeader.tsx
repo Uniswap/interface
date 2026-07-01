@@ -26,6 +26,8 @@ import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/Header
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useModalState } from '~/hooks/useModalState'
 import { RWAIssuerHeaderDetails } from '~/pages/TokenDetails/components/header/RWAIssuerHeaderDetails'
+import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
+import { TokenDetailsHeaderSubtitleMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderSubtitleMobile'
 import { TokenDetailsNetworkFilter } from '~/pages/TokenDetails/components/header/TokenDetailsNetworkFilter'
 import { useTokenDetailsHeaderActions } from '~/pages/TokenDetails/components/header/useTokenDetailsHeaderActions'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
@@ -95,7 +97,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
   const isNative = effectiveCurrency.isNative
-  const tokenLogoSize = getHeaderLogoSize({ isCompact, media })
+  const tokenLogoSize = getHeaderLogoSize({ isCompact, media, scaleMobileOnScroll: true })
 
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
@@ -189,7 +191,16 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 {tokenSymbol}
               </Text>
             )}
+            <TokenDetailsHeaderAddressCopyMobile
+              displayAddress={displayAddress}
+              isNative={isNative}
+              chainId={effectiveCurrency.chainId}
+              isMultiChainAsset={isMultiChainAsset}
+              selectedChainId={selectedChainId}
+              multichainEntries={multichainEntries}
+            />
           </Flex>
+          <TokenDetailsHeaderSubtitleMobile rwaMatch={rwaMatch} symbol={tokenSymbol} isCompact={isCompact} />
           {!media.sm && (
             <Flex row alignItems="center" gap="$spacing6">
               <RWAIssuerHeaderDetails rwaMatch={rwaMatch} />

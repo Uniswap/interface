@@ -176,7 +176,6 @@
     "// ── Setup Commands ──": "First-time setup, install hooks, environment verification",
     "preinstall": "./scripts/check-runtime-versions.sh",
     "postinstall": "git config core.hooksPath .husky && touch node_modules/.install-marker",
-    "lfg": "bun run g:prepare && bun run mobile env:local:download && bun run extension env:local:download && bun run mobile pod && bun run mobile ios",
     "local:check": "./scripts/local-version-check.sh",
     "config:login": "bun run config-cli start login",
     "config:logout": "bun run config-cli start logout",

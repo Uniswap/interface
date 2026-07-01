@@ -1,23 +1,17 @@
 import { Contract } from '@ethersproject/contracts'
-import { CHAIN_TO_ADDRESSES_MAP, MULTICALL_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
+import { MULTICALL_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import { useEffect, useMemo } from 'react'
-import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20, Erc721, Weth } from 'uniswap/src/abis/types'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
-import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { useMemo } from 'react'
+import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
+import { type ChainContract, createContract, erc20Abi, getAddress, wethAbi, type WethAbi } from '~/chains'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersProvider, useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
-const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>({
@@ -63,6 +57,9 @@ export function useContract<T extends Contract = Contract>({
   }, [address, ABI, readProvider, walletProvider, withSignerIfPossible, account.address]) as T
 }
 
+/**
+ * ERC20 token contract handle
+ */
 export function useTokenContract({
   tokenAddress,
   withSignerIfPossible = false,
@@ -71,22 +68,69 @@ export function useTokenContract({
   tokenAddress?: string
   withSignerIfPossible?: boolean
   chainId?: UniverseChainId
-}) {
-  return useContract<Erc20>({
-    address: tokenAddress,
-    ABI: ERC20_ABI,
-    withSignerIfPossible,
-    chainId,
-  })
+}): ChainContract<typeof erc20Abi> | null {
+  const account = useAccount()
+  const chainIdToUse = chainId ?? account.chainId
+  const readProvider = useEthersProvider({ chainId: chainIdToUse })
+  // Writes sign through the wallet's provider; reads stay on the app's read
+  // provider (UniRPC) so they never route through connector RPC endpoints.
+  const walletProvider = useEthersWeb3Provider({ chainId: chainIdToUse })
+
+  return useMemo(() => {
+    const provider = readProvider ?? walletProvider
+    if (!tokenAddress || !provider) {
+      return null
+    }
+    const address = getAddress(tokenAddress)
+    if (withSignerIfPossible && walletProvider && account.address) {
+      return createContract({
+        address,
+        abi: erc20Abi,
+        provider,
+        signer: walletProvider.getSigner(account.address),
+        signerAddress: account.address,
+      })
+    }
+    return createContract({ address, abi: erc20Abi, provider })
+  }, [tokenAddress, withSignerIfPossible, account.address, walletProvider, readProvider])
 }
 
-export function useWETHContract(withSignerIfPossible?: boolean, chainId?: UniverseChainId) {
-  return useContract<Weth>({
-    address: chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
-    ABI: WETH_ABI,
-    withSignerIfPossible,
-    chainId,
-  })
+/**
+ * WETH contract handle through the `@universe/chains` seam, viem-shaped
+ * surface (`write.deposit({ value })`), engine selected by feature flag.
+ */
+export function useWETHContract({
+  withSignerIfPossible,
+  chainId,
+}: {
+  withSignerIfPossible?: boolean
+  chainId?: UniverseChainId
+}): ChainContract<WethAbi> | null {
+  const account = useAccount()
+  const chainIdToUse = chainId ?? account.chainId
+  const readProvider = useEthersProvider({ chainId: chainIdToUse })
+  // Writes sign through the wallet's provider; reads stay on the app's read
+  // provider (UniRPC) so they never route through connector RPC endpoints.
+  const walletProvider = useEthersWeb3Provider({ chainId: chainIdToUse })
+  const wethAddress = chainIdToUse ? WRAPPED_NATIVE_CURRENCY[chainIdToUse]?.address : undefined
+
+  return useMemo(() => {
+    const provider = readProvider ?? walletProvider
+    if (!wethAddress || !provider) {
+      return null
+    }
+    const address = getAddress(wethAddress)
+    if (withSignerIfPossible && walletProvider && account.address) {
+      return createContract({
+        address,
+        abi: wethAbi,
+        provider,
+        signer: walletProvider.getSigner(account.address),
+        signerAddress: account.address,
+      })
+    }
+    return createContract({ address, abi: wethAbi, provider })
+  }, [wethAddress, withSignerIfPossible, account.address, walletProvider, readProvider])
 }
 
 export function useInterfaceMulticall(chainId?: UniverseChainId) {
@@ -98,65 +142,4 @@ export function useInterfaceMulticall(chainId?: UniverseChainId) {
     withSignerIfPossible: false,
     chainId: chain,
   }) as UniswapInterfaceMulticall
-}
-
-export function useV3NFTPositionManagerContract(
-  withSignerIfPossible?: boolean,
-  chainId?: UniverseChainId,
-): NonfungiblePositionManager | null {
-  const account = useAccount()
-  const chainIdToUse = chainId ?? account.chainId
-  const contract = useContract<NonfungiblePositionManager>({
-    address: chainIdToUse ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainIdToUse] : undefined,
-    ABI: NFTPositionManagerABI,
-    withSignerIfPossible,
-    chainId: chainIdToUse,
-  })
-  useEffect(() => {
-    if (contract && account.isConnected) {
-      sendAnalyticsEvent(InterfaceEventName.WalletProviderUsed, {
-        source: 'useV3NFTPositionManagerContract',
-        contract: {
-          name: 'V3NonfungiblePositionManager',
-          address: contract.address,
-          withSignerIfPossible,
-          chainId: chainIdToUse,
-        },
-      })
-    }
-  }, [account.isConnected, chainIdToUse, contract, withSignerIfPossible])
-  return contract
-}
-
-/**
- * NOTE: the return type of this contract and the ABI used are just a generic ERC721,
- * so you can only use this to call tokenURI or other Position NFT related functions.
- */
-export function useV4NFTPositionManagerContract(
-  withSignerIfPossible?: boolean,
-  chainId?: EVMUniverseChainId,
-): Erc721 | null {
-  const account = useAccount()
-  const chainIdToUse = chainId ?? account.chainId
-
-  const contract = useContract<Erc721>({
-    address: chainIdToUse ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress : undefined,
-    ABI: NFTPositionManagerABI,
-    withSignerIfPossible,
-    chainId: chainIdToUse,
-  })
-  useEffect(() => {
-    if (contract && account.isConnected) {
-      sendAnalyticsEvent(InterfaceEventName.WalletProviderUsed, {
-        source: 'useV4NFTPositionManagerContract',
-        contract: {
-          name: 'V4NonfungiblePositionManager',
-          address: contract.address,
-          withSignerIfPossible,
-          chainId: chainIdToUse,
-        },
-      })
-    }
-  }, [account.isConnected, chainIdToUse, contract, withSignerIfPossible])
-  return contract
 }

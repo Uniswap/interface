@@ -7,29 +7,18 @@ import { Button, Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { LP_POSITION_PROTOCOL_VERSIONS, LP_POSITION_STATUS_FILTER_OPTIONS } from '~/features/Liquidity/constants'
-import { getProtocolStatusLabel, getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
+import {
+  POSITION_FILTER_BUTTON_STYLE,
+  PositionsNetworkFilter,
+  ProtocolFilterDropdown,
+} from '~/features/Liquidity/positionsFilters'
+import { getProtocolStatusLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { buildCreatePositionHref, type CreatePositionProtocolVersion } from '~/utils/createPositionRoute'
-
-const StyledDropdownButton = {
-  borderRadius: '$rounded12',
-  py: '$padding8',
-  px: '$padding12',
-  borderWidth: '$spacing1',
-  borderColor: '$surface3',
-  backgroundColor: 'transparent',
-  cursor: 'pointer',
-  hoverStyle: {
-    backgroundColor: '$surface2',
-  },
-}
 
 type PositionsHeaderProps = {
   showFilters?: boolean
@@ -74,7 +63,6 @@ export function PositionsHeader({
   createPositionEntryPoint,
 }: PositionsHeaderProps) {
   const { t } = useTranslation()
-  const { chains } = useEnabledChains({ platform: Platform.EVM })
   const navigate = useNavigate()
   const media = useMedia()
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
@@ -135,20 +123,6 @@ export function PositionsHeader({
     })
   }, [selectedStatus, onStatusChange, t])
 
-  const versionFilterOptions = useMemo(() => {
-    return LP_POSITION_PROTOCOL_VERSIONS.map((version) => (
-      <LabeledCheckbox
-        key={`PositionsHeader-version-${version}`}
-        py="$spacing4"
-        hoverStyle={{ opacity: 0.8, backgroundColor: 'unset' }}
-        checkboxPosition="end"
-        checked={selectedVersions?.includes(version) ?? false}
-        text={getProtocolVersionLabel(version)}
-        onCheckPressed={() => onVersionChange(version)}
-      />
-    ))
-  }, [selectedVersions, onVersionChange])
-
   const createOptions = useMemo(
     () =>
       LP_POSITION_PROTOCOL_VERSIONS.flatMap((version) => {
@@ -175,7 +149,6 @@ export function PositionsHeader({
 
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
-  const [protocolDropdownOpen, setProtocolDropdownOpen] = useState(false)
 
   const createPositionControl = useMemo(() => {
     if (!showCreateButton) {
@@ -312,63 +285,39 @@ export function PositionsHeader({
           shouldStackControlsAtMd ? { flexDirection: 'column', alignItems: 'stretch', gap: '$spacing16' } : undefined
         }
       >
+        {createPositionControl}
+        {launchAuctionControl}
         {showFilters && (
-          <>
-            {createPositionControl}
-            {launchAuctionControl}
-            <Flex
-              row
-              alignItems="center"
-              shrink
-              height="100%"
-              gap="$gap8"
-              width={shouldStackControls ? '100%' : undefined}
+          <Flex
+            row
+            alignItems="center"
+            shrink
+            height="100%"
+            gap="$gap8"
+            width={shouldStackControls ? '100%' : undefined}
+          >
+            <Dropdown
+              isOpen={statusDropdownOpen}
+              toggleOpen={() => {
+                setStatusDropdownOpen((prev) => !prev)
+              }}
+              menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
+              dropdownStyle={{ width: 240 }}
+              containerStyle={shouldStackControls ? { flex: 1 } : undefined}
+              buttonStyle={{ ...POSITION_FILTER_BUTTON_STYLE, width: shouldStackControls ? '100%' : undefined }}
+              alignRight={false}
             >
-              <Dropdown
-                isOpen={statusDropdownOpen}
-                toggleOpen={() => {
-                  setStatusDropdownOpen((prev) => !prev)
-                }}
-                menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
-                dropdownStyle={{ width: 240 }}
-                containerStyle={shouldStackControls ? { flex: 1 } : undefined}
-                buttonStyle={{ ...StyledDropdownButton, width: shouldStackControls ? '100%' : undefined }}
-                alignRight={false}
-              >
-                {statusFilterOptions}
-              </Dropdown>
-              <Dropdown
-                isOpen={protocolDropdownOpen}
-                toggleOpen={() => setProtocolDropdownOpen((prev) => !prev)}
-                menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
-                dropdownStyle={{ width: 160 }}
-                containerStyle={shouldStackControls ? { flex: 1 } : undefined}
-                buttonStyle={{ ...StyledDropdownButton, width: shouldStackControls ? '100%' : undefined }}
-              >
-                {versionFilterOptions}
-              </Dropdown>
-              {showNetworkFilter && (
-                <Flex
-                  centered
-                  px="$padding12"
-                  borderWidth="$spacing1"
-                  borderColor="$surface3"
-                  borderRadius="$rounded12"
-                  hoverStyle={{ backgroundColor: '$surface2' }}
-                >
-                  <NetworkFilter
-                    includeAllNetworks
-                    selectedChain={selectedChain}
-                    onPressChain={onChainChange}
-                    chainIds={chains}
-                    styles={{
-                      buttonPaddingY: '$spacing8',
-                    }}
-                  />
-                </Flex>
-              )}
-            </Flex>
-          </>
+              {statusFilterOptions}
+            </Dropdown>
+            <ProtocolFilterDropdown
+              selectedVersions={selectedVersions ?? []}
+              onToggleVersion={onVersionChange}
+              fullWidth={shouldStackControls}
+            />
+            {showNetworkFilter && (
+              <PositionsNetworkFilter selectedChain={selectedChain} onChainChange={onChainChange} />
+            )}
+          </Flex>
         )}
       </Flex>
     </Flex>

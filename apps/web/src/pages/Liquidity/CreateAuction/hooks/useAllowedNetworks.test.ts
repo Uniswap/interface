@@ -88,7 +88,12 @@ describe('filterAllowedNetworksByTestnetMode', () => {
 describe('useCreateNewTokenAllowedNetworks', () => {
   it('excludes testnet chains when testnet mode is disabled', () => {
     const { result } = renderHook(() => useCreateNewTokenAllowedNetworks())
-    expect(result.current).toEqual([UniverseChainId.Mainnet, UniverseChainId.Unichain, UniverseChainId.Base])
+    expect(result.current).toEqual([
+      UniverseChainId.Unichain,
+      UniverseChainId.Mainnet,
+      UniverseChainId.Base,
+      UniverseChainId.ArbitrumOne,
+    ])
   })
 
   it('shows only testnet chains when testnet mode is enabled', () => {
@@ -102,8 +107,8 @@ describe('useCreateAuctionAllowedNetworks', () => {
   it('excludes testnet chains when testnet mode is disabled', () => {
     const { result } = renderHook(() => useCreateAuctionAllowedNetworks())
     expect(result.current).toEqual([
-      UniverseChainId.Mainnet,
       UniverseChainId.Unichain,
+      UniverseChainId.Mainnet,
       UniverseChainId.Base,
       UniverseChainId.ArbitrumOne,
     ])

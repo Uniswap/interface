@@ -90,14 +90,13 @@ function UnwrapUnderCard({
     <Flex
       row
       backgroundColor="$surface2"
-      borderBottomLeftRadius="$rounded12"
-      borderBottomRightRadius="$rounded12"
+      borderRadius="$rounded12"
       justifyContent="space-between"
       alignItems="center"
-      py="$padding8"
+      py="$padding12"
       px="$padding16"
     >
-      <Text variant="body3" color="$neutral2">
+      <Text variant="body2" color="$neutral2">
         {t('pool.collectAs', { nativeWrappedSymbol: nativeCurrency?.symbol })}
       </Text>
       <Switch
@@ -107,6 +106,34 @@ function UnwrapUnderCard({
         onCheckedChange={() => setUnwrapNativeCurrency((unwrapNativeCurrency) => !unwrapNativeCurrency)}
         variant="default"
       />
+    </Flex>
+  )
+}
+
+function FeeTokenRow({
+  currencyInfo,
+  symbol,
+  formattedAmount,
+  fiatAmount,
+}: {
+  currencyInfo: ReturnType<typeof useCurrencyInfo>
+  symbol?: string
+  formattedAmount: string
+  fiatAmount?: string
+}) {
+  return (
+    <Flex row alignItems="center" justifyContent="space-between" gap="$gap16">
+      <Flex gap="$gap4" fill>
+        <Text variant="heading3" color="$neutral1">
+          {formattedAmount} {symbol}
+        </Text>
+        {fiatAmount && (
+          <Text variant="body2" color="$neutral2">
+            {fiatAmount}
+          </Text>
+        )}
+      </Flex>
+      <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon36} />
     </Flex>
   )
 }
@@ -271,52 +298,31 @@ export function ClaimFeeModal() {
           closeDataTestId="ClaimFeeModal-close-icon"
         />
         {fee0Amount && fee1Amount && (
-          <Flex gap="$gap4">
-            <Flex
-              backgroundColor="$surface2"
-              borderTopLeftRadius="$rounded12"
-              borderTopRightRadius="$rounded12"
-              borderBottomLeftRadius={canUnwrap ? '$rounded0' : '$rounded12'}
-              borderBottomRightRadius={canUnwrap ? '$rounded0' : '$rounded12'}
-              p="$padding16"
-              gap="$gap12"
-            >
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Flex row gap="$gap8" alignItems="center">
-                  <CurrencyLogo currencyInfo={currencyInfo0} size={iconSizes.icon24} />
-                  <Text variant="body1" color="neutral1">
-                    {currency0?.symbol}
-                  </Text>
-                </Flex>
-                <Flex row gap="$gap8" alignItems="center">
-                  <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: fee0Amount })}
-                  </Text>
-                  {fee0AmountUsd && (
-                    <Text variant="body1" color="$neutral2">
-                      ({convertFiatAmountFormatted(fee0AmountUsd.toExact(), NumberType.FiatTokenPrice)})
-                    </Text>
-                  )}
-                </Flex>
-              </Flex>
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Flex row gap="$gap8" alignItems="center">
-                  <CurrencyLogo currencyInfo={currencyInfo1} size={iconSizes.icon24} />
-                  <Text variant="body1" color="neutral1">
-                    {currency1?.symbol}
-                  </Text>
-                </Flex>
-                <Flex row gap="$gap8" alignItems="center">
-                  <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: fee1Amount })}
-                  </Text>
-                  {fee1AmountUsd && (
-                    <Text variant="body1" color="$neutral2">
-                      ({convertFiatAmountFormatted(fee1AmountUsd.toExact(), NumberType.FiatTokenPrice)})
-                    </Text>
-                  )}
-                </Flex>
-              </Flex>
+          <Flex gap="$gap16">
+            <Flex gap="$gap12">
+              <FeeTokenRow
+                currencyInfo={currencyInfo0}
+                symbol={currency0?.symbol}
+                formattedAmount={formatCurrencyAmount({ value: fee0Amount })}
+                fiatAmount={
+                  fee0AmountUsd
+                    ? convertFiatAmountFormatted(fee0AmountUsd.toExact(), NumberType.FiatTokenPrice)
+                    : undefined
+                }
+              />
+              <Text variant="heading3" color="$neutral3">
+                +
+              </Text>
+              <FeeTokenRow
+                currencyInfo={currencyInfo1}
+                symbol={currency1?.symbol}
+                formattedAmount={formatCurrencyAmount({ value: fee1Amount })}
+                fiatAmount={
+                  fee1AmountUsd
+                    ? convertFiatAmountFormatted(fee1AmountUsd.toExact(), NumberType.FiatTokenPrice)
+                    : undefined
+                }
+              />
             </Flex>
             {canUnwrap && (
               <UnwrapUnderCard

@@ -16,7 +16,6 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 
 - **Node.js version** - Use the version specified in `.nvmrc`. Run `nvm use` to switch.
 - **Bun** - Package manager
-- **1Password CLI** - Required for environment variables (run `bun lfg` from monorepo root for full setup)
 
 ## Running Locally
 
@@ -40,28 +39,6 @@ Using a different port may cause CORS errors for certain Uniswap Backend service
 | `bun web test` | Run unit tests |
 | `bun web e2e` | Run E2E Playwright tests with prod build |
 | `bun web e2e:dev` | Run E2E Playwright tests with dev build |
-
-## Translations
-
-To get translations to work you'll need to set up 1Password, and then:
-
-```bash
-eval $(op signin)
-```
-
-Sign into 1Password, then:
-
-```bash
-bun mobile env:local:download
-```
-
-Which downloads a `.env.defaults.local` file at the root. Finally:
-
-```bash
-bun web i18n:download
-```
-
-Which will download the translations to `./apps/web/src/i18n/locales/translations`.
 
 ## Console Debugging
 

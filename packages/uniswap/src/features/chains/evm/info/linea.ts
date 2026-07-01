@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, LINEA_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -32,6 +33,7 @@ export const LINEA_CHAIN_INFO = {
   ...linea,
   id: UniverseChainId.Linea,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'linea',
   backendChain: {
     chain: GraphQLApi.Chain.Linea as GqlChainId,

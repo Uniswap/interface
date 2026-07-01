@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { ChartPeriod, type ChartPoint } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useEffect, useMemo } from 'react'
 import { type ChartData } from 'src/components/home/PortfolioChart/SparklineChart'
@@ -7,7 +8,7 @@ import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWal
 import { logger } from 'utilities/src/logger/logger'
 
 // API returns timestamps as bigint in seconds.
-function toChartData(points: ChartPoint[] | undefined): ChartData {
+function toChartData(points: readonly PlainMessage<ChartPoint>[] | undefined): ChartData {
   if (!points || points.length === 0) {
     return []
   }

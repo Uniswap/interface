@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
@@ -62,7 +63,7 @@ export function useTransformTokenTableData({
 }: {
   chainIds?: UniverseChainId[]
   limit?: number
-  tokenProfitLossData?: GetWalletTokensProfitLossResponse
+  tokenProfitLossData?: PlainMessage<GetWalletTokensProfitLossResponse>
 }): {
   visible: TokenData[] | null
   hidden: TokenData[] | null

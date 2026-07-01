@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
@@ -16,6 +16,8 @@ export const Price = memo(function Price({ price }: { price: TokenData['price'] 
     return <EmptyTableCell />
   }
 
-  return <ValueWithFadedDecimals value={formattedPrice} />
+  return (
+    <AnimatedNumber shouldFadeDecimals value={formattedPrice} numericValue={price} textVariant="$body3" alignRight />
+  )
 })
 Price.displayName = 'Price'

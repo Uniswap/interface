@@ -164,7 +164,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     }
 
     if (isUserOpRequest(request) && request.gasSponsored) {
-      // TODO(SWAP-2508): Need to handle case where userOp not sponsored: confirm should be disabled if !gasFee
       return true
     }
 

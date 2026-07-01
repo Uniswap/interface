@@ -23,6 +23,8 @@ export enum UniswapEventName {
   PnlCoverageReport = 'PnL Coverage Report',
   PnlPortfolioReport = 'PnL Portfolio Report',
   PnlTokenReport = 'PnL Token Report',
+  PoolsPositionsReport = 'Pools Positions Report',
+  PoolsStatusFilterSelected = 'Pools Status Filter Selected',
   RWATokenDetailsViewed = 'RWA Token Details Viewed',
   SmartWalletMismatchDetected = 'Smart Wallet Mismatch Detected',
   SpamReportSubmitted = 'Spam Report Submitted',

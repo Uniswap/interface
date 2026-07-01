@@ -6,6 +6,7 @@ import { memo, ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -503,7 +504,12 @@ function ToucanTableComponent({
 
           const fdvContent = (
             <Flex row alignItems="center" justifyContent="flex-end" gap="$spacing4">
-              <TableText color={isLowEngagement ? '$neutral3' : undefined}>{fdvFormatted ?? '-'}</TableText>
+              <AnimatedNumber
+                numericValue={projectedFdv?.usd}
+                textVariant="$body2"
+                color={isLowEngagement ? '$neutral3' : undefined}
+                value={fdvFormatted ?? '-'}
+              />
               {isLowEngagement && <AlertTriangleFilled color="$neutral3" size="$icon.16" />}
             </Flex>
           )
@@ -566,7 +572,11 @@ function ToucanTableComponent({
           return (
             <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
               <Flex flexDirection="column" alignItems="flex-end" gap="$spacing4">
-                <TableText>{committedVolumeDisplay ?? '-'}</TableText>
+                <AnimatedNumber
+                  numericValue={commitedVolumeUsd}
+                  textVariant="$body2"
+                  value={committedVolumeDisplay ?? '-'}
+                />
               </Flex>
             </Cell>
           )

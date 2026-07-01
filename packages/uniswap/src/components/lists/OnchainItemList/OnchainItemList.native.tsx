@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { CellContainer, FlashList } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useMemo, useRef, type PropsWithChildren } from 'react'
 import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
@@ -18,6 +18,7 @@ const TOKEN_ITEM_SIZE = 64
 const AMOUNT_TO_DRAW = 18
 
 const EXPANDABLE_ROW_LAYOUT_TRANSITION = LinearTransition.duration(EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS)
+const AnimatedCellContainer = Animated.createAnimatedComponent(CellContainer)
 
 // Only multi-issuer (grouped ticker) rows are expandable / dynamic-height.
 function isExpandableRow(row: ProcessedRow): boolean {
@@ -37,9 +38,15 @@ function AnimatedCellRenderer({
 }: PropsWithChildren<{
   style?: StyleProp<ViewStyle>
   onLayout?: (event: LayoutChangeEvent) => void
-  index?: number
+  index: number
 }>): JSX.Element {
-  return <Animated.View {...props} layout={EXPANDABLE_ROW_LAYOUT_TRANSITION} style={[style, { overflow: 'hidden' }]} />
+  return (
+    <AnimatedCellContainer
+      {...props}
+      layout={EXPANDABLE_ROW_LAYOUT_TRANSITION}
+      style={[style, { overflow: 'hidden' }]}
+    />
+  )
 }
 
 export const OnchainItemList = memo(function OnchainItemListInner({

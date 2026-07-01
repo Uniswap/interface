@@ -83,7 +83,6 @@ export enum FeatureFlags {
   NotificationOnboardingCard,
   NotificationService,
 
-  PrivateRpc,
   Scantastic,
   SelfReportSpamNFTs,
   SmartWalletSettings,
@@ -219,7 +218,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
   [FeatureFlags.NotificationService, 'notification_system'],
-  [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SmartWalletSettings, 'smart_wallet_settings'],
   [FeatureFlags.Support7677GasSponsorship, 'support_7677_gas_sponsorship'],

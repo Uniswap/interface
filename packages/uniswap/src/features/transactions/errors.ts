@@ -18,6 +18,17 @@ export class UnexpectedTransactionStateError extends TransactionError {
   }
 }
 
+/**
+ * Thrown when a sponsored approval was attempted (account capable) but sponsorship was not granted or the request
+ * errored. We error out rather than silently downgrading to a user-paid approval — no surprise charges.
+ */
+export class SponsoredApprovalRejectedError extends TransactionError {
+  constructor(reason?: string) {
+    super(reason ?? 'Sponsored approval was not granted')
+    this.name = 'SponsoredApprovalRejectedError'
+  }
+}
+
 /** Thrown when a transaction step fails for an unknown reason. */
 export class TransactionStepFailedError extends TransactionError {
   step: TransactionStep

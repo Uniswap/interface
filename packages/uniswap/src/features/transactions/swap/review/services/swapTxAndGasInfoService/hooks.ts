@@ -31,6 +31,7 @@ import type {
   SwapTxAndGasInfoService,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
+import { createUniswapXSponsoredApprovalStrategy } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/sponsoredApproval'
 import { createUniswapXSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/uniswapXSwapTxAndGasInfoService'
 import { createWrapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/wrap/wrapTxAndGasInfoService'
 import {
@@ -126,9 +127,16 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
     return decorateWithEVMLogging(bridgeService)
   }, [swapConfig, transactionSettings, instructionService, hasOverrides, decorateWithEVMLogging])
 
+  // Sponsored approval: 5792 wallet-call on web, 4337 userOp on wallet.
   const uniswapXSwapTxInfoService = useMemo(() => {
-    return createUniswapXSwapTxAndGasInfoService()
-  }, [])
+    return createUniswapXSwapTxAndGasInfoService({
+      fetchSponsoredApproval: createUniswapXSponsoredApprovalStrategy({
+        getCanBatchTransactions: swapConfig.getCanBatchTransactions,
+        getSwapDelegationInfo: swapConfig.getSwapDelegationInfo,
+        gasOverrides,
+      }),
+    })
+  }, [swapConfig.getCanBatchTransactions, swapConfig.getSwapDelegationInfo, gasOverrides])
 
   const chainedSwapTxInfoService = useMemo(() => {
     return createChainedActionSwapTxAndGasInfoService({

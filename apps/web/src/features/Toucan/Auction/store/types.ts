@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { Auction, Checkpoint, TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -143,8 +144,11 @@ interface AuctionState {
   auctionDetails: AuctionDetails | null
   auctionDetailsLoadState: AuctionDetailsLoadState
   auctionDetailsError: string | null
-  checkpointData: Checkpoint | null
-  onchainCheckpoint: Checkpoint | null // For bid in-range detection only
+  checkpointData: PlainMessage<Checkpoint> | null
+  onchainCheckpoint: PlainMessage<Checkpoint> | null // For bid in-range detection only
+  // Live total tokens cleared, from GetLatestCheckpointResponse.total_cleared (response-level,
+  // always-populated). Checkpoint.totalCleared (proto field 13) is deprecated — don't read it.
+  totalCleared: string | null
   tokenColor?: string
   tokenColorLoading: boolean
   currentBlockNumber: number | undefined
@@ -176,7 +180,7 @@ interface AuctionState {
   excludedBidVolume: string | null
   // Initialized-tick details from GetTickDetails API (sorted ascending by priceQ96).
   // Null until first load; empty array means the auction has no initialized ticks.
-  tickDetails: TickDetail[] | null
+  tickDetails: PlainMessage<TickDetail>[] | null
   // Callback to manually refetch user bids (used after withdrawal transactions)
   refetchUserBids: (() => void) | null
   // Active tab in BidFormTabs - used to conditionally show bid line on chart
@@ -211,14 +215,15 @@ interface AuctionActions {
   resetChartZoom: (chartMode?: ChartMode) => void
   setAuctionDetails: (details: AuctionDetails | null) => void
   setAuctionDetailsLoadState: (state: AuctionDetailsLoadState, error?: string | null) => void
-  setCheckpointData: (data: Checkpoint | null) => void
-  setOnchainCheckpoint: (data: Checkpoint | null) => void
+  setCheckpointData: (data: PlainMessage<Checkpoint> | null) => void
+  setOnchainCheckpoint: (data: PlainMessage<Checkpoint> | null) => void
+  setTotalCleared: (totalCleared: string | null) => void
   setSelectedTickPrice: (price: string | null) => void
   setUserBidPrice: (price: string | null) => void
   setCustomBidTick: (tickValue: number | null) => void
   setConcentrationBand: (band: ConcentrationBand | null) => void
   setBidDistributionData: (data: BidDistributionData | null, excludedVolume?: string | null) => void
-  setTickDetails: (ticks: TickDetail[] | null) => void
+  setTickDetails: (ticks: PlainMessage<TickDetail>[] | null) => void
   setRefetchUserBids: (refetchFn: (() => void) | null) => void
   setActiveBidFormTab: (tab: BidInfoTab) => void
   setOptimisticBid: (bid: OptimisticBid | null) => void

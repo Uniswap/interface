@@ -26,6 +26,7 @@ import { createConfig, fallback, http } from 'wagmi'
 import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
 import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/connection/constants'
 import { embeddedWallet } from '~/connection/EmbeddedWalletConnector'
+import { instrumentWalletConnectRpc } from '~/connection/instrumentWalletConnectRpc'
 import { createRejectableMockConnector } from '~/connection/rejectableConnector'
 import { WC_PARAMS } from '~/connection/walletConnect'
 
@@ -86,7 +87,7 @@ function createWagmiConnectors(params: {
     getBinanceConnector(),
     // There are no unit tests that expect WalletConnect to be included here,
     // so we can disable it to reduce log noise.
-    ...(isTestEnv() && !isE2eTestEnv() ? [] : [walletConnect(WC_PARAMS)]),
+    ...(isTestEnv() && !isE2eTestEnv() ? [] : [instrumentWalletConnectRpc(walletConnect(WC_PARAMS))]),
     embeddedWallet(),
     coinbaseWallet({
       appName: 'Uniswap',

@@ -1,6 +1,7 @@
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ARBITRUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -35,6 +36,7 @@ export const ARBITRUM_CHAIN_INFO = {
   ...arbitrum,
   id: UniverseChainId.ArbitrumOne,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'arbitrum',
   backendChain: {
     chain: GraphQLApi.Chain.Arbitrum as GqlChainId,

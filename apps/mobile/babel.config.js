@@ -5,7 +5,8 @@ const dotenv = require('dotenv')
 const fs = require('fs')
 const path = require('path')
 
-const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS === 'true'
+// New config system is enabled by default; opt out by explicitly setting USE_NEW_CONFIGS=false.
+const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS !== 'false'
 
 if (USE_NEW_CONFIGS) {
   const newEnvPath = path.resolve(__dirname, '.env.new')

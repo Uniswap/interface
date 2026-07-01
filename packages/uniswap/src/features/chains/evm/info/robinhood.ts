@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, ROBINHOOD_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -35,6 +36,7 @@ const tokens = buildChainTokens({
 export const ROBINHOOD_CHAIN_INFO = {
   id: UniverseChainId.Robinhood,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   testnet: false,
   assetRepoNetworkName: 'robinhood',
   backendChain: {

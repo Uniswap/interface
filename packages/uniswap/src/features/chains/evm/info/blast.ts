@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -31,6 +32,7 @@ export const BLAST_CHAIN_INFO = {
   ...blast,
   id: UniverseChainId.Blast,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'blast',
   backendChain: {
     chain: GraphQLApi.Chain.Blast as GqlChainId,

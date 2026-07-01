@@ -30,6 +30,8 @@ function safeAccessorGetValue<T>(getValue: (() => T | undefined) | undefined): T
   return getValue?.()
 }
 
+const RWA_METRIC_COLUMN_META = { flexGrow: 0 } as const
+
 export function useExpandableAssetTableColumns({
   showLoadingSkeleton,
   enabledChainIds,
@@ -108,7 +110,7 @@ export function useExpandableAssetTableColumns({
             )
           return (
             <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
-              <Flex {...(row.type === 'parent' ? { group: true } : {})} flex={1} minWidth={0} width="100%">
+              <Flex flex={1} minWidth={0} width="100%">
                 <TableText flex={1} minWidth={0} width="100%">
                   {description}
                 </TableText>
@@ -119,6 +121,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.display({
         id: 'price',
+        meta: RWA_METRIC_COLUMN_META,
         maxSize: 140,
         header: createMetricHeader(StocksSortMethod.PRICE),
         cell: (info) => {
@@ -139,6 +142,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).priceChange1hPct, {
         id: 'percentChange1hr',
+        meta: RWA_METRIC_COLUMN_META,
         maxSize: 100,
         header: createMetricHeader(StocksSortMethod.HOUR_CHANGE),
         cell: (info) => {
@@ -154,6 +158,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).priceChange24hPct, {
         id: 'percentChange1d',
+        meta: RWA_METRIC_COLUMN_META,
         maxSize: 140,
         header: createMetricHeader(StocksSortMethod.DAY_CHANGE),
         cell: (info) => {
@@ -169,6 +174,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).marketCapUsd, {
         id: 'marketCap',
+        meta: RWA_METRIC_COLUMN_META,
         maxSize: 120,
         header: createMetricHeader(StocksSortMethod.MARKET_CAP),
         cell: (info) => {
@@ -184,7 +190,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).volume24hUsd, {
         id: 'volume',
-        meta: { overflowVisible: true },
+        meta: { ...RWA_METRIC_COLUMN_META, overflowVisible: true },
         maxSize: 150,
         header: createMetricHeader(StocksSortMethod.VOLUME, true),
         cell: (info) => {
@@ -198,6 +204,7 @@ export function useExpandableAssetTableColumns({
       }),
       columnHelper.display({
         id: 'sparkline',
+        meta: RWA_METRIC_COLUMN_META,
         maxSize: 120,
         header: () => (
           <HeaderCell>

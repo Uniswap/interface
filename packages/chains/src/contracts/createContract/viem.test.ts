@@ -3,6 +3,7 @@ import { createPublicClient, custom, encodeFunctionResult } from 'viem'
 import { mainnet } from 'viem/chains'
 import { describe, expect, it, vi } from 'vitest'
 import { feeOnTransferDetectorAbi } from '../../abis/feeOnTransferDetectorAbi'
+import { wethAbi } from '../../abis/wethAbi'
 import { createViemContract, createViemContractFromEthersParams } from './viem'
 
 // Fixture matched 1:1 with ethers tests. Both tests decode the same
@@ -117,5 +118,64 @@ describe('createViemContractFromEthersParams', () => {
     // It's not the most "direct" but less brittle then internal checks.
     expect((withSigner as { write?: unknown }).write).toBeDefined()
     expect((withoutSigner as { write?: unknown }).write).toBeUndefined()
+  })
+
+  // The bridged walletClient has no `chain`; these tests prove writes still
+  // send (the proxy pins `chain: null`, so viem skips its chain assertion.
+  describe('writes through the bridged signer', () => {
+    const wethAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    const signerAddress = '0xCD2A3d9F938E13CD947Ec05Abc7FE734DF8DD826' as const
+    const txHash = `0x${'12'.repeat(32)}`
+
+    function makeBridgedWethContract() {
+      const send = vi.fn(async (method: string) => {
+        if (method === 'eth_sendTransaction') {
+          return txHash
+        }
+        throw new Error(`Unexpected RPC method: ${method}`)
+      })
+      const provider = { send } as unknown as JsonRpcProvider
+      const signer = { provider } as unknown as JsonRpcSigner
+      const contract = createViemContractFromEthersParams({
+        address: wethAddress,
+        abi: wethAbi,
+        provider,
+        signer,
+        signerAddress,
+      })
+      return { contract, send }
+    }
+
+    it('sends a payable write given only options', async () => {
+      const { contract, send } = makeBridgedWethContract()
+      const hash = await contract.write.deposit({ value: 123n })
+      expect(hash).toBe(txHash)
+      expect(send).toHaveBeenCalledTimes(1)
+      expect(send).toHaveBeenCalledWith('eth_sendTransaction', [
+        expect.objectContaining({
+          // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
+          from: signerAddress.toLowerCase(),
+          to: wethAddress,
+          value: '0x7b',
+          // deposit() selector
+          data: '0xd0e30db0',
+        }),
+      ])
+    })
+
+    it('encodes args for a write given an args array', async () => {
+      const { contract, send } = makeBridgedWethContract()
+      const hash = await contract.write.withdraw([5n])
+      expect(hash).toBe(txHash)
+      expect(send).toHaveBeenCalledWith('eth_sendTransaction', [
+        expect.objectContaining({
+          // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
+          from: signerAddress.toLowerCase(),
+          to: wethAddress,
+          // withdraw(uint256) selector + abi-encoded 5
+          data: `0x2e1a7d4d${'5'.padStart(64, '0')}`,
+        }),
+      ])
+    })
   })
 })

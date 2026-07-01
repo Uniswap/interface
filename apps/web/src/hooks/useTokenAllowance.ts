@@ -1,6 +1,6 @@
-import { ContractTransaction } from '@ethersproject/contracts'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useRef } from 'react'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ApproveTransactionInfo, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -47,7 +47,7 @@ export function useTokenAllowance({ token, owner, spender }: { token?: Token; ow
 export function useUpdateTokenAllowance(
   amount: CurrencyAmount<Token> | undefined,
   spender: string,
-): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
+): () => Promise<{ hash: string; chainId: UniverseChainId; info: ApproveTransactionInfo }> {
   const analyticsTrace = useTrace()
 
   const contract = useTokenContract({
@@ -73,14 +73,14 @@ export function useUpdateTokenAllowance(
       }
 
       const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
-      const response = await (async () => {
+      const hash = await (async () => {
         // oxlint-disable-next-line no-shadow
         const contract = contractRef.current
         try {
           if (!contract) {
             throw new Error('missing contract')
           }
-          return await contract.approve(spender, allowance)
+          return await contract.write.approve([assume0xAddress(spender), BigInt(allowance)])
         } catch (error) {
           if (didUserReject(error)) {
             const symbol = amount.currency.symbol ?? 'Token'
@@ -97,7 +97,8 @@ export function useUpdateTokenAllowance(
         ...analyticsTrace,
       })
       return {
-        response,
+        hash,
+        chainId: amount.currency.chainId,
         info: {
           type: TransactionType.Approve,
           tokenAddress: contract.address,
@@ -119,7 +120,7 @@ export function useUpdateTokenAllowance(
 export function useRevokeTokenAllowance(
   token: Token | undefined,
   spender: string,
-): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
+): () => Promise<{ hash: string; chainId: UniverseChainId; info: ApproveTransactionInfo }> {
   const amount = useMemo(() => (token ? CurrencyAmount.fromRawAmount(token, 0) : undefined), [token])
 
   return useUpdateTokenAllowance(amount, spender)

@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { Token as RestToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
@@ -34,7 +35,7 @@ export function mapRestStatusToNetworkStatus(status: 'success' | 'error' | 'pend
   }
 }
 
-export function matchesCurrency(token: RestToken, currency: Currency): boolean {
+export function matchesCurrency(token: PlainMessage<RestToken>, currency: Currency): boolean {
   const chainIdsMatch = token.chainId === currency.chainId
   const addressesMatch =
     (currency.isNative && isNativeCurrencyAddress(token.chainId, token.address)) ||

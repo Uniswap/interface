@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, FlexLoader, Image, Skeleton, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
@@ -139,11 +140,18 @@ export function PortfolioPoolsRewardsCard({
               </Skeleton>
             </Flex>
           ) : (
-            <Text variant="heading3" color={userHasRewards || hasError ? '$neutral1' : '$neutral3'} flexGrow={1}>
-              {hasError
-                ? '-'
-                : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))}
-            </Text>
+            <Flex flexGrow={1}>
+              <AnimatedNumber
+                value={
+                  hasError
+                    ? '-'
+                    : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))
+                }
+                numericValue={rewardsUsdValue ? Number(rewardsUsdValue.toExact()) : 0}
+                textVariant="$heading3"
+                color={userHasRewards || hasError ? '$neutral1' : '$neutral3'}
+              />
+            </Flex>
           )}
           {!isZero && !showSkeleton && !isExternalWallet && (
             <Button

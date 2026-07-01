@@ -11,6 +11,7 @@ import {
   ProfitLossPeriod,
 } from 'uniswap/src/components/WalletProfitLoss/utils'
 import { WalletProfitLoss } from 'uniswap/src/components/WalletProfitLoss/WalletProfitLoss'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetWalletProfitLossQuery } from 'uniswap/src/data/rest/getWalletProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -41,6 +42,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
       since,
       modifier,
     },
+    refetchInterval: PollingInterval.Normal,
   })
 
   const profitLoss = data?.profitLoss

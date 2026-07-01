@@ -9,7 +9,6 @@ import {
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
   type PostAuctionLiquidityTier,
-  PriceRangeStrategy,
   RaiseCurrency,
   UNBOUNDED_TIER_ID,
 } from '~/pages/Liquidity/CreateAuction/types'
@@ -32,10 +31,6 @@ function formatCompactNormalized(normalized: number): string {
   return Number.isInteger(normalized)
     ? normalized.toFixed(0)
     : normalized.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
-}
-
-export function getRecommendedStrategy(): PriceRangeStrategy {
-  return PriceRangeStrategy.CONCENTRATED_FULL_RANGE
 }
 
 export function clampPostAuctionLiquidityPercent(percent: number): number {

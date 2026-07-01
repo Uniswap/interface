@@ -2,6 +2,7 @@ import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -69,6 +70,7 @@ const TokenStatsSection = ({ children }: { children: ReactNode }) => (
 const StatsLoadingContainer = styled(Flex, {
   row: true,
   flexWrap: 'wrap',
+  rowGap: '$spacing24',
   width: '100%',
 })
 
@@ -117,6 +119,7 @@ function Stat({
   numberType?: FiatNumberType
 }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const formattedValue = convertFiatAmountFormatted(value, numberType)
 
   return (
     <StatWrapper tableRow data-cy={`${testID}`} data-testid={`${testID}`}>
@@ -128,18 +131,14 @@ function Stat({
           </Text>
         </MouseoverTooltip>
       </Text>
-      <Text
-        tag="td"
-        mt="$spacing8"
-        fontSize={28}
-        color="$neutral1"
-        fontWeight="$book"
-        $platform-web={{
-          overflowWrap: 'break-word',
-        }}
-      >
-        {convertFiatAmountFormatted(value, numberType)}
-      </Text>
+      <Flex tag="td" mt="$spacing8" data-testid={`${testID}-value`} $platform-web={{ overflowWrap: 'break-word' }}>
+        <AnimatedNumber
+          numericValue={value ?? undefined}
+          loadingPlaceholderText="$0.00"
+          textVariant="$heading3"
+          value={formattedValue}
+        />
+      </Flex>
     </StatWrapper>
   )
 }

@@ -129,5 +129,4 @@ export const TOUCAN_AUCTION_SUPPORTED_CHAINS = [
   UniverseChainId.Base,
   UniverseChainId.ArbitrumOne,
   UniverseChainId.Sepolia,
-  UniverseChainId.UnichainSepolia,
 ]

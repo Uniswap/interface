@@ -105,7 +105,7 @@ export function BalanceBreakdownPopover({
         animation="quick"
         animateOnly={['transform', 'opacity']}
         p="$spacing16"
-        width={POPOVER_WIDTH}
+        {...(isMobile ? { width: POPOVER_WIDTH } : { minWidth: POPOVER_WIDTH })}
         {...shadowProps}
       >
         <Flex gap="$spacing8" width="100%">

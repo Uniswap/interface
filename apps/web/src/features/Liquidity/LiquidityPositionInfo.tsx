@@ -93,7 +93,7 @@ export function LiquidityPositionInfo({
       return {
         fullLabel: t('pool.migrateToV3'),
         shortLabel: t('common.migrate'),
-        path: `/migrate/v2/${positionInfo.liquidityToken.address}`,
+        path: `/migrate/v2/${chainInfo.urlParam}/${positionInfo.liquidityToken.address}`,
       }
     }
 

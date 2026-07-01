@@ -2,6 +2,7 @@ import { GraphQLApi, TradingApi } from '@universe/api'
 import { isWebApp } from '@universe/environment'
 import { ETH_LOGO, OPTIMISM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -34,6 +35,7 @@ export const OPTIMISM_CHAIN_INFO = {
   ...optimism,
   id: UniverseChainId.Optimism,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'optimism',
   backendChain: {
     chain: GraphQLApi.Chain.Optimism as GqlChainId,

@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Flex, TouchableArea, useIsTouchDevice } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -23,7 +23,6 @@ export const LiquidityPositionDropdownMenu = memo(function LiquidityPositionDrop
   isVisible = true,
   readOnly = false,
 }: LiquidityPositionDropdownMenuProps) {
-  const isTouchDevice = useIsTouchDevice()
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu, toggle } = useBooleanState(false)
   const dropdownOptions = useLiquidityPositionDropdownOptions({
     liquidityPosition,
@@ -54,24 +53,8 @@ export const LiquidityPositionDropdownMenu = memo(function LiquidityPositionDrop
             toggle()
           }}
         >
-          <Flex
-            aria-label="View pool options"
-            opacity={isTouchDevice ? 1 : 0}
-            transition="opacity 0.2s ease"
-            centered
-            $group-hover={{ opacity: 1 }}
-            $group-focus={{ opacity: 1 }}
-            mr="$spacing8"
-            ml="$spacing4"
-          >
-            <Flex
-              height={ICON_BUTTON_SIZE}
-              width={ICON_BUTTON_SIZE}
-              borderRadius="$rounded12"
-              hoverStyle={{ backgroundColor: '$surface3' }}
-              centered
-              animateOnly={['opacity', 'transform']}
-            >
+          <Flex aria-label="View pool options" centered mr="$spacing8" ml="$spacing4">
+            <Flex height={ICON_BUTTON_SIZE} width={ICON_BUTTON_SIZE} borderRadius="$rounded12" centered>
               <MoreHorizontal size="$icon.16" color="$neutral2" />
             </Flex>
           </Flex>

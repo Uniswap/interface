@@ -6,6 +6,8 @@ export type RWAToken = {
   chainId: number
   address: string
   issuer: RWAIssuer
+  /** Present when this preferred TDP display token represents an issuer available on multiple chains. */
+  networkCount?: number
   // Display data for this specific tokenized asset (e.g. an `XX.on` token), resolved per token by
   // `resolveRwaIssuerDisplay`: from the data-api `Rwa.issuerData` map (keyed by issuer), or asset-level
   // name/symbol/logoUrl for issuer-less entries (e.g. commodities). Always populated — a non-empty issuer

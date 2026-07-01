@@ -1,11 +1,10 @@
 import path from 'path'
 import { defineConfig, devices } from '@playwright/test'
-import { config } from 'dotenv'
 import ms from 'ms'
+import { loadTestRunnerEnv } from './vite/resolveEnvConfigs'
 
-// Load environment variables from .env file
-// This ensures the VSCode Playwright extension has access to env vars
-config({ path: path.resolve(__dirname, '.env') })
+// Load env into process.env so the runner's getConfig() matches the browser bundle.
+loadTestRunnerEnv(__dirname)
 
 // __DEV__ is a build-time constant injected by Vite/Vitest; the Playwright
 // worker has no such define so set it here to avoid loud errors from utilities/logger.ts
@@ -16,30 +15,6 @@ const IS_CI = process.env.CI === 'true'
 // Handle asset files and platform-specific imports for Node.js
 // oxlint-disable-next-line typescript/no-var-requires
 const Module = require('module')
-
-// Override module resolution to handle platform-specific files like Vite does
-const originalResolveFilename = Module._resolveFilename
-Module._resolveFilename = function (request, parent) {
-  // For getConfig imports, try .web variant first (mimics Vite behavior)
-  // Use precise matching to avoid false positives with modules containing 'getConfig' as substring
-  if (request.endsWith('/getConfig') || request.endsWith('\\getConfig') || request === 'getConfig') {
-    // Try different .web patterns to match how Vite resolves extensions
-    const webVariants = [
-      `${request}.web`,
-      request.endsWith('.js') ? request.replace(/\.js$/, '.web.js') : `${request}.web.js`,
-    ]
-
-    for (const webVariant of webVariants) {
-      try {
-        return originalResolveFilename.call(this, webVariant, parent)
-      } catch {
-        // Continue trying other variants
-      }
-    }
-  }
-
-  return originalResolveFilename.call(this, request, parent)
-}
 
 const originalLoad = Module._load
 Module._load = function (...args: any[]) {

@@ -2,8 +2,8 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { waitForFlashbotsProtectReceipt } from '@universe/chains'
 import { HexString } from '@universe/encoding'
 import { buildFlashbotsUrl, SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
-import { Chain, PublicClient } from 'viem'
+import { createFlashbotsRpcClient, createFlashbotsTransport } from 'uniswap/src/features/providers/FlashbotsRpcClient'
+import { Chain, createPublicClient, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import type { Mock, Mocked } from 'vitest'
 
@@ -93,8 +93,11 @@ describe('FlashbotsRpcClient', () => {
 
       // Check base URL
       expect(requestUrl).toContain('rpc.flashbots.net/fast')
-      // Check refund parameter (default 50%)
-      expect(requestUrl).toContain(`refund=${testAddress}:50`)
+      // Check refund parameter (default 90%)
+      expect(requestUrl).toContain(`refund=${testAddress}:90`)
+      // Check calldata hints
+      expect(requestUrl).toContain('hint=calldata')
+      expect(requestUrl).toContain('hint=logs')
       // Check origin ID
       expect(requestUrl).toContain('originId=uniswapwallet')
 
@@ -128,6 +131,52 @@ describe('FlashbotsRpcClient', () => {
       const fetchCall = (global.fetch as Mock).mock.calls[0]!
       const requestUrl = fetchCall[0]
       expect(requestUrl).toContain(`refund=${testAddress}:${refundPercent}`)
+    })
+  })
+
+  describe('createFlashbotsTransport', () => {
+    it('should include calldata hints in fallback URL when enabled', async () => {
+      mockFetchResponse({ result: '0x2328' })
+
+      const transport = createFlashbotsTransport({
+        signerInfo,
+        areAddressesEqual: (a, b) => a.toLowerCase() === b.toLowerCase(),
+      })
+      const flashbotsClient = createPublicClient({
+        chain: mockChain,
+        transport,
+      })
+
+      await flashbotsClient.request({
+        method: 'eth_blockNumber',
+        params: undefined,
+      })
+
+      const requestUrl = (global.fetch as Mock).mock.calls[0]![0]
+      expect(requestUrl).toContain('hint=calldata')
+      expect(requestUrl).toContain('hint=logs')
+    })
+
+    it('should omit calldata hints in fallback URL when disabled', async () => {
+      mockFetchResponse({ result: '0x2328' })
+
+      const transport = createFlashbotsTransport({
+        signerInfo,
+        calldataHintsEnabled: false,
+        areAddressesEqual: (a, b) => a.toLowerCase() === b.toLowerCase(),
+      })
+      const flashbotsClient = createPublicClient({
+        chain: mockChain,
+        transport,
+      })
+
+      await flashbotsClient.request({
+        method: 'eth_blockNumber',
+        params: undefined,
+      })
+
+      const requestUrl = (global.fetch as Mock).mock.calls[0]![0]
+      expect(requestUrl).not.toContain('hint=')
     })
   })
 

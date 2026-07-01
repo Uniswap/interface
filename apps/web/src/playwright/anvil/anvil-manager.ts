@@ -1,5 +1,4 @@
 // oxlint-disable eslint-js/no-restricted-syntax
-import 'dotenv/config'
 import { type ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -7,6 +6,9 @@ import { promiseTimeout, sleep } from 'utilities/src/time/timing'
 import { createClient, createTestClient, http, publicActions, walletActions } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
+import { loadTestRunnerEnv } from '../../../vite/resolveEnvConfigs'
+
+loadTestRunnerEnv(process.cwd())
 
 const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 

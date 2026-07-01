@@ -40,6 +40,7 @@ import {
   type WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
 import { type TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { SponsoredApprovalType } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { type TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { type WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { type UnitagClaimContext } from 'uniswap/src/features/unitags/types'
@@ -711,13 +712,15 @@ export type AuctionPoolDetailsInfoEnteredProperties = ITraceContext & {
 }
 
 /** Stage at which the launch failed. */
-export type AuctionCreateFailedStep = 'build_request' | 'create_auction_request' | 'launch'
+export type AuctionCreateFailedStep = 'build_request' | 'create_auction_request' | 'launch' | 'onchain'
 
 export type AuctionCreateFailedProperties = ITraceContext & {
   token_source: AuctionCreateTokenSource
   chain_id: number
   failed_step: AuctionCreateFailedStep
   error_code?: string | number
+  /** Set only for `failed_step: 'onchain'`: hash of the reverted launch tx. */
+  transaction_hash?: string
 }
 
 /** Fired when the user adds a custom post-auction-liquidity price range on the Pool Details step. */
@@ -758,6 +761,13 @@ type PoolReportProperties = {
   chain_id: UniverseChainId
   token0: string
   token1: string
+}
+
+export type SponsoredApprovalEventProperties = {
+  transport: SponsoredApprovalType
+  chain_id: number
+  reason?: string // Failed/Fallback only
+  duration_ms?: number // since SponsoredApprovalRequested
 }
 
 // Please sort new values by EventName type!
@@ -840,15 +850,6 @@ export type UniverseEventProperties = {
     timestamp: number
   }
   [InterfaceEventName.AccountDropdownButtonClicked]: undefined
-  [InterfaceEventName.WalletProviderUsed]: {
-    source: string
-    contract: {
-      name: string
-      address?: string
-      withSignerIfPossible?: boolean
-      chainId?: number
-    }
-  }
   [InterfaceEventName.WrapTokenTxnInvalidated]: WrapProperties
   [InterfaceEventName.WrapTokenTxnSubmitted]: WrapProperties
   [InterfaceEventName.UniswapWalletMicrositeOpened]: ITraceContext
@@ -889,6 +890,12 @@ export type UniverseEventProperties = {
     txHash: string
     transactionType?: TransactionType
     routing?: SwapRouting
+    // RWA: mirror the props on Swap Quote Received / Signed / Transaction Completed so this event is filterable
+    // by tokenized-stock activity. Captured at submit on the swap typeInfo. See `getRwaSwapAnalyticsFromTypeInfo`.
+    market_closed?: boolean
+    price_warning?: boolean
+    token_in_stocks?: boolean
+    token_out_stocks?: boolean
   }
   [InterfaceEventName.SwapTabClicked]: {
     tab: SwapTab
@@ -1136,6 +1143,8 @@ export type UniverseEventProperties = {
     token_address?: string
     token_symbol?: string
     token_list_length?: number
+    /** ElementName.TDPRwaTokenVariant — issuer of the clicked tokenized-stock variant on the TDP (ondo/dinari/xstocks) */
+    issuer?: string
     /** ElementName.Continue on the launch-auction flow — new (factory-deployed) vs existing token */
     token_source?: AuctionCreateTokenSource
     /** ElementName.AuctionRaiseCurrency — selected raise currency on the launch-auction flow (ETH / USDC). */
@@ -1150,6 +1159,9 @@ export type UniverseEventProperties = {
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
     /** Token details */
     multichain?: boolean
+    /** section='market-close-warning' — tokenized-stock the off-hours warning was shown for (mobile TDP) */
+    token_address?: string
+    token_symbol?: string
   }
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
     enabled: boolean
@@ -1264,6 +1276,10 @@ export type UniverseEventProperties = {
     time_to_sign_since_request_ms?: number
     time_signed?: number
   }
+  [SwapEventName.SponsoredApprovalRequested]: SponsoredApprovalEventProperties
+  [SwapEventName.SponsoredApprovalSubmitted]: SponsoredApprovalEventProperties
+  [SwapEventName.SponsoredApprovalConfirmed]: SponsoredApprovalEventProperties
+  [SwapEventName.SponsoredApprovalFailed]: SponsoredApprovalEventProperties
   [SwapEventName.SwapModifiedInWallet]: {
     expected: string
     actual: string
@@ -1317,6 +1333,17 @@ export type UniverseEventProperties = {
     realized_return_percent: number | undefined
     token_address: string
     chain_id: number
+  }
+  [UniswapEventName.PoolsPositionsReport]: {
+    total_positions: number
+    in_range_count: number
+    out_of_range_count: number
+    closed_count: number
+    pages_loaded: number
+    has_more: boolean
+  } & Partial<ITraceContext>
+  [UniswapEventName.PoolsStatusFilterSelected]: {
+    filter: 'all' | 'open' | 'closed'
   }
   [UniswapEventName.MultichainExploreMetrics]: {
     total_token_row_count: number

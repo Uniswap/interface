@@ -63,7 +63,10 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
     portfolioTotalBalanceUSD: portfolioData?.balanceUSD,
   })
 
-  const canShowChart = chartData.length > 0
+  // Hide the chart (and its tap-through to the details/PnL screen) on an empty wallet — a zero
+  // total balance is meaningless to chart. Matches `isEmptyWalletBalance`: a defined, non-positive total.
+  const isEmptyPortfolio = portfolioData?.balanceUSD !== undefined && portfolioData.balanceUSD <= 0
+  const canShowChart = !isEmptyPortfolio && chartData.length > 0
 
   const openPortfolioChartDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

@@ -5,8 +5,9 @@ import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { type SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
+import { HandledTransactionInterrupt, UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import {
+  type HandleApprovalWalletCallStepParams,
   HandleSwapWalletCallStepParams,
   type HandleSwapStepParams,
   type TransactionStep,
@@ -17,7 +18,10 @@ import { type PlanAnalyticsFields, planAnalyticsToCamelCase } from 'uniswap/src/
 import { handleSwitchChains } from 'uniswap/src/features/transactions/swap/plan/utils'
 import { getSwapTxRequest } from 'uniswap/src/features/transactions/swap/steps/swap'
 import type { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { type ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import {
+  SponsoredApprovalType,
+  type ValidatedSwapTxContext,
+} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import {
   type BridgeTrade,
   type ChainedActionTrade,
@@ -41,6 +45,7 @@ import { jupiterSwap } from '~/state/sagas/transactions/solana'
 import { sendSwapSignedEvent } from '~/state/sagas/transactions/swapSignedAnalytics'
 import { handleUniswapXSignatureStep } from '~/state/sagas/transactions/uniswapx'
 import {
+  getApprovalTransactionInfo,
   getDisplayableError,
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
@@ -48,6 +53,7 @@ import {
   handlePermitTransactionStep,
   handleSignatureStep,
   waitForBatch,
+  waitForBatchInterruptible,
 } from '~/state/sagas/transactions/utils'
 import { type VitalTxFields } from '~/state/transactions/types'
 
@@ -148,6 +154,43 @@ export function createHandleSwapTransactionWalletCallStep(ctx: {
 
     const hash = yield* call(waitForBatch, batchId, step)
     return { batchId, hash }
+  }
+}
+
+export function* handleApprovalWalletCallStep(params: HandleApprovalWalletCallStepParams): SagaGenerator<void> {
+  const { step } = params
+  const info = getApprovalTransactionInfo(step)
+  const analyticsBase = { transport: SponsoredApprovalType.WalletCall, chain_id: step.chainId } as const
+  const requestedAt = Date.now()
+  sendAnalyticsEvent(SwapEventName.SponsoredApprovalRequested, analyticsBase)
+
+  try {
+    const batchId = yield* handleAtomicSendCalls({
+      ...params,
+      info,
+      step,
+      ignoreInterrupt: false,
+      shouldWaitForConfirmation: false,
+    })
+    sendAnalyticsEvent(SwapEventName.SponsoredApprovalSubmitted, {
+      ...analyticsBase,
+      duration_ms: Date.now() - requestedAt,
+    })
+
+    yield* call(waitForBatchInterruptible, batchId, step)
+    sendAnalyticsEvent(SwapEventName.SponsoredApprovalConfirmed, {
+      ...analyticsBase,
+      duration_ms: Date.now() - requestedAt,
+    })
+  } catch (error) {
+    if (!(error instanceof HandledTransactionInterrupt)) {
+      sendAnalyticsEvent(SwapEventName.SponsoredApprovalFailed, {
+        ...analyticsBase,
+        reason: error instanceof Error ? error.message : 'unknown',
+        duration_ms: Date.now() - requestedAt,
+      })
+    }
+    throw error
   }
 }
 
@@ -264,6 +307,11 @@ function* swap(params: SwapParams) {
             analytics,
             disableOneClickSwap,
           })
+          break
+        }
+        case TransactionStepType.TokenApprovalWalletCall: {
+          requireRouting(trade, UNISWAPX_ROUTING_VARIANTS)
+          yield* call(handleApprovalWalletCallStep, { address, step, setCurrentStep, disableOneClickSwap })
           break
         }
         case TransactionStepType.UniswapXSignature: {

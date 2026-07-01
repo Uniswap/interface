@@ -59,10 +59,7 @@ export function* createTransactionServices(
         })
       : providerService.getProvider({ chainId: input.chainId })
 
-  const transactionConfigService = dependencies.createTransactionConfigService({
-    featureFlagService: dependencies.createFeatureFlagService(),
-    logger: dependencies.logger,
-  })
+  const transactionConfigService = dependencies.createTransactionConfigService()
 
   const getViemClient = async (): Promise<PublicClient> => {
     const viemClients = dependencies.getViemClients()

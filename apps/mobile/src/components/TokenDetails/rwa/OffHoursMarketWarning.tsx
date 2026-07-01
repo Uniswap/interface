@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useIsEquityOffHours } from 'uniswap/src/features/rwa/useIsEquityOffHours'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
@@ -20,7 +22,14 @@ export function OffHoursMarketWarning(): JSX.Element | null {
   const isOffHours = useIsEquityOffHours()
 
   const closeSheet = useCallback((): void => setIsSheetOpen(false), [])
-  const openSheet = useCallback((): void => setIsSheetOpen(true), [])
+  const openSheet = useCallback((): void => {
+    setIsSheetOpen(true)
+    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+      section: 'market-close-warning',
+      token_address: rwaMatch?.token.address,
+      token_symbol: rwaMatch?.token.symbol,
+    })
+  }, [rwaMatch])
   const openLearnMore = useCallback((): void => {
     openUri({ uri: UniswapHelpUrls.articles.rwaOffHours }).catch(() => undefined)
   }, [])
@@ -62,7 +71,7 @@ export function OffHoursMarketWarning(): JSX.Element | null {
                   {t('tdp.rwa.offHours.title')}
                 </Text>
                 <Text color="$neutral2" textAlign="center" variant="body3">
-                  {t('tdp.rwa.offHours.warning', { ticker: rwaMatch.asset.symbol })}
+                  {t('tdp.rwa.offHours.warning', { name: rwaMatch.asset.name, ticker: rwaMatch.asset.symbol })}
                 </Text>
                 <TouchableArea onPress={openLearnMore}>
                   <Text color="$neutral1" variant="buttonLabel3">

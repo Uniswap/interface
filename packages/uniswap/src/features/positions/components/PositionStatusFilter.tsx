@@ -5,7 +5,10 @@ import { Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { spacing } from 'ui/src/theme'
 import { SingleSelectContextMenu, type SingleSelectOption } from 'uniswap/src/components/menus/SingleSelectContextMenu'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export enum PositionStatusFilterValue {
   All = 'all',
@@ -32,6 +35,13 @@ export function PositionStatusFilterButton({
 }): JSX.Element {
   const { t } = useTranslation()
 
+  const handleSelect = useEvent((nextValue: PositionStatusFilterValue) => {
+    if (nextValue !== value) {
+      sendAnalyticsEvent(UniswapEventName.PoolsStatusFilterSelected, { filter: nextValue })
+    }
+    onChange(nextValue)
+  })
+
   const labelByValue = useMemo<Record<PositionStatusFilterValue, string>>(
     () => ({
       [PositionStatusFilterValue.All]: t('common.all'),
@@ -57,7 +67,7 @@ export function PositionStatusFilterButton({
       selectedValue={value}
       offsetY={spacing.spacing8}
       disabled={disabled}
-      onSelect={onChange}
+      onSelect={handleSelect}
     >
       {({ isOpen }) => (
         <Flex

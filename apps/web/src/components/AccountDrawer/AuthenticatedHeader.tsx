@@ -8,9 +8,7 @@ import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { Shine } from 'ui/src/loading/Shine'
 import { iconSizes } from 'ui/src/theme'
-import AnimatedNumber, {
-  BALANCE_CHANGE_INDICATION_DURATION,
-} from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
@@ -24,7 +22,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
@@ -67,7 +64,6 @@ export function AuthenticatedHeader({
   const isUniswapExtensionConnected = useIsUniswapExtensionConnected()
   const uniswapExtensionRequest = useUniswapExtensionRequest()
   const shouldShowExtensionButton = isUniswapExtensionConnected && !isSolanaConnected
-  const isRightToLeft = i18next.dir() === 'rtl'
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(evmAddress)
   const isUnclaimed = useUserHasAvailableClaim(evmAddress)
@@ -181,9 +177,7 @@ export function AuthenticatedHeader({
         <Flex flex={1} mt="$spacing16">
           <Flex gap="$spacing4" mb="$spacing16" data-testid={TestID.MiniPortfolioTotalBalance}>
             <AnimatedNumber
-              balance={balanceUSD}
-              isRightToLeft={isRightToLeft}
-              colorIndicationDuration={BALANCE_CHANGE_INDICATION_DURATION}
+              numericValue={balanceUSD}
               loading={isLoading}
               loadingPlaceholderText="000000.00"
               shouldFadeDecimals={shouldFadePortfolioDecimals}

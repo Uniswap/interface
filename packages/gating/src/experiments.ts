@@ -6,7 +6,6 @@
 export enum Experiments {
   EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
-  PrivateRpc = 'private_rpc',
   SwapConfirmation = 'swap-confirmation',
 }
 
@@ -25,12 +24,6 @@ export enum NativeTokenPercentageBufferExperimentGroup {
 
 export enum ArbitrumXV2SamplingProperties {
   RoutingType = 'routingType',
-}
-
-export enum PrivateRpcProperties {
-  CalldataHintsEnabled = 'calldata_hints_enabled',
-  FlashbotsEnabled = 'flashbots_enabled',
-  RefundPercent = 'refund_percent',
 }
 
 export enum NativeTokenPercentageBufferProperties {
@@ -57,7 +50,6 @@ export enum EthAsErc20UniswapXProperties {
 export type ExperimentProperties = {
   [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
-  [Experiments.PrivateRpc]: PrivateRpcProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
 }
 

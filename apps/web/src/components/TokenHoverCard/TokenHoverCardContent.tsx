@@ -79,12 +79,12 @@ function TokenHoverCardContentInner({
         <Flex row gap="$spacing8" alignItems="center">
           {onCopy && (
             <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onCopy}>
-              <AnimatableCopyIcon isCopied={isCopied} size={iconSizes.icon16} />
+              <AnimatableCopyIcon isCopied={isCopied} size={iconSizes.icon16} textColor="$neutral2" />
             </TouchableArea>
           )}
           {onExpand && (
             <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onExpand}>
-              <ArrowsExpand color="$neutral2" size={iconSizes.icon16} />
+              <ArrowsExpand color="$neutral2" size={iconSizes.icon12} />
             </TouchableArea>
           )}
         </Flex>
@@ -138,6 +138,7 @@ function TokenHoverCardContentInner({
           stale={false}
           hideYAxis
           sparkline
+          hideMinMaxLines
           overrideColor={lineColor}
         />
       ) : null}

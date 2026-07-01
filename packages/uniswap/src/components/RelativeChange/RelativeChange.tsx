@@ -1,6 +1,7 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { Caret } from 'ui/src/components/icons/Caret'
-import { fonts, IconSizeTokens } from 'ui/src/theme'
+import { type FontVariantToken, fonts, IconSizeTokens } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -18,6 +19,7 @@ interface RelativeChangeProps {
   arrowSize?: IconSizeTokens
   loading?: boolean
   alignRight?: boolean
+  shouldAnimate?: boolean
 }
 
 export function RelativeChange(props: RelativeChangeProps): JSX.Element {
@@ -32,6 +34,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     loading = false,
     alignRight = false,
     color = '$neutral2',
+    shouldAnimate = false,
   } = props
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const currency = useAppFiatCurrencyInfo()
@@ -61,19 +64,32 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
         <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Flex>
-        <Text
-          color={semanticColor ? getDeltaTextColor(directionValue) : color}
-          loading={loading}
-          loadingPlaceholderText="▲ 00.00 (0.00)%"
-          testID={TestID.PortfolioRelativeChange}
-          variant={variant}
-        >
-          {absoluteChange
-            ? change !== undefined
-              ? `${formattedAbsChange} (${formattedChange})`
-              : formattedAbsChange
-            : formattedChange}
-        </Text>
+        {shouldAnimate && change !== undefined && !absoluteChange ? (
+          <AnimatedNumber
+            alignRight={alignRight}
+            numericValue={change}
+            color={semanticColor ? getDeltaTextColor(directionValue) : color}
+            containerTestID={TestID.PortfolioRelativeChange}
+            loading={loading}
+            loadingPlaceholderText="00.00%"
+            textVariant={`$${variant}` as FontVariantToken}
+            value={formattedChange}
+          />
+        ) : (
+          <Text
+            color={semanticColor ? getDeltaTextColor(directionValue) : color}
+            loading={loading}
+            loadingPlaceholderText="▲ 00.00 (0.00)%"
+            testID={TestID.PortfolioRelativeChange}
+            variant={variant}
+          >
+            {absoluteChange
+              ? change !== undefined
+                ? `${formattedAbsChange} (${formattedChange})`
+                : formattedAbsChange
+              : formattedChange}
+          </Text>
+        )}
       </Flex>
     </Flex>
   )

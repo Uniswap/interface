@@ -1,8 +1,10 @@
 import { isMobileApp, isWebPlatform } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import { borderRadii } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -25,6 +27,7 @@ export const NetworkBalanceRow = memo(function NetworkBalanceRow({
   balance,
   onPress,
 }: NetworkBalanceRowProps): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const { chainId } = balance.currencyInfo.currency
 
@@ -35,9 +38,12 @@ export const NetworkBalanceRow = memo(function NetworkBalanceRow({
     <Flex row my="$spacing8" alignItems="center" gap="$spacing12">
       <DefaultNetworkLogo chainId={chainId} />
       <Flex shrink row flex={1} justifyContent="space-between" alignItems="center">
-        <Text variant="subheading2" color="$neutral1">
-          {formattedUsdValue}
-        </Text>
+        <AnimatedNumber
+          numericValue={balance.balanceUSD ?? undefined}
+          value={formattedUsdValue}
+          textVariant="$subheading2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
         <Text variant={isMobileApp ? 'subheading2' : 'body2'} color="$neutral2">
           {formattedBalance}
         </Text>

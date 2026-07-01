@@ -85,7 +85,7 @@ const StockCard = memo(function StockCard({ item }: { item: ExploreStockShelfIte
     }
     const currencyId = buildCurrencyId(primaryChain.chainId as UniverseChainId, primaryChain.address)
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId)
+    tokenDetailsNavigation.navigateWithPop(currencyId)
   }
 
   return (

@@ -48,7 +48,6 @@ export {
   LayerProperties,
   Layers,
   NativeTokenPercentageBufferProperties,
-  PrivateRpcProperties,
 } from '@universe/gating/src/experiments'
 export {
   FeatureFlagClient,

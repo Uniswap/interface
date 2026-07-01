@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { useQueryClient } from '@tanstack/react-query'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import type { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
@@ -22,10 +23,10 @@ function updateBalanceVisibility({
   targetCurrency,
   isHidden,
 }: {
-  balances: Balance[]
+  balances: readonly PlainMessage<Balance>[]
   targetCurrency: Currency
   isHidden: boolean
-}): Pick<Balance, 'token' | 'amount' | 'priceUsd' | 'pricePercentChange1d' | 'valueUsd' | 'isHidden'>[] {
+}): Pick<PlainMessage<Balance>, 'token' | 'amount' | 'priceUsd' | 'pricePercentChange1d' | 'valueUsd' | 'isHidden'>[] {
   return balances.map((balance) => {
     const token = balance.token
     if (!token) {
@@ -33,7 +34,6 @@ function updateBalanceVisibility({
     }
 
     const matches = matchesCurrency(token, targetCurrency)
-    // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
     return matches ? { ...balance, isHidden } : balance
   })
 }
@@ -60,9 +60,9 @@ export const createPortfolioCacheUpdater =
   (ctx: {
     updateData: (
       input: GetPortfolioInput['input'],
-      updater: (old?: GetPortfolioResponse) => GetPortfolioResponse,
+      updater: (old?: PlainMessage<GetPortfolioResponse>) => PlainMessage<GetPortfolioResponse>,
     ) => void
-    getCurrentData: (input: GetPortfolioInput['input']) => GetPortfolioResponse | undefined
+    getCurrentData: (input: GetPortfolioInput['input']) => PlainMessage<GetPortfolioResponse> | undefined
     /** Optional — when provided, mutates the exact `GetWalletBalances` entry for the same input tuple. */
     updateWalletBalancesForDelta?: (args: { input: GetPortfolioInput['input']; deltaUsd: number }) => void
   }) =>
@@ -95,15 +95,13 @@ export const createPortfolioCacheUpdater =
         input,
         (old) =>
           ({
-            // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
             ...(old || currentData),
             portfolio: {
-              // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
               ...currentData.portfolio,
               balances: updatedBalances,
               totalValueUsd: newTotal,
             },
-          }) as GetPortfolioResponse,
+          }) as PlainMessage<GetPortfolioResponse>,
       )
 
       if (ctx.updateWalletBalancesForDelta) {

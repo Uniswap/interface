@@ -5,11 +5,11 @@ import { z } from 'zod'
 
 // Common Flashbots constants
 export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswapwallet'
-export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
+export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 90
 export const FLASHBOTS_SIGNATURE_HEADER = 'X-Flashbots-Signature'
 export const DEFAULT_FLASHBOTS_ENABLED = true
 export const DEFAULT_FLASHBOTS_BLOCK_RANGE = 10
-export const DEFAULT_CALLDATA_HINTS_ENABLED = false
+export const DEFAULT_CALLDATA_HINTS_ENABLED = true
 
 // Polling constants
 export const POLL_INTERVAL_MS = 4000

@@ -167,4 +167,33 @@ describe('toRWAWhitelistFromDataApi', () => {
     ])
     expect(logger.error).not.toHaveBeenCalled()
   })
+
+  it('carries network count for preferred issuer tokens', () => {
+    const whitelist = toRWAWhitelistFromDataApi([
+      {
+        symbol: 'GOOGL',
+        name: 'GOOGL',
+        logoUrl: 'https://example.com/googl.png',
+        issuerTokens: [
+          { chainId: 56, address: '0xondo-bnb', issuer: 'ondo' },
+          { chainId: MAINNET_CHAIN_ID, address: '0xondo-mainnet', issuer: 'ondo' },
+        ],
+        issuerData: {
+          ondo: { name: 'Ondo', symbol: 'GOOGL.on', logoUrl: 'https://example.com/ondo.png' },
+        },
+      },
+    ])
+
+    expect(whitelist[0]?.tokens).toEqual([
+      {
+        chainId: MAINNET_CHAIN_ID,
+        address: '0xondo-mainnet',
+        issuer: 'ondo',
+        networkCount: 2,
+        name: 'Ondo',
+        symbol: 'GOOGL.on',
+        logoUrl: 'https://example.com/ondo.png',
+      },
+    ])
+  })
 })

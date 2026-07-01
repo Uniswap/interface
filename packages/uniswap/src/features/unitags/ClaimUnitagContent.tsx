@@ -182,11 +182,16 @@ export function ClaimUnitagContent({
 
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
         setUnitagAvailableError(getUnitagFormatError(text, t))
-        setUnitagInputValue(text.slice(0, MAX_UNITAG_CHAR_LENGTH).trim())
+        setUnitagInputValue(text.slice(0, MAX_UNITAG_CHAR_LENGTH).trim() || undefined)
         return
       }
 
-      setUnitagInputValue(text.trim())
+      const nextValue = text.trim() || undefined
+      setUnitagInputValue(nextValue)
+
+      if (!nextValue) {
+        setUnitagNameInputMinWidth(undefined)
+      }
     },
     [inputPlaceholder, onSetFontSize, t],
   )

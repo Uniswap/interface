@@ -68,6 +68,8 @@ export interface UseWalletPositionsResult extends ForwardedQueryState {
   hiddenPositions: PositionInfo[]
   /** All parsed positions (visible + hidden), useful for total counts. */
   allPositions: PositionInfo[]
+  /** Number of pages fetched so far (grows as `fetchNextPage` drains pagination). */
+  pagesLoaded: number
   /**
    * True once the first page response has been received (success or empty).
    * Useful for distinguishing "still loading" from "errored before any data arrived".
@@ -169,6 +171,7 @@ export function useWalletPositions({
     positions,
     hiddenPositions,
     allPositions,
+    pagesLoaded: data?.pages.length ?? 0,
     isLoading,
     isFetching,
     isFetchingNextPage,

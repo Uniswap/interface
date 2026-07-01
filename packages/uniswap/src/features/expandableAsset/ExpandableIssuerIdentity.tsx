@@ -37,7 +37,6 @@ export function ExpandableIssuerIdentity({
   const issuerTableRowHovered = useContext(IssuerTableRowHoverContext)
   const displaySymbol = formatIssuerDisplaySymbol({
     baseSymbol: asset.symbol,
-    issuer: issuer.issuer,
     apiSymbol: issuer.symbol,
   })
   const chainIds = issuer.chainTokens.map((chain) => chain.chainId as UniverseChainId)

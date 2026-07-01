@@ -1622,6 +1622,61 @@
         "x-internal": true
       }
     },
+    "/check_approval_4337": {
+      "post": {
+        "tags": [
+          "swapping"
+        ],
+        "summary": "Create approval ERC-4337 UserOperation",
+        "description": "Builds and returns an ERC-4337 v0.8 UserOperation that performs the ERC-20 approval (and any required allowance reset) needed before a swap. Paymaster fields and `signature` are left for the client to populate. When `sponsorshipInfo.sponsored` is `true`, the approval is tagged for sponsorship and a `paymasterServiceContext` envelope is returned for the client to forward to the paymaster.",
+        "operationId": "check_approval_4337",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckApproval4337Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UserOperation encoded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckApproval4337Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest400"
+          },
+          "401": {
+            "$ref": "#/components/responses/SwapUnauthorized401"
+          },
+          "404": {
+            "$ref": "#/components/responses/SwapNotFound404"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitedErr429"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalErr500"
+          },
+          "504": {
+            "$ref": "#/components/responses/Timeout504"
+          }
+        },
+        "x-internal": true
+      }
+    },
     "/plan": {
       "post": {
         "tags": [
@@ -2806,24 +2861,6 @@
           "EXPIRED"
         ]
       },
-      "SwapSponsorship": {
-        "x-internal": true,
-        "type": "object",
-        "description": "Present only when `swapper` is supplied and the transaction's gas fees were sponsored by Uniswap. Use this to display \"Sponsored by Uniswap\" in activity history.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Display name of the sponsor."
-          },
-          "icon": {
-            "type": "string",
-            "description": "URL of the sponsor's logo or icon."
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
       "GetSwapsResponse": {
         "type": "object",
         "properties": {
@@ -2865,7 +2902,8 @@
                   "description": "Paymaster address from the userOperation receipt. Present only for userOperation queries when the receipt is available and a paymaster was used."
                 },
                 "sponsorship": {
-                  "$ref": "#/components/schemas/SwapSponsorship",
+                  "$ref": "#/components/schemas/SponsorMetadata",
+                  "description": "Present only when `swapper` is supplied and the transaction's gas fees were sponsored by Uniswap. Use this to display \"Sponsored by Uniswap\" in activity history.",
                   "x-internal": true
                 }
               }
@@ -2999,6 +3037,18 @@
               },
               {
                 "$ref": "#/components/schemas/BridgeQuote"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuote"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuoteV2"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuoteV3"
+              },
+              {
+                "$ref": "#/components/schemas/PriorityQuote"
               }
             ]
           },
@@ -3013,6 +3063,11 @@
           },
           "sponsorshipInfo": {
             "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
+          },
+          "approvalOnly": {
+            "type": "boolean",
+            "description": "Return only the ERC-20 approval call(s) for the quote's input token — no swap transaction. Required (and only supported) for UniswapX quotes, whose swap is an off-chain signed order.",
             "x-internal": true
           }
         },
@@ -3131,12 +3186,87 @@
           "gasSponsored"
         ]
       },
+      "CheckApproval4337Request": {
+        "type": "object",
+        "description": "Request body for building an ERC-4337 UserOperation that performs a token approval, optionally gas-sponsored.",
+        "properties": {
+          "sender": {
+            "$ref": "#/components/schemas/Address",
+            "description": "Smart account address that will execute the UserOperation."
+          },
+          "token": {
+            "$ref": "#/components/schemas/inputToken"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "urgency": {
+            "$ref": "#/components/schemas/Urgency"
+          },
+          "tokenOut": {
+            "$ref": "#/components/schemas/outputToken"
+          },
+          "tokenOutChainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "walletExecutionContext": {
+            "$ref": "#/components/schemas/WalletExecutionContext",
+            "x-internal": true
+          },
+          "eip7702Auth": {
+            "$ref": "#/components/schemas/Eip7702Authorization"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
+          }
+        },
+        "required": [
+          "sender",
+          "token",
+          "amount",
+          "chainId"
+        ]
+      },
+      "CheckApproval4337Response": {
+        "type": "object",
+        "description": "Response containing the approval ERC-4337 UserOperation. `userOperation` is omitted when no approval is required.",
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/RequestId"
+          },
+          "userOperation": {
+            "$ref": "#/components/schemas/UserOperation"
+          },
+          "gasSponsored": {
+            "type": "boolean",
+            "description": "Whether gas for this approval will be sponsored.",
+            "x-internal": true
+          },
+          "gasSponsorshipRejectionReason": {
+            "type": "string",
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
+          },
+          "paymasterServiceContext": {
+            "$ref": "#/components/schemas/PaymasterServiceContext",
+            "x-internal": true
+          }
+        },
+        "required": [
+          "requestId",
+          "gasSponsored"
+        ]
+      },
       "UniversalRouterVersion": {
         "type": "string",
         "enum": [
-          "1.2",
           "2.0",
-          "2.1.1"
+          "2.1.1",
+          "2.2.0"
         ],
         "default": "2.0"
       },
@@ -3221,7 +3351,7 @@
       },
       "PaymasterServiceContext": {
         "type": "object",
-        "description": "EIP-7677 paymasterService.context bundle. The wallet forwards this verbatim to the paymaster RPC (or — for ERC-4337 — to /wallet/encode_4337). `sponsorship` is opaque AES-256-GCM ciphertext whose integrity is enforced cryptographically on the uniRPC side.",
+        "description": "EIP-7677 paymasterService.context bundle. The wallet forwards this verbatim to the paymaster RPC (or \u2014 for ERC-4337 \u2014 to /wallet/encode_4337). `sponsorship` is opaque AES-256-GCM ciphertext whose integrity is enforced cryptographically on the uniRPC side.",
         "x-internal": true,
         "properties": {
           "sponsorship": {
@@ -5419,6 +5549,10 @@
             "type": "string",
             "format": "uri",
             "description": "URL the wallet holder must visit to complete KYC and become allowlisted. Always provided when isAllowlisted is false."
+          },
+          "issuer": {
+            "type": "string",
+            "description": "KYC provider display name (e.g. \"Superstate\"). Always provided when isPermissioned is true."
           }
         },
         "required": [

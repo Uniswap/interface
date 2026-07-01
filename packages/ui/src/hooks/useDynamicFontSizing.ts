@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
+import { getRelativeCharWidth } from 'ui/src/utils/getRelativeCharWidth'
 
 export interface FontSizeOptions {
   maxCharWidthAtMaxFontSize: number
@@ -70,6 +71,9 @@ function getStringWidth({
   currentFontSize: number
   maxFontSize: number
 }): number {
-  const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
+  const widthAtMaxFontSize = Array.from(value).reduce(
+    (sum, char) => sum + getRelativeCharWidth(char) * maxCharWidthAtMaxFontSize,
+    0,
+  )
   return widthAtMaxFontSize * (currentFontSize / maxFontSize)
 }

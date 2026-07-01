@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { TEMPO_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS,
@@ -27,6 +28,7 @@ const tempoTokens = buildChainTokens({
 export const TEMPO_CHAIN_INFO = {
   id: UniverseChainId.Tempo,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   testnet: false,
   assetRepoNetworkName: 'tempo',
   backendChain: {

@@ -1,29 +1,10 @@
 import { CreateAuctionConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
+import { TOUCAN_AUCTION_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isUniverseChainIdArrayType } from 'uniswap/src/features/gating/typeGuards'
-
-// The auction flow has two independently-configurable network lists, backed by two Statsig keys:
-//   - AllowedTokenCreationNetworks: chains a brand-new token can be deployed + auctioned on.
-//   - AllowedNetworks: chains an existing token can be auctioned on.
-// They intentionally differ (e.g. an existing token can be auctioned on Arbitrum, but new-token
-// creation isn't offered there), so each keeps its own default below.
-const DEFAULT_TOKEN_CREATION_NETWORKS = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Unichain,
-  UniverseChainId.Base,
-  UniverseChainId.Sepolia,
-]
-
-const DEFAULT_AUCTION_NETWORKS = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Unichain,
-  UniverseChainId.Base,
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.Sepolia,
-]
 
 const VALID_CHAIN_IDS = new Set<UniverseChainId>(
   Object.values(UniverseChainId).filter((value): value is UniverseChainId => typeof value === 'number'),
@@ -76,7 +57,7 @@ function useAllowedNetworks({
 export function useCreateNewTokenAllowedNetworks(): UniverseChainId[] {
   return useAllowedNetworks({
     configKey: CreateAuctionConfigKey.AllowedTokenCreationNetworks,
-    defaultValue: DEFAULT_TOKEN_CREATION_NETWORKS,
+    defaultValue: TOUCAN_AUCTION_SUPPORTED_CHAINS,
   })
 }
 
@@ -84,6 +65,6 @@ export function useCreateNewTokenAllowedNetworks(): UniverseChainId[] {
 export function useCreateAuctionAllowedNetworks(): UniverseChainId[] {
   return useAllowedNetworks({
     configKey: CreateAuctionConfigKey.AllowedNetworks,
-    defaultValue: DEFAULT_AUCTION_NETWORKS,
+    defaultValue: TOUCAN_AUCTION_SUPPORTED_CHAINS,
   })
 }

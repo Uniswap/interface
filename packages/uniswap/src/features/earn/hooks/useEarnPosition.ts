@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import type { GetEarnPositionResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
@@ -24,7 +25,7 @@ interface UseEarnPositionResult {
 }
 
 // Module-level so React Query keeps a stable reference across renders.
-const selectEarnPosition = (data: GetEarnPositionResponse | undefined): EarnPositionInfo | undefined =>
+const selectEarnPosition = (data: PlainMessage<GetEarnPositionResponse> | undefined): EarnPositionInfo | undefined =>
   getEarnPositionInfo(data?.position)
 
 export function useEarnPosition({

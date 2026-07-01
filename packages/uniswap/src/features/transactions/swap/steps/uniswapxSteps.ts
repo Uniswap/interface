@@ -1,10 +1,16 @@
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import {
+  TokenApprovalTransactionStep,
+  TokenApprovalUserOpStep,
+  TokenApprovalWalletCallStep,
+} from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import type { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 
+export type UniswapXApprovalStep = TokenApprovalTransactionStep | TokenApprovalWalletCallStep | TokenApprovalUserOpStep
+
 export type UniswapXSwapFlow = {
   revocation?: TokenRevocationTransactionStep
-  approval?: TokenApprovalTransactionStep
+  approval?: UniswapXApprovalStep
   signOrder: UniswapXSignatureStep
 }
 

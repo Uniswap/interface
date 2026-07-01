@@ -1,4 +1,5 @@
 import type { WatchQueryFetchPolicy } from '@apollo/client'
+import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -43,7 +44,7 @@ export function formatPortfolioResponseToMap({
   ownerAddress,
   useMultichainFormat,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: false
 }): Record<CurrencyId, PortfolioBalance> | undefined
@@ -53,7 +54,7 @@ export function formatPortfolioResponseToMap({
   useMultichainFormat,
   requestedMultichainFromBackend,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: true
   /** When true, only use response.multichainBalances; do not fall back to transforming legacy. */
@@ -65,7 +66,7 @@ export function formatPortfolioResponseToMap({
   useMultichainFormat,
   requestedMultichainFromBackend,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: boolean
   requestedMultichainFromBackend?: boolean
@@ -80,9 +81,9 @@ export function formatPortfolioResponseToMap({
     if (requestedMultichainFromBackend === true && !hasMultichainFromBackend) {
       return {}
     }
-    const transformed = shouldTransformToMultichain(portfolioData)
-      ? transformPortfolioToMultichain(portfolioData)
-      : portfolioData
+    // transformPortfolioToMultichain constructs real Message instances; the plain cache value is structurally compatible.
+    const response = portfolioData as GetPortfolioResponse
+    const transformed = shouldTransformToMultichain(response) ? transformPortfolioToMultichain(response) : response
     const multichainMap = getPortfolioMultichainBalancesById(transformed, ownerAddress)
     const byCurrencyId: Record<CurrencyId, PortfolioMultichainBalance> = {}
     if (!multichainMap) {
@@ -123,10 +124,10 @@ export type UsePortfolioDataQueryOptions = {
   requestMultichainFromBackend?: boolean
 } & GetPortfolioInput['input']
 
-/** Internal: runs the portfolio query with a select that determines the result data type. No cast needed. */
+/** Internal: runs the portfolio query with a select that determines the result data type. */
 function usePortfolioDataQueryWithSelect<T>(
   options: UsePortfolioDataQueryOptions & {
-    select: (portfolioData: GetPortfolioResponse | undefined) => T
+    select: (portfolioData: PlainMessage<GetPortfolioResponse> | undefined) => T
   },
 ): BaseResult<T> {
   const { evmAddress, svmAddress, select, requestMultichainFromBackend, ...queryOptions } = options
@@ -179,8 +180,12 @@ function usePortfolioDataQueryWithSelect<T>(
  */
 export function usePortfolioData(options: UsePortfolioDataQueryOptions): PortfolioDataResult {
   const ownerAddress = options.evmAddress ?? options.svmAddress
-  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
-    formatPortfolioResponseToMap({ portfolioData, ownerAddress, useMultichainFormat: false }),
+  const select = useEvent((data: PlainMessage<GetPortfolioResponse> | undefined) =>
+    formatPortfolioResponseToMap({
+      portfolioData: data,
+      ownerAddress,
+      useMultichainFormat: false,
+    }),
   )
   return usePortfolioDataQueryWithSelect({ ...options, select, requestMultichainFromBackend: false })
 }
@@ -193,9 +198,9 @@ export function usePortfolioData(options: UsePortfolioDataQueryOptions): Portfol
 export function usePortfolioDataMultichain(options: UsePortfolioDataQueryOptions): PortfolioDataResultMultichain {
   const ownerAddress = options.evmAddress ?? options.svmAddress
   const requestedMultichainFromBackend = options.requestMultichainFromBackend
-  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
+  const select = useEvent((data: PlainMessage<GetPortfolioResponse> | undefined) =>
     formatPortfolioResponseToMap({
-      portfolioData,
+      portfolioData: data,
       ownerAddress,
       useMultichainFormat: true,
       requestedMultichainFromBackend,
@@ -205,7 +210,7 @@ export function usePortfolioDataMultichain(options: UsePortfolioDataQueryOptions
 }
 
 export function convertRestBalanceToPortfolioBalance(
-  balance: NonNullable<NonNullable<GetPortfolioResponse['portfolio']>['balances'][0]>,
+  balance: NonNullable<NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>['balances'][0]>,
   address?: Address,
 ): PortfolioBalance | undefined {
   const { token, amount, pricePercentChange1d, valueUsd, isHidden } = balance

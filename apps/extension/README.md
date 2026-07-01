@@ -2,10 +2,6 @@
 
 ## Developer Quickstart
 
-### Environment variables
-
-Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `bun extension env:local:download` to copy them to your root folder.
-
 ### Build System
 
 The extension is built with **WXT** (Vite-based) for both local development and production. The dev server opens a browser automatically.

@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { isWebApp } from '@universe/environment'
 import { ETH_LOGO, SONEIUM_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -39,6 +40,7 @@ export const SONEIUM_CHAIN_INFO = {
   ...soneium,
   id: UniverseChainId.Soneium,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'soneium',
   backendChain: {
     chain: GraphQLApi.Chain.Soneium as GqlChainId,

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useAccount } from '~/hooks/useAccount'
+import { useActiveAddress, useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
@@ -96,7 +97,12 @@ export function handleRouteToPasskeyManagement({
 // A user should only reach this page from a deeplink to passkey management from the Uniswap Wallet
 // This pages falls back to the swap page in the case that a user unintentionally navigates to this page or tries to connect a wallet other than the embedded wallet
 export default function PasskeyManagement() {
-  const account = useAccount()
+  const evmAddress = useActiveAddress(Platform.EVM)
+  const connectionStatus = useConnectionStatus(Platform.EVM)
+  const account = useMemo(
+    () => ({ address: evmAddress, isConnecting: connectionStatus.isConnecting }),
+    [evmAddress, connectionStatus.isConnecting],
+  )
   const { walletAddress: embeddedWalletAddress } = useParams()
   const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()

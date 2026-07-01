@@ -1,5 +1,6 @@
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, ETHEREUM_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -31,6 +32,7 @@ export const UNICHAIN_CHAIN_INFO = {
   name: 'Unichain',
   id: UniverseChainId.Unichain,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'unichain',
   backendChain: {
     chain: GraphQLApi.Chain.Unichain as GqlChainId,
@@ -97,6 +99,7 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   testnet: true,
   id: UniverseChainId.UnichainSepolia,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: GraphQLApi.Chain.AstrochainSepolia as GqlChainId,

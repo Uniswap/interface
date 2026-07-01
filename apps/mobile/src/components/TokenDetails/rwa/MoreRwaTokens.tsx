@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from '@universe/gating'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +12,8 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import { type RWAIssuerMarketData, useRWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -83,9 +86,15 @@ function IssuerTokenCard({
   const volumeLabel = convertFiatAmountFormatted(marketData.volume24hUsd, NumberType.FiatTokenStats)
 
   const onPress = (): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.TDPRwaTokenVariant,
+      issuer: token.issuer,
+      token_address: token.address,
+      token_symbol: token.symbol,
+    })
     const currencyId = buildCurrencyId(token.chainId as UniverseChainId, token.address)
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId)
+    tokenDetailsNavigation.navigateWithPop(currencyId)
   }
 
   return (

@@ -52,7 +52,13 @@ function selectPreferredTokenPerIssuer(tokens: RWAToken[]): RWAToken[] {
   // Backend can return the same issuer on multiple chains. Store one canonical token per issuer for matching:
   // prefer Ethereum mainnet, and fall back to the first chain the backend returned when mainnet is unavailable.
   return Array.from(tokensByIssuer.values()).flatMap((tokensForIssuer) => {
-    return tokensForIssuer.find((token) => token.chainId === PREFERRED_RWA_CHAIN_ID) ?? tokensForIssuer[0] ?? []
+    const preferredToken =
+      tokensForIssuer.find((issuerToken) => issuerToken.chainId === PREFERRED_RWA_CHAIN_ID) ?? tokensForIssuer[0]
+    if (!preferredToken) {
+      return []
+    }
+
+    return tokensForIssuer.length > 1 ? { ...preferredToken, networkCount: tokensForIssuer.length } : preferredToken
   })
 }
 

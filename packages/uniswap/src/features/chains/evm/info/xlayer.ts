@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { OKB_LOGO, XLAYER_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -35,6 +36,7 @@ export const XLAYER_CHAIN_INFO = {
   ...xLayer,
   id: UniverseChainId.XLayer,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'xlayer',
   backendChain: {
     chain: GraphQLApi.Chain.Xlayer as GqlChainId,

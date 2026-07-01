@@ -1,7 +1,7 @@
 import type { TradingApi } from '@universe/api'
 import { isWebApp } from '@universe/environment'
+import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 /**
  * Returns the sponsor metadata to display on the Network cost row, if any.
@@ -12,9 +12,10 @@ import { isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/s
  *   (paymasterService set, or requestUniswapGasSponsorship === true).
  */
 export function resolveSponsorMetadata(swapTxContext: SwapTxAndGasInfo): TradingApi.SponsorMetadata | undefined {
-  if (isClassic(swapTxContext) || isBridge(swapTxContext) || isWrap(swapTxContext)) {
-    const sponsor = swapTxContext.trade?.quote.sponsorshipInfo?.sponsorMetadata
-    if (sponsor) {
+  if (isSponsorableSwap(swapTxContext)) {
+    const sponsorshipInfo = swapTxContext.trade?.quote.sponsorshipInfo
+    const sponsor = sponsorshipInfo?.sponsorMetadata
+    if (sponsor && Object.keys(sponsor).length > 0) {
       return sponsor
     }
 

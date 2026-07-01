@@ -85,7 +85,7 @@ export function useHomeScreenPortfolioHeader(): HomeScreenPortfolioHeaderState {
   const promoBanner = useMemo(
     () =>
       isNotificationServiceEnabled ? (
-        <MobileNotificationServiceManager isLoading={!isTabsDataLoaded} />
+        <MobileNotificationServiceManager isLoading={!isTabsDataLoaded} onCardsChange={handleIntroCardsChange} />
       ) : (
         <OnboardingIntroCardStack
           isLoading={!isTabsDataLoaded}

@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 
 export const AvgCost = memo(function AvgCost({ value }: { value: number | undefined }) {
@@ -18,6 +18,8 @@ export const AvgCost = memo(function AvgCost({ value }: { value: number | undefi
     return <EmptyTableCell />
   }
 
-  return <ValueWithFadedDecimals value={formattedValue} />
+  return (
+    <AnimatedNumber shouldFadeDecimals value={formattedValue} numericValue={value} textVariant="$body3" alignRight />
+  )
 })
 AvgCost.displayName = 'AvgCost'

@@ -97,8 +97,6 @@
     "clean": "nx clean extension",
     "dev": "nx dev extension",
     "dev:firefox": "nx dev extension -c dev-firefox",
-    "env:local:download": "nx env:local:download extension",
-    "env:local:upload": "nx env:local:upload extension",
     "format": "nx run extension:format",
     "format:check": "nx run extension:format:check",
     "lint": "nx lint extension",

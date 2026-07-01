@@ -83,6 +83,7 @@ describe('executeSwapSaga', () => {
         submitViaPrivateRpc: false,
         delegationType: DelegationType.Auto,
         request: mockSwapTxRequest,
+        includeUserOpServices: false,
       }),
       {
         transactionSigner: mockTransactionSigner,
@@ -716,6 +717,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -824,6 +826,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             Promise.reject(error),
           ],
@@ -889,6 +892,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -947,6 +951,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: true,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -968,6 +973,7 @@ describe('executeSwapSaga', () => {
           submitViaPrivateRpc: true,
           delegationType: DelegationType.Auto,
           request: mockSwapTxRequest,
+          includeUserOpServices: false,
         })
         .call(params.onSuccess)
         .run()
@@ -1018,6 +1024,7 @@ describe('Sync transaction submission', () => {
             submitViaPrivateRpc: false,
             delegationType: DelegationType.Auto,
             request: mockSwapTxRequest,
+            includeUserOpServices: false,
           }),
           {
             transactionSigner: mockTransactionSigner,

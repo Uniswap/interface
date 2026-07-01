@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi } from '@universe/api'
+import { AppId } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -120,7 +121,9 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS })).toEqual({
+    expect(
+      getEnabledChains({ appId: AppId.Web, isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS }),
+    ).toEqual({
       chains: [
         UniverseChainId.Mainnet,
         UniverseChainId.Unichain,
@@ -177,6 +180,7 @@ describe('getEnabledChains', () => {
   it('returns feature flagged chains', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         isTestnetModeEnabled: false,
         featureFlaggedChainIds: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
       }),
@@ -191,6 +195,7 @@ describe('getEnabledChains', () => {
   it('returns testnet chains', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         isTestnetModeEnabled: true,
         featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
@@ -205,6 +210,7 @@ describe('getEnabledChains', () => {
   it('returns both mainnet and testnet chains when includeTestnets is true', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         includeTestnets: true,
         isTestnetModeEnabled: false,
         featureFlaggedChainIds: [

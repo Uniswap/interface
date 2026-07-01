@@ -16,6 +16,7 @@ import ExtensionIllustration from '~/assets/images/extensionIllustration.png'
 import PlayStoreBadge from '~/assets/images/play-store-badge.png'
 import WalletIllustration from '~/assets/images/walletIllustration.png'
 import { Wiggle } from '~/components/animations/Wiggle'
+import { TroubleLoggingInModule } from '~/components/NavBar/DownloadApp/Modal/TroubleLoggingInModule'
 import { useAccount } from '~/hooks/useAccount'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { ExternalLink } from '~/theme/components/Links'
@@ -139,6 +140,7 @@ function DownloadMobile() {
           </BadgeLink>
         </Flex>
       </Trace>
+      <TroubleLoggingInModule />
     </ModalContent>
   )
 }

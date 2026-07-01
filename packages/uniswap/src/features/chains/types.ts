@@ -2,6 +2,7 @@
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import type { GraphQLApi } from '@universe/api'
 import { UniversalRouterVersion } from '@universe/api/src/clients/trading/__generated__'
+import type { AppId } from '@universe/config'
 import { SwapConfigKey } from '@universe/gating'
 import type { ImageSourcePropType } from 'react-native'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
@@ -90,6 +91,8 @@ type ChainRPCUrls = { http: string[] }
 export interface UniverseChainInfo extends WagmiChain {
   readonly id: UniverseChainId
   readonly platform: Platform
+  /** Apps where this chain may appear in chain pickers and enabled-chain lists. */
+  readonly supportedApps: readonly AppId[]
   readonly assetRepoNetworkName: string | undefined // Name used to index the network on this repo: https://github.com/Uniswap/assets/
   readonly backendChain: BackendChain
   readonly blockPerMainnetEpochForChainId: number

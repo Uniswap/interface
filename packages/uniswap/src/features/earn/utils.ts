@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import type { Token as DataApiToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type {
   EarnPosition as DataApiEarnPosition,
@@ -38,7 +39,7 @@ function getCurrencyIdForToken({
   token,
 }: {
   chainId: UniverseChainId
-  token: DataApiToken
+  token: PlainMessage<DataApiToken>
 }): string | undefined {
   if (!token.address) {
     return undefined
@@ -48,7 +49,7 @@ function getCurrencyIdForToken({
     : buildCurrencyId(chainId, token.address)
 }
 
-export function getEarnVaultCurrencyId(vault: DataApiEarnVault): string | undefined {
+export function getEarnVaultCurrencyId(vault: PlainMessage<DataApiEarnVault>): string | undefined {
   const chainId = toSupportedChainId(vault.chainId)
   if (!chainId || !vault.underlyingToken) {
     return undefined
@@ -72,7 +73,7 @@ export function isWrappedNativeEarnVault(vault: Pick<EarnVaultInfo, 'currencyId'
   return isWrappedNativeCurrencyId(vault.currencyId)
 }
 
-function getEarnVaultCurator(dataApiVault: DataApiEarnVault): EarnVaultCurator {
+function getEarnVaultCurator(dataApiVault: PlainMessage<DataApiEarnVault>): EarnVaultCurator {
   return {
     name: dataApiVault.curatorName,
     imageUrl: dataApiVault.curatorImageUrl,
@@ -97,7 +98,7 @@ function getExposureCurrencyIds({
   fallbackCurrencyId,
 }: {
   chainId: UniverseChainId
-  exposureTokens: readonly DataApiToken[]
+  exposureTokens: readonly PlainMessage<DataApiToken>[]
   fallbackCurrencyId: string
 }): readonly string[] {
   if (exposureTokens.length === 0) {
@@ -113,7 +114,7 @@ function getExposureCurrencyIds({
   return currencyIds.length > 0 ? currencyIds : [fallbackCurrencyId]
 }
 
-export function getEarnVaultInfo(dataApiVault: DataApiEarnVault): EarnVaultInfo | undefined {
+export function getEarnVaultInfo(dataApiVault: PlainMessage<DataApiEarnVault>): EarnVaultInfo | undefined {
   const chainId = toSupportedChainId(dataApiVault.chainId)
   const currencyId = getEarnVaultCurrencyId(dataApiVault)
 
@@ -148,7 +149,7 @@ export function getEarnVaultInfo(dataApiVault: DataApiEarnVault): EarnVaultInfo 
   }
 }
 
-export function getEarnVaultInfos(vaults: readonly DataApiEarnVault[] | undefined): EarnVaultInfo[] {
+export function getEarnVaultInfos(vaults: readonly PlainMessage<DataApiEarnVault>[] | undefined): EarnVaultInfo[] {
   const vaultInfos: EarnVaultInfo[] = []
 
   vaults?.forEach((vault) => {
@@ -161,7 +162,9 @@ export function getEarnVaultInfos(vaults: readonly DataApiEarnVault[] | undefine
   return vaultInfos
 }
 
-export function getEarnPositionInfo(position: DataApiEarnPosition | undefined): EarnPositionInfo | undefined {
+export function getEarnPositionInfo(
+  position: PlainMessage<DataApiEarnPosition> | undefined,
+): EarnPositionInfo | undefined {
   if (!position?.vault) {
     return undefined
   }
@@ -183,7 +186,7 @@ export function getEarnPositionInfo(position: DataApiEarnPosition | undefined): 
 }
 
 export function getEarnPositionInfosByVaultId(
-  positions: readonly DataApiEarnPosition[] | undefined,
+  positions: readonly PlainMessage<DataApiEarnPosition>[] | undefined,
 ): Map<string, EarnPositionInfo> {
   const positionsByVaultId = new Map<string, EarnPositionInfo>()
 

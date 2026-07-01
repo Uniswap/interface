@@ -604,6 +604,7 @@ export default defineConfig({
       ],
       'universe-custom/no-redux-modals': 'error',
       'universe-custom/no-tolowercase-address-currencyid': 'warn',
+      'universe-custom/no-platform-gate-in-chain-flags': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
       '@jambit/typed-redux-saga/delegate-effects': 'error',

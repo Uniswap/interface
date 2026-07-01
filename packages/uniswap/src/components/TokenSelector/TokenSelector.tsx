@@ -1,6 +1,6 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
-import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebIOS, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -171,6 +171,14 @@ export function TokenSelectorContent({
 
   const shouldAutoFocusSearch = isWebPlatform && !media.sm
 
+  // Mounting SearchTextInput on the same render that modal opens caused jitter on Safari mWeb.
+  // Defer one render so the modal paints first.
+  const [searchInputMounted, setSearchInputMounted] = useState(!isWebIOS)
+
+  useEffect(() => {
+    setSearchInputMounted(true)
+  }, [])
+
   const shouldShowCrosschainPromoBanner = useMemo(
     () => flow === TokenSelectorFlow.Swap && (!chainFilter || isChainSupportedForChainedActions(chainFilter)),
     [flow, chainFilter],
@@ -190,36 +198,38 @@ export function TokenSelectorContent({
               <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
-          <SearchTextInput
-            autoFocus={shouldAutoFocusSearch}
-            backgroundColor="$surface2"
-            endAdornment={
-              <Flex row alignItems="center">
-                {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
-                <TokenSelectorNetworkFilter
-                  tieredOptions={tieredNetworkOptions}
-                  networkFilterV2Enabled={networkFilterV2Enabled}
-                  includeAllNetworks={!isTestnetModeEnabled && effectiveChainIds.length > 1}
-                  chainIds={effectiveChainIds}
-                  selectedChain={chainFilter}
-                  styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                  onPressChain={(newChainId) => {
-                    onChangeChainFilter(newChainId)
-                    onSelectChain?.(newChainId)
-                  }}
-                />
-              </Flex>
-            }
-            placeholder={t('tokens.selector.search.placeholder')}
-            px="$spacing16"
-            py="$none"
-            mx={spacing.spacing16}
-            my="$spacing4"
-            value={searchFilter ?? ''}
-            onCancel={isWebPlatform ? undefined : onCancel}
-            onChangeText={onChangeText}
-            onFocus={onFocus}
-          />
+          {searchInputMounted && (
+            <SearchTextInput
+              autoFocus={shouldAutoFocusSearch}
+              backgroundColor="$surface2"
+              endAdornment={
+                <Flex row alignItems="center">
+                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
+                  <TokenSelectorNetworkFilter
+                    tieredOptions={tieredNetworkOptions}
+                    networkFilterV2Enabled={networkFilterV2Enabled}
+                    includeAllNetworks={!isTestnetModeEnabled && effectiveChainIds.length > 1}
+                    chainIds={effectiveChainIds}
+                    selectedChain={chainFilter}
+                    styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                    onPressChain={(newChainId) => {
+                      onChangeChainFilter(newChainId)
+                      onSelectChain?.(newChainId)
+                    }}
+                  />
+                </Flex>
+              }
+              placeholder={t('tokens.selector.search.placeholder')}
+              px="$spacing16"
+              py="$none"
+              mx={spacing.spacing16}
+              my="$spacing4"
+              value={searchFilter ?? ''}
+              onCancel={isWebPlatform ? undefined : onCancel}
+              onChangeText={onChangeText}
+              onFocus={onFocus}
+            />
+          )}
           {flow === TokenSelectorFlow.Limit && (
             <Flex
               row

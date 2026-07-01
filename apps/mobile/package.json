@@ -28,8 +28,6 @@
     "env:android:keystore:download:prod": "nx env:android:keystore:download:prod mobile",
     "env:fastlane:download": "nx env:fastlane:download mobile",
     "env:fastlane:upload": "nx env:fastlane:upload mobile",
-    "env:local:download": "nx env:local:download mobile",
-    "env:local:upload": "nx env:local:upload mobile",
     "env:local:copy:swift": "nx env:local:copy:swift mobile",
     "e2e:prepare": "nx e2e:prepare mobile",
     "e2e:generate-ids": "nx e2e:generate-ids mobile",

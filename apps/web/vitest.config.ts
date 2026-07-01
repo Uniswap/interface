@@ -13,7 +13,7 @@ export default defineConfig({
       APP_ID: 'web',
     },
     setupFiles: ['./src/setupTests.ts', './vite/mockAssets.tsx'],
-    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'vite/**/*.test.ts'],
     exclude: [
       'e2e',
       '**/*.e2e.test.ts',

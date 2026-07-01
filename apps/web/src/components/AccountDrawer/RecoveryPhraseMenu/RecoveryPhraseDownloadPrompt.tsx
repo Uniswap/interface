@@ -1,5 +1,6 @@
+import { isMobileWeb } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
-import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
@@ -13,6 +14,7 @@ import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
+import { openDownloadApp } from '~/utils/openDownloadApp'
 
 const ICON_DROP_SHADOW =
   'drop-shadow(0px 2px 2.5px rgba(18, 18, 23, 0.03)) drop-shadow(0px 6px 6px rgba(18, 18, 23, 0.04))'
@@ -112,6 +114,12 @@ export function RecoveryPhraseDownloadPrompt({
     window.open(UniswapStaticUrls.chromeExtension, '_blank', 'noopener,noreferrer')
   }
 
+  // mWeb: skip the QR/extension cards and deep-link straight to the OS-appropriate
+  // store via the same OneLink the download QR code uses.
+  const onPressGetApp = (): void => {
+    openDownloadApp({ element: ElementName.UniswapWalletModalDownloadButton })
+  }
+
   return (
     <Trace logImpression modal={ModalName.RecoveryPhraseDownloadPrompt}>
       <SlideOutMenu title={t('settings.setting.recoveryPhrase.title')} onClose={onBack}>
@@ -129,69 +137,86 @@ export function RecoveryPhraseDownloadPrompt({
             </Flex>
           </Flex>
 
-          <Flex gap="$gap8">
-            <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
-              <DownloadCard
-                title={t('common.mobileApp')}
-                background={<CardBackground variant="mobile" />}
-                onPress={onPressMobile}
-                iconSlot={
-                  <Flex row alignItems="center" gap="$spacing4" style={{ filter: ICON_DROP_SHADOW }}>
-                    <AppStoreLogo size={iconSizes.icon28} />
-                    <Flex
-                      width={28}
-                      height={28}
-                      backgroundColor="$black"
-                      borderRadius="$rounded6"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <GooglePlayStoreLogo width={iconSizes.icon20} height={iconSizes.icon20} />
+          {isMobileWeb ? (
+            <Flex gap="$gap8">
+              <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
+                <Button emphasis="primary" size="medium" onPress={onPressGetApp}>
+                  {t('setting.recoveryPhrase.downloadPrompt.getApp')}
+                </Button>
+              </Trace>
+              <Trace logPress element={ElementName.RecoveryPhraseContinueOnWeb}>
+                <Button emphasis="secondary" size="medium" onPress={onContinueOnWeb}>
+                  {t('setting.recoveryPhrase.downloadPrompt.continueOnWeb')}
+                </Button>
+              </Trace>
+            </Flex>
+          ) : (
+            <>
+              <Flex gap="$gap8">
+                <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
+                  <DownloadCard
+                    title={t('common.mobileApp')}
+                    background={<CardBackground variant="mobile" />}
+                    onPress={onPressMobile}
+                    iconSlot={
+                      <Flex row alignItems="center" gap="$spacing4" style={{ filter: ICON_DROP_SHADOW }}>
+                        <AppStoreLogo size={iconSizes.icon28} />
+                        <Flex
+                          width={28}
+                          height={28}
+                          backgroundColor="$black"
+                          borderRadius="$rounded6"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <GooglePlayStoreLogo width={iconSizes.icon20} height={iconSizes.icon20} />
+                        </Flex>
+                      </Flex>
+                    }
+                  />
+                </Trace>
+                <Trace logPress element={ElementName.ExtensionDownloadButton}>
+                  <DownloadCard
+                    title={t('common.browserExtension')}
+                    background={<CardBackground variant="extension" />}
+                    onPress={onPressExtension}
+                    iconSlot={
+                      <Flex
+                        width={28}
+                        height={28}
+                        alignItems="center"
+                        justifyContent="center"
+                        backgroundColor="$white"
+                        borderRadius="$rounded6"
+                        style={{ filter: ICON_DROP_SHADOW }}
+                      >
+                        <GoogleChromeLogo size={22} />
+                      </Flex>
+                    }
+                  />
+                </Trace>
+              </Flex>
+
+              <Trace logPress element={ElementName.RecoveryPhraseContinueOnWeb}>
+                <TouchableArea
+                  onPress={onContinueOnWeb}
+                  alignSelf="center"
+                  px="$spacing16"
+                  py="$spacing12"
+                  hoverStyle={{ opacity: 0.8 }}
+                >
+                  <Flex row alignItems="center" gap="$spacing4">
+                    <Text variant="buttonLabel3" color="$neutral2">
+                      {t('setting.recoveryPhrase.downloadPrompt.continueOnWeb')}
+                    </Text>
+                    <Flex centered width={iconSizes.icon16} height={iconSizes.icon16}>
+                      <ArrowRight size="$icon.12" color="$neutral2" />
                     </Flex>
                   </Flex>
-                }
-              />
-            </Trace>
-            <Trace logPress element={ElementName.ExtensionDownloadButton}>
-              <DownloadCard
-                title={t('common.browserExtension')}
-                background={<CardBackground variant="extension" />}
-                onPress={onPressExtension}
-                iconSlot={
-                  <Flex
-                    width={28}
-                    height={28}
-                    alignItems="center"
-                    justifyContent="center"
-                    backgroundColor="$white"
-                    borderRadius="$rounded6"
-                    style={{ filter: ICON_DROP_SHADOW }}
-                  >
-                    <GoogleChromeLogo size={22} />
-                  </Flex>
-                }
-              />
-            </Trace>
-          </Flex>
-
-          <Trace logPress element={ElementName.RecoveryPhraseContinueOnWeb}>
-            <TouchableArea
-              onPress={onContinueOnWeb}
-              alignSelf="center"
-              px="$spacing16"
-              py="$spacing12"
-              hoverStyle={{ opacity: 0.8 }}
-            >
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="buttonLabel3" color="$neutral2">
-                  {t('setting.recoveryPhrase.downloadPrompt.continueOnWeb')}
-                </Text>
-                <Flex centered width={iconSizes.icon16} height={iconSizes.icon16}>
-                  <ArrowRight size="$icon.12" color="$neutral2" />
-                </Flex>
-              </Flex>
-            </TouchableArea>
-          </Trace>
+                </TouchableArea>
+              </Trace>
+            </>
+          )}
         </Flex>
       </SlideOutMenu>
     </Trace>

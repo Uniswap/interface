@@ -40,6 +40,7 @@ export { createObservableTransport } from './rpc/observability/createObservableT
 export { createUniRpcRoutedTransport } from './rpc/createUniRpcRoutedTransport'
 export { createSessionGatedTransport } from './rpc/session/createSessionGatedTransport'
 export { extractProviderName } from './rpc/observability/extractProviderName'
+export { extractRpcErrorMeta } from './rpc/observability/extractRpcErrorMeta'
 export {
   noopObserver,
   generateRequestId,
@@ -59,5 +60,6 @@ export { v3PoolStateAbi, type V3PoolStateAbi } from './abis/v3PoolStateAbi'
 export { feeOnTransferDetectorAbi, type FeeOnTransferDetectorAbi } from './abis/feeOnTransferDetectorAbi'
 export { ensRegistrarAbi, type EnsRegistrarAbi } from './abis/ensRegistrarAbi'
 export { ensPublicResolverAbi, type EnsPublicResolverAbi } from './abis/ensPublicResolverAbi'
+export { wethAbi, type WethAbi } from './abis/wethAbi'
 export { createContracts } from './contracts/createContracts'
 export type { ChainContract } from './contracts/createContract/shared'

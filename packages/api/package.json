@@ -28,7 +28,7 @@
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-explore": "0.0.18",
     "@uniswap/client-for": "0.1.5",
-    "@uniswap/client-liquidity": "1.3.0",
+    "@uniswap/client-liquidity": "1.3.1",
     "@uniswap/client-notification-service": "0.0.11",
     "@uniswap/client-privy-embedded-wallet": "0.1.2",
     "@uniswap/client-unirpc-v2": "0.0.4",

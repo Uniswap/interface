@@ -27,7 +27,6 @@ import {
 } from 'uniswap/src/features/portfolio/PortfolioBalance/getPortfolioRelativeChangeDisplay'
 import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
 import { PortfolioRelativeChange } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioRelativeChange'
-import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -143,8 +142,6 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     isLoading,
   })
 
-  const isRightToLeft = i18next.dir() === 'rtl'
-
   const displayBalanceUSD = overrideBalanceUSD ?? balanceUSD
   const totalBalance = convertFiatAmountFormatted(displayBalanceUSD, NumberType.PortfolioBalance)
   const absoluteChange = absoluteChangeUSD && convertFiatAmount(absoluteChangeUSD).amount
@@ -176,7 +173,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   return (
     <Flex gap="$spacing4" testID={TestID.PortfolioBalance}>
       <AnimatedNumber
-        balance={displayBalanceUSD}
+        numericValue={displayBalanceUSD}
         colorIndicationDuration={overrideBalanceUSD !== undefined ? 0 : BALANCE_CHANGE_INDICATION_DURATION}
         disableAnimations={overrideBalanceUSD !== undefined}
         loading={isLoading}
@@ -184,7 +181,6 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
         shouldFadeDecimals={shouldFadePortfolioDecimals}
         value={totalBalance}
         warmLoading={isWarmLoading}
-        isRightToLeft={isRightToLeft}
         EndElement={balanceEndElement}
         endElementGap={spacing.spacing12}
       />

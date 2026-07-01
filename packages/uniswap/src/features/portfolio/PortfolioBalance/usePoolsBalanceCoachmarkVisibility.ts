@@ -1,9 +1,12 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useDispatch, useSelector } from 'react-redux'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { selectHasDismissedPoolsBalanceCoachmark } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setPoolsBalanceCoachmarkDismissed } from 'uniswap/src/features/behaviorHistory/slice'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface UsePoolsBalanceCoachmarkVisibilityParams {
@@ -42,6 +45,7 @@ export function usePoolsBalanceCoachmarkVisibility({
 
   const dispatch = useDispatch()
   const dismiss = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.PoolsBalanceCoachmark })
     dispatch(setPoolsBalanceCoachmarkDismissed())
   })
 

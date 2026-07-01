@@ -18,14 +18,15 @@ import { zIndexes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent, useOnClickOutside } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { StatusIcon } from '~/components/StatusIcon'
 import { useRecentConnectorId } from '~/connection/constants'
+import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
-import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
@@ -254,20 +255,20 @@ const isOAuthReturn =
 
 function shouldShowModal({
   walletAddress,
-  account,
+  connectionStatus,
   isEmbeddedWalletEnabled,
   isOpenRef,
   recentConnectorId,
 }: {
   walletAddress?: string
-  account: ReturnType<typeof useAccount>
+  connectionStatus: ReturnType<typeof useConnectionStatus>
   isEmbeddedWalletEnabled: boolean
   isOpenRef: MutableRefObject<boolean>
   recentConnectorId?: string
 }) {
   return (
     !!walletAddress &&
-    !(account.isConnected || account.isConnecting) &&
+    !(connectionStatus.isConnected || connectionStatus.isConnecting) &&
     isEmbeddedWalletEnabled &&
     !isOpenRef.current &&
     recentConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID &&
@@ -276,7 +277,7 @@ function shouldShowModal({
 }
 
 export function RecentlyConnectedModal() {
-  const account = useAccount()
+  const connectionStatus = useConnectionStatus(Platform.EVM)
   const { walletAddress: walletAddressFromState } = useEmbeddedWalletState()
   const walletAddress = walletAddressFromState ?? undefined
   const { isOpen, closeModal, openModal } = useModalState(ModalName.RecentlyConnectedModal)
@@ -309,7 +310,7 @@ export function RecentlyConnectedModal() {
     if (
       shouldShowModal({
         walletAddress,
-        account,
+        connectionStatus,
         isEmbeddedWalletEnabled,
         isOpenRef,
         recentConnectorId,
@@ -318,13 +319,13 @@ export function RecentlyConnectedModal() {
       openModal()
       isOpenRef.current = true
     }
-  }, [walletAddress, account, isEmbeddedWalletEnabled, openModal, recentConnectorId])
+  }, [walletAddress, connectionStatus, isEmbeddedWalletEnabled, openModal, recentConnectorId])
 
   useEffect(() => {
-    if (account.isConnected && isOpen) {
+    if (connectionStatus.isConnected && isOpen) {
       closeModal()
     }
-  }, [account.isConnected, account.isConnecting, isOpen, closeModal])
+  }, [connectionStatus.isConnected, connectionStatus.isConnecting, isOpen, closeModal])
 
   return (
     <RecentlyConnectedModalUI

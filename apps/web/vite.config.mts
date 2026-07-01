@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
-import { config as dotenvConfig, parse as dotenvParse } from 'dotenv'
+import { config as dotenvConfig } from 'dotenv'
 import { defineConfig, loadEnv, type ViteDevServer } from 'vite'
 import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
@@ -16,6 +16,7 @@ import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
+import { resolveEnvConfigs } from './vite/resolveEnvConfigs'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
 // process.env.APP_ID is sourced from apps/web/.env for browser-side substitution
@@ -35,16 +36,6 @@ const DEPLOY_TARGET = process.env.DEPLOY_TARGET
 const DISABLE_SOURCEMAP = (process.env.DISABLE_SOURCEMAP ?? process.env.VITE_DISABLE_SOURCEMAP) === 'true'
 const DEBUG_PROXY = (process.env.DEBUG_PROXY ?? process.env.VITE_DEBUG_PROXY) === 'true'
 const ENABLE_PROXY = (process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY) === 'true'
-
-// Env vars that should be read directly from process.env instead of .env files
-const PROCESS_ENV_OVERRIDES = [
-  'CI',
-  'IS_E2E_TEST',
-  'JEST_WORKER_ID',
-  'VITEST_WORKER_ID',
-  'SKIP_CSP',
-  'DISABLE_SOURCEMAP',
-]
 
 const DEFAULT_PORT = 3000
 
@@ -156,46 +147,16 @@ function getNextDevVersion(): string {
 export default defineConfig(({ mode, isPreview }) => {
   let env: Record<string, string> = {}
 
-  if (process.env.USE_NEW_CONFIGS === 'true') {
-    // New unified config: read .env.new as the base layer, then apply
-    // .env.new.overrides on top (overrides win). Other env sources are
-    // ignored; direct process.env reads elsewhere in this file are unaffected.
-    const newEnvPath = path.resolve(__dirname, '.env.new')
-    if (fs.existsSync(newEnvPath)) {
-      try {
-        // Use dotenv.parse (not dotenv.config) so .env.new values populate `env`
-        // without mutating process.env
-        env = dotenvParse(fs.readFileSync(newEnvPath))
-      } catch (error) {
-        throw new Error(`Failed to parse ${newEnvPath}: ${error instanceof Error ? error.message : String(error)}`)
-      }
-    }
+  if (process.env.USE_NEW_CONFIGS !== 'false') {
+    // New unified config: resolve .env.new + overrides via the shared utility (the same
+    // code the Playwright test runner uses, so the build and runner configs stay identical).
+    env = resolveEnvConfigs({
+      rootDir: __dirname,
+      isE2eTest: process.env.IS_E2E_TEST === 'true',
+      onOverride: (key) => console.log(`ENV_OVERRIDE: ${key}`),
+      overrideProcessEnv: true,
+    })
 
-    // Apply .env.new.overrides on top, logging every value it overrides
-    const overridesEnvPath = path.resolve(__dirname, '.env.new.override')
-    if (fs.existsSync(overridesEnvPath)) {
-      let overridesEnv: Record<string, string> = {}
-      try {
-        overridesEnv = dotenvParse(fs.readFileSync(overridesEnvPath))
-      } catch (error) {
-        throw new Error(
-          `Failed to parse ${overridesEnvPath}: ${error instanceof Error ? error.message : String(error)}`,
-        )
-      }
-      for (const [key, value] of Object.entries(overridesEnv)) {
-        if (key in env && env[key] !== value) {
-          console.log(`ENV_OVERRIDE: ${key}`)
-        }
-        env[key] = value
-      }
-    }
-
-    // Add in values that come from process.env directly instead of .env files
-    for (const key of PROCESS_ENV_OVERRIDES) {
-      if (process.env[key] !== undefined) {
-        env[key] = process.env[key]
-      }
-    }
     // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
     // (and emitting "Using vars defined in ..." logs). The .env.new values are forwarded
     // to the Worker below via the plugin's `config` customizer.
@@ -522,7 +483,7 @@ export default defineConfig(({ mode, isPreview }) => {
             // crash the Workers runtime at startup. Skip empty strings so any
             // wrangler-defined defaults for the same key are preserved.
             config:
-              process.env.USE_NEW_CONFIGS === 'true'
+              process.env.USE_NEW_CONFIGS !== 'false'
                 ? () => ({
                     vars: Object.fromEntries(Object.entries(env).filter(([, value]) => value !== '')),
                   })
@@ -561,6 +522,7 @@ export default defineConfig(({ mode, isPreview }) => {
         'jsbi',
         'ethers',
         '@visx/responsive',
+        'use-resize-observer',
       ],
       // Libraries that shouldn't be pre-bundled
       exclude: [

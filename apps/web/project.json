@@ -40,6 +40,7 @@
       },
       "dependsOn": ["^prepare", "prepare", "config:pull"],
       "defaultConfiguration": "production",
+      "cache": true,
       "inputs": ["production", "^production", "!{projectRoot}/build"],
       "outputs": ["{projectRoot}/build"],
       "configurations": {
@@ -53,7 +54,7 @@
           "command": "SKIP_CSP=1 IS_E2E_TEST=true DISABLE_SOURCEMAP=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=cloudflare CLOUDFLARE_ENV=production vite build"
         },
         "vercel": {
-          "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=12288\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && bun scripts/build-vercel.ts"
+          "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && bun scripts/build-vercel.ts"
         }
       }
     },
@@ -67,14 +68,15 @@
     "check:deps:usage": {},
     "check:fast": {},
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" = \"true\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$USE_NEW_CONFIGS\" != \"false\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
       "options": { "cwd": "{workspaceRoot}" },
       "defaultConfiguration": "development",
       "configurations": {
         "development": {},
         "staging": { "env": { "CONFIG_ENV": "staging" } },
         "production": { "env": { "CONFIG_ENV": "production" } },
-        "e2e": { "env": { "CONFIG_ENV": "staging" } }
+        "e2e": { "env": { "CONFIG_ENV": "staging" } },
+        "vercel": { "env": { "CONFIG_ENV": "staging" } }
       }
     },
     "deduplicate": {
@@ -310,7 +312,7 @@
       "cache": true
     },
     "test:set4": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run src --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/app/**' --exclude 'src/state/**' --exclude 'src/features/Swap/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src vite --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/app/**' --exclude 'src/state/**' --exclude 'src/features/Swap/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
       "options": {
         "cwd": "{projectRoot}"
       },

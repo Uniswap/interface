@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeData } from 'uniswap/src/features/positions/types'
+import { useV4PoolsInitializedOnChain } from '~/features/Liquidity/hooks/useV4PoolsInitializedOnChain'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import {
   getDefaultFeeTiersForChainWithDynamicFeeTier,
@@ -25,13 +27,24 @@ export function useAllFeeTierPoolData({
   sdkCurrencies,
   withDynamicFeeTier = false,
   hook,
+  checkOnChainPoolExistence = false,
+  additionalFeeTiersToCheck,
 }: {
   chainId?: number
   protocolVersion: ProtocolVersion
   sdkCurrencies: { TOKEN0: Maybe<Currency>; TOKEN1: Maybe<Currency> }
   hook: string
   withDynamicFeeTier?: boolean
-}): { feeTierData: Record<string, FeeTierData>; hasExistingFeeTiers: boolean } {
+  /**
+   * When true, additionally verifies pool existence on-chain (`StateView.getSlot0`) for the default
+   * tiers and any `additionalFeeTiersToCheck`, marking initialized pools as `created`. Required by flows
+   * that must reject any existing pool (e.g. CCA auctions), since the indexed `listPools` data omits
+   * abandoned/zero-liquidity pools the contract still blocks.
+   */
+  checkOnChainPoolExistence?: boolean
+  /** Extra (non-default) fee tiers to include in the on-chain existence check, e.g. a user-entered custom tier. */
+  additionalFeeTiersToCheck?: FeeData[]
+}): { feeTierData: Record<string, FeeTierData>; hasExistingFeeTiers: boolean; isLoading: boolean } {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
 
@@ -41,7 +54,7 @@ export function useAllFeeTierPoolData({
     !isPlaceholderToken(sdkCurrencies.TOKEN0) &&
     !isPlaceholderToken(sdkCurrencies.TOKEN1)
 
-  const { data: poolData } = useGetPoolsByTokens(
+  const { data: poolData, isLoading: isPoolDataLoading } = useGetPoolsByTokens(
     {
       chainId,
       protocolVersions: [protocolVersion],
@@ -52,7 +65,37 @@ export function useAllFeeTierPoolData({
     shouldFetchPools,
   )
 
-  return useMemo(() => {
+  const defaultFeeData = useMemo(
+    () =>
+      Object.values(
+        getDefaultFeeTiersForChainWithDynamicFeeTier({
+          chainId,
+          dynamicFeeTierEnabled: withDynamicFeeTier,
+          protocolVersion,
+        }),
+      ),
+    [chainId, withDynamicFeeTier, protocolVersion],
+  )
+
+  // Candidates for the on-chain existence check: the default tiers plus any caller-supplied custom tiers.
+  const onChainFeeTierCandidates = useMemo(
+    () => [...defaultFeeData, ...(additionalFeeTiersToCheck ?? [])],
+    [defaultFeeData, additionalFeeTiersToCheck],
+  )
+
+  const {
+    initializedFeeTierKeys,
+    isLoading: isOnChainExistenceLoading,
+    isError: isOnChainExistenceError,
+  } = useV4PoolsInitializedOnChain({
+    chainId,
+    sdkCurrencies,
+    hook,
+    feeTiers: onChainFeeTierCandidates,
+    enabled: checkOnChainPoolExistence && protocolVersion === ProtocolVersion.V4 && shouldFetchPools,
+  })
+
+  const mergedResult = useMemo(() => {
     const liquiditySum = poolData?.pools.reduce(
       (sum, pool) => BigInt(pool.totalLiquidityUsd.split('.')[0] ?? '0') + sum,
       0n,
@@ -93,20 +136,51 @@ export function useAllFeeTierPoolData({
       }
     }
 
+    const mergedFeeTierData = mergeFeeTiers({
+      feeTiers: feeTierData,
+      defaultFeeData,
+      formatPercent,
+      formattedDynamicFeeTier: t('fee.dynamic'),
+    })
+
+    // Overlay on-chain truth: mark any pool that exists on-chain as `created`, even if the indexed data
+    // didn't surface it (abandoned/zero-liquidity pools), so existing-pool gates can't be bypassed.
+    for (const key of initializedFeeTierKeys) {
+      const existing = mergedFeeTierData[key]
+      // oxlint-disable-next-line typescript/no-unnecessary-condition -- Record index access can be undefined at runtime
+      if (existing) {
+        mergedFeeTierData[key] = { ...existing, created: true }
+        continue
+      }
+      const candidate = onChainFeeTierCandidates.find(
+        (tier) => getFeeTierKey({ feeTier: tier.feeAmount, tickSpacing: tier.tickSpacing }) === key,
+      )
+      if (candidate) {
+        mergedFeeTierData[key] = {
+          fee: { isDynamic: false, feeAmount: candidate.feeAmount, tickSpacing: candidate.tickSpacing },
+          formattedFee: formatPercent(candidate.feeAmount / BIPS_BASE, MAX_FEE_TIER_DECIMALS),
+          totalLiquidityUsd: 0,
+          percentage: new Percent(0, 100),
+          created: true,
+          tvl: '0',
+        } satisfies FeeTierData
+      }
+    }
+
     return {
-      feeTierData: mergeFeeTiers({
-        feeTiers: feeTierData,
-        defaultFeeData: Object.values(
-          getDefaultFeeTiersForChainWithDynamicFeeTier({
-            chainId,
-            dynamicFeeTierEnabled: withDynamicFeeTier,
-            protocolVersion,
-          }),
-        ),
-        formatPercent,
-        formattedDynamicFeeTier: t('fee.dynamic'),
-      }),
+      feeTierData: mergedFeeTierData,
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sdkCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
+  }, [poolData, sdkCurrencies, defaultFeeData, formatPercent, t, initializedFeeTierKeys, onChainFeeTierCandidates])
+
+  return {
+    ...mergedResult,
+    // Pending until both the indexed data and (when requested) the on-chain existence check settle, so
+    // callers can withhold the fee-tier UI until the final created/blocked state is known (no enabled→disabled
+    // flash). A failed on-chain read keeps this set (fail closed) so the UI stays gated rather than showing an
+    // unverified tier as available.
+    isLoading:
+      (shouldFetchPools && isPoolDataLoading) ||
+      (checkOnChainPoolExistence && (isOnChainExistenceLoading || isOnChainExistenceError)),
+  }
 }

@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import type { ListEarnPositionsResponse, ListEarnVaultsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
@@ -18,10 +19,11 @@ import {
 const EMPTY_EARN_VAULTS: readonly EarnVaultInfo[] = []
 const EMPTY_EARN_POSITIONS_BY_VAULT_ID: ReadonlyMap<string, EarnPositionInfo> = new Map()
 
-const selectEarnVaultInfos = (data: ListEarnVaultsResponse | undefined): EarnVaultInfo[] =>
+const selectEarnVaultInfos = (data: PlainMessage<ListEarnVaultsResponse> | undefined): EarnVaultInfo[] =>
   getEarnVaultInfos(data?.vaults)
-const selectEarnPositionInfosByVaultId = (data: ListEarnPositionsResponse | undefined): Map<string, EarnPositionInfo> =>
-  getEarnPositionInfosByVaultId(data?.positions)
+const selectEarnPositionInfosByVaultId = (
+  data: PlainMessage<ListEarnPositionsResponse> | undefined,
+): Map<string, EarnPositionInfo> => getEarnPositionInfosByVaultId(data?.positions)
 
 type UseEarnVaultsParams = {
   account?: string

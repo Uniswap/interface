@@ -118,6 +118,7 @@ export function Swap({
   initialInputChainId,
   hideHeader = false,
   hideFooter = false,
+  hideChart = false,
   onCurrencyChange,
   syncTabToUrl,
   swapRedirectCallback,
@@ -134,6 +135,7 @@ export function Swap({
   syncTabToUrl: boolean
   hideHeader?: boolean
   hideFooter?: boolean
+  hideChart?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
   passkeyAuthStatus?: PasskeyAuthStatus
@@ -184,6 +186,7 @@ export function Swap({
                   <UniversalSwapFlow
                     hideHeader={hideHeader}
                     hideFooter={hideFooter}
+                    hideChart={hideChart}
                     syncTabToUrl={syncTabToUrl}
                     swapRedirectCallback={swapRedirectCallback}
                     onCurrencyChange={onCurrencyChange}
@@ -230,6 +233,7 @@ function isChartEligibleTab(tab: SwapTab): boolean {
 function UniversalSwapFlow({
   hideHeader = false,
   hideFooter = false,
+  hideChart = false,
   disableTokenInputs = false,
   syncTabToUrl = true,
   prefilledState,
@@ -240,6 +244,7 @@ function UniversalSwapFlow({
 }: {
   hideHeader?: boolean
   hideFooter?: boolean
+  hideChart?: boolean
   syncTabToUrl?: boolean
   disableTokenInputs?: boolean
   prefilledState?: SwapFormState
@@ -316,11 +321,11 @@ function UniversalSwapFlow({
   const isChartVisible = showChart && isChartEligibleTab(currentTab)
 
   const chartSettingsLeftContent = useMemo(() => {
-    if (!isDataLivelinessEnabled || media.lg) {
+    if (!isDataLivelinessEnabled || media.lg || hideChart) {
       return undefined
     }
     return <SwapChartToggleButton showChart={showChart} onPress={() => setShowChart((prev) => !prev)} />
-  }, [isDataLivelinessEnabled, media.lg, showChart])
+  }, [isDataLivelinessEnabled, media.lg, showChart, hideChart])
 
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
     return SWAP_TABS.map((tab) => ({
@@ -343,8 +348,9 @@ function UniversalSwapFlow({
     <Flex row alignItems="flex-start" maxWidth="calc(100vw - 16px)">
       {/* Chart card animates in from the left (gated behind DataLivelinessUI flag).
           Not mounted on pages that hide the header (e.g. landing page) since the chart
-          toggle lives in the header and the collapsed animator would still consume gap space. */}
-      {isDataLivelinessEnabled && !hideHeader && (
+          toggle lives in the header and the collapsed animator would still consume gap space.
+          Also not shown when hideChart is set (e.g. TDP embedded swap). */}
+      {isDataLivelinessEnabled && !hideHeader && !hideChart && (
         <WidthAnimator
           open={isChartVisible}
           height={swapFlowPanelsHeight || CHART_CARD_HEIGHT}

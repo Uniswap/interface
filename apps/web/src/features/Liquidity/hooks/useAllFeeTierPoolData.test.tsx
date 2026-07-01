@@ -11,6 +11,16 @@ vi.mock('uniswap/src/data/rest/getPools', () => ({
   useGetPoolsByTokens: vi.fn(),
 }))
 
+// The on-chain existence check (wagmi) is covered separately; default it to "no initialized pools" here
+// so these tests focus on indexed-data merging without needing a WagmiProvider.
+vi.mock('~/features/Liquidity/hooks/useV4PoolsInitializedOnChain', () => ({
+  useV4PoolsInitializedOnChain: vi.fn(() => ({
+    initializedFeeTierKeys: new Set(),
+    isLoading: false,
+    isError: false,
+  })),
+}))
+
 const useGetPoolsByTokensMock = vi.mocked(useGetPoolsByTokens)
 
 const DEFAULT_FEE_TIER_DATA = {
@@ -64,6 +74,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: DEFAULT_FEE_TIER_DATA,
       hasExistingFeeTiers: false,
+      isLoading: false,
     })
   })
 
@@ -102,6 +113,7 @@ describe('useAllFeeTierPoolData', () => {
         },
       },
       hasExistingFeeTiers: true,
+      isLoading: false,
     })
   })
 
@@ -148,6 +160,7 @@ describe('useAllFeeTierPoolData', () => {
         },
       },
       hasExistingFeeTiers: true,
+      isLoading: false,
     })
   })
 
@@ -208,6 +221,7 @@ describe('useAllFeeTierPoolData', () => {
         },
       },
       hasExistingFeeTiers: true,
+      isLoading: false,
     })
   })
 
@@ -254,6 +268,7 @@ describe('useAllFeeTierPoolData', () => {
         },
       },
       hasExistingFeeTiers: true,
+      isLoading: false,
     })
   })
 
@@ -263,6 +278,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: DEFAULT_FEE_TIER_DATA,
       hasExistingFeeTiers: false,
+      isLoading: false,
     })
   })
 
@@ -279,6 +295,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: DEFAULT_FEE_TIER_DATA,
       hasExistingFeeTiers: false,
+      isLoading: false,
     })
   })
 })

@@ -7,10 +7,12 @@ import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FORMAT_DATE_MONTH_DAY_TIME, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { NumberType } from 'utilities/src/format/types'
 import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimatedColor'
@@ -20,6 +22,7 @@ import { PriceChartBody } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
+import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useColor } from '~/hooks/useColor'
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
@@ -135,6 +138,7 @@ function SlideoutChartCardBody({
   onSelectedFieldChange,
 }: SlideoutChartCardBodyProps): JSX.Element {
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const localizedDayjs = useLocalizedDayjs()
   const navigateToTokenDetails = useNavigateToTokenDetails()
   const sporeColors = useSporeColors()
   const tokenColor = useColor(selectedCurrency)
@@ -190,7 +194,7 @@ function SlideoutChartCardBody({
           )}
           <TouchableArea onPress={() => navigateToTokenDetails(selectedCurrency)}>
             <Flex centered width={28} height={28} borderRadius="$rounded6">
-              <ArrowsExpand color="$neutral2" size="$icon.16" />
+              <ArrowsExpand color="$neutral2" size={iconSizes.icon12} />
             </Flex>
           </TouchableArea>
         </Flex>
@@ -209,13 +213,20 @@ function SlideoutChartCardBody({
               {displayPrice !== undefined ? convertFiatAmountFormatted(displayPrice, NumberType.FiatTokenPrice) : '—'}
             </Text>
             {firstEntry !== undefined && displayPrice !== undefined && (
-              <PriceChartDelta
-                startingPrice={firstEntry.value}
-                endingPrice={displayPrice}
-                shouldIncludeFiatDelta
-                pricePercentChange={pricePercentChange}
-                isHovering={!!crosshairData}
-              />
+              <Flex row alignItems="center" gap="$spacing8">
+                <PriceChartDelta
+                  startingPrice={firstEntry.value}
+                  endingPrice={displayPrice}
+                  shouldIncludeFiatDelta
+                  pricePercentChange={pricePercentChange}
+                  isHovering={!!crosshairData}
+                />
+                {crosshairData && (
+                  <Text variant="body2" color="$neutral3">
+                    {localizedDayjs.unix(crosshairData.time as number).format(FORMAT_DATE_MONTH_DAY_TIME)}
+                  </Text>
+                )}
+              </Flex>
             )}
           </>
         )}
@@ -244,6 +255,7 @@ function SlideoutChartCardBody({
             overrideColor={chartColor}
             hideYAxis
             hideXAxis
+            hideMinMaxLines
           />
         )}
       </Flex>
@@ -329,8 +341,14 @@ export function SlideoutChartCard(): JSX.Element {
   const [timePeriod, setTimePeriod] = useState(TimePeriod.DAY)
   const [crosshairData, setCrosshairData] = useState<PriceChartData | undefined>()
 
-  const inputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currency)
-  const outputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.OUTPUT]?.currency)
+  const { currentTab, currencyState } = useSwapAndLimitContext()
+  const isLimitTab = currentTab === SwapTab.Limit
+
+  const swapInputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currency)
+  const swapOutputCurrency = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.OUTPUT]?.currency)
+
+  const inputCurrency = isLimitTab ? currencyState.inputCurrency : swapInputCurrency
+  const outputCurrency = isLimitTab ? currencyState.outputCurrency : swapOutputCurrency
 
   const [selectedField, setSelectedField] = useState<CurrencyField>(CurrencyField.INPUT)
   const selectedCurrency = selectedField === CurrencyField.INPUT ? inputCurrency : outputCurrency

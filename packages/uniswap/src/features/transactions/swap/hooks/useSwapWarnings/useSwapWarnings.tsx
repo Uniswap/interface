@@ -27,6 +27,7 @@ import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/s
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getPriceImpact } from 'uniswap/src/features/transactions/swap/utils/getPriceImpact'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { useMemoCompare } from 'utilities/src/react/hooks'
@@ -123,9 +124,7 @@ function useParsedSwapFormWarnings(): ParsedWarnings {
   const accountAddress = useActiveAddress(derivedSwapInfo.chainId)
 
   const gasFee = useSwapTxStore((s) => s.gasFee)
-  const isGasSponsored = useSwapTxStore(
-    (s) => s.trade && 'sponsorshipInfo' in s.trade.quote && s.trade.quote.sponsorshipInfo?.sponsored,
-  )
+  const isGasSponsored = useSwapTxStore((s) => isSponsorableSwap(s) && s.trade?.quote.sponsorshipInfo?.sponsored)
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 

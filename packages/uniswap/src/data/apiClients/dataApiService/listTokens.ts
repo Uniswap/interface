@@ -1,4 +1,4 @@
-import { type PartialMessage } from '@bufbuild/protobuf'
+import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { type InfiniteData } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
@@ -26,23 +26,24 @@ export function getListTokensQueryOptions({
   enabled,
 }: ListTokensInput): ReturnType<
   typeof persistableInfiniteQueryOptions<
-    ListTokensResponse,
+    PlainMessage<ListTokensResponse>,
     Error,
-    InfiniteData<ListTokensResponse, string>,
+    InfiniteData<PlainMessage<ListTokensResponse>, string>,
     ListTokensQueryKey,
     string
   >
 > {
   return persistableInfiniteQueryOptions({
     queryKey: [ReactQueryCacheKey.DataApiService, 'listTokens', params] as const,
-    queryFn: async ({ pageParam }: { pageParam: string }): Promise<ListTokensResponse> => {
+    // toPlainMessage strips the Message prototype so the value survives disk persistence.
+    queryFn: async ({ pageParam }: { pageParam: string }): Promise<PlainMessage<ListTokensResponse>> => {
       if (!params) {
         throw new Error('params required')
       }
-      return dataApiServiceClient.listTokens({ ...params, pageToken: pageParam })
+      return toPlainMessage(await dataApiServiceClient.listTokens({ ...params, pageToken: pageParam }))
     },
     initialPageParam: '',
-    getNextPageParam: (lastPage: ListTokensResponse) => lastPage.nextPageToken || undefined,
+    getNextPageParam: (lastPage: PlainMessage<ListTokensResponse>) => lastPage.nextPageToken || undefined,
     enabled,
   })
 }

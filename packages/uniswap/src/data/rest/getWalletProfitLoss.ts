@@ -1,4 +1,4 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
@@ -17,12 +17,14 @@ type GetWalletProfitLossInput = {
     svmAddress?: string
   }
   enabled?: boolean
+  refetchInterval?: number | false
 }
 
 export function useGetWalletProfitLossQuery({
   input,
   enabled,
-}: GetWalletProfitLossInput): UseQueryResult<GetWalletProfitLossResponse | undefined> {
+  refetchInterval,
+}: GetWalletProfitLossInput): UseQueryResult<PlainMessage<GetWalletProfitLossResponse> | undefined> {
   const { isTestnetModeEnabled } = useEnabledChains()
   const transformedInput = transformInput(input)
   const address = transformedInput ? transformedInput.walletAccount.platformAddresses[0]?.address : undefined
@@ -37,9 +39,10 @@ export function useGetWalletProfitLossQuery({
         input?.till?.toString(),
         input?.modifier,
       ] as const,
-      queryFn: () =>
-        transformedInput ? profitLossClient.getWalletProfitLoss(transformedInput) : Promise.resolve(undefined),
+      queryFn: async () =>
+        transformedInput ? toPlainMessage(await profitLossClient.getWalletProfitLoss(transformedInput)) : undefined,
       enabled: !!address && !isTestnetModeEnabled && enabled !== false,
+      refetchInterval,
     }),
   )
 }

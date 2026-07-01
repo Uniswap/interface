@@ -86,11 +86,12 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
         placement="right-start"
         offset={TOKEN_HOVER_CARD_OFFSET}
         containerWidth={searchModalWidth}
+        onNavigate={onSelect}
       >
         {element}
       </TokenHoverCard>
     ),
-    [searchModalWidth],
+    [searchModalWidth, onSelect],
   )
   const wrapTokenRow = isDataLivelinessUIEnabled && !media.xl ? wrapWithTokenHoverCard : undefined
 

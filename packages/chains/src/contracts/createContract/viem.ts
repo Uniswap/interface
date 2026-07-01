@@ -3,6 +3,7 @@ import { ensure0xHex } from '@universe/encoding'
 import {
   type Abi,
   type Address,
+  type Hash,
   type PublicClient,
   type WalletClient,
   createPublicClient,
@@ -10,7 +11,12 @@ import {
   custom,
   getContract as viemGetContract,
 } from 'viem'
-import type { ChainContract, EthersChainContractParams, ViemChainContractParams } from './shared'
+import {
+  type ChainContract,
+  type EthersChainContractParams,
+  type ViemChainContractParams,
+  getWriteParameters,
+} from './shared'
 
 /**
  * Delegates straight to `viem.getContract`
@@ -48,6 +54,7 @@ function adaptEthersProviderToPublicClient(provider: JsonRpcProvider | Web3Provi
  */
 function adaptEthersSignerToWalletClient(signer: JsonRpcSigner, address: Address): WalletClient {
   return createWalletClient({
+    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
     account: ensure0xHex(address.toLowerCase()),
     transport: custom({
       async request({ method, params }) {
@@ -57,6 +64,8 @@ function adaptEthersSignerToWalletClient(signer: JsonRpcSigner, address: Address
     }),
   })
 }
+
+type ViemWriteFn = (args: readonly unknown[], options: Record<string, unknown>) => Promise<Hash>
 
 /**
  * Caller has ethers `provider`/`signer` we want
@@ -68,5 +77,28 @@ export function createViemContractFromEthersParams<TAbi extends Abi>(
   const { address, abi, provider, signer, signerAddress } = params
   const publicClient = adaptEthersProviderToPublicClient(provider)
   const walletClient = signer && signerAddress ? adaptEthersSignerToWalletClient(signer, signerAddress) : undefined
-  return createViemContract({ address, abi, publicClient, walletClient })
+  const contract = createViemContract({ address, abi, publicClient, walletClient })
+  // Anything but a write then
+  if (!walletClient) {
+    return contract
+  }
+  // The bridged walletClient carries no `chain`, and viem refuses to
+  // send a write with an undefined chain (ChainNotFoundError) unless told
+  // `chain: null`. matching ethers behavior, so pin `chain: null` on
+  // every write unless the caller explicitly overrides it.
+  const viemWrite = (contract as unknown as { write: Record<string, ViemWriteFn> }).write
+  const write = new Proxy(
+    {},
+    {
+      get(_target, fnName: string) {
+        return (...parameters: readonly unknown[]) => {
+          const { args, options } = getWriteParameters(parameters)
+          return viemWrite[fnName]?.(args, { chain: null, ...options })
+        }
+      },
+    },
+  )
+
+  // Same widening cast as `createViemContract` — the runtime surface matches.
+  return { ...contract, write } as unknown as ChainContract<TAbi>
 }

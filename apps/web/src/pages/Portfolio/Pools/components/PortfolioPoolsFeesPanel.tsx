@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, FlexLoader, Skeleton, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogoPair } from 'uniswap/src/components/CurrencyLogo/TokenLogoPair'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -27,12 +28,14 @@ interface PortfolioPoolsFeesPanelProps {
   walletAddress: string | undefined
   chainId: UniverseChainId | undefined
   isExternalWallet?: boolean
+  maxHeight?: number
 }
 
 export function PortfolioPoolsFeesPanel({
   walletAddress,
   chainId,
   isExternalWallet = false,
+  maxHeight,
 }: PortfolioPoolsFeesPanelProps): JSX.Element | null {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -72,7 +75,7 @@ export function PortfolioPoolsFeesPanel({
   const hiddenPositions = useExpando ? eligiblePositions.slice(COLLAPSED_VISIBLE_ROWS) : []
 
   return (
-    <PortfolioPoolsSidebarCard gap="$gap16">
+    <PortfolioPoolsSidebarCard gap="$gap16" maxHeight={maxHeight} style={{ overflowY: 'auto', overflowX: 'hidden' }}>
       <Flex gap="$gap8">
         <Text variant="body3" color="$neutral2">
           {t('pool.fees.totalEarned')}
@@ -82,13 +85,14 @@ export function PortfolioPoolsFeesPanel({
             <FlexLoader borderRadius="$rounded12" height={iconSizes.icon24} width={iconSizes.icon100} opacity={0.4} />
           </Skeleton>
         ) : (
-          <Text
-            variant="heading3"
-            color={isEmpty ? '$neutral3' : '$neutral1'}
-            testID={isEmpty ? TestID.PortfolioPoolsFeesEmpty : TestID.PortfolioPoolsFeesTotal}
-          >
-            {convertFiatAmountFormatted(totalUsd, NumberType.FiatTokenQuantity)}
-          </Text>
+          <Flex testID={isEmpty ? TestID.PortfolioPoolsFeesEmpty : TestID.PortfolioPoolsFeesTotal}>
+            <AnimatedNumber
+              value={convertFiatAmountFormatted(totalUsd, NumberType.FiatTokenQuantity)}
+              numericValue={totalUsd}
+              textVariant="$heading3"
+              color={isEmpty ? '$neutral3' : '$neutral1'}
+            />
+          </Flex>
         )}
       </Flex>
       {(isFetchingAllPages || eligiblePositions.length > 0) && (
@@ -162,9 +166,13 @@ function FeeRow({ position, showCollectButton }: { position: PositionInfo; showC
   return (
     <Flex row gap="$gap12" alignItems="center" width="100%">
       <TokenLogoPair currency0Info={currency0Info} currency1Info={currency1Info} />
-      <Text variant="body2" color="$neutral1" flex={1} testID={TestID.PortfolioPoolsFeesRow}>
-        {convertFiatAmountFormatted(position.uncollectedFeesUsd ?? 0, NumberType.FiatTokenQuantity)}
-      </Text>
+      <Flex flex={1} testID={TestID.PortfolioPoolsFeesRow}>
+        <AnimatedNumber
+          value={convertFiatAmountFormatted(position.uncollectedFeesUsd ?? 0, NumberType.FiatTokenQuantity)}
+          numericValue={position.uncollectedFeesUsd ?? 0}
+          textVariant="$body2"
+        />
+      </Flex>
       {showCollectButton && (
         <Button size="xsmall" emphasis="secondary" fill={false} onPress={handleCollect}>
           {t('common.collect.button')}

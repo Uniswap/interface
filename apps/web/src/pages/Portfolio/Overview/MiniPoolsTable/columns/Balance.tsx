@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -25,9 +25,11 @@ export const PoolBalanceCell = memo(function PoolBalanceCell({ position }: { pos
   }
 
   return (
-    <Text variant="body3" color="$neutral1">
-      {convertFiatAmountFormatted(totalBalanceUSD.toExact(), NumberType.FiatTokenPrice)}
-    </Text>
+    <AnimatedNumber
+      value={convertFiatAmountFormatted(totalBalanceUSD.toExact(), NumberType.FiatTokenPrice)}
+      numericValue={parseFloat(totalBalanceUSD.toExact())}
+      textVariant="$body3"
+    />
   )
 })
 PoolBalanceCell.displayName = 'PoolBalanceCell'

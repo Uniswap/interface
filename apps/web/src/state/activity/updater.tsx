@@ -231,18 +231,22 @@ function useOnActivityUpdate(): OnActivityUpdate {
               isCentralizedPricesEnabled,
             }),
           })
-        } else if (
-          original.typeInfo.type === TransactionType.AuctionLaunch &&
-          update.status === TransactionStatus.Success &&
-          original.typeInfo.analytics &&
-          hash
-        ) {
-          // Launch confirmed on-chain: emit Completed with the exact property snapshot taken at
-          // Submitted time, so the two events always agree.
-          sendAnalyticsEvent(AuctionEventName.AuctionCreateCompleted, {
-            ...original.typeInfo.analytics,
-            transaction_hash: hash,
-          })
+        } else if (original.typeInfo.type === TransactionType.AuctionLaunch && original.typeInfo.analytics) {
+          // Emit the terminal launch event from the Submitted-time snapshot persisted on the tx, so it
+          // agrees with Submitted. Canceled/Expired are user-driven, not launch failures, so skipped.
+          const launchAnalytics = original.typeInfo.analytics
+          if (update.status === TransactionStatus.Success && hash) {
+            sendAnalyticsEvent(AuctionEventName.AuctionCreateCompleted, {
+              ...launchAnalytics,
+              transaction_hash: hash,
+            })
+          } else if (update.status === TransactionStatus.Failed) {
+            sendAnalyticsEvent(AuctionEventName.AuctionCreateFailed, {
+              ...launchAnalytics,
+              failed_step: 'onchain',
+              transaction_hash: hash,
+            })
+          }
         }
 
         if (hash) {

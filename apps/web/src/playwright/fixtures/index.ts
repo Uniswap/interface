@@ -3,6 +3,7 @@
 import { mergeTests } from '@playwright/test'
 import { test as amplitudeTest } from '~/playwright/fixtures/amplitude'
 import { test as anvilTest } from '~/playwright/fixtures/anvil'
+import { test as consoleForwardTest } from '~/playwright/fixtures/consoleForward'
 import { test as dataApiTest } from '~/playwright/fixtures/dataApi'
 import { test as graphqlTest } from '~/playwright/fixtures/graphql'
 import { test as tradingApiTest } from '~/playwright/fixtures/tradingApi'
@@ -16,8 +17,9 @@ interface TestConfig {
 }
 
 // Get the merged test types
-const getAnvilTest = () => mergeTests(anvilTest, graphqlTest, amplitudeTest, tradingApiTest, dataApiTest)
-const getBaseTest = () => mergeTests(graphqlTest, amplitudeTest, tradingApiTest, dataApiTest)
+const getAnvilTest = () =>
+  mergeTests(anvilTest, graphqlTest, amplitudeTest, tradingApiTest, dataApiTest, consoleForwardTest)
+const getBaseTest = () => mergeTests(graphqlTest, amplitudeTest, tradingApiTest, dataApiTest, consoleForwardTest)
 
 // Type for test with anvil
 type AnvilTest = ReturnType<typeof getAnvilTest>
