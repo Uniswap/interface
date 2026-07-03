@@ -451,12 +451,12 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: WRAPPED_PATH,
     getElement: () => <Wrapped />,
-    getTitle: () => 'Uniswap Wrapped',
+    getTitle: () => 'HookSwap Wrapped',
     enabled: (args) => args.isWrappedEnabled ?? false,
   }),
   createRouteDefinition({
     path: '/preview',
-    getTitle: () => 'Uniswap Preview',
+    getTitle: () => 'HookSwap Preview',
     getElement: () => (
       <Suspense fallback={null}>
         <BetaPage />

@@ -46,15 +46,15 @@ const fontFamily = {
 }
 
 const baselMedium = isWebPlatform
-  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  ? 'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.medium
 
 const baselBook = isWebPlatform
-  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  ? 'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.book
 
 const monospaceFontFamily = isWebPlatform
-  ? 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Courier New", monospace'
+  ? '"JetBrains Mono", ui-monospace, monospace'
   : fontFamily.sansSerif.monospace
 
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif

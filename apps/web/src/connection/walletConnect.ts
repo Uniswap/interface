@@ -34,7 +34,7 @@ export const WC_PARAMS = {
   projectId: WALLET_CONNECT_PROJECT_ID,
   metadata: {
     name: 'Uniswap',
-    description: 'Uniswap Interface',
+    description: 'HookSwap Interface',
     url: 'https://app.uniswap.org',
     icons: ['https://app.uniswap.org/favicon.png'],
   },

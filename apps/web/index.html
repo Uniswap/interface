@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
+    <title>HookSwap Interface</title>
 
     <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
@@ -28,8 +28,17 @@
 
     <style>
       * {
-        font-family: 'Basel', sans-serif;
+        font-family: 'Inter', sans-serif;
         box-sizing: border-box;
+      }
+
+      /* Monospace stack. JetBrains Mono is not bundled, so this resolves via the
+         native ui-monospace/monospace fallback without referencing a missing file. */
+      code,
+      pre,
+      kbd,
+      samp {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
       }
 
       /**
@@ -67,7 +76,7 @@
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Basel', sans-serif;
+          font-family: 'Inter', sans-serif;
         }
       }
 

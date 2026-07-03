@@ -247,9 +247,13 @@ export default defineConfig(({ mode, isPreview }) => {
     },
   ]
 
-  // Create process.env definitions for ALL environment variables
+  // Create process.env definitions for ALL environment variables.
+  // Filter to valid JS identifiers: on Windows, loadEnv('') pulls in system vars like
+  // `ProgramFiles(x86)` whose parentheses produce invalid `define` keys and break esbuild.
   const envDefines = Object.fromEntries(
-    Object.entries(env).map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
+    Object.entries(env)
+      .filter(([key]) => /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key))
+      .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
   )
 
   const defines = {

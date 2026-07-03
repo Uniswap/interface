@@ -69,7 +69,7 @@ export default async function getAuction({
       title,
       image,
       url,
-      description: `Bid on ${tokenName} in a Uniswap token auction.`,
+      description: `Bid on ${tokenName} in a HookSwap token auction.`,
       name: tokenName,
       auctionData: {
         tokenName,
