@@ -119,3 +119,8 @@ skills-lock.json
 # temporary files
 /tmp/
 .env*.local
+
+# Local dev / tooling artifacts
+.playwright-mcp/
+hookswap-landing.png
+apps/web/.env.local
