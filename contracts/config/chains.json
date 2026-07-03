@@ -1,29 +1,41 @@
 {
+  "_audit": "On-chain audit 2026-07-03 (cast code). Permit2 canonical = 0x000000000022D473030F116dDEE9F6B43aC78BA3; CREATE2 deployer 0x4e59...4956C present on all three (deterministic deploys work).",
   "sepolia": {
     "name": "sepolia",
     "chainId": 11155111,
     "rpcEnvVar": "SEPOLIA_RPC_URL",
     "weth": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
     "nativeSymbol": "ETH",
     "nativeLabel": "ETH",
-    "explorer": "https://sepolia.etherscan.io"
+    "explorer": "https://sepolia.etherscan.io",
+    "skipDeploy": true,
+    "note": "FULL canonical Uniswap v2/v3/UniversalRouter stack already deployed on Sepolia AND already wired into sdk-core with real addresses. Do NOT deploy — reuse existing addresses."
   },
   "hyperevm": {
     "name": "hyperevm",
     "chainId": 999,
     "rpcEnvVar": "HYPEREVM_RPC_URL",
     "weth": "0x5555555555555555555555555555555555555555",
+    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
     "nativeSymbol": "HYPE",
     "nativeLabel": "HYPE",
-    "explorer": "https://hyperevmscan.io"
+    "explorer": "https://hyperevmscan.io",
+    "skipDeploy": false,
+    "deployNeeded": ["v2Factory", "v2Router", "v3 (via @uniswap/deploy-v3)", "universalRouter"],
+    "note": "Permit2 + WHYPE already exist. Deploy v2 + v3 + UniversalRouter only. Costs real HYPE."
   },
   "robinhood": {
     "name": "robinhood",
     "chainId": 4663,
     "rpcEnvVar": "ROBINHOOD_RPC_URL",
     "weth": "DEPLOY",
+    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
     "nativeSymbol": "ETH",
     "nativeLabel": "ETH",
-    "explorer": "https://explorer.mainnet.chain.robinhood.com"
+    "explorer": "https://explorer.mainnet.chain.robinhood.com",
+    "skipDeploy": false,
+    "deployNeeded": ["weth9", "v2Factory", "v2Router", "v3 (via @uniswap/deploy-v3)", "universalRouter"],
+    "note": "Permit2 already exists. Deploy WETH9 + v2 + v3 + UniversalRouter. Costs real ETH."
   }
 }

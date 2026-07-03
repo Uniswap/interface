@@ -1,0 +1,29 @@
+[     186ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Book.woff2 @ http://localhost:3000/:0
+[     186ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/:0
+[     187ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Medium.woff2 @ http://localhost:3000/:0
+[     187ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/:0
+[    9976ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:29554
+[   10044ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Medium.woff2 @ http://localhost:3000/src/state/scroll/scrollStore.ts:8
+[   10044ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/src/state/scroll/scrollStore.ts:8
+[   10044ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Book.woff2 @ http://localhost:3000/src/state/scroll/scrollStore.ts:8
+[   10044ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/src/state/scroll/scrollStore.ts:8
+[   10431ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Medium.woff2 @ http://localhost:3000/:0
+[   10431ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/:0
+[   10431ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/Basel-Grotesk-Book.woff2 @ http://localhost:3000/:0
+[   10431ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/:0
+[   10442ms] _6: Cannot initialize the Privy provider with an invalid Privy app ID
+    at http://localhost:3000/node_modules/.vite/deps/chunk-SX2WEDKF.js?v=938883d9:15605:60
+    at Bs (http://localhost:3000/node_modules/.vite/deps/chunk-SX2WEDKF.js?v=938883d9:15606:5)
+    at react-stack-bottom-frame (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:28992:20)
+    at renderWithHooks (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:15774:24)
+    at updateFunctionComponent (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:18187:21)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:19222:20)
+    at runWithFiberInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:13053:72)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:22436:98)
+    at workLoopSync (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:22296:43)
+    at renderRootSync (http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:22279:13)
+[   10443ms] [WARNING] %s
+
+%s
+ An error occurred in the <Bs> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-GIFLVW4N.js?v=938883d9:17796

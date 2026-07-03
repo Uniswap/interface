@@ -256,6 +256,13 @@ export const MNW = new Token(
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<UniverseChainId, Token>),
+  [UniverseChainId.HyperEvm]: new Token(
+    UniverseChainId.HyperEvm,
+    '0x5555555555555555555555555555555555555555',
+    18,
+    'WHYPE',
+    'Wrapped HYPE',
+  ),
   [UniverseChainId.ArbitrumOne]: new Token(
     UniverseChainId.ArbitrumOne,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',

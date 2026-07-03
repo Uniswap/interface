@@ -1,0 +1,137 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e4]:
+    - navigation [ref=f1e6]:
+      - generic [ref=f1e7]:
+        - generic [ref=f1e8]:
+          - generic [ref=f1e11] [cursor=pointer]:
+            - link [ref=f1e12]:
+              - /url: /?intro=true
+              - img [ref=f1e15]
+            - img [ref=f1e26]
+          - link "Trade" [ref=f1e30] [cursor=pointer]:
+            - /url: /swap
+          - link "Explore" [ref=f1e33] [cursor=pointer]:
+            - /url: /explore
+          - link "Pool" [ref=f1e36] [cursor=pointer]:
+            - /url: /positions
+          - link "Portfolio" [ref=f1e39] [cursor=pointer]:
+            - /url: /portfolio
+        - generic [ref=f1e40]:
+          - generic:
+            - heading [level=2]
+          - button "Search tokens, pools, and wallets" [ref=f1e41] [cursor=pointer]:
+            - img [ref=f1e45]
+          - button "Get the app" [ref=f1e47] [cursor=pointer]:
+            - generic [ref=f1e48]: Get the app
+          - button "Navigation button" [ref=f1e51] [cursor=pointer]:
+            - img [ref=f1e54]
+          - button "Connect" [ref=f1e59] [cursor=pointer]:
+            - generic [ref=f1e60]: Connect
+    - generic [ref=f1e62]:
+      - generic:
+        - generic:
+          - generic:
+            - heading "Swap anytime, anywhere." [level=1]:
+              - generic: Swap
+              - generic: anytime,
+              - generic: anywhere.
+          - generic [ref=f1e69]:
+            - generic [ref=f1e72]:
+              - generic [ref=f1e73]:
+                - button "Sell ETH $0" [ref=f1e75] [cursor=pointer]:
+                  - generic [ref=f1e76]:
+                    - generic [ref=f1e78]: Sell
+                    - generic [ref=f1e79]:
+                      - textbox "0" [active] [ref=f1e83]
+                      - button "ETH" [ref=f1e85]:
+                        - generic [ref=f1e86]:
+                          - img [ref=f1e90]
+                          - generic [ref=f1e95]: ETH
+                          - img [ref=f1e97]
+                    - button "$0" [ref=f1e101]:
+                      - generic [ref=f1e103]: $0
+                - button [ref=f1e105] [cursor=pointer]:
+                  - img [ref=f1e106]
+                - button "Buy 0 Select token $0" [ref=f1e109] [cursor=pointer]:
+                  - generic [ref=f1e110]:
+                    - generic [ref=f1e112]: Buy
+                    - generic [ref=f1e117]:
+                      - button "0" [ref=f1e119]:
+                        - heading "0" [level=2] [ref=f1e120]
+                      - button "Select token" [ref=f1e122]:
+                        - generic [ref=f1e123]:
+                          - generic [ref=f1e124]: Select token
+                          - img [ref=f1e126]
+                    - generic:
+                      - generic:
+                        - button "$0":
+                          - generic:
+                            - generic: $0
+              - generic [ref=f1e133]:
+                - button "Get started" [ref=f1e136] [cursor=pointer]:
+                  - generic [ref=f1e137]: Get started
+                - generic:
+                  - heading [level=2]
+                - generic:
+                  - heading [level=2]
+                - generic:
+                  - heading [level=2]
+            - generic:
+              - heading [level=2]
+          - generic:
+            - generic: Buy and sell crypto with zero app fees on 18+ networks including Ethereum, Unichain, and Base.
+  - generic [ref=f1e138]:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]
+                - generic:
+                  - generic:
+                    - generic: Connect a wallet
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic: Get Uniswap Wallet
+                              - generic: Available on iOS, Android, and Chrome
+                      - generic:
+                        - generic:
+                          - img
+                        - generic:
+                          - generic:
+                            - generic: Uniswap Mobile
+                            - generic: Scan QR code to connect
+                  - generic:
+                    - generic:
+                      - generic: Other wallets
+                      - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - img "WalletConnect"
+                          - generic: WalletConnect
+                      - generic:
+                        - generic:
+                          - img "Coinbase Wallet"
+                          - generic: Coinbase Wallet
+                      - generic:
+                        - generic:
+                          - generic: Binance Wallet
+                  - generic:
+                    - generic:
+                      - generic:
+                        - text: By connecting a wallet, you agree to Uniswap Labs’
+                        - link "Terms of Service":
+                          - /url: https://uniswap.org/terms-of-service
+                        - text: and consent to its
+                        - link "Privacy Policy":
+                          - /url: https://uniswap.org/privacy-policy
+                        - text: .
