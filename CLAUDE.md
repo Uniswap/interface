@@ -56,6 +56,16 @@ nx spawns bare `vite`/`typechain`/`openapi` but bun only makes `.bunx` shims the
 - 🔄 Foundry deploy kit under `contracts/` (in progress).
 - ⏳ Localhost: `http://localhost:3000` LIVE (bring-up procedure above).
 
+## Render fixes (why the page was blank) — in `apps/web/.env.local` (gitignored)
+The app crashed to a blank page on two config validations; fixed via local env overrides:
+- `WALLETCONNECT_PROJECT_ID` — committed `.env` uses `WALLET_CONNECT_PROJECT_ID` (underscored) but the legacy config path (USE_NEW_CONFIGS=false) reads `WALLETCONNECT_PROJECT_ID`; web schema requires it non-empty. Set a placeholder.
+- `PRIVY_APP_ID` / `PRIVY_CLIENT_ID` — committed `.env` ships non-empty PLACEHOLDER ids, so `MaybePrivyProvider` mounts `<PrivyProvider>` with a bogus id and throws. Set BOTH to `""` → `isPrivyConfigured()` false → Privy skipped. Injected/WalletConnect wallets still work.
+Result: app renders the HookSwap landing (Atlas green theme confirmed). Remaining console errors are EXPECTED backend-auth failures (401 on `*.api.uniswap.org/rpc`, WS auth, compliance CORS) — resolved by self-hosting RPC/routing.
+
+## Brand polish TODO (visible in render)
+- [ ] Logo still the Uniswap unicorn (top-left) → swap for HookSwap hex logo (brand-kit/logo).
+- [ ] Inter font not loading (old Basel `.woff2` 404) → wire Inter/JetBrains Mono @font-face or fonts.
+
 ## Follow-ups (pre-production, not localhost blockers)
 - [ ] Audit other exhaustive `Record<UniverseChainId,…>` literals across monorepo for a missing `HyperEvm` key (esbuild/dev ignores types; `tsc`/prod build will flag). Candidates: packages/uniswap/src/constants/tokens.ts, apps/web/src/features/Swap/SwapBottomCard.tsx, wallet ContractManager/ProviderManager, chains/utils.ts.
 - [ ] Fix the repo's pre-commit hooks for Windows (nx/bun PATH, missing trufflehog/git-secrets, i18n hook bash regex bug) OR keep committing with a manual secret scan.
