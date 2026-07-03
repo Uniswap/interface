@@ -1,0 +1,24 @@
+# Foundry config for the HookSwap deploy kit.
+# This project only compiles the small helper contract shipped here (WETH9).
+# The Uniswap contracts themselves are built/deployed from their own forked
+# repos (see README.md) which carry their own foundry/hardhat configs and
+# their own pinned solc versions.
+
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+# WETH9 is canonical 0.4.x-era source but compiles fine under a modern 0.8.x
+# toolchain with the pragma left permissive. Optimizer on for cheap deploys.
+solc_version = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+evm_version = "paris"
+
+# Add remappings here if you later vendor Uniswap libs into ./lib.
+remappings = []
+
+[fmt]
+line_length = 100
+tab_width = 4

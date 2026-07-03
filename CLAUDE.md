@@ -48,6 +48,19 @@ nx spawns bare `vite`/`typechain`/`openapi` but bun only makes `.bunx` shims the
 3. GraphQL types + UI icons: already committed / regenerate fine.
 4. Launch: `cd apps/web && SKIP_CONFIG_PULL=true USE_NEW_CONFIGS=false node ../../node_modules/vite/bin/vite.js dev --port 3000`.
 
+## Progress (2026-07-03)
+- ✅ Rebrand → HookSwap (title/meta/urls/i18n) — live, served title = "HookSwap Interface".
+- ✅ Atlas theme (accent #0c8a42, paper #f4f5f1, ink, Inter+JetBrains Mono).
+- ✅ Chains: Robinhood GA (removed rollout flag), HyperEVM (999) added (`hyperevm.ts`, backendSupported:false + GQL filter guard), Sepolia already present, `supportsV4:false` on Robinhood+HyperEVM. Committed on branch `hookswap-rebrand` (pushed).
+- ✅ Forked 15 repos into HooksOS org (see FORK-LIST.md).
+- 🔄 Foundry deploy kit under `contracts/` (in progress).
+- ⏳ Localhost: `http://localhost:3000` LIVE (bring-up procedure above).
+
+## Follow-ups (pre-production, not localhost blockers)
+- [ ] Audit other exhaustive `Record<UniverseChainId,…>` literals across monorepo for a missing `HyperEvm` key (esbuild/dev ignores types; `tsc`/prod build will flag). Candidates: packages/uniswap/src/constants/tokens.ts, apps/web/src/features/Swap/SwapBottomCard.tsx, wallet ContractManager/ProviderManager, chains/utils.ts.
+- [ ] Fix the repo's pre-commit hooks for Windows (nx/bun PATH, missing trufflehog/git-secrets, i18n hook bash regex bug) OR keep committing with a manual secret scan.
+- [ ] HyperEVM logo asset (currently ETH_LOGO placeholder); confirm USDT0 stablecoin address.
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.

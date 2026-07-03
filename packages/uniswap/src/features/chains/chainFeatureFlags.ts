@@ -9,7 +9,6 @@ export const CHAIN_ROLLOUT_FLAGS = {
   [UniverseChainId.Arc]: FeatureFlags.Arc,
   [UniverseChainId.Linea]: FeatureFlags.Linea,
   [UniverseChainId.MegaETH]: FeatureFlags.MegaETH,
-  [UniverseChainId.Robinhood]: FeatureFlags.Robinhood,
   [UniverseChainId.Tempo]: FeatureFlags.Tempo,
   [UniverseChainId.XLayer]: FeatureFlags.XLayer,
 } as const satisfies Partial<Record<UniverseChainId, FeatureFlags>>

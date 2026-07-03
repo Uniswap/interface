@@ -51,7 +51,6 @@ export const ROBINHOOD_CHAIN_INFO = {
   elementName: ElementName.ChainRobinhood,
   explorer: {
     name: 'Robinhood Explorer',
-    // TODO(SWAP-2703): swap to the mainnet explorer URL before launch (testnet placeholder).
     url: 'https://robinhoodchain.blockscout.com/',
   },
   interfaceName: 'robinhood',
@@ -76,7 +75,7 @@ export const ROBINHOOD_CHAIN_INFO = {
     [RPCType.Interface]: { http: [getUniRpcEndpointUrl(UniverseChainId.Robinhood)] },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
-  supportsV4: true,
+  supportsV4: false,
   supportsNFTs: true,
   tokens,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Robinhood],

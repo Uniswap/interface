@@ -1,0 +1,29 @@
+{
+  "sepolia": {
+    "name": "sepolia",
+    "chainId": 11155111,
+    "rpcEnvVar": "SEPOLIA_RPC_URL",
+    "weth": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+    "nativeSymbol": "ETH",
+    "nativeLabel": "ETH",
+    "explorer": "https://sepolia.etherscan.io"
+  },
+  "hyperevm": {
+    "name": "hyperevm",
+    "chainId": 999,
+    "rpcEnvVar": "HYPEREVM_RPC_URL",
+    "weth": "0x5555555555555555555555555555555555555555",
+    "nativeSymbol": "HYPE",
+    "nativeLabel": "HYPE",
+    "explorer": "https://hyperevmscan.io"
+  },
+  "robinhood": {
+    "name": "robinhood",
+    "chainId": 4663,
+    "rpcEnvVar": "ROBINHOOD_RPC_URL",
+    "weth": "DEPLOY",
+    "nativeSymbol": "ETH",
+    "nativeLabel": "ETH",
+    "explorer": "https://explorer.mainnet.chain.robinhood.com"
+  }
+}

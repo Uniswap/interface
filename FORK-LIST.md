@@ -2,6 +2,10 @@
 
 Tailored to the locked decisions: **v2 + v3 only (no v4/hooks), self-hosted routing, chains = Sepolia + HyperEVM + Robinhood, brand = HookSwap / hookswap.xyz.**
 
+## ✅ FORKED into HooksOS org (2026-07-03, via gh as OxForged)
+All 15 forked: `HooksOS/{v2-core, v2-periphery, v3-core, v3-periphery, swap-router-contracts, universal-router, permit2, sdks, smart-order-router, routing-api, v3-subgraph, v2-subgraph, token-lists, default-token-list, assets}`. Interface already = `HooksOS/HookSwap` (this repo). v4 repos intentionally NOT forked.
+Next per repo: contracts → deploy; sdks → add HyperEVM chain-id + deployed addresses; smart-order-router/routing-api → self-host; default-token-list/assets → brand.
+
 Legend: **FORK+BRAND** = fork, modify, publish/host under HookSwap · **DEPLOY** = deploy the contracts as-is (open license) · **SKIP** = not needed for v2/v3 stack.
 
 ---

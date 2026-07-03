@@ -21,7 +21,6 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   const arcStatus = useFeatureFlag(FeatureFlags.Arc)
   const lineaStatus = useFeatureFlag(FeatureFlags.Linea)
   const megaETHStatus = useFeatureFlag(FeatureFlags.MegaETH)
-  const robinhoodStatus = useFeatureFlag(FeatureFlags.Robinhood)
   const tempoStatus = useFeatureFlag(FeatureFlags.Tempo)
   const xLayerStatus = useFeatureFlag(FeatureFlags.XLayer)
 
@@ -35,8 +34,6 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
             return lineaStatus
           case FeatureFlags.MegaETH:
             return megaETHStatus
-          case FeatureFlags.Robinhood:
-            return robinhoodStatus
           case FeatureFlags.Tempo:
             return tempoStatus
           case FeatureFlags.XLayer:
@@ -45,7 +42,7 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
             return false
         }
       })(),
-    [arcStatus, lineaStatus, megaETHStatus, robinhoodStatus, tempoStatus, xLayerStatus],
+    [arcStatus, lineaStatus, megaETHStatus, tempoStatus, xLayerStatus],
   )
 }
 

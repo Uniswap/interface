@@ -1,0 +1,18 @@
+# Per-chain deployment records are written here by scripts/deploy.sh as
+# deployments/<chain>.json (e.g. deployments/sepolia.json).
+#
+# Each file has the shape:
+# {
+#   "chainId": 11155111,
+#   "permit2": "0x...",
+#   "weth": "0x...",
+#   "v2Factory": "0x...",
+#   "v2Router": "0x...",
+#   "v2PairInitCodeHash": "0x...",
+#   "v3Factory": "0x...",
+#   "v3PositionManager": "0x...",
+#   "v3QuoterV2": "0x...",
+#   "v3Migrator": "0x...",
+#   "swapRouter02": "0x...",
+#   "universalRouter": "0x..."
+# }
