@@ -40,12 +40,6 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M12 3s6 6.5 6 10.5A6 6 0 016 13.5C6 9.5 12 3 12 3z" />
         </svg>
       )
-    case 'hooks':
-      return (
-        <svg {...common} strokeLinejoin="round">
-          <path d="M12 2.5l8.2 4.75v9.5L12 21.5 3.8 16.75v-9.5z" />
-        </svg>
-      )
     case 'portfolio':
       return (
         <svg {...common} strokeLinejoin="round">

@@ -9,12 +9,6 @@ import {
 } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
-/** Live "Hooks live" mini stat. `undefined` while loading. */
-export interface HooksLiveStat {
-  count: number
-  deltaThisWeek: number
-}
-
 /** Connected wallet summary. `undefined` = disconnected (show connect affordance). */
 export interface WalletSummary {
   /** Truncated address, e.g. "0x8f…3aE2". Rendered mono. */
@@ -28,8 +22,6 @@ export interface LeftRailProps {
   activeId?: TerminalScreenId
   /** Route handler (wire to react-router navigate). */
   onNavigate?: (path: string, id: TerminalScreenId) => void
-  /** Live hooks-live stat. Omit to render the loading skeleton. */
-  hooksLive?: HooksLiveStat
   /** Connected wallet. Omit to render the "Connect wallet" chip. */
   wallet?: WalletSummary
   /** Handler for the wallet chip when disconnected. */
@@ -103,14 +95,13 @@ function NavRow({
 
 /**
  * Fixed 226px left rail — pixel-perfect from design/NavRailB.dc.html.
- * Top→bottom: logo, TRADE section, ACCOUNT section, "Hooks live" mini stat,
- * dark wallet chip. Data (hooks-live, wallet) is injected live; omitted data
- * renders loading / connect states (no hardcoded fallback values).
+ * Top→bottom: logo, TRADE section, ACCOUNT section, dark wallet chip. Wallet data
+ * is injected live; when disconnected the chip renders a "Connect wallet" state
+ * (no hardcoded fallback values).
  */
 export function LeftRail({
   activeId,
   onNavigate,
-  hooksLive,
   wallet,
   onConnectWallet,
 }: LeftRailProps): JSX.Element {
@@ -150,43 +141,6 @@ export function LeftRail({
       </div>
 
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {/* Hooks-live mini stat card */}
-        <div
-          style={{
-            background: terminalColors.bg,
-            border: `1px solid ${terminalColors.line}`,
-            borderRadius: 12,
-            padding: '12px 13px',
-          }}
-        >
-          <div style={{ fontSize: 11, color: terminalColors.ink3Alt, marginBottom: 4 }}>Hooks live</div>
-          {hooksLive ? (
-            <>
-              <div
-                style={{
-                  fontFamily: terminalFonts.mono,
-                  fontSize: 19,
-                  fontWeight: 600,
-                  color: terminalColors.ink,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {hooksLive.count.toLocaleString()}
-              </div>
-              <div style={{ fontSize: 11, color: terminalColors.greenUp, fontWeight: 600, marginTop: 2 }}>
-                {hooksLive.deltaThisWeek >= 0 ? '+' : ''}
-                {hooksLive.deltaThisWeek.toLocaleString()} this week
-              </div>
-            </>
-          ) : (
-            // loading skeleton
-            <div
-              aria-busy="true"
-              style={{ height: 19, width: 56, borderRadius: 4, background: terminalColors.line2, marginTop: 2 }}
-            />
-          )}
-        </div>
-
         {/* Wallet chip (dark) */}
         <div
           role="button"

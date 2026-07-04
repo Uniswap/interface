@@ -24,6 +24,7 @@ import { Portal } from '~/components/Popups/Portal'
 import { useAccount } from '~/hooks/useAccount'
 import { TerminalShell } from '~/terminal/components/TerminalShell'
 import { terminalScreens, TerminalScreenId } from '~/terminal/config/screens'
+import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
@@ -49,9 +50,6 @@ function activeScreenIdFromPath(pathname: string): TerminalScreenId | undefined 
   }
   if (rest.startsWith('/pools')) {
     return 'create-position'
-  }
-  if (rest.startsWith('/hooks')) {
-    return 'hook-detail'
   }
   if (rest.startsWith('/portfolio')) {
     return 'portfolio'
@@ -117,14 +115,11 @@ export function TerminalChrome({
         rail={{
           activeId: resolvedActiveId,
           onNavigate: (path) => navigate(path),
-          // TODO(data): live "hooks live" count from the hook registry (v4). Omitted
-          // renders the loading skeleton — no fabricated count.
-          hooksLive: undefined,
           wallet,
           onConnectWallet: () => accountDrawer.open(),
         }}
         topBar={{
-          searchPlaceholder: 'Search markets, tokens, hooks…',
+          searchPlaceholder: 'Search markets, tokens…',
           // TODO(B11): open the command palette.
           onSearchClick: () => undefined,
           // TODO(data): live gas oracle (gwei). Omitted renders the skeleton.
@@ -179,8 +174,8 @@ export default function TerminalApp(): JSX.Element {
       <Routes>
         <Route index element={<Navigate to="swap" replace />} />
         <Route path="swap" element={<SwapScreen />} />
+        <Route path="markets" element={<MarketsScreen />} />
         {/* Screens built in parallel — placeholders until their B-screen lands. */}
-        <Route path="markets" element={<ComingSoonScreen code="B3" title={terminalScreens.markets.title} />} />
         <Route
           path="markets/:poolId"
           element={<ComingSoonScreen code="B6" title={terminalScreens['market-detail'].title} />}
@@ -188,11 +183,6 @@ export default function TerminalApp(): JSX.Element {
         <Route
           path="pools/new"
           element={<ComingSoonScreen code="B4" title={terminalScreens['create-position'].title} />}
-        />
-        <Route path="hooks" element={<ComingSoonScreen code="B7" title="Hooks" />} />
-        <Route
-          path="hooks/:hookId"
-          element={<ComingSoonScreen code="B7" title={terminalScreens['hook-detail'].title} />}
         />
         <Route path="portfolio" element={<ComingSoonScreen code="B5" title={terminalScreens.portfolio.title} />} />
         <Route path="analytics" element={<ComingSoonScreen code="B10" title={terminalScreens.analytics.title} />} />

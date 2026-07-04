@@ -44,7 +44,7 @@ const FIELD_BASE = {
  * loading skeletons (no hardcoded fallback values).
  */
 export function TopBar({
-  searchPlaceholder = 'Search markets, tokens, hooks…',
+  searchPlaceholder = 'Search markets, tokens…',
   onSearchClick,
   gas,
   chain,

@@ -63,7 +63,7 @@ export interface CommandPaletteProps {
   query: string
   onQueryChange: (query: string) => void
   placeholder?: string
-  /** Filter tabs (B11: All / Tokens / Pools / Hooks / Actions). Omit to hide the tab row. */
+  /** Filter tabs (B11: All / Tokens / Pools / Actions). Omit to hide the tab row. */
   tabs?: readonly CommandPaletteTab[]
   activeTabId?: string
   onTabChange?: (tabId: string) => void
@@ -90,7 +90,7 @@ export function CommandPalette({
   onClose,
   query,
   onQueryChange,
-  placeholder = 'Search markets, tokens, hooks…',
+  placeholder = 'Search markets, tokens…',
   tabs,
   activeTabId,
   onTabChange,

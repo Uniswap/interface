@@ -1,7 +1,7 @@
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 /** Notification categories from the B13 feed. */
-export type NotificationCategory = 'fees' | 'range' | 'swap' | 'hook' | 'alert' | 'governance'
+export type NotificationCategory = 'fees' | 'range' | 'swap' | 'alert' | 'governance'
 
 export interface NotificationBadgeStyle {
   label: string
@@ -18,7 +18,6 @@ export const notificationCategoryBadges: Record<NotificationCategory, Notificati
   fees: { label: 'FEES', color: terminalColors.greenDeep, background: terminalColors.greenBg },
   range: { label: 'RANGE', color: '#C4712A', background: terminalColors.warnBg },
   swap: { label: 'SWAP', color: terminalColors.ink2, background: terminalColors.panel2 },
-  hook: { label: 'HOOK', color: terminalColors.greenDeep, background: terminalColors.greenBg },
   alert: { label: 'ALERT', color: terminalColors.accentBlue, background: '#EAF2FE' },
   governance: { label: 'GOV', color: terminalColors.accentPurple, background: '#F0ECFF' },
 }

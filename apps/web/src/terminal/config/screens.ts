@@ -18,7 +18,6 @@ export type TerminalScreenId =
   | 'create-position' // B4
   | 'portfolio' // B5
   | 'market-detail' // B6
-  | 'hook-detail' // B7
   | 'confirm-swap' // B8 (modal)
   | 'connect-wallet' // B9 (modal)
   | 'analytics' // B10
@@ -26,7 +25,7 @@ export type TerminalScreenId =
   | 'settings' // B12
   | 'notifications' // B13
 
-export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'hooks' | 'portfolio' | 'activity'
+export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'portfolio' | 'activity'
 
 export interface TerminalScreen {
   id: TerminalScreenId
@@ -56,13 +55,6 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
     code: 'B6',
     title: 'Market detail',
     path: `${TERMINAL_BASE}/markets/:poolId`,
-    kind: 'page',
-  },
-  'hook-detail': {
-    id: 'hook-detail',
-    code: 'B7',
-    title: 'Hook detail',
-    path: `${TERMINAL_BASE}/hooks/:hookId`,
     kind: 'page',
   },
   'confirm-swap': {
@@ -114,12 +106,9 @@ export interface TerminalNavItem {
  */
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
-  // TODO(B3): '/terminal/markets' once the Markets screen is ported.
-  { id: 'markets', label: 'Markets', icon: 'markets', path: '/explore' },
+  { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
   // TODO(B4): '/terminal/pools/new' once Create position is ported.
   { id: 'create-position', label: 'Pools', icon: 'pools', path: '/positions' },
-  // "Hooks" routes to the hook marketplace (rendered on Landing B1 / hook detail B7).
-  { id: 'hook-detail', label: 'Hooks', icon: 'hooks', path: `${TERMINAL_BASE}/hooks` },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */

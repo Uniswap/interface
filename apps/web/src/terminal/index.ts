@@ -22,7 +22,7 @@ export type { HookLogoProps } from '~/terminal/components/HookLogo'
 export { NavIcon } from '~/terminal/components/NavIcon'
 export type { NavIconProps } from '~/terminal/components/NavIcon'
 export { LeftRail } from '~/terminal/components/LeftRail'
-export type { LeftRailProps, HooksLiveStat, WalletSummary } from '~/terminal/components/LeftRail'
+export type { LeftRailProps, WalletSummary } from '~/terminal/components/LeftRail'
 export { TopBar } from '~/terminal/components/TopBar'
 export type { TopBarProps, GasInfo, ChainInfo } from '~/terminal/components/TopBar'
 export { TerminalShell } from '~/terminal/components/TerminalShell'
@@ -33,8 +33,6 @@ export { SparklineCell, trendColor, trendDirectionOf } from '~/terminal/componen
 export type { SparklineCellProps, TrendDirection } from '~/terminal/components/SparklineCell'
 export { StatCard } from '~/terminal/components/StatCard'
 export type { StatCardProps, StatCardSize, StatDelta } from '~/terminal/components/StatCard'
-export { HookBadge, NoHookBadge, hookCategoryColors } from '~/terminal/components/HookBadge'
-export type { HookBadgeProps, HookBadgeColors, HookCategory } from '~/terminal/components/HookBadge'
 export { DataTable } from '~/terminal/components/DataTable'
 export type {
   DataTableAlign,

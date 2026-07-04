@@ -18,9 +18,10 @@
  *     subgraph that the hosted Trading API does not serve for the target chains.
  *     They render honest loading / empty states (NOT fabricated numbers). See the
  *     `TODO(data)` markers; wire to the self-hosted indexer when available.
- *   • Hook-fee strip + active-hook selector + MEV private-flow — GATED behind
- *     `useHooksV4Enabled()` (v4 excluded for launch); render "v4 — coming soon",
- *     never fake hook data.
+ *
+ * HookSwap ships v2 + v3 only (no Uniswap v4 / hooks — LOCKED decision). There is
+ * NO hook UI on this screen: no hook-fee strip, no active-hook selector, no hook
+ * config bar. The order ticket is Market / Limit only.
  */
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
@@ -45,7 +46,6 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
-import { useHooksV4Enabled } from '~/terminal/config/hooksGate'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
 /* ------------------------------------------------------------------ helpers */
@@ -213,7 +213,6 @@ function ChartPanel({
   outputInfo: Maybe<CurrencyInfo>
   priceLabel: string
 }): JSX.Element {
-  const hooksEnabled = useHooksV4Enabled()
   const inSym = inputInfo?.currency.symbol ?? '—'
   const outSym = outputInfo?.currency.symbol ?? '—'
 
@@ -248,20 +247,6 @@ function ChartPanel({
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 17, color: terminalColors.ink }}>
               {inSym} / {outSym}
-            </span>
-            {/* GATED: hook fee badge — v4 only. Never fabricated. */}
-            <span
-              style={{
-                fontFamily: MONO,
-                fontSize: 11,
-                color: terminalColors.ink3Alt,
-                background: terminalColors.panel2,
-                padding: '3px 7px',
-                borderRadius: 5,
-              }}
-              title={hooksEnabled ? undefined : 'Hook fees require Uniswap v4 — coming soon'}
-            >
-              Hooks · v4 soon
             </span>
           </div>
         </div>
@@ -355,35 +340,14 @@ function ChartPanel({
           </div>
         )}
       </div>
-
-      {/* Hook config strip — GATED (v4). */}
-      <div
-        style={{
-          padding: '13px 20px',
-          borderTop: `1px solid ${terminalColors.line2}`,
-          background: terminalColors.bg,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 20,
-        }}
-      >
-        <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 12.5, color: terminalColors.ink }}>
-          Hook config
-        </span>
-        <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink3Alt }}>
-          Dynamic fees, TWAMM &amp; MEV shields arrive with Uniswap v4
-        </span>
-        <span style={{ marginLeft: 'auto', fontSize: 11.5, fontWeight: 600, color: terminalColors.faint }}>
-          v4 — coming soon
-        </span>
-      </div>
     </div>
   )
 }
 
 /* -------------------------------------------------------------- swap ticket */
 
-const TICKET_TABS = ['Market', 'Limit', 'TWAMM'] as const
+// v2/v3 only — Market + Limit. (TWAMM is a v4 hook; excluded per LOCKED decision.)
+const TICKET_TABS = ['Market', 'Limit'] as const
 
 function CurrencyField_Panel({
   side,
@@ -502,7 +466,7 @@ function BreakdownRow({
 function SwapTicket(): JSX.Element {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const hooksEnabled = useHooksV4Enabled()
+  const [mevProtected, setMevProtected] = useState(true)
 
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencies: s.currencies,
@@ -593,7 +557,7 @@ function SwapTicket(): JSX.Element {
 
   return (
     <div style={{ width: 326, flexShrink: 0, background: terminalColors.bg, padding: 16 }}>
-      {/* Market / Limit / TWAMM tabs */}
+      {/* Market / Limit tabs */}
       <div
         style={{
           display: 'flex',
@@ -609,7 +573,7 @@ function SwapTicket(): JSX.Element {
           return (
             <span
               key={tab}
-              title={active ? undefined : 'Limit & TWAMM orders arrive with Uniswap v4'}
+              title={active ? undefined : 'Limit orders — coming soon'}
               style={{
                 flex: 1,
                 textAlign: 'center',
@@ -687,46 +651,22 @@ function SwapTicket(): JSX.Element {
         onSelectToken={() => updateSwapForm({ selectingCurrencyField: CurrencyField.OUTPUT })}
       />
 
-      {/* Active-hook selector — GATED (v4). */}
-      <div
+      {/* MEV protection — client-side routing preference (v2/v3, not a hook). */}
+      <button
+        type="button"
+        onClick={() => setMevProtected((v) => !v)}
+        aria-pressed={mevProtected}
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: terminalColors.panel,
-          border: `1px solid ${terminalColors.line2}`,
-          borderRadius: 11,
-          padding: '11px 13px',
-          marginTop: 12,
-          opacity: 0.75,
+          width: '100%',
+          background: 'transparent',
+          border: 'none',
+          marginTop: 14,
+          padding: 2,
+          cursor: 'pointer',
         }}
-        title={hooksEnabled ? undefined : 'Active hooks require Uniswap v4 — coming soon'}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <span
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: terminalColors.panel2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span style={{ width: 11, height: 11, border: `2px solid ${terminalColors.ink3Alt}`, borderRadius: 3 }} />
-          </span>
-          <div>
-            <div style={{ fontSize: 12.5, fontWeight: 600, color: terminalColors.ink2 }}>No hook</div>
-            <div style={{ fontSize: 10.5, color: terminalColors.ink3 }}>v4 — coming soon</div>
-          </div>
-        </div>
-      </div>
-
-      {/* MEV protection — GATED (private-flow routing not yet available). */}
-      <div
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, padding: 2, opacity: 0.75 }}
-        title="MEV private-flow routing — coming soon"
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <svg
@@ -734,7 +674,7 @@ function SwapTicket(): JSX.Element {
             height={15}
             viewBox="0 0 24 24"
             fill="none"
-            stroke={terminalColors.ink3Alt}
+            stroke={mevProtected ? terminalColors.greenUp : terminalColors.ink3Alt}
             strokeWidth={2}
             strokeLinejoin="round"
           >
@@ -742,12 +682,31 @@ function SwapTicket(): JSX.Element {
           </svg>
           <span style={{ fontSize: 12.5, color: terminalColors.ink2, fontWeight: 500 }}>MEV protection</span>
         </div>
-        <span style={{ width: 34, height: 20, borderRadius: 999, background: terminalColors.line, position: 'relative' }}>
+        <span
+          style={{
+            width: 34,
+            height: 20,
+            borderRadius: 999,
+            background: mevProtected ? terminalColors.brandGreen : terminalColors.line,
+            position: 'relative',
+            transition: 'background 120ms ease',
+            flexShrink: 0,
+          }}
+        >
           <span
-            style={{ position: 'absolute', top: 2, left: 2, width: 16, height: 16, borderRadius: '50%', background: '#fff' }}
+            style={{
+              position: 'absolute',
+              top: 2,
+              left: mevProtected ? 16 : 2,
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
+              background: '#fff',
+              transition: 'left 120ms ease',
+            }}
           />
         </span>
-      </div>
+      </button>
 
       {/* Live breakdown */}
       <div
