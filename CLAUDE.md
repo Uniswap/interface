@@ -62,6 +62,12 @@ The app crashed to a blank page on two config validations; fixed via local env o
 - `PRIVY_APP_ID` / `PRIVY_CLIENT_ID` — committed `.env` ships non-empty PLACEHOLDER ids, so `MaybePrivyProvider` mounts `<PrivyProvider>` with a bogus id and throws. Set BOTH to `""` → `isPrivyConfigured()` false → Privy skipped. Injected/WalletConnect wallets still work.
 Result: app renders the HookSwap landing (Atlas green theme confirmed). Remaining console errors are EXPECTED backend-auth failures (401 on `*.api.uniswap.org/rpc`, WS auth, compliance CORS) — resolved by self-hosting RPC/routing.
 
+## Sepolia validation results (2026-07-03)
+- On-chain audit: Sepolia has the FULL canonical Uniswap stack + is already wired in sdk-core → no deploy. Permit2 + CREATE2 deployer exist on all 3 chains; HyperEVM WHYPE exists.
+- Live-app validation caught + fixed 2 real runtime crashes (esbuild skips the exhaustive-map types tsc would catch): `SwapBottomCard` CHAIN_THEME map + `WRAPPED_NATIVE_CURRENCY` missing HyperEvm. `/swap?chain=hyperevm` now renders.
+- routing-api scaffolded + pushed to HooksOS/routing-api (chains wired, static on-chain pools, hookswap/ docs). AWS-Lambda/CDK app (no local server).
+- **Quoting gap (honest):** interface speaks the Trading API schema, NOT routing-api directly. To quote you need: deploy v2/v3/UR on 999+4663 → fill addresses in sdks + SOR forks → add 3 chains to the SOR fork too → dependency override (@uniswap/* → HooksOS forks) → on-chain liquidity → a Trading API layer (unified-routing-api) or adapter wrapping routing-api.
+
 ## Brand polish TODO (visible in render)
 - [ ] Logo still the Uniswap unicorn (top-left) → swap for HookSwap hex logo (brand-kit/logo).
 - [ ] Inter font not loading (old Basel `.woff2` 404) → wire Inter/JetBrains Mono @font-face or fonts.
