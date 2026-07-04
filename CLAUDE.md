@@ -77,6 +77,29 @@ Result: app renders the HookSwap landing (Atlas green theme confirmed). Remainin
 - [ ] Fix the repo's pre-commit hooks for Windows (nx/bun PATH, missing trufflehog/git-secrets, i18n hook bash regex bug) OR keep committing with a manual secret scan.
 - [ ] HyperEVM logo asset (currently ETH_LOGO placeholder); confirm USDT0 stablecoin address.
 
+## Deploy strategy (2026-07-03, LOCKED — FULLY INDEPENDENT)
+Reggie is deploying **HookSwap's OWN complete stack on ALL 7 chains** — full independence, NOT reusing Uniswap's canonical deployments anywhere (even where they exist, e.g. HyperEVM v3+UR, Ink/MegaETH v3). Own everything = fee capture + full control + no dependency on Uniswap governance.
+- **Own on every chain:** v2 factory + v2 router + v3 factory (+ v3 periphery: NFT position manager, quoter, tick lens, migrator, multicall) + SwapRouter02 + Universal Router.
+- **Bytecode:** standard/canonical Uniswap bytecode → canonical init-code hashes → SDK/SOR forks only need factory ADDRESSES swapped (hashes untouched).
+- **WETH:** reuse each chain's canonical wrapped-native where it exists (HyperEVM WHYPE, Ink/MegaETH WETH 0x42..06, XLayer WOKB, Sepolia WETH). Deploy own WETH9 ONLY on Robinhood + Tempo (none exists). Rationale: WETH is a shared wrapper, not "the stack" — deploying your own would create an incompatible token nobody holds. Confirm if you truly want own WETH everywhere.
+- **Permit2:** reuse canonical (already live on all 7, deployed by canonical CREATE2 — same address everywhere; not worth redeploying).
+
+### Per-chain deploy list — OWN FULL v2+v3+UR STACK on all 7
+| Chain (id) | Deploy (own) | WETH |
+|---|---|---|
+| Sepolia (11155111) | v2 + v3 + UR (own) | reuse 0xfFf9..6B14 |
+| HyperEVM (999) | v2 + v3 + UR (own) | reuse WHYPE 0x5555..5555 |
+| Ink (57073) | v2 + v3 + UR (own) | reuse WETH 0x42..06 |
+| MegaETH (4326) | v2 + v3 + UR (own) | reuse WETH 0x42..06 |
+| XLayer (196) | v2 + v3 + UR (own) | reuse WOKB 0xe538..9b2b |
+| Robinhood (4663) | v2 + v3 + UR (own) + WETH9 | deploy own |
+| Tempo (4217) | v2 + v3 + UR (own) + WETH9 | deploy own (20 gwei) |
+
+### Deploy pipeline
+- v3 via `@uniswap/deploy-v3` CLI (canonical bytecode). v2 via forge-create canonical UniswapV2Factory/Router02. UR via universal-router fork + RouterParameters (v4 fields = address(0)). WETH via contracts/WETH9.sol.
+- After deploy: write `contracts/deployments/<chain>.json` → swap factory addresses into HooksOS/sdks (sdk-core CHAIN_TO_ADDRESSES_MAP + V2_FACTORY/ROUTER) and smart-order-router addresses.ts. Init-code hashes stay canonical.
+- THEN: bootstrap liquidity (own seed + LP incentives) — the real launch blocker; empty pools quote nothing.
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
