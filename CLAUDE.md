@@ -155,6 +155,15 @@ Every chain's addresses in contracts/deployments/<chain>.json. Permit2 + WETH re
 - Terminal is the CORE app now (/ and /swap render it). Screens: B2 Swap ✅ live, B3 Markets (in progress), then Pools/Portfolio/Activity. Analytics/Settings/Notifications/Search later.
 - **Remaining to LIVE SWAPS (deferred, post-UI):** (1) dependency override interface+routing → HooksOS/sdks+SOR forks; (2) deploy routing-api + a Trading API adapter; (3) hosted RPC/indexer; (4) on-chain liquidity (the real launch blocker). Confirm deployed UR version == interface supportedURVersions `_2_0`.
 
+## Infra decisions (2026-07-04, from Reggie)
+- **Deploy target: VPS, not AWS.** Trading API adapter + routing = long-running Node/Express server(s) on a VPS (Docker/pm2 + nginx + certbot TLS), NOT AWS Lambda/CDK. Adapter recommended to embed the HooksOS smart-order-router in-process (option b) rather than proxy an AWS routing-api. See trading-api-adapter/DEPLOY.md.
+- **Hosted RPC: Infura key** (in apps/web/.env.local, gitignored; rotate after launch — was shared in chat). Infura serves Ethereum mainnet + **Sepolia** + major L2s — use it for Sepolia/mainnet. It does NOT serve the 6 HookSwap custom chains (MegaETH/Robinhood/Ink/XLayer/HyperEVM/Tempo) → those keep their public RPCs until dedicated nodes are provisioned.
+- **UI progress:** Terminal is core app. B2 Swap ✅ (hooks removed, pixel-tightened, MEV toggle live), B3 Markets ✅ (real pools/TVL/volume/APR/sparklines/heatmap). Next: Pools, Portfolio, Activity.
+
+## SDK fork address status (2026-07-04)
+- sdks (sdk-core @ 79285a0f) + SOR (@ efd0ba1): MegaETH/Robinhood/Ink/XLayer/HyperEVM = COMPLETE real addresses.
+- **FOLLOW-UP: Tempo (4217) is only v2-factory in the forks** — the sdk-update agent ran before the Tempo deploy finished. Tempo is now FULLY deployed (see tempo.json); fill its real v3/router/UR addresses into HooksOS/sdks addresses.ts + SOR when convenient (not demo-critical).
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
