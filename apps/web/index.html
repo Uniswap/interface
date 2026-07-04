@@ -108,8 +108,18 @@
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+          /* HookSwap Atlas — paper surface with a single acid-green moment at the top edge */
+          background: radial-gradient(120% 80% at 50% -10%, rgba(56, 224, 123, 0.10) 0%, rgba(56, 224, 123, 0) 55%), #f4f5f1;
         }
+      }
+
+      /* ================= HookSwap Atlas design layer ================= */
+      /* Frosted terminal topbar: paper-white glass with a hairline rule. */
+      nav.is_Nav {
+        background-color: rgba(255, 255, 255, 0.72) !important;
+        backdrop-filter: blur(20px) saturate(1.25);
+        -webkit-backdrop-filter: blur(20px) saturate(1.25);
+        border-bottom: 1px solid rgba(13, 16, 12, 0.09);
       }
     </style>
   </head>
