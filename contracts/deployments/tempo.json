@@ -1,0 +1,31 @@
+{
+  "chain": "tempo",
+  "chainId": 4217,
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "weth9": "0xBbBcC62853a5fA27b93d6Bab3E6F7ce841E25Df2",
+  "weth9Note": "routing wrapper only; Tempo gas = pathUSD, interface tempo.ts wrappedNativeCurrency stays null",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "v2Factory": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+  "v2FactoryTx": "0x2749d8c2... (landed at exactly 20 gwei; 25 gwei was rejected insufficient-funds)",
+  "v2FactoryNote": "NON-deterministic address — deployer nonce was not 0 on Tempo (address collides with Ink swapRouter02 by coincidence of nonce reuse)",
+  "v2PairInitCodeHash": "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+  "v2Router02": null,
+  "v3Factory": null,
+  "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+  "universalRouter": null,
+  "_status": "BLOCKED 2026-07-04 — INSUFFICIENT GAS FUNDS. v2 factory only. Nothing burned (nonce still 15).",
+  "_blocker": {
+    "gasPriceWei": "20000000000 (20 gwei, network floor)",
+    "affordableGasAtStop": 1417000,
+    "balanceUnitsApprox": 28340,
+    "unitDefinition": "node have/want unit = gasLimit*gasPrice/1e12 (1 unit = 1e-12 ETH-equivalent); eth_getBalance is NOT the gas budget",
+    "tempoGasSchedule": "contract creation costs ~5-6x mainnet (extra ~1000 gas/byte code deposit); plain transfer normal 21000",
+    "remainingGasNeeded": {
+      "v2Router02": 23016400,
+      "v3Suite": "~148,600,000 (factory 26.67M, NFTDescriptorLib 25.64M, NPM 27.27M, SwapRouter02 25.85M, staker 16.24M, quoterV2 9.0M, migrator 8.4M, descriptor 5.6M, tickLens 1.94M, multicall 1.94M) + ~10M proxy/admin/setup txs",
+      "universalRouter": 23264118,
+      "totalApprox": 205000000
+    },
+    "fundingNeeded": "~4,100,000 units to finish (have ~28,340) — recommend funding ~4,500,000 units (= 225M gas at 20 gwei = 4.5 ETH-equivalent at the 1e-12 unit scale) before resuming"
+  }
+}
