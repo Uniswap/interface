@@ -1,0 +1,23 @@
+{
+  "chainId": 999,
+  "chainName": "HyperEVM",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "weth9": "0x5555555555555555555555555555555555555555",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "v2Factory": "0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2",
+  "v2Router02": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+  "v2PairInitCodeHash": "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+  "v3Factory": "0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A",
+  "nonfungiblePositionManager": "0x86426094d82bC1fd40F0901965b23D30837Dc66b",
+  "quoterV2": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D",
+  "swapRouter02": "0xD96fc9629AFaf325fCdd7F98Dc9b8dc2165adcBB",
+  "multicall2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+  "tickLens": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+  "v3Migrator": "0xB5A7BF488f2407479E116f713f116546F67c803b",
+  "v3Staker": "0x0E88A920A522d2e858B5fB0e896F228f4619E0a6",
+  "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+  "universalRouter": "0xD9d4795F2A12305a12C36455ADAD011F2D6143AB",
+  "universalRouterTxHash": "0xcb41b2ab0cdc58eef2596958ba6e778db3325420997163fa5b973f2c3eeecee1",
+  "_status": "COMPLETE",
+  "_note": "big-blocks mode enabled on deployer via Hyperliquid evmUserModify; addresses non-deterministic (deployer nonce≠0 on HyperEVM)"
+}
