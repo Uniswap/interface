@@ -124,3 +124,9 @@ skills-lock.json
 .playwright-mcp/
 hookswap-landing.png
 apps/web/.env.local
+
+# redesign screenshots + forge build cache
+atlas-*.png
+baseline-*.png
+contracts/cache/
+contracts/out/
