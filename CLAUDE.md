@@ -104,6 +104,24 @@ Tempo's Uniswap v3 (reference, deploying own): factory 0x24a3d4757e330890a8b8978
 - After deploy: write `contracts/deployments/<chain>.json` → swap factory addresses into HooksOS/sdks (sdk-core CHAIN_TO_ADDRESSES_MAP + V2_FACTORY/ROUTER) and smart-order-router addresses.ts. Init-code hashes stay canonical.
 - THEN: bootstrap liquidity (own seed + LP incentives) — the real launch blocker; empty pools quote nothing.
 
+## Deploy pipeline (RESOLVED 2026-07-03 — all forks compile, keyless prep DONE)
+Forks at `C:/Users/avone/OneDrive/Desktop/HokkOS/forks/`. Foundry installed.
+**Per-chain deploy order:**
+1. Permit2 — already on-chain (canonical `0x0000..78BA3`), skip.
+2. WETH9 — reuse each chain's existing (see table above), skip deploy.
+3. **v2**: `cd forks/v2-core && forge build` → deploy `UniswapV2Factory(feeToSetter=deployer)`; `cd forks/v2-periphery && forge build` → deploy `UniswapV2Router02(factory, weth9)`. (foundry.toml committed to both forks.)
+4. **v3**: build the CLI from GitHub (npx is 404 — restricted pkg):
+   `git clone https://github.com/Uniswap/deploy-v3 && cd deploy-v3 && npm install && NODE_OPTIONS=--openssl-legacy-provider npm run build`
+   then `node dist/index.js --private-key <k> --json-rpc <rpc> --weth9-address <weth> --native-currency-label <SYM> --owner-address <deployer> --v2-core-factory-address <v2Factory from step 3> --state deployments/<chain>-v3.json`
+   (deploys v3-core + v3-periphery + SwapRouter02).
+5. **UniversalRouter**: `cd forks/universal-router && forge build --skip 'script/**' --skip 'test/**'` (stale DeployTempo script has wrong arg count). Deploy with the **11-field RouterParameters** (this fork = newer v4+Across UR; v4 fields zeroed):
+   permit2=`0x0000..78BA3`, weth9=<per-chain>, v2Factory=<step3>, v3Factory=<step4>, pairInitCodeHash=`0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f`, poolInitCodeHash=`0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54`, v4PoolManager=0, permissionsAdapterFactory=0, v3NFTPositionManager=0, v4PositionManager=0, spokePool=0.
+- v2 pair init hash CONFIRMED == canonical → SDK/SOR forks need only factory ADDRESSES (hashes untouched).
+- Verify the deployed UR version matches the interface's `supportedURVersions` (`_2_0`) at deploy time.
+
+## BLOCKER: deployer key malformed (2026-07-03)
+`contracts/.env` DEPLOYER_PRIVATE_KEY is 71 non-hex chars after `0x` (must be exactly 64 hex). Reggie must fix: line = `DEPLOYER_PRIVATE_KEY=0x<64 hex>` — no quotes/spaces/comment/trailing text. Then fund wallet (HYPE/ETH/etc per chain) and run deploys. Key never printed; only shape measured.
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
