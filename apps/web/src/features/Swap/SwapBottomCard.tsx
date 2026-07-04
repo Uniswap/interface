@@ -123,6 +123,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#222222' },
   [UniverseChainId.HyperEvm]: { bgColor: 'rgba(80, 210, 193, 0.12)', textColor: '#149E8C' },
+  [UniverseChainId.Ink]: { bgColor: 'rgba(113, 63, 245, 0.10)', textColor: '#7136F5' },
   [UniverseChainId.Linea]: { bgColor: 'rgba(97, 223, 255, 0.12)', textColor: '#121212' },
   [UniverseChainId.MegaETH]: { bgColor: 'rgba(25, 25, 26, 0.08)', textColor: '#19191A' },
   [UniverseChainId.Monad]: { bgColor: 'rgba(115, 91, 248, 0.08)', textColor: '#735BF8' },

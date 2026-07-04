@@ -6,6 +6,7 @@ import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { HYPEREVM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/hyperevm'
+import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
 import { LINEA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/linea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { MEGAETH_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/megaeth'
@@ -47,6 +48,7 @@ export const ORDERED_CHAINS = [
   MEGAETH_CHAIN_INFO,
   ROBINHOOD_CHAIN_INFO,
   HYPEREVM_CHAIN_INFO,
+  INK_CHAIN_INFO,
   ARC_CHAIN_INFO,
   SONEIUM_CHAIN_INFO,
   TEMPO_CHAIN_INFO,
@@ -104,6 +106,7 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Monad]: MONAD_CHAIN_INFO,
   [UniverseChainId.Robinhood]: ROBINHOOD_CHAIN_INFO,
   [UniverseChainId.HyperEvm]: HYPEREVM_CHAIN_INFO,
+  [UniverseChainId.Ink]: INK_CHAIN_INFO,
   [UniverseChainId.Arc]: ARC_CHAIN_INFO,
 
   // TESTNET

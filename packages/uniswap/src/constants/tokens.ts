@@ -263,6 +263,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WHYPE',
     'Wrapped HYPE',
   ),
+  [UniverseChainId.Ink]: new Token(
+    UniverseChainId.Ink,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
   [UniverseChainId.ArbitrumOne]: new Token(
     UniverseChainId.ArbitrumOne,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',

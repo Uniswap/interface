@@ -37,6 +37,7 @@ export enum UniverseChainId {
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
   HyperEvm = 999,
+  Ink = 57073,
   Solana = 501000101,
 }
 

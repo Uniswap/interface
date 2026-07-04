@@ -20,9 +20,6 @@ export const getFeatureFlaggedChainIds = createGetFeatureFlaggedChainIds((flag) 
 export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   const arcStatus = useFeatureFlag(FeatureFlags.Arc)
   const lineaStatus = useFeatureFlag(FeatureFlags.Linea)
-  const megaETHStatus = useFeatureFlag(FeatureFlags.MegaETH)
-  const tempoStatus = useFeatureFlag(FeatureFlags.Tempo)
-  const xLayerStatus = useFeatureFlag(FeatureFlags.XLayer)
 
   return useMemo(
     () =>
@@ -32,17 +29,11 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
             return arcStatus
           case FeatureFlags.Linea:
             return lineaStatus
-          case FeatureFlags.MegaETH:
-            return megaETHStatus
-          case FeatureFlags.Tempo:
-            return tempoStatus
-          case FeatureFlags.XLayer:
-            return xLayerStatus
           default:
             return false
         }
       })(),
-    [arcStatus, lineaStatus, megaETHStatus, tempoStatus, xLayerStatus],
+    [arcStatus, lineaStatus],
   )
 }
 
