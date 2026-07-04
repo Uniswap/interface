@@ -81,7 +81,7 @@ Result: app renders the HookSwap landing (Atlas green theme confirmed). Remainin
 Reggie is deploying **HookSwap's OWN complete stack on ALL 7 chains** — full independence, NOT reusing Uniswap's canonical deployments anywhere (even where they exist, e.g. HyperEVM v3+UR, Ink/MegaETH v3). Own everything = fee capture + full control + no dependency on Uniswap governance.
 - **Own on every chain:** v2 factory + v2 router + v3 factory (+ v3 periphery: NFT position manager, quoter, tick lens, migrator, multicall) + SwapRouter02 + Universal Router.
 - **Bytecode:** standard/canonical Uniswap bytecode → canonical init-code hashes → SDK/SOR forks only need factory ADDRESSES swapped (hashes untouched).
-- **WETH:** reuse each chain's canonical wrapped-native where it exists (HyperEVM WHYPE, Ink/MegaETH WETH 0x42..06, XLayer WOKB, Sepolia WETH). Deploy own WETH9 ONLY on Robinhood + Tempo (none exists). Rationale: WETH is a shared wrapper, not "the stack" — deploying your own would create an incompatible token nobody holds. Confirm if you truly want own WETH everywhere.
+- **WETH:** reuse each chain's canonical wrapped-native where it exists (HyperEVM WHYPE, Ink/MegaETH WETH 0x42..06, XLayer WOKB, Sepolia WETH, **Robinhood WETH `0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73`** — official Robinhood Chain token, already wired in robinhood.ts). Deploy own WETH9 ONLY on **Tempo** (the only chain with no canonical wrapped-native). Rationale: WETH is a shared wrapper, not "the stack" — deploying your own would create an incompatible token nobody holds.
 - **Permit2:** reuse canonical (already live on all 7, deployed by canonical CREATE2 — same address everywhere; not worth redeploying).
 
 ### Per-chain deploy list — OWN FULL v2+v3+UR STACK on all 7
@@ -92,7 +92,7 @@ Reggie is deploying **HookSwap's OWN complete stack on ALL 7 chains** — full i
 | Ink (57073) | v2 + v3 + UR (own) | reuse WETH 0x42..06 |
 | MegaETH (4326) | v2 + v3 + UR (own) | reuse WETH 0x42..06 |
 | XLayer (196) | v2 + v3 + UR (own) | reuse WOKB 0xe538..9b2b |
-| Robinhood (4663) | v2 + v3 + UR (own) + WETH9 | deploy own |
+| Robinhood (4663) | v2 + v3 + UR (own) | reuse WETH 0x0Bd7D308..EAcAD73 |
 | Tempo (4217) | v2 + v3 + UR (own) + WETH9 | deploy own (20 gwei) |
 
 ### Deploy pipeline
