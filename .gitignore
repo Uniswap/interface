@@ -130,3 +130,9 @@ atlas-*.png
 baseline-*.png
 contracts/cache/
 contracts/out/
+
+# more dev screenshots/logs
+terminal-*.png
+markets-*.png
+markets-*.log
+*-errors.log
