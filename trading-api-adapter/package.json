@@ -1,0 +1,28 @@
+{
+  "name": "@hookswap/trading-api-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Trading-API-schema adapter for HookSwap. Speaks the exact Trading API schema the HookSwap interface calls (POST /v1/quote, GET /v1/swappable_tokens, ...) and computes routes via HookSwap's own smart-order-router / routing-api. Lets the interface's TRADING_API_URL_OVERRIDE point here instead of Uniswap's hosted Trading API (which only serves Uniswap chains).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "//": "NOTE: dependencies are NOT installed in this repo checkout (disk constrained). Run `npm install` on Reggie's machine before build/serve. See DEPLOY.md.",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cross-fetch": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

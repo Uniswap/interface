@@ -1,0 +1,28 @@
+# HookSwap Trading API adapter — VPS single-node compose.
+# Usage:  docker compose --env-file .env up -d --build
+# Secrets: config/rpc.env is gitignored; it is loaded via env_file below (NOT baked into image).
+services:
+  trading-api-adapter:
+    build: .
+    image: hookswap-trading-api-adapter
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4000:4000" # bind localhost only; nginx terminates TLS and proxies in.
+    env_file:
+      - .env # ROUTING_API_URL / ROUTING_MODE / PORT / CORS_ALLOW_ORIGIN
+      - config/rpc.env # WEB3_RPC_<chainId> (real Infura key + public RPCs) — gitignored
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # OPTIONAL: run the HooksOS/routing-api as a sibling Node service on the same VPS if you
+  # choose PROXY mode instead of embedding the SOR. Upstream routing-api is an AWS-CDK/Lambda
+  # app; running it as a plain server needs a thin Express wrapper around its exported quote
+  # handler (see DEPLOY.md "Option A"). Left commented — embed mode (Option B) avoids it.
+  # routing-api:
+  #   build: ../../routing-api
+  #   restart: unless-stopped
+  #   ports: ["127.0.0.1:4001:4001"]
+  #   env_file: [config/rpc.env]
