@@ -93,7 +93,11 @@ Reggie is deploying **HookSwap's OWN complete stack on ALL 7 chains** — full i
 | MegaETH (4326) | v2 + v3 + UR (own) | reuse WETH 0x42..06 |
 | XLayer (196) | v2 + v3 + UR (own) | reuse WOKB 0xe538..9b2b |
 | Robinhood (4663) | v2 + v3 + UR (own) | reuse WETH 0x0Bd7D308..EAcAD73 |
-| Tempo (4217) | v2 + v3 + UR (own) + WETH9 | deploy own (20 gwei) |
+| Tempo (4217) | v2 + v3 + UR (own) | reuse WETH9 0xBbBcC62853a5fA27b93d6Bab3E6F7ce841E25Df2 as router constructor arg (20 gwei) |
+
+**NO WETH deploys needed on ANY chain** — every chain has a canonical wrapped-native to pass as the router/periphery WETH9 constructor arg.
+Tempo note: gas is paid in pathUSD (ERC-20), so interface `tempo.ts wrappedNativeCurrency = null` (correct — leave it); `0xBbBcC62…` is only the WETH9 param for the SwapRouter02/UR/periphery deploy.
+Tempo's Uniswap v3 (reference, deploying own): factory 0x24a3d4757e330890a8b8978028c9e58e04611fd6, NPM 0xb71c33f096ceabdc0229110e0d76a6382d01c633, QuoterV2 0x53ab5d7a69db158f621b43ee70423da1e1403c2a, SwapRouter02 0x7e9d53081e961201837336bcd81f52ae92691a8f, UniversalRouter 0xa2dc7d0266f0cc50b3eeaf36c9bfcecff1beea91.
 
 ### Deploy pipeline
 - v3 via `@uniswap/deploy-v3` CLI (canonical bytecode). v2 via forge-create canonical UniswapV2Factory/Router02. UR via universal-router fork + RouterParameters (v4 fields = address(0)). WETH via contracts/WETH9.sol.
