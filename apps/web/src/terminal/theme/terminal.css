@@ -1,0 +1,138 @@
+/* ==========================================================================
+   HookSwap Terminal — design tokens as CSS custom properties + web fonts.
+
+   Additive layer. Scoped under `.tm-root` so nothing here leaks into the
+   existing Uniswap-fork UI. Import this file only from the Terminal shell.
+
+   Values mirror ./tokens.ts EXACTLY (README §Design tokens).
+   ========================================================================== */
+
+/* --------------------------------------------------------------- fonts ----
+   The Terminal spec requires THREE families that are NOT yet bundled:
+     • Space Grotesk  (display / headings / logo wordmark)
+     • IBM Plex Sans  (UI / body)
+     • IBM Plex Mono  (all numerics / prices / addresses / tickers — hard rule)
+
+   Font FILES are intentionally NOT added here (disk-space constraint at build
+   time). Each @font-face below points at the expected drop-in path under
+   /public/fonts and degrades to a sensible system fallback until the .woff2
+   files are added. TODO(fonts): add the following files to apps/web/public/fonts
+   and the app will pick them up with no code change:
+     - SpaceGrotesk-Medium.woff2   (500)
+     - SpaceGrotesk-SemiBold.woff2 (600)
+     - SpaceGrotesk-Bold.woff2     (700)
+     - IBMPlexSans-Regular.woff2   (400)
+     - IBMPlexSans-Medium.woff2    (500)
+     - IBMPlexSans-SemiBold.woff2  (600)
+     - IBMPlexMono-Regular.woff2   (400)
+     - IBMPlexMono-Medium.woff2    (500)
+     - IBMPlexMono-SemiBold.woff2  (600)
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+  /* Fallback metrics: Space Grotesk ~ a slightly tightened grotesque. */
+  src: local('Space Grotesk'), url('/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: local('IBM Plex Sans'), url('/fonts/IBMPlexSans-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+  src: local('IBM Plex Mono'), url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+}
+
+/* --------------------------------------------------------- CSS variables -- */
+
+.tm-root {
+  /* Colors */
+  --tm-ink: #0b0f14;
+  --tm-ink-2: #59626f;
+  --tm-ink-3: #8a94a3;
+  --tm-ink-3-alt: #98a0ac;
+  --tm-faint: #b0b7c0;
+  --tm-line: #e6e9ee;
+  --tm-line-2: #eff1f4;
+  --tm-line-3: #f4f6f8;
+  --tm-bg: #ffffff;
+  --tm-bg-app: #fcfcfd;
+  --tm-panel: #f6f8fa;
+  --tm-panel-2: #f0f3f6;
+  --tm-panel-2-alt: #eef1f4;
+  --tm-brand-green: #2fe07e;
+  --tm-green-deep: #0aa85a;
+  --tm-green-up: #12b866;
+  --tm-green-bg: #e9fbef;
+  --tm-green-border: #c7f3d8;
+  --tm-btn-ink: #08110a;
+  --tm-red-down: #ef4e4a;
+  --tm-red-bg: #fdebea;
+  --tm-warn: #f0913a;
+  --tm-warn-bg: #fff3e8;
+  --tm-warn-bg-alt: #fff1e9;
+  --tm-accent-indigo: #5b6bff;
+  --tm-accent-blue: #2e7cf6;
+  --tm-accent-purple: #8a6bff;
+  --tm-accent-pink: #e0517a;
+  --tm-accent-teal: #12b0a8;
+  --tm-rail-icon-inactive: #8a92a0;
+  --tm-rail-wallet-sub: #7c8698;
+
+  /* Fonts */
+  --tm-font-display: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+  --tm-font-sans: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+  --tm-font-mono: 'IBM Plex Mono', ui-monospace, 'JetBrains Mono', monospace;
+
+  /* Radii */
+  --tm-radius-pill: 999px;
+  --tm-radius-rail-item: 10px;
+  --tm-radius-rail-card: 12px;
+  --tm-radius-field: 9px;
+  --tm-radius-card: 12px;
+  --tm-radius-screen: 18px;
+  --tm-radius-modal: 18px;
+
+  /* Borders */
+  --tm-border-card: 1px solid var(--tm-line);
+  --tm-border-inner: 1px solid var(--tm-line-2);
+  --tm-border-row: 1px solid var(--tm-line-3);
+
+  /* Shadows */
+  --tm-shadow-screen: 0 30px 60px -30px rgba(11, 15, 20, 0.22);
+  --tm-shadow-modal: 0 40px 90px -20px rgba(11, 15, 20, 0.5);
+  --tm-shadow-segmented: 0 1px 2px rgba(11, 15, 20, 0.06);
+  --tm-shadow-rail-item: 0 1px 2px rgba(11, 15, 20, 0.05);
+
+  /* Layout */
+  --tm-frame-width: 1360px;
+  --tm-rail-width: 226px;
+  --tm-topbar-height: 52px;
+
+  /* Base surface + text for the Terminal region */
+  font-family: var(--tm-font-sans);
+  color: var(--tm-ink);
+  background: var(--tm-bg-app);
+}
+
+/* Modal scrim */
+.tm-scrim {
+  background: rgba(11, 15, 20, 0.42);
+}
+
+/* Convenience: every numeric/monetary/address value uses mono (hard rule). */
+.tm-mono {
+  font-family: var(--tm-font-mono);
+  font-feature-settings: 'tnum' 1;
+}
