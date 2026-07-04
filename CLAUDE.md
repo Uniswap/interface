@@ -139,6 +139,22 @@ Four per-chain deploy agents ran but hit the account session limit mid-diagnosis
 - **Ink (57073):** v2 already live; needs v3 (patched CLI) + UR.
 - **RESUME after 12:40am PT** (session limit). Real-money deploys should NOT be run when a rate-limit could interrupt mid-sequence (v3 = ~10 sequential txs → partial deploy risk).
 
+## 🎉 CONTRACT DEPLOYMENT COMPLETE (2026-07-04) — deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125
+Own v2 + v3 + Universal Router stack LIVE on ALL target chains:
+- **MegaETH (4326), Robinhood (4663), Ink (57073)** — identical deterministic addresses (nonce 0): v2Factory 0xD1Cf66..6B45, v2Router 0xBe3729..EEFA, v3Factory 0xAa1f5B..D7f3, NPM 0xbd8170..577d, QuoterV2 0x15cD41..c78E, SwapRouter02 0xE8526A..7EE4, UR 0x3D3013..93b3.
+- **XLayer (196)** — v2Factory matches (0xD1Cf66..); v3/UR nonce-shifted (dup factory at nonce 1). See xlayer.json.
+- **HyperEVM (999)** — big-blocks enabled via Hyperliquid evmUserModify; addresses non-deterministic. UR 0xD9d479..43AB.
+- **Tempo (4217)** — pathUSD gas (~5-6x schedule, 20 gwei floor); addresses non-deterministic. UR 0x62aE01..661E.
+- **Sepolia** — uses canonical Uniswap stack (already live, already in sdk-core).
+Every chain's addresses in contracts/deployments/<chain>.json. Permit2 + WETH reused everywhere (no deploys). Init hashes canonical.
+
+## PRODUCTION PLAN (2026-07-04, from Reggie): UI-FIRST
+- **Priority: finish the Terminal UI redesign** (all core screens, pixel-perfect, data-bound to what's available, NO mock data → polished loading/empty states). Backend/live-swaps AFTER.
+- **Hooks: REMOVED entirely** from the UI (v2/v3 only — no Hooks nav, no hook selector, no hook config bar, no Hooks-live widget). Not "coming soon" — gone.
+- **Liquidity: not yet / small** — build launch-ready, demo on testnet/small pools, seed real liquidity later.
+- Terminal is the CORE app now (/ and /swap render it). Screens: B2 Swap ✅ live, B3 Markets (in progress), then Pools/Portfolio/Activity. Analytics/Settings/Notifications/Search later.
+- **Remaining to LIVE SWAPS (deferred, post-UI):** (1) dependency override interface+routing → HooksOS/sdks+SOR forks; (2) deploy routing-api + a Trading API adapter; (3) hosted RPC/indexer; (4) on-chain liquidity (the real launch blocker). Confirm deployed UR version == interface supportedURVersions `_2_0`.
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
