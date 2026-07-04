@@ -1,0 +1,64 @@
+{
+  "_readme": {
+    "what": "Config-driven pool list for the seeder. Keyed by chainId (string). Each value is an array of pools to create + seed on that chain. Copy this file to pools.json and edit, or point seed.sh at any file via SEED_POOLS=/path/to/file.",
+    "token": {
+      "kind": "one of WETH | MINT | ADDRESS",
+      "WETH": "use the chain's wrapped-native (from the deployment record's weth9). The seeder auto-wraps native ETH -> WETH if your WETH balance is short (except on Tempo).",
+      "MINT": "deploy a fresh MockERC20 (test token) and mint a big supply to the deployer. Give it name/symbol/decimals. Use this on chains where you hold no stablecoin.",
+      "ADDRESS": "an existing token you already hold; provide address + decimals.",
+      "fields": "kind, address(ADDRESS only), name(MINT only), symbol, decimals"
+    },
+    "pool": {
+      "protocol": "v2 | v3",
+      "label": "free-text description (logged only)",
+      "tokenA": "token object",
+      "tokenB": "token object",
+      "fee": "v3 ONLY: 100 | 500 | 3000 | 10000 (bps*100). Determines tickSpacing 1/10/60/200.",
+      "priceAperB": "human price = how many units of tokenB you get per 1 unit of tokenA. For a WETH/tUSDC pool with tokenA=WETH, tokenB=tUSDC, priceAperB=2500 means 1 WETH = 2500 tUSDC. Drives the v3 initial sqrtPrice. (For v2, price is set by the deposit RATIO, so keep amountA:amountB consistent with priceAperB.)",
+      "amountA": "human amount of tokenA to deposit",
+      "amountB": "human amount of tokenB to deposit (keep amountB ~= amountA * priceAperB so v3 uses both sides)",
+      "range": "v3 ONLY: 'wide' (full usable range, snapped to tickSpacing) or 'concentrated' (a +/- band around the current tick, width = rangeTicks tickSpacings)",
+      "rangeTicks": "v3 concentrated ONLY, optional (default 50): half-width of the band in tickSpacings"
+    },
+    "sizing": "Amounts are DEMO-scale on purpose. Technical minimum for a v3 position is a few dollars; a usable demo that quotes sanely is ~$200-500 of value per side. Sepolia is free (faucet + MINT tokens)."
+  },
+
+  "11155111": [
+    {
+      "protocol": "v3",
+      "label": "WETH / tUSDC 0.30% concentrated (~$250/side demo)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test USD Coin", "symbol": "tUSDC", "decimals": 6 },
+      "fee": 3000,
+      "priceAperB": 2500,
+      "amountA": 0.1,
+      "amountB": 250,
+      "range": "concentrated",
+      "rangeTicks": 50
+    },
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 (small demo)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test Hook Token", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.05,
+      "amountB": 50
+    }
+  ],
+
+  "57073": [
+    {
+      "protocol": "v3",
+      "label": "WETH / tUSDC 0.30% concentrated on Ink",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test USD Coin", "symbol": "tUSDC", "decimals": 6 },
+      "fee": 3000,
+      "priceAperB": 2500,
+      "amountA": 0.08,
+      "amountB": 200,
+      "range": "concentrated",
+      "rangeTicks": 40
+    }
+  ]
+}

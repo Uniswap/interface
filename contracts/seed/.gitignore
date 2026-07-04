@@ -1,0 +1,4 @@
+# Foundry build artifacts + cache
+out/
+cache/
+broadcast/

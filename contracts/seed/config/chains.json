@@ -1,0 +1,52 @@
+{
+  "_note": "Per-chain metadata for the seeder. `rpc` is a public default; override any chain by exporting its `rpcEnvVar` in ../.env. `${INFURA_KEY}` in an rpc is substituted from .env. `gasPriceGwei` (null = let the node pick) is forwarded to forge as --with-gas-price; some chains have a network floor.",
+  "sepolia": {
+    "chainId": 11155111,
+    "rpc": "https://sepolia.infura.io/v3/${INFURA_KEY}",
+    "rpcEnvVar": "SEPOLIA_RPC_URL",
+    "gasPriceGwei": null,
+    "note": "FREE testnet. Fund the deployer from a Sepolia faucet, then seed a WETH + MINT-token pool at zero real cost."
+  },
+  "hyperevm": {
+    "chainId": 999,
+    "rpc": "https://rpc.hyperliquid.xyz/evm",
+    "rpcEnvVar": "HYPEREVM_RPC_URL",
+    "gasPriceGwei": null,
+    "note": "Real HYPE. Big-blocks mode was needed for the large DEPLOY txs; seeding txs are small (well under 3M gas) so standard blocks are fine."
+  },
+  "robinhood": {
+    "chainId": 4663,
+    "rpc": "https://rpc.mainnet.chain.robinhood.com",
+    "rpcEnvVar": "ROBINHOOD_RPC_URL",
+    "gasPriceGwei": 0.05,
+    "note": "Real ETH. Low base fee (~0.02 gwei); 0.05 gwei clears comfortably."
+  },
+  "ink": {
+    "chainId": 57073,
+    "rpc": "https://rpc-gel.inkonchain.com",
+    "rpcEnvVar": "INK_RPC_URL",
+    "gasPriceGwei": null,
+    "note": "Real ETH, very cheap L2. WETH = 0x42..06."
+  },
+  "megaeth": {
+    "chainId": 4326,
+    "rpc": "https://carrot.megaeth.com/rpc",
+    "rpcEnvVar": "MEGAETH_RPC_URL",
+    "gasPriceGwei": null,
+    "note": "Testnet. If this public RPC is wrong for your endpoint, override with MEGAETH_RPC_URL in .env."
+  },
+  "xlayer": {
+    "chainId": 196,
+    "rpc": "https://rpc.xlayer.tech",
+    "rpcEnvVar": "XLAYER_RPC_URL",
+    "gasPriceGwei": 0.05,
+    "note": "Gas paid in OKB. Base fee ~0.021 gwei; 0.05 gwei clears."
+  },
+  "tempo": {
+    "chainId": 4217,
+    "rpc": "${TEMPO_RPC_URL}",
+    "rpcEnvVar": "TEMPO_RPC_URL",
+    "gasPriceGwei": 20,
+    "note": "20 gwei NETWORK FLOOR (txs below it are rejected). Gas is paid in pathUSD (ERC-20). The deployment weth9 here is a routing wrapper only; a WETH-side pool needs you to already hold that wrapper token — auto-wrap of native will NOT work on Tempo. Set TEMPO_RPC_URL in .env."
+  }
+}

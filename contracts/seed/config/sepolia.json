@@ -1,0 +1,14 @@
+{
+  "_note": "Sepolia uses the CANONICAL Uniswap deployments (already live + wired into sdk-core). Shaped like a ../deployments/<chain>.json record so seed.sh can read it the same way. Nothing is deployed here.",
+  "chain": "sepolia",
+  "chainId": 11155111,
+  "weth9": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "v2Factory": "0xF62c03E08ada871A0bEb309762E260a7a6a880E6",
+  "v2Router02": "0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3",
+  "v2PairInitCodeHash": "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+  "v3Factory": "0x0227628f3F023bb0B980b67D528571c95c6DaC1c",
+  "nonfungiblePositionManager": "0x1238536071E1c677A632429e3655c799b22cDA52",
+  "swapRouter02": "0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E",
+  "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
+}

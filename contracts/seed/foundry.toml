@@ -1,0 +1,33 @@
+# Foundry config for the HookSwap pool-seeding kit.
+#
+# Self-contained: this project vendors the few interfaces, math libraries, and a
+# minimal forge scripting shim it needs (see src/), so no lib/ checkout or
+# submodule is required. The Uniswap v2/v3 contracts themselves are already
+# deployed (see ../deployments/*.json) — this kit only *calls* them.
+
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+script = "script"
+
+solc_version = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+evm_version = "paris"
+# The seeding script holds a fair number of locals (sorted token0/1, decimals,
+# amounts, ticks) in one frame; compile through the IR pipeline to avoid
+# "stack too deep" without contorting the code.
+via_ir = true
+
+# No external remappings — everything is imported via relative paths from src/.
+remappings = []
+
+# The SeedPools script reads the JSON config + the chain's deployment record from
+# disk via vm.readFile(). Allow read access to this kit's config and the sibling
+# deploy kit's deployments/ directory (both live under ../ = the contracts/ dir).
+fs_permissions = [{ access = "read", path = "../" }]
+
+[fmt]
+line_length = 110
+tab_width = 4
