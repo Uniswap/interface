@@ -14,11 +14,12 @@
   "nftDescriptorLibrary": "0xA87a98a930d90fb8e68D497afE3ADe02B949fc10",
   "nftPositionDescriptor": "0xb9df9AfbCF909a16218285889912820c3F2C6313",
   "descriptorProxy": "0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2",
-  "nonfungiblePositionManager": "FAILED",
-  "v3Migrator": "PENDING",
-  "v3QuoterV2": "PENDING",
-  "swapRouter02": "PENDING",
-  "universalRouter": "PENDING",
-  "_note": "v2 complete. v3 partial: core factory + descriptor stack deployed; NonfungiblePositionManager deploy failed with 'out of gas: gas required exceeds 197453170' — MegaETH gas-estimation quirk (not a balance issue; gas 0.002 gwei). RESUMABLE: rerun deploy-v3 with -s state/megaeth-v3.json (skips done steps). Try providing a manual gas limit or investigate MegaETH per-tx gas cap / estimateGas behavior for the NPM constructor.",
-  "state": "forks/deploy-v3/state/megaeth-v3.json"
+  "nonfungiblePositionManager": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+  "v3Migrator": "0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A",
+  "v3Staker": "0xD412b66afAd16a247a12a1eF31A1c6d37BBb9B6f",
+  "v3QuoterV2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+  "swapRouter02": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+  "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54",
+  "universalRouter": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+  "_note": "v2 + FULL v3 deployed (deploy succeeded). Only Universal Router remains. NPM issue was the add-1bp-fee-tier step reverting because the factory constructor already enables the 100/1 tier — FIXED via idempotent patch in forks/deploy-v3/src/steps/add-1bp-fee-tier.ts (skip if feeAmountTickSpacing(100)!=0). This fix applies to ALL chains. UR deploy: forge create contracts/UniversalRouter.sol:UniversalRouter --constructor-args '(permit2,weth,v2Factory,v3Factory,pairHash,poolHash,0,0,0,0,0)' (NO --skip flag on forge create)."
 }
