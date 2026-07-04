@@ -130,6 +130,15 @@ Forks at `C:/Users/avone/OneDrive/Desktop/HokkOS/forks/`. Foundry installed.
 - **Key format gotcha:** .env key is bare 64-hex (no 0x). forge accepts it; the deploy-v3 CLI needs `0x`-prefixed (regex `^0x[a-zA-Z0-9]{64}$`) → pass `0x$(echo $KEY | tr -d '\r\n ' | sed 's/^0x//')`.
 - **Gas gotcha:** deploy-v3 CLI `--gas-price` is `parseInt` GWEI (integer only) — can't express Ink/MegaETH 0.001 gwei or Robinhood 0.02 gwei. At 1 gwei the ~20M-gas v3 deploy costs ~0.02 ETH > the ~0.002 ETH L2 balances → "gas required exceeds allowance". Fix: patch CLI to fractional gwei, OR fund each L2 deployer with ~0.03 ETH. HyperEVM (0.187 HYPE) + Tempo (large) have enough as-is.
 
+## Deploy agent findings (2026-07-03, agents died on session limit — resets 12:40am PT)
+Four per-chain deploy agents ran but hit the account session limit mid-diagnosis. Key findings to resume from:
+- **deploy-v3 fractional-gwei fix (EXACT):** `gasPrice` is passed as a BigNumber **wei** override straight to ethers. Patch = in `index.ts` parse `parseFloat(program.gasPrice)` (fractional gwei), and in the deploy lib (`deploy.ts` / node_modules/@uniswap/deploy-v3) convert with `Math.round(gwei * 1e9)` to wei. Rebuild `NODE_OPTIONS=--openssl-legacy-provider npm run build`. Copy CLI per-chain to avoid clobber.
+- **HyperEVM BIG BLOCKS (blocker):** HyperEVM has dual-block architecture — small blocks cap ~2M gas. UniswapV2Factory (+v3 factory) deploy EXCEEDS 2M gas → must use **big blocks**. Deployer must opt into big blocks (send the HyperEVM `evmUserModify`/big-blocks toggle action, or use an RPC/tx that targets the big-block mempool) before deploying large contracts. RESEARCH: HyperEVM big-block activation for the deployer address.
+- **MegaETH (4326):** key OK, 0.002083 ETH, gas 0.001 gwei — all deploys cheap once fractional-gwei patch applied. Ready.
+- **Robinhood (4663):** key OK, WETH9 valid, nonce 0, 0.0044 ETH covers 200M+ gas at 0.05 gwei. Ready.
+- **Ink (57073):** v2 already live; needs v3 (patched CLI) + UR.
+- **RESUME after 12:40am PT** (session limit). Real-money deploys should NOT be run when a rate-limit could interrupt mid-sequence (v3 = ~10 sequential txs → partial deploy risk).
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
