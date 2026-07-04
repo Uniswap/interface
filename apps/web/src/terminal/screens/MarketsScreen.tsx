@@ -510,7 +510,7 @@ function MarketsScreenBody(): JSX.Element {
       {
         id: 'apr',
         header: 'APR',
-        width: 'minmax(64px,0.7fr)',
+        width: 'minmax(72px,0.7fr)',
         align: 'right',
         mono: true,
         cell: (row) => row.aprText,
@@ -520,8 +520,8 @@ function MarketsScreenBody(): JSX.Element {
       {
         id: 'hook',
         header: 'Hook',
-        width: 'minmax(80px,0.9fr)',
-        align: 'left',
+        width: 'minmax(96px,1fr)',
+        align: 'center',
         cell: (row) => <HookCell row={row} hooksEnabled={hooksEnabled} />,
       },
       {
