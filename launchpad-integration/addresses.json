@@ -1,0 +1,119 @@
+{
+  "_comment": "HookSwap deployed contract addresses per chain. Machine-readable map a launchpad imports. Generated from contracts/deployments/*.json (HookSwap-owned v2+v3+Universal Router stack; NO v4) and @uniswap/sdk-core (Sepolia canonical). Init code hashes are canonical Uniswap bytecode hashes and identical on every chain.",
+  "initCodeHashes": {
+    "v2Pair": "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+    "v3Pool": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
+  },
+  "feeTiers": {
+    "100": { "tickSpacing": 1 },
+    "500": { "tickSpacing": 10 },
+    "3000": { "tickSpacing": 60 },
+    "10000": { "tickSpacing": 200 }
+  },
+  "chains": {
+    "11155111": {
+      "name": "Sepolia",
+      "deployment": "canonical-uniswap",
+      "v2Factory": "0xF62c03E08ada871A0bEb309762E260a7a6a880E6",
+      "v2Router02": "0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3",
+      "v3Factory": "0x0227628f3F023bb0B980b67D528571c95c6DaC1c",
+      "nonfungiblePositionManager": "0x1238536071E1c677A632429e3655c799b22cDA52",
+      "swapRouter02": "0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E",
+      "quoterV2": "0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3",
+      "universalRouter": "0x3a9d48ab9751398bbfa63ad67599bb04e4bdf98b",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14"
+    },
+    "196": {
+      "name": "XLayer",
+      "deployment": "hookswap-own",
+      "addressGroup": "unique",
+      "v2Factory": "0xD1Cf664944173140AFc302c169eFD55c24966B45",
+      "v2Router02": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+      "v3Factory": "0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC",
+      "nonfungiblePositionManager": "0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A",
+      "swapRouter02": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+      "quoterV2": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+      "universalRouter": "0x6d8a0783213B3b06648DB3708a89732af3661005",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0xe538905cf8410324e03A5A23C1c177a474D59b2b",
+      "wethSymbol": "WOKB"
+    },
+    "999": {
+      "name": "HyperEVM",
+      "deployment": "hookswap-own",
+      "addressGroup": "unique",
+      "v2Factory": "0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2",
+      "v2Router02": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+      "v3Factory": "0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A",
+      "nonfungiblePositionManager": "0x86426094d82bC1fd40F0901965b23D30837Dc66b",
+      "swapRouter02": "0xD96fc9629AFaf325fCdd7F98Dc9b8dc2165adcBB",
+      "quoterV2": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D",
+      "universalRouter": "0xD9d4795F2A12305a12C36455ADAD011F2D6143AB",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0x5555555555555555555555555555555555555555",
+      "wethSymbol": "WHYPE"
+    },
+    "4217": {
+      "name": "Tempo",
+      "deployment": "hookswap-own",
+      "addressGroup": "unique",
+      "v2Factory": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+      "v2Router02": "0x6d8a0783213B3b06648DB3708a89732af3661005",
+      "v3Factory": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+      "nonfungiblePositionManager": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+      "swapRouter02": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+      "quoterV2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+      "universalRouter": "0x62aE013cb2b232C20094B466C94bb39714eF661E",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0xBbBcC62853a5fA27b93d6Bab3E6F7ce841E25Df2",
+      "wethSymbol": "WETH9",
+      "wethNote": "Router/periphery WETH9 constructor arg ONLY. Tempo gas is paid in pathUSD (ERC-20), not this token. There is no native-gas wrapping on Tempo: use token/token pairs, not addLiquidityETH."
+    },
+    "4326": {
+      "name": "MegaETH",
+      "deployment": "hookswap-own",
+      "addressGroup": "deterministic",
+      "v2Factory": "0xD1Cf664944173140AFc302c169eFD55c24966B45",
+      "v2Router02": "0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA",
+      "v3Factory": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+      "nonfungiblePositionManager": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+      "swapRouter02": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+      "quoterV2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+      "universalRouter": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0x4200000000000000000000000000000000000006",
+      "wethSymbol": "WETH"
+    },
+    "4663": {
+      "name": "Robinhood",
+      "deployment": "hookswap-own",
+      "addressGroup": "deterministic",
+      "v2Factory": "0xD1Cf664944173140AFc302c169eFD55c24966B45",
+      "v2Router02": "0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA",
+      "v3Factory": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+      "nonfungiblePositionManager": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+      "swapRouter02": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+      "quoterV2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+      "universalRouter": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73",
+      "wethSymbol": "WETH"
+    },
+    "57073": {
+      "name": "Ink",
+      "deployment": "hookswap-own",
+      "addressGroup": "deterministic",
+      "v2Factory": "0xD1Cf664944173140AFc302c169eFD55c24966B45",
+      "v2Router02": "0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA",
+      "v3Factory": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+      "nonfungiblePositionManager": "0xbd817036c5bF69Cb27D3A342129e39f9f908577d",
+      "swapRouter02": "0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4",
+      "quoterV2": "0x15cD41B273865feD20BC8B5cDF4423D7678ac78E",
+      "universalRouter": "0x3D30133F4d4A80684F02d8310faF572E3dc193b3",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "weth": "0x4200000000000000000000000000000000000006",
+      "wethSymbol": "WETH"
+    }
+  }
+}
