@@ -104,19 +104,28 @@ export interface TerminalNavItem {
   path: string
 }
 
-/** TRADE section — surfaced in the rail, in order. */
+/**
+ * TRADE section — surfaced in the rail, in order.
+ *
+ * The Terminal is the primary experience on the CORE routes: Swap points at
+ * `/swap` (Terminal-rendered). Screens not yet ported (Markets, Pools,
+ * Portfolio, Activity) point at the equivalent LEGACY routes so navigation
+ * keeps working; swap each path to its Terminal screen as it lands.
+ */
 export const terminalTradeNav: TerminalNavItem[] = [
-  { id: 'swap', label: 'Swap', icon: 'swap', path: terminalScreens.swap.path },
-  { id: 'markets', label: 'Markets', icon: 'markets', path: terminalScreens.markets.path },
-  // "Pools" routes to the Create-position / pools surface (B4).
-  { id: 'create-position', label: 'Pools', icon: 'pools', path: terminalScreens['create-position'].path },
+  { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
+  // TODO(B3): '/terminal/markets' once the Markets screen is ported.
+  { id: 'markets', label: 'Markets', icon: 'markets', path: '/explore' },
+  // TODO(B4): '/terminal/pools/new' once Create position is ported.
+  { id: 'create-position', label: 'Pools', icon: 'pools', path: '/positions' },
   // "Hooks" routes to the hook marketplace (rendered on Landing B1 / hook detail B7).
   { id: 'hook-detail', label: 'Hooks', icon: 'hooks', path: `${TERMINAL_BASE}/hooks` },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */
 export const terminalAccountNav: TerminalNavItem[] = [
-  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: terminalScreens.portfolio.path },
-  // "Activity" maps to the notifications/activity feed (B13).
-  { id: 'notifications', label: 'Activity', icon: 'activity', path: terminalScreens.notifications.path },
+  // TODO(B5): '/terminal/portfolio' once the Portfolio screen is ported.
+  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: '/portfolio' },
+  // TODO(B13): '/terminal/notifications' once the Activity feed is ported.
+  { id: 'notifications', label: 'Activity', icon: 'activity', path: '/portfolio/activity' },
 ]

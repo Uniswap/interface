@@ -17,6 +17,7 @@ export const paths = [
   '/sell',
   '/send',
   '/swap',
+  '/terminal/*',
   '/buy',
   '/limit',
   '/limits',

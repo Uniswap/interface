@@ -20,6 +20,16 @@ import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
 
+/**
+ * HookSwap Terminal routes own the full viewport (226px left rail + top bar), so
+ * they bypass the legacy Header/AppBody layout. `Body` still renders the app
+ * chrome (popups + top-level modals); the Terminal chrome mounts the wallet
+ * drawer itself.
+ */
+function isTerminalLayoutPath(pathname: string): boolean {
+  return pathname === '/' || pathname === '/swap' || pathname.startsWith('/terminal')
+}
+
 export function App() {
   const colors = useSporeColors()
 
@@ -83,7 +93,13 @@ export function App() {
         <UserPropertyUpdater />
         <ResetPageScrollEffect />
         <ResetPortfolioChainOnEntryEffect />
-        {shouldOverridePageLayout ? <Body shouldRenderAppChrome={false} /> : <AppLayout />}
+        {shouldOverridePageLayout ? (
+          <Body shouldRenderAppChrome={false} />
+        ) : isTerminalLayoutPath(pathname) ? (
+          <Body />
+        ) : (
+          <AppLayout />
+        )}
       </Trace>
     </ErrorBoundary>
   )

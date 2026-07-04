@@ -14,8 +14,11 @@ import {
   getPositionPageTitle,
 } from '~/pages/getPositionPageTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
-import { Landing } from '~/pages/Landing'
+// The HookSwap Terminal UI is the primary experience at `/` and `/swap`; the
+// legacy Landing/Swap pages stay in the tree but are no longer routed there
+// (SwapPage still backs /buy, /sell, /send and /limit).
 import { SwapPage } from '~/pages/Swap'
+import TerminalSwapPage from '~/terminal/TerminalSwapPage'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
 const AddLiquidity = lazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
@@ -51,6 +54,8 @@ const CreateAuction = lazy(() => import('~/pages/Liquidity/CreateAuction/CreateA
 const XOAuthCallbackPage = lazy(() => import('~/pages/Liquidity/CreateAuction/XOAuthCallbackPage'))
 const BetaPage = lazy(() => import('~/pages/Beta'))
 const Wrapped = lazy(() => import('~/pages/Wrapped'))
+// HookSwap Terminal — additive design layer mounted under /terminal/* (see src/terminal/).
+const TerminalApp = lazy(() => import('~/terminal/TerminalApp'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -130,7 +135,11 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     getElement: (args) => {
-      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+      return args.browserRouterEnabled && args.hash ? (
+        <Navigate to={args.hash.replace('#', '')} replace />
+      ) : (
+        <TerminalSwapPage />
+      )
     },
   }),
   createRouteDefinition({
@@ -272,8 +281,19 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/swap',
-    getElement: () => <SwapPage />,
+    getElement: () => <TerminalSwapPage />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  // HookSwap Terminal namespace — alias kept while remaining B-screens are ported.
+  createRouteDefinition({
+    path: '/terminal/*',
+    getTitle: () => 'HookSwap Terminal',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalApp />
+      </Suspense>
+    ),
   }),
   // Refreshed pool routes
   createRouteDefinition({

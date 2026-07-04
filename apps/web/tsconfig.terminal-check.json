@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true
+  },
+  "include": [],
+  "files": [
+    "src/env.d.ts",
+    "src/react-app-env.d.ts",
+    "src/theme/styled.d.ts",
+    "src/terminal/components/SparklineCell.tsx",
+    "src/terminal/components/StatCard.tsx",
+    "src/terminal/components/HookBadge.tsx",
+    "src/terminal/components/DataTable.tsx",
+    "src/terminal/components/Modal.tsx",
+    "src/terminal/components/NotificationRow.tsx",
+    "src/terminal/components/CommandPalette.tsx",
+    "src/terminal/config/hooksGate.ts",
+    "src/terminal/screens/SwapScreen.tsx",
+    "src/terminal/TerminalApp.tsx",
+    "src/terminal/TerminalSwapPage.tsx",
+    "src/pages/RouteDefinitions.tsx",
+    "src/App.tsx",
+    "src/terminal/index.ts"
+  ],
+  "references": []
+}

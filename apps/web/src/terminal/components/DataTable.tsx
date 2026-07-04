@@ -1,0 +1,307 @@
+import { ReactNode, useMemo, useState } from 'react'
+import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
+
+export type DataTableAlign = 'left' | 'right' | 'center'
+export type DataTableSortDirection = 'asc' | 'desc'
+
+export interface DataTableColumn<Row> {
+  /** Stable column id (used for sort state). */
+  id: string
+  /** Header text — rendered uppercase, mono 11px `#98A0AC` per the B3 markets table. */
+  header: string
+  /** CSS grid track, e.g. `'minmax(160px,1.7fr)'`, `'1fr'`, `'96px'` (B3 uses these verbatim). */
+  width: string
+  /** Default `'left'`. Numeric columns in the design are right-aligned; sparklines centered. */
+  align?: DataTableAlign
+  /**
+   * Numeric/mono column: plain string/number cell content is wrapped in
+   * IBM Plex Mono 12.5px (hard rule for all numerics).
+   */
+  mono?: boolean
+  /** Cell renderer. Return plain text for mono columns or any node for custom cells. */
+  cell: (row: Row) => ReactNode
+  /** Colour for mono/plain text cells (default `#59626F`); e.g. green/red for signed changes. */
+  cellColor?: (row: Row) => string
+  /** Providing this makes the column sortable (click header to toggle asc/desc). */
+  sortValue?: (row: Row) => number | string
+}
+
+export interface DataTableSort {
+  columnId: string
+  direction: DataTableSortDirection
+}
+
+export interface DataTableProps<Row> {
+  columns: ReadonlyArray<DataTableColumn<Row>>
+  /** Row data. `undefined` while loading. */
+  rows?: ReadonlyArray<Row>
+  rowKey: (row: Row) => string
+  /** Force skeleton rows (also shown while `rows` is undefined and there is no error). */
+  loading?: boolean
+  /** Error message — renders the error state (with optional retry). */
+  error?: string
+  onRetry?: () => void
+  /** Shown when `rows` is an empty array. Default "No data". */
+  emptyMessage?: string
+  /** Number of skeleton rows while loading. Default 8 (prototype placeholder count). */
+  skeletonRows?: number
+  initialSort?: DataTableSort
+  onRowClick?: (row: Row) => void
+}
+
+/**
+ * Generic Terminal data table — pixel-perfect to the B3 markets table: CSS-grid
+ * rows, uppercase mono 11px `#98A0AC` column headers over a `1px #EFF1F4` rule,
+ * `1px #F4F6F8` hairline row dividers, 12px vertical / 6px horizontal cell
+ * padding, IBM Plex Mono 12.5px numeric cells. Sortable columns (opt-in via
+ * `sortValue`), loading skeleton rows, empty and error states.
+ */
+export function DataTable<Row>({
+  columns,
+  rows,
+  rowKey,
+  loading = false,
+  error,
+  onRetry,
+  emptyMessage = 'No data',
+  skeletonRows = 8,
+  initialSort,
+  onRowClick,
+}: DataTableProps<Row>): JSX.Element {
+  const [sort, setSort] = useState<DataTableSort | undefined>(initialSort)
+  const [hoveredKey, setHoveredKey] = useState<string | undefined>(undefined)
+
+  const gridTemplateColumns = columns.map((column) => column.width).join(' ')
+  const isLoading = loading || (rows === undefined && !error)
+
+  const sortedRows = useMemo(() => {
+    if (!rows || !sort) {
+      return rows
+    }
+    const column = columns.find((c) => c.id === sort.columnId)
+    const sortValue = column?.sortValue
+    if (!sortValue) {
+      return rows
+    }
+    const factor = sort.direction === 'asc' ? 1 : -1
+    return [...rows].sort((a, b) => {
+      const va = sortValue(a)
+      const vb = sortValue(b)
+      if (va < vb) {
+        return -1 * factor
+      }
+      if (va > vb) {
+        return 1 * factor
+      }
+      return 0
+    })
+  }, [rows, sort, columns])
+
+  const toggleSort = (column: DataTableColumn<Row>): void => {
+    if (!column.sortValue) {
+      return
+    }
+    setSort((current) =>
+      current?.columnId === column.id
+        ? { columnId: column.id, direction: current.direction === 'desc' ? 'asc' : 'desc' }
+        : { columnId: column.id, direction: 'desc' },
+    )
+  }
+
+  return (
+    <div role="table" style={{ fontFamily: terminalFonts.sans }}>
+      {/* Header row */}
+      <div
+        role="row"
+        style={{
+          display: 'grid',
+          gridTemplateColumns,
+          gap: 0,
+          padding: '0 6px 10px',
+          borderBottom: `1px solid ${terminalColors.line2}`,
+          fontSize: 11,
+          color: terminalColors.ink3Alt,
+          fontWeight: 500,
+          fontFamily: terminalFonts.mono,
+        }}
+      >
+        {columns.map((column) => {
+          const sortable = Boolean(column.sortValue)
+          const active = sort?.columnId === column.id
+          return (
+            <span
+              key={column.id}
+              role="columnheader"
+              aria-sort={active ? (sort?.direction === 'asc' ? 'ascending' : 'descending') : undefined}
+              tabIndex={sortable ? 0 : undefined}
+              onClick={sortable ? (): void => toggleSort(column) : undefined}
+              onKeyDown={
+                sortable
+                  ? (e): void => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        toggleSort(column)
+                      }
+                    }
+                  : undefined
+              }
+              style={{
+                textAlign: column.align ?? 'left',
+                textTransform: 'uppercase',
+                cursor: sortable ? 'pointer' : undefined,
+                userSelect: 'none',
+                color: active ? terminalColors.ink2 : terminalColors.ink3Alt,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {column.header}
+              {active ? (sort?.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+            </span>
+          )
+        })}
+      </div>
+
+      {/* Error state */}
+      {error ? (
+        <div
+          role="alert"
+          style={{
+            padding: '28px 6px',
+            textAlign: 'center',
+            fontSize: 13,
+            color: terminalColors.redDown,
+          }}
+        >
+          <div>{error}</div>
+          {onRetry ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              style={{
+                marginTop: 12,
+                fontFamily: terminalFonts.sans,
+                fontSize: 12.5,
+                fontWeight: 600,
+                color: terminalColors.ink2,
+                background: terminalColors.bg,
+                border: `1px solid ${terminalColors.line}`,
+                padding: '8px 14px',
+                borderRadius: 9,
+                cursor: 'pointer',
+              }}
+            >
+              Retry
+            </button>
+          ) : null}
+        </div>
+      ) : isLoading ? (
+        /* Loading skeleton rows */
+        <div aria-busy="true">
+          {Array.from({ length: skeletonRows }, (_, rowIndex) => (
+            <div
+              key={rowIndex}
+              role="row"
+              style={{
+                display: 'grid',
+                gridTemplateColumns,
+                gap: 0,
+                padding: '12px 6px',
+                borderBottom: `1px solid ${terminalColors.line3}`,
+                alignItems: 'center',
+              }}
+            >
+              {columns.map((column) => (
+                <span
+                  key={column.id}
+                  style={{
+                    display: 'flex',
+                    justifyContent:
+                      column.align === 'right' ? 'flex-end' : column.align === 'center' ? 'center' : 'flex-start',
+                  }}
+                >
+                  <span
+                    style={{
+                      height: 12,
+                      width: '60%',
+                      maxWidth: 96,
+                      borderRadius: 4,
+                      background: terminalColors.line2,
+                    }}
+                  />
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : sortedRows && sortedRows.length > 0 ? (
+        /* Data rows */
+        sortedRows.map((row) => {
+          const key = rowKey(row)
+          return (
+            <div
+              key={key}
+              role="row"
+              tabIndex={onRowClick ? 0 : undefined}
+              onClick={onRowClick ? (): void => onRowClick(row) : undefined}
+              onKeyDown={
+                onRowClick
+                  ? (e): void => {
+                      if (e.key === 'Enter') {
+                        onRowClick(row)
+                      }
+                    }
+                  : undefined
+              }
+              onMouseEnter={onRowClick ? (): void => setHoveredKey(key) : undefined}
+              onMouseLeave={onRowClick ? (): void => setHoveredKey(undefined) : undefined}
+              style={{
+                display: 'grid',
+                gridTemplateColumns,
+                gap: 0,
+                padding: '12px 6px',
+                borderBottom: `1px solid ${terminalColors.line3}`,
+                alignItems: 'center',
+                cursor: onRowClick ? 'pointer' : undefined,
+                background: hoveredKey === key ? terminalColors.panel : undefined,
+              }}
+            >
+              {columns.map((column) => (
+                <span
+                  key={column.id}
+                  role="cell"
+                  style={{
+                    textAlign: column.align ?? 'left',
+                    minWidth: 0,
+                    ...(column.mono
+                      ? {
+                          fontFamily: terminalFonts.mono,
+                          fontSize: 12.5,
+                          color: column.cellColor?.(row) ?? terminalColors.ink2,
+                        }
+                      : column.cellColor
+                        ? { color: column.cellColor(row) }
+                        : null),
+                  }}
+                >
+                  {column.cell(row)}
+                </span>
+              ))}
+            </div>
+          )
+        })
+      ) : (
+        /* Empty state */
+        <div
+          style={{
+            padding: '28px 6px',
+            textAlign: 'center',
+            fontSize: 13,
+            color: terminalColors.ink3Alt,
+          }}
+        >
+          {emptyMessage}
+        </div>
+      )}
+    </div>
+  )
+}
