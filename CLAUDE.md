@@ -122,6 +122,14 @@ Forks at `C:/Users/avone/OneDrive/Desktop/HokkOS/forks/`. Foundry installed.
 ## BLOCKER: deployer key malformed (2026-07-03)
 `contracts/.env` DEPLOYER_PRIVATE_KEY is 71 non-hex chars after `0x` (must be exactly 64 hex). Reggie must fix: line = `DEPLOYER_PRIVATE_KEY=0x<64 hex>` — no quotes/spaces/comment/trailing text. Then fund wallet (HYPE/ETH/etc per chain) and run deploys. Key never printed; only shape measured.
 
+## Design handoff — HookSwap Terminal (for later; deploy is current priority)
+`C:/Users/avone/OneDrive/Desktop/design_handoff_hookswap_terminal/` — pixel-perfect "Terminal" redesign: 13 screens (B01 landing … B13 notifications) with screenshots, `design/HookSwap Redesign.dc.html` (build the "Option B / Terminal" column, id "1b"), `README.md` (exact color/type/spacing spec), `CLAUDE_PROMPT.md` (build prompt). Key: 226px left rail, IBM Plex Mono for all numerics/addresses/tickers, NO mock data (bind every value to live source). Supersedes the earlier Atlas plan for the redesign. Do after deploys.
+
+## Live deploy progress (2026-07-03) — deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125
+- **Ink (57073): v2 DEPLOYED** — factory 0xD1Cf664944173140AFc302c169eFD55c24966B45, router02 0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA (see contracts/deployments/ink.json). v3+UR pending.
+- **Key format gotcha:** .env key is bare 64-hex (no 0x). forge accepts it; the deploy-v3 CLI needs `0x`-prefixed (regex `^0x[a-zA-Z0-9]{64}$`) → pass `0x$(echo $KEY | tr -d '\r\n ' | sed 's/^0x//')`.
+- **Gas gotcha:** deploy-v3 CLI `--gas-price` is `parseInt` GWEI (integer only) — can't express Ink/MegaETH 0.001 gwei or Robinhood 0.02 gwei. At 1 gwei the ~20M-gas v3 deploy costs ~0.02 ETH > the ~0.002 ETH L2 balances → "gas required exceeds allowance". Fix: patch CLI to fractional gwei, OR fund each L2 deployer with ~0.03 ETH. HyperEVM (0.187 HYPE) + Tempo (large) have enough as-is.
+
 ## Decision log
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.

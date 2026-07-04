@@ -1,0 +1,16 @@
+{
+  "chain": "ink",
+  "chainId": 57073,
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "weth9": "0x4200000000000000000000000000000000000006",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "v2Factory": "0xD1Cf664944173140AFc302c169eFD55c24966B45",
+  "v2Router02": "0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA",
+  "v2PairInitCodeHash": "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+  "v3Factory": "PENDING",
+  "v3PositionManager": "PENDING",
+  "v3QuoterV2": "PENDING",
+  "swapRouter02": "PENDING",
+  "universalRouter": "PENDING",
+  "_note": "v2 deployed OK. v3 CLI blocked on key format: deploy-v3 regex /^0x[a-zA-Z0-9]{64}$/ rejects trailing \\r from Windows CRLF .env. Fix: pass PK stripped of \\r (tr -d '\\r\\n'). Then run deploy-v3 + UniversalRouter."
+}
