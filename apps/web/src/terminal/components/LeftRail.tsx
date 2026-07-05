@@ -3,6 +3,7 @@ import { HookLogo } from '~/terminal/components/HookLogo'
 import { NavIcon } from '~/terminal/components/NavIcon'
 import {
   terminalAccountNav,
+  terminalCommunityNav,
   terminalResourcesNav,
   terminalTradeNav,
   TerminalNavItem,
@@ -144,6 +145,7 @@ export function LeftRail({
         padding: '20px 14px',
         fontFamily: terminalFonts.sans,
         flexShrink: 0,
+        overflowY: 'auto',
       }}
     >
       <div style={{ padding: '2px 8px 22px' }}>
@@ -167,7 +169,14 @@ export function LeftRail({
       <div style={{ ...SECTION_LABEL, padding: '20px 10px 8px' }}>MORE</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {terminalResourcesNav.map((item) => (
-          <NavRow key={item.id} item={item} active={isActive(item)} onNavigate={onNavigate} />
+          <NavRow key={item.label} item={item} active={isActive(item)} onNavigate={onNavigate} />
+        ))}
+      </div>
+
+      <div style={{ ...SECTION_LABEL, padding: '20px 10px 8px' }}>COMMUNITY</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {terminalCommunityNav.map((item) => (
+          <NavRow key={item.label} item={item} active={false} onNavigate={onNavigate} />
         ))}
       </div>
 

@@ -25,10 +25,32 @@ export type TerminalScreenId =
   | 'settings' // B12
   | 'notifications' // B13
 
-export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'portfolio' | 'activity' | 'analytics' | 'settings' | 'docs'
+export type TerminalNavIcon =
+  | 'swap'
+  | 'markets'
+  | 'pools'
+  | 'portfolio'
+  | 'activity'
+  | 'analytics'
+  | 'settings'
+  | 'docs'
+  | 'launchpad'
+  | 'x'
+  | 'telegram'
+  | 'github'
+
+/** Official HookSwap / HookOS links. External items open in a new tab. */
+export const HOOKSWAP_LINKS = {
+  docs: 'https://docs.hookswap.org',
+  launchpad: 'https://hookos.fun/atlas',
+  x: 'https://x.com/hookosfun',
+  telegram: 'https://t.me/HookOSPortal',
+  telegramTrending: 'https://t.me/hookosdeploys',
+  github: 'https://github.com/HooksOS',
+} as const
 
 /** External documentation site (opens in a new tab; not an in-app route). */
-export const HOOKSWAP_DOCS_URL = 'https://docs.hookswap.org'
+export const HOOKSWAP_DOCS_URL = HOOKSWAP_LINKS.docs
 
 export interface TerminalScreen {
   id: TerminalScreenId
@@ -124,9 +146,26 @@ export const terminalAccountNav: TerminalNavItem[] = [
 
 /**
  * MORE section — surfaced in the rail below ACCOUNT. Settings is an in-app route;
- * Docs is an external link (opens docs.hookswap.org in a new tab).
+ * Docs + Launchpad are external links (open in a new tab).
  */
 export const terminalResourcesNav: TerminalNavItem[] = [
   { id: 'settings', label: 'Settings', icon: 'settings', path: `${TERMINAL_BASE}/settings` },
-  { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_DOCS_URL, externalHref: HOOKSWAP_DOCS_URL },
+  { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_LINKS.docs, externalHref: HOOKSWAP_LINKS.docs },
+  { id: 'docs', label: 'Launchpad', icon: 'launchpad', path: HOOKSWAP_LINKS.launchpad, externalHref: HOOKSWAP_LINKS.launchpad },
+]
+
+/**
+ * COMMUNITY section — official HookSwap socials. All open in a new tab.
+ */
+export const terminalCommunityNav: TerminalNavItem[] = [
+  { id: 'docs', label: 'X', icon: 'x', path: HOOKSWAP_LINKS.x, externalHref: HOOKSWAP_LINKS.x },
+  { id: 'docs', label: 'Telegram', icon: 'telegram', path: HOOKSWAP_LINKS.telegram, externalHref: HOOKSWAP_LINKS.telegram },
+  {
+    id: 'docs',
+    label: 'Telegram Trending',
+    icon: 'telegram',
+    path: HOOKSWAP_LINKS.telegramTrending,
+    externalHref: HOOKSWAP_LINKS.telegramTrending,
+  },
+  { id: 'docs', label: 'GitHub', icon: 'github', path: HOOKSWAP_LINKS.github, externalHref: HOOKSWAP_LINKS.github },
 ]

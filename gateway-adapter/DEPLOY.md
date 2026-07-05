@@ -30,8 +30,12 @@ nginx (TLS, certbot) ──► gateway-adapter (this service, graphql-yoga, :400
         (graph-node :8000, SELF-HOST.md)        (real Uniswap gateway) → return as-is
 ```
 
-- **Subgraph-backed** (implemented): `topV3Pools`, `v3Pool`, `token`, `tokens`, `isV3SubgraphStale`
-  (see `README.md` → resolver coverage). More are TODO (README → remaining subgraph-serveable ops).
+- **Subgraph-backed** (implemented): `topV3Pools`, `v3Pool`, `v3PoolsForTokenPair`, `v3Transactions`,
+  `token`, `tokens`, `topTokens`, `isV3SubgraphStale`, plus the args-bearing field resolvers on
+  `V3Pool` (transactions / ticks / priceHistory / historicalVolume / cumulativeVolume /
+  totalLiquidityPercentChange24h), `Token` (market / v3Transactions), and `TokenMarket` (price / tvl /
+  fdv / volume / historicalVolume / historicalTvl / priceHistory / ohlc / pricePercentChange /
+  priceHighLow). See `README.md` → resolver coverage. Remaining gaps are TODO there.
 - **Proxied** (default for everything else): balances, NFTs, token projects/CMS, v2/v4, convert,
   search. No data is fabricated — if `UPSTREAM_GATEWAY_URL` is unset, those return a GraphQL error.
 

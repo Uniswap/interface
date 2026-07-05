@@ -3,7 +3,6 @@ import { Flex, Text } from 'ui/src'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
-import V4_HOOK from '~/assets/images/v4Hooks.png'
 import { LearnMoreTile } from '~/features/Liquidity/components/LearnMoreTiles'
 import { ExternalArrowLink } from '~/features/Liquidity/ExternalArrowLink'
 import { TopPools } from '~/pages/Positions/TopPools'
@@ -27,7 +26,6 @@ export function PositionsSidebar({ chainFilter, isConnected }: PositionsSidebarP
               text={t('liquidity.provideOnProtocols')}
               link={UniswapHelpUrls.articles.providingLiquidityInfo}
             />
-            <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={UniswapHelpUrls.articles.v4HooksInfo} />
           </Flex>
           <ExternalArrowLink href={UniswapHelpUrls.articles.positionsLearnMore}>
             {t('common.button.learn')}

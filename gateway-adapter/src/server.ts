@@ -22,7 +22,7 @@ import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { join } from 'node:path'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { parse, type DocumentNode, type OperationDefinitionNode } from 'graphql'
+import { parse, type DocumentNode, type FieldNode, type OperationDefinitionNode } from 'graphql'
 import { createYoga, type Plugin } from 'graphql-yoga'
 import fetch from 'cross-fetch'
 import { LOCAL_QUERY_FIELDS, resolvers } from './resolvers'
@@ -53,8 +53,45 @@ interface GraphQLParams {
 }
 
 /**
+ * Evaluate @skip / @include on a root field so an EXCLUDED field doesn't force a whole query to proxy.
+ * The interface's `PoolPriceHistory` / `PoolVolumeHistory` carry `v4Pool` + `v3Pool` + `v2Pair` root
+ * fields all gated by booleans (`$isV4/$isV3/$isV2`); only one branch is actually requested. Without
+ * this, the presence of the un-served `v4Pool`/`v2Pair` fields would proxy the whole (v3-serveable)
+ * request. Returns true if the field is excluded (`@skip(if: true)` or `@include(if: false)`).
+ */
+function isFieldExcluded(field: FieldNode, variables?: Record<string, unknown>): boolean {
+  for (const d of field.directives ?? []) {
+    const dir = d.name.value
+    if (dir !== 'skip' && dir !== 'include') {
+      continue
+    }
+    const ifArg = d.arguments?.find((a) => a.name.value === 'if')
+    if (!ifArg) {
+      continue
+    }
+    let val: boolean | undefined
+    if (ifArg.value.kind === 'BooleanValue') {
+      val = ifArg.value.value
+    } else if (ifArg.value.kind === 'Variable') {
+      val = Boolean(variables?.[ifArg.value.name.value])
+    }
+    if (val === undefined) {
+      continue
+    }
+    if (dir === 'skip' && val) {
+      return true // @skip(if: true) -> field is dropped
+    }
+    if (dir === 'include' && !val) {
+      return true // @include(if: false) -> field is dropped
+    }
+  }
+  return false
+}
+
+/**
  * Decide whether a request can be served locally. Returns true only for a query whose every root
- * selection is a field in LOCAL_QUERY_FIELDS (or an introspection field). Everything else -> proxy.
+ * selection is a field in LOCAL_QUERY_FIELDS (or an introspection field), ignoring root fields that
+ * are excluded by @skip/@include. Everything else -> proxy.
  */
 function canServeLocally(params: GraphQLParams): boolean {
   if (!params.query) {
@@ -77,6 +114,9 @@ function canServeLocally(params: GraphQLParams): boolean {
   for (const sel of op.selectionSet.selections) {
     if (sel.kind !== 'Field') {
       return false // fragment spread / inline fragment at root -> be conservative, proxy
+    }
+    if (isFieldExcluded(sel, params.variables)) {
+      continue // @skip(if:true) / @include(if:false) -> this root field won't execute; ignore it
     }
     const name = sel.name.value
     if (name.startsWith('__')) {

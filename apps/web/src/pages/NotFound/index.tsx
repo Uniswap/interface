@@ -1,18 +1,11 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import darkImage from '~/assets/images/404-page-dark.png'
-import lightImage from '~/assets/images/404-page-light.png'
+import { HookLogo } from '~/terminal/components/HookLogo'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-
-const Image = deprecatedStyled.img`
-  max-width: 510px;
-  width: 100%;
-  padding: 0 75px;
-`
 
 const Container = deprecatedStyled.div`
   display: flex;
@@ -43,7 +36,6 @@ interface NotFoundProps {
 
 export function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
   const isMobile = useIsMobile()
 
   return (
@@ -58,7 +50,9 @@ export function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
               </Text>
             )}
           </Container>
-          <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
+          <Flex py="$spacing24">
+            <HookLogo size={72} />
+          </Flex>
         </Header>
         {actionButton ?? (
           <Flex row alignSelf="stretch">
