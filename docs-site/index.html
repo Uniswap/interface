@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HookSwap Docs</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+  :root{--paper:#f4f5f1;--card:#fff;--ink:#0d100c;--ink2:#59626f;--line:#e6e9ee;--green:#0c8a42;--acid:#38e07b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--paper)}
+  a{color:var(--green);text-decoration:none}
+  a:hover{text-decoration:underline}
+  header{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10}
+  header .mark{width:26px;height:26px}
+  header b{font-weight:800;font-size:18px}
+  header b .s{color:var(--green)}
+  .wrap{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 59px)}
+  nav{width:250px;flex-shrink:0;padding:22px 14px;border-right:1px solid var(--line)}
+  nav .sec{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:16px 8px 6px}
+  nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--ink);font-size:14px}
+  nav a.active{background:var(--paper);color:var(--green);font-weight:600}
+  main{flex:1;min-width:0;padding:28px 40px 80px;overflow-x:auto}
+  main h1{font-size:30px;letter-spacing:-.02em;margin:0 0 8px}
+  main h2{margin-top:32px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  main pre{background:#0d100c;color:#e6e9ee;padding:14px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+  main code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#eef0ec;padding:2px 5px;border-radius:5px}
+  main pre code{background:none;padding:0}
+  main table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  main th,main td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+  main th{background:var(--paper)}
+  main img{max-width:100%}
+  @media(max-width:800px){nav{display:none}main{padding:20px}}
+</style>
+</head>
+<body>
+<header>
+  <svg class="mark" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0d100c" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2fe07e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>
+  <b>Hook<span class="s">Swap</span> Docs</b>
+  <span style="margin-left:auto"><a href="https://hookswap.org">hookswap.org →</a></span>
+</header>
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main id="content">Loading…</main>
+</div>
+<script src="/vendor/marked.min.js"></script>
+<script>
+const TREE = [
+  ["Overview", [["Docs home","README.md"]]],
+  ["Users", [["Getting started","users/getting-started.md"],["Swapping","users/swapping.md"],["Liquidity","users/liquidity.md"],["Chains","users/chains.md"],["FAQ","users/faq.md"]]],
+  ["Developers", [["Overview","developers/overview.md"],["Contract addresses","developers/contract-addresses.md"],["SDK","developers/sdk.md"],["Routing","developers/routing.md"],["Launchpad integration","developers/launchpad-integration.md"]]],
+  ["Operators", [["Go-live checklist","operators/go-live-checklist.md"],["Deploy contracts","operators/deploy-contracts.md"],["Run the app","operators/run-the-app.md"],["Run routing","operators/run-routing.md"],["Run indexer","operators/run-indexer.md"],["Seed liquidity","operators/seed-liquidity.md"]]],
+];
+const nav = document.getElementById('nav');
+const content = document.getElementById('content');
+for (const [sec, items] of TREE){
+  const h = document.createElement('div'); h.className='sec'; h.textContent=sec; nav.appendChild(h);
+  for (const [label, path] of items){
+    const a = document.createElement('a'); a.textContent=label; a.href='#'+path; a.dataset.path=path; nav.appendChild(a);
+  }
+}
+async function load(path){
+  try{
+    const res = await fetch('/md/'+path);
+    if(!res.ok) throw new Error(res.status);
+    const md = await res.text();
+    content.innerHTML = marked.parse(md);
+  }catch(e){ content.innerHTML = '<h1>Not found</h1><p>Could not load '+path+'.</p>'; }
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.path===path));
+  window.scrollTo(0,0);
+}
+function route(){ const p = location.hash.slice(1) || 'README.md'; load(p); }
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
