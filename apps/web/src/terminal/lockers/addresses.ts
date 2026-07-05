@@ -34,11 +34,17 @@ export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>>
   // MegaETH (4326)
   [UniverseChainId.MegaETH]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
   // XLayer (196)
-  [UniverseChainId.XLayer]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.XLayer]: {
+    tokenLockerManager: '0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+  },
   // Robinhood (4663)
   [UniverseChainId.Robinhood]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
   // Tempo (4217)
-  [UniverseChainId.Tempo]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.Tempo]: {
+    tokenLockerManager: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    v3PositionLocker: '0xB5A7BF488f2407479E116f713f116546F67c803b',
+  },
   // Sepolia (11155111) — DEPLOYED 2026-07-05, lock fee 0.04 native (adjustable).
   [UniverseChainId.Sepolia]: {
     tokenLockerManager: '0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
