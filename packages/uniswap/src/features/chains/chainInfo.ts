@@ -73,6 +73,26 @@ function getOrderedEVMChains(): ConstChainInfo<Platform.EVM>[] {
 
 export const ALL_CHAIN_IDS: UniverseChainId[] = ORDERED_CHAINS.map((chain) => chain.id)
 
+/**
+ * HookSwap: the ONLY chains HookSwap is live on. This is the single source of truth
+ * for which chains the UI enables/orders/shows (chain switcher, network filters,
+ * default chain — everything routed through `getEnabledChains`/`useEnabledChains`).
+ *
+ * Every other chain still exists in `UniverseChainId`, `UNIVERSE_CHAIN_INFO`, and its
+ * `evm/info/*.ts` (needed by types + validation helpers like `toSupportedChainId`),
+ * but is intentionally excluded from the enabled/supported UI set until HookSwap
+ * launches on it. Do NOT re-add mainnet chains just to get hosted-backend data.
+ */
+export const HOOKSWAP_ENABLED_CHAIN_IDS: readonly UniverseChainId[] = [
+  UniverseChainId.Sepolia, // 11155111 (testnet)
+  UniverseChainId.HyperEvm, // 999
+  UniverseChainId.Ink, // 57073
+  UniverseChainId.MegaETH, // 4326
+  UniverseChainId.Robinhood, // 4663
+  UniverseChainId.XLayer, // 196
+  UniverseChainId.Tempo, // 4217
+] as const
+
 // Exported with narrow typing for viem config typing on web. Will throw if no EVM chain is provided in ORDERED_CHAINS.
 export const ORDERED_EVM_CHAINS = getNonEmptyArrayOrThrow(getOrderedEVMChains())
 

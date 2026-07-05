@@ -361,6 +361,28 @@ interface MarketCardModel {
   token0?: TokenStats
 }
 
+/** Stablecoins whose price hovers at ~$1 — a flat/sawtooth chart, so avoid featuring them. */
+const STABLE_SYMBOLS = new Set([
+  'USDC',
+  'USDT',
+  'DAI',
+  'USDS',
+  'USDG',
+  'FRAX',
+  'TUSD',
+  'USDP',
+  'GUSD',
+  'LUSD',
+  'PYUSD',
+  'USDB',
+  'USDE',
+  'CRVUSD',
+])
+
+function isStableSymbol(symbol: string | undefined): boolean {
+  return Boolean(symbol && STABLE_SYMBOLS.has(symbol.toUpperCase()))
+}
+
 function buildMarketCard(pool: PoolStat, index: number): MarketCardModel {
   const chainId: UniverseChainId | undefined = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain)
   const displayToken0 = chainId !== undefined && pool.token0 ? unwrapToken(chainId, pool.token0) : pool.token0
@@ -636,7 +658,15 @@ function LandingScreenBody(): JSX.Element {
   )
 
   // Featured pool for the right terminal card = the highest-volume pool.
-  const featured = useMemo(() => (topPools && topPools.length > 0 ? topPools[0] : undefined), [topPools])
+  // Feature the highest-volume pool whose base token (token0, the chart's price
+  // source) isn't a stablecoin — so the featured chart shows real movement, not a
+  // flat/sawtooth $1 line. Falls back to the top pool if all bases are stable.
+  const featured = useMemo(() => {
+    if (!topPools || topPools.length === 0) {
+      return undefined
+    }
+    return topPools.find((pool) => !isStableSymbol(pool.token0?.symbol)) ?? topPools[0]
+  }, [topPools])
   const featuredCard = useMemo(() => (featured ? buildMarketCard(featured, 0) : undefined), [featured])
   const featuredMetric = useMemo(
     () => (featured ? lookupMetric(featured.token0, metricMaps) : undefined),

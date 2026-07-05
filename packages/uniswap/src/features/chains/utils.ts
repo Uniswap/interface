@@ -3,7 +3,12 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { AppId, getConfig } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { ALL_CHAIN_IDS, getChainInfo, ORDERED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
+import {
+  ALL_CHAIN_IDS,
+  getChainInfo,
+  HOOKSWAP_ENABLED_CHAIN_IDS,
+  ORDERED_CHAINS,
+} from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
@@ -266,6 +271,12 @@ export function getEnabledChains({
   appId?: AppId
 }): EnabledChainsInfo {
   const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
+    // HookSwap: restrict the enabled/supported UI set to the chains HookSwap is live on.
+    // (Single source of truth: `HOOKSWAP_ENABLED_CHAIN_IDS`.)
+    if (!HOOKSWAP_ENABLED_CHAIN_IDS.includes(chainInfo.id)) {
+      return false
+    }
+
     // Filter by app support (structural — not a feature flag concern)
     if (!chainInfo.supportedApps.includes(appId)) {
       return false
@@ -315,7 +326,10 @@ function getDefaultChainId({
     return UniverseChainId.Solana
   }
 
-  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
+  // HookSwap: Mainnet (1) is not an enabled chain. In testnet mode default to Sepolia
+  // (the one testnet HookSwap runs on); otherwise default to Robinhood — the flagship
+  // HookSwap mainnet (already GA in-repo). Both are in HOOKSWAP_ENABLED_CHAIN_IDS.
+  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Robinhood
 }
 
 /** Returns all stablecoins for a given chainId. */
