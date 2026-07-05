@@ -37,7 +37,9 @@ const DEFAULT_POSITION_STATE: PositionState = {
   fee: undefined,
   hook: undefined,
   userApprovedHook: undefined,
-  protocolVersion: ProtocolVersion.V4,
+  // HookSwap ships v2 + v3 only (no v4). Default new positions to v3 so users
+  // never land on the unsupported "v4 pools" state.
+  protocolVersion: ProtocolVersion.V3,
 }
 
 // Combined state interface

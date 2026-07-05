@@ -150,8 +150,8 @@ export interface TerminalNavItem {
  */
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
-  // Limit orders — Terminal-native screen (frames the real limit-order form).
-  { id: 'limit', label: 'Limit', icon: 'limit', path: `${TERMINAL_BASE}/limit` },
+  // Limit is NOT a separate rail item — it's a tab inside the Swap ticket
+  // (Market / Limit) that routes to /terminal/limit. The route still exists.
   { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
   { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
   // View existing liquidity positions — Terminal-native screen (v2/v3 only).

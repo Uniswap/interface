@@ -555,11 +555,11 @@ export function PortfolioScreen(): JSX.Element {
     <div style={{ padding: '20px 24px 40px' }}>
       <Header address={address} />
 
-      {/* KPI row — responsive grid: 4-up wide, wraps to 2-up / 1-up as the content area narrows. */}
+      {/* KPI row — 4 tiles on one line (shrink to fit), collapsing to 2-up only on very narrow content. */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
           gap: 14,
           marginBottom: 20,
         }}

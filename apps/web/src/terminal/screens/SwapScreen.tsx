@@ -25,6 +25,7 @@
  */
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -492,6 +493,7 @@ function BreakdownRow({
 function SwapTicket(): JSX.Element {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
+  const navigate = useNavigate()
   const [mevProtected, setMevProtected] = useState(true)
 
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
@@ -599,7 +601,20 @@ function SwapTicket(): JSX.Element {
           return (
             <span
               key={tab}
-              title={active ? undefined : 'Limit orders — coming soon'}
+              role={active ? undefined : 'link'}
+              tabIndex={active ? undefined : 0}
+              // "Limit" is the same limit-order flow as the /terminal/limit screen —
+              // clicking the tab routes there rather than duplicating the form here.
+              onClick={active ? undefined : () => navigate('/terminal/limit')}
+              onKeyDown={
+                active
+                  ? undefined
+                  : (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        navigate('/terminal/limit')
+                      }
+                    }
+              }
               style={{
                 flex: 1,
                 textAlign: 'center',
@@ -610,7 +625,7 @@ function SwapTicket(): JSX.Element {
                 color: active ? terminalColors.ink : terminalColors.ink2,
                 borderRadius: 6,
                 boxShadow: active ? '0 1px 2px rgba(11,15,20,.06)' : undefined,
-                cursor: active ? 'default' : 'not-allowed',
+                cursor: 'pointer',
               }}
             >
               {tab}
