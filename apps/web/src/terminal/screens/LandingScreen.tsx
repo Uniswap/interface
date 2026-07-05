@@ -572,8 +572,10 @@ function HeroButton({
 /* ------------------------------------------------------------------ feature grid */
 
 /**
- * DEX capabilities surfaced on the landing. Every entry routes to a REAL,
- * already-built Terminal screen — no dead links, no fabricated features.
+ * DEX capabilities surfaced on the landing, grouped by intent (Trade / Earn /
+ * Track) to mirror the left-rail IA. Every entry routes to a REAL, already-built
+ * Terminal screen — no dead links, no fabricated features. All 10 built screens
+ * are surfaced (including HookSwap's own-contract features: Locker + Referrals).
  */
 interface FeatureModel {
   icon: TerminalNavIcon
@@ -583,13 +585,37 @@ interface FeatureModel {
   path: string
 }
 
-const FEATURES: readonly FeatureModel[] = [
-  { icon: 'swap', title: 'Swap', desc: 'Market & limit orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
-  { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/terminal/markets' },
-  { icon: 'pools', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add liquidity', path: '/terminal/pools/new' },
-  { icon: 'portfolio', title: 'Portfolio', desc: 'Track balances, open LP positions, PnL, and claimable fees.', cta: 'View', path: '/terminal/portfolio' },
-  { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/terminal/analytics' },
-  { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/terminal/activity' },
+interface FeatureGroup {
+  label: string
+  features: readonly FeatureModel[]
+}
+
+const FEATURE_GROUPS: readonly FeatureGroup[] = [
+  {
+    label: 'Trade',
+    features: [
+      { icon: 'swap', title: 'Swap', desc: 'Market & limit orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
+      { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/terminal/markets' },
+      { icon: 'buy', title: 'Buy', desc: 'On-ramp fiat straight into any supported token — no CEX detour.', cta: 'Buy crypto', path: '/terminal/buy' },
+    ],
+  },
+  {
+    label: 'Earn',
+    features: [
+      { icon: 'pools', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add liquidity', path: '/terminal/pools/new' },
+      { icon: 'positions', title: 'Positions', desc: 'Manage open LP positions, collect fees, and adjust ranges.', cta: 'View positions', path: '/terminal/positions' },
+      { icon: 'locker', title: 'Locker', desc: 'Lock LP tokens, ERC-20s, and v3 positions on-chain with a vesting schedule.', cta: 'Lock tokens', path: '/terminal/locker' },
+      { icon: 'referral', title: 'Referrals', desc: 'Share your code and earn a cut of every referred swap, on every chain.', cta: 'Get your code', path: '/terminal/referrals' },
+    ],
+  },
+  {
+    label: 'Track',
+    features: [
+      { icon: 'portfolio', title: 'Portfolio', desc: 'Balances, open LP positions, PnL, and claimable fees in one view.', cta: 'View', path: '/terminal/portfolio' },
+      { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/terminal/analytics' },
+      { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/terminal/activity' },
+    ],
+  },
 ]
 
 function FeatureCard({ feature, onOpen }: { feature: FeatureModel; onOpen: (path: string) => void }): JSX.Element {
@@ -868,8 +894,9 @@ function LandingScreenBody(): JSX.Element {
           </div>
         </div>
 
-        {/* DEX feature grid — every entry routes to a real, built screen */}
-        <div style={{ marginBottom: 16 }}>
+        {/* DEX feature map — grouped (Trade / Earn / Track); every entry routes
+            to a real, built screen. Surfaces all 10 screens incl. Locker + Referrals. */}
+        <div style={{ marginBottom: 22 }}>
           <h2
             style={{
               fontFamily: DISPLAY,
@@ -882,19 +909,43 @@ function LandingScreenBody(): JSX.Element {
           >
             Everything in one terminal
           </h2>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink3Alt, margin: '8px 0 0' }}>
+            Trade, earn, and track across HookSwap&apos;s own v2 + v3 deployments on every chain.
+          </p>
         </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: 16,
-            marginBottom: 40,
-          }}
-        >
-          {FEATURES.map((feature) => (
-            <FeatureCard key={feature.title} feature={feature} onOpen={(path) => navigate(path)} />
-          ))}
-        </div>
+        {FEATURE_GROUPS.map((group) => (
+          <div key={group.label} style={{ marginBottom: 26 }}>
+            {/* Band label + hairline divider */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <span
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: terminalColors.ink3Alt,
+                  flexShrink: 0,
+                }}
+              >
+                {group.label}
+              </span>
+              <span style={{ flex: 1, height: 1, background: terminalColors.line2 }} />
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: 16,
+              }}
+            >
+              {group.features.map((feature) => (
+                <FeatureCard key={feature.title} feature={feature} onOpen={(path) => navigate(path)} />
+              ))}
+            </div>
+          </div>
+        ))}
+        <div style={{ marginBottom: 14 }} />
 
         {/* Top markets grid (replaces the hook marketplace) */}
         <div style={{ marginBottom: 16 }}>
