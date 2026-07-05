@@ -41,6 +41,8 @@ import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
 import { PoolsScreen } from '~/terminal/screens/PoolsScreen'
 import { PortfolioScreen } from '~/terminal/screens/PortfolioScreen'
 import { PositionsScreen } from '~/terminal/screens/PositionsScreen'
+import { ReferralsScreen } from '~/terminal/screens/ReferralsScreen'
+import { useCaptureRef } from '~/terminal/referral/useCaptureRef'
 import { SettingsScreen } from '~/terminal/screens/SettingsScreen'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
 
@@ -104,6 +106,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/analytics')) {
     return 'analytics'
+  }
+  if (rest.startsWith('/referrals')) {
+    return 'referrals'
   }
   if (rest.startsWith('/settings')) {
     return 'settings'
@@ -227,6 +232,9 @@ export function TerminalChrome({
   const selectChain = useSelectChain()
   const { chains: enabledChains } = useEnabledChains()
 
+  // Capture `?ref=<code>` from the URL into localStorage for referral attribution.
+  useCaptureRef()
+
   // Chain switcher — chrome owns the open/close of the top-bar chain menu.
   const [chainMenuOpen, setChainMenuOpen] = useState(false)
 
@@ -323,6 +331,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="notifications" element={<ActivityScreen />} />
         <Route path="markets/:poolId" element={<MarketDetailScreen />} />
         <Route path="analytics" element={<AnalyticsScreen />} />
+        <Route path="referrals" element={<ReferralsScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
         <Route path="*" element={<Navigate to="swap" replace />} />
       </Routes>

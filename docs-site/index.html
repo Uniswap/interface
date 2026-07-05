@@ -17,20 +17,46 @@
   header b .s{color:var(--green)}
   .wrap{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 59px)}
   nav{width:250px;flex-shrink:0;padding:22px 14px;border-right:1px solid var(--line)}
-  nav .sec{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:16px 8px 6px}
+  nav .sec{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:18px 8px 8px}
+  nav .sec svg{width:14px;height:14px;color:var(--green);flex-shrink:0}
   nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--ink);font-size:14px}
-  nav a.active{background:var(--paper);color:var(--green);font-weight:600}
+  nav a:hover{background:var(--paper);text-decoration:none}
+  nav a.active{background:var(--paper);color:var(--green);font-weight:600;box-shadow:inset 2px 0 0 var(--green)}
   main{flex:1;min-width:0;padding:28px 40px 80px;overflow-x:auto}
   main h1{font-size:30px;letter-spacing:-.02em;margin:0 0 8px}
+  main h2,main h3{scroll-margin-top:70px}
   main h2{margin-top:32px;border-bottom:1px solid var(--line);padding-bottom:6px}
-  main pre{background:#0d100c;color:#e6e9ee;padding:14px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+  main h2 .anchor,main h3 .anchor{opacity:0;margin-left:8px;font-size:.7em;color:var(--ink2);transition:opacity .12s}
+  main h2:hover .anchor,main h3:hover .anchor{opacity:1}
+  main pre{position:relative;background:#0d100c;color:#e6e9ee;padding:14px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
   main code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#eef0ec;padding:2px 5px;border-radius:5px}
   main pre code{background:none;padding:0}
+  main pre .copy-btn{position:absolute;top:8px;right:8px;background:#1c211b;color:#cfd6cc;border:1px solid #2c332a;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  main pre .copy-btn:hover{background:#2c332a;color:#fff}
+  main pre .copy-btn.ok{color:var(--acid);border-color:var(--green)}
   main table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
   main th,main td{border:1px solid var(--line);padding:8px 10px;text-align:left}
   main th{background:var(--paper)}
   main img{max-width:100%}
-  @media(max-width:800px){nav{display:none}main{padding:20px}}
+  /* home hero */
+  .hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:28px 30px;margin:0 0 30px;background:linear-gradient(135deg,#e9f6ed,#f4f5f1)}
+  .hero-bg{position:absolute;top:-30px;right:-20px;width:260px;height:220px;opacity:.5;pointer-events:none}
+  .hero-top{display:flex;align-items:center;gap:16px;position:relative}
+  .hero-logo{width:52px;height:52px;flex-shrink:0}
+  .hero h1{font-size:28px;letter-spacing:-.02em;margin:0}
+  .hero h1 .s{color:var(--green)}
+  .hero .tag{color:var(--ink2);margin:4px 0 0;font-size:14.5px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;position:relative}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .stat .v{font-weight:800;font-size:19px;color:var(--green);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.1}
+  .stat .k{font-size:12px;color:var(--ink2);margin-top:5px}
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;position:relative}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .btn:hover{border-color:var(--green);text-decoration:none}
+  .btn svg{width:15px;height:15px}
+  .btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .btn.primary:hover{background:#0a7638}
+  @media(max-width:800px){nav{display:none}main{padding:20px}.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}}
 </style>
 </head>
 <body>
@@ -51,20 +77,92 @@ const TREE = [
   ["Developers", [["Overview","developers/overview.md"],["Contract addresses","developers/contract-addresses.md"],["SDK","developers/sdk.md"],["Routing","developers/routing.md"],["Launchpad integration","developers/launchpad-integration.md"]]],
   ["Operators", [["Go-live checklist","operators/go-live-checklist.md"],["Deploy contracts","operators/deploy-contracts.md"],["Run the app","operators/run-the-app.md"],["Run routing","operators/run-routing.md"],["Run indexer","operators/run-indexer.md"],["Seed liquidity","operators/seed-liquidity.md"]]],
 ];
+// Static, trusted inline SVGs (no user input) for section headers + buttons.
+const SEC_ICONS = {
+  "Overview":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>',
+  "Users":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  "Developers":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4"/><path d="m16 8 5 4-5 4"/></svg>',
+  "Operators":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
+};
 const nav = document.getElementById('nav');
 const content = document.getElementById('content');
 // Whitelist of loadable doc paths (from TREE) — prevents path traversal / arbitrary
 // same-origin fetch driven by location.hash. Only these exact paths ever load.
 const ALLOWED = new Set();
 for (const [sec, items] of TREE){
-  const h = document.createElement('div'); h.className='sec'; h.textContent=sec; nav.appendChild(h);
+  const h = document.createElement('div'); h.className='sec';
+  const ico = document.createElement('span'); ico.innerHTML = SEC_ICONS[sec] || ''; // trusted static markup
+  const lbl = document.createElement('span'); lbl.textContent = sec;
+  if (ico.firstChild) h.appendChild(ico.firstChild);
+  h.appendChild(lbl); nav.appendChild(h);
   for (const [label, path] of items){
     ALLOWED.add(path);
     const a = document.createElement('a'); a.textContent=label; a.href='#'+path; a.dataset.path=path; nav.appendChild(a);
   }
 }
 function setText(el, s){ el.textContent = s; }
-async function load(path){
+
+// Static home hero (trusted markup only — no user/hash input interpolated).
+function heroHTML(){
+  return ''+
+  '<section class="hero">'+
+    '<svg class="hero-bg" viewBox="0 0 260 220" fill="none" stroke="#0c8a42" stroke-width="1.4" aria-hidden="true">'+
+      '<path d="M60 20 90 37 90 71 60 88 30 71 30 37Z"/>'+
+      '<path d="M120 55 150 72 150 106 120 123 90 106 90 72Z"/>'+
+      '<path d="M180 20 210 37 210 71 180 88 150 71 150 37Z"/>'+
+      '<path d="M180 90 210 107 210 141 180 158 150 141 150 107Z"/>'+
+    '</svg>'+
+    '<div class="hero-top">'+
+      '<svg class="hero-logo" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0d100c" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2fe07e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>'+
+      '<div><h1>Hook<span class="s">Swap</span> Documentation</h1>'+
+      '<p class="tag">Self-hosted v2 + v3 DEX with an on-chain launchpad, token lockers, and referrals — deployed across 7 chains.</p></div>'+
+    '</div>'+
+    '<div class="stats">'+
+      '<div class="stat"><div class="v">7</div><div class="k">Chains deployed</div></div>'+
+      '<div class="stat"><div class="v">v2 + v3</div><div class="k">AMM protocols</div></div>'+
+      '<div class="stat"><div class="v">7 chains</div><div class="k">Lockers live</div></div>'+
+      '<div class="stat"><div class="v">6 chains</div><div class="k">Referrals live</div></div>'+
+    '</div>'+
+    '<div class="btns">'+
+      '<a class="btn primary" href="https://hookswap.org" target="_blank" rel="noopener">Open App</a>'+
+      '<a class="btn" href="https://hookswap.org/swap" target="_blank" rel="noopener">Launch Terminal</a>'+
+      '<a class="btn" href="https://hookos.fun/atlas" target="_blank" rel="noopener">Launchpad</a>'+
+      '<a class="btn" href="https://github.com/HooksOS" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.46-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.36-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>GitHub</a>'+
+      '<a class="btn" href="https://x.com/hookosfun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2h3.31l-7.23 8.26L22.5 22h-6.66l-5.22-6.82L4.65 22H1.34l7.73-8.84L1.5 2h6.83l4.72 6.23L18.24 2Zm-1.16 18h1.84L7.01 3.9H5.03L17.08 20Z"/></svg>X</a>'+
+      '<a class="btn" href="https://t.me/HookOSPortal" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.94 4.28 18.9 19.1c-.23 1.02-.83 1.27-1.68.79l-4.64-3.42-2.24 2.16c-.25.25-.46.46-.94.46l.33-4.73L18.7 5.9c.37-.33-.08-.51-.58-.18L6.5 12.98l-4.6-1.44c-1-.31-1.02-1 .21-1.48l17.98-6.93c.83-.31 1.56.2 1.29 1.15Z"/></svg>Telegram</a>'+
+    '</div>'+
+  '</section>';
+}
+
+function enhance(path){
+  // copy buttons on code blocks
+  content.querySelectorAll('pre').forEach(pre=>{
+    if(pre.querySelector('.copy-btn')) return;
+    const b=document.createElement('button'); b.type='button'; b.className='copy-btn'; b.textContent='Copy';
+    b.addEventListener('click',()=>{
+      const code=pre.querySelector('code'); const text=code?code.textContent:pre.textContent;
+      navigator.clipboard.writeText(text).then(()=>{
+        b.textContent='Copied'; b.classList.add('ok');
+        setTimeout(()=>{ b.textContent='Copy'; b.classList.remove('ok'); },1400);
+      }).catch(()=>{ b.textContent='Failed'; setTimeout(()=>{ b.textContent='Copy'; },1400); });
+    });
+    pre.appendChild(b);
+  });
+  // anchor links on headings (deep-link via "<docpath>::<headingId>", still whitelisted on load)
+  content.querySelectorAll('h2[id],h3[id]').forEach(h=>{
+    if(h.querySelector('.anchor')) return;
+    const a=document.createElement('a'); a.className='anchor'; a.textContent='#'; a.title='Link to this section';
+    a.href='#'+path+'::'+h.id;
+    h.appendChild(a);
+  });
+}
+function scrollToFrag(frag){
+  const el=document.getElementById(frag); // id lookup is injection-safe
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  else window.scrollTo(0,0);
+}
+let currentPath=null;
+async function load(path, frag){
   if(!ALLOWED.has(path)){
     content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found'); content.appendChild(h);
     return;
@@ -76,14 +174,28 @@ async function load(path){
     // Our own trusted docs only (whitelisted). marked renders to sanitized-ish HTML;
     // raw inline HTML in the markdown is escaped by disabling the html tokenizer.
     content.innerHTML = marked.parse(md, { mangle:false, headerIds:true });
+    if(path==='README.md'){
+      const hero=document.createElement('div'); hero.innerHTML=heroHTML(); // trusted static markup
+      content.insertBefore(hero.firstChild, content.firstChild);
+    }
   }catch(e){
     content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found');
     const p=document.createElement('p'); setText(p,'Could not load this page.'); content.appendChild(h); content.appendChild(p);
   }
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.path===path));
-  window.scrollTo(0,0);
+  currentPath=path;
+  enhance(path);
+  if(frag) scrollToFrag(frag); else window.scrollTo(0,0);
 }
-function route(){ let p = location.hash.slice(1); if(!ALLOWED.has(p)) p = 'README.md'; load(p); }
+function route(){
+  const raw = location.hash.slice(1);
+  const i = raw.indexOf('::');
+  const p = i>=0 ? raw.slice(0,i) : raw;
+  const frag = i>=0 ? raw.slice(i+2) : null;
+  const path = ALLOWED.has(p) ? p : 'README.md';
+  if(path===currentPath){ if(frag) scrollToFrag(frag); else window.scrollTo(0,0); return; }
+  load(path, frag);
+}
 window.addEventListener('hashchange', route);
 route();
 </script>

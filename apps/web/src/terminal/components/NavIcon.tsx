@@ -107,6 +107,14 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
         </svg>
       )
+    case 'referral':
+      // Referrals — a gift box (share / earn).
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <rect x={3} y={8} width={18} height={4} rx={1} />
+          <path d="M5 12v8h14v-8M12 8v12M12 8S10.5 4 8 4a2 2 0 000 4h4zM12 8s1.5-4 4-4a2 2 0 010 4h-4z" />
+        </svg>
+      )
     case 'launchpad':
       return (
         <svg {...common} strokeLinecap="round" strokeLinejoin="round">

@@ -17,6 +17,7 @@ export type TerminalScreenId =
   | 'markets' // B3
   | 'create-position' // B4
   | 'locker' // Tools — lock LP/tokens + v3 positions
+  | 'referrals' // Account — referral codes + earnings (deployed referral router)
   | 'portfolio' // B5
   | 'market-detail' // B6
   | 'confirm-swap' // B8 (modal)
@@ -33,6 +34,7 @@ export type TerminalNavIcon =
   | 'pools'
   | 'positions'
   | 'locker'
+  | 'referral'
   | 'buy'
   | 'portfolio'
   | 'activity'
@@ -91,6 +93,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
     kind: 'page',
   },
   locker: { id: 'locker', code: 'LK', title: 'Locker', path: `${TERMINAL_BASE}/locker`, kind: 'page' },
+  referrals: { id: 'referrals', code: 'RF', title: 'Referrals', path: `${TERMINAL_BASE}/referrals`, kind: 'page' },
   portfolio: { id: 'portfolio', code: 'B5', title: 'Portfolio', path: `${TERMINAL_BASE}/portfolio`, kind: 'page' },
   'market-detail': {
     id: 'market-detail',
@@ -165,6 +168,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
 export const terminalAccountNav: TerminalNavItem[] = [
   { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: `${TERMINAL_BASE}/portfolio` },
   { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
+  // Referral codes + earnings (deployed referral router).
+  { id: 'referrals', label: 'Referrals', icon: 'referral', path: `${TERMINAL_BASE}/referrals` },
   // Fiat on-ramp — Terminal-native screen (frames the real on-ramp Buy form).
   { id: 'buy', label: 'Buy', icon: 'buy', path: `${TERMINAL_BASE}/buy` },
 ]
