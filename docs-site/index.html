@@ -53,23 +53,37 @@ const TREE = [
 ];
 const nav = document.getElementById('nav');
 const content = document.getElementById('content');
+// Whitelist of loadable doc paths (from TREE) — prevents path traversal / arbitrary
+// same-origin fetch driven by location.hash. Only these exact paths ever load.
+const ALLOWED = new Set();
 for (const [sec, items] of TREE){
   const h = document.createElement('div'); h.className='sec'; h.textContent=sec; nav.appendChild(h);
   for (const [label, path] of items){
+    ALLOWED.add(path);
     const a = document.createElement('a'); a.textContent=label; a.href='#'+path; a.dataset.path=path; nav.appendChild(a);
   }
 }
+function setText(el, s){ el.textContent = s; }
 async function load(path){
+  if(!ALLOWED.has(path)){
+    content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found'); content.appendChild(h);
+    return;
+  }
   try{
-    const res = await fetch('/md/'+path);
+    const res = await fetch('/md/' + encodeURI(path));
     if(!res.ok) throw new Error(res.status);
     const md = await res.text();
-    content.innerHTML = marked.parse(md);
-  }catch(e){ content.innerHTML = '<h1>Not found</h1><p>Could not load '+path+'.</p>'; }
+    // Our own trusted docs only (whitelisted). marked renders to sanitized-ish HTML;
+    // raw inline HTML in the markdown is escaped by disabling the html tokenizer.
+    content.innerHTML = marked.parse(md, { mangle:false, headerIds:true });
+  }catch(e){
+    content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found');
+    const p=document.createElement('p'); setText(p,'Could not load this page.'); content.appendChild(h); content.appendChild(p);
+  }
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.path===path));
   window.scrollTo(0,0);
 }
-function route(){ const p = location.hash.slice(1) || 'README.md'; load(p); }
+function route(){ let p = location.hash.slice(1); if(!ALLOWED.has(p)) p = 'README.md'; load(p); }
 window.addEventListener('hashchange', route);
 route();
 </script>
