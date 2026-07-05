@@ -5,8 +5,8 @@
 [profile.default]
 src = "."
 out = "out"
-libs = []
-remappings = []
+libs = ["lib"]
+remappings = ["forge-std/=lib/forge-std/src/"]
 
 solc_version = "0.8.24"
 optimizer = true

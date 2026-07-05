@@ -39,8 +39,11 @@ export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>>
   [UniverseChainId.Robinhood]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
   // Tempo (4217)
   [UniverseChainId.Tempo]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
-  // Sepolia (11155111)
-  [UniverseChainId.Sepolia]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  // Sepolia (11155111) — DEPLOYED 2026-07-05, lock fee 0.04 native (adjustable).
+  [UniverseChainId.Sepolia]: {
+    tokenLockerManager: '0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    v3PositionLocker: '0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC',
+  },
 }
 
 /**

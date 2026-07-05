@@ -1,0 +1,11 @@
+{
+  "chain": "sepolia",
+  "chainId": 11155111,
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "lockFeeWei": "40000000000000000",
+  "lockFeeNative": "0.04",
+  "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "tokenLockerManager": "0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3",
+  "v3PositionLocker": "0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC",
+  "note": "Lock fee adjustable via setLockFee (onlyOwner). Referral router not yet deployed on Sepolia."
+}
