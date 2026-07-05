@@ -38,7 +38,7 @@ is free (faucet + `MINT`). See [seed-liquidity.md](./seed-liquidity.md).
 > This is the real launch blocker — code being wired does not create routes; liquidity does.
 
 ### 5. Point the interface at the adapter — [code/config]
-Set `TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"` in the prod web env; rebuild/restart.
+Set `TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"` in the prod web env; rebuild/restart.
 See [run-the-app.md](./run-the-app.md) and [developers/routing.md](../developers/routing.md).
 
 ### 6. Verify a real swap — [validation]

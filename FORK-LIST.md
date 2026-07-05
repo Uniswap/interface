@@ -51,7 +51,7 @@
 
 # HookSwap — Repos to Fork (Uniswap → HookSwap full stack)
 
-Tailored to the locked decisions: **v2 + v3 only (no v4/hooks), self-hosted routing, chains = Sepolia + HyperEVM + Robinhood, brand = HookSwap / hookswap.xyz.**
+Tailored to the locked decisions: **v2 + v3 only (no v4/hooks), self-hosted routing, chains = Sepolia + HyperEVM + Robinhood, brand = HookSwap / hookswap.org.**
 
 ## ✅ FORKED into HooksOS org (2026-07-03, via gh as OxForged)
 All 15 forked: `HooksOS/{v2-core, v2-periphery, v3-core, v3-periphery, swap-router-contracts, universal-router, permit2, sdks, smart-order-router, routing-api, v3-subgraph, v2-subgraph, token-lists, default-token-list, assets}`. Interface already = `HooksOS/HookSwap` (this repo). v4 repos intentionally NOT forked.
@@ -116,7 +116,7 @@ This is what replaces `interface.gateway.uniswap.org`. Without it, swaps won't q
 | # | Repo | Purpose | Action |
 |---|------|---------|--------|
 | 14 | `Uniswap/token-lists` | the token-list JSON schema + tooling | FORK light / reuse |
-| 15 | `Uniswap/default-token-list` | the default token set the UI shows | FORK+BRAND — curate HookSwap list for your 3 chains, host at `tokens.hookswap.xyz` |
+| 15 | `Uniswap/default-token-list` | the default token set the UI shows | FORK+BRAND — curate HookSwap list for your 3 chains, host at `tokens.hookswap.org` |
 | 16 | `Uniswap/assets` (token/chain logos) | logo asset repo (`assetRepoNetworkName` points here) | FORK+BRAND — add HyperEVM/Robinhood + token logos |
 
 ---

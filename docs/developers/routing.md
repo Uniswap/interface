@@ -46,7 +46,7 @@ API (the interface auto-appends `/v1`):
 
 ```bash
 # apps/web/.env.local  (gitignored)
-TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"
+TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"
 ```
 
 Leave it **unset** to keep the app on Uniswap's default. Rebuild/restart after setting it.

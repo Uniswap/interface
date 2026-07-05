@@ -103,7 +103,7 @@ export function Wrapped() {
               }}
               width="100%"
               height="100%"
-              title="Uniswap Wrapped"
+              title="HookSwap Wrapped"
             />
             <Trace logPress={true} element={ElementName.CloseButton}>
               <TouchableArea
@@ -116,7 +116,7 @@ export function Wrapped() {
                 borderRadius="$roundedFull"
                 backdropFilter="blur(20px)"
                 display={hasWallet ? 'flex' : 'none'}
-                aria-label="Close Uniswap Wrapped"
+                aria-label="Close HookSwap Wrapped"
                 onPress={() => navigate('/swap')}
               >
                 <Text

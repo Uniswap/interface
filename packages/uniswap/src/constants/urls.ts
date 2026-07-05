@@ -11,7 +11,7 @@ import {
 import { isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 
-export const UNISWAP_WEB_HOSTNAME = 'hookswap.xyz'
+export const UNISWAP_WEB_HOSTNAME = 'hookswap.org'
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 // Liquidity service uses dedicated backend-{env} hosts. Dev and staging builds both use the staging

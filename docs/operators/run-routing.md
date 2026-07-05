@@ -20,7 +20,7 @@ Until a backend is wired, `/v1/quote` returns a proper `404 NO_ROUTE_FOUND` — 
 
 ## 1. Provision the VPS  [CREDENTIAL: VPS + domain]
 
-Ubuntu 22.04+, a DNS A-record (e.g. `trading.hookswap.xyz`). Install `git`, `nginx`, `certbot`, and
+Ubuntu 22.04+, a DNS A-record (e.g. `trading.hookswap.org`). Install `git`, `nginx`, `certbot`, and
 either Docker or Node 20 + `pm2`:
 
 ```bash
@@ -39,7 +39,7 @@ cp config/rpc.example.env config/rpc.env
 ```
 
 Edit `.env`: `ROUTING_MODE=embed` (or `ROUTING_API_URL=http://127.0.0.1:4001` for proxy),
-`CORS_ALLOW_ORIGIN=https://hookswap.xyz` (`http://localhost:3000` for local), `PORT=4000`.
+`CORS_ALLOW_ORIGIN=https://hookswap.org` (`http://localhost:3000` for local), `PORT=4000`.
 
 ## 3. RPC config  [CREDENTIAL: Infura key]
 
@@ -84,7 +84,7 @@ Reverse-proxy `127.0.0.1:4000` and provision TLS:
 
 ```nginx
 server {
-  server_name trading.hookswap.xyz;
+  server_name trading.hookswap.org;
   location / {
     proxy_pass http://127.0.0.1:4000;
     proxy_set_header Host $host;
@@ -94,18 +94,18 @@ server {
 }
 ```
 ```bash
-sudo ln -s /etc/nginx/sites-available/trading.hookswap.xyz /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/trading.hookswap.org /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d trading.hookswap.xyz
+sudo certbot --nginx -d trading.hookswap.org
 ```
 
 ## 6. Point the interface at the adapter
 
 ```bash
 # apps/web/.env.local
-TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"
+TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"
 ```
-The interface auto-appends `/v1`, calling `https://trading.hookswap.xyz/v1/quote`. Leave unset to
+The interface auto-appends `/v1`, calling `https://trading.hookswap.org/v1/quote`. Leave unset to
 keep Uniswap's default. Rebuild/restart the web app after setting it.
 
 ## 7. (Embed mode) apply the SOR dependency override  [code]
@@ -124,7 +124,7 @@ each chain. Seed liquidity first — see [seed-liquidity.md](./seed-liquidity.md
 
 ## Credential-gated checklist
 
-- [ ] VPS + DNS A-record (`trading.hookswap.xyz`)
+- [ ] VPS + DNS A-record (`trading.hookswap.org`)
 - [ ] Infura key in `config/rpc.env` for Sepolia
 - [ ] TLS cert via certbot
 - [ ] Routing backend — implement embed SOR **or** deploy routing-api + set `ROUTING_API_URL`

@@ -1,0 +1,29 @@
+{
+  "name": "@hookswap/gateway-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GraphQL gateway-schema adapter for HookSwap. Serves the EXACT Uniswap gateway GraphQL schema the HookSwap interface calls (AWS_API_ENDPOINT), backed by HookSwap's self-hosted v3-subgraph (graph-node) for pool/token/price ops, and proxies every unimplemented operation (portfolio balances, NFTs, token projects/CMS, v2/v4) to the real Uniswap gateway. Lets the interface's AWS_API_ENDPOINT point here instead of Uniswap's hosted gateway (which only serves Uniswap chains).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "//": "NOTE: dependencies are NOT installed in this repo checkout (disk constrained). Run `npm install` on Reggie's machine / the VPS before build/serve. See DEPLOY.md.",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "graphql": "^16.9.0",
+    "graphql-yoga": "^5.7.0",
+    "@graphql-tools/schema": "^10.0.6",
+    "cross-fetch": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

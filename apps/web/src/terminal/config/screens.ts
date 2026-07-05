@@ -28,7 +28,7 @@ export type TerminalScreenId =
 export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'portfolio' | 'activity' | 'analytics' | 'settings' | 'docs'
 
 /** External documentation site (opens in a new tab; not an in-app route). */
-export const HOOKSWAP_DOCS_URL = 'https://hookswap.xyz/docs'
+export const HOOKSWAP_DOCS_URL = 'https://docs.hookswap.org'
 
 export interface TerminalScreen {
   id: TerminalScreenId
@@ -124,7 +124,7 @@ export const terminalAccountNav: TerminalNavItem[] = [
 
 /**
  * MORE section — surfaced in the rail below ACCOUNT. Settings is an in-app route;
- * Docs is an external link (opens hookswap.xyz/docs in a new tab).
+ * Docs is an external link (opens docs.hookswap.org in a new tab).
  */
 export const terminalResourcesNav: TerminalNavItem[] = [
   { id: 'settings', label: 'Settings', icon: 'settings', path: `${TERMINAL_BASE}/settings` },

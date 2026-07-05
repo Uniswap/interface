@@ -59,9 +59,36 @@ export const HYPEREVM_CHAIN_INFO = {
   blockTimeMs: 2000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
-    [RPCType.Default]: { http: ['https://rpc.hyperliquid.xyz/evm'] },
-    [RPCType.Public]: { http: ['https://rpc.hyperliquid.xyz/evm'] },
-    [RPCType.Interface]: { http: ['https://rpc.hyperliquid.xyz/evm'] },
+    // Verified real public HyperEVM RPCs (each returns chainId 0x3e7 / 999).
+    // Primary first; the rest act as fallbacks. rpc.hyperliquid.xyz is the
+    // official (rate-limited) endpoint; *.drpc.org is on the CSP allowlist.
+    [RPCType.Default]: {
+      http: [
+        'https://rpc.hyperliquid.xyz/evm',
+        'https://hyperliquid.drpc.org',
+        'https://public.1rpc.io/hyperliquid',
+        'https://hyperliquid.api.onfinality.io/evm/public',
+        'https://hyperliquid.rpc.blxrbdn.com',
+      ],
+    },
+    [RPCType.Public]: {
+      http: [
+        'https://rpc.hyperliquid.xyz/evm',
+        'https://hyperliquid.drpc.org',
+        'https://public.1rpc.io/hyperliquid',
+        'https://hyperliquid.api.onfinality.io/evm/public',
+        'https://hyperliquid.rpc.blxrbdn.com',
+      ],
+    },
+    [RPCType.Interface]: {
+      http: [
+        'https://rpc.hyperliquid.xyz/evm',
+        'https://hyperliquid.drpc.org',
+        'https://public.1rpc.io/hyperliquid',
+        'https://hyperliquid.api.onfinality.io/evm/public',
+        'https://hyperliquid.rpc.blxrbdn.com',
+      ],
+    },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0],
   supportsV4: false,

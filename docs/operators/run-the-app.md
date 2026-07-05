@@ -61,7 +61,7 @@ To quote against HookSwap chains instead of Uniswap's hosted Trading API, set:
 
 ```bash
 # apps/web/.env.local
-TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"
+TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"
 ```
 
 Leave it unset to keep the app on Uniswap's default. See

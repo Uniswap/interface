@@ -20,7 +20,7 @@ The credential-gated actions are called out explicitly.
 
 ```
 HookSwap interface (browser)
-     │  POST https://trading.hookswap.xyz/v1/quote   (Trading API schema)
+     │  POST https://trading.hookswap.org/v1/quote   (Trading API schema)
      ▼
 nginx (TLS, certbot)  ──►  trading-api-adapter  (this service, Node/Express, :4000)
                                    │
@@ -51,7 +51,7 @@ Until whichever backend is wired, `/v1/quote` returns a proper Trading-API `404 
 
 ## 1. Provision the VPS  **[REGGIE — CREDENTIAL: VPS + domain]**
 
-- A Linux VPS (Ubuntu 22.04+), a DNS A-record for the adapter host, e.g. `trading.hookswap.xyz`.
+- A Linux VPS (Ubuntu 22.04+), a DNS A-record for the adapter host, e.g. `trading.hookswap.org`.
 - Install: `git`, `nginx`, `certbot` (`python3-certbot-nginx`), and **either** Docker
   (`docker` + `docker compose`) **or** Node 20 + `pm2` (`npm i -g pm2`).
 
@@ -73,7 +73,7 @@ cp config/rpc.example.env config/rpc.env   # then put the real Infura key in it 
 
 Edit `.env`:
 - `ROUTING_MODE=embed` (Option B) **or** `ROUTING_API_URL=http://127.0.0.1:4001` (Option A).
-- `CORS_ALLOW_ORIGIN=https://hookswap.xyz` (the interface origin; `http://localhost:3000` for local).
+- `CORS_ALLOW_ORIGIN=https://hookswap.org` (the interface origin; `http://localhost:3000` for local).
 - `PORT=4000`.
 
 ## 3. RPC config  **[REGGIE — CREDENTIAL: Infura key]**
@@ -130,10 +130,10 @@ WantedBy=multi-user.target
 
 ## 5. nginx reverse proxy + TLS  **[REGGIE — CREDENTIAL: domain/DNS]**
 
-`/etc/nginx/sites-available/trading.hookswap.xyz`:
+`/etc/nginx/sites-available/trading.hookswap.org`:
 ```nginx
 server {
-  server_name trading.hookswap.xyz;
+  server_name trading.hookswap.org;
   location / {
     proxy_pass http://127.0.0.1:4000;
     proxy_set_header Host $host;
@@ -143,9 +143,9 @@ server {
 }
 ```
 ```bash
-sudo ln -s /etc/nginx/sites-available/trading.hookswap.xyz /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/trading.hookswap.org /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d trading.hookswap.xyz    # provisions + auto-renews TLS
+sudo certbot --nginx -d trading.hookswap.org    # provisions + auto-renews TLS
 ```
 
 ## 6. Point the interface at the adapter
@@ -156,11 +156,11 @@ change:
 
 ```bash
 # apps/web/.env.local
-TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"
+TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"
 ```
 
 The interface auto-appends `/v1` (see `TradingApiClient` `getApiPathPrefix`), so it will call
-`https://trading.hookswap.xyz/v1/quote`. Leave this **unset** to keep the app on Uniswap's
+`https://trading.hookswap.org/v1/quote`. Leave this **unset** to keep the app on Uniswap's
 default (do not break current dev). Rebuild/restart the web app after setting it.
 
 ## 7. (Option B embed) apply the SOR dependency override  **[code, no creds]**
@@ -182,7 +182,7 @@ the real launch blocker, not the code.
 ---
 
 ## Credential-gated checklist (everything left for Reggie)
-- [ ] **VPS + DNS** — provision host, A-record `trading.hookswap.xyz` (§1, §5).
+- [ ] **VPS + DNS** — provision host, A-record `trading.hookswap.org` (§1, §5).
 - [ ] **Infura key** — put real key in `config/rpc.env` for Sepolia (§3). (Provided key already
       placed there; rotate if leaked.)
 - [ ] **TLS** — `certbot` cert for the domain (§5).

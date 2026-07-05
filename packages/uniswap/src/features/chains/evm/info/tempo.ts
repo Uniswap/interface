@@ -67,7 +67,10 @@ export const TEMPO_CHAIN_INFO = {
   urlParam: 'tempo',
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Tempo)] },
-    [RPCType.Default]: { http: ['https://rpc.tempo.xyz'] },
+    // Verified real public Tempo RPCs (each returns chainId 0x1079 / 4217).
+    // Only two public endpoints exist; both are Tempo-operated. Keep Public/
+    // Interface on the hosted proxies for auth.
+    [RPCType.Default]: { http: ['https://rpc.tempo.xyz', 'https://rpc.mainnet.tempo.xyz'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Tempo)] },
   },
 

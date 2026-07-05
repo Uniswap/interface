@@ -8,7 +8,7 @@
 - This applies to status reports, "what's built", data sources (real vs mock), addresses, and every recommendation. No exceptions. This rule is permanent.
 
 ## North Star
-- **Name:** HookSwap · **URL:** https://hookswap.xyz
+- **Name:** HookSwap · **URL:** https://hookswap.org
 - **Brand system:** "Atlas" from the handoff kit — Paper `#f4f5f1`, Card `#fff`, Ink `#0d100c`, primary accent "Acid ink" `#0c8a42` (green text/CTAs), Acid fill `#38e07b`, danger `#c0291f`, gold `#c79212`. Fonts: Inter (UI) + JetBrains Mono (numbers).
 - **Go live on:** Robinhood Chain, HyperEVM.
 

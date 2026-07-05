@@ -1,0 +1,30 @@
+# HookSwap gateway-schema adapter — VPS single-node compose.
+# Usage:  docker compose --env-file .env up -d --build
+#
+# This service talks to the graph-node from v3-subgraph/hookswap/SELF-HOST.md over the shared
+# Docker network. The SUBGRAPH_URL_* in .env use hostname "graph-node" (that stack's service name).
+# Either (a) run this adapter in the SAME compose project as graph-node, or (b) attach it to that
+# stack's external network (shown below). Adjust the network name to match your graph-node stack.
+services:
+  gateway-adapter:
+    build: .
+    image: hookswap-gateway-adapter
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4000:4000" # bind localhost only; nginx terminates TLS and proxies in.
+    env_file:
+      - .env # PORT / GRAPHQL_ENDPOINT / CORS_ALLOW_ORIGIN / UPSTREAM_GATEWAY_URL / SUBGRAPH_URL_<chainId>
+    networks:
+      - graph-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  # The network the graph-node stack (SELF-HOST.md) runs on. Mark it external so this compose
+  # joins the already-running graph-node rather than creating an isolated network.
+  # Create/rename to match: `docker network create graph-net` (or the graph stack's default net).
+  graph-net:
+    external: true

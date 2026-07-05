@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.log
+# Never commit real secrets / hosted RPC / subgraph URLs with embedded auth:
+.env
+.env.local
+config/subgraphs.env

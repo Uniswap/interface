@@ -6,8 +6,8 @@ import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: i18n.t('interface.metatags.title'),
   description: i18n.t('interface.metatags.description'),
-  image: `https://hookswap.xyz/images/1200x630_Rich_Link_Preview_Image.png`,
-  url: 'https://hookswap.xyz',
+  image: `https://hookswap.org/images/1200x630_Rich_Link_Preview_Image.png`,
+  url: 'https://hookswap.org',
 }
 
 type MetatagAttributes = { property?: string; name?: string; content: string }

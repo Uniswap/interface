@@ -8,7 +8,7 @@ only serves Uniswap chains).
 
 ```
 HookSwap interface (browser)
-   │  POST https://trading.hookswap.xyz/v1/quote     (Trading API schema)
+   │  POST https://trading.hookswap.org/v1/quote     (Trading API schema)
    ▼
 Trading API adapter  (Node/Express, self-hosted on a VPS)
    │   embeds (or proxies) the smart-order-router

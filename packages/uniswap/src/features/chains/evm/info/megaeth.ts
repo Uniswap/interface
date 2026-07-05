@@ -66,7 +66,16 @@ export const MEGAETH_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.MegaETH)] },
-    [RPCType.Default]: { http: ['https://mainnet.megaeth.com/rpc'] },
+    // Verified real public MegaETH RPCs (each returns chainId 0x10e6 / 4326).
+    // Primary first; the rest act as fallbacks. Keep Public/Interface on the
+    // hosted proxies for auth; Default stays unkeyed/public for wallet connectors.
+    [RPCType.Default]: {
+      http: [
+        'https://mainnet.megaeth.com/rpc',
+        'https://megaeth.drpc.org',
+        'https://megaeth.blockscout.com/api/eth-rpc',
+      ],
+    },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.MegaETH)] },
   },
   statusPage: 'https://uptime.megaeth.com/',

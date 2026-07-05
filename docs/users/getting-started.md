@@ -17,7 +17,7 @@ Router**.
 
 HookSwap works with standard EVM wallets via injected providers and WalletConnect:
 
-1. Open the app at **https://hookswap.xyz** (or your local dev build at `http://localhost:3000`).
+1. Open the app at **https://hookswap.org** (or your local dev build at `http://localhost:3000`).
 2. Click **Connect** and pick your wallet (e.g. MetaMask "Installed", Coinbase Wallet,
    WalletConnect QR, Rainbow, Ledger).
 3. Approve the connection in your wallet.

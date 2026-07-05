@@ -10,8 +10,7 @@ export function RouterLabel({ trade, color }: { trade: SubmittableTrade; color?:
   if (isUniswapXTrade(trade)) {
     return (
       <UniswapXRouterLabel>
-        {/* Note: we don't translate Uniswap X because it's a brand name */}
-        <Text variant="body3">Uniswap X</Text>
+        <Text variant="body3">Router</Text>
       </UniswapXRouterLabel>
     )
   }

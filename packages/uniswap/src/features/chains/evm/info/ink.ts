@@ -60,9 +60,36 @@ export const INK_CHAIN_INFO = {
   blockTimeMs: 1000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
-    [RPCType.Default]: { http: ['https://rpc-gel.inkonchain.com'] },
-    [RPCType.Public]: { http: ['https://rpc-gel.inkonchain.com'] },
-    [RPCType.Interface]: { http: ['https://rpc-gel.inkonchain.com'] },
+    // Verified real public Ink RPCs (each returns chainId 0xdef1 / 57073).
+    // Primary first; the rest act as fallbacks. rpc-gel/rpc-qnd are Ink's
+    // official endpoints; *.drpc.org is on the CSP allowlist.
+    [RPCType.Default]: {
+      http: [
+        'https://rpc-gel.inkonchain.com',
+        'https://rpc-qnd.inkonchain.com',
+        'https://ink.drpc.org',
+        'https://ink.gateway.tenderly.co',
+        'https://57073.rpc.thirdweb.com',
+      ],
+    },
+    [RPCType.Public]: {
+      http: [
+        'https://rpc-gel.inkonchain.com',
+        'https://rpc-qnd.inkonchain.com',
+        'https://ink.drpc.org',
+        'https://ink.gateway.tenderly.co',
+        'https://57073.rpc.thirdweb.com',
+      ],
+    },
+    [RPCType.Interface]: {
+      http: [
+        'https://rpc-gel.inkonchain.com',
+        'https://rpc-qnd.inkonchain.com',
+        'https://ink.drpc.org',
+        'https://ink.gateway.tenderly.co',
+        'https://57073.rpc.thirdweb.com',
+      ],
+    },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0],
   supportsV4: false,

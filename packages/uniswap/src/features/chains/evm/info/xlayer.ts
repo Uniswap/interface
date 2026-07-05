@@ -68,8 +68,18 @@ export const XLAYER_CHAIN_INFO = {
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.XLayer)] },
-    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
-    [RPCType.Default]: { http: ['https://xlayer.drpc.org'] },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed
+    // public endpoints. Verified real public X Layer RPCs (each returns chainId
+    // 0xc4 / 196); *.drpc.org is on the CSP allowlist so it leads. rpc.xlayer.tech
+    // and xlayerrpc.okx.com are OKX's official endpoints.
+    [RPCType.Default]: {
+      http: [
+        'https://xlayer.drpc.org',
+        'https://rpc.xlayer.tech',
+        'https://xlayerrpc.okx.com',
+        'https://196.rpc.thirdweb.com',
+      ],
+    },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
   },
   tokens,

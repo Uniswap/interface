@@ -107,7 +107,7 @@ export function UniswapXDescription() {
       <Trans
         i18nKey="uniswapX.aggregatesLiquidity"
         components={{
-          logo: <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient>,
+          logo: <InlineUniswapXGradient>Router</InlineUniswapXGradient>,
         }}
       />{' '}
       <ExternalLink href={UniswapHelpUrls.articles.uniswapXInfo}>{t('common.button.learn')}</ExternalLink>

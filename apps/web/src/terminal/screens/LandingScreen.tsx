@@ -81,6 +81,8 @@ import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { NavIcon } from '~/terminal/components/NavIcon'
+import type { TerminalNavIcon } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import type { PoolStat } from '~/types/explore'
 
@@ -535,6 +537,75 @@ function HeroButton({
   )
 }
 
+/* ------------------------------------------------------------------ feature grid */
+
+/**
+ * DEX capabilities surfaced on the landing. Every entry routes to a REAL,
+ * already-built Terminal screen — no dead links, no fabricated features.
+ */
+interface FeatureModel {
+  icon: TerminalNavIcon
+  title: string
+  desc: string
+  cta: string
+  path: string
+}
+
+const FEATURES: readonly FeatureModel[] = [
+  { icon: 'swap', title: 'Swap', desc: 'Market & limit orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
+  { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/terminal/markets' },
+  { icon: 'pools', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add liquidity', path: '/terminal/pools/new' },
+  { icon: 'portfolio', title: 'Portfolio', desc: 'Track balances, open LP positions, PnL, and claimable fees.', cta: 'View', path: '/terminal/portfolio' },
+  { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/terminal/analytics' },
+  { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/terminal/activity' },
+]
+
+function FeatureCard({ feature, onOpen }: { feature: FeatureModel; onOpen: (path: string) => void }): JSX.Element {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(feature.path)}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: 10,
+        textAlign: 'left',
+        border: `1px solid ${terminalColors.line}`,
+        borderRadius: 14,
+        background: terminalColors.bg,
+        padding: 18,
+        cursor: 'pointer',
+        minWidth: 0,
+      }}
+    >
+      <span
+        style={{
+          width: 38,
+          height: 38,
+          borderRadius: 10,
+          background: terminalColors.greenBg,
+          border: `1px solid ${terminalColors.greenBorder}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <NavIcon name={feature.icon} stroke={terminalColors.greenDeep} size={19} />
+      </span>
+      <span style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 600, color: terminalColors.ink }}>
+        {feature.title}
+      </span>
+      <span style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink2, flex: 1 }}>
+        {feature.desc}
+      </span>
+      <span style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: terminalColors.greenDeep }}>
+        {feature.cta} →
+      </span>
+    </button>
+  )
+}
+
 /* ------------------------------------------------------------------ the body */
 
 function LandingScreenBody(): JSX.Element {
@@ -755,6 +826,34 @@ function LandingScreenBody(): JSX.Element {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* DEX feature grid — every entry routes to a real, built screen */}
+        <div style={{ marginBottom: 16 }}>
+          <h2
+            style={{
+              fontFamily: DISPLAY,
+              fontSize: 22,
+              fontWeight: 600,
+              letterSpacing: '-0.02em',
+              color: terminalColors.ink,
+              margin: 0,
+            }}
+          >
+            Everything in one terminal
+          </h2>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 16,
+            marginBottom: 40,
+          }}
+        >
+          {FEATURES.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} onOpen={(path) => navigate(path)} />
+          ))}
         </div>
 
         {/* Top markets grid (replaces the hook marketplace) */}

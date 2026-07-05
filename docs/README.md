@@ -5,7 +5,7 @@ Uniswap interface running on **HookSwap's own deployed contracts**. It ships a f
 **Uniswap v2 (constant-product AMM) + v3 (concentrated liquidity) + Universal Router**
 stack across 6 production chains, plus **Sepolia** (canonical Uniswap) for testing.
 
-- **Name / URL:** HookSwap · https://hookswap.xyz
+- **Name / URL:** HookSwap · https://hookswap.org
 - **Contracts:** HookSwap-owned deployments of canonical Uniswap v2/v3/Universal Router
   bytecode (so init-code hashes stay canonical; only the factory/manager addresses differ).
 - **UI:** the Uniswap-interface fork, rebranded to HookSwap ("Terminal" redesign in progress).

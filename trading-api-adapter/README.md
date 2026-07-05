@@ -60,6 +60,6 @@ curl -s localhost:4000/health
 
 Point the interface at it via `apps/web/.env.local`:
 ```
-TRADING_API_URL_OVERRIDE="https://trading.hookswap.xyz"
+TRADING_API_URL_OVERRIDE="https://trading.hookswap.org"
 ```
 See [DEPLOY.md](./DEPLOY.md) for the full VPS runbook (nginx, TLS, systemd/pm2, liquidity gate).
