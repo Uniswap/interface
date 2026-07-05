@@ -13,7 +13,6 @@ import { CurrencySettings } from '~/components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from '~/components/NavBar/PreferencesMenu/Language'
 import { PreferencesView } from '~/components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
-import { Socials } from '~/pages/Landing/sections/Footer'
 
 function MenuSection({
   title,
@@ -155,9 +154,6 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               </Flex>
               <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
                 <HelpModal showOnXL />
-                <Flex gap="$spacing16">
-                  <Socials iconSize="20px" />
-                </Flex>
               </Flex>
             </Flex>
           </Accordion>

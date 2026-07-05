@@ -25,8 +25,8 @@ export function RouterLabel({ trade, color }: { trade: SubmittableTrade; color?:
 
   return (
     <Text variant="body3" color={color}>
-      {/* Note: we don't translate Uniswap API because it's a brand name */}
-      Uniswap API
+      {/* Note: we don't translate HookSwap API because it's a brand name */}
+      HookSwap API
     </Text>
   )
 }

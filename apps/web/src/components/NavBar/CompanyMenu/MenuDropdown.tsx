@@ -12,7 +12,6 @@ import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from '~/components/NavBar/NavDropdown'
 import { useTabsVisible } from '~/components/NavBar/ScreenSizes'
 import { useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
-import { Socials } from '~/pages/Landing/sections/Footer'
 import { ExternalLink } from '~/theme/components/Links'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
@@ -197,7 +196,6 @@ export function MenuDropdown({ close }: { close?: () => void }) {
               <Flex display="none" $xl={{ display: 'flex' }}>
                 <HelpModal showOnXL />
               </Flex>
-              <Socials iconSize="18px" gap="$spacing12" />
             </Flex>
           </Flex>
         </Flex>

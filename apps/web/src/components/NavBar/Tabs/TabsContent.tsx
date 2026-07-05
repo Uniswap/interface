@@ -84,7 +84,7 @@ export const useTabsContent = (): TabsSection[] => {
     {
       title: t('common.explore'),
       href: '/explore',
-      isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
+      isActive: pathname.startsWith('/explore'),
       icon: <Compass color="$accent1" size="$icon.20" />,
       elementName: ElementName.NavbarExploreTab,
       items: [
