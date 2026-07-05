@@ -230,7 +230,7 @@ export function TerminalChrome({
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
   const selectChain = useSelectChain()
-  const { chains: enabledChains } = useEnabledChains()
+  const { chains: enabledChains, defaultChainId } = useEnabledChains()
 
   // Capture `?ref=<code>` from the URL into localStorage for referral attribution.
   useCaptureRef()
@@ -253,8 +253,13 @@ export function TerminalChrome({
 
   const resolvedActiveId = activeId ?? activeScreenIdFromPath(location.pathname)
 
-  // Live chain readout (real) — from the connected/active chain.
-  const chain = account.chainId ? { name: getChainLabel(account.chainId), chainId: account.chainId } : undefined
+  // Chain chip: show the connected chain when a wallet is connected, else the
+  // default enabled HookSwap chain (so the chip shows a real network + logo and
+  // the switcher is always meaningful — never a bare "—").
+  const displayChainId = account.chainId ?? defaultChainId ?? enabledChains[0]
+  const chain = displayChainId
+    ? { name: getChainLabel(displayChainId), chainId: displayChainId }
+    : undefined
 
   // Live wallet + portfolio total (real) — honest skeletons while loading.
   const totalValue = usePortfolioTotalValue({ evmAddress: account.address })
@@ -290,9 +295,14 @@ export function TerminalChrome({
           actions: chainMenuOpen ? (
             <ChainSwitcherMenu
               chains={enabledChains}
-              activeChainId={account.chainId}
+              activeChainId={displayChainId}
               onSelect={async (id) => {
                 setChainMenuOpen(false)
+                if (!account.address) {
+                  // No wallet yet — prompt connect; the wallet picks the chain on connect.
+                  accountDrawer.open()
+                  return
+                }
                 await selectChain(id)
               }}
               onClose={() => setChainMenuOpen(false)}
