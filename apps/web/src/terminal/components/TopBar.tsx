@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
+import { HookLogo } from '~/terminal/components/HookLogo'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
 /** Live gas readout. `undefined` while loading. */
@@ -30,6 +31,10 @@ export interface TopBarProps {
   onChainClick?: () => void
   /** Per-screen actions rendered at the far right (e.g. Save/Reset, Export). */
   actions?: ReactNode
+  /** Mobile: open the nav drawer (renders a hamburger + logo on the left). */
+  onMenuClick?: () => void
+  /** True on narrow viewports — compact layout (hamburger, flexible search). */
+  isMobile?: boolean
 }
 
 const FIELD_BASE = {
