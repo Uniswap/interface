@@ -154,8 +154,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'limit', label: 'Limit', icon: 'limit', path: '/limit' },
   { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
   { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
-  // View/manage existing liquidity positions — legacy route (Positions page).
-  { id: 'positions', label: 'Positions', icon: 'positions', path: '/positions' },
+  // View existing liquidity positions — Terminal-native screen (v2/v3 only).
+  { id: 'positions', label: 'Positions', icon: 'positions', path: `${TERMINAL_BASE}/positions` },
   // Lock LP/tokens + v3 positions (HookSwap locker contracts).
   { id: 'locker', label: 'Locker', icon: 'locker', path: `${TERMINAL_BASE}/locker` },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: `${TERMINAL_BASE}/analytics` },

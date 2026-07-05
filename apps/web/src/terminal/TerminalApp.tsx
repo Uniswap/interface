@@ -38,6 +38,7 @@ import { MarketDetailScreen } from '~/terminal/screens/MarketDetailScreen'
 import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
 import { PoolsScreen } from '~/terminal/screens/PoolsScreen'
 import { PortfolioScreen } from '~/terminal/screens/PortfolioScreen'
+import { PositionsScreen } from '~/terminal/screens/PositionsScreen'
 import { SettingsScreen } from '~/terminal/screens/SettingsScreen'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
 
@@ -79,6 +80,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/pools')) {
     return 'create-position'
+  }
+  if (rest.startsWith('/positions')) {
+    return 'positions'
   }
   if (rest.startsWith('/locker')) {
     return 'locker'
@@ -301,6 +305,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="markets" element={<MarketsScreen />} />
         <Route path="pools/new" element={<PoolsScreen />} />
         <Route path="pools" element={<PoolsScreen />} />
+        <Route path="positions" element={<PositionsScreen />} />
         <Route path="locker" element={<LockerScreen />} />
         <Route path="portfolio" element={<PortfolioScreen />} />
         <Route path="activity" element={<ActivityScreen />} />
