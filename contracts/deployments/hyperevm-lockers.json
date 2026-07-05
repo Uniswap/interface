@@ -1,0 +1,1 @@
+{ "chain":"hyperevm","chainId":999,"deployer":"0xc14C897c6bff88a5Eeac31F795693b9230205125","lockFeeWei":"40000000000000000","lockFeeNative":"0.04","feeReceiver":"0xc14C897c6bff88a5Eeac31F795693b9230205125","tokenLockerManager":"0x7EFFe9DD68035f43ad43aE6C31bc1a47Ab4579D0","v3PositionLocker":"0xD08E609277eCB0B7E2eF15dF5C1Fb11436627a63" }

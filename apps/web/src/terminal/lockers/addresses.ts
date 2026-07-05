@@ -28,7 +28,10 @@ export interface LockerAddresses {
  */
 export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>> = {
   // HyperEVM (999)
-  [UniverseChainId.HyperEvm]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.HyperEvm]: {
+    tokenLockerManager: '0x7EFFe9DD68035f43ad43aE6C31bc1a47Ab4579D0',
+    v3PositionLocker: '0xD08E609277eCB0B7E2eF15dF5C1Fb11436627a63',
+  },
   // Ink (57073)
   [UniverseChainId.Ink]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
   // MegaETH (4326)
