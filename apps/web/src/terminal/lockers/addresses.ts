@@ -33,7 +33,10 @@ export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>>
     v3PositionLocker: '0xD08E609277eCB0B7E2eF15dF5C1Fb11436627a63',
   },
   // Ink (57073)
-  [UniverseChainId.Ink]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.Ink]: {
+    tokenLockerManager: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    v3PositionLocker: '0xB5A7BF488f2407479E116f713f116546F67c803b',
+  },
   // MegaETH (4326)
   [UniverseChainId.MegaETH]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
   // XLayer (196)
@@ -42,7 +45,10 @@ export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>>
     v3PositionLocker: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
   },
   // Robinhood (4663)
-  [UniverseChainId.Robinhood]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.Robinhood]: {
+    tokenLockerManager: '0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+  },
   // Tempo (4217)
   [UniverseChainId.Tempo]: {
     tokenLockerManager: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',

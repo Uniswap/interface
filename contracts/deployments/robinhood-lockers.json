@@ -1,0 +1,1 @@
+{ "chain":"robinhood","chainId":4663,"deployer":"0xc14C897c6bff88a5Eeac31F795693b9230205125","lockFeeWei":"40000000000000000","lockFeeNative":"0.04","feeReceiver":"0xc14C897c6bff88a5Eeac31F795693b9230205125","tokenLockerManager":"0x35dB40f22143651159056285E92c113ECE65E7e2","v3PositionLocker":"0x86426094d82bC1fd40F0901965b23D30837Dc66b" }
