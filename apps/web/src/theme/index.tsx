@@ -1,6 +1,5 @@
 import { PropsWithChildren, useMemo } from 'react'
 import { breakpoints } from 'ui/src/theme'
-import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { createGlobalStyle, ThemeProvider as StyledComponentsThemeProvider } from '~/lib/deprecated-styled'
 import { darkTheme, lightTheme, ThemeColors } from '~/theme/colors'
 import { getAccent2, getNeutralContrast } from '~/theme/utils'
@@ -99,7 +98,9 @@ function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Pa
 }
 
 export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildren<Partial<ThemeColors>>) {
-  const darkMode = useSelectedColorScheme() === 'dark'
+  // HookSwap is light-only (Atlas theme) — force light so legacy styled-components
+  // pages match the Terminal shell instead of following the system dark setting.
+  const darkMode = false
   // oxlint-disable-next-line react/exhaustive-deps -- Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 

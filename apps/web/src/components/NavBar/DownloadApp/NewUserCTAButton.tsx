@@ -12,6 +12,12 @@ export function NewUserCTAButton() {
   const { openModal } = useModalState(ModalName.GetTheApp)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
+  // HookSwap: hide the Uniswap-wallet "Get the app" download promo (no HookSwap wallet).
+  // The sign-up path (embedded wallet) is left intact. Remove this guard to restore.
+  if (!isEmbeddedWalletEnabled) {
+    return null
+  }
+
   return (
     <Trace logPress element={isEmbeddedWalletEnabled ? ElementName.SignIn : ElementName.GetTheApp}>
       <Button

@@ -1,28 +1,20 @@
-import { isMobileWeb, isWebIOS } from '@universe/environment'
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAtom } from 'jotai'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
 import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
-import { DownloadWalletOption } from '~/components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from '~/components/WalletModal/shared'
 import { UniswapBrandedIcon } from '~/components/WalletModal/UniswapBrandedIcon'
 import { useWalletWithId } from '~/features/accounts/store/hooks'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
-import { persistHideMobileAppPromoBannerAtom } from '~/state/application/atoms'
-import { openDownloadApp } from '~/utils/openDownloadApp'
 
 interface OptionContainerProps extends PropsWithChildren {
   hideBackground?: boolean
@@ -81,7 +73,6 @@ function PasskeyLoginOption({ onSuccess }: { onSuccess: () => void }) {
 
 export function UniswapWalletOptions() {
   const { t } = useTranslation()
-  const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   const uniswapExtensionWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
@@ -117,9 +108,8 @@ export function UniswapWalletOptions() {
               <DetectedBadge />
             </Flex>
           </OptionContainer>
-        ) : !isMobileWeb ? (
-          <DownloadWalletOption />
         ) : null}
+        {/* HookSwap: removed the "Get Uniswap Wallet" download promo (unicorn CTA). */}
         {isEmbeddedWalletEnabled && embeddedWallet ? <PasskeyLoginOption onSuccess={onSuccess} /> : null}
         <OptionContainer
           onPress={() => (uniswapMobileWallet ? connectWallet({ wallet: uniswapMobileWallet, onSuccess }) : undefined)}
@@ -137,34 +127,7 @@ export function UniswapWalletOptions() {
           </Flex>
         </OptionContainer>
 
-        {isMobileWeb && (
-          // If on a mobile web browser show the relevant app store download link
-          <OptionContainer
-            onPress={() => {
-              setPersistHideMobileAppPromoBanner(true)
-              openDownloadApp({ element: ElementName.UniswapWalletModalDownloadButton })
-            }}
-          >
-            <PhoneDownload size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} />
-            <Flex row grow alignItems="center">
-              <Flex grow>
-                <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                  {t('common.getUniswapWallet')}
-                </Text>
-                <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                  {isWebIOS ? t('common.downloadAppStore') : t('common.downloadPlayStore')}
-                </Text>
-              </Flex>
-              {isWebIOS ? (
-                <AppStoreLogo size="$icon.24" />
-              ) : (
-                <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$neutral1">
-                  <GooglePlayStoreLogo />
-                </Flex>
-              )}
-            </Flex>
-          </OptionContainer>
-        )}
+        {/* HookSwap: removed the mobile-web "Get Uniswap Wallet" app-store download promo. */}
       </Flex>
     </Flex>
   )

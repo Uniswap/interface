@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
 /** Live gas readout. `undefined` while loading. */
@@ -10,7 +11,9 @@ export interface GasInfo {
 /** Connected chain summary. */
 export interface ChainInfo {
   name: string
-  /** Optional CSS background for the chain dot (gradient/colour). */
+  /** Chain id — renders the real chain logo when present. */
+  chainId?: number
+  /** Optional CSS background for the chain dot (gradient/colour) fallback. */
   dotBackground?: string
 }
 
@@ -134,14 +137,18 @@ export function TopBar({
             cursor: 'pointer',
           }}
         >
-          <span
-            style={{
-              width: 13,
-              height: 13,
-              borderRadius: '50%',
-              background: chain?.dotBackground ?? terminalTokenGradients.eth,
-            }}
-          />
+          {chain?.chainId !== undefined ? (
+            <ChainLogo chainId={chain.chainId} size={15} />
+          ) : (
+            <span
+              style={{
+                width: 13,
+                height: 13,
+                borderRadius: '50%',
+                background: chain?.dotBackground ?? terminalTokenGradients.eth,
+              }}
+            />
+          )}
           {chain?.name ?? '—'}
         </span>
 

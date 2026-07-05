@@ -42,10 +42,19 @@ const StyledButton = styled(Anchor, {
  * - The user has not dismissed the banner during this session
  * - The user has not clicked the Uniswap wallet or Get Uniswap Wallet buttons in wallet options
  */
+// HookSwap: the mobile-app promo banner advertises the Uniswap mobile wallet (unicorn logo +
+// OneLink download). HookSwap has no wallet, so keep it disabled. Flip to true to restore.
+const MOBILE_APP_PROMO_ENABLED = false
+
 export function useMobileAppPromoBannerEligible(): boolean {
   const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)
   const persistHideMobileAppPromoBanner = useAtomValue(persistHideMobileAppPromoBannerAtom)
-  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner && !persistHideMobileAppPromoBanner
+  return (
+    MOBILE_APP_PROMO_ENABLED &&
+    (isWebIOS || isWebAndroid) &&
+    !hideMobileAppPromoBanner &&
+    !persistHideMobileAppPromoBanner
+  )
 }
 
 const UNIVERSAL_DOWNLOAD_LINK = 'https://uniswapwallet.onelink.me/8q3y/39b0eeui'

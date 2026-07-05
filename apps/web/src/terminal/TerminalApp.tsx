@@ -22,6 +22,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { AccountDrawer } from '~/components/AccountDrawer'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { Portal } from '~/components/Popups/Portal'
 import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
@@ -167,15 +168,7 @@ function ChainSwitcherMenu({
                 background: active ? terminalColors.panel : 'transparent',
               }}
             >
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: active ? terminalColors.brandGreen : terminalColors.line2,
-                  flexShrink: 0,
-                }}
-              />
+              <ChainLogo chainId={id} size={18} />
               <span
                 style={{
                   flex: 1,
@@ -236,7 +229,7 @@ export function TerminalChrome({
   const resolvedActiveId = activeId ?? activeScreenIdFromPath(location.pathname)
 
   // Live chain readout (real) — from the connected/active chain.
-  const chain = account.chainId ? { name: getChainLabel(account.chainId) } : undefined
+  const chain = account.chainId ? { name: getChainLabel(account.chainId), chainId: account.chainId } : undefined
 
   // Live wallet + portfolio total (real) — honest skeletons while loading.
   const totalValue = usePortfolioTotalValue({ evmAddress: account.address })

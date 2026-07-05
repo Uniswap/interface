@@ -1,11 +1,12 @@
 import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
 import config from 'ui/src/tamagui.config'
-import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 
+// HookSwap ships a single LIGHT "Atlas" theme (the Terminal shell + screens are
+// light-only). Force light so every legacy page renders light and consistent
+// instead of following the system dark setting (which clashed with the shell).
 export function TamaguiProvider({ children, ...rest }: Omit<TamaguiProviderProps, 'config'>): JSX.Element {
-  const darkMode = useSelectedColorScheme() === 'dark'
   return (
-    <OGTamaguiProvider config={config} defaultTheme={darkMode ? 'dark' : 'light'} {...rest}>
+    <OGTamaguiProvider config={config} defaultTheme="light" {...rest}>
       {children}
     </OGTamaguiProvider>
   )
