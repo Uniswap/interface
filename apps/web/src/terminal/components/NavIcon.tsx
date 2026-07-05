@@ -57,6 +57,14 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M4 12l8 4.5 8-4.5M4 16.5L12 21l8-4.5" />
         </svg>
       )
+    case 'locker':
+      // Locker — a padlock (locked shackle + body).
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <rect x={4} y={10.5} width={16} height={10} rx={2.5} />
+          <path d="M8 10.5V7a4 4 0 018 0v3.5" />
+        </svg>
+      )
     case 'buy':
       // Fiat on-ramp — a payment card.
       return (

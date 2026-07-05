@@ -16,6 +16,7 @@ export type TerminalScreenId =
   | 'swap' // B2
   | 'markets' // B3
   | 'create-position' // B4
+  | 'locker' // Tools — lock LP/tokens + v3 positions
   | 'portfolio' // B5
   | 'market-detail' // B6
   | 'confirm-swap' // B8 (modal)
@@ -31,6 +32,7 @@ export type TerminalNavIcon =
   | 'markets'
   | 'pools'
   | 'positions'
+  | 'locker'
   | 'buy'
   | 'portfolio'
   | 'activity'
@@ -88,6 +90,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
     path: `${TERMINAL_BASE}/pools/new`,
     kind: 'page',
   },
+  locker: { id: 'locker', code: 'LK', title: 'Locker', path: `${TERMINAL_BASE}/locker`, kind: 'page' },
   portfolio: { id: 'portfolio', code: 'B5', title: 'Portfolio', path: `${TERMINAL_BASE}/portfolio`, kind: 'page' },
   'market-detail': {
     id: 'market-detail',
@@ -153,6 +156,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
   // View/manage existing liquidity positions — legacy route (Positions page).
   { id: 'positions', label: 'Positions', icon: 'positions', path: '/positions' },
+  // Lock LP/tokens + v3 positions (HookSwap locker contracts).
+  { id: 'locker', label: 'Locker', icon: 'locker', path: `${TERMINAL_BASE}/locker` },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: `${TERMINAL_BASE}/analytics` },
 ]
 
