@@ -150,8 +150,8 @@ export interface TerminalNavItem {
  */
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
-  // Limit orders — legacy route (SwapPage in limit mode), still fully working.
-  { id: 'limit', label: 'Limit', icon: 'limit', path: '/limit' },
+  // Limit orders — Terminal-native screen (frames the real limit-order form).
+  { id: 'limit', label: 'Limit', icon: 'limit', path: `${TERMINAL_BASE}/limit` },
   { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
   { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
   // View existing liquidity positions — Terminal-native screen (v2/v3 only).
@@ -165,8 +165,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
 export const terminalAccountNav: TerminalNavItem[] = [
   { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: `${TERMINAL_BASE}/portfolio` },
   { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
-  // Fiat on-ramp — legacy route (SwapPage buy flow).
-  { id: 'buy', label: 'Buy', icon: 'buy', path: '/buy' },
+  // Fiat on-ramp — Terminal-native screen (frames the real on-ramp Buy form).
+  { id: 'buy', label: 'Buy', icon: 'buy', path: `${TERMINAL_BASE}/buy` },
 ]
 
 /**

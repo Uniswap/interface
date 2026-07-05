@@ -32,7 +32,9 @@ import { TerminalNavId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { ActivityScreen } from '~/terminal/screens/ActivityScreen'
 import { AnalyticsScreen } from '~/terminal/screens/AnalyticsScreen'
+import { BuyScreen } from '~/terminal/screens/BuyScreen'
 import { LandingScreen } from '~/terminal/screens/LandingScreen'
+import { LimitScreen } from '~/terminal/screens/LimitScreen'
 import { LockerScreen } from '~/terminal/screens/LockerScreen'
 import { MarketDetailScreen } from '~/terminal/screens/MarketDetailScreen'
 import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
@@ -74,6 +76,12 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   const rest = pathname.slice(TERMINAL_BASE.length) // e.g. "/swap"
   if (rest === '' || rest === '/' || rest.startsWith('/swap')) {
     return 'swap'
+  }
+  if (rest.startsWith('/limit')) {
+    return 'limit'
+  }
+  if (rest.startsWith('/buy')) {
+    return 'buy'
   }
   if (rest.startsWith('/markets')) {
     return 'markets'
@@ -302,6 +310,8 @@ export default function TerminalApp(): JSX.Element {
         <Route index element={<Navigate to="swap" replace />} />
         <Route path="landing" element={<LandingScreen />} />
         <Route path="swap" element={<SwapScreen />} />
+        <Route path="limit" element={<LimitScreen />} />
+        <Route path="buy" element={<BuyScreen />} />
         <Route path="markets" element={<MarketsScreen />} />
         <Route path="pools/new" element={<PoolsScreen />} />
         <Route path="pools" element={<PoolsScreen />} />
