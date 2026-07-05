@@ -342,9 +342,57 @@ function MoverTileSkeleton(): JSX.Element {
   )
 }
 
-function TopMovers({ tokens, loading }: { tokens: readonly MultichainToken[]; loading: boolean }): JSX.Element {
+function TopMovers({
+  tokens,
+  loading,
+  error,
+}: {
+  tokens: readonly MultichainToken[]
+  loading: boolean
+  error: boolean
+}): JSX.Element {
   const movers = useMemo(() => buildMovers(tokens), [tokens])
-  const showSkeleton = loading && movers.length === 0
+
+  // Skeleton while the token feed is first loading.
+  if (loading && movers.length === 0) {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+          gap: 12,
+          marginBottom: 20,
+        }}
+      >
+        {Array.from({ length: 6 }, (_, i) => (
+          <MoverTileSkeleton key={i} />
+        ))}
+      </div>
+    )
+  }
+
+  // Honest empty / error state — a single branded strip instead of a blank grid row.
+  if (movers.length === 0) {
+    return (
+      <div
+        style={{
+          border: `1px solid ${terminalColors.line}`,
+          background: terminalColors.bg,
+          borderRadius: 12,
+          padding: '18px 16px',
+          marginBottom: 20,
+          textAlign: 'center',
+          fontFamily: SANS,
+          fontSize: 12.5,
+          color: error ? terminalColors.redDown : terminalColors.ink3Alt,
+        }}
+      >
+        {error
+          ? 'Couldn’t load top movers.'
+          : 'No market movers yet — token price data goes live with the HookSwap indexer.'}
+      </div>
+    )
+  }
 
   return (
     <div
@@ -355,9 +403,9 @@ function TopMovers({ tokens, loading }: { tokens: readonly MultichainToken[]; lo
         marginBottom: 20,
       }}
     >
-      {showSkeleton
-        ? Array.from({ length: 6 }, (_, i) => <MoverTileSkeleton key={i} />)
-        : movers.map((mover) => <MoverTile key={mover.symbol} mover={mover} />)}
+      {movers.map((mover) => (
+        <MoverTile key={mover.symbol} mover={mover} />
+      ))}
     </div>
   )
 }
@@ -402,7 +450,7 @@ function MarketsScreenBody(): JSX.Element {
   })
 
   // Real token list — feeds the price/24H/sparkline join + the top-movers heatmap.
-  const { topTokens, isLoading: tokensLoading } = useListTokens(undefined)
+  const { topTokens, isLoading: tokensLoading, isError: tokensError } = useListTokens(undefined)
 
   const metricMaps = useMemo(() => buildTokenMetrics(topTokens), [topTokens])
   const rows = useMemo(() => buildRows(topPools, metricMaps), [topPools, metricMaps])
@@ -413,7 +461,7 @@ function MarketsScreenBody(): JSX.Element {
       ? 'New-pool data requires the self-hosted indexer feed (not yet wired).'
       : filter === 'stable'
         ? 'No stablecoin pools in the current data set.'
-        : 'No markets found.'
+        : 'No pools indexed yet — liquidity data goes live with the HookSwap indexer.'
 
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
@@ -575,7 +623,7 @@ function MarketsScreenBody(): JSX.Element {
       </div>
 
       {/* Top-movers heatmap (live, from the token list) */}
-      <TopMovers tokens={topTokens} loading={tokensLoading} />
+      <TopMovers tokens={topTokens} loading={tokensLoading} error={tokensError} />
 
       {/*
         Dense markets table (reused Terminal DataTable primitive). The DataTable is a

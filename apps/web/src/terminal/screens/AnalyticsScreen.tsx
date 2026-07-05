@@ -348,12 +348,20 @@ function AreaChart({
 
 /* ------------------------------------------------------------------ bar chart */
 
-function BarChart({ points, loading }: { points?: SeriesPoint[]; loading: boolean }): JSX.Element {
+function BarChart({
+  points,
+  loading,
+  error,
+}: {
+  points?: SeriesPoint[]
+  loading: boolean
+  error?: boolean
+}): JSX.Element {
   const height = 150
   if (loading) {
     return <div style={{ height: height + 24, borderRadius: 10, background: terminalColors.line2 }} aria-busy="true" />
   }
-  if (!points || points.length === 0) {
+  if (error || !points || points.length === 0) {
     return (
       <div
         style={{
@@ -361,12 +369,15 @@ function BarChart({ points, loading }: { points?: SeriesPoint[]; loading: boolea
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          textAlign: 'center',
+          padding: '0 16px',
           fontFamily: SANS,
           fontSize: 12.5,
-          color: terminalColors.ink3Alt,
+          lineHeight: 1.5,
+          color: error ? terminalColors.redDown : terminalColors.ink3Alt,
         }}
       >
-        No volume data.
+        {error ? 'Couldn’t load volume.' : 'No volume yet — arrives with the HookSwap indexer.'}
       </div>
     )
   }
@@ -458,10 +469,12 @@ function NetworkDonut({
   allocation,
   totalLabel,
   loading,
+  error,
 }: {
   allocation?: { slices: AllocSlice[]; total: number }
   totalLabel?: string
   loading: boolean
+  error?: boolean
 }): JSX.Element {
   const gradient = useMemo(() => {
     if (!allocation || allocation.slices.length === 0) {
@@ -536,7 +549,9 @@ function NetworkDonut({
             </div>
           ))
         ) : (
-          <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>No pool TVL to allocate.</div>
+          <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: error ? terminalColors.redDown : terminalColors.ink3Alt }}>
+            {error ? 'Couldn’t load network allocation.' : 'No pool TVL yet — network allocation appears with the HookSwap indexer.'}
+          </div>
         )}
       </div>
     </div>
@@ -691,10 +706,14 @@ function TopPoolsByTvlList({
     )
   }
   if (error) {
-    return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>Failed to load pools.</div>
+    return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>Couldn’t load pools.</div>
   }
   if (!presentations || presentations.length === 0) {
-    return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>No pools found.</div>
+    return (
+      <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink3Alt }}>
+        No pools indexed yet — liquidity data goes live with the HookSwap indexer.
+      </div>
+    )
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -1066,7 +1085,7 @@ function AnalyticsScreenBody(): JSX.Element {
               emptyMessage={
                 chartMetric === 'fees'
                   ? 'Fee-over-time series is not exposed by the protocol stats feed. 24h fees are shown in the stat card above (aggregated from live pools).'
-                  : 'No series data for this timeframe yet.'
+                  : 'No protocol series yet — analytics populate once the HookSwap indexer is live.'
               }
             />
           </Card>
@@ -1078,6 +1097,7 @@ function AnalyticsScreenBody(): JSX.Element {
               allocation={allocation}
               totalLabel={allocation && allocation.total > 0 ? fiatStats(allocation.total) : undefined}
               loading={poolsLoading && !allocation}
+              error={poolsError}
             />
             <a
               href="/terminal/markets"
@@ -1106,7 +1126,7 @@ function AnalyticsScreenBody(): JSX.Element {
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 300px', minWidth: 0 }}>
           <Card title={`Volume · ${timeframe === '1Y' ? 'weekly (1y)' : `daily (${timeframe})`}`}>
-            <BarChart points={barPoints} loading={protocolLoading} />
+            <BarChart points={barPoints} loading={protocolLoading} error={protocolError} />
           </Card>
         </div>
 
@@ -1121,8 +1141,8 @@ function AnalyticsScreenBody(): JSX.Element {
                   rows={poolsLoading && !topByVolume ? undefined : topByVolume}
                   rowKey={(row) => row.key}
                   loading={poolsLoading && !topByVolume}
-                  error={poolsError ? 'Failed to load pools.' : undefined}
-                  emptyMessage="No pools found."
+                  error={poolsError ? 'Couldn’t load pools.' : undefined}
+                  emptyMessage="No pools indexed yet — liquidity data goes live with the HookSwap indexer."
                   initialSort={{ columnId: 'volume', direction: 'desc' }}
                   skeletonRows={6}
                 />

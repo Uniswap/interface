@@ -177,10 +177,12 @@ function buildTickers(tokens: readonly MultichainToken[]): Ticker[] {
 function TickerStrip({
   tickers,
   loading,
+  error,
   fiatPrice,
 }: {
   tickers: Ticker[]
   loading: boolean
+  error: boolean
   fiatPrice: (value: number | undefined) => string
 }): JSX.Element {
   return (
@@ -196,14 +198,21 @@ function TickerStrip({
         whiteSpace: 'nowrap',
       }}
     >
-      {loading && tickers.length === 0
-        ? Array.from({ length: 6 }, (_, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <div style={{ height: 11, width: 34, borderRadius: 4, background: terminalColors.line2 }} />
-              <div style={{ height: 11, width: 52, borderRadius: 4, background: terminalColors.line3 }} />
-            </div>
-          ))
-        : tickers.map((ticker) => {
+      {loading && tickers.length === 0 ? (
+        Array.from({ length: 6 }, (_, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <div style={{ height: 11, width: 34, borderRadius: 4, background: terminalColors.line2 }} />
+            <div style={{ height: 11, width: 52, borderRadius: 4, background: terminalColors.line3 }} />
+          </div>
+        ))
+      ) : tickers.length === 0 ? (
+        // Honest degrade — the strip keeps its height with a short branded line
+        // instead of collapsing to an empty bar when the token feed has no prices.
+        <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint, flexShrink: 0 }}>
+          {error ? 'Token feed unavailable.' : 'Live token feed goes live with the HookSwap indexer.'}
+        </span>
+      ) : (
+        tickers.map((ticker) => {
             const up = (ticker.change1d ?? 0) >= 0
             return (
               <div key={ticker.symbol} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
@@ -229,7 +238,8 @@ function TickerStrip({
                 </span>
               </div>
             )
-          })}
+          })
+      )}
     </div>
   )
 }
@@ -636,7 +646,7 @@ function LandingScreenBody(): JSX.Element {
   const { chains } = useEnabledChains()
 
   // Real token list — feeds the ticker strip + the right-card price join.
-  const { topTokens, isLoading: tokensLoading } = useListTokens(undefined)
+  const { topTokens, isLoading: tokensLoading, isError: tokensError } = useListTokens(undefined)
   // Real top-pools feed — feeds the stat-bar pool count + right card + market grid.
   const {
     topPools,
@@ -683,7 +693,7 @@ function LandingScreenBody(): JSX.Element {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
       {/* Market ticker strip (live) */}
-      <TickerStrip tickers={tickers} loading={tokensLoading} fiatPrice={fiatPrice} />
+      <TickerStrip tickers={tickers} loading={tokensLoading} error={tokensError} fiatPrice={fiatPrice} />
 
       <div style={{ padding: '28px 24px 40px', minWidth: 0 }}>
         {/* Hero + right terminal card (wrapping flex row) */}
@@ -849,7 +859,7 @@ function LandingScreenBody(): JSX.Element {
                     emptyMessage={
                       featured
                         ? 'Live chart — no recent price history for this market.'
-                        : 'Live chart — connect a pool feed to plot price.'
+                        : 'Live chart — market data arrives with the HookSwap indexer.'
                     }
                   />
                 )}
@@ -903,7 +913,38 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {poolsError ? (
-          <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.redDown }}>Failed to load markets.</div>
+          // Honest error — a branded bordered box, not a bare red line or blank grid.
+          <div
+            style={{
+              border: `1px solid ${terminalColors.line}`,
+              borderRadius: 14,
+              background: terminalColors.bg,
+              padding: '32px 20px',
+              textAlign: 'center',
+              fontFamily: SANS,
+              fontSize: 13,
+              color: terminalColors.redDown,
+            }}
+          >
+            Couldn’t load markets.
+          </div>
+        ) : marketCards && marketCards.length === 0 ? (
+          // Intentional empty state — the indexer isn't live yet, so there are no pools.
+          <div
+            style={{
+              border: `1px solid ${terminalColors.line}`,
+              borderRadius: 14,
+              background: terminalColors.bg,
+              padding: '32px 20px',
+              textAlign: 'center',
+              fontFamily: SANS,
+              fontSize: 13,
+              lineHeight: 1.5,
+              color: terminalColors.ink3Alt,
+            }}
+          >
+            No pools indexed yet — markets appear once the HookSwap indexer is live.
+          </div>
         ) : (
           <div
             style={{
@@ -924,10 +965,6 @@ function LandingScreenBody(): JSX.Element {
               : Array.from({ length: 6 }, (_, i) => <MarketCardSkeleton key={i} />)}
           </div>
         )}
-
-        {marketCards && marketCards.length === 0 ? (
-          <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink3Alt }}>No markets found.</div>
-        ) : null}
 
         {/* Honest data-provenance note (no fabricated values). */}
         <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 20, lineHeight: 1.5 }}>
