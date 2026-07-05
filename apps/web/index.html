@@ -6,15 +6,30 @@
     <title>HookSwap Interface</title>
 
     <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
-    <!-- HookSwap SVG favicon (modern browsers). PNG/ICO below are legacy fallbacks
-         still carrying Uniswap art — flagged for design regeneration. -->
+    <!-- HookSwap "Signal" brand favicons (official Signal Web Kit). SVG for modern
+         browsers; PNG set for legacy + high-DPI; app icons for iOS/PWA. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#fff" />
+    <meta name="theme-color" content="#0B0F14" />
+
+    <!-- Open Graph / Twitter card (HookSwap Signal social header) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HookSwap" />
+    <meta property="og:title" content="HookSwap — a DEX in terminal form" />
+    <meta property="og:description" content="Swap, provide liquidity, and lock tokens across HookSwap's own v2 + v3 deployments on every chain." />
+    <meta property="og:url" content="https://hookswap.org" />
+    <meta property="og:image" content="/brand/og-hookswap-1500x500.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HookSwap — a DEX in terminal form" />
+    <meta name="twitter:description" content="Swap, provide liquidity, and lock tokens across HookSwap's own v2 + v3 deployments on every chain." />
+    <meta name="twitter:image" content="/brand/og-hookswap-1500x500.png" />
     <meta name="format-detection" content="telephone=no">
 
     <!-- CSP will be injected here -->

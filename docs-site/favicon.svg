@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- HookSwap favicon: pointy-top hexagon (ink) + open green "hook" ring.
+       Geometry ported from apps/web/src/terminal/components/HookLogo.tsx.
+       Paper rounded-square backing keeps the ink hexagon visible on both
+       light and dark browser chrome. -->
+  <rect x="0" y="0" width="48" height="48" rx="10" fill="#f4f5f1" />
+  <path
+    d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z"
+    fill="none"
+    stroke="#0B0F14"
+    stroke-width="2.4"
+    stroke-linejoin="round"
+  />
+  <circle
+    cx="24"
+    cy="25"
+    r="7.2"
+    fill="none"
+    stroke="#2FE07E"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-dasharray="33 13"
+    transform="rotate(118 24 25)"
+  />
+</svg>

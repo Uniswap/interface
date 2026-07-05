@@ -1,0 +1,14 @@
+{
+  "name": "HookSwap",
+  "short_name": "HookSwap",
+  "description": "A DEX in terminal form — swap, provide liquidity, and lock tokens across HookSwap's own v2 + v3 deployments on every chain.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0B0F14",
+  "background_color": "#FFFFFF",
+  "icons": [
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/apple-touch-icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}
