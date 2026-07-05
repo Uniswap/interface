@@ -35,6 +35,7 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { useAccount } from '~/hooks/useAccount'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
+import { StatCard } from '~/terminal/components/StatCard'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 const MONO = terminalFonts.mono
@@ -145,38 +146,179 @@ function StatusPill({ status }: { status: PositionStatus }): JSX.Element {
   )
 }
 
-/* ------------------------------------------------------------------ summary stat */
+/* --------------------------------------------------- allocation (real, by pair) */
 
-function Stat({ label, value, valueColor, loading }: { label: string; value?: string; valueColor?: string; loading?: boolean }): JSX.Element {
+/* Category swatch palette (shared token accents) for the value-by-pair breakdown. */
+const ALLOC_COLORS = [
+  terminalColors.accentIndigo,
+  terminalColors.accentBlue,
+  terminalColors.greenUp,
+  terminalColors.accentPurple,
+  terminalColors.accentPink,
+  terminalColors.accentTeal,
+] as const
+const ALLOC_OTHER_COLOR = terminalColors.faint
+
+interface AllocSlice {
+  label: string
+  usd: number
+  percent: number
+  color: string
+}
+
+/**
+ * Aggregate REAL position value (`totalValueUsd`) by pair → top-N slices + an
+ * "Other" bucket. Positions the feed gives no value for (undefined/0) are skipped
+ * — never fabricated. Returns an empty slice list when nothing carries value.
+ */
+function buildAllocation(positions: PositionInfo[]): { slices: AllocSlice[]; total: number } {
+  const byPair = new Map<string, number>()
+  for (const p of positions) {
+    const usd = p.totalValueUsd ?? 0
+    if (usd <= 0) {
+      continue
+    }
+    const label = `${p.currency0Amount.currency.symbol ?? '—'} / ${p.currency1Amount.currency.symbol ?? '—'}`
+    byPair.set(label, (byPair.get(label) ?? 0) + usd)
+  }
+  const rows = [...byPair.entries()].map(([label, usd]) => ({ label, usd })).sort((a, b) => b.usd - a.usd)
+  const total = rows.reduce((sum, r) => sum + r.usd, 0)
+  if (total <= 0) {
+    return { slices: [], total: 0 }
+  }
+  const top = rows.slice(0, ALLOC_COLORS.length)
+  const otherUsd = rows.slice(ALLOC_COLORS.length).reduce((sum, r) => sum + r.usd, 0)
+  const slices: AllocSlice[] = top.map((r, i) => ({
+    label: r.label,
+    usd: r.usd,
+    percent: (r.usd / total) * 100,
+    color: ALLOC_COLORS[i],
+  }))
+  if (otherUsd > 0) {
+    slices.push({ label: 'Other', usd: otherUsd, percent: (otherUsd / total) * 100, color: ALLOC_OTHER_COLOR })
+  }
+  return { slices, total }
+}
+
+/** Horizontal stacked value-by-pair bar + legend (real data / honest empty). */
+function AllocationCard({
+  allocation,
+  loading,
+  fiat,
+}: {
+  allocation: { slices: AllocSlice[]; total: number }
+  loading: boolean
+  fiat: (v: number | undefined) => string
+}): JSX.Element {
   return (
-    <div
+    <Card>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 12,
+          marginBottom: 14,
+        }}
+      >
+        <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: terminalColors.ink }}>
+          Allocation by pair
+        </div>
+        {!loading && allocation.total > 0 ? (
+          <div style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 600, color: terminalColors.ink }}>
+            {fiat(allocation.total)}
+          </div>
+        ) : null}
+      </div>
+
+      {loading ? (
+        <div style={{ height: 14, borderRadius: 999, background: terminalColors.line2 }} aria-busy="true" />
+      ) : allocation.slices.length === 0 ? (
+        <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink3Alt }}>
+          No position value to break down yet. Allocation appears once your positions carry a USD value.
+        </div>
+      ) : (
+        <>
+          <div
+            style={{
+              display: 'flex',
+              height: 14,
+              borderRadius: 999,
+              overflow: 'hidden',
+              background: terminalColors.panel2,
+            }}
+          >
+            {allocation.slices.map((s) => (
+              <div
+                key={s.label}
+                title={`${s.label} · ${s.percent.toFixed(1)}%`}
+                style={{ width: `${s.percent}%`, background: s.color }}
+              />
+            ))}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 14 }}>
+            {allocation.slices.map((s) => (
+              <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
+                <span
+                  style={{
+                    fontFamily: SANS,
+                    fontSize: 12.5,
+                    color: terminalColors.ink2,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: 160,
+                  }}
+                >
+                  {s.label}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 12.5, color: terminalColors.ink }}>
+                  {fiat(s.usd)}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink3Alt }}>
+                  {s.percent.toFixed(0)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </Card>
+  )
+}
+
+/* -------------------------------------------------------------- row action button */
+
+function RowActionButton({
+  label,
+  onClick,
+  tone = 'neutral',
+}: {
+  label: string
+  onClick: (e: React.MouseEvent) => void
+  tone?: 'neutral' | 'green'
+}): JSX.Element {
+  const green = tone === 'green'
+  return (
+    <button
+      type="button"
+      onClick={onClick}
       style={{
-        border: `1px solid ${terminalColors.line}`,
-        borderRadius: 14,
-        background: terminalColors.bg,
-        padding: '14px 16px',
-        minWidth: 0,
-        boxSizing: 'border-box',
+        fontFamily: SANS,
+        fontSize: 12,
+        fontWeight: 600,
+        color: green ? terminalColors.greenDeep : terminalColors.ink2,
+        background: green ? terminalColors.greenBg : terminalColors.bg,
+        border: `1px solid ${green ? terminalColors.greenBorder : terminalColors.line}`,
+        padding: '5px 12px',
+        borderRadius: 9,
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
       }}
     >
-      <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt }}>{label}</div>
-      {loading ? (
-        <div style={{ height: 24, width: 80, borderRadius: 4, background: terminalColors.line2, marginTop: 8 }} />
-      ) : (
-        <div
-          style={{
-            fontFamily: MONO,
-            fontSize: 22,
-            fontWeight: 600,
-            letterSpacing: '-0.02em',
-            color: valueColor ?? terminalColors.ink,
-            marginTop: 6,
-          }}
-        >
-          {value ?? '—'}
-        </div>
-      )}
-    </div>
+      {label}
+    </button>
   )
 }
 
@@ -337,6 +479,7 @@ export function PositionsScreen(): JSX.Element {
     () => positions.filter((p) => p.status === PositionStatus.IN_RANGE).length,
     [positions],
   )
+  const allocation = useMemo(() => buildAllocation(positions), [positions])
 
   const isLoading = positionsResult.isLoading && !positionsResult.hasData
 
@@ -400,12 +543,44 @@ export function PositionsScreen(): JSX.Element {
           </span>
         ),
       },
+      {
+        id: 'actions',
+        header: '',
+        width: 'minmax(140px,1fr)',
+        align: 'right',
+        // "View" always opens the real position detail route (where add / collect /
+        // remove all live); "Collect" appears only where the feed reports real
+        // uncollected fees, and opens that same detail page (its collect surface).
+        cell: (p) => (
+          <span style={{ display: 'inline-flex', justifyContent: 'flex-end', gap: 6, width: '100%' }}>
+            {(p.uncollectedFeesUsd ?? 0) > 0 ? (
+              <RowActionButton
+                label="Collect"
+                tone="green"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(getPositionUrl(p))
+                }}
+              />
+            ) : null}
+            <RowActionButton
+              label="View"
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate(getPositionUrl(p))
+              }}
+            />
+          </span>
+        ),
+      },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [convertFiatAmountFormatted],
+    [convertFiatAmountFormatted, navigate],
   )
 
-  const onNewPosition = (): void => navigate('/terminal/pools/new')
+  const onNewPosition = (): void => {
+    void navigate('/terminal/pools/new')
+  }
 
   /* Disconnected → connect empty state. */
   if (!address) {
@@ -423,25 +598,33 @@ export function PositionsScreen(): JSX.Element {
     <div style={{ padding: '20px 24px 40px' }}>
       <Header address={address} onNewPosition={onNewPosition} showAction />
 
-      {/* Summary row — real counts + totals over the returned positions. */}
+      {/* Stat tiles — real counts + totals over the returned positions. */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
           gap: 14,
-          marginBottom: 20,
+          marginBottom: 16,
         }}
       >
-        <Stat label="Open positions" value={String(positions.length)} loading={isLoading} />
-        <Stat label="Total value" value={fiat(totalValue)} loading={isLoading} />
-        <Stat
+        <StatCard size="lg" label="Open positions" value={String(positions.length)} loading={isLoading} />
+        <StatCard size="lg" label="Total value" value={fiat(totalValue)} loading={isLoading} />
+        <StatCard
+          size="lg"
           label="Fees claimable"
           value={fiat(feesClaimable)}
-          valueColor={feesClaimable > 0 ? terminalColors.greenUp : terminalColors.ink}
+          valueColor={feesClaimable > 0 ? 'up' : 'ink'}
           loading={isLoading}
         />
-        <Stat label="In range" value={`${inRangeCount} / ${positions.length}`} loading={isLoading} />
+        <StatCard size="lg" label="In range" value={`${inRangeCount} / ${positions.length}`} loading={isLoading} />
       </div>
+
+      {/* Allocation by pair — real position value only (honest empty otherwise). */}
+      {!showEmpty ? (
+        <div style={{ marginBottom: 16 }}>
+          <AllocationCard allocation={allocation} loading={isLoading} fiat={fiat} />
+        </div>
+      ) : null}
 
       <Card>
         {showEmpty ? (
@@ -450,7 +633,7 @@ export function PositionsScreen(): JSX.Element {
           /* Wide table scrolls inside its own container so column minima never
              widen the page at narrow content widths. */
           <div style={{ overflowX: 'auto' }}>
-            <div style={{ minWidth: 620 }}>
+            <div style={{ minWidth: 760 }}>
               <DataTable<PositionInfo>
                 columns={columns}
                 rows={isLoading ? undefined : positions}

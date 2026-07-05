@@ -24,10 +24,12 @@
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useReadContract, useReadContracts, useWriteContract } from 'wagmi'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { erc20Abi, formatUnits, isAddress, parseUnits, type Address } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from '~/hooks/useAccount'
+import { StatCard } from '~/terminal/components/StatCard'
 import {
   tokenLockerAbi,
   tokenLockerManagerAbi,
@@ -852,8 +854,6 @@ function V3LocksList({
   locks: ReturnType<typeof useV3Locks>
   onConnect: () => void
 }): JSX.Element {
-  const { writeContractAsync, isPending } = useWriteContract()
-
   if (!deployed) {
     return <NotDeployedNote chainLabel={chainLabel} />
   }
@@ -870,69 +870,152 @@ function V3LocksList({
     return <EmptyInline text="You have no v3 position locks yet." />
   }
 
-  const now = Math.floor(Date.now() / 1000)
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {locks.rows.map((row, i) => {
-        const unlockable = row.unlockTime <= now
-        return (
-          <div
-            key={String(row.id)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '12px 0',
-              borderTop: i === 0 ? undefined : `1px solid ${terminalColors.line3}`,
-            }}
-          >
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>
-                Position #{String(row.tokenId)}
-              </div>
-              <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, marginTop: 3 }}>
-                Unlocks {fmtUnlock(row.unlockTime)}
-              </div>
-            </div>
-            <StatusPill unlockable={unlockable} />
-            <div style={{ display: 'flex', gap: 6 }}>
-              <button
-                type="button"
-                disabled={!locker || isPending}
-                onClick={() =>
-                  void writeContractAsync({
-                    address: locker!,
-                    chainId,
-                    abi: v3PositionLockerAbi,
-                    functionName: 'collectFees',
-                    args: [row.id],
-                  })
-                }
-                style={rowActionStyle(Boolean(locker) && !isPending)}
-              >
-                Collect
-              </button>
-              <button
-                type="button"
-                disabled={!locker || !unlockable || isPending}
-                onClick={() =>
-                  void writeContractAsync({
-                    address: locker!,
-                    chainId,
-                    abi: v3PositionLockerAbi,
-                    functionName: 'withdraw',
-                    args: [row.id],
-                  })
-                }
-                style={rowActionStyle(Boolean(locker) && unlockable && !isPending)}
-              >
-                Withdraw
-              </button>
-            </div>
+      {locks.rows.map((row, i) => (
+        <V3LockRowItem key={String(row.id)} row={row} locker={locker} chainId={chainId} isFirst={i === 0} />
+      ))}
+    </div>
+  )
+}
+
+/**
+ * A single v3 position-lock row with its real action set: Collect fees (any time),
+ * Extend (inline datetime → `extend(lockId, newUnlockTime)`), and Withdraw (once
+ * unlockable). All three are real writes wired to the exact v3PositionLocker ABI.
+ */
+function V3LockRowItem({
+  row,
+  locker,
+  chainId,
+  isFirst,
+}: {
+  row: V3LockRow
+  locker: Address | undefined
+  chainId?: number
+  isFirst: boolean
+}): JSX.Element {
+  const { writeContractAsync, isPending } = useWriteContract()
+  const [extendOpen, setExtendOpen] = useState(false)
+  const [extendValue, setExtendValue] = useState('')
+
+  const now = Math.floor(Date.now() / 1000)
+  const unlockable = row.unlockTime <= now
+  const extendUnix = toUnix(extendValue)
+  // A valid extend must push the unlock strictly later than the current unlock time.
+  const canExtend = Boolean(locker) && extendUnix !== undefined && extendUnix > row.unlockTime && !isPending
+
+  const onCollect = (): void => {
+    if (!locker) {
+      return
+    }
+    void writeContractAsync({
+      address: locker,
+      chainId,
+      abi: v3PositionLockerAbi,
+      functionName: 'collectFees',
+      args: [row.id],
+    })
+  }
+
+  const onWithdraw = (): void => {
+    if (!locker) {
+      return
+    }
+    void writeContractAsync({
+      address: locker,
+      chainId,
+      abi: v3PositionLockerAbi,
+      functionName: 'withdraw',
+      args: [row.id],
+    })
+  }
+
+  const onExtend = (): void => {
+    if (!locker || extendUnix === undefined) {
+      return
+    }
+    void writeContractAsync({
+      address: locker,
+      chainId,
+      abi: v3PositionLockerAbi,
+      functionName: 'extend',
+      args: [row.id, extendUnix],
+    })
+    setExtendOpen(false)
+    setExtendValue('')
+  }
+
+  return (
+    <div style={{ padding: '12px 0', borderTop: isFirst ? undefined : `1px solid ${terminalColors.line3}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>
+            Position #{String(row.tokenId)}
           </div>
-        )
-      })}
+          <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, marginTop: 3 }}>
+            Unlocks {fmtUnlock(row.unlockTime)}
+          </div>
+        </div>
+        <StatusPill unlockable={unlockable} />
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button
+            type="button"
+            disabled={!locker || isPending}
+            onClick={onCollect}
+            style={rowActionStyle(Boolean(locker) && !isPending)}
+          >
+            Collect fees
+          </button>
+          <button
+            type="button"
+            disabled={!locker || isPending}
+            onClick={() => setExtendOpen((v) => !v)}
+            style={rowNeutralActionStyle(Boolean(locker) && !isPending)}
+          >
+            Extend
+          </button>
+          <button
+            type="button"
+            disabled={!locker || !unlockable || isPending}
+            onClick={onWithdraw}
+            style={rowActionStyle(Boolean(locker) && unlockable && !isPending)}
+          >
+            Withdraw
+          </button>
+        </div>
+      </div>
+
+      {extendOpen ? (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10 }}>
+          <input
+            value={extendValue}
+            onChange={(e) => setExtendValue(e.target.value)}
+            type="datetime-local"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              boxSizing: 'border-box',
+              border: `1px solid ${terminalColors.line}`,
+              borderRadius: 9,
+              background: terminalColors.bg,
+              padding: '8px 10px',
+              fontFamily: SANS,
+              fontSize: 12.5,
+              color: terminalColors.ink,
+              outline: 'none',
+            }}
+          />
+          <button
+            type="button"
+            disabled={!canExtend}
+            onClick={onExtend}
+            style={rowActionStyle(canExtend)}
+          >
+            {isPending ? 'Confirm…' : 'Confirm extend'}
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -947,6 +1030,22 @@ function rowActionStyle(enabled: boolean): React.CSSProperties {
     color: enabled ? terminalColors.greenDeep : terminalColors.faint,
     background: enabled ? terminalColors.greenBg : terminalColors.panel,
     border: `1px solid ${enabled ? terminalColors.greenBorder : terminalColors.line}`,
+    padding: '6px 12px',
+    borderRadius: 9,
+    cursor: enabled ? 'pointer' : 'default',
+    whiteSpace: 'nowrap',
+  }
+}
+
+/** Neutral (non-primary) row action — e.g. "Extend" toggles an inline field. */
+function rowNeutralActionStyle(enabled: boolean): React.CSSProperties {
+  return {
+    fontFamily: SANS,
+    fontSize: 12,
+    fontWeight: 600,
+    color: enabled ? terminalColors.ink2 : terminalColors.faint,
+    background: terminalColors.bg,
+    border: `1px solid ${terminalColors.line}`,
     padding: '6px 12px',
     borderRadius: 9,
     cursor: enabled ? 'pointer' : 'default',
@@ -1026,6 +1125,97 @@ function SkeletonRows(): JSX.Element {
   )
 }
 
+/* ------------------------------------------------------------------ graphics + analytics */
+
+/** Small padlock glyph for empty states (stroked, muted ink). */
+function PadlockGraphic({ size = 34 }: { size?: number }): JSX.Element {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="10.2" width="16" height="10.8" rx="2.6" stroke={terminalColors.ink3} strokeWidth="1.5" />
+      <path d="M7.6 10.2V7.4a4.4 4.4 0 0 1 8.8 0v2.8" stroke={terminalColors.ink3} strokeWidth="1.5" />
+      <circle cx="12" cy="15" r="1.5" fill={terminalColors.ink3} />
+    </svg>
+  )
+}
+
+interface LockBreakdown {
+  locked: number
+  unlockable: number
+  total: number
+}
+
+/**
+ * Lock analytics card. Time-series "value locked / locks over time" needs the
+ * HookSwap indexer (not live) → honest empty state, never a fabricated series.
+ * When the user has REAL locks, a live Locked/Unlockable status split IS shown
+ * (computed from on-chain unlock times).
+ */
+function LockAnalyticsCard({
+  breakdown,
+  loading,
+}: {
+  breakdown?: LockBreakdown
+  loading: boolean
+}): JSX.Element {
+  const hasData = Boolean(breakdown && breakdown.total > 0)
+  const lockedPct = hasData ? (breakdown!.locked / breakdown!.total) * 100 : 0
+  const unlockablePct = hasData ? (breakdown!.unlockable / breakdown!.total) * 100 : 0
+
+  return (
+    <Panel>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+        <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: terminalColors.ink }}>
+          Lock analytics
+        </span>
+        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.06em', color: terminalColors.ink3Alt }}>
+          {hasData ? 'YOUR LOCKS' : 'INDEXER PENDING'}
+        </span>
+      </div>
+
+      {loading ? (
+        <div style={{ height: 14, borderRadius: 999, background: terminalColors.line2 }} aria-busy="true" />
+      ) : hasData ? (
+        <>
+          <div style={{ display: 'flex', height: 14, borderRadius: 999, overflow: 'hidden', background: terminalColors.panel2 }}>
+            {breakdown!.locked > 0 ? (
+              <div title={`Locked · ${breakdown!.locked}`} style={{ width: `${lockedPct}%`, background: terminalColors.ink3 }} />
+            ) : null}
+            {breakdown!.unlockable > 0 ? (
+              <div title={`Unlockable · ${breakdown!.unlockable}`} style={{ width: `${unlockablePct}%`, background: terminalColors.greenUp }} />
+            ) : null}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 9, height: 9, borderRadius: '50%', background: terminalColors.ink3 }} />
+              <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink2 }}>Locked</span>
+              <span style={{ fontFamily: MONO, fontSize: 12.5, color: terminalColors.ink }}>{breakdown!.locked}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 9, height: 9, borderRadius: '50%', background: terminalColors.greenUp }} />
+              <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink2 }}>Unlockable</span>
+              <span style={{ fontFamily: MONO, fontSize: 12.5, color: terminalColors.greenDeep }}>{breakdown!.unlockable}</span>
+            </div>
+          </div>
+          <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 12, lineHeight: 1.5 }}>
+            Live status from your on-chain locks. Value-locked and locks-over-time charts arrive with the HookSwap indexer.
+          </div>
+        </>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 8, padding: '18px 12px' }}>
+          <PadlockGraphic />
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink2 }}>
+            Lock analytics go live with the HookSwap indexer.
+          </div>
+          <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.faint, maxWidth: 300, lineHeight: 1.5 }}>
+            Historical value-locked and lock-count charts need the indexer (not live yet). Your live locks appear in the
+            tabs below.
+          </div>
+        </div>
+      )}
+    </Panel>
+  )
+}
+
 /* ------------------------------------------------------------------ the screen */
 
 export function LockerScreen(): JSX.Element {
@@ -1041,6 +1231,7 @@ export function LockerScreen(): JSX.Element {
   const lockerAddrs = getLockerAddresses(chainId)
   const tokenManager = lockerAddrs?.tokenLockerManager
   const v3Locker = lockerAddrs?.v3PositionLocker
+  const deployed = Boolean(tokenManager || v3Locker)
 
   // Total locked count (real read) — "—" until deployed.
   const countRead = useReadContract({
@@ -1051,6 +1242,54 @@ export function LockerScreen(): JSX.Element {
     query: { enabled: Boolean(tokenManager && chainId) },
   })
   const totalCount = countRead.data as bigint | undefined
+
+  // Lock fee (real read) — denominated in the chain's native gas token.
+  const lockFeeRead = useReadContract({
+    address: tokenManager,
+    chainId,
+    abi: tokenLockerManagerAbi,
+    functionName: 'lockFee',
+    query: { enabled: Boolean(tokenManager && chainId) },
+  })
+  const lockFee = lockFeeRead.data as bigint | undefined
+  const native = chainId ? getChainInfo(chainId).nativeCurrency : undefined
+
+  // The user's real locks (both kinds) — drive "Your locks" + the status split.
+  // wagmi dedupes these identical reads with the per-tab copies (same query keys).
+  const tokenLocks = useTokenLocks(tokenManager, owner, chainId)
+  const v3Locks = useV3Locks(v3Locker, owner, chainId)
+
+  const locksLoading =
+    connected &&
+    deployed &&
+    !tokenLocks.error &&
+    !v3Locks.error &&
+    (tokenLocks.rows === undefined || v3Locks.rows === undefined)
+
+  const breakdown = useMemo((): LockBreakdown | undefined => {
+    if (!connected || !deployed) {
+      return undefined
+    }
+    const rows = [...(tokenLocks.rows ?? []), ...(v3Locks.rows ?? [])]
+    if (rows.length === 0) {
+      return { locked: 0, unlockable: 0, total: 0 }
+    }
+    const now = Math.floor(Date.now() / 1000)
+    const unlockable = rows.filter((r) => r.unlockTime <= now).length
+    return { locked: rows.length - unlockable, unlockable, total: rows.length }
+  }, [connected, deployed, tokenLocks.rows, v3Locks.rows])
+
+  const yourLocksCount = (tokenLocks.rows?.length ?? 0) + (v3Locks.rows?.length ?? 0)
+
+  // Stat-tile display values (honest "—" when disconnected / not deployed).
+  const totalLocksValue = !deployed ? '—' : totalCount !== undefined ? String(totalCount) : undefined
+  const yourLocksValue = !connected || !deployed ? '—' : locksLoading ? undefined : String(yourLocksCount)
+  const lockFeeValue = !deployed
+    ? '—'
+    : lockFee !== undefined
+      ? `${formatUnits(lockFee, native?.decimals ?? 18)} ${native?.symbol ?? ''}`.trim()
+      : undefined
+  const networkValue = !connected ? '—' : deployed ? chainLabel : 'Not live'
 
   const onConnect = (): void => accountDrawer.open()
 
@@ -1084,6 +1323,38 @@ export function LockerScreen(): JSX.Element {
       <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink2, marginBottom: 18, maxWidth: 560, lineHeight: 1.5 }}>
         Lock ERC-20 tokens, Uniswap-V2 LP, or Uniswap-v3 positions until a chosen unlock time. Proof-of-lock for your
         community — v3 positions keep earning fees while locked.
+      </div>
+
+      {/* Stat tiles — real contract reads (honest "—" when not deployed / disconnected). */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
+        <StatCard
+          size="lg"
+          label="Total locks"
+          value={totalLocksValue}
+          loading={deployed && countRead.isLoading && totalCount === undefined}
+          error={countRead.error ? 'Failed to load' : undefined}
+        />
+        <StatCard size="lg" label="Your locks" value={yourLocksValue} loading={Boolean(locksLoading)} />
+        <StatCard
+          size="lg"
+          label="Lock fee"
+          value={lockFeeValue}
+          loading={deployed && lockFeeRead.isLoading && lockFee === undefined}
+          error={lockFeeRead.error ? 'Failed to load' : undefined}
+        />
+        <StatCard size="lg" label="Network" value={networkValue} valueColor={deployed ? 'up' : 'ink'} />
+      </div>
+
+      {/* Lock analytics — honest indexer-pending empty state, or a real status split. */}
+      <div style={{ marginBottom: 20 }}>
+        <LockAnalyticsCard breakdown={breakdown} loading={Boolean(locksLoading)} />
       </div>
 
       {/* Tabs */}
