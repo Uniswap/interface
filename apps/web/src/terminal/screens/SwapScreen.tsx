@@ -490,7 +490,7 @@ function BreakdownRow({
   )
 }
 
-function SwapTicket(): JSX.Element {
+export function SwapTicket(): JSX.Element {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
   const navigate = useNavigate()
