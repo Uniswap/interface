@@ -18,6 +18,7 @@ import {
 // legacy Landing/Swap pages stay in the tree but are no longer routed there
 // (SwapPage still backs /buy, /sell, /send and /limit).
 import { SwapPage } from '~/pages/Swap'
+import TerminalLandingPage from '~/terminal/TerminalLandingPage'
 import TerminalSwapPage from '~/terminal/TerminalSwapPage'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
@@ -138,7 +139,7 @@ export const routes: RouteDefinition[] = [
       return args.browserRouterEnabled && args.hash ? (
         <Navigate to={args.hash.replace('#', '')} replace />
       ) : (
-        <TerminalSwapPage />
+        <TerminalLandingPage />
       )
     },
   }),

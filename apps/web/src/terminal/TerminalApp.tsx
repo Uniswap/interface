@@ -51,7 +51,8 @@ const TERMINAL_BASE = '/terminal'
  * Handles both the core mounts (`/`, `/swap`) and the `/terminal/*` namespace.
  */
 function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
-  if (pathname === '/' || pathname === '/swap' || pathname.startsWith('/swap/')) {
+  // `/` is the Landing page (not a rail item) → no active pill. `/swap` is Swap.
+  if (pathname === '/swap' || pathname.startsWith('/swap/')) {
     return 'swap'
   }
   // Legacy (non-Terminal) routes surfaced in the rail — highlight their pill too.

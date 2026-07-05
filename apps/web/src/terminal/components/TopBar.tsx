@@ -98,23 +98,27 @@ export function TopBar({
 
       {/* Right cluster */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-        {/* Gas pill (mono) */}
-        <span
-          style={{
-            ...FIELD_BASE,
-            gap: 6,
-            height: 32,
-            padding: '0 11px',
-            fontSize: 12,
-            fontFamily: terminalFonts.mono,
-            color: terminalColors.ink2,
-          }}
-        >
-          <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={terminalColors.warn} strokeWidth={2}>
-            <path d="M13 2L3 14h7l-1 8 10-12h-7z" />
-          </svg>
-          {gas ? `${gas.gwei} gwei` : '— gwei'}
-        </span>
+        {/* Gas pill (mono) — only shown when a real gwei reading is available;
+            no live gas oracle for the custom chains yet, so hide rather than
+            render a permanent empty "— gwei". */}
+        {gas ? (
+          <span
+            style={{
+              ...FIELD_BASE,
+              gap: 6,
+              height: 32,
+              padding: '0 11px',
+              fontSize: 12,
+              fontFamily: terminalFonts.mono,
+              color: terminalColors.ink2,
+            }}
+          >
+            <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={terminalColors.warn} strokeWidth={2}>
+              <path d="M13 2L3 14h7l-1 8 10-12h-7z" />
+            </svg>
+            {gas.gwei} gwei
+          </span>
+        ) : null}
 
         {/* Chain selector */}
         <span
