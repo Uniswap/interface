@@ -3,6 +3,7 @@ import { HookLogo } from '~/terminal/components/HookLogo'
 import { NavIcon } from '~/terminal/components/NavIcon'
 import {
   terminalAccountNav,
+  terminalResourcesNav,
   terminalTradeNav,
   TerminalNavItem,
   TerminalScreenId,
@@ -44,28 +45,21 @@ function NavRow({
   active: boolean
   onNavigate?: LeftRailProps['onNavigate']
 }): JSX.Element {
-  return (
-    <div
-      role="link"
-      tabIndex={0}
-      onClick={() => onNavigate?.(item.path, item.id)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          onNavigate?.(item.path, item.id)
-        }
-      }}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 11,
-        padding: '9px 10px 9px 12px',
-        borderRadius: 10,
-        cursor: 'pointer',
-        background: active ? terminalColors.bg : 'transparent',
-        boxShadow: active ? '0 1px 2px rgba(11,15,20,.05)' : undefined,
-      }}
-    >
+  const isExternal = Boolean(item.externalHref)
+  const rowStyle: CSSProperties = {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 11,
+    padding: '9px 10px 9px 12px',
+    borderRadius: 10,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    background: active ? terminalColors.bg : 'transparent',
+    boxShadow: active ? '0 1px 2px rgba(11,15,20,.05)' : undefined,
+  }
+  const inner = (
+    <>
       {active ? (
         <span
           style={{
@@ -82,6 +76,7 @@ function NavRow({
       <NavIcon name={item.icon} stroke={active ? terminalColors.ink : terminalColors.railIconInactive} />
       <span
         style={{
+          flex: 1,
           fontSize: 14,
           fontWeight: active ? 600 : 500,
           color: active ? terminalColors.ink : terminalColors.ink2,
@@ -89,6 +84,35 @@ function NavRow({
       >
         {item.label}
       </span>
+      {isExternal ? (
+        <span aria-hidden style={{ fontSize: 12, color: terminalColors.ink3Alt, lineHeight: 1 }}>
+          ↗
+        </span>
+      ) : null}
+    </>
+  )
+
+  // External items are real anchors (new tab); internal items route via react-router.
+  if (isExternal) {
+    return (
+      <a href={item.externalHref} target="_blank" rel="noopener noreferrer" style={rowStyle}>
+        {inner}
+      </a>
+    )
+  }
+  return (
+    <div
+      role="link"
+      tabIndex={0}
+      onClick={() => onNavigate?.(item.path, item.id as TerminalScreenId)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onNavigate?.(item.path, item.id as TerminalScreenId)
+        }
+      }}
+      style={rowStyle}
+    >
+      {inner}
     </div>
   )
 }
@@ -140,7 +164,14 @@ export function LeftRail({
         ))}
       </div>
 
-      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ ...SECTION_LABEL, padding: '20px 10px 8px' }}>MORE</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {terminalResourcesNav.map((item) => (
+          <NavRow key={item.id} item={item} active={isActive(item)} onNavigate={onNavigate} />
+        ))}
+      </div>
+
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 16 }}>
         {/* Wallet chip (dark) */}
         <div
           role="button"

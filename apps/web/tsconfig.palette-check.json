@@ -1,10 +1,5 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "composite": false,
-    "noEmit": true
-  },
-  "include": [],
+  "extends": "./tsconfig.terminal-check.json",
   "files": [
     "src/env.d.ts",
     "src/react-app-env.d.ts",
@@ -16,9 +11,9 @@
     "src/terminal/components/Modal.tsx",
     "src/terminal/components/NotificationRow.tsx",
     "src/terminal/components/CommandPalette.tsx",
+    "src/terminal/components/TerminalCommandPalette.tsx",
     "src/terminal/config/hooksGate.ts",
     "src/terminal/screens/SwapScreen.tsx",
-    "src/terminal/screens/LandingScreen.tsx",
     "src/terminal/screens/MarketsScreen.tsx",
     "src/terminal/screens/PoolsScreen.tsx",
     "src/terminal/screens/PortfolioScreen.tsx",

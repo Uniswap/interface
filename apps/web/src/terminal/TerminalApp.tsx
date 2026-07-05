@@ -14,19 +14,30 @@
  * `AppLayout` (no legacy Header), the chrome mounts the app's real AccountDrawer
  * in a portal so connect-wallet still works.
  */
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { AccountDrawer } from '~/components/AccountDrawer'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { Portal } from '~/components/Popups/Portal'
 import { useAccount } from '~/hooks/useAccount'
+import { useSelectChain } from '~/hooks/useSelectChain'
+import { TerminalCommandPalette } from '~/terminal/components/TerminalCommandPalette'
 import { TerminalShell } from '~/terminal/components/TerminalShell'
-import { terminalScreens, TerminalScreenId } from '~/terminal/config/screens'
-import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
-import { SwapScreen } from '~/terminal/screens/SwapScreen'
+import { TerminalScreenId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
+import { ActivityScreen } from '~/terminal/screens/ActivityScreen'
+import { AnalyticsScreen } from '~/terminal/screens/AnalyticsScreen'
+import { LandingScreen } from '~/terminal/screens/LandingScreen'
+import { MarketDetailScreen } from '~/terminal/screens/MarketDetailScreen'
+import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
+import { PoolsScreen } from '~/terminal/screens/PoolsScreen'
+import { PortfolioScreen } from '~/terminal/screens/PortfolioScreen'
+import { SettingsScreen } from '~/terminal/screens/SettingsScreen'
+import { SwapScreen } from '~/terminal/screens/SwapScreen'
 
 const TERMINAL_BASE = '/terminal'
 
@@ -72,6 +83,105 @@ function shortenAddress(address: string): string {
 }
 
 /**
+ * Chain switcher dropdown, rendered in the top bar's `actions` slot. Lists the
+ * app's real enabled chains (`useEnabledChains`) and switches the connected
+ * wallet via `useSelectChain` (wagmi). No hardcoded chain list — all live.
+ */
+function ChainSwitcherMenu({
+  chains,
+  activeChainId,
+  onSelect,
+  onClose,
+}: {
+  chains: readonly UniverseChainId[]
+  activeChainId?: number
+  onSelect: (id: UniverseChainId) => void
+  onClose: () => void
+}): JSX.Element {
+  return (
+    <>
+      {/* Click-away backdrop */}
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: 46,
+          right: 22,
+          minWidth: 220,
+          maxHeight: 360,
+          overflowY: 'auto',
+          background: terminalColors.bg,
+          border: `1px solid ${terminalColors.line}`,
+          borderRadius: 12,
+          boxShadow: '0 14px 34px -12px rgba(11,15,20,.30)',
+          padding: 6,
+          zIndex: 41,
+          fontFamily: terminalFonts.sans,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: terminalFonts.mono,
+            fontSize: 10.5,
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            color: terminalColors.ink3Alt,
+            padding: '6px 10px 8px',
+          }}
+        >
+          SWITCH NETWORK
+        </div>
+        {chains.map((id) => {
+          const active = id === activeChainId
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onSelect(id)}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 9,
+                padding: '9px 10px',
+                borderRadius: 9,
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                background: active ? terminalColors.panel : 'transparent',
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: active ? terminalColors.brandGreen : terminalColors.line2,
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  flex: 1,
+                  fontSize: 13,
+                  fontWeight: active ? 600 : 500,
+                  color: terminalColors.ink,
+                }}
+              >
+                {getChainLabel(id)}
+              </span>
+              {active ? (
+                <span style={{ fontSize: 11, color: terminalColors.greenDeep, fontWeight: 600 }}>●</span>
+              ) : null}
+            </button>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
+/**
  * Terminal shell wired to live app data (chain, wallet, portfolio total) and
  * react-router navigation. Also mounts the app's real AccountDrawer (portal) so
  * connect-wallet works on Terminal routes, which bypass the legacy Header.
@@ -88,6 +198,24 @@ export function TerminalChrome({
   const navigate = useNavigate()
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
+  const selectChain = useSelectChain()
+  const { chains: enabledChains } = useEnabledChains()
+
+  // Chain switcher — chrome owns the open/close of the top-bar chain menu.
+  const [chainMenuOpen, setChainMenuOpen] = useState(false)
+
+  // B11 command palette — chrome owns open/close (⌘K / Ctrl+K + top-bar search).
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent): void {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const resolvedActiveId = activeId ?? activeScreenIdFromPath(location.pathname)
 
@@ -120,13 +248,22 @@ export function TerminalChrome({
         }}
         topBar={{
           searchPlaceholder: 'Search markets, tokens…',
-          // TODO(B11): open the command palette.
-          onSearchClick: () => undefined,
+          onSearchClick: () => setPaletteOpen(true),
           // TODO(data): live gas oracle (gwei). Omitted renders the skeleton.
           gas: undefined,
           chain,
-          // TODO: chain switcher.
-          onChainClick: () => undefined,
+          onChainClick: () => setChainMenuOpen((prev) => !prev),
+          actions: chainMenuOpen ? (
+            <ChainSwitcherMenu
+              chains={enabledChains}
+              activeChainId={account.chainId}
+              onSelect={async (id) => {
+                setChainMenuOpen(false)
+                await selectChain(id)
+              }}
+              onClose={() => setChainMenuOpen(false)}
+            />
+          ) : undefined,
         }}
       >
         {children}
@@ -136,35 +273,8 @@ export function TerminalChrome({
       <Portal>
         <AccountDrawer />
       </Portal>
+      <TerminalCommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </>
-  )
-}
-
-/**
- * Placeholder for Terminal screens that are being built in parallel. Keeps rail
- * navigation from 404-ing while other B-screens land. Real screens replace this
- * as they are added to the internal <Routes>.
- */
-function ComingSoonScreen({ code, title }: { code: string; title: string }): JSX.Element {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        height: '100%',
-        minHeight: 480,
-        fontFamily: terminalFonts.sans,
-      }}
-    >
-      <div style={{ fontFamily: terminalFonts.mono, fontSize: 12, color: terminalColors.ink3Alt }}>{code}</div>
-      <div style={{ fontFamily: terminalFonts.display, fontSize: 22, fontWeight: 600, color: terminalColors.ink }}>
-        {title}
-      </div>
-      <div style={{ fontSize: 13, color: terminalColors.ink2 }}>This Terminal screen is under construction.</div>
-    </div>
   )
 }
 
@@ -173,24 +283,17 @@ export default function TerminalApp(): JSX.Element {
     <TerminalChrome>
       <Routes>
         <Route index element={<Navigate to="swap" replace />} />
+        <Route path="landing" element={<LandingScreen />} />
         <Route path="swap" element={<SwapScreen />} />
         <Route path="markets" element={<MarketsScreen />} />
-        {/* Screens built in parallel — placeholders until their B-screen lands. */}
-        <Route
-          path="markets/:poolId"
-          element={<ComingSoonScreen code="B6" title={terminalScreens['market-detail'].title} />}
-        />
-        <Route
-          path="pools/new"
-          element={<ComingSoonScreen code="B4" title={terminalScreens['create-position'].title} />}
-        />
-        <Route path="portfolio" element={<ComingSoonScreen code="B5" title={terminalScreens.portfolio.title} />} />
-        <Route path="analytics" element={<ComingSoonScreen code="B10" title={terminalScreens.analytics.title} />} />
-        <Route path="settings" element={<ComingSoonScreen code="B12" title={terminalScreens.settings.title} />} />
-        <Route
-          path="notifications"
-          element={<ComingSoonScreen code="B13" title={terminalScreens.notifications.title} />}
-        />
+        <Route path="pools/new" element={<PoolsScreen />} />
+        <Route path="pools" element={<PoolsScreen />} />
+        <Route path="portfolio" element={<PortfolioScreen />} />
+        <Route path="activity" element={<ActivityScreen />} />
+        <Route path="notifications" element={<ActivityScreen />} />
+        <Route path="markets/:poolId" element={<MarketDetailScreen />} />
+        <Route path="analytics" element={<AnalyticsScreen />} />
+        <Route path="settings" element={<SettingsScreen />} />
         <Route path="*" element={<Navigate to="swap" replace />} />
       </Routes>
     </TerminalChrome>

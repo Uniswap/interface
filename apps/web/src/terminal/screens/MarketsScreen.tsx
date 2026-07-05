@@ -5,7 +5,10 @@
  * `design_handoff_hookswap_terminal/screenshots/B03-markets.png` and the B3 markup
  * in `design/HookSwap Redesign.dc.html`: a title + filter chips, a 6-tile top-movers
  * heatmap, and a dense sortable table (Pair · Price · 24H · 7D · Volume · TVL ·
- * Fees 24h · APR · Hook · 7d sparkline).
+ * Fees 24h · APR · 7d sparkline).
+ *
+ * HookSwap ships v2 + v3 only (locked decision 2026-07-04) — there is NO hook
+ * column, hook badge, or hook filter anywhere in this screen.
  *
  * DATA POLICY (no mock data — handoff hard rule):
  *   • Pool rows — LIVE from the app's real Explore pools layer (`useTopPools` →
@@ -19,9 +22,6 @@
  *   • 7D price change — the Explore stats feed only exposes 1h/1d change, so this
  *     column renders an honest "—" (TODO: wire once a 7d series is available). It is
  *     NEVER fabricated.
- *   • Hook badge — GATED behind `useHooksV4Enabled()` (v4 excluded for launch). A
- *     neutral "Hook" pill shows only when a pool actually carries a hook address; no
- *     fabricated hook categories (Dyn Fee / TWAMM / …) are invented.
  *
  * Loading / empty / error states are all real (the reused DataTable + StatCard-style
  * heatmap tiles render skeletons while the queries are in flight).
@@ -45,7 +45,6 @@ import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import { SparklineCell } from '~/terminal/components/SparklineCell'
-import { useHooksV4Enabled } from '~/terminal/config/hooksGate'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import type { PoolStat } from '~/types/explore'
 
@@ -84,10 +83,9 @@ interface MarketRow {
   fees24h?: number
   aprPercent: number
   aprText: string
-  hookAddress?: string
 }
 
-type MarketFilter = 'all' | 'hook' | 'stable' | 'new'
+type MarketFilter = 'all' | 'stable' | 'new'
 
 /** Symbols treated as stablecoins for the "Stable" filter chip. */
 const STABLES = new Set([
@@ -109,11 +107,6 @@ const STABLES = new Set([
   'PYUSD',
   'USDS',
 ])
-
-/** True when a pool carries a real (non-zero) hook address. */
-function isRealHook(address: string | undefined): boolean {
-  return address !== undefined && address !== '' && !/^0x0+$/i.test(address)
-}
 
 /** Signed percent, 1 decimal: 14.6 → "+14.6%", -3.4 → "-3.4%". */
 function formatSignedPct(value: number): string {
@@ -206,7 +199,6 @@ function buildRows(pools: PoolStat[] | undefined, maps: TokenMetricMaps): Market
       fees24h,
       aprPercent: Number(pool.apr.toFixed(4)),
       aprText: `${pool.apr.toFixed(1)}%`,
-      hookAddress: pool.hookAddress,
     }
   })
 }
@@ -216,8 +208,6 @@ function applyFilter(rows: MarketRow[] | undefined, filter: MarketFilter): Marke
     return undefined
   }
   switch (filter) {
-    case 'hook':
-      return rows.filter((row) => isRealHook(row.hookAddress))
     case 'stable':
       return rows.filter((row) => STABLES.has(row.symbol0.toUpperCase()) && STABLES.has(row.symbol1.toUpperCase()))
     case 'new':
@@ -260,7 +250,6 @@ function buildMovers(tokens: readonly MultichainToken[]): Mover[] {
 
 const FILTER_CHIPS: ReadonlyArray<{ id: MarketFilter; label: string }> = [
   { id: 'all', label: 'All pools' },
-  { id: 'hook', label: 'Hook-enabled' },
   { id: 'stable', label: 'Stable' },
   { id: 'new', label: 'New' },
 ]
@@ -401,7 +390,6 @@ function PairCell({ row }: { row: MarketRow }): JSX.Element {
 function MarketsScreenBody(): JSX.Element {
   const [filter, setFilter] = useState<MarketFilter>('all')
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const hooksEnabled = useHooksV4Enabled()
   const { chains } = useEnabledChains()
 
   // Real pool data (all enabled networks; ExploreContext defaults to all-networks).
@@ -423,11 +411,9 @@ function MarketsScreenBody(): JSX.Element {
   const emptyMessage =
     filter === 'new'
       ? 'New-pool data requires the self-hosted indexer feed (not yet wired).'
-      : filter === 'hook'
-        ? 'No hook-enabled pools — hooks arrive with Uniswap v4.'
-        : filter === 'stable'
-          ? 'No stablecoin pools in the current data set.'
-          : 'No markets found.'
+      : filter === 'stable'
+        ? 'No stablecoin pools in the current data set.'
+        : 'No markets found.'
 
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
@@ -518,13 +504,6 @@ function MarketsScreenBody(): JSX.Element {
         sortValue: (row) => row.aprPercent,
       },
       {
-        id: 'hook',
-        header: 'Hook',
-        width: 'minmax(96px,1fr)',
-        align: 'center',
-        cell: (row) => <HookCell row={row} hooksEnabled={hooksEnabled} />,
-      },
-      {
         id: 'sparkline',
         header: '7d',
         width: '96px',
@@ -539,7 +518,7 @@ function MarketsScreenBody(): JSX.Element {
           ),
       },
     ],
-    [convertFiatAmountFormatted, hooksEnabled],
+    [convertFiatAmountFormatted],
   )
 
   return (
@@ -598,48 +577,34 @@ function MarketsScreenBody(): JSX.Element {
       {/* Top-movers heatmap (live, from the token list) */}
       <TopMovers tokens={topTokens} loading={tokensLoading} />
 
-      {/* Dense markets table (reused Terminal DataTable primitive) */}
-      <DataTable<MarketRow>
-        columns={columns}
-        rows={filteredRows}
-        rowKey={(row) => row.key}
-        loading={poolsLoading}
-        error={poolsError ? 'Failed to load markets.' : undefined}
-        emptyMessage={emptyMessage}
-        initialSort={{ columnId: 'tvl', direction: 'desc' }}
-        skeletonRows={8}
-      />
+      {/*
+        Dense markets table (reused Terminal DataTable primitive). The DataTable is a
+        CSS grid whose column minimums sum wider than the content area at narrow
+        widths, so it lives in its own `overflowX:auto` scroll container — the table
+        scrolls horizontally INSIDE this box and never widens the page (header, chips,
+        heatmap and note stay put). `minWidth:0` lets the wrapper shrink with the rail.
+      */}
+      <div style={{ overflowX: 'auto', minWidth: 0 }}>
+        <div style={{ minWidth: 720 }}>
+          <DataTable<MarketRow>
+            columns={columns}
+            rows={filteredRows}
+            rowKey={(row) => row.key}
+            loading={poolsLoading}
+            error={poolsError ? 'Failed to load markets.' : undefined}
+            emptyMessage={emptyMessage}
+            initialSort={{ columnId: 'tvl', direction: 'desc' }}
+            skeletonRows={8}
+          />
+        </div>
+      </div>
 
       {/* Honest data-provenance note (visible-but-muted; no fabricated values). */}
       <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 14, lineHeight: 1.5 }}>
-        Price · 24H · 7d spark join the live token feed by pool base token; 7D change and hook categories arrive with
-        the v4 indexer.
+        Price · 24H · 7d spark join the live token feed by pool base token; 7D change arrives with the self-hosted
+        indexer feed.
       </div>
     </div>
-  )
-}
-
-function HookCell({ row, hooksEnabled }: { row: MarketRow; hooksEnabled: boolean }): JSX.Element {
-  if (!isRealHook(row.hookAddress)) {
-    return <span style={{ fontFamily: MONO, fontSize: 12.5, color: terminalColors.faint }}>—</span>
-  }
-  return (
-    <span
-      title={hooksEnabled ? row.hookAddress : 'Pool carries a v4 hook — hook detail arrives with v4'}
-      style={{
-        fontFamily: MONO,
-        fontSize: 10.5,
-        fontWeight: 600,
-        color: terminalColors.greenDeep,
-        background: terminalColors.greenBg,
-        border: `1px solid ${terminalColors.greenBorder}`,
-        padding: '2px 7px',
-        borderRadius: 6,
-        whiteSpace: 'nowrap',
-      }}
-    >
-      Hook
-    </span>
   )
 }
 

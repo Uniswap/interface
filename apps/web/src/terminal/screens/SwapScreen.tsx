@@ -193,11 +193,35 @@ function MarketListPanel(): JSX.Element {
 
 /* -------------------------------------------------------------- chart panel */
 
-function HeaderStat({ label, value, valueColor }: { label: string; value: string; valueColor?: string }): JSX.Element {
+function HeaderStat({
+  label,
+  value,
+  valueColor,
+  size = 14,
+  weight,
+}: {
+  label: string
+  value: string
+  valueColor?: string
+  /** Prototype: Price value is 15px; all other stats 14px. */
+  size?: number
+  /** Prototype: only Price is weight 600. */
+  weight?: number
+}): JSX.Element {
   return (
     <div>
-      <div style={{ fontSize: 10.5, color: terminalColors.ink3Alt }}>{label}</div>
-      <div style={{ fontFamily: MONO, fontSize: 14, color: valueColor ?? terminalColors.ink2 }}>{value}</div>
+      <div style={{ fontSize: 10.5, color: terminalColors.ink3Alt, whiteSpace: 'nowrap' }}>{label}</div>
+      <div
+        style={{
+          fontFamily: MONO,
+          fontSize: size,
+          fontWeight: weight,
+          color: valueColor ?? terminalColors.ink2,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {value}
+      </div>
     </div>
   )
 }
@@ -251,9 +275,11 @@ function ChartPanel({
           </div>
         </div>
         <div style={{ display: 'flex', gap: 26, alignItems: 'center' }}>
-          <HeaderStat label="Price" value={priceLabel} valueColor={terminalColors.ink} />
+          {/* Prototype line 431: Price is 15px / weight 600 / ink; the rest are
+              14px. 24h % is green (#12B866); high / low / vol are secondary ink. */}
+          <HeaderStat label="Price" value={priceLabel} valueColor={terminalColors.ink} size={15} weight={600} />
           {/* TODO(data): 24h change / high / low / volume from pool day data. */}
-          <HeaderStat label="24h" value="—" />
+          <HeaderStat label="24h" value="—" valueColor={terminalColors.greenUp} />
           <HeaderStat label="24h high" value="—" />
           <HeaderStat label="24h low" value="—" />
           <HeaderStat label="24h vol" value="—" />
@@ -663,7 +689,7 @@ function SwapTicket(): JSX.Element {
           width: '100%',
           background: 'transparent',
           border: 'none',
-          marginTop: 14,
+          marginTop: 12,
           padding: 2,
           cursor: 'pointer',
         }}

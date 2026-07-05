@@ -2,6 +2,11 @@
 
 > Living scratchpad so we stay on track. Update as decisions land. This is a **fork of the Uniswap interface monorepo** (Uniswap Labs front-end: web + mobile + extension). We are rebranding it to **HookSwap** and shipping on new chains.
 
+## ⛔ MANDATORY WORKING RULE — FACTS ONLY, NEVER GUESS (from Reggie, indefinite)
+- **Do not guess, infer, assume, or say "probably/likely/should be."** Every claim about the code, data, routing, deploys, or state MUST be verified by reading the actual file/route/query/output FIRST, then stated as a fact with the source.
+- If something is not yet verified, say **"not verified yet"** and go verify it — do not fill the gap with a plausible-sounding answer.
+- This applies to status reports, "what's built", data sources (real vs mock), addresses, and every recommendation. No exceptions. This rule is permanent.
+
 ## North Star
 - **Name:** HookSwap · **URL:** https://hookswap.xyz
 - **Brand system:** "Atlas" from the handoff kit — Paper `#f4f5f1`, Card `#fff`, Ink `#0d100c`, primary accent "Acid ink" `#0c8a42` (green text/CTAs), Acid fill `#38e07b`, danger `#c0291f`, gold `#c79212`. Fonts: Inter (UI) + JetBrains Mono (numbers).

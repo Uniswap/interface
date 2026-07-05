@@ -25,7 +25,10 @@ export type TerminalScreenId =
   | 'settings' // B12
   | 'notifications' // B13
 
-export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'portfolio' | 'activity'
+export type TerminalNavIcon = 'swap' | 'markets' | 'pools' | 'portfolio' | 'activity' | 'analytics' | 'settings' | 'docs'
+
+/** External documentation site (opens in a new tab; not an in-app route). */
+export const HOOKSWAP_DOCS_URL = 'https://hookswap.xyz/docs'
 
 export interface TerminalScreen {
   id: TerminalScreenId
@@ -90,10 +93,12 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
 }
 
 export interface TerminalNavItem {
-  id: TerminalScreenId
+  id: TerminalScreenId | 'docs'
   label: string
   icon: TerminalNavIcon
   path: string
+  /** When set, the item is an external link opened in a new tab (not an in-app route). */
+  externalHref?: string
 }
 
 /**
@@ -107,14 +112,21 @@ export interface TerminalNavItem {
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
   { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
-  // TODO(B4): '/terminal/pools/new' once Create position is ported.
-  { id: 'create-position', label: 'Pools', icon: 'pools', path: '/positions' },
+  { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
+  { id: 'analytics', label: 'Analytics', icon: 'analytics', path: `${TERMINAL_BASE}/analytics` },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */
 export const terminalAccountNav: TerminalNavItem[] = [
-  // TODO(B5): '/terminal/portfolio' once the Portfolio screen is ported.
-  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: '/portfolio' },
-  // TODO(B13): '/terminal/notifications' once the Activity feed is ported.
-  { id: 'notifications', label: 'Activity', icon: 'activity', path: '/portfolio/activity' },
+  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: `${TERMINAL_BASE}/portfolio` },
+  { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
+]
+
+/**
+ * MORE section — surfaced in the rail below ACCOUNT. Settings is an in-app route;
+ * Docs is an external link (opens hookswap.xyz/docs in a new tab).
+ */
+export const terminalResourcesNav: TerminalNavItem[] = [
+  { id: 'settings', label: 'Settings', icon: 'settings', path: `${TERMINAL_BASE}/settings` },
+  { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_DOCS_URL, externalHref: HOOKSWAP_DOCS_URL },
 ]
