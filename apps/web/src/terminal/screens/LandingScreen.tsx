@@ -550,7 +550,7 @@ function LandingScreenBody(): JSX.Element {
     isLoading: poolsLoading,
     isError: poolsError,
   } = useTopPools({
-    sortState: { sortBy: PoolSortFields.VOLUME_24H, sortDirection: OrderDirection.Desc },
+    sortState: { sortBy: PoolSortFields.Volume24h, sortDirection: OrderDirection.Desc },
   })
   // Real protocol stats — feeds the TVL + 24h volume stat cells.
   const tvlStats = useDailyTVLWithChange()
