@@ -232,7 +232,21 @@ export function LeftRail({
           padding: collapsed ? '2px 0 20px' : '2px 4px 22px 8px',
         }}
       >
-        <HookLogo size={25} textSize="18px" showText={!collapsed} />
+        <span
+          role="link"
+          tabIndex={0}
+          aria-label="HookSwap home"
+          title="Home"
+          onClick={() => onNavigate?.('/', 'landing')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onNavigate?.('/', 'landing')
+            }
+          }}
+          style={{ cursor: 'pointer', display: 'inline-flex' }}
+        >
+          <HookLogo size={25} textSize="18px" showText={!collapsed} />
+        </span>
         <CollapseToggle collapsed={collapsed} onToggle={onToggleCollapse} />
       </div>
 
