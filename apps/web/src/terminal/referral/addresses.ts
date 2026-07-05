@@ -16,7 +16,8 @@ export const REFERRAL_ROUTER_ADDRESSES: Partial<Record<number, Address>> = {
   999: '0x250C3448278F7B71E3e9B641f2EfEb6074820e25', // HyperEVM
   57073: '0x62aE013cb2b232C20094B466C94bb39714eF661E', // Ink
   4663: '0x6d8a0783213B3b06648DB3708a89732af3661005', // Robinhood
-  // MegaETH (4326): deployer underfunded. Sepolia (11155111): pending canonical router.
+  4326: '0xB5A7BF488f2407479E116f713f116546F67c803b', // MegaETH
+  // Sepolia (11155111): pending canonical SwapRouter02.
 }
 
 export function getReferralRouter(chainId?: number | UniverseChainId): Address | undefined {

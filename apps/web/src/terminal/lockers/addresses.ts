@@ -38,7 +38,10 @@ export const LOCKER_ADDRESSES: Partial<Record<UniverseChainId, LockerAddresses>>
     v3PositionLocker: '0xB5A7BF488f2407479E116f713f116546F67c803b',
   },
   // MegaETH (4326)
-  [UniverseChainId.MegaETH]: { tokenLockerManager: undefined, v3PositionLocker: undefined },
+  [UniverseChainId.MegaETH]: {
+    tokenLockerManager: '0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker: '0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+  },
   // XLayer (196)
   [UniverseChainId.XLayer]: {
     tokenLockerManager: '0x35dB40f22143651159056285E92c113ECE65E7e2',
