@@ -27,8 +27,11 @@ export type TerminalScreenId =
 
 export type TerminalNavIcon =
   | 'swap'
+  | 'limit'
   | 'markets'
   | 'pools'
+  | 'positions'
+  | 'buy'
   | 'portfolio'
   | 'activity'
   | 'analytics'
@@ -38,6 +41,17 @@ export type TerminalNavIcon =
   | 'x'
   | 'telegram'
   | 'github'
+
+/**
+ * Rail item ids that point at LEGACY (non-Terminal) routes that still render
+ * their own pages (`/positions`, `/limit`, `/buy`). These are not B-numbered
+ * Terminal screens, so they live outside `TerminalScreenId` but still drive the
+ * rail's active pill via {@link TerminalNavId}.
+ */
+export type TerminalLegacyNavId = 'positions' | 'limit' | 'buy'
+
+/** Any id a rail nav item / active pill can take (Terminal screens + legacy routes). */
+export type TerminalNavId = TerminalScreenId | TerminalLegacyNavId
 
 /** Official HookSwap / HookOS links. External items open in a new tab. */
 export const HOOKSWAP_LINKS = {
@@ -115,7 +129,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
 }
 
 export interface TerminalNavItem {
-  id: TerminalScreenId | 'docs'
+  id: TerminalNavId | 'docs'
   label: string
   icon: TerminalNavIcon
   path: string
@@ -133,8 +147,12 @@ export interface TerminalNavItem {
  */
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
+  // Limit orders — legacy route (SwapPage in limit mode), still fully working.
+  { id: 'limit', label: 'Limit', icon: 'limit', path: '/limit' },
   { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
   { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
+  // View/manage existing liquidity positions — legacy route (Positions page).
+  { id: 'positions', label: 'Positions', icon: 'positions', path: '/positions' },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: `${TERMINAL_BASE}/analytics` },
 ]
 
@@ -142,6 +160,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
 export const terminalAccountNav: TerminalNavItem[] = [
   { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: `${TERMINAL_BASE}/portfolio` },
   { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
+  // Fiat on-ramp — legacy route (SwapPage buy flow).
+  { id: 'buy', label: 'Buy', icon: 'buy', path: '/buy' },
 ]
 
 /**

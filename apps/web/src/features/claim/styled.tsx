@@ -1,11 +1,10 @@
 import { Flex, styled } from 'ui/src'
-import uImage from '~/assets/images/big_unicorn.png'
 import noise from '~/assets/images/noise.png'
-import xlUnicorn from '~/assets/images/xl_uni.png'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 
+// HookSwap: Uniswap-governance UNI-claim art (big_unicorn.png / xl_uni.png)
+// removed. These decorative spans now render no background image.
 export const CardBGImage = deprecatedStyled.span<{ desaturate?: boolean }>`
-  background: url(${uImage});
   width: 1000px;
   height: 600px;
   position: absolute;
@@ -19,7 +18,6 @@ export const CardBGImage = deprecatedStyled.span<{ desaturate?: boolean }>`
 `
 
 export const CardBGImageSmaller = deprecatedStyled.span<{ desaturate?: boolean }>`
-  background: url(${xlUnicorn});
   width: 1200px;
   height: 1200px;
   position: absolute;

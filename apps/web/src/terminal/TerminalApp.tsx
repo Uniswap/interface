@@ -27,7 +27,7 @@ import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { TerminalCommandPalette } from '~/terminal/components/TerminalCommandPalette'
 import { TerminalShell } from '~/terminal/components/TerminalShell'
-import { TerminalScreenId } from '~/terminal/config/screens'
+import { TerminalNavId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { ActivityScreen } from '~/terminal/screens/ActivityScreen'
 import { AnalyticsScreen } from '~/terminal/screens/AnalyticsScreen'
@@ -45,9 +45,25 @@ const TERMINAL_BASE = '/terminal'
  * Map the current pathname to the active rail screen id (for the active pill).
  * Handles both the core mounts (`/`, `/swap`) and the `/terminal/*` namespace.
  */
-function activeScreenIdFromPath(pathname: string): TerminalScreenId | undefined {
+function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   if (pathname === '/' || pathname === '/swap' || pathname.startsWith('/swap/')) {
     return 'swap'
+  }
+  // Legacy (non-Terminal) routes surfaced in the rail — highlight their pill too.
+  if (pathname === '/limit' || pathname === '/limits') {
+    return 'limit'
+  }
+  if (pathname === '/buy') {
+    return 'buy'
+  }
+  if (pathname === '/positions' || pathname.startsWith('/positions/')) {
+    return 'positions'
+  }
+  if (pathname === '/portfolio' || pathname.startsWith('/portfolio/')) {
+    return 'portfolio'
+  }
+  if (pathname.startsWith('/explore') || pathname.startsWith('/tokens')) {
+    return 'markets'
   }
   if (!pathname.startsWith(TERMINAL_BASE)) {
     return undefined
@@ -191,7 +207,7 @@ export function TerminalChrome({
   children,
 }: {
   /** Overrides the pathname-derived active rail item (e.g. 'swap' on `/`). */
-  activeId?: TerminalScreenId
+  activeId?: TerminalNavId
   children: ReactNode
 }): JSX.Element {
   const location = useLocation()

@@ -28,6 +28,15 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M7 4v14M7 4L4 7M7 4l3 3M17 20V6M17 20l-3-3M17 20l3-3" />
         </svg>
       )
+    case 'limit':
+      // Limit order — a horizontal price line with a set marker.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 8h13M3 16h8" />
+          <circle cx={18} cy={8} r={2.5} />
+          <circle cx={13} cy={16} r={2.5} />
+        </svg>
+      )
     case 'markets':
       return (
         <svg {...common} strokeLinecap="round">
@@ -38,6 +47,22 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
       return (
         <svg {...common} strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 3s6 6.5 6 10.5A6 6 0 016 13.5C6 9.5 12 3 12 3z" />
+        </svg>
+      )
+    case 'positions':
+      // Liquidity positions — stacked layers.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" />
+          <path d="M4 12l8 4.5 8-4.5M4 16.5L12 21l8-4.5" />
+        </svg>
+      )
+    case 'buy':
+      // Fiat on-ramp — a payment card.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <rect x={2.5} y={5} width={19} height={14} rx={2.5} />
+          <path d="M2.5 9.5h19M6 15h4" />
         </svg>
       )
     case 'portfolio':
