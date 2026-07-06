@@ -3,15 +3,15 @@
 ## What is HookSwap?
 
 HookSwap is a decentralized exchange (DEX) for swapping tokens and providing liquidity
-across several EVM chains. It runs the well-known **Uniswap v2 + v3** automated-market-maker
-model on **HookSwap's own deployed contracts**, with swaps routed through a **Universal
-Router**.
+across several EVM chains. It runs the proven **constant-product (v2)** and
+**concentrated-liquidity (v3)** automated-market-maker model on **HookSwap's own deployed
+contracts**, with swaps routed through a **Universal Router**.
 
 - **Two pool types:** v2 (simple constant-product pools) and v3 (concentrated liquidity
   with fee tiers). See [Liquidity](./liquidity.md).
 - **Self-custody:** you trade directly from your own wallet. HookSwap never holds your funds.
 - **No hooks / no v4.** Despite the name, HookSwap ships v2 + v3 only — there are no
-  Uniswap v4 pools or hooks on any HookSwap chain. See the [FAQ](./faq.md).
+  v4 pools or hooks on any HookSwap chain. See the [FAQ](./faq.md).
 
 ## Connect a wallet
 

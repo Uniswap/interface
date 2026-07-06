@@ -10,7 +10,7 @@ machine-readable [`addresses.json`](../../launchpad-integration/addresses.json).
 
 ## What you're integrating with
 
-- HookSwap's **own** v2 + v3 + Universal Router deployments (canonical Uniswap bytecode).
+- HookSwap's **own** v2 + v3 + Universal Router deployments (standard, widely-used AMM bytecode).
 - **No v4 / no hooks** — pool creation is the classic v2 `createPair` / v3
   `NonfungiblePositionManager` path. There is no PoolManager. Do not attempt v4 flows.
 - Addresses per chain: see [contract-addresses.md](./contract-addresses.md). Init-code hashes

@@ -1,8 +1,7 @@
 # Architecture overview
 
-HookSwap is the Uniswap-interface monorepo, rebranded, pointed at **HookSwap's own deployed
-contracts**, and served by a **self-hosted** routing backend (Uniswap's hosted Trading API
-only serves Uniswap chains).
+HookSwap is a multi-chain DEX running on **its own deployed contracts**, served by a
+**self-hosted** routing backend.
 
 ## Request flow
 
@@ -10,55 +9,48 @@ only serves Uniswap chains).
 HookSwap interface (browser)
    │  POST https://trading.hookswap.org/v1/quote     (Trading API schema)
    ▼
-Trading API adapter  (Node/Express, self-hosted on a VPS)
-   │   embeds (or proxies) the smart-order-router
-   ▼
-smart-order-router (HooksOS fork)  ── reads pools + reserves via per-chain JSON-RPC
+HookSwap Trading API  (self-hosted)
+   │   computes routes against HookSwap's on-chain pools via per-chain JSON-RPC
    ▼
 HookSwap on-chain contracts:  v2 pools · v3 pools · Universal Router · Permit2
 ```
 
 - The interface does **not** compute routes itself — it calls a Trading API endpoint.
-- HookSwap replaces Uniswap's hosted endpoint with its own **Trading API adapter**, which
-  computes routes with the **smart-order-router** against HookSwap's deployed pools.
+- HookSwap's Trading API computes routes against HookSwap's deployed pools and returns quotes.
 - Quotes/swaps are then executed on-chain through the **Universal Router** (+ Permit2 for
   approvals).
 
-See [routing.md](./routing.md) for the adapter details.
+See [routing.md](./routing.md) for the Trading API details, and
+[contract addresses](./contract-addresses.md) for the deployed stack per chain.
 
-## The fork stack (HooksOS/*)
+## What HookSwap deploys
 
-15 Uniswap repos were forked into the `HooksOS` GitHub org. Relevant to integrators:
+On every chain HookSwap owns a full **v2 + v3 + Universal Router** stack:
 
-| Layer | Repo(s) | Role |
-|---|---|---|
-| Contracts (deployed) | `v2-core`, `v2-periphery`, `v3-core`, `v3-periphery`, `swap-router-contracts`, `universal-router`, `permit2` | The on-chain stack. Deployed as-is (canonical bytecode). |
-| SDKs | `sdks` (monorepo: `sdk-core`, `v2-sdk`, `v3-sdk`, `router-sdk`, `universal-router-sdk`, `permit2-sdk`) | Teaches chain IDs + HookSwap addresses. See [sdk.md](./sdk.md). |
-| Routing | `smart-order-router`, `routing-api` | Pathfinding + quoting. Self-hosted. See [routing.md](./routing.md). |
-| Indexing | `v2-subgraph`, `v3-subgraph` | Pool/liquidity indexers feeding the router. |
-| Assets | `token-lists`, `default-token-list`, `assets` | Token metadata + logos. |
-| Frontend | `HookSwap` (this repo — fork of `Uniswap/interface`) | The rebranded app. |
+- v2 factory + router
+- v3 factory + periphery (NonfungiblePositionManager, QuoterV2, tick lens, migrator, multicall)
+- SwapRouter02 + Universal Router
+- Permit2 (the canonical CREATE2 deployment, identical address everywhere)
 
-**Intentionally NOT forked:** `v4-core`, `v4-periphery`, `v4-sdk` — v4/hooks are excluded.
-Full list: [`FORK-LIST.md`](../../FORK-LIST.md).
+**No v4 / no hooks** on any chain — pool creation uses the classic v2 `createPair` and v3
+`NonfungiblePositionManager` paths.
 
-## Canonical bytecode → canonical init-code hashes
+## Init-code hashes
 
-HookSwap deploys **standard Uniswap bytecode**, so the pair/pool **init-code hashes are the
-canonical Uniswap values and identical on every chain**:
+The pair/pool **init-code hashes are canonical and identical on every chain**:
 
 | | Init code hash |
 |---|---|
 | v2 pair | `0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f` |
 | v3 pool | `0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54` |
 
-Consequence: the SDK/SOR forks only needed **factory/manager addresses** swapped in — the
-hashes are untouched. You can compute pool/pair addresses off-chain deterministically with
+Consequence: only **factory/manager addresses** differ per chain — the hashes are untouched. You
+can compute pool/pair addresses off-chain deterministically with
 `getCreate2Address(factory, salt, initCodeHash)`.
 
 ## What is and isn't done
 
-- **Done:** contracts deployed on all 6 chains; interface rebrand + address override (bridge).
-- **In progress:** the routing backend (adapter `EmbedRoutingProvider` is a marked TODO),
-  self-hosted subgraphs, and on-chain liquidity. Until those land, quotes 404. See the
-  [go-live checklist](../operators/go-live-checklist.md).
+- **Done:** contracts deployed on all 6 custom chains (Sepolia reuses the canonical testnet
+  stack); the rebranded interface pointed at HookSwap addresses.
+- **In progress:** the routing backend, indexing, and on-chain liquidity. Until those land for a
+  given chain/pair, quotes return `404 NO_ROUTE_FOUND`.

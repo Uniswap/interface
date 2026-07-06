@@ -52,6 +52,5 @@ liquidity between two prices (a **range**):
 
 - **Tempo** has no native-gas wrapper — you cannot add liquidity with native gas
   (`addLiquidityETH`). Pair tokens against `pathUSD` or another ERC-20 quote asset instead.
-- New pools may be thin. Small pools give volatile prices and shallow quotes; see the
-  operator [seed-liquidity guidance](../operators/seed-liquidity.md) for what "usable"
-  liquidity looks like.
+- New pools may be thin. Small pools give volatile prices and shallow quotes — check price
+  impact before large trades, and prefer deeper pools where available.

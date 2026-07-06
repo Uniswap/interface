@@ -5,12 +5,11 @@
 The **contracts are deployed** on all 6 custom chains (and Sepolia uses canonical Uniswap).
 But a working end-to-end swap also needs two things that are still in progress:
 
-1. the **routing backend** online (the Trading API adapter + smart-order-router), and
+1. the **routing backend** (HookSwap's Trading API) online, and
 2. **real liquidity** in the pools.
 
 Until both are true for a given chain/pair, the app may show **no route / no price**. HookSwap
 does not fabricate quotes — a missing route means there is genuinely nothing to route against.
-See the [status summary](../README.md#current-status-honest-summary).
 
 ### Which chains are supported?
 
@@ -28,12 +27,11 @@ Plus network gas in the chain's native token (on Tempo, gas is paid in the `path
 
 ### Is it audited?
 
-HookSwap does **not** publish its own independent audit. The contracts are deployed from the
-**canonical Uniswap v2 / v3 / Universal Router bytecode** — the same, widely-audited code Uniswap
-uses — with only the factory/manager **addresses** differing from Uniswap's. That is the honest
-security posture: canonical, battle-tested bytecode, but no separate HookSwap audit and no
-formal audit claim beyond upstream Uniswap's. Only the deploy configuration and the addresses
-are HookSwap-specific.
+HookSwap does **not** publish its own independent audit. The contracts are deployed from
+**standard, widely-audited v2 / v3 / Universal Router bytecode** — battle-tested code used across
+the industry — with only the factory/manager **addresses** and deploy configuration being
+HookSwap-specific. That is the honest security posture: proven bytecode, but no separate HookSwap
+audit claim.
 
 ### What wallets are supported?
 
@@ -41,12 +39,12 @@ Standard EVM wallets via injected providers and WalletConnect (MetaMask, Coinbas
 Rainbow, Ledger, etc.). Approvals use **Permit2** (the canonical deployment, same address on
 every chain). Some hosted login options (e.g. Privy) are not configured in the current build.
 
-### Does HookSwap have hooks or Uniswap v4?
+### Does HookSwap have hooks or v4?
 
-**No.** Despite the name, HookSwap ships **v2 + v3 only**. There is no Uniswap v4 PoolManager
-and no hooks deployed on any HookSwap chain. The "hook-native" branding is aspirational; those
-surfaces are gated off in the UI until a v4 stack is ever deployed. Do not attempt v4 flows —
-they do not exist on-chain.
+**No.** Despite the name, HookSwap ships **v2 + v3 only**. There is no v4 PoolManager and no
+hooks deployed on any HookSwap chain. The "hook-native" branding is aspirational; those surfaces
+are gated off in the UI until a v4 stack is ever deployed. Do not attempt v4 flows — they do not
+exist on-chain.
 
 ### Why does a token I launched not show up for routing?
 

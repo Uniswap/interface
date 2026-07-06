@@ -1,8 +1,7 @@
 # Supported chains
 
-HookSwap is deployed on 6 production chains, plus **Sepolia** for testing. Values below come
-from the in-app chain configs (`packages/uniswap/src/features/chains/evm/info/*.ts`), the
-deployment records (`contracts/deployments/*.json`), and the locked project decisions.
+HookSwap is deployed on 6 production chains, plus **Sepolia** for testing. Values below come from
+the in-app chain configs and the deployment records (`contracts/deployments/*.json`).
 
 | Chain | chainId | Native token | Wrapped native | Layer | Explorer | Default public RPC |
 |---|---|---|---|---|---|---|
@@ -28,9 +27,8 @@ LP token/token pairs (against pathUSD or another ERC-20), never native-gas flows
 
 ## Notes
 
-- Public RPCs are rate-limited; operators are expected to move to dedicated nodes for
-  production traffic. Sepolia uses Infura; the 6 custom chains use public RPCs (Infura does
-  not serve them). See [operators/run-routing.md](../operators/run-routing.md).
+- Public RPCs are rate-limited and are expected to move to dedicated nodes for production
+  traffic. Sepolia uses a hosted RPC; the 6 custom chains use public RPCs.
 - **v4/hooks are not deployed on any chain.** Some chain config files carry a `supportsV4`
   flag, but no v4 PoolManager or hook contracts exist on HookSwap — only v2 + v3 + Universal
   Router. See the [FAQ](./faq.md).

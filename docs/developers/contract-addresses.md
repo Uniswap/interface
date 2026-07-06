@@ -1,8 +1,8 @@
 # Contract addresses
 
 The canonical address reference for the HookSwap stack. Values are pulled **verbatim** from
-`contracts/deployments/*.json` (HookSwap-owned deploys) and, for Sepolia, from
-`@uniswap/sdk-core` / canonical Uniswap. A machine-readable copy lives at
+`contracts/deployments/*.json` (HookSwap-owned deploys) and, for Sepolia, from the canonical
+testnet deployment. A machine-readable copy lives at
 [`launchpad-integration/addresses.json`](../../launchpad-integration/addresses.json).
 
 - **Deployer** (all 6 custom chains): `0xc14C897c6bff88a5Eeac31F795693b9230205125`

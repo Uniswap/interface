@@ -19,7 +19,6 @@ Universal Router** stack across multiple production chains.
 |---|---|---|
 | **[Users](./users/README.md)** | Traders and liquidity providers using the app | [Getting started](./users/getting-started.md) |
 | **[Developers / Integrators](./developers/README.md)** | Launchpads, SDK consumers, anyone integrating | [Overview](./developers/overview.md) · [Contract addresses](./developers/contract-addresses.md) |
-| **[Operators](./operators/README.md)** | Whoever deploys and runs the HookSwap stack | [Go-live checklist](./operators/go-live-checklist.md) |
 
 ---
 
