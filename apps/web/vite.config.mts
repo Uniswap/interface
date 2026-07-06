@@ -578,6 +578,10 @@ export default defineConfig(({ mode, isPreview }) => {
       // this rollup emits bare `exports.` refs → runtime "exports is not defined".
       commonjsOptions: {
         transformMixedEsModules: true,
+        // The vendored @uniswap/sdk-core lives outside node_modules (vendor/sdk-core),
+        // so include it explicitly — rollup's commonjs plugin only transforms
+        // node_modules by default, which left its CJS build unwrapped.
+        include: [/node_modules/, /vendor[\\/]sdk-core/],
       },
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
