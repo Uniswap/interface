@@ -117,7 +117,6 @@
     "@swc/helpers": "0.5.11",
     "@types/react": "19.1.10",
     "@uniswap/router-sdk": "2.7.1",
-    "@uniswap/sdk-core": "file:../sdks/sdks/sdk-core",
     "@uniswap/v2-sdk": "4.19.1",
     "@wxt-dev/browser": "0.1.4",
     "@xmldom/xmldom": "0.7.7",
@@ -259,7 +258,8 @@
     "apps/*",
     "packages/*",
     "config/*",
-    "labs/*"
+    "labs/*",
+    "vendor/*"
   ],
   "patchedDependencies": {
     "multiformats@9.9.0": "patches/multiformats@9.9.0.patch",

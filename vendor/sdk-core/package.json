@@ -1,0 +1,70 @@
+{
+  "name": "@uniswap/sdk-core",
+  "version": "7.17.0",
+  "description": "⚒️ An SDK for building applications on top of Uniswap V3",
+  "repository": "https://github.com/Uniswap/sdks.git",
+  "keywords": [
+    "uniswap",
+    "ethereum"
+  ],
+  "license": "MIT",
+  "main": "./dist/cjs/src/index.js",
+  "typings": "./dist/types/src/index.d.ts",
+  "module": "./dist/esm/src/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/src/index.d.ts",
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "bun run clean && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && tsc -p tsconfig.types.json",
+    "clean": "rm -rf dist",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}' --max-warnings 0",
+    "release": "changeset publish",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ethersproject/address": "^5.0.2",
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/keccak256": "5.7.0",
+    "@ethersproject/strings": "5.7.0",
+    "big.js": "^5.2.2",
+    "decimal.js-light": "^2.5.0",
+    "jsbi": "^3.1.4",
+    "tiny-invariant": "^1.1.0",
+    "toformat": "^2.0.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/big.js": "^4.0.5",
+    "@typescript-eslint/parser": "^5.0.0",
+    "babel-eslint": "10.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-react-app": "7.0.1",
+    "eslint-plugin-flowtype": "8.0.3",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "typescript": "^4.3.3"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": true
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
