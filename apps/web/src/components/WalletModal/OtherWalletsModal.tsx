@@ -3,14 +3,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useShowMoonpayText } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { ConnectionErrorView } from '~/components/WalletModal/ConnectionErrorView'
 import { PrivacyPolicyNotice } from '~/components/WalletModal/PrivacyPolicyNotice'
-import { UniswapMobileWalletConnectorOption } from '~/components/WalletModal/UniswapMobileWalletConnectorOption'
 import { WalletConnectorOption } from '~/components/WalletModal/WalletConnectorOption'
-import { useRecentConnectorId } from '~/connection/constants'
 import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { transitions } from '~/theme/styles'
 
@@ -20,7 +17,6 @@ export function OtherWalletsModal() {
   const setMenu = useSetMenu()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const wallets = useOrderedWallets({ showSecondaryConnectors: true })
-  const recentConnectorId = useRecentConnectorId()
 
   return (
     <Flex
@@ -51,15 +47,7 @@ export function OtherWalletsModal() {
             transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
             data-testid="option-grid"
           >
-            {/* If uniswap mobile was the last used connector it will be show on the primary window */}
-            {/* If Embedded Wallet is enabled, it will be shown on the primary window */}
-            {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
-              !isEmbeddedWalletEnabled && (
-                <>
-                  <UniswapMobileWalletConnectorOption />
-                  {wallets.length > 0 && <Separator />}
-                </>
-              )}
+            {/* HookSwap: removed the Uniswap Mobile "scan to connect" connector option. */}
             {wallets.map((wallet, index) => (
               <React.Fragment key={wallet.name}>
                 <WalletConnectorOption wallet={wallet} />

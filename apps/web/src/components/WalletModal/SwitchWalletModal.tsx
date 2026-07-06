@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { UniswapWalletOptions } from '~/components/WalletModal/UniswapWalletOptions'
 import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
 import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
 import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
@@ -40,8 +39,6 @@ export function SwitchWalletModal({
     </Flex>
   )
 
-  const uniswapOptions = <UniswapWalletOptions />
-
   const walletOptions = (
     <WalletOptionsGrid
       connectOnPlatform={connectOnPlatform}
@@ -54,12 +51,7 @@ export function SwitchWalletModal({
 
   return (
     <WalletModalLayout
-      header={
-        <Flex gap="$gap16">
-          {header}
-          {connectOnPlatform !== Platform.SVM ? uniswapOptions : null}
-        </Flex>
-      }
+      header={header}
       hidePolicyNotice={connectOnPlatform === Platform.SVM && wallets.length === 0}
     >
       {walletOptions}

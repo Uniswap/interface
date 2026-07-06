@@ -71,37 +71,21 @@ function getWalletWithId(wallets: WalletWithInjectedStatus[], id: string): Walle
   return wallets.find((wallet) => wallet.id === id)
 }
 
-function getInjectedConnectors({
-  wallets,
-  isEmbeddedWalletEnabled,
-}: {
-  wallets: WalletWithInjectedStatus[]
-  isEmbeddedWalletEnabled: boolean
-}): WalletWithInjectedStatus[] {
-  return wallets
-    .filter((wallet) => {
-      if (
-        wallet.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS ||
-        wallet.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
-      ) {
-        // Special-case: Ignore coinbase eip6963-injected connector and coinbase solana wallet adapter; CB is selected separately / not treated as an injector since it can always be accessed via the CB SDK connector.
-        return false
-      } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
-        // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
-        return false
-      }
-      return wallet.injected
-    })
-    .sort((a, b) => {
-      // prioritize uniswap extension over other injected connectors
-      if (a.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
-        return -1
-      } else if (b.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
-        return 1
-      } else {
-        return 0
-      }
-    })
+function getInjectedConnectors({ wallets }: { wallets: WalletWithInjectedStatus[] }): WalletWithInjectedStatus[] {
+  return wallets.filter((wallet) => {
+    if (
+      wallet.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS ||
+      wallet.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
+    ) {
+      // Special-case: Ignore coinbase eip6963-injected connector and coinbase solana wallet adapter; CB is selected separately / not treated as an injector since it can always be accessed via the CB SDK connector.
+      return false
+    } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
+      // HookSwap: never surface the Uniswap Extension — HookSwap ships no wallet, so its
+      // branded extension/mobile wallet is not promoted anywhere in the connect flow.
+      return false
+    }
+    return wallet.injected
+  })
 }
 
 function useSortByRecent(recentConnectorId: string | undefined) {
@@ -217,12 +201,11 @@ function buildPrimaryConnectorsList({
  * Excludes Coinbase (accessed via SDK) and, when embedded wallet is disabled, Uniswap Extension.
  */
 export function useHasInjectedWallets(): boolean {
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const wallets = useFilteredWalletsWithInjectedInfo({ platformFilter: 'any' })
 
   return useMemo(() => {
-    return getInjectedConnectors({ wallets, isEmbeddedWalletEnabled }).length > 0
-  }, [wallets, isEmbeddedWalletEnabled])
+    return getInjectedConnectors({ wallets }).length > 0
+  }, [wallets])
 }
 
 /**
@@ -248,10 +231,7 @@ export function useOrderedWallets({
   const sortByRecent = useSortByRecent(recentConnectorId)
 
   return useMemo(() => {
-    const injectedWallets = getInjectedConnectors({
-      wallets,
-      isEmbeddedWalletEnabled,
-    })
+    const injectedWallets = getInjectedConnectors({ wallets })
     const isBinanceBrowser = isBinanceWalletBrowser(wallets)
     const coinbaseSdkWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
     const walletConnectWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
