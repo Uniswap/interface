@@ -25,6 +25,7 @@ import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useReadContract, useReadContracts, useWriteContract } from 'wagmi'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { erc20Abi, formatUnits, isAddress, parseUnits, type Address } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
@@ -1225,7 +1226,11 @@ export function LockerScreen(): JSX.Element {
 
   const connected = Boolean(account.address)
   const owner = assume0xAddress(account.address)
-  const chainId = account.chainId
+  // Deployment status + the read-only count/fee reflect the DISPLAYED chain
+  // (locker addresses are static and these reads are wallet-independent), so a
+  // disconnected user still sees lockers as live on the current network, not "Not live".
+  const { defaultChainId, chains } = useEnabledChains()
+  const chainId = account.chainId ?? defaultChainId ?? chains[0]
   const chainLabel = chainId ? getChainLabel(chainId) : '—'
 
   const lockerAddrs = getLockerAddresses(chainId)
@@ -1289,7 +1294,7 @@ export function LockerScreen(): JSX.Element {
     : lockFee !== undefined
       ? `${formatUnits(lockFee, native?.decimals ?? 18)} ${native?.symbol ?? ''}`.trim()
       : undefined
-  const networkValue = !connected ? '—' : deployed ? chainLabel : 'Not live'
+  const networkValue = deployed ? chainLabel : 'Not live'
 
   const onConnect = (): void => accountDrawer.open()
 

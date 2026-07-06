@@ -1,36 +1,24 @@
-import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
-import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
-import React, { type PropsWithChildren, type ReactNode, useMemo } from 'react'
+import { type ReactNode } from 'react'
 import { type Register, WagmiProvider } from 'wagmi'
-import { SolanaSignerUpdater } from '~/connection/signSolanaTransaction'
 import { useWalletCapabilitiesStateEffect } from '~/state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
 
 export function createWeb3Provider(params: { wagmiConfig: Register['config']; reconnectOnMount?: boolean }) {
   const { wagmiConfig, reconnectOnMount = true } = params
 
+  // HookSwap is EVM-only (v2 + v3). We deliberately do NOT mount the Solana
+  // wallet adapter (`@solana/wallet-adapter-react`'s WalletProvider) here.
+  // Mounting it registered a Solana namespace via wallet-standard, which made
+  // multichain wallets (OKX, etc.) demand Solana-capable accounts and blocked
+  // connecting to the EVM chains. Only the EVM (wagmi) provider is mounted.
   const Provider = ({ children }: { children: ReactNode }) => (
-    <SolanaProvider>
-      <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
-        {children}
-      </WagmiProvider>
-    </SolanaProvider>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
+      {children}
+    </WagmiProvider>
   )
 
   Provider.displayName = 'Web3Provider'
 
   return Provider
-}
-
-function SolanaProvider({ children }: PropsWithChildren) {
-  // WalletProvider has built-in support for SolanaStandard wallets;
-  const wallets = useMemo(() => [new CoinbaseWalletAdapter()], [])
-
-  return (
-    <SolanaWalletProvider wallets={wallets} autoConnect>
-      <SolanaSignerUpdater />
-      {children}
-    </SolanaWalletProvider>
-  )
 }
 
 export function WalletCapabilitiesEffects() {
