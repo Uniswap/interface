@@ -126,6 +126,9 @@
   .cx-tbl tr:first-child td{border-top:none}
   .cx-tbl td.k{width:230px;color:var(--slate);white-space:nowrap}
   .cx-tbl td.v{font-family:var(--mono);font-size:12.5px;color:var(--ink);word-break:break-all}
+  .cx-addr{font-family:var(--mono);color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+  .cx-addr:hover{color:var(--green-deep);text-decoration:none;border-bottom-color:var(--green-border)}
+  .cx-common .box .v .cx-addr{font-size:12.5px}
   .cx-note{font-size:12.5px;color:var(--slate);padding:10px 18px;border-top:1px solid var(--line2);background:var(--mist)}
   @media(max-width:800px){
     nav{display:none}main{padding:22px 18px 70px}
@@ -153,7 +156,6 @@ const TREE = [
   ["Users", [["Getting started","users/getting-started.md"],["Swapping","users/swapping.md"],["Liquidity","users/liquidity.md"],["Chains","users/chains.md"],["FAQ","users/faq.md"]]],
   ["Developers", [["Overview","developers/overview.md"],["Contract addresses","developers/contract-addresses.md"],["SDK","developers/sdk.md"],["Routing","developers/routing.md"],["Launchpad integration","developers/launchpad-integration.md"]]],
   ["Contracts", [["Deployed addresses","contracts"]]],
-  ["Operators", [["Go-live checklist","operators/go-live-checklist.md"],["Deploy contracts","operators/deploy-contracts.md"],["Run the app","operators/run-the-app.md"],["Run routing","operators/run-routing.md"],["Run indexer","operators/run-indexer.md"],["Seed liquidity","operators/seed-liquidity.md"]]],
 ];
 // Static, trusted inline SVGs (no user input) for section headers + buttons.
 const SEC_ICONS = {
@@ -161,7 +163,6 @@ const SEC_ICONS = {
   "Users":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
   "Developers":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4"/><path d="m16 8 5 4-5 4"/></svg>',
   "Contracts":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
-  "Operators":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
 };
 const nav = document.getElementById('nav');
 const content = document.getElementById('content');
@@ -218,11 +219,27 @@ function heroHTML(){
  * deploys). Only fields present in a chain's JSON are listed. Trusted static
  * data — no user input is interpolated. */
 const CX_COMMON = {
-  deployer: '0xc14C897c6bff88a5Eeac31F795693b9230205125',
   permit2: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
   v2Hash: '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f',
   v3Hash: '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54',
+  // Explorer base for Permit2's link — canonical, live on every chain; MegaETH used.
+  permit2Explorer: 'https://megaeth.blockscout.com/',
 };
+// Block-explorer base per chain — read verbatim from
+// packages/uniswap/src/features/chains/evm/info/<chain>.ts (`explorer.url`).
+const CX_EXPLORER = {
+  4326: 'https://megaeth.blockscout.com/',
+  4663: 'https://robinhoodchain.blockscout.com/',
+  57073: 'https://explorer.inkonchain.com/',
+  196: 'https://web3.okx.com/explorer/x-layer/',
+  999: 'https://hyperevmscan.io/',
+  4217: 'https://explore.tempo.xyz/',
+  11155111: 'https://sepolia.etherscan.io/',
+};
+function addrLink(base, addr){
+  const href = base.replace(/\/+$/,'') + '/address/' + addr;
+  return '<a class="cx-addr" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(addr)+'</a>';
+}
 // Row order + human labels. Only rows with a value for a chain are rendered.
 const CX_ROWS = [
   ['v2Factory','v2 Factory'],
@@ -328,19 +345,19 @@ function contractsHTML(){
   let h = '<h1 id="contracts">Contract addresses</h1>';
   h += '<p class="cx-lead">HookSwap runs its <b>own</b> full v2 + v3 + Universal Router stack, plus token lockers and a referral router, on every chain. All values below are copied verbatim from the on-chain deployment records (<code>contracts/deployments/*.json</code>). Every address is public.</p>';
   h += '<div class="cx-common">'+
-    '<div class="box"><div class="k">Deployer (all chains)</div><div class="v">'+esc(CX_COMMON.deployer)+'</div></div>'+
-    '<div class="box"><div class="k">Permit2 (canonical, every chain)</div><div class="v">'+esc(CX_COMMON.permit2)+'</div></div>'+
+    '<div class="box"><div class="k">Permit2 (canonical, every chain)</div><div class="v">'+addrLink(CX_COMMON.permit2Explorer, CX_COMMON.permit2)+'</div></div>'+
     '<div class="box"><div class="k">v2 pair init-code hash</div><div class="v">'+esc(CX_COMMON.v2Hash)+'</div></div>'+
     '<div class="box"><div class="k">v3 pool init-code hash</div><div class="v">'+esc(CX_COMMON.v3Hash)+'</div></div>'+
   '</div>';
   for (const c of CX_CHAINS){
+    const exp = CX_EXPLORER[c.id];
     h += '<div class="cx-chain">';
     h += '<div class="hd"><span class="nm">'+esc(c.nm)+'</span><span class="id">chain id <b>'+esc(c.id)+'</b></span><span class="tag">'+esc(c.tag)+'</span></div>';
     h += '<table class="cx-tbl"><tbody>';
     for (const [key,label] of CX_ROWS){
       const v = c.a[key];
       if (!v) continue; // omit rows absent from this chain's JSON
-      h += '<tr><td class="k">'+esc(label)+'</td><td class="v">'+esc(v)+'</td></tr>';
+      h += '<tr><td class="k">'+esc(label)+'</td><td class="v">'+(exp?addrLink(exp,v):esc(v))+'</td></tr>';
     }
     h += '</tbody></table>';
     if (c.note) h += '<div class="cx-note">'+esc(c.note)+'</div>';
