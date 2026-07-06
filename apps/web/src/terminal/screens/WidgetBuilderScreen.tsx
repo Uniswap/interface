@@ -62,7 +62,11 @@ export function WidgetBuilderScreen(): JSX.Element {
 
   // Absolute origin so the snippet works when pasted on any host.
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://hookswap.org'
+  // Cache-bust the PREVIEW only (stable per mount) so it never shows a stale
+  // /embed/swap render; the copy-able snippet below uses the clean URL.
+  const [previewNonce] = useState(() => Date.now())
   const src = `${origin}/embed/swap?${query}`
+  const previewSrc = `${src}&_p=${previewNonce}`
   const snippet = `<iframe\n  src="${src}"\n  width="${WIDGET_W}"\n  height="${WIDGET_H}"\n  style="border:0;border-radius:18px;max-width:100%"\n  title="HookSwap swap widget"\n  loading="lazy"\n></iframe>`
 
   const onCopy = async (): Promise<void> => {
@@ -207,7 +211,7 @@ export function WidgetBuilderScreen(): JSX.Element {
           <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, marginBottom: 8 }}>Live preview</div>
           <iframe
             key={query}
-            src={src}
+            src={previewSrc}
             width={WIDGET_W}
             height={WIDGET_H}
             title="HookSwap swap widget preview"

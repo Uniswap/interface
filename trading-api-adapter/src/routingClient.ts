@@ -19,7 +19,7 @@
 
 import fetch from 'cross-fetch'
 import type { ChainConfig } from './chains'
-import { resolveRpcUrl } from './chains'
+import { EmbedRoutingProvider } from './embedRouter'
 
 /**
  * The classic routing-api `/quote` response shape (the subset we consume).
@@ -121,34 +121,10 @@ class ProxyRoutingProvider implements RoutingProvider {
 }
 
 // ---------------------------------------------------------------------------
-// (B) EMBED provider — in-process AlphaRouter (TODO, not active)
+// (B) EMBED provider — in-process AlphaRouter. Implemented in ./embedRouter.ts
+// (heavy import: @uniswap/smart-order-router fork + sdk-core fork + ethers v5),
+// kept out of this module so PROXY/NONE paths don't pull the SOR at import time.
 // ---------------------------------------------------------------------------
-
-class EmbedRoutingProvider implements RoutingProvider {
-  readonly mode = 'embed' as const
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async quoteExactRoute(_params: QuoteExactRouteParams): Promise<RoutingApiQuoteResponse | undefined> {
-    // TODO(embed): implement direct SOR embedding.
-    //  1. Add "@uniswap/smart-order-router" (HooksOS fork), "@uniswap/sdk-core" (HooksOS fork)
-    //     and "ethers" (v5) to package.json — with a dependency override pointing both @uniswap
-    //     packages at the HooksOS forks (which define ChainId 999/4663/4326/57073/196/4217 and
-    //     carry the deployed addresses). Same override routing-api needs (see its README §3).
-    //  2. Per chain build providers from this ChainConfig:
-    //       const provider = new ethers.providers.JsonRpcProvider(resolveRpcUrl(chain), chain.chainId)
-    //       const multicall = new UniswapMulticallProvider(chain.chainId, provider)
-    //       const router = new AlphaRouter({ chainId: chain.chainId, provider, multicall2Provider: multicall })
-    //  3. Build CurrencyAmount from tokenIn/out + amount, call router.route(amount, quoteCurrency,
-    //     tradeType, swapConfig, { protocols: [Protocol.V2, Protocol.V3] }).
-    //  4. Map the SwapRoute (route, quote, estimatedGasUsed, methodParameters) into
-    //     RoutingApiQuoteResponse so translate.ts is reused unchanged.
-    // Kept as a stub so the HTTP contract + translation stay real without pulling the SOR into
-    // this disk-constrained checkout. Use PROXY mode (ROUTING_API_URL) for now.
-    // Reference of what it would need: `resolveRpcUrl` is imported so lint keeps the wiring intent.
-    void resolveRpcUrl
-    throw new Error('EMBED routing mode not implemented — set ROUTING_API_URL to use PROXY mode. See DEPLOY.md.')
-  }
-}
 
 // ---------------------------------------------------------------------------
 // (none) — no backend configured
