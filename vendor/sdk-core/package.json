@@ -13,7 +13,8 @@
   "exports": {
     ".": {
       "types": "./dist/types/src/index.d.ts",
-      "import": "./dist/esm/src/index.js"
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js"
     }
   },
   "sideEffects": false,
@@ -65,5 +66,5 @@
     "access": "public",
     "provenance": true
   },
-  "type": "module"
+  "main": "./dist/cjs/src/index.js"
 }

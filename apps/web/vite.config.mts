@@ -573,6 +573,12 @@ export default defineConfig(({ mode, isPreview }) => {
       outDir: 'build',
       sourcemap: DISABLE_SOURCEMAP ? false : isProduction && !isVercelDeploy ? 'hidden' : true,
       minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
+      // Handle deps that mix ESM + CommonJS (e.g. the vendored @uniswap/sdk-core
+      // whose CJS build is require()'d by registry @uniswap/* packages) — without
+      // this rollup emits bare `exports.` refs → runtime "exports is not defined".
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
         output: {
