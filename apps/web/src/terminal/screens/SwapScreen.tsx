@@ -47,6 +47,7 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
 /* ------------------------------------------------------------------ helpers */
@@ -805,6 +806,18 @@ function SwapScreenBody(): JSX.Element {
   const outputInfo = derived.currencies[CurrencyField.OUTPUT]
   const activeTrade = derived.trade.trade
   const priceLabel = activeTrade ? groupNumber(activeTrade.executionPrice.toSignificant(8)) : '—'
+  const isMobile = useIsMobileViewport()
+
+  // Mobile: collapse the 3-panel desktop layout to a single, centered swap ticket.
+  // The market list + chart are secondary desktop context; hiding them keeps the
+  // core swap flow front-and-center and avoids horizontal overflow on a phone.
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 8px 28px' }}>
+        <SwapTicket />
+      </div>
+    )
+  }
 
   return (
     <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
