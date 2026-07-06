@@ -32,6 +32,8 @@ export interface LeftRailProps {
   collapsed?: boolean
   /** Toggle collapse (rendered as a chevron button by the logo). */
   onToggleCollapse?: () => void
+  /** Hide the collapse chevron (used when the rail is reused inside the mobile drawer). */
+  hideCollapseToggle?: boolean
 }
 
 const SECTION_LABEL: CSSProperties = {
@@ -180,6 +182,7 @@ export function LeftRail({
   onConnectWallet,
   collapsed,
   onToggleCollapse,
+  hideCollapseToggle,
 }: LeftRailProps): JSX.Element {
   const isActive = (item: TerminalNavItem): boolean => item.id === activeId
 
@@ -247,7 +250,7 @@ export function LeftRail({
         >
           <HookLogo size={25} textSize="18px" showText={!collapsed} />
         </span>
-        <CollapseToggle collapsed={collapsed} onToggle={onToggleCollapse} />
+        {hideCollapseToggle ? null : <CollapseToggle collapsed={collapsed} onToggle={onToggleCollapse} />}
       </div>
 
       {collapsed ? null : <div style={{ ...SECTION_LABEL, padding: '0 10px 8px' }}>TRADE</div>}
