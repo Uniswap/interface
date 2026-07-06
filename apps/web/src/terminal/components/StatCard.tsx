@@ -30,6 +30,12 @@ export interface StatCardProps {
   loading?: boolean
   /** Error message — renders an em-dash value + 11px red message. */
   error?: string
+  /**
+   * Renders a clean "Coming soon" state (em-dash value + muted caption, no red)
+   * for metrics that depend on the not-yet-live indexer/backend. Takes
+   * precedence over `error`.
+   */
+  comingSoon?: boolean
 }
 
 const SIZE = {
@@ -54,9 +60,12 @@ export function StatCard({
   size = 'md',
   loading = false,
   error,
+  comingSoon = false,
 }: StatCardProps): JSX.Element {
   const s = SIZE[size]
-  const isLoading = loading || (value === undefined && !error)
+  // "Coming soon" wins over both value and error: the metric can't exist yet.
+  const isLoading = !comingSoon && (loading || (value === undefined && !error))
+  const isPlaceholder = comingSoon || Boolean(error)
   const resolvedValueColor = valueColor === 'ink' ? terminalColors.ink : trendColor(valueColor)
   const sideSparkline = sparklinePosition === 'right'
 
@@ -79,12 +88,12 @@ export function StatCard({
         fontFamily: terminalFonts.mono,
         fontSize: sideSparkline ? 16 : s.value,
         fontWeight: 600,
-        color: error ? terminalColors.ink3 : resolvedValueColor,
+        color: isPlaceholder ? terminalColors.ink3 : resolvedValueColor,
         marginTop: 5,
         letterSpacing: '-0.02em',
       }}
     >
-      {error ? '—' : value}
+      {isPlaceholder ? '—' : value}
     </div>
   )
 
@@ -106,13 +115,15 @@ export function StatCard({
       <div style={{ minWidth: 0 }}>
         {labelNode}
         {valueNode}
-        {error ? (
+        {comingSoon ? (
+          <div style={{ fontSize: 11, color: terminalColors.ink3Alt, marginTop: 4 }}>Coming soon</div>
+        ) : error ? (
           <div style={{ fontSize: 11, color: terminalColors.redDown, marginTop: 4 }}>{error}</div>
         ) : null}
       </div>
 
       {sideSparkline ? (
-        sparkline && !isLoading && !error ? (
+        sparkline && !isLoading && !isPlaceholder ? (
           <SparklineCell data={sparkline} direction={sparklineDirection} width={90} height={34} strokeWidth={2.2} />
         ) : null
       ) : delta || sparkline ? (
@@ -124,7 +135,7 @@ export function StatCard({
             marginTop: 8,
           }}
         >
-          {delta && !isLoading && !error ? (
+          {delta && !isLoading && !isPlaceholder ? (
             <span
               style={{
                 fontFamily: terminalFonts.mono,
@@ -137,7 +148,7 @@ export function StatCard({
           ) : (
             <span />
           )}
-          {sparkline && !isLoading && !error ? (
+          {sparkline && !isLoading && !isPlaceholder ? (
             <SparklineCell data={sparkline} direction={sparklineDirection} width={46} height={18} strokeWidth={2.4} />
           ) : null}
         </div>

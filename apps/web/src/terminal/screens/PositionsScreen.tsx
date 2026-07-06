@@ -639,8 +639,8 @@ export function PositionsScreen(): JSX.Element {
                 rows={isLoading ? undefined : positions}
                 rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
                 loading={isLoading}
-                error={positionsResult.error ? 'Failed to load positions.' : undefined}
-                onRetry={() => positionsResult.refetch()}
+                comingSoon={Boolean(positionsResult.error)}
+                comingSoonSubtext="Live positions arrive with the HookSwap indexer."
                 emptyMessage="No positions."
                 initialSort={{ columnId: 'value', direction: 'desc' }}
                 skeletonRows={6}

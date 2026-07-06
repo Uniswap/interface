@@ -43,6 +43,7 @@ import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import { SparklineCell } from '~/terminal/components/SparklineCell'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
@@ -371,7 +372,7 @@ function TopMovers({
     )
   }
 
-  // Honest empty / error state — a single branded strip instead of a blank grid row.
+  // Honest empty / coming-soon state — a single branded strip instead of a blank grid row.
   if (movers.length === 0) {
     return (
       <div
@@ -384,12 +385,14 @@ function TopMovers({
           textAlign: 'center',
           fontFamily: SANS,
           fontSize: 12.5,
-          color: error ? terminalColors.redDown : terminalColors.ink3Alt,
+          color: terminalColors.ink3Alt,
         }}
       >
-        {error
-          ? 'Couldn’t load top movers.'
-          : 'No market movers yet — token price data goes live with the HookSwap indexer.'}
+        {error ? (
+          <ComingSoon variant="inline" subtext="Top movers arrive with the HookSwap indexer." />
+        ) : (
+          'No market movers yet — token price data goes live with the HookSwap indexer.'
+        )}
       </div>
     )
   }
@@ -639,7 +642,8 @@ function MarketsScreenBody(): JSX.Element {
             rows={filteredRows}
             rowKey={(row) => row.key}
             loading={poolsLoading}
-            error={poolsError ? 'Failed to load markets.' : undefined}
+            comingSoon={poolsError}
+            comingSoonSubtext="Live markets arrive with the HookSwap indexer."
             emptyMessage={emptyMessage}
             initialSort={{ columnId: 'tvl', direction: 'desc' }}
             skeletonRows={8}

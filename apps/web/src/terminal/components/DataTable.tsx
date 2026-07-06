@@ -1,4 +1,5 @@
 import { ReactNode, useMemo, useState } from 'react'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 export type DataTableAlign = 'left' | 'right' | 'center'
@@ -41,6 +42,13 @@ export interface DataTableProps<Row> {
   /** Error message — renders the error state (with optional retry). */
   error?: string
   onRetry?: () => void
+  /**
+   * Renders a clean "Coming soon" state (in place of rows/error/empty) for data
+   * that depends on the not-yet-live indexer/backend. Takes precedence over
+   * `error`/`loading`. Optionally override the muted subtext.
+   */
+  comingSoon?: boolean
+  comingSoonSubtext?: string
   /** Shown when `rows` is an empty array. Default "No data". */
   emptyMessage?: string
   /** Number of skeleton rows while loading. Default 8 (prototype placeholder count). */
@@ -63,6 +71,8 @@ export function DataTable<Row>({
   loading = false,
   error,
   onRetry,
+  comingSoon = false,
+  comingSoonSubtext,
   emptyMessage = 'No data',
   skeletonRows = 8,
   initialSort,
@@ -161,8 +171,10 @@ export function DataTable<Row>({
         })}
       </div>
 
-      {/* Error state */}
-      {error ? (
+      {/* Coming-soon state (indexer/backend not live) — takes precedence. */}
+      {comingSoon ? (
+        <ComingSoon variant="panel" subtext={comingSoonSubtext} minHeight={180} />
+      ) : error ? (
         <div
           role="alert"
           style={{

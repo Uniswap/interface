@@ -81,6 +81,7 @@ import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { NavIcon } from '~/terminal/components/NavIcon'
 import type { TerminalNavIcon } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
@@ -209,7 +210,10 @@ function TickerStrip({
         // Honest degrade — the strip keeps its height with a short branded line
         // instead of collapsing to an empty bar when the token feed has no prices.
         <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint, flexShrink: 0 }}>
-          {error ? 'Token feed unavailable.' : 'Live token feed goes live with the HookSwap indexer.'}
+          {/* Error and empty both mean the same pre-launch truth: the feed isn't live yet. */}
+          {error
+            ? 'Live token feed arrives with the HookSwap indexer.'
+            : 'Live token feed goes live with the HookSwap indexer.'}
         </span>
       ) : (
         tickers.map((ticker) => {
@@ -964,20 +968,15 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {poolsError ? (
-          // Honest error — a branded bordered box, not a bare red line or blank grid.
+          // Backend not live — a branded coming-soon box, not a bare red line or blank grid.
           <div
             style={{
               border: `1px solid ${terminalColors.line}`,
               borderRadius: 14,
               background: terminalColors.bg,
-              padding: '32px 20px',
-              textAlign: 'center',
-              fontFamily: SANS,
-              fontSize: 13,
-              color: terminalColors.redDown,
             }}
           >
-            Couldn’t load markets.
+            <ComingSoon variant="panel" subtext="Live markets arrive with the HookSwap indexer." minHeight={140} />
           </div>
         ) : marketCards && marketCards.length === 0 ? (
           // Intentional empty state — the indexer isn't live yet, so there are no pools.

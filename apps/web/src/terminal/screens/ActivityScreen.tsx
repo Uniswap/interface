@@ -41,6 +41,7 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { useAccount } from '~/hooks/useAccount'
 import { NotificationRow, type NotificationCategory } from '~/terminal/components/NotificationRow'
 import { StatCard } from '~/terminal/components/StatCard'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { formatRelativeTime } from '~/terminal/utils/time'
 
@@ -340,9 +341,7 @@ export function ActivityScreen(): JSX.Element {
         {loadingFeed ? (
           <FeedSkeleton />
         ) : activity.error ? (
-          <FeedMessage>
-            <span style={{ color: terminalColors.redDown }}>Failed to load activity.</span>
-          </FeedMessage>
+          <ComingSoon variant="panel" subtext="Your activity feed goes live with the HookSwap indexer." minHeight={180} />
         ) : filteredRows && filteredRows.length > 0 ? (
           filteredRows.map((row, index) => (
             <NotificationRow

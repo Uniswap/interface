@@ -67,6 +67,7 @@ import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { useAccount } from '~/hooks/useAccount'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 const MONO = terminalFonts.mono
@@ -366,9 +367,7 @@ function TradesTab({
             </div>
           ))
         ) : error ? (
-          <div style={{ padding: '24px 16px', textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>
-            Failed to load trades.
-          </div>
+          <ComingSoon variant="panel" subtext="Live trades arrive with the HookSwap indexer." minHeight={140} />
         ) : rows.length === 0 ? (
           <div style={{ padding: '24px 16px', textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>
             No recent trades.
@@ -744,14 +743,18 @@ export function MarketDetailScreen(): JSX.Element {
   if (!poolLoading && !poolData) {
     return (
       <div style={{ padding: '20px 24px' }}>
-        <CenteredState
-          title={poolError ? 'Failed to load market' : 'Market not found'}
-          detail={
-            poolError
-              ? 'We could not load this pool. It may be on a network without an indexed pools feed.'
-              : 'No pool exists at this address on the selected network.'
-          }
-        />
+        {poolError ? (
+          <ComingSoon
+            variant="panel"
+            subtext="Market detail data arrives with the HookSwap indexer."
+            minHeight={480}
+          />
+        ) : (
+          <CenteredState
+            title="Market not found"
+            detail="No pool exists at this address on the selected network."
+          />
+        )}
       </div>
     )
   }

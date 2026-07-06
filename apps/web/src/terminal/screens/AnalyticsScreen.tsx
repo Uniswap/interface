@@ -60,6 +60,7 @@ import { useProtocolStats } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import { SparklineCell } from '~/terminal/components/SparklineCell'
 import { StatCard, StatDelta } from '~/terminal/components/StatCard'
@@ -278,21 +279,7 @@ function AreaChart({
     return <div style={{ height, borderRadius: 10, background: terminalColors.line2 }} aria-busy="true" />
   }
   if (error) {
-    return (
-      <div
-        style={{
-          height,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: SANS,
-          fontSize: 13,
-          color: terminalColors.redDown,
-        }}
-      >
-        Failed to load protocol series.
-      </div>
-    )
+    return <ComingSoon variant="panel" minHeight={height} subtext="Protocol analytics arrive with the HookSwap indexer." />
   }
   if (!geometry) {
     return (
@@ -361,7 +348,10 @@ function BarChart({
   if (loading) {
     return <div style={{ height: height + 24, borderRadius: 10, background: terminalColors.line2 }} aria-busy="true" />
   }
-  if (error || !points || points.length === 0) {
+  if (error) {
+    return <ComingSoon variant="panel" minHeight={height + 24} subtext="Volume metrics arrive with the HookSwap indexer." />
+  }
+  if (!points || points.length === 0) {
     return (
       <div
         style={{
@@ -374,10 +364,10 @@ function BarChart({
           fontFamily: SANS,
           fontSize: 12.5,
           lineHeight: 1.5,
-          color: error ? terminalColors.redDown : terminalColors.ink3Alt,
+          color: terminalColors.ink3Alt,
         }}
       >
-        {error ? 'Couldn’t load volume.' : 'No volume yet — arrives with the HookSwap indexer.'}
+        No volume yet — arrives with the HookSwap indexer.
       </div>
     )
   }
@@ -548,9 +538,11 @@ function NetworkDonut({
               </span>
             </div>
           ))
+        ) : error ? (
+          <ComingSoon variant="inline" subtext="Network allocation arrives with the HookSwap indexer." />
         ) : (
-          <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: error ? terminalColors.redDown : terminalColors.ink3Alt }}>
-            {error ? 'Couldn’t load network allocation.' : 'No pool TVL yet — network allocation appears with the HookSwap indexer.'}
+          <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink3Alt }}>
+            No pool TVL yet — network allocation appears with the HookSwap indexer.
           </div>
         )}
       </div>
@@ -706,7 +698,7 @@ function TopPoolsByTvlList({
     )
   }
   if (error) {
-    return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>Couldn’t load pools.</div>
+    return <ComingSoon variant="inline" subtext="Pool rankings arrive with the HookSwap indexer." />
   }
   if (!presentations || presentations.length === 0) {
     return (
@@ -855,8 +847,6 @@ function AnalyticsScreenBody(): JSX.Element {
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
 
-  const statsError = protocolError ? 'Failed to load' : undefined
-
   /* --- export (real snapshot of loaded headline metrics) --- */
   const onExport = (): void => {
     const rows: Array<[string, string]> = [
@@ -1003,7 +993,7 @@ function AnalyticsScreenBody(): JSX.Element {
           delta={protocolError ? undefined : pctDelta(tvlStats.totalChangePercent)}
           sparkline={tvlSeries.length >= 2 ? tvlSeries.map((p) => p.v) : undefined}
           loading={tvlStats.isLoading}
-          error={statsError}
+          comingSoon={protocolError}
         />
         <StatCard
           label="24h Volume"
@@ -1011,13 +1001,13 @@ function AnalyticsScreenBody(): JSX.Element {
           delta={protocolError ? undefined : pctDelta(volumeStats.totalChangePercent)}
           sparkline={monthVolumeSeries.length >= 2 ? monthVolumeSeries.map((p) => p.v) : undefined}
           loading={volumeStats.isLoading}
-          error={statsError}
+          comingSoon={protocolError}
         />
         <StatCard
           label="24h Fees"
           value={fiatStats(aggFees24h)}
           loading={poolsLoading && !presentations}
-          error={poolsError ? 'Failed to load' : undefined}
+          comingSoon={poolsError}
         />
         <StatCard
           label="v3 TVL"
@@ -1025,7 +1015,7 @@ function AnalyticsScreenBody(): JSX.Element {
           delta={protocolError ? undefined : pctDelta(tvlStats.protocolChangePercent.v3)}
           sparkline={v3TvlSeries.length >= 2 ? v3TvlSeries.map((p) => p.v) : undefined}
           loading={tvlStats.isLoading}
-          error={statsError}
+          comingSoon={protocolError}
         />
         <StatCard
           label="v2 TVL"
@@ -1033,13 +1023,13 @@ function AnalyticsScreenBody(): JSX.Element {
           delta={protocolError ? undefined : pctDelta(tvlStats.protocolChangePercent.v2)}
           sparkline={v2TvlSeries.length >= 2 ? v2TvlSeries.map((p) => p.v) : undefined}
           loading={tvlStats.isLoading}
-          error={statsError}
+          comingSoon={protocolError}
         />
         <StatCard
           label="Pools tracked"
           value={topPools ? String(topPools.length) : undefined}
           loading={poolsLoading && !presentations}
-          error={poolsError ? 'Failed to load' : undefined}
+          comingSoon={poolsError}
         />
       </div>
 
@@ -1141,7 +1131,8 @@ function AnalyticsScreenBody(): JSX.Element {
                   rows={poolsLoading && !topByVolume ? undefined : topByVolume}
                   rowKey={(row) => row.key}
                   loading={poolsLoading && !topByVolume}
-                  error={poolsError ? 'Couldn’t load pools.' : undefined}
+                  comingSoon={poolsError}
+                  comingSoonSubtext="Pool liquidity data goes live with the HookSwap indexer."
                   emptyMessage="No pools indexed yet — liquidity data goes live with the HookSwap indexer."
                   initialSort={{ columnId: 'volume', direction: 'desc' }}
                   skeletonRows={6}

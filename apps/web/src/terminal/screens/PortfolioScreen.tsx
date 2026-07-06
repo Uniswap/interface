@@ -45,6 +45,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { useAccount } from '~/hooks/useAccount'
+import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import {
   terminalColors,
@@ -310,7 +311,7 @@ function ActivityFeed({
     )
   }
   if (error) {
-    return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>Failed to load activity.</div>
+    return <ComingSoon variant="inline" subtext="Activity goes live with the HookSwap indexer." />
   }
   if (!items || items.length === 0) {
     return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>No recent activity.</div>
@@ -612,8 +613,8 @@ export function PortfolioScreen(): JSX.Element {
                   rows={positionsResult.isLoading && !positionsResult.hasData ? undefined : positions}
                   rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
                   loading={positionsResult.isLoading && !positionsResult.hasData}
-                  error={positionsResult.error ? 'Failed to load positions.' : undefined}
-                  onRetry={() => positionsResult.refetch()}
+                  comingSoon={Boolean(positionsResult.error)}
+                  comingSoonSubtext="Live positions arrive with the HookSwap indexer."
                   emptyMessage="No open liquidity positions."
                   initialSort={{ columnId: 'value', direction: 'desc' }}
                   skeletonRows={5}
