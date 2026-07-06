@@ -16,68 +16,135 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="/og-hookswap.png" />
 <style>
-  :root{--paper:#f4f5f1;--card:#fff;--ink:#0d100c;--ink2:#59626f;--line:#e6e9ee;--green:#0c8a42;--acid:#38e07b}
+  /* ---------------------------------------------------------------- fonts */
+  @font-face{font-family:'Space Grotesk';font-weight:500;font-style:normal;font-display:swap;src:url('/fonts/SpaceGrotesk-Medium.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:600;font-style:normal;font-display:swap;src:url('/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:700;font-style:normal;font-display:swap;src:url('/fonts/SpaceGrotesk-Bold.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Sans';font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/IBMPlexSans-Regular.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Sans';font-weight:600;font-style:normal;font-display:swap;src:url('/fonts/IBMPlexSans-SemiBold.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/IBMPlexMono-Regular.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:600;font-style:normal;font-display:swap;src:url('/fonts/IBMPlexMono-SemiBold.woff2') format('woff2')}
+
+  /* ------------------------------------------------------ signal palette */
+  :root{
+    --ink:#0B0F14; --slate:#59626F; --faint:#8A94A3;
+    --mist:#F6F8FA; --panel:#F0F3F6; --line:#E6E9EE; --line2:#EFF1F4; --white:#FFFFFF;
+    --green:#2FE07E; --green-deep:#0AA85A; --up:#12B866; --down:#EF4E4A;
+    --green-bg:#E9FBEF; --green-border:#C7F3D8; --btn-ink:#08110A;
+    --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --display:'Space Grotesk',var(--sans);
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
   *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--paper)}
-  a{color:var(--green);text-decoration:none}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--ink);background:var(--mist);-webkit-font-smoothing:antialiased}
+  a{color:var(--green-deep);text-decoration:none}
   a:hover{text-decoration:underline}
-  header{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10}
-  header .mark{width:26px;height:26px}
-  header b{font-weight:800;font-size:18px}
-  header b .s{color:var(--green)}
-  .wrap{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 59px)}
-  nav{width:250px;flex-shrink:0;padding:22px 14px;border-right:1px solid var(--line)}
-  nav .sec{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:18px 8px 8px}
-  nav .sec svg{width:14px;height:14px;color:var(--green);flex-shrink:0}
-  nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--ink);font-size:14px}
-  nav a:hover{background:var(--paper);text-decoration:none}
-  nav a.active{background:var(--paper);color:var(--green);font-weight:600;box-shadow:inset 2px 0 0 var(--green)}
-  main{flex:1;min-width:0;padding:28px 40px 80px;overflow-x:auto}
-  main h1{font-size:30px;letter-spacing:-.02em;margin:0 0 8px}
-  main h2,main h3{scroll-margin-top:70px}
-  main h2{margin-top:32px;border-bottom:1px solid var(--line);padding-bottom:6px}
-  main h2 .anchor,main h3 .anchor{opacity:0;margin-left:8px;font-size:.7em;color:var(--ink2);transition:opacity .12s}
+
+  /* -------------------------------------------------------------- header */
+  header{display:flex;align-items:center;gap:12px;padding:13px 22px;border-bottom:1px solid var(--line);background:var(--white);position:sticky;top:0;z-index:10}
+  header .logo{height:24px;width:auto;display:block}
+  header .tab{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);border:1px solid var(--line);border-radius:999px;padding:3px 9px;line-height:1}
+  header .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+  header .right a{font-size:13.5px;font-weight:600;color:var(--ink)}
+  header .right a:hover{color:var(--green-deep);text-decoration:none}
+
+  /* ---------------------------------------------------------------- layout */
+  .wrap{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 51px)}
+  nav{width:240px;flex-shrink:0;padding:22px 14px;border-right:1px solid var(--line);position:sticky;top:51px;align-self:flex-start;max-height:calc(100vh - 51px);overflow-y:auto}
+  nav .sec{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:18px 8px 8px}
+  nav .sec svg{width:14px;height:14px;color:var(--green-deep);flex-shrink:0}
+  nav a{display:block;padding:7px 10px;border-radius:10px;color:var(--ink);font-size:14px}
+  nav a:hover{background:var(--mist);text-decoration:none}
+  nav a.active{background:var(--green-bg);color:var(--green-deep);font-weight:600;box-shadow:inset 2px 0 0 var(--green)}
+  main{flex:1;min-width:0;padding:30px 44px 90px;overflow-x:auto}
+  .doc{max-width:820px}
+
+  /* ------------------------------------------------------------ typography */
+  main h1{font-family:var(--display);font-weight:600;font-size:32px;letter-spacing:-.02em;margin:0 0 10px;line-height:1.15}
+  main h2,main h3,main h4{font-family:var(--display);letter-spacing:-.02em;scroll-margin-top:70px;line-height:1.2}
+  main h2{font-weight:600;font-size:23px;margin:38px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  main h3{font-weight:600;font-size:18px;margin:26px 0 8px}
+  main h4{font-weight:600;font-size:15px;margin:20px 0 6px}
+  main p,main li{color:var(--ink)}
+  main strong{font-weight:600}
+  main h2 .anchor,main h3 .anchor{opacity:0;margin-left:8px;font-size:.62em;color:var(--faint);transition:opacity .12s;font-family:var(--mono)}
   main h2:hover .anchor,main h3:hover .anchor{opacity:1}
-  main pre{position:relative;background:#0d100c;color:#e6e9ee;padding:14px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
-  main code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#eef0ec;padding:2px 5px;border-radius:5px}
-  main pre code{background:none;padding:0}
-  main pre .copy-btn{position:absolute;top:8px;right:8px;background:#1c211b;color:#cfd6cc;border:1px solid #2c332a;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-  main pre .copy-btn:hover{background:#2c332a;color:#fff}
-  main pre .copy-btn.ok{color:var(--acid);border-color:var(--green)}
-  main table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
-  main th,main td{border:1px solid var(--line);padding:8px 10px;text-align:left}
-  main th{background:var(--paper)}
+  main blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--green);background:var(--green-bg);border-radius:0 10px 10px 0;color:var(--ink)}
+  main blockquote p{margin:4px 0}
+  main hr{border:none;border-top:1px solid var(--line);margin:28px 0}
   main img{max-width:100%}
-  /* home hero */
-  .hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:28px 30px;margin:0 0 30px;background:linear-gradient(135deg,#e9f6ed,#f4f5f1)}
-  .hero-bg{position:absolute;top:-30px;right:-20px;width:260px;height:220px;opacity:.5;pointer-events:none}
+
+  /* --------------------------------------------------------------- code */
+  main pre{position:relative;background:var(--ink);color:#E6E9EE;padding:15px 16px;border-radius:12px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
+  main code{font-family:var(--mono);font-size:.88em;background:var(--panel);color:var(--ink);padding:2px 6px;border-radius:6px}
+  main pre code{background:none;padding:0;color:inherit}
+  main a code{color:var(--green-deep)}
+  main pre .copy-btn{position:absolute;top:9px;right:9px;background:#161B22;color:#B0B7C0;border:1px solid #2A313B;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--mono)}
+  main pre .copy-btn:hover{background:#222932;color:#fff}
+  main pre .copy-btn.ok{color:var(--green);border-color:var(--green-deep)}
+
+  /* --------------------------------------------------------------- tables */
+  main table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13.5px}
+  main th,main td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  main th{background:var(--mist);font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.02em;color:var(--slate)}
+  /* Addresses / hashes / numbers in markdown tables render as <code> → mono already */
+
+  /* ---------------------------------------------------------------- hero */
+  .hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:30px 32px;margin:0 0 32px;background:linear-gradient(135deg,var(--green-bg),var(--white))}
+  .hero-bg{position:absolute;top:-30px;right:-20px;width:260px;height:220px;opacity:.45;pointer-events:none}
   .hero-top{display:flex;align-items:center;gap:16px;position:relative}
-  .hero-logo{width:52px;height:52px;flex-shrink:0}
-  .hero h1{font-size:28px;letter-spacing:-.02em;margin:0}
-  .hero h1 .s{color:var(--green)}
-  .hero .tag{color:var(--ink2);margin:4px 0 0;font-size:14.5px}
+  .hero-logo{width:50px;height:50px;flex-shrink:0}
+  .hero h1{font-family:var(--display);font-weight:600;font-size:29px;letter-spacing:-.02em;margin:0}
+  .hero h1 .s{color:var(--green-deep)}
+  .hero .tag{color:var(--slate);margin:5px 0 0;font-size:14.5px;max-width:640px}
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;position:relative}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-  .stat .v{font-weight:800;font-size:19px;color:var(--green);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.1}
-  .stat .k{font-size:12px;color:var(--ink2);margin-top:5px}
+  .stat{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:15px 16px}
+  .stat .v{font-family:var(--mono);font-weight:600;font-size:19px;color:var(--green-deep);line-height:1.1}
+  .stat .k{font-size:12px;color:var(--slate);margin-top:6px}
   .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;position:relative}
-  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:12px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer}
   .btn:hover{border-color:var(--green);text-decoration:none}
   .btn svg{width:15px;height:15px}
-  .btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
-  .btn.primary:hover{background:#0a7638}
-  @media(max-width:800px){nav{display:none}main{padding:20px}.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}}
+  .btn.primary{background:var(--green);color:var(--btn-ink);border-color:var(--green)}
+  .btn.primary:hover{background:#25c96e;border-color:#25c96e}
+
+  /* -------------------------------------------------------- contracts page */
+  .cx-lead{color:var(--slate);font-size:15px;max-width:760px;margin:0 0 20px}
+  .cx-common{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 30px}
+  .cx-common .box{border:1px solid var(--line);border-radius:14px;background:var(--white);padding:13px 15px}
+  .cx-common .box .k{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--slate)}
+  .cx-common .box .v{font-family:var(--mono);font-size:12.5px;margin-top:5px;word-break:break-all;color:var(--ink)}
+  .cx-chain{border:1px solid var(--line);border-radius:14px;background:var(--white);margin:0 0 16px;overflow:hidden}
+  .cx-chain>.hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line2);background:var(--mist)}
+  .cx-chain>.hd .nm{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em}
+  .cx-chain>.hd .id{font-family:var(--mono);font-size:12px;color:var(--slate)}
+  .cx-chain>.hd .id b{color:var(--ink);font-weight:600}
+  .cx-chain>.hd .tag{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--green-deep);background:var(--green-bg);border:1px solid var(--green-border);border-radius:999px;padding:3px 10px}
+  .cx-tbl{width:100%;border-collapse:collapse}
+  .cx-tbl td{border-top:1px solid var(--line2);padding:8px 18px;font-size:13.5px}
+  .cx-tbl tr:first-child td{border-top:none}
+  .cx-tbl td.k{width:230px;color:var(--slate);white-space:nowrap}
+  .cx-tbl td.v{font-family:var(--mono);font-size:12.5px;color:var(--ink);word-break:break-all}
+  .cx-note{font-size:12.5px;color:var(--slate);padding:10px 18px;border-top:1px solid var(--line2);background:var(--mist)}
+  @media(max-width:800px){
+    nav{display:none}main{padding:22px 18px 70px}
+    .stats{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}
+    .cx-tbl td.k{width:auto;white-space:normal}
+  }
 </style>
 </head>
 <body>
 <header>
-  <svg class="mark" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0d100c" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2fe07e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>
-  <b>Hook<span class="s">Swap</span> Docs</b>
-  <span style="margin-left:auto"><a href="https://hookswap.org">hookswap.org →</a></span>
+  <a href="#README.md" aria-label="HookSwap Docs home"><img class="logo" src="/logo-horizontal.png" alt="HookSwap" /></a>
+  <span class="tab">Docs</span>
+  <span class="right">
+    <a href="https://hookswap.org" target="_blank" rel="noopener">Open App →</a>
+  </span>
 </header>
 <div class="wrap">
   <nav id="nav"></nav>
-  <main id="content">Loading…</main>
+  <main id="content"><div class="doc">Loading…</div></main>
 </div>
 <script src="/vendor/marked.min.js"></script>
 <script>
@@ -85,6 +152,7 @@ const TREE = [
   ["Overview", [["Docs home","README.md"]]],
   ["Users", [["Getting started","users/getting-started.md"],["Swapping","users/swapping.md"],["Liquidity","users/liquidity.md"],["Chains","users/chains.md"],["FAQ","users/faq.md"]]],
   ["Developers", [["Overview","developers/overview.md"],["Contract addresses","developers/contract-addresses.md"],["SDK","developers/sdk.md"],["Routing","developers/routing.md"],["Launchpad integration","developers/launchpad-integration.md"]]],
+  ["Contracts", [["Deployed addresses","contracts"]]],
   ["Operators", [["Go-live checklist","operators/go-live-checklist.md"],["Deploy contracts","operators/deploy-contracts.md"],["Run the app","operators/run-the-app.md"],["Run routing","operators/run-routing.md"],["Run indexer","operators/run-indexer.md"],["Seed liquidity","operators/seed-liquidity.md"]]],
 ];
 // Static, trusted inline SVGs (no user input) for section headers + buttons.
@@ -92,11 +160,12 @@ const SEC_ICONS = {
   "Overview":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>',
   "Users":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
   "Developers":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4"/><path d="m16 8 5 4-5 4"/></svg>',
+  "Contracts":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
   "Operators":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
 };
 const nav = document.getElementById('nav');
 const content = document.getElementById('content');
-// Whitelist of loadable doc paths (from TREE) — prevents path traversal / arbitrary
+// Whitelist of loadable routes (from TREE) — prevents path traversal / arbitrary
 // same-origin fetch driven by location.hash. Only these exact paths ever load.
 const ALLOWED = new Set();
 for (const [sec, items] of TREE){
@@ -116,14 +185,14 @@ function setText(el, s){ el.textContent = s; }
 function heroHTML(){
   return ''+
   '<section class="hero">'+
-    '<svg class="hero-bg" viewBox="0 0 260 220" fill="none" stroke="#0c8a42" stroke-width="1.4" aria-hidden="true">'+
+    '<svg class="hero-bg" viewBox="0 0 260 220" fill="none" stroke="#0AA85A" stroke-width="1.4" aria-hidden="true">'+
       '<path d="M60 20 90 37 90 71 60 88 30 71 30 37Z"/>'+
       '<path d="M120 55 150 72 150 106 120 123 90 106 90 72Z"/>'+
       '<path d="M180 20 210 37 210 71 180 88 150 71 150 37Z"/>'+
       '<path d="M180 90 210 107 210 141 180 158 150 141 150 107Z"/>'+
     '</svg>'+
     '<div class="hero-top">'+
-      '<svg class="hero-logo" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0d100c" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2fe07e" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>'+
+      '<svg class="hero-logo" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0B0F14" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2FE07E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>'+
       '<div><h1>Hook<span class="s">Swap</span> Documentation</h1>'+
       '<p class="tag">Self-hosted v2 + v3 DEX with an on-chain launchpad, token lockers, and referrals — deployed across 7 chains.</p></div>'+
     '</div>'+
@@ -136,12 +205,149 @@ function heroHTML(){
     '<div class="btns">'+
       '<a class="btn primary" href="https://hookswap.org" target="_blank" rel="noopener">Open App</a>'+
       '<a class="btn" href="https://hookswap.org/swap" target="_blank" rel="noopener">Launch Terminal</a>'+
-      '<a class="btn" href="https://hookos.fun/atlas" target="_blank" rel="noopener">Launchpad</a>'+
+      '<a class="btn" href="#contracts">Contracts</a>'+
       '<a class="btn" href="https://github.com/HooksOS" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.46-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.36-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>GitHub</a>'+
       '<a class="btn" href="https://x.com/hookosfun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2h3.31l-7.23 8.26L22.5 22h-6.66l-5.22-6.82L4.65 22H1.34l7.73-8.84L1.5 2h6.83l4.72 6.23L18.24 2Zm-1.16 18h1.84L7.01 3.9H5.03L17.08 20Z"/></svg>X</a>'+
       '<a class="btn" href="https://t.me/HookOSPortal" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.94 4.28 18.9 19.1c-.23 1.02-.83 1.27-1.68.79l-4.64-3.42-2.24 2.16c-.25.25-.46.46-.94.46l.33-4.73L18.7 5.9c.37-.33-.08-.51-.58-.18L6.5 12.98l-4.6-1.44c-1-.31-1.02-1 .21-1.48l17.98-6.93c.83-.31 1.56.2 1.29 1.15Z"/></svg>Telegram</a>'+
     '</div>'+
   '</section>';
+}
+
+/* ---------------------------------------------------------------- Contracts
+ * Values copied VERBATIM from contracts/deployments/*.json (HookSwap-owned
+ * deploys). Only fields present in a chain's JSON are listed. Trusted static
+ * data — no user input is interpolated. */
+const CX_COMMON = {
+  deployer: '0xc14C897c6bff88a5Eeac31F795693b9230205125',
+  permit2: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+  v2Hash: '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f',
+  v3Hash: '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54',
+};
+// Row order + human labels. Only rows with a value for a chain are rendered.
+const CX_ROWS = [
+  ['v2Factory','v2 Factory'],
+  ['v2Router02','v2 Router02'],
+  ['v3Factory','v3 Factory'],
+  ['nonfungiblePositionManager','v3 NFT Position Mgr'],
+  ['swapRouter02','SwapRouter02'],
+  ['quoterV2','QuoterV2'],
+  ['universalRouter','Universal Router'],
+  ['tokenLockerManager','Token Locker Mgr'],
+  ['v3PositionLocker','v3 Position Locker'],
+  ['referralRouter','Referral Router'],
+  ['weth9','WETH / wrapped'],
+];
+const CX_CHAINS = [
+  { nm:'MegaETH', id:4326, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    v2Router02:'0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA',
+    v3Factory:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    nonfungiblePositionManager:'0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    swapRouter02:'0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
+    quoterV2:'0x15cD41B273865feD20BC8B5cDF4423D7678ac78E',
+    universalRouter:'0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
+    tokenLockerManager:'0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    referralRouter:'0xB5A7BF488f2407479E116f713f116546F67c803b',
+    weth9:'0x4200000000000000000000000000000000000006',
+  }},
+  { nm:'Robinhood', id:4663, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    v2Router02:'0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA',
+    v3Factory:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    nonfungiblePositionManager:'0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    swapRouter02:'0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
+    quoterV2:'0x15cD41B273865feD20BC8B5cDF4423D7678ac78E',
+    universalRouter:'0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
+    tokenLockerManager:'0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    referralRouter:'0x6d8a0783213B3b06648DB3708a89732af3661005',
+    weth9:'0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
+  }},
+  { nm:'Ink', id:57073, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    v2Router02:'0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA',
+    v3Factory:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    nonfungiblePositionManager:'0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    swapRouter02:'0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
+    quoterV2:'0x15cD41B273865feD20BC8B5cDF4423D7678ac78E',
+    universalRouter:'0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
+    tokenLockerManager:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    v3PositionLocker:'0xB5A7BF488f2407479E116f713f116546F67c803b',
+    referralRouter:'0x62aE013cb2b232C20094B466C94bb39714eF661E',
+    weth9:'0x4200000000000000000000000000000000000006',
+  }},
+  { nm:'XLayer', id:196, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    v2Router02:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    v3Factory:'0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC',
+    nonfungiblePositionManager:'0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A',
+    swapRouter02:'0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
+    quoterV2:'0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
+    universalRouter:'0x6d8a0783213B3b06648DB3708a89732af3661005',
+    tokenLockerManager:'0x35dB40f22143651159056285E92c113ECE65E7e2',
+    v3PositionLocker:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    referralRouter:'0xB5A7BF488f2407479E116f713f116546F67c803b',
+    weth9:'0xe538905cf8410324e03A5A23C1c177a474D59b2b',
+  }},
+  { nm:'HyperEVM', id:999, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2',
+    v2Router02:'0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    v3Factory:'0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A',
+    nonfungiblePositionManager:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    swapRouter02:'0xD96fc9629AFaf325fCdd7F98Dc9b8dc2165adcBB',
+    quoterV2:'0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D',
+    universalRouter:'0xD9d4795F2A12305a12C36455ADAD011F2D6143AB',
+    tokenLockerManager:'0x7EFFe9DD68035f43ad43aE6C31bc1a47Ab4579D0',
+    v3PositionLocker:'0xD08E609277eCB0B7E2eF15dF5C1Fb11436627a63',
+    referralRouter:'0x250C3448278F7B71E3e9B641f2EfEb6074820e25',
+    weth9:'0x5555555555555555555555555555555555555555',
+  }},
+  { nm:'Tempo', id:4217, tag:'v2 + v3 + UR', a:{
+    v2Factory:'0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
+    v2Router02:'0x6d8a0783213B3b06648DB3708a89732af3661005',
+    v3Factory:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    nonfungiblePositionManager:'0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    swapRouter02:'0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
+    quoterV2:'0x15cD41B273865feD20BC8B5cDF4423D7678ac78E',
+    universalRouter:'0x62aE013cb2b232C20094B466C94bb39714eF661E',
+    tokenLockerManager:'0x86426094d82bC1fd40F0901965b23D30837Dc66b',
+    v3PositionLocker:'0xB5A7BF488f2407479E116f713f116546F67c803b',
+    referralRouter:'0x0E88A920A522d2e858B5fB0e896F228f4619E0a6',
+    weth9:'0xBbBcC62853a5fA27b93d6Bab3E6F7ce841E25Df2',
+  }, note:'Tempo has no native-gas wrapper — gas is paid in pathUSD (ERC-20). The WETH9 address is only the router/periphery constructor arg; do not use addLiquidityETH / msg.value on Tempo.' },
+  { nm:'Sepolia', id:11155111, tag:'testnet · lockers + referral', a:{
+    swapRouter02:'0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E',
+    tokenLockerManager:'0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    v3PositionLocker:'0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC',
+    referralRouter:'0xfEb3eA6212761c1891389e77ee5Bf27c3b385E1A',
+  }, note:'Sepolia reuses Uniswap’s canonical v2/v3/Universal Router deployment for testing; the addresses above are the HookSwap-deployed locker + referral contracts. See Developers → Contract addresses for the full canonical Sepolia stack.' },
+];
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function contractsHTML(){
+  let h = '<h1 id="contracts">Contract addresses</h1>';
+  h += '<p class="cx-lead">HookSwap runs its <b>own</b> full v2 + v3 + Universal Router stack, plus token lockers and a referral router, on every chain. All values below are copied verbatim from the on-chain deployment records (<code>contracts/deployments/*.json</code>). Every address is public.</p>';
+  h += '<div class="cx-common">'+
+    '<div class="box"><div class="k">Deployer (all chains)</div><div class="v">'+esc(CX_COMMON.deployer)+'</div></div>'+
+    '<div class="box"><div class="k">Permit2 (canonical, every chain)</div><div class="v">'+esc(CX_COMMON.permit2)+'</div></div>'+
+    '<div class="box"><div class="k">v2 pair init-code hash</div><div class="v">'+esc(CX_COMMON.v2Hash)+'</div></div>'+
+    '<div class="box"><div class="k">v3 pool init-code hash</div><div class="v">'+esc(CX_COMMON.v3Hash)+'</div></div>'+
+  '</div>';
+  for (const c of CX_CHAINS){
+    h += '<div class="cx-chain">';
+    h += '<div class="hd"><span class="nm">'+esc(c.nm)+'</span><span class="id">chain id <b>'+esc(c.id)+'</b></span><span class="tag">'+esc(c.tag)+'</span></div>';
+    h += '<table class="cx-tbl"><tbody>';
+    for (const [key,label] of CX_ROWS){
+      const v = c.a[key];
+      if (!v) continue; // omit rows absent from this chain's JSON
+      h += '<tr><td class="k">'+esc(label)+'</td><td class="v">'+esc(v)+'</td></tr>';
+    }
+    h += '</tbody></table>';
+    if (c.note) h += '<div class="cx-note">'+esc(c.note)+'</div>';
+    h += '</div>';
+  }
+  h += '<p class="cx-lead" style="margin-top:22px">Looking for the deterministic-group breakdown, canonical Sepolia stack, and v3 fee-tier reference? See <a href="#developers/contract-addresses.md">Developers → Contract addresses</a>.</p>';
+  return h;
 }
 
 function enhance(path){
@@ -174,7 +380,15 @@ function scrollToFrag(frag){
 let currentPath=null;
 async function load(path, frag){
   if(!ALLOWED.has(path)){
-    content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found'); content.appendChild(h);
+    content.innerHTML = '<div class="doc"></div>';
+    const h=document.createElement('h1'); setText(h,'Not found'); content.firstChild.appendChild(h);
+    return;
+  }
+  // Synthetic, self-contained Contracts page (no markdown fetch; trusted static markup).
+  if(path==='contracts'){
+    content.innerHTML = '<div class="doc">'+contractsHTML()+'</div>';
+    document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.path===path));
+    currentPath=path; window.scrollTo(0,0);
     return;
   }
   try{
@@ -183,14 +397,18 @@ async function load(path, frag){
     const md = await res.text();
     // Our own trusted docs only (whitelisted). marked renders to sanitized-ish HTML;
     // raw inline HTML in the markdown is escaped by disabling the html tokenizer.
-    content.innerHTML = marked.parse(md, { mangle:false, headerIds:true });
+    const doc = document.createElement('div'); doc.className='doc';
+    doc.innerHTML = marked.parse(md, { mangle:false, headerIds:true });
+    content.innerHTML=''; content.appendChild(doc);
     if(path==='README.md'){
       const hero=document.createElement('div'); hero.innerHTML=heroHTML(); // trusted static markup
-      content.insertBefore(hero.firstChild, content.firstChild);
+      doc.insertBefore(hero.firstChild, doc.firstChild);
     }
   }catch(e){
-    content.innerHTML = ''; const h=document.createElement('h1'); setText(h,'Not found');
-    const p=document.createElement('p'); setText(p,'Could not load this page.'); content.appendChild(h); content.appendChild(p);
+    content.innerHTML = '<div class="doc"></div>';
+    const h=document.createElement('h1'); setText(h,'Not found');
+    const p=document.createElement('p'); setText(p,'Could not load this page.');
+    content.firstChild.appendChild(h); content.firstChild.appendChild(p);
   }
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.path===path));
   currentPath=path;

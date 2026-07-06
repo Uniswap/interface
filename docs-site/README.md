@@ -1,7 +1,10 @@
 # docs.hookswap.org — static docs site
 
-`index.html` is a self-contained, Atlas-themed viewer that renders the repo's
-`/docs` markdown client-side (via marked.js). Deployed to the VPS at
+`index.html` is a self-contained, Signal/Terminal-themed viewer (Space Grotesk +
+IBM Plex Sans/Mono, self-hosted from `fonts/`; brand logo `logo-horizontal.png`)
+that renders the repo's `/docs` markdown client-side (via marked.js). It also
+ships a built-in **Contracts** page (`#contracts`) whose addresses are inlined
+verbatim from `contracts/deployments/*.json`. Deployed to the VPS at
 `/var/www/docs.hookswap.org` behind nginx + Let's Encrypt (certbot).
 
 ## Deploy / update
