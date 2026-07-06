@@ -18,7 +18,8 @@ import { isPathBlocked } from '~/utils/blockedPaths'
 import { MICROSITE_LINK } from '~/utils/openDownloadApp'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
-const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
+// `/embed/swap` renders chromeless (no rail/header) for third-party iframe embeds.
+const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH, '/embed/swap']
 
 /**
  * HookSwap Terminal routes own the full viewport (226px left rail + top bar), so

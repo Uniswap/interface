@@ -57,6 +57,8 @@ const BetaPage = lazy(() => import('~/pages/Beta'))
 const Wrapped = lazy(() => import('~/pages/Wrapped'))
 // HookSwap Terminal — additive design layer mounted under /terminal/* (see src/terminal/).
 const TerminalApp = lazy(() => import('~/terminal/TerminalApp'))
+// Embeddable swap widget — chromeless page for third-party iframes (see src/embed/).
+const SwapWidgetPage = lazy(() => import('~/embed/SwapWidgetPage'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -284,6 +286,16 @@ export const routes: RouteDefinition[] = [
     path: '/swap',
     getElement: () => <TerminalSwapPage />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  // Embeddable swap widget — chromeless (see App.tsx OVERRIDE_PAGE_LAYOUT); for third-party iframes.
+  createRouteDefinition({
+    path: '/embed/swap',
+    getTitle: () => 'HookSwap Swap Widget',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <SwapWidgetPage />
+      </Suspense>
+    ),
   }),
   // HookSwap Terminal namespace — alias kept while remaining B-screens are ported.
   createRouteDefinition({

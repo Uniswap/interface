@@ -26,6 +26,7 @@ export type TerminalScreenId =
   | 'command-palette' // B11 (modal)
   | 'settings' // B12
   | 'notifications' // B13
+  | 'widget-builder' // Tools — embeddable swap widget builder
 
 export type TerminalNavIcon =
   | 'swap'
@@ -45,6 +46,7 @@ export type TerminalNavIcon =
   | 'x'
   | 'telegram'
   | 'github'
+  | 'widget'
 
 /**
  * Rail item ids that point at LEGACY (non-Terminal) routes that still render
@@ -132,6 +134,13 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
     path: `${TERMINAL_BASE}/notifications`,
     kind: 'page',
   },
+  'widget-builder': {
+    id: 'widget-builder',
+    code: 'WB',
+    title: 'Widget builder',
+    path: `${TERMINAL_BASE}/widget`,
+    kind: 'page',
+  },
 }
 
 export interface TerminalNavItem {
@@ -180,6 +189,7 @@ export const terminalAccountNav: TerminalNavItem[] = [
  */
 export const terminalResourcesNav: TerminalNavItem[] = [
   { id: 'settings', label: 'Settings', icon: 'settings', path: `${TERMINAL_BASE}/settings` },
+  { id: 'widget-builder', label: 'Widget', icon: 'widget', path: `${TERMINAL_BASE}/widget` },
   { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_LINKS.docs, externalHref: HOOKSWAP_LINKS.docs },
   { id: 'docs', label: 'Launchpad', icon: 'launchpad', path: HOOKSWAP_LINKS.launchpad, externalHref: HOOKSWAP_LINKS.launchpad },
 ]

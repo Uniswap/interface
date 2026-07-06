@@ -45,6 +45,7 @@ import { ReferralsScreen } from '~/terminal/screens/ReferralsScreen'
 import { useCaptureRef } from '~/terminal/referral/useCaptureRef'
 import { SettingsScreen } from '~/terminal/screens/SettingsScreen'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
+import { WidgetBuilderScreen } from '~/terminal/screens/WidgetBuilderScreen'
 
 const TERMINAL_BASE = '/terminal'
 
@@ -109,6 +110,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/referrals')) {
     return 'referrals'
+  }
+  if (rest.startsWith('/widget')) {
+    return 'widget-builder'
   }
   if (rest.startsWith('/settings')) {
     return 'settings'
@@ -343,6 +347,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="analytics" element={<AnalyticsScreen />} />
         <Route path="referrals" element={<ReferralsScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
+        <Route path="widget" element={<WidgetBuilderScreen />} />
         <Route path="*" element={<Navigate to="swap" replace />} />
       </Routes>
     </TerminalChrome>

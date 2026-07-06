@@ -148,6 +148,14 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           />
         </svg>
       )
+    case 'widget':
+      // Embeddable widget builder — a frame with an inset panel.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <rect x={3} y={4} width={18} height={16} rx={2} />
+          <rect x={7} y={9} width={10} height={7} rx={1} />
+        </svg>
+      )
     default:
       return <svg {...common} />
   }
