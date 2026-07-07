@@ -23,10 +23,11 @@
  * NO hook UI on this screen: no hook-fee strip, no active-hook selector, no hook
  * config bar. The order ticket is Market / Limit only.
  */
+import { Token } from '@uniswap/sdk-core'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
@@ -51,7 +52,6 @@ import { useAccount } from '~/hooks/useAccount'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
 import { TerminalChartPanel } from '~/terminal/screens/swap/TerminalChartPanel'
-import { TerminalMarketsPanel } from '~/terminal/screens/swap/TerminalMarketsPanel'
 import { TerminalSwapReviewFlow, useTerminalReviewTrigger } from '~/terminal/screens/swap/TerminalSwapReviewFlow'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
@@ -554,12 +554,8 @@ function SwapScreenBody(): JSX.Element {
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencies: s.currencies,
   }))
-  const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
   const inputCurrency = derived.currencies[CurrencyField.INPUT]?.currency
   const outputCurrency = derived.currencies[CurrencyField.OUTPUT]?.currency
-  // The markets list queries the input's chain (default Mainnet); selecting a row
-  // sets that token as the swap OUTPUT, which the chart then follows.
-  const chainId = (inputCurrency?.chainId ?? UniverseChainId.Mainnet) as UniverseChainId
   const isMobile = useIsMobileViewport()
   // Swap dependencies (handlers/service) — the review flow reads this store via
   // useSwapDependenciesStoreBase(); the real swap page provides it the same way
@@ -567,19 +563,7 @@ function SwapScreenBody(): JSX.Element {
   // SwapDependenciesStoreContextProvider"). Provided here around the whole body.
   const swapHandlers = useSwapHandlers()
 
-  const onSelectMarket = useCallback(
-    (currency: Currency): void => {
-      const asset = currencyToAsset(currency)
-      if (asset) {
-        updateSwapForm({ output: asset })
-      }
-    },
-    [updateSwapForm],
-  )
-
-  // Mobile: collapse the 3-panel desktop layout to a single, centered swap ticket.
-  // The market list + chart are secondary desktop context; hiding them keeps the
-  // core swap flow front-and-center and avoids horizontal overflow on a phone.
+  // Mobile: single, centered swap ticket (no chart) to avoid horizontal overflow.
   if (isMobile) {
     return (
       <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
@@ -597,7 +581,6 @@ function SwapScreenBody(): JSX.Element {
   return (
     <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
       <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
-        <TerminalMarketsPanel chainId={chainId} activeCurrency={outputCurrency} onSelectCurrency={onSelectMarket} />
         <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
         {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
             uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
@@ -618,11 +601,15 @@ function SwapScreenBody(): JSX.Element {
  * B2 Swap screen. Mounts the same swap-engine provider stack the app's `/swap`
  * page uses (multichain → transaction settings → swap-and-limit → swap form
  * store), so the ticket reads a real live quote. Prefilled with a real default
- * pair (native ETH → USDC on Mainnet); users swap tokens via the real selector.
+ * pair (native OKB → HKT on the X Layer test pool); users swap tokens via the real selector.
  */
 export function SwapScreen(): JSX.Element {
-  const initialInputCurrency = useMemo(() => nativeOnChain(UniverseChainId.Mainnet), [])
-  const initialOutputCurrency = USDC
+  // Default to the X Layer test setup: native OKB → HKT (the seeded WOKB/HKT pool).
+  const initialInputCurrency = useMemo(() => nativeOnChain(UniverseChainId.XLayer), [])
+  const initialOutputCurrency = useMemo(
+    () => new Token(UniverseChainId.XLayer, '0x144331BB4C3026D135896CaFec3Ae3D667f4F376', 18, 'HKT', 'HookSwap Test'),
+    [],
+  )
 
   // Minimal transaction-modal context (mirrors TransactionModal.web.tsx) — the
   // SwapTokenSelector's selection hooks require it even outside a modal flow.
@@ -636,7 +623,7 @@ export function SwapScreen(): JSX.Element {
   })
 
   return (
-    <MultichainContextProvider initialChainId={UniverseChainId.Mainnet}>
+    <MultichainContextProvider initialChainId={UniverseChainId.XLayer}>
       <SwapTransactionSettingsStoreContextProvider>
         <SwapAndLimitContextProvider
           initialInputCurrency={initialInputCurrency}
