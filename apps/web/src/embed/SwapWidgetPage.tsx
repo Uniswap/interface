@@ -26,7 +26,10 @@ import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
+import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
 import { SwapTicket } from '~/terminal/screens/SwapScreen'
+import { TerminalSwapReviewFlow } from '~/terminal/screens/swap/TerminalSwapReviewFlow'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { parseEmbedConfig, type WidgetTheme } from '~/embed/embedParams'
 
@@ -57,6 +60,23 @@ function PoweredByHookSwap({ theme }: { theme: WidgetTheme }): JSX.Element {
  * the form store's prefilled state (bare address+chain assets) — no `Currency`
  * objects needed, so a host only supplies token addresses.
  */
+/**
+ * SwapTicket wrapped with the same providers the main SwapScreen uses: the swap
+ * dependencies store (handlers/service) and the review→confirm→submit flow. Must be
+ * rendered INSIDE the swap-form store so `useSwapHandlers()` resolves; the ticket's
+ * review trigger requires TerminalSwapReviewFlow's warning-store provider.
+ */
+function EmbedSwapTicket(): JSX.Element {
+  const swapHandlers = useSwapHandlers()
+  return (
+    <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
+      <TerminalSwapReviewFlow>
+        <SwapTicket />
+      </TerminalSwapReviewFlow>
+    </SwapDependenciesStoreContextProvider>
+  )
+}
+
 export function SwapWidgetPage(): JSX.Element {
   const [searchParams] = useSearchParams()
   const config = useMemo(() => parseEmbedConfig(searchParams), [searchParams])
@@ -112,7 +132,7 @@ export function SwapWidgetPage(): JSX.Element {
                   setScreen={setTxScreen}
                   onClose={() => undefined}
                 >
-                  <SwapTicket />
+                  <EmbedSwapTicket />
                 </TransactionModalContextProvider>
               </SwapFormStoreContextProvider>
             </SwapAndLimitContextProvider>

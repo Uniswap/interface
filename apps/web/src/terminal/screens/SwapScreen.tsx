@@ -35,7 +35,9 @@ import {
   TransactionScreen,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
+import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
+import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -559,6 +561,11 @@ function SwapScreenBody(): JSX.Element {
   // sets that token as the swap OUTPUT, which the chart then follows.
   const chainId = (inputCurrency?.chainId ?? UniverseChainId.Mainnet) as UniverseChainId
   const isMobile = useIsMobileViewport()
+  // Swap dependencies (handlers/service) — the review flow reads this store via
+  // useSwapDependenciesStoreBase(); the real swap page provides it the same way
+  // (SwapForm.tsx). Omitting it crashes the screen ("must be used within
+  // SwapDependenciesStoreContextProvider"). Provided here around the whole body.
+  const swapHandlers = useSwapHandlers()
 
   const onSelectMarket = useCallback(
     (currency: Currency): void => {
@@ -575,29 +582,33 @@ function SwapScreenBody(): JSX.Element {
   // core swap flow front-and-center and avoids horizontal overflow on a phone.
   if (isMobile) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 8px 28px' }}>
-        <div style={{ width: 326, maxWidth: '100%' }}>
+      <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 8px 28px' }}>
+          <div style={{ width: 326, maxWidth: '100%' }}>
+            <TerminalSwapReviewFlow>
+              <SwapTicket />
+            </TerminalSwapReviewFlow>
+          </div>
+        </div>
+      </SwapDependenciesStoreContextProvider>
+    )
+  }
+
+  return (
+    <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
+        <TerminalMarketsPanel chainId={chainId} activeCurrency={outputCurrency} onSelectCurrency={onSelectMarket} />
+        <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+        {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
+            uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
+            the row height and steal the chart's width / bottom-align the ticket. */}
+        <div style={{ width: 326, flexShrink: 0, alignSelf: 'flex-start' }}>
           <TerminalSwapReviewFlow>
             <SwapTicket />
           </TerminalSwapReviewFlow>
         </div>
       </div>
-    )
-  }
-
-  return (
-    <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
-      <TerminalMarketsPanel chainId={chainId} activeCurrency={outputCurrency} onSelectCurrency={onSelectMarket} />
-      <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
-      {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
-          uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
-          the row height and steal the chart's width / bottom-align the ticket. */}
-      <div style={{ width: 326, flexShrink: 0, alignSelf: 'flex-start' }}>
-        <TerminalSwapReviewFlow>
-          <SwapTicket />
-        </TerminalSwapReviewFlow>
-      </div>
-    </div>
+    </SwapDependenciesStoreContextProvider>
   )
 }
 
