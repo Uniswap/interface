@@ -107,7 +107,7 @@ function StatsCluster({
   vol: string
 }): JSX.Element {
   return (
-    <div style={{ display: 'flex', gap: 26, alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 22, alignItems: 'center', flexShrink: 0 }}>
       <HeaderStat label="Price" value={price} valueColor={terminalColors.ink} size={15} weight={600} />
       <HeaderStat label="24h" value={change} valueColor={changeColor} />
       <HeaderStat label="24h high" value={high} />
@@ -183,7 +183,7 @@ function PairHeaderLeft({
           <CurrencyLogo currency={outputCurrency} size={28} />
         </span>
       </span>
-      <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 17, color: terminalColors.ink }}>
+      <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 17, color: terminalColors.ink, whiteSpace: 'nowrap' }}>
         {inSym} / {outSym}
       </span>
       {showToggle && (
@@ -327,9 +327,11 @@ function PanelShell({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: 16,
           padding: '15px 20px',
           borderBottom: `1px solid ${terminalColors.line2}`,
           background: terminalColors.bg,
+          overflowX: 'auto',
         }}
       >
         <PairHeaderLeft
