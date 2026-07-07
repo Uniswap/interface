@@ -594,9 +594,6 @@ export default defineConfig(({ mode, isPreview }) => {
       },
       // Increase the warning limit for larger chunks
       chunkSizeWarningLimit: 800,
-      commonjsOptions: {
-        include: [/node_modules/],
-      },
     },
 
     // Support all prefixes (including no prefix)

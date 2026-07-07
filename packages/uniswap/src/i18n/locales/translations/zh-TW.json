@@ -2545,7 +2545,7 @@
   "title.sendTokens": "在 HookSwap 上傳送代幣",
   "title.swappingMadeSimple": "支援在以太坊、Base、Arbitrum、Polygon、Unichain 等鏈上即時買賣加密貨幣。深受數百萬用戶信賴的 DeFi 平台。",
   "title.tradeTokens": "交易代幣並提供流動資產。即時價格、圖表、交易資料和其他。",
-  "title.uniswapTradeCrypto": "HookSwap | 在 DeFi 領先交易所交易加密貨幣 ",
+  "title.uniswapTradeCrypto": "HookSwap | Trade crypto onchain",
   "title.uniToken": "UNI 代幣代表 HookSwap 治理中的投票份額。你可以自己對每個提案進行投票，也可以將你的投票委託給第三方。",
   "title.voteOnGov": "對 HookSwap 治理提案進行投票",
   "token.balances.chooseNetwork": "選擇網路餘額",

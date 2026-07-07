@@ -61,9 +61,9 @@ export function TerminalShell({ rail, topBar, subBar, children }: TerminalShellP
     // In the mobile drawer, tapping a nav item navigates AND closes the drawer.
     const drawerRail: LeftRailProps = {
       ...rail,
-      onNavigate: (path: string) => {
+      onNavigate: (path, id) => {
         setDrawerOpen(false)
-        rail.onNavigate?.(path)
+        rail.onNavigate?.(path, id)
       },
     }
 

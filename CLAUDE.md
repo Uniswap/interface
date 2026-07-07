@@ -124,8 +124,8 @@ Forks at `C:/Users/avone/OneDrive/Desktop/HokkOS/forks/`. Foundry installed.
 - v2 pair init hash CONFIRMED == canonical → SDK/SOR forks need only factory ADDRESSES (hashes untouched).
 - Verify the deployed UR version matches the interface's `supportedURVersions` (`_2_0`) at deploy time.
 
-## BLOCKER: deployer key malformed (2026-07-03)
-`contracts/.env` DEPLOYER_PRIVATE_KEY is 71 non-hex chars after `0x` (must be exactly 64 hex). Reggie must fix: line = `DEPLOYER_PRIVATE_KEY=0x<64 hex>` — no quotes/spaces/comment/trailing text. Then fund wallet (HYPE/ETH/etc per chain) and run deploys. Key never printed; only shape measured.
+## ~~BLOCKER: deployer key malformed~~ RESOLVED (2026-07-03; confirmed 2026-07-07)
+`contracts/.env` DEPLOYER_PRIVATE_KEY was 71 non-hex chars after `0x`. **Fixed** — the audit (2026-07-07) measured the key shape as exactly 64 hex (shape only; key never printed), consistent with all deploys having completed. No longer a blocker.
 
 ## Design handoff — HookSwap Terminal (for later; deploy is current priority)
 `C:/Users/avone/OneDrive/Desktop/design_handoff_hookswap_terminal/` — pixel-perfect "Terminal" redesign: 13 screens (B01 landing … B13 notifications) with screenshots, `design/HookSwap Redesign.dc.html` (build the "Option B / Terminal" column, id "1b"), `README.md` (exact color/type/spacing spec), `CLAUDE_PROMPT.md` (build prompt). Key: 226px left rail, IBM Plex Mono for all numerics/addresses/tickers, NO mock data (bind every value to live source). Supersedes the earlier Atlas plan for the redesign. Do after deploys.
@@ -165,11 +165,27 @@ Every chain's addresses in contracts/deployments/<chain>.json. Permit2 + WETH re
 - **Hosted RPC: Infura key** (in apps/web/.env.local, gitignored; rotate after launch — was shared in chat). Infura serves Ethereum mainnet + **Sepolia** + major L2s — use it for Sepolia/mainnet. It does NOT serve the 6 HookSwap custom chains (MegaETH/Robinhood/Ink/XLayer/HyperEVM/Tempo) → those keep their public RPCs until dedicated nodes are provisioned.
 - **UI progress:** Terminal is core app. B2 Swap ✅ (hooks removed, pixel-tightened, MEV toggle live), B3 Markets ✅ (real pools/TVL/volume/APR/sparklines/heatmap). Next: Pools, Portfolio, Activity.
 
-## SDK fork address status (2026-07-04)
+## SDK fork address status (2026-07-04; re-audited 2026-07-07)
 - sdks (sdk-core @ 79285a0f) + SOR (@ efd0ba1): MegaETH/Robinhood/Ink/XLayer/HyperEVM = COMPLETE real addresses.
-- **FOLLOW-UP: Tempo (4217) is only v2-factory in the forks** — the sdk-update agent ran before the Tempo deploy finished. Tempo is now FULLY deployed (see tempo.json); fill its real v3/router/UR addresses into HooksOS/sdks addresses.ts + SOR when convenient (not demo-critical).
+- ~~FOLLOW-UP: Tempo only v2-factory in the forks~~ **RESOLVED** — the 2026-07-07 contracts audit verified `vendor/sdk-core` `CHAIN_TO_ADDRESSES_MAP` has Tempo (4217) FULLY wired (v3Factory/QuoterV2/NPM/tickLens/multicall/swapRouter02/v2Factory/v2Router), matching tempo.json. SOR fork has all 7 chains too.
+- **Only `@uniswap/sdk-core` is workspace-overridden** (`resolutions` → `vendor/sdk-core`). SOR fork is consumed by the adapter, NOT the web app. `@uniswap/universal-router-sdk` is NOT overridden → see the UR resolver note in the 2026-07-07 session log.
+
+## Session 2026-07-07 — stack sweep + fixes (5-agent audit UI+contracts)
+Read-only audits (chains / rebrand / terminal UI / contracts / routing) + fixes applied:
+- **Terminal UI redesign — verified DONE.** SwapScreen refactored into `screens/swap/` panels (TerminalChartPanel/TerminalMarketsPanel/TerminalSwapReviewFlow). All 15 screens audited: NO mock data, no v4/hook leakage, honest empty/"—" states. Pools/Portfolio/Activity got minor pixel/token fixes (all real-data-bound). Screens B2–B13 demo-ready.
+- **Connect button** added top-right of the Terminal `TopBar` (was only in the left rail; users expected top-right). Reuses the already-mounted `AccountDrawer` (disconnected→open, connected→toggle). The collapsed left-rail wallet chip's green square = `terminalTokenGradients.walletAvatar`.
+- **Rebrand:** browser `<title>` `title.uniswapTradeCrypto` → "HookSwap | Trade crypto onchain" across all 15 locale files; meta-injector tests updated to HookSwap title/description. (Full rebrand asset audit — logo/favicon/og/fonts — still PENDING; agent died on rate limit, relaunch after reset.)
+- **Prod `tsc` build-breaks fixed** (invisible to esbuild/dev; caught only by `apps/web/tsconfig.terminal-check.json`):
+  - `packages/chains/src/rpc/types.ts` — the "canonical" `UniverseChainId` enum was **missing `Ink` + `HyperEvm`**, diverged from the app enum → ~26 cascade errors across web/wallet/provider plumbing. Added both. (tsc 28→8→clean.)
+  - `packages/ui/.../color/colors.ts` — added `chain_999`/`chain_57073` tokens + `hyperevm`/`ink` `networkColors` (brand-accent hexes are tunable).
+  - `LockerScreen` chainId narrowed to EVM (excl. Solana) for wagmi reads; + 6 residual non-chain errors (TerminalCommandPalette nav-icon `Partial`, TerminalShell onNavigate id-forward, SwapWidgetPage `TransactionState` annotation, AcrossRoutingInfo color prop, 2× unused `@ts-expect-error` in planSaga).
+- **Adapter:** filled real `v3QuoterV2` for HyperEVM (`0x3b5a01Ef…`) + Tempo (`0x15cD41…`) in `trading-api-adapter/src/chains.ts` (HyperEVM `ready:true`; Tempo `ready:false` pending pathUSD-gas validation). `.env.example` default `ROUTING_MODE=embed` (was blank → 404).
+- **Universal Router P0 (client-side execution):** `@uniswap/universal-router-sdk` is NOT overridden → `UNIVERSAL_ROUTER_ADDRESS()` throws/returns wrong addr for the 7 chains. Fixed via a local resolver `apps/web/src/constants/hookswapUniversalRouter.ts` (real deployed UR per custom chain from deployments JSON; delegates others to the SDK), wired into `useUniversalRouter.ts`. **STILL TO VALIDATE:** deployed UR `_2_0` vs this SDK's swap calldata command set — test a testnet swap before enabling custom-chain execution.
+- **Still needs Reggie (can't do from repo):** (1) deploy the adapter to the VPS (`trading.hookswap.org` DNS/TLS) with `ROUTING_MODE=embed`; (2) broadcast liquidity — `contracts/seed/SeedLiquidity.s.sol` + `SeedPools.s.sol` are ready, need funded key per chain; (3) confirm UR version compat on-chain.
 
 ## Decision log
+- 2026-07-07: Universal Router resolution patched via a local address resolver (NOT a universal-router-sdk fork) — lower maintenance; addresses from deployments JSON.
+- 2026-07-07: Terminal wallet connect exposed in the top bar (not just the left rail) to match user expectation.
 - 2026-07-03: Kept `@uniswap/*` package names; rebrand is user-facing only.
 - 2026-07-03: Removed `tools/uniswap-nx` workspace entry to unblock install.
 - 2026-07-03: v4 excluded; HyperEVM+Robinhood+Sepolia targeted; self-host routing; brand existing swap UI.

@@ -6,7 +6,6 @@ import { Anchor, Flex, Separator, styled, Text, TouchableArea } from 'ui/src'
 import { spacing, TextVariantTokens } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { HelpModal } from '~/components/HelpModal/HelpModal'
 import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
 import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from '~/components/NavBar/NavDropdown'
@@ -191,11 +190,6 @@ export function MenuDropdown({ close }: { close?: () => void }) {
           >
             <Flex flex={1} width="100%">
               <LegalAndPrivacyMenu closeMenu={close} />
-            </Flex>
-            <Flex row alignSelf="flex-end" alignItems="center" justifyContent="space-between" $xl={{ width: '100%' }}>
-              <Flex display="none" $xl={{ display: 'flex' }}>
-                <HelpModal showOnXL />
-              </Flex>
             </Flex>
           </Flex>
         </Flex>

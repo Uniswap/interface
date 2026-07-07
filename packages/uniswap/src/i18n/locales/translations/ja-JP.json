@@ -2545,7 +2545,7 @@
   "title.sendTokens": "HookSwap でトークンを送信",
   "title.swappingMadeSimple": "イーサリアム、Base、Arbitrum、ポリゴン、Unichain などで暗号通貨を即座に売買できます。何百万人もの人々に信頼されている DeFi プラットフォームです。",
   "title.tradeTokens": "トークンを取引して流動性を提供します。リアルタイムの価格、チャート、トランザクションデータなど。",
-  "title.uniswapTradeCrypto": "HookSwap | DeFi 市場をリードする取引所で暗号通貨を取引する ",
+  "title.uniswapTradeCrypto": "HookSwap | Trade crypto onchain",
   "title.uniToken": "UNI トークンは、HookSwap ガバナンスにおける投票権を表します。各提案に対して自分で投票することも、第三者に投票を委任することもできます。",
   "title.voteOnGov": "HookSwap のガバナンス提案に投票",
   "token.balances.chooseNetwork": "ネットワーク残高を選択",

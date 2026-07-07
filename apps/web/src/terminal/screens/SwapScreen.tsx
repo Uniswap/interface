@@ -24,7 +24,7 @@
  * config bar. The order ticket is Market / Limit only.
  */
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -48,12 +48,14 @@ import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
+import { TerminalChartPanel } from '~/terminal/screens/swap/TerminalChartPanel'
+import { TerminalMarketsPanel } from '~/terminal/screens/swap/TerminalMarketsPanel'
+import { TerminalSwapReviewFlow, useTerminalReviewTrigger } from '~/terminal/screens/swap/TerminalSwapReviewFlow'
 import { terminalColors, terminalFonts, terminalTokenGradients } from '~/terminal/theme/tokens'
 
 /* ------------------------------------------------------------------ helpers */
 
 const MONO = terminalFonts.mono
-const DISPLAY = terminalFonts.display
 
 /** Group the integer part with thousands separators, preserving decimals. */
 function groupNumber(value: string): string {
@@ -114,261 +116,6 @@ function TerminalTokenLogo({
         display: 'inline-block',
       }}
     />
-  )
-}
-
-/* ------------------------------------------------------------- market list */
-
-const SKELETON_ROWS = [0, 1, 2, 3, 4, 5, 6, 7]
-
-function MarketListPanel(): JSX.Element {
-  return (
-    <div
-      style={{
-        width: 238,
-        flexShrink: 0,
-        borderRight: `1px solid ${terminalColors.line2}`,
-        background: terminalColors.bg,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div
-        style={{
-          padding: '13px 14px',
-          borderBottom: `1px solid ${terminalColors.line2}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 13.5, color: terminalColors.ink }}>Markets</span>
-        {/* TODO(data): live pool count from the pools subgraph. */}
-        <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.ink3Alt }} aria-busy="true">
-          —
-        </span>
-      </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1.3fr 1fr 60px',
-          gap: 6,
-          padding: '8px 12px',
-          fontFamily: MONO,
-          fontSize: 10,
-          color: terminalColors.ink3Alt,
-          borderBottom: `1px solid ${terminalColors.line3}`,
-        }}
-      >
-        <span>PAIR</span>
-        <span style={{ textAlign: 'right' }}>PRICE</span>
-        <span />
-      </div>
-      {/* TODO(data): render live pairs (pair, mono price, %Δ, mini sparkline) from
-          the pools subgraph; active pair drives the chart + ticket. Honest loading
-          skeleton until the self-hosted indexer is wired — no fabricated pairs. */}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {SKELETON_ROWS.map((i) => (
-          <div
-            key={i}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1.3fr 1fr 60px',
-              gap: 6,
-              alignItems: 'center',
-              padding: '11px 12px',
-              borderBottom: `1px solid ${terminalColors.line3}`,
-            }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-              <span style={{ height: 9, width: 58, borderRadius: 3, background: terminalColors.line2 }} />
-              <span style={{ height: 8, width: 34, borderRadius: 3, background: terminalColors.line3 }} />
-            </div>
-            <span style={{ height: 9, width: 46, borderRadius: 3, background: terminalColors.line2, justifySelf: 'end' }} />
-            <span style={{ height: 14, width: 52, borderRadius: 3, background: terminalColors.line3 }} />
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* -------------------------------------------------------------- chart panel */
-
-function HeaderStat({
-  label,
-  value,
-  valueColor,
-  size = 14,
-  weight,
-}: {
-  label: string
-  value: string
-  valueColor?: string
-  /** Prototype: Price value is 15px; all other stats 14px. */
-  size?: number
-  /** Prototype: only Price is weight 600. */
-  weight?: number
-}): JSX.Element {
-  return (
-    <div>
-      <div style={{ fontSize: 10.5, color: terminalColors.ink3Alt, whiteSpace: 'nowrap' }}>{label}</div>
-      <div
-        style={{
-          fontFamily: MONO,
-          fontSize: size,
-          fontWeight: weight,
-          color: valueColor ?? terminalColors.ink2,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  )
-}
-
-const TIMEFRAMES = ['1m', '5m', '15m', '1H', '4H', '1D'] as const
-
-function ChartPanel({
-  inputInfo,
-  outputInfo,
-  priceLabel,
-}: {
-  inputInfo: Maybe<CurrencyInfo>
-  outputInfo: Maybe<CurrencyInfo>
-  priceLabel: string
-}): JSX.Element {
-  const inSym = inputInfo?.currency.symbol ?? '—'
-  const outSym = outputInfo?.currency.symbol ?? '—'
-
-  return (
-    <div
-      style={{
-        flex: 1,
-        minWidth: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        borderRight: `1px solid ${terminalColors.line2}`,
-      }}
-    >
-      {/* Pair header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '15px 20px',
-          borderBottom: `1px solid ${terminalColors.line2}`,
-          background: terminalColors.bg,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ display: 'flex' }}>
-            <TerminalTokenLogo currencyInfo={inputInfo} size={28} fallbackGradient={terminalTokenGradients.eth} />
-            <span style={{ marginLeft: -9 }}>
-              <TerminalTokenLogo currencyInfo={outputInfo} size={28} fallbackGradient={terminalTokenGradients.usdc} />
-            </span>
-          </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 17, color: terminalColors.ink }}>
-              {inSym} / {outSym}
-            </span>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 26, alignItems: 'center' }}>
-          {/* Prototype line 431: Price is 15px / weight 600 / ink; the rest are
-              14px. 24h % is green (#12B866); high / low / vol are secondary ink. */}
-          <HeaderStat label="Price" value={priceLabel} valueColor={terminalColors.ink} size={15} weight={600} />
-          {/* TODO(data): 24h change / high / low / volume from pool day data. */}
-          <HeaderStat label="24h" value="—" valueColor={terminalColors.greenUp} />
-          <HeaderStat label="24h high" value="—" />
-          <HeaderStat label="24h low" value="—" />
-          <HeaderStat label="24h vol" value="—" />
-        </div>
-      </div>
-
-      {/* Timeframe tabs (visual; series wiring is a data TODO) */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 3,
-          padding: '9px 20px',
-          borderBottom: `1px solid ${terminalColors.line2}`,
-          background: terminalColors.bg,
-        }}
-      >
-        {TIMEFRAMES.map((tf) => {
-          const active = tf === '1H'
-          return (
-            <span
-              key={tf}
-              style={{
-                fontFamily: MONO,
-                fontSize: 11.5,
-                fontWeight: active ? 600 : 400,
-                color: active ? terminalColors.ink : terminalColors.ink2,
-                background: active ? terminalColors.panel2Alt : 'transparent',
-                padding: '4px 10px',
-                borderRadius: 6,
-              }}
-            >
-              {tf}
-            </span>
-          )
-        })}
-      </div>
-
-      {/* Chart area — grid + right price axis scaffold. Honest empty state until the
-          price-history feed is wired (TODO(data)); no fabricated series drawn. */}
-      <div
-        style={{
-          position: 'relative',
-          flex: 1,
-          minHeight: 300,
-          background: terminalColors.bgApp,
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage:
-              'repeating-linear-gradient(0deg,transparent 0 59px,#F1F3F6 59px 60px), repeating-linear-gradient(90deg,transparent 0 79px,#F1F3F6 79px 80px)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.faint }}>
-            Price history — awaiting pool data feed
-          </span>
-        </div>
-        {priceLabel !== '—' && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 14,
-              right: 12,
-              fontFamily: MONO,
-              fontSize: 10.5,
-              color: terminalColors.greenUp,
-              background: terminalColors.greenBg,
-              padding: '2px 5px',
-              borderRadius: 4,
-            }}
-          >
-            {priceLabel}
-          </div>
-        )}
-      </div>
-    </div>
   )
 }
 
@@ -496,6 +243,9 @@ export function SwapTicket(): JSX.Element {
   const account = useAccount()
   const navigate = useNavigate()
   const [mevProtected, setMevProtected] = useState(true)
+  // Launches the REAL review→confirm→submit flow. Valid only because SwapTicket is
+  // rendered inside <TerminalSwapReviewFlow> (which provides the swap-form warning store).
+  const { onReview } = useTerminalReviewTrigger()
 
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencies: s.currencies,
@@ -577,11 +327,12 @@ export function SwapTicket(): JSX.Element {
   } else if (trade.error || !activeTrade) {
     swapLabel = 'No route available'
   } else {
-    // TODO(B8): open the Terminal-native confirm modal (B8) + submit. The
-    // Terminal now OWNS `/swap`, so the old hand-off target is gone; execution
-    // is honestly stubbed (disabled button) until B8 lands.
-    swapLabel = 'Swap — confirm flow coming soon'
-    swapEnabled = false
+    // Trade ready — open the REAL review→confirm→submit modal via the interface's
+    // own swap pipeline, reused verbatim (see TerminalSwapReviewFlow / SwapReviewScreen).
+    // The button opens the review step; funds only move on explicit confirm in that modal.
+    swapLabel = 'Swap'
+    swapEnabled = true
+    onSwap = onReview
   }
 
   return (
@@ -800,13 +551,24 @@ export function SwapTicket(): JSX.Element {
 function SwapScreenBody(): JSX.Element {
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencies: s.currencies,
-    trade: s.trade,
   }))
-  const inputInfo = derived.currencies[CurrencyField.INPUT]
-  const outputInfo = derived.currencies[CurrencyField.OUTPUT]
-  const activeTrade = derived.trade.trade
-  const priceLabel = activeTrade ? groupNumber(activeTrade.executionPrice.toSignificant(8)) : '—'
+  const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
+  const inputCurrency = derived.currencies[CurrencyField.INPUT]?.currency
+  const outputCurrency = derived.currencies[CurrencyField.OUTPUT]?.currency
+  // The markets list queries the input's chain (default Mainnet); selecting a row
+  // sets that token as the swap OUTPUT, which the chart then follows.
+  const chainId = (inputCurrency?.chainId ?? UniverseChainId.Mainnet) as UniverseChainId
   const isMobile = useIsMobileViewport()
+
+  const onSelectMarket = useCallback(
+    (currency: Currency): void => {
+      const asset = currencyToAsset(currency)
+      if (asset) {
+        updateSwapForm({ output: asset })
+      }
+    },
+    [updateSwapForm],
+  )
 
   // Mobile: collapse the 3-panel desktop layout to a single, centered swap ticket.
   // The market list + chart are secondary desktop context; hiding them keeps the
@@ -814,16 +576,27 @@ function SwapScreenBody(): JSX.Element {
   if (isMobile) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 8px 28px' }}>
-        <SwapTicket />
+        <div style={{ width: 326, maxWidth: '100%' }}>
+          <TerminalSwapReviewFlow>
+            <SwapTicket />
+          </TerminalSwapReviewFlow>
+        </div>
       </div>
     )
   }
 
   return (
     <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
-      <MarketListPanel />
-      <ChartPanel inputInfo={inputInfo} outputInfo={outputInfo} priceLabel={priceLabel} />
-      <SwapTicket />
+      <TerminalMarketsPanel chainId={chainId} activeCurrency={outputCurrency} onSelectCurrency={onSelectMarket} />
+      <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+      {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
+          uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
+          the row height and steal the chart's width / bottom-align the ticket. */}
+      <div style={{ width: 326, flexShrink: 0, alignSelf: 'flex-start' }}>
+        <TerminalSwapReviewFlow>
+          <SwapTicket />
+        </TerminalSwapReviewFlow>
+      </div>
     </div>
   )
 }

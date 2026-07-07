@@ -50,7 +50,7 @@ export function AcrossRoutingInfo(): JSX.Element {
               {t('swap.details.poweredBy')}
             </Text>
             <Flex>
-              <AcrossLogoFull color="$neutral3" />
+              <AcrossLogoFull />
             </Flex>
           </Flex>
         </Flex>

@@ -1230,7 +1230,9 @@ export function LockerScreen(): JSX.Element {
   // (locker addresses are static and these reads are wallet-independent), so a
   // disconnected user still sees lockers as live on the current network, not "Not live".
   const { defaultChainId, chains } = useEnabledChains()
-  const chainId = account.chainId ?? defaultChainId ?? chains[0]
+  // Fallbacks are always EVM chains at runtime; cast to account.chainId's EVM-narrow
+  // union (excludes Solana) so wagmi's useReadContract chainId type is satisfied.
+  const chainId = (account.chainId ?? defaultChainId ?? chains[0]) as typeof account.chainId
   const chainLabel = chainId ? getChainLabel(chainId) : '—'
 
   const lockerAddrs = getLockerAddresses(chainId)
@@ -1326,7 +1328,7 @@ export function LockerScreen(): JSX.Element {
         </span>
       </div>
       <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink2, marginBottom: 18, maxWidth: 560, lineHeight: 1.5 }}>
-        Lock ERC-20 tokens, Uniswap-V2 LP, or Uniswap-v3 positions until a chosen unlock time. Proof-of-lock for your
+        Lock ERC-20 tokens, v2 LP, or v3 positions until a chosen unlock time. Proof-of-lock for your
         community — v3 positions keep earning fees while locked.
       </div>
 

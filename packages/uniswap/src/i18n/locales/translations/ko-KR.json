@@ -2545,7 +2545,7 @@
   "title.sendTokens": "HookSwap에서 토큰 보내기",
   "title.swappingMadeSimple": "Ethereum, Base, Arbitrum, Polygon, Unichain 등에서 암호화폐를 즉시 사고팔 수 있습니다. 수백만 명이 신뢰하는 DeFi 플랫폼입니다.",
   "title.tradeTokens": "토큰을 거래하고 유동성을 제공하세요. 실시간 가격, 차트, 트랜잭션 데이터 등.",
-  "title.uniswapTradeCrypto": "HookSwap | DeFi 대표 거래소에서 암호화폐 거래하기 ",
+  "title.uniswapTradeCrypto": "HookSwap | Trade crypto onchain",
   "title.uniToken": "UNI 토큰은 HookSwap 거버넌스에서 투표 지분을 나타냅니다. 각 프로포절에 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다.",
   "title.voteOnGov": "HookSwap의 거버넌스 프로포절에 투표하세요",
   "token.balances.chooseNetwork": "네트워크 잔액 선택",

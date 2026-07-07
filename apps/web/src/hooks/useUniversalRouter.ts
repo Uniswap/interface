@@ -1,12 +1,7 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Percent } from '@uniswap/sdk-core'
-import {
-  FlatFeeOptions,
-  SwapRouter,
-  UNIVERSAL_ROUTER_ADDRESS,
-  UniversalRouterVersion,
-} from '@uniswap/universal-router-sdk'
+import { FlatFeeOptions, SwapRouter, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { SharedQueryClient } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
@@ -30,6 +25,7 @@ import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventPropertie
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from '~/state/routing/types'
 import { useUserSlippageTolerance } from '~/state/user/hooks'
+import { hookswapUniversalRouterAddress } from '~/constants/hookswapUniversalRouter'
 import { calculateGasMargin } from '~/utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from '~/utils/errors'
 import { isZero } from '~/utils/isZero'
@@ -121,7 +117,7 @@ export function useUniversalRouterSwapCallback({
       })
       const tx = {
         from: account.address,
-        to: UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, chainId),
+        to: hookswapUniversalRouterAddress(UniversalRouterVersion.V1_2, chainId),
         data,
         // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),

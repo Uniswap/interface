@@ -21,6 +21,7 @@ import {
   TransactionScreen,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
+import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
@@ -62,9 +63,9 @@ export function SwapWidgetPage(): JSX.Element {
 
   const prefilledState = useSwapPrefilledState(
     useMemo(
-      () => ({
+      (): TransactionState => ({
         input: config.inputAsset,
-        output: config.outputAsset ?? undefined,
+        output: config.outputAsset ?? null,
         exactAmountToken: '',
         exactCurrencyField: CurrencyField.INPUT,
       }),

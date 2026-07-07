@@ -30,6 +30,7 @@ import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import {
   usePortfolioData,
@@ -141,17 +142,21 @@ interface KpiProps {
   label: string
   value?: string
   valueColor?: string
+  /** Value font size (px). Net worth is the emphasised tile (28); the rest are 22 (design B5). */
+  valueSize?: number
   sub?: string
   subColor?: string
+  /** Render the sub line in mono (for numeric subs like the net-worth PnL); words stay sans. */
+  subMono?: boolean
   loading?: boolean
 }
 
-function Kpi({ label, value, valueColor, sub, subColor, loading }: KpiProps): JSX.Element {
+function Kpi({ label, value, valueColor, valueSize = 22, sub, subColor, subMono, loading }: KpiProps): JSX.Element {
   return (
     <div
       style={{
         border: `1px solid ${terminalColors.line}`,
-        borderRadius: 14,
+        borderRadius: 12,
         background: terminalColors.bg,
         padding: '16px 18px',
         minWidth: 0,
@@ -160,12 +165,12 @@ function Kpi({ label, value, valueColor, sub, subColor, loading }: KpiProps): JS
     >
       <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt }}>{label}</div>
       {loading ? (
-        <div style={{ height: 26, width: 96, borderRadius: 4, background: terminalColors.line2, marginTop: 8 }} />
+        <div style={{ height: valueSize, width: 96, borderRadius: 4, background: terminalColors.line2, marginTop: 8 }} />
       ) : (
         <div
           style={{
             fontFamily: MONO,
-            fontSize: 26,
+            fontSize: valueSize,
             fontWeight: 600,
             letterSpacing: '-0.02em',
             color: valueColor ?? terminalColors.ink,
@@ -176,7 +181,14 @@ function Kpi({ label, value, valueColor, sub, subColor, loading }: KpiProps): JS
         </div>
       )}
       {sub && !loading ? (
-        <div style={{ fontFamily: MONO, fontSize: 11.5, color: subColor ?? terminalColors.ink3Alt, marginTop: 6 }}>
+        <div
+          style={{
+            fontFamily: subMono ? MONO : SANS,
+            fontSize: 11.5,
+            color: subColor ?? terminalColors.ink3Alt,
+            marginTop: 3,
+          }}
+        >
           {sub}
         </div>
       ) : null}
@@ -239,8 +251,8 @@ function AllocationDonut({ slices, loading }: { slices?: AllocSlice[]; loading: 
       <div style={{ position: 'relative', flexShrink: 0 }}>
         <div
           style={{
-            width: 108,
-            height: 108,
+            width: 104,
+            height: 104,
             borderRadius: '50%',
             background: loading || !gradient ? terminalColors.line2 : gradient,
           }}
@@ -249,7 +261,7 @@ function AllocationDonut({ slices, loading }: { slices?: AllocSlice[]; loading: 
         <div
           style={{
             position: 'absolute',
-            inset: 18,
+            inset: 20,
             borderRadius: '50%',
             background: terminalColors.bg,
           }}
@@ -262,12 +274,12 @@ function AllocationDonut({ slices, loading }: { slices?: AllocSlice[]; loading: 
           ))
         ) : slices && slices.length > 0 ? (
           slices.map((s) => (
-            <div key={s.symbol} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 9, height: 9, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
-              <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink2, flex: 1, minWidth: 0 }}>
+            <div key={s.symbol} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 2, background: s.color, flexShrink: 0 }} />
+              <span style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink2, flex: 1, minWidth: 0 }}>
                 {s.symbol}
               </span>
-              <span style={{ fontFamily: MONO, fontSize: 12.5, color: terminalColors.ink }}>
+              <span style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.ink }}>
                 {s.percent.toFixed(0)}%
               </span>
             </div>
@@ -354,13 +366,13 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
     <div
       style={{
         border: `1px solid ${terminalColors.line}`,
-        borderRadius: 14,
+        borderRadius: 12,
         background: terminalColors.bg,
         padding: 18,
         boxSizing: 'border-box',
       }}
     >
-      <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: terminalColors.ink, marginBottom: 14 }}>
+      <div style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 600, color: terminalColors.ink, marginBottom: 14 }}>
         {title}
       </div>
       {children}
@@ -461,7 +473,7 @@ export function PortfolioScreen(): JSX.Element {
       items.push({
         id: tx.id,
         title,
-        detail: tx.chainId ? `Chain ${tx.chainId}` : '',
+        detail: getChainLabel(tx.chainId),
         timestamp: formatRelativeTime(tx.addedTime),
       })
       if (items.length >= 6) {
@@ -556,23 +568,25 @@ export function PortfolioScreen(): JSX.Element {
     <div style={{ padding: '20px 24px 40px' }}>
       <Header address={address} />
 
-      {/* KPI row — 4 tiles on one line (shrink to fit), collapsing to 2-up only on very narrow content. */}
+      {/* KPI row — Net worth (emphasised, wider) + 24h PnL + Fees + LP positions, one line, shrink to fit (design B5). */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-          gap: 14,
-          marginBottom: 20,
+          gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+          gap: 12,
+          marginBottom: 18,
         }}
       >
         <Kpi
           label="Net worth"
           value={netWorth !== undefined ? fiat(netWorth) : undefined}
+          valueSize={28}
           sub={
             pnl !== undefined && pct !== undefined
               ? `${formatSignedUsd(pnl)} · ${formatSignedPct(pct)}`
               : undefined
           }
+          subMono
           subColor={pnl !== undefined ? (pnl >= 0 ? terminalColors.greenUp : terminalColors.redDown) : undefined}
           loading={totalValue.loading && netWorth === undefined}
         />
@@ -601,7 +615,7 @@ export function PortfolioScreen(): JSX.Element {
       {/* Main: positions table (left) + allocation & activity (right).
           Responsive: flex-wrap so the right column drops BELOW the table when the
           content area is too narrow, instead of overflowing off-screen. */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-start' }}>
         <div style={{ flex: '1 1 460px', minWidth: 0 }}>
           <Card title="Open positions">
             {/* Wide table scrolls inside its own container so its column minima
@@ -624,7 +638,7 @@ export function PortfolioScreen(): JSX.Element {
           </Card>
         </div>
 
-        <div style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
           <Card title="Allocation">
             <AllocationDonut
               slices={allocation}

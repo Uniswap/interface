@@ -57,8 +57,9 @@ const PALETTE_TABS: ReadonlyArray<CommandPaletteTab & { id: PaletteTabId }> = [
 /** Quick-action nav targets, in rail order (TRADE then ACCOUNT). */
 const NAV_ACTIONS = [...terminalTradeNav, ...terminalAccountNav]
 
-/** Visual mnemonic chips (discoverability only; the parent wires any real keys). */
-const ACTION_HINTS: Record<TerminalNavIcon, string> = {
+/** Visual mnemonic chips (discoverability only; the parent wires any real keys).
+ *  Partial — only the primary nav targets have a mnemonic; the rest render none. */
+const ACTION_HINTS: Partial<Record<TerminalNavIcon, string>> = {
   swap: 'S',
   markets: 'M',
   pools: 'L',

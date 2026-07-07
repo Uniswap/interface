@@ -296,6 +296,12 @@ export function TerminalChrome({
           gas: undefined,
           chain,
           onChainClick: () => setChainMenuOpen((prev) => !prev),
+          // Top-right wallet button (mirrors the left-rail chip). Reuses the real
+          // AccountDrawer mounted below: disconnected → open to connect; connected
+          // → toggle (the drawer's Power menu handles switch / disconnect).
+          wallet,
+          onConnectWallet: () => accountDrawer.open(),
+          onWalletClick: () => accountDrawer.toggle(),
           actions: chainMenuOpen ? (
             <ChainSwitcherMenu
               chains={enabledChains}

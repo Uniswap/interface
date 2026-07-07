@@ -70,6 +70,12 @@ function sanitizeNumberInput(raw: string): string {
   return cleaned.slice(0, first + 1) + cleaned.slice(first + 1).replace(/\./g, '')
 }
 
+/** Parse a sanitized amount to a finite number (a lone "." → 0, never NaN). */
+function toNum(raw: string): number {
+  const n = Number(raw)
+  return Number.isFinite(n) ? n : 0
+}
+
 function fmtPrice(value: number): string {
   return value.toLocaleString('en-US', {
     minimumFractionDigits: 2,
@@ -215,7 +221,7 @@ function TokenSelect({
 function StepLabel({ index, label, note }: { index: string; label: string; note?: string }): JSX.Element {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
-      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em', color: terminalColors.ink3Alt }}>
+      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.06em', color: terminalColors.ink3Alt }}>
         {index} · {label.toUpperCase()}
       </span>
       {note ? (
@@ -430,10 +436,20 @@ function PoolsScreenBody(): JSX.Element {
   const bandMax = max ?? (currentPrice ? currentPrice * 1.15 : undefined)
 
   const depositUsd = useMemo(() => {
-    const v0 = amount0 && resolvedToken0?.price ? Number(amount0) * resolvedToken0.price : 0
-    const v1 = amount1 && resolvedToken1?.price ? Number(amount1) * resolvedToken1.price : 0
+    const v0 = resolvedToken0?.price ? toNum(amount0) * resolvedToken0.price : 0
+    const v1 = resolvedToken1?.price ? toNum(amount1) * resolvedToken1.price : 0
     return v0 + v1
   }, [amount0, amount1, resolvedToken0?.price, resolvedToken1?.price])
+
+  // Per-field USD (real: entered amount × the token's live price). Undefined when there
+  // is no price or no positive amount → the field shows nothing (never a fabricated value).
+  const fmtFieldUsd = (amount: string, price?: number): string | undefined => {
+    const n = toNum(amount)
+    if (!price || n <= 0) {
+      return undefined
+    }
+    return convertFiatAmountFormatted(n * price, NumberType.PortfolioBalance)
+  }
 
   const isConnected = Boolean(account.address)
   const canContinue = Boolean(resolvedToken0 && resolvedToken1)
@@ -586,8 +602,18 @@ function PoolsScreenBody(): JSX.Element {
           <Panel>
             <StepLabel index="03" label="Deposit" />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <DepositField token={resolvedToken0} amount={amount0} onChange={setAmount0} />
-              <DepositField token={resolvedToken1} amount={amount1} onChange={setAmount1} />
+              <DepositField
+                token={resolvedToken0}
+                amount={amount0}
+                onChange={setAmount0}
+                usd={fmtFieldUsd(amount0, resolvedToken0?.price)}
+              />
+              <DepositField
+                token={resolvedToken1}
+                amount={amount1}
+                onChange={setAmount1}
+                usd={fmtFieldUsd(amount1, resolvedToken1?.price)}
+              />
             </div>
           </Panel>
 
@@ -632,10 +658,12 @@ function DepositField({
   token,
   amount,
   onChange,
+  usd,
 }: {
   token?: TokenOption
   amount: string
   onChange: (v: string) => void
+  usd?: string
 }): JSX.Element {
   return (
     <div
@@ -655,23 +683,29 @@ function DepositField({
           </span>
         </span>
       </div>
-      <input
-        value={amount}
-        onChange={(e) => onChange(sanitizeNumberInput(e.target.value))}
-        placeholder="0.00"
-        inputMode="decimal"
-        style={{
-          width: '100%',
-          border: 'none',
-          outline: 'none',
-          background: 'transparent',
-          fontFamily: MONO,
-          fontSize: 20,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          padding: 0,
-        }}
-      />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+        <input
+          value={amount}
+          onChange={(e) => onChange(sanitizeNumberInput(e.target.value))}
+          placeholder="0.00"
+          inputMode="decimal"
+          style={{
+            flex: 1,
+            minWidth: 0,
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+            fontFamily: MONO,
+            fontSize: 20,
+            fontWeight: 600,
+            color: terminalColors.ink,
+            padding: 0,
+          }}
+        />
+        {usd ? (
+          <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.ink3Alt, flexShrink: 0 }}>{usd}</span>
+        ) : null}
+      </div>
     </div>
   )
 }

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { HelpModal } from '~/components/HelpModal/HelpModal'
 import { MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
 import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuDropdown'
 import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
@@ -151,9 +150,6 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               ))}
               <Flex paddingBottom="$padding8">
                 <LegalAndPrivacyMenu closeMenu={closeMenu} />
-              </Flex>
-              <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
-                <HelpModal showOnXL />
               </Flex>
             </Flex>
           </Accordion>

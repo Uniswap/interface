@@ -31,6 +31,12 @@ export interface TopBarProps {
   onChainClick?: () => void
   /** Per-screen actions rendered at the far right (e.g. Save/Reset, Export). */
   actions?: ReactNode
+  /** Connected wallet summary. Omit → render the green "Connect wallet" button. */
+  wallet?: { addressShort: string }
+  /** Click handler when disconnected (open the wallet drawer to connect). */
+  onConnectWallet?: () => void
+  /** Click handler when connected (toggle the account drawer — switch/disconnect). */
+  onWalletClick?: () => void
   /** Mobile: open the nav drawer (renders a hamburger + logo on the left). */
   onMenuClick?: () => void
   /** True on narrow viewports — compact layout (hamburger, flexible search). */
@@ -58,6 +64,9 @@ export function TopBar({
   chain,
   onChainClick,
   actions,
+  wallet,
+  onConnectWallet,
+  onWalletClick,
 }: TopBarProps): JSX.Element {
   return (
     <div
@@ -160,6 +169,63 @@ export function TopBar({
           )}
           {chain?.name ?? '—'}
         </span>
+
+        {/* Wallet / connect — reuses the app's real AccountDrawer (mounted by
+            TerminalChrome). Disconnected → green Connect button; connected →
+            an address pill that toggles the drawer (switch / disconnect). */}
+        {wallet ? (
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={onWalletClick}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onWalletClick?.()
+              }
+            }}
+            style={{
+              ...FIELD_BASE,
+              gap: 7,
+              height: 32,
+              padding: '0 11px 0 6px',
+              fontSize: 12.5,
+              fontWeight: 500,
+              fontFamily: terminalFonts.mono,
+              color: terminalColors.ink,
+              cursor: 'pointer',
+            }}
+          >
+            <span
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 6,
+                background: terminalTokenGradients.walletAvatar,
+                flexShrink: 0,
+              }}
+            />
+            {wallet.addressShort}
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={onConnectWallet}
+            style={{
+              height: 32,
+              padding: '0 14px',
+              borderRadius: 9,
+              border: 'none',
+              background: terminalColors.brandGreen,
+              color: terminalColors.btnInk,
+              fontSize: 12.5,
+              fontWeight: 600,
+              fontFamily: terminalFonts.sans,
+              cursor: 'pointer',
+            }}
+          >
+            Connect wallet
+          </button>
+        )}
 
         {actions}
       </div>

@@ -49,6 +49,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # HookSwap — Repos to Fork (Uniswap → HookSwap full stack)
 
 Tailored to the locked decisions: **v2 + v3 only (no v4/hooks), self-hosted routing, chains = Sepolia + HyperEVM + Robinhood, brand = HookSwap / hookswap.org.**

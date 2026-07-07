@@ -129,7 +129,7 @@ export const CHAINS: Record<number, ChainConfig> = {
     ready: true,
   },
 
-  // ---- HyperEVM (999) — v2+v3 core+router DEPLOYED, v3 QuoterV2 PENDING ----
+  // ---- HyperEVM (999) — v2+v3+UR DEPLOYED (v3 QuoterV2 now filled) ----
   999: {
     chainId: 999,
     name: 'hyperevm',
@@ -141,13 +141,13 @@ export const CHAINS: Record<number, ChainConfig> = {
     v2Factory: '0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2',
     v2Router02: '0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
     v3Factory: '0x45DB3eaE624dBcA631A9C6C1406DA0B8F6Fb275A',
-    v3QuoterV2: undefined, // TODO: fill from contracts/deployments/hyperevm.json once v3 periphery deploy completes.
+    v3QuoterV2: '0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D', // contracts/deployments/hyperevm.json (v3 periphery COMPLETE)
     swapRouter02: '0xD96fc9629AFaf325fCdd7F98Dc9b8dc2165adcBB',
     universalRouter: '0xD9d4795F2A12305a12C36455ADAD011F2D6143AB',
     multicall2: '0x15cD41B273865feD20BC8B5cDF4423D7678ac78E',
     permit2: PERMIT2,
     protocols: ['v2', 'v3'],
-    ready: false, // v3 quoter pending; v2 quotes should still work.
+    ready: true, // full v2+v3 stack live (quoter filled).
   },
 
   // ---- Tempo (4217) — DEPLOYED; native gas paid in pathUSD (no native wrap in-app) ----
@@ -163,13 +163,15 @@ export const CHAINS: Record<number, ChainConfig> = {
     v2Factory: '0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4',
     v2Router02: '0x6d8a0783213B3b06648DB3708a89732af3661005',
     v3Factory: '0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
-    v3QuoterV2: undefined, // TODO: fill from contracts/deployments/tempo.json.
+    v3QuoterV2: '0x15cD41B273865feD20BC8B5cDF4423D7678ac78E', // contracts/deployments/tempo.json (v3 periphery COMPLETE)
     swapRouter02: '0x3D30133F4d4A80684F02d8310faF572E3dc193b3',
     universalRouter: '0x62aE013cb2b232C20094B466C94bb39714eF661E',
     multicall2: '0xfEb3eA6212761c1891389e77ee5Bf27c3b385E1A',
     permit2: PERMIT2,
     protocols: ['v2', 'v3'],
-    ready: false, // v3 quoter pending; native-gas model differs — validate before GA.
+    // quoter now filled; kept false because native gas = pathUSD (ERC-20), an
+    // unusual model that needs on-chain validation before GA (see tempo.json).
+    ready: false,
   },
 
   // ---- Sepolia (11155111) — canonical Uniswap stack reused (testing) ----
