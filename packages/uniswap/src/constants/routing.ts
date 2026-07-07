@@ -16,6 +16,7 @@ import {
   DAI_POLYGON,
   ETH_BSC,
   EURC_ARC,
+  HKT_XLAYER,
   nativeOnChain,
   OP,
   PATHUSD_TEMPO,
@@ -50,6 +51,8 @@ import {
   USDT_LINEA,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT0_HYPEREVM,
+  USDT0_INK,
   USDT0_XLAYER,
   USDM_MEGAETH,
   USYC_ARC,
@@ -189,9 +192,24 @@ export const COMMON_BASES: ChainCurrencyList = {
 
   [UniverseChainId.Tempo]: [PATHUSD_TEMPO, USDC_E_TEMPO].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.XLayer]: [WRAPPED_NATIVE_CURRENCY[UniverseChainId.XLayer] as Token, USDC_XLAYER, USDT0_XLAYER].map(
-    buildPartialCurrencyInfo,
-  ),
+  [UniverseChainId.HyperEvm]: [
+    nativeOnChain(UniverseChainId.HyperEvm),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.HyperEvm] as Token,
+    USDT0_HYPEREVM,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Ink]: [
+    nativeOnChain(UniverseChainId.Ink),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Ink] as Token,
+    USDT0_INK,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.XLayer]: [
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.XLayer] as Token,
+    USDC_XLAYER,
+    USDT0_XLAYER,
+    HKT_XLAYER,
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Solana]: [nativeOnChain(UniverseChainId.Solana), USDC_SOLANA].map(buildPartialCurrencyInfo),
 

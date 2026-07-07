@@ -27,10 +27,13 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 
 // X Layer quick-select tokens
 const XLAYER_CURRENCY_IDS = [
+  buildNativeCurrencyId(UniverseChainId.XLayer), // OKB
+  buildCurrencyId(UniverseChainId.XLayer, '0xe538905cf8410324e03A5A23C1c177a474D59b2b'), // WOKB
   buildCurrencyId(UniverseChainId.XLayer, USDT0_XLAYER.address),
   buildCurrencyId(UniverseChainId.XLayer, '0x4ae46a509F6b1D9056937BA4500cb143933D2dc8'), // USDG
   buildCurrencyId(UniverseChainId.XLayer, '0xb7C00000bcDEeF966b20B3D884B98E64d2b06b4f'), // xBTC
   buildCurrencyId(UniverseChainId.XLayer, '0xE7B000003A45145decf8a28FC755aD5eC5EA025A'), // xETH
+  buildCurrencyId(UniverseChainId.XLayer, '0x144331BB4C3026D135896CaFec3Ae3D667f4F376'), // HKT (HookSwap Test)
 ]
 
 // Linea quick-select tokens

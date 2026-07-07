@@ -36,13 +36,18 @@ export function useCommonTokensOptionsWithFallback({
 
   const shouldFallback = data?.length === 0 && commonBases?.length
 
+  // When the hosted token API doesn't serve a chain (e.g. HookSwap custom chains),
+  // the GQL re-resolution (commonBasesTokenOptions) comes back empty. In that case
+  // render the locally-built curated common bases so the selector still populates.
+  const fallbackData = commonBasesTokenOptions?.length ? commonBasesTokenOptions : commonBases
+
   return useMemo(
     () => ({
-      data: shouldFallback ? commonBasesTokenOptions : data,
+      data: shouldFallback ? fallbackData : data,
       error: shouldFallback ? undefined : error,
       refetch,
       loading,
     }),
-    [commonBasesTokenOptions, data, error, loading, refetch, shouldFallback],
+    [fallbackData, data, error, loading, refetch, shouldFallback],
   )
 }

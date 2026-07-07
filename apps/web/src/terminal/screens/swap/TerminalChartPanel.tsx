@@ -328,10 +328,11 @@ function PanelShell({
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
+          rowGap: 10,
+          flexWrap: 'wrap',
           padding: '15px 20px',
           borderBottom: `1px solid ${terminalColors.line2}`,
           background: terminalColors.bg,
-          overflowX: 'auto',
         }}
       >
         <PairHeaderLeft
