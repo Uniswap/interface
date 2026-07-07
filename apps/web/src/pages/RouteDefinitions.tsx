@@ -457,7 +457,9 @@ export const routes: RouteDefinition[] = [
   // Portfolio Pages
   createRouteDefinition({
     path: '/portfolio',
-    getElement: () => <Portfolio />,
+    // HookSwap Terminal owns the portfolio experience — redirect the legacy Uniswap
+    // portfolio page to the Atlas Terminal screen so the old UI is never shown.
+    getElement: () => <Navigate to="/terminal/portfolio" replace />,
     getTitle: getPortfolioTitle,
     getDescription: getPortfolioDescription,
     nestedPaths: [
