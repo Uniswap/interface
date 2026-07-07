@@ -15,8 +15,11 @@
  */
 import {
   AlphaRouter,
+  StaticV2SubgraphProvider,
+  StaticV3SubgraphProvider,
   SwapType,
   UniswapMulticallProvider,
+  V3PoolProvider,
   type SwapRoute,
   type SwapOptions,
 } from '@uniswap/smart-order-router'
@@ -63,7 +66,16 @@ export class EmbedRoutingProvider implements RoutingProvider {
     if (!ctx) {
       const provider = new ethers.providers.JsonRpcProvider(resolveRpcUrl(chain), chain.chainId)
       const multicall2Provider = new UniswapMulticallProvider(chain.chainId, provider)
-      const router = new AlphaRouter({ chainId: chain.chainId, provider, multicall2Provider })
+      // HookSwap chains have no hosted subgraph — use static (on-chain-derived) pool
+      // discovery so the router finds our deployed v2/v3 pools via the factory + bases.
+      const v3PoolProvider = new V3PoolProvider(chain.chainId, multicall2Provider)
+      const router = new AlphaRouter({
+        chainId: chain.chainId,
+        provider,
+        multicall2Provider,
+        v2SubgraphProvider: new StaticV2SubgraphProvider(chain.chainId),
+        v3SubgraphProvider: new StaticV3SubgraphProvider(chain.chainId, v3PoolProvider),
+      })
       ctx = { router, provider }
       this.chainContexts.set(chain.chainId, ctx)
     }
@@ -125,6 +137,12 @@ export class EmbedRoutingProvider implements RoutingProvider {
     if (params.recipient) {
       swapConfig = {
         type: SwapType.UNIVERSAL_ROUTER,
+        // UniversalRouterVersion.V2_0 ('2.0') — matches HookSwap's deployed UR
+        // (supportedURVersions _2_0). Hardcoded to avoid importing universal-router-sdk
+        // (whose dep chain fails to resolve from the interface node_modules at runtime).
+        // Only read when assembling swap calldata; the quote path ignores it.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        version: '2.0' as any,
         recipient: params.recipient,
         slippageTolerance: new Percent(Math.round((params.slippageTolerancePct ?? 0.5) * 100), 10_000),
         deadlineOrPreviousBlockhash: Math.floor(Date.now() / 1000) + (params.deadlineSeconds ?? 1800),
