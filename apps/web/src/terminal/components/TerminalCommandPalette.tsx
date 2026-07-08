@@ -44,13 +44,14 @@ import { terminalColors } from '~/terminal/theme/tokens'
 
 /* ------------------------------------------------------------------ config */
 
-type PaletteTabId = 'all' | 'tokens' | 'pools' | 'actions'
+type PaletteTabId = 'all' | 'tokens' | 'actions'
 
-/** Filter tabs — NO "Hooks" tab (hooks removed from the UI entirely). */
+/** Filter tabs — NO "Hooks" tab (hooks removed from the UI entirely). No "Pools"
+ *  tab either: pool search isn't wired in the palette yet, so a structurally-empty
+ *  tab would only ever show a placeholder (re-add once pool search exists). */
 const PALETTE_TABS: ReadonlyArray<CommandPaletteTab & { id: PaletteTabId }> = [
   { id: 'all', label: 'All' },
   { id: 'tokens', label: 'Tokens' },
-  { id: 'pools', label: 'Pools' },
   { id: 'actions', label: 'Actions' },
 ]
 
@@ -235,9 +236,6 @@ function PaletteBody({ onClose }: { onClose: () => void }): JSX.Element {
   // Loading only matters when a token-bearing tab has nothing to show yet.
   const loading = showTokens && tokensLoading && tokenItems.length === 0
 
-  const emptyMessage =
-    activeTab === 'pools' ? 'Pool search isn’t available in the palette yet.' : undefined
-
   return (
     <CommandPalette
       open
@@ -250,7 +248,6 @@ function PaletteBody({ onClose }: { onClose: () => void }): JSX.Element {
       onTabChange={(tabId) => setActiveTab(tabId as PaletteTabId)}
       groups={groups}
       loading={loading}
-      emptyMessage={emptyMessage}
     />
   )
 }

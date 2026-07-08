@@ -22,8 +22,8 @@
  *   • Create — a real CTA: disconnected → opens the wallet drawer; connected → continues
  *     into the app's real position-manager flow. No fake position numbers are shown.
  */
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
@@ -412,6 +412,33 @@ function PoolsScreenBody(): JSX.Element {
   const [token0, setToken0] = useState<TokenOption | undefined>()
   const [token1, setToken1] = useState<TokenOption | undefined>()
   const [feeIndex, setFeeIndex] = useState(1) // default 0.05%
+
+  // Preselect the pair when arriving from a Market-Detail "Add liquidity" deep-link
+  // (`?token0=SYM&token1=SYM`). Symbols are matched against the live token list; a
+  // symbol not in the list is left unset (falls back to the ETH/USDC defaults). Runs
+  // once, after options load, so it never clobbers the user's later manual picks.
+  const [searchParams] = useSearchParams()
+  const didSeedFromParams = useRef(false)
+  useEffect(() => {
+    if (didSeedFromParams.current || options.length === 0) {
+      return
+    }
+    const sym0 = searchParams.get('token0')
+    const sym1 = searchParams.get('token1')
+    if (sym0 || sym1) {
+      const find = (sym: string | null): TokenOption | undefined =>
+        sym ? options.find((o) => o.symbol.toUpperCase() === sym.toUpperCase()) : undefined
+      const t0 = find(sym0)
+      const t1 = find(sym1)
+      if (t0) {
+        setToken0(t0)
+      }
+      if (t1) {
+        setToken1(t1)
+      }
+    }
+    didSeedFromParams.current = true
+  }, [options, searchParams])
   const [rangeMode, setRangeMode] = useState<RangeMode>('custom')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
@@ -459,8 +486,22 @@ function PoolsScreenBody(): JSX.Element {
       accountDrawer.open()
       return
     }
-    // Continue into the app's real position-manager flow (v2/v3 add-liquidity).
-    navigate('/positions/create')
+    // Continue into the app's real position-manager flow (v2/v3 add-liquidity),
+    // forwarding the selected fee tier via the route's `feeTier` param (a fee amount
+    // in hundredths of a bip: 0.05% → 500). The create route's URL migration expands
+    // it into the full fee object.
+    //
+    // NOT forwarded (the create route can't consume them from this form): the token
+    // pair — this form models tokens by SYMBOL only (`TokenOption` has no address or
+    // chainId), whereas the create route requires validated on-chain `currencyA`/
+    // `currencyB` addresses + a `chain` id; and the price range / deposit amounts —
+    // the route reads tick-based `priceRangeState` (minTick/maxTick) and a
+    // `depositState` keyed by PositionField, not the raw min/max prices + amounts this
+    // form holds. Forwarding those would require fabricating addresses/ticks, so only
+    // the fee tier is carried.
+    const feeAmount = Math.round(FEE_TIERS[feeIndex].bps * 10000)
+    const params = new URLSearchParams({ feeTier: String(feeAmount) })
+    navigate(`/positions/create?${params.toString()}`)
   }
 
   return (

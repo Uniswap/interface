@@ -247,7 +247,6 @@ export function SwapTicket(): JSX.Element {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
   const navigate = useNavigate()
-  const [mevProtected, setMevProtected] = useState(true)
   // Launches the REAL review→confirm→submit flow. Valid only because SwapTicket is
   // rendered inside <TerminalSwapReviewFlow> (which provides the swap-form warning store).
   const { onReview } = useTerminalReviewTrigger()
@@ -449,21 +448,26 @@ export function SwapTicket(): JSX.Element {
         onSelectToken={() => updateSwapForm({ selectingCurrencyField: CurrencyField.OUTPUT })}
       />
 
-      {/* MEV protection — client-side routing preference (v2/v3, not a hook). */}
-      <button
-        type="button"
-        onClick={() => setMevProtected((v) => !v)}
-        aria-pressed={mevProtected}
+      {/*
+        MEV protection — intentionally a DISABLED, not-yet-available control (matches
+        SettingsScreen's "Unavailable" treatment). Private-flow / protected routing
+        needs the self-hosted protected-routing backend, which is not live for the
+        HookSwap chains yet, so this is rendered off + disabled rather than a
+        misleading toggle that implies active protection. Do NOT wire it on until the
+        backend exists.
+      */}
+      <div
+        aria-disabled="true"
+        title="Requires the self-hosted protected-routing backend — not yet available for HookSwap chains."
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
-          background: 'transparent',
-          border: 'none',
           marginTop: 12,
           padding: 2,
-          cursor: 'pointer',
+          opacity: 0.6,
+          cursor: 'not-allowed',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -472,22 +476,37 @@ export function SwapTicket(): JSX.Element {
             height={15}
             viewBox="0 0 24 24"
             fill="none"
-            stroke={mevProtected ? terminalColors.greenUp : terminalColors.ink3Alt}
+            stroke={terminalColors.ink3Alt}
             strokeWidth={2}
             strokeLinejoin="round"
           >
             <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
           </svg>
           <span style={{ fontSize: 12.5, color: terminalColors.ink2, fontWeight: 500 }}>MEV protection</span>
+          <span
+            style={{
+              fontFamily: MONO,
+              fontSize: 10.5,
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
+              color: terminalColors.ink3Alt,
+              background: terminalColors.panel2,
+              padding: '2px 6px',
+              borderRadius: 5,
+            }}
+          >
+            Soon
+          </span>
         </div>
+        {/* Off + disabled toggle — visual only, no click handler. */}
         <span
           style={{
             width: 34,
             height: 20,
             borderRadius: 999,
-            background: mevProtected ? terminalColors.brandGreen : terminalColors.line,
+            background: terminalColors.line,
             position: 'relative',
-            transition: 'background 120ms ease',
             flexShrink: 0,
           }}
         >
@@ -495,16 +514,15 @@ export function SwapTicket(): JSX.Element {
             style={{
               position: 'absolute',
               top: 2,
-              left: mevProtected ? 16 : 2,
+              left: 2,
               width: 16,
               height: 16,
               borderRadius: '50%',
               background: terminalColors.ink,
-              transition: 'left 120ms ease',
             }}
           />
         </span>
-      </button>
+      </div>
 
       {/* Live breakdown */}
       <div

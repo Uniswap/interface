@@ -31,6 +31,7 @@ import type { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1
 import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { ReactNode, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -72,6 +73,8 @@ interface TokenMetricMaps {
 /** One row of the markets table. Raw values; formatting happens in the cells. */
 interface MarketRow {
   key: string
+  /** `/terminal/markets/:poolId` route target (chainId-poolId), when resolvable. */
+  detailPath?: string
   currency0?: Currency
   currency1?: Currency
   symbol0: string
@@ -188,6 +191,8 @@ function buildRows(pools: PoolStat[] | undefined, maps: TokenMetricMaps): Market
 
     return {
       key: pool.id ? `${pool.id}-${index}` : `row-${index}`,
+      // Same encoding Landing uses (`chainId-poolId`) so the row opens MarketDetailScreen.
+      detailPath: chainId !== undefined && pool.id ? `/terminal/markets/${chainId}-${pool.id}` : undefined,
       currency0,
       currency1,
       symbol0: currency0?.symbol ?? pool.token0?.symbol ?? '—',
@@ -440,6 +445,7 @@ function PairCell({ row }: { row: MarketRow }): JSX.Element {
 
 function MarketsScreenBody(): JSX.Element {
   const [filter, setFilter] = useState<MarketFilter>('all')
+  const navigate = useNavigate()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { chains } = useEnabledChains()
 
@@ -639,6 +645,7 @@ function MarketsScreenBody(): JSX.Element {
         columns={columns}
         rows={filteredRows}
         rowKey={(row) => row.key}
+        onRowClick={(row) => (row.detailPath ? navigate(row.detailPath) : undefined)}
         loading={poolsLoading}
         comingSoon={poolsError}
         comingSoonSubtext="Live markets arrive with the HookSwap indexer."

@@ -47,6 +47,7 @@ import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -65,6 +66,7 @@ import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, TimePeriod, toHistoryDuration, unwrapToken } from '~/appGraphql/data/util'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
+import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useAccount } from '~/hooks/useAccount'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { ComingSoon } from '~/terminal/components/ComingSoon'
@@ -672,6 +674,44 @@ export function MarketDetailScreen(): JSX.Element {
   const symbol0 = currency0?.symbol ?? poolData?.token0?.symbol ?? '—'
   const symbol1 = currency1?.symbol ?? poolData?.token1?.symbol ?? '—'
 
+  // Swap CTA → open the swap form pre-loaded with THIS pool's pair (same deep-link
+  // serializer Landing uses). Native currencies pass the chain's native address so
+  // the serializer emits the NATIVE_CHAIN_ID sentinel; tokens pass their address.
+  const swapPath = useMemo(() => {
+    if (chainId === undefined) {
+      return '/swap'
+    }
+    const addressOf = (c: Currency | undefined): string | undefined =>
+      c ? (c.isNative ? getNativeAddress(chainId) : c.address) : undefined
+    try {
+      return (
+        '/swap' +
+        serializeSwapAddressesToURLParameters({
+          inputTokenAddress: addressOf(currency0),
+          outputTokenAddress: addressOf(currency1),
+          chainId,
+        })
+      )
+    } catch {
+      return '/swap'
+    }
+  }, [chainId, currency0, currency1])
+
+  // Add-liquidity CTA → open the Pools create form on THIS pair. The Pools form
+  // models tokens by symbol (not address), so forward the pair as symbols; it
+  // preselects them when they resolve in its token list (falls back to defaults).
+  const poolsPath = useMemo(() => {
+    const params = new URLSearchParams()
+    if (symbol0 && symbol0 !== '—') {
+      params.set('token0', symbol0)
+    }
+    if (symbol1 && symbol1 !== '—') {
+      params.set('token1', symbol1)
+    }
+    const qs = params.toString()
+    return qs ? `/terminal/pools/new?${qs}` : '/terminal/pools/new'
+  }, [symbol0, symbol1])
+
   // Derived price stats from the real close series.
   const closes = useMemo(() => priceQuery.entries.map((e) => e.close), [priceQuery.entries])
   const priceStats = useMemo(() => {
@@ -765,13 +805,37 @@ export function MarketDetailScreen(): JSX.Element {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      {/* Back to Markets */}
+      <button
+        type="button"
+        onClick={() => navigate('/terminal/markets')}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          alignSelf: 'flex-start',
+          margin: '14px var(--tm-gutter) 0',
+          padding: '4px 4px 4px 0',
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          fontFamily: SANS,
+          fontSize: 12.5,
+          fontWeight: 500,
+          color: terminalColors.ink3Alt,
+        }}
+      >
+        <span style={{ fontSize: 14, lineHeight: 1 }}>←</span>
+        Markets
+      </button>
+
       {/* Pair-identity header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '18px var(--tm-gutter)',
+          padding: '14px var(--tm-gutter) 18px',
           borderBottom: `1px solid ${terminalColors.line2}`,
           background: terminalColors.bg,
           gap: 16,
@@ -823,7 +887,7 @@ export function MarketDetailScreen(): JSX.Element {
           <div style={{ display: 'flex', gap: 9 }}>
             <button
               type="button"
-              onClick={() => navigate('/swap')}
+              onClick={() => navigate(swapPath)}
               style={{
                 background: terminalColors.brandGreen,
                 color: terminalColors.btnInk,
@@ -840,7 +904,7 @@ export function MarketDetailScreen(): JSX.Element {
             </button>
             <button
               type="button"
-              onClick={() => navigate('/terminal/pools/new')}
+              onClick={() => navigate(poolsPath)}
               style={{
                 background: terminalColors.bg,
                 border: `1px solid ${terminalColors.line}`,

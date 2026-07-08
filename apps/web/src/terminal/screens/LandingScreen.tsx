@@ -1209,7 +1209,6 @@ function LandingScreenBody(): JSX.Element {
     {
       label: 'Trade',
       onClick: () => navigate('/swap'),
-      active: true,
       children: [
         { label: 'Swap', onClick: () => navigate('/swap') },
         { label: 'Limit', onClick: () => navigate('/terminal/limit') },
