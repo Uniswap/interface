@@ -99,7 +99,6 @@ const CONTENT_WIDTH = 1200
  * 4-card row all align on the same grid — no stretched orphan cards. Collapses
  * 4→2→1 columns as the viewport narrows.
  */
-const FEATURE_GRID_COLUMNS = 'repeat(auto-fill, minmax(240px, 1fr))'
 
 /** Signed percent, 1 decimal: 2.4 → "+2.4%", -3.1 → "-3.1%". */
 function formatSignedPct(value: number): string {
@@ -934,6 +933,11 @@ function LandingScreenBody(): JSX.Element {
   const isMobile = viewportWidth <= 640
   const isCompactNav = viewportWidth <= 1024
   const padX = isMobile ? 20 : 40
+  // Feature grids: each section is ONE full, even row on desktop (columns = its
+  // own card count), collapsing to 2 cols on tablet and 1 on mobile — so no
+  // section ever leaves a ragged trailing gap or an orphaned card.
+  const featureCols = (count: number): string =>
+    isMobile ? '1fr' : isCompactNav ? 'repeat(2, minmax(0, 1fr))' : `repeat(${count}, minmax(0, 1fr))`
 
   // Capture ?ref=<code> for referral attribution (chrome normally does this).
   useCaptureRef()
@@ -1520,7 +1524,7 @@ function LandingScreenBody(): JSX.Element {
               <div style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint, letterSpacing: '0.08em', margin: '26px 0 12px' }}>
                 {group.label}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: FEATURE_GRID_COLUMNS, gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: featureCols(group.features.length), gap: 14 }}>
                 {group.features.map((feature) => (
                   <button
                     key={feature.title}
@@ -1580,7 +1584,7 @@ function LandingScreenBody(): JSX.Element {
               Every swap, best execution.
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: FEATURE_GRID_COLUMNS, gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: featureCols(WHY_CARDS.length), gap: 14 }}>
             {WHY_CARDS.map((card) => (
               <div key={card.title} style={{ background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: 18 }}>
                 <span
