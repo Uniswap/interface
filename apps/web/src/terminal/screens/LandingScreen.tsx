@@ -363,10 +363,19 @@ function Wordmark({ size = 19 }: { size?: number }): JSX.Element {
 
 /* ------------------------------------------------------------------ header */
 
+interface NavChildLink {
+  label: string
+  onClick: () => void
+}
+
 interface NavLink {
   label: string
   onClick: () => void
   active?: boolean
+  /** Render a trailing ↗ arrow; onClick opens a new tab. */
+  external?: boolean
+  /** Dropdown items — presence shows a ▾ caret and a hover panel. */
+  children?: NavChildLink[]
 }
 
 function Header({
@@ -392,6 +401,8 @@ function Header({
   padX: number
 }): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false)
+  // Which desktop nav section's hover dropdown is open (keyed by label; null = none).
+  const [openNav, setOpenNav] = useState<string | null>(null)
 
   const logoButton = (
     <button
@@ -458,27 +469,59 @@ function Header({
             }}
           >
             {navLinks.map((link) => (
-              <button
-                key={link.label}
-                type="button"
-                onClick={() => {
-                  link.onClick()
-                  setMenuOpen(false)
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  padding: '11px 4px',
-                  fontFamily: SANS,
-                  fontSize: 15,
-                  fontWeight: link.active ? 600 : 400,
-                  color: link.active ? terminalColors.ink : terminalColors.ink2,
-                }}
-              >
-                {link.label}
-              </button>
+              <div key={link.label} style={{ display: 'flex', flexDirection: 'column' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    link.onClick()
+                    setMenuOpen(false)
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    padding: '11px 4px',
+                    fontFamily: SANS,
+                    fontSize: 15,
+                    fontWeight: link.active ? 600 : 400,
+                    color: link.active ? terminalColors.ink : terminalColors.ink2,
+                  }}
+                >
+                  {link.label}
+                  {link.external ? (
+                    <span aria-hidden style={{ fontSize: 12, color: terminalColors.ink3Alt, lineHeight: 1 }}>
+                      ↗
+                    </span>
+                  ) : null}
+                </button>
+                {link.children?.map((child) => (
+                  <button
+                    key={child.label}
+                    type="button"
+                    onClick={() => {
+                      child.onClick()
+                      setMenuOpen(false)
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      padding: '9px 4px 9px 18px',
+                      fontFamily: SANS,
+                      fontSize: 13.5,
+                      fontWeight: 400,
+                      color: terminalColors.ink3,
+                    }}
+                  >
+                    {child.label}
+                  </button>
+                ))}
+              </div>
             ))}
             <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
               <button
@@ -574,25 +617,111 @@ function Header({
     >
       {logoButton}
       <div style={{ display: 'flex', alignItems: 'center', gap: 22, marginLeft: 14 }}>
-        {navLinks.map((link) => (
-          <button
-            key={link.label}
-            type="button"
-            onClick={link.onClick}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              fontFamily: SANS,
-              fontSize: 13.5,
-              fontWeight: link.active ? 600 : 400,
-              color: link.active ? terminalColors.ink : terminalColors.ink2,
-            }}
-          >
-            {link.label}
-          </button>
-        ))}
+        {navLinks.map((link) => {
+          const hasDropdown = Boolean(link.children && link.children.length > 0)
+          const isOpen = openNav === link.label
+          return (
+            <div
+              key={link.label}
+              style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+              onMouseEnter={() => hasDropdown && setOpenNav(link.label)}
+              onMouseLeave={() => hasDropdown && setOpenNav((prev) => (prev === link.label ? null : prev))}
+            >
+              <button
+                type="button"
+                onClick={link.onClick}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                  fontFamily: SANS,
+                  fontSize: 13.5,
+                  fontWeight: link.active ? 600 : 400,
+                  color: link.active ? terminalColors.ink : terminalColors.ink2,
+                }}
+              >
+                {link.label}
+                {link.external ? (
+                  <span aria-hidden style={{ fontSize: 11, color: terminalColors.ink3Alt, lineHeight: 1 }}>
+                    ↗
+                  </span>
+                ) : hasDropdown ? (
+                  <svg
+                    width={9}
+                    height={9}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={terminalColors.ink3Alt}
+                    strokeWidth={2.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                ) : null}
+              </button>
+
+              {hasDropdown && isOpen ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 26,
+                    left: -10,
+                    minWidth: 180,
+                    background: terminalColors.bg,
+                    border: `1px solid ${terminalColors.line}`,
+                    borderRadius: 12,
+                    boxShadow: '0 14px 34px -12px rgba(11,15,20,.45)',
+                    padding: 6,
+                    zIndex: 41,
+                    fontFamily: SANS,
+                  }}
+                >
+                  {link.children?.map((child) => (
+                    <button
+                      key={child.label}
+                      type="button"
+                      onClick={() => {
+                        setOpenNav(null)
+                        child.onClick()
+                      }}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '9px 10px',
+                        borderRadius: 9,
+                        border: 'none',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        background: 'transparent',
+                        fontFamily: SANS,
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: terminalColors.ink2,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = terminalColors.panel
+                        e.currentTarget.style.color = terminalColors.ink
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent'
+                        e.currentTarget.style.color = terminalColors.ink2
+                      }}
+                    >
+                      {child.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          )
+        })}
       </div>
       <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
         <button
@@ -1077,12 +1206,38 @@ function LandingScreenBody(): JSX.Element {
   }
 
   const navLinks: NavLink[] = [
-    { label: 'Trade', onClick: () => navigate('/swap'), active: true },
+    {
+      label: 'Trade',
+      onClick: () => navigate('/swap'),
+      active: true,
+      children: [
+        { label: 'Swap', onClick: () => navigate('/swap') },
+        { label: 'Limit', onClick: () => navigate('/terminal/limit') },
+        { label: 'Widget builder', onClick: () => navigate('/terminal/widget') },
+      ],
+    },
     { label: 'Markets', onClick: () => navigate('/terminal/markets') },
-    { label: 'Earn', onClick: () => navigate('/terminal/pools/new') },
-    { label: 'Portfolio', onClick: () => navigate('/terminal/portfolio') },
-    { label: 'Docs', onClick: () => window.open(HOOKSWAP_LINKS.docs, '_blank', 'noreferrer') },
-    { label: 'Launchpad', onClick: () => window.open(HOOKSWAP_LINKS.launchpad, '_blank', 'noreferrer') },
+    {
+      label: 'Earn',
+      onClick: () => navigate('/terminal/pools/new'),
+      children: [
+        { label: 'Pools', onClick: () => navigate('/terminal/pools/new') },
+        { label: 'Positions', onClick: () => navigate('/terminal/positions') },
+        { label: 'Locker', onClick: () => navigate('/terminal/locker') },
+        { label: 'Referrals', onClick: () => navigate('/terminal/referrals') },
+      ],
+    },
+    {
+      label: 'Portfolio',
+      onClick: () => navigate('/terminal/portfolio'),
+      children: [
+        { label: 'Overview', onClick: () => navigate('/terminal/portfolio') },
+        { label: 'Activity', onClick: () => navigate('/terminal/activity') },
+        { label: 'Analytics', onClick: () => navigate('/terminal/analytics') },
+      ],
+    },
+    { label: 'Docs', external: true, onClick: () => window.open(HOOKSWAP_LINKS.docs, '_blank', 'noreferrer') },
+    { label: 'Launchpad', external: true, onClick: () => window.open(HOOKSWAP_LINKS.launchpad, '_blank', 'noreferrer') },
   ]
 
   return (
