@@ -573,7 +573,7 @@ function MarketsScreenBody(): JSX.Element {
   )
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       {/* Header: title + network context + filter chips */}
       <div
         style={{
@@ -631,25 +631,21 @@ function MarketsScreenBody(): JSX.Element {
       {/*
         Dense markets table (reused Terminal DataTable primitive). The DataTable is a
         CSS grid whose column minimums sum wider than the content area at narrow
-        widths, so it lives in its own `overflowX:auto` scroll container — the table
-        scrolls horizontally INSIDE this box and never widens the page (header, chips,
-        heatmap and note stay put). `minWidth:0` lets the wrapper shrink with the rail.
+        widths, so it scrolls horizontally INSIDE its own `.tm-table-scroll` container
+        (built into DataTable) and never widens the page — header, chips, heatmap and
+        note stay put.
       */}
-      <div style={{ overflowX: 'auto', minWidth: 0 }}>
-        <div style={{ minWidth: 720 }}>
-          <DataTable<MarketRow>
-            columns={columns}
-            rows={filteredRows}
-            rowKey={(row) => row.key}
-            loading={poolsLoading}
-            comingSoon={poolsError}
-            comingSoonSubtext="Live markets arrive with the HookSwap indexer."
-            emptyMessage={emptyMessage}
-            initialSort={{ columnId: 'tvl', direction: 'desc' }}
-            skeletonRows={8}
-          />
-        </div>
-      </div>
+      <DataTable<MarketRow>
+        columns={columns}
+        rows={filteredRows}
+        rowKey={(row) => row.key}
+        loading={poolsLoading}
+        comingSoon={poolsError}
+        comingSoonSubtext="Live markets arrive with the HookSwap indexer."
+        emptyMessage={emptyMessage}
+        initialSort={{ columnId: 'tvl', direction: 'desc' }}
+        skeletonRows={8}
+      />
 
       {/* Honest data-provenance note (visible-but-muted; no fabricated values). */}
       <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 14, lineHeight: 1.5 }}>

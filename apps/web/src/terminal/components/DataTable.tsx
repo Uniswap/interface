@@ -55,6 +55,23 @@ export interface DataTableProps<Row> {
   skeletonRows?: number
   initialSort?: DataTableSort
   onRowClick?: (row: Row) => void
+  /**
+   * Explicit min-width (px) for the table's inner scroll body. When omitted it is
+   * derived from the sum of each column's minimum track width, so the table keeps
+   * its columns legible and scrolls horizontally inside its own container on narrow
+   * viewports instead of compressing/overflowing the page. Pass a value to override.
+   */
+  minWidth?: number
+}
+
+/**
+ * Minimum track width (px) implied by a CSS grid column string. `minmax(150px,…)`
+ * and fixed `'96px'` yield their leading px value; flex-only (`'1fr'`) columns fall
+ * back to a sensible legible minimum.
+ */
+function columnMinWidth(width: string): number {
+  const match = width.match(/(\d+(?:\.\d+)?)px/)
+  return match ? parseFloat(match[1]) : 80
 }
 
 /**
@@ -77,11 +94,15 @@ export function DataTable<Row>({
   skeletonRows = 8,
   initialSort,
   onRowClick,
+  minWidth,
 }: DataTableProps<Row>): JSX.Element {
   const [sort, setSort] = useState<DataTableSort | undefined>(initialSort)
   const [hoveredKey, setHoveredKey] = useState<string | undefined>(undefined)
 
   const gridTemplateColumns = columns.map((column) => column.width).join(' ')
+  // Sum of column minimums (+ the 6px cell padding on each side) so the table
+  // never compresses below legibility; instead it scrolls inside .tm-table-scroll.
+  const tableMinWidth = minWidth ?? columns.reduce((sum, column) => sum + columnMinWidth(column.width), 12)
   const isLoading = loading || (rows === undefined && !error)
 
   const sortedRows = useMemo(() => {
@@ -119,7 +140,8 @@ export function DataTable<Row>({
   }
 
   return (
-    <div role="table" style={{ fontFamily: terminalFonts.sans }}>
+    <div className="tm-table-scroll">
+      <div role="table" style={{ fontFamily: terminalFonts.sans, minWidth: tableMinWidth }}>
       {/* Header row */}
       <div
         role="row"
@@ -314,6 +336,7 @@ export function DataTable<Row>({
           {emptyMessage}
         </div>
       )}
+      </div>
     </div>
   )
 }

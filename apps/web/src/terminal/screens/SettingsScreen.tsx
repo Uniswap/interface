@@ -51,6 +51,7 @@ import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { updateUserDeadline } from '~/state/user/reducer'
 import { useUserSlippageTolerance } from '~/state/user/hooks'
 import { SlippageTolerance } from '~/state/user/types'
+import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 const MONO = terminalFonts.mono
@@ -606,6 +607,7 @@ function ComingSoonPanel({ title, subtitle }: { title: string; subtitle: string 
 
 export function SettingsScreen(): JSX.Element {
   const [panel, setPanel] = useState<PanelId>('trading')
+  const isMobile = useIsMobileViewport()
 
   // --- Real, persisted stores ------------------------------------------------
   const [userSlippage, setUserSlippage] = useUserSlippageTolerance()
@@ -663,7 +665,7 @@ export function SettingsScreen(): JSX.Element {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 22px',
+          padding: '0 var(--tm-gutter)',
         }}
       >
         <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 15, color: terminalColors.ink }}>Settings</span>
@@ -709,18 +711,21 @@ export function SettingsScreen(): JSX.Element {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        {/* Settings nav */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, flexDirection: isMobile ? 'column' : 'row' }}>
+        {/* Settings nav — a fixed 210px side column on desktop; on mobile it becomes a
+            horizontally scrollable tab strip above the panel so nothing overflows. */}
         <div
           style={{
-            width: 210,
+            width: isMobile ? '100%' : 210,
             flexShrink: 0,
-            borderRight: `1px solid ${terminalColors.line2}`,
+            borderRight: isMobile ? 'none' : `1px solid ${terminalColors.line2}`,
+            borderBottom: isMobile ? `1px solid ${terminalColors.line2}` : 'none',
             background: terminalColors.bg,
-            padding: '16px 12px',
+            padding: isMobile ? '10px var(--tm-gutter)' : '16px 12px',
             display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
+            flexDirection: isMobile ? 'row' : 'column',
+            gap: isMobile ? 6 : 2,
+            overflowX: isMobile ? 'auto' : undefined,
           }}
         >
           {NAV_ITEMS.map((item) => {
@@ -734,11 +739,13 @@ export function SettingsScreen(): JSX.Element {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
-                  padding: active ? '9px 11px' : '9px 11px 9px 24px',
+                  padding: isMobile ? '8px 12px' : active ? '9px 11px' : '9px 11px 9px 24px',
                   borderRadius: 9,
                   border: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap',
                   background: active ? terminalColors.greenBg : 'transparent',
                   color: active ? terminalColors.ink : terminalColors.ink2,
                   fontFamily: SANS,
@@ -756,7 +763,7 @@ export function SettingsScreen(): JSX.Element {
         </div>
 
         {/* Active panel */}
-        <div style={{ flex: 1, minWidth: 0, padding: '26px 30px', maxWidth: 760 }}>
+        <div style={{ flex: 1, minWidth: 0, padding: isMobile ? '22px var(--tm-gutter) 40px' : '26px 30px', maxWidth: 760 }}>
           {panel === 'trading' && <TradingPanel draft={draft} setDraft={setDraft} />}
           {panel === 'appearance' && (
             <AppearancePanel value={draft.appearance} onChange={(v) => setDraft({ appearance: v })} />

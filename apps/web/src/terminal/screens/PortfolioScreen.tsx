@@ -557,7 +557,7 @@ export function PortfolioScreen(): JSX.Element {
 
   if (!address) {
     return (
-      <div style={{ padding: '20px 24px 40px' }}>
+      <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
         <Header address={undefined} />
         <ConnectState onConnect={() => accountDrawer.open()} />
       </div>
@@ -565,14 +565,14 @@ export function PortfolioScreen(): JSX.Element {
   }
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       <Header address={address} />
 
       {/* KPI row — Net worth (emphasised, wider) + 24h PnL + Fees + LP positions, one line, shrink to fit (design B5). */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
           gap: 12,
           marginBottom: 18,
         }}
@@ -618,23 +618,20 @@ export function PortfolioScreen(): JSX.Element {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-start' }}>
         <div style={{ flex: '1 1 460px', minWidth: 0 }}>
           <Card title="Open positions">
-            {/* Wide table scrolls inside its own container so its column minima
-                never widen the page at narrow content widths. */}
-            <div style={{ overflowX: 'auto' }}>
-              <div style={{ minWidth: 560 }}>
-                <DataTable<PositionInfo>
-                  columns={columns}
-                  rows={positionsResult.isLoading && !positionsResult.hasData ? undefined : positions}
-                  rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
-                  loading={positionsResult.isLoading && !positionsResult.hasData}
-                  comingSoon={Boolean(positionsResult.error)}
-                  comingSoonSubtext="Live positions arrive with the HookSwap indexer."
-                  emptyMessage="No open liquidity positions."
-                  initialSort={{ columnId: 'value', direction: 'desc' }}
-                  skeletonRows={5}
-                />
-              </div>
-            </div>
+            {/* Wide table scrolls inside its own container (built into DataTable) so
+                its column minima never widen the page at narrow content widths. */}
+            <DataTable<PositionInfo>
+              columns={columns}
+              rows={positionsResult.isLoading && !positionsResult.hasData ? undefined : positions}
+              rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
+              loading={positionsResult.isLoading && !positionsResult.hasData}
+              comingSoon={Boolean(positionsResult.error)}
+              comingSoonSubtext="Live positions arrive with the HookSwap indexer."
+              emptyMessage="No open liquidity positions."
+              initialSort={{ columnId: 'value', direction: 'desc' }}
+              skeletonRows={5}
+              minWidth={560}
+            />
           </Card>
         </div>
 

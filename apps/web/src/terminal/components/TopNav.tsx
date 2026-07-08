@@ -277,8 +277,8 @@ export function TopNav({
         borderBottom: `1px solid ${terminalColors.line2}`,
         display: 'flex',
         alignItems: 'center',
-        gap: 22,
-        padding: '0 24px',
+        gap: 14,
+        padding: '0 var(--tm-gutter)',
         fontFamily: terminalFonts.sans,
       }}
     >
@@ -300,7 +300,7 @@ export function TopNav({
       </span>
 
       {/* Nav items */}
-      <nav style={{ display: 'flex', alignItems: 'stretch', gap: 20, height: 64 }} aria-label="Primary">
+      <nav style={{ display: 'flex', alignItems: 'stretch', gap: 15, height: 64, flexShrink: 0 }} aria-label="Primary">
         {NAV_SECTIONS.map((section) => (
           <NavItem
             key={section.label}
@@ -311,14 +311,12 @@ export function TopNav({
         ))}
       </nav>
 
-      {/* Right cluster */}
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-        {/* Search */}
-        <button
-          type="button"
-          onClick={onSearchClick}
-          style={{ ...FIELD_BASE, gap: 9, height: 36, padding: '0 13px', width: 210, cursor: 'text' }}
-        >
+      {/* Flexible search — grows to fill, shrinks FIRST so the bar never overflows. */}
+      <button
+        type="button"
+        onClick={onSearchClick}
+        style={{ ...FIELD_BASE, gap: 9, height: 36, padding: '0 13px', flex: '1 1 auto', minWidth: 0, maxWidth: 300, cursor: 'text' }}
+      >
           <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={terminalColors.faint} strokeWidth={2} aria-hidden="true">
             <circle cx={11} cy={11} r={7} />
             <path d="M20 20l-3.5-3.5" />
@@ -343,7 +341,9 @@ export function TopNav({
           </span>
         </button>
 
-        {/* Chain chip */}
+        {/* Right controls — fixed, never shrink */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          {/* Chain chip */}
         <button
           type="button"
           onClick={onChainClick}

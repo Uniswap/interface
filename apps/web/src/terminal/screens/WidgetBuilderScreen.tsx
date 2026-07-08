@@ -80,7 +80,7 @@ export function WidgetBuilderScreen(): JSX.Element {
   }
 
   return (
-    <div style={{ padding: '28px 24px 40px', minWidth: 0 }}>
+    <div style={{ padding: '28px var(--tm-gutter) 40px', minWidth: 0 }}>
       <h1
         style={{
           fontFamily: DISPLAY,

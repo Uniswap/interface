@@ -120,10 +120,37 @@
   --tm-rail-width: 226px;
   --tm-topbar-height: 52px;
 
+  /* Shared horizontal gutter — one content-width convention across the app shell.
+     Every screen root + the TopNav / mobile TopBar reference this so their left
+     edges align. Shrinks on narrower viewports so content never crowds the edge
+     nor overflows the page. */
+  --tm-gutter: 24px;
+
   /* Base surface + text for the Terminal region */
   font-family: var(--tm-font-sans);
   color: var(--tm-ink);
   background: var(--tm-bg-app);
+}
+
+@media (max-width: 900px) {
+  .tm-root {
+    --tm-gutter: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tm-root {
+    --tm-gutter: 12px;
+  }
+}
+
+/* Horizontal-scroll container for wide tables / grids. The table scrolls INSIDE
+   this box (never widening the page) once its columns hit their minimum widths.
+   Pair with an inner element that carries the table's min-width. */
+.tm-table-scroll {
+  overflow-x: auto;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Modal scrim */

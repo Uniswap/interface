@@ -27,7 +27,8 @@ import { Token } from '@uniswap/sdk-core'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
@@ -599,19 +600,69 @@ function SwapScreenBody(): JSX.Element {
 
 /* --------------------------------------------------------------- providers */
 
+/** The X Layer test pool default: native OKB → HKT (the seeded WOKB/HKT pool). */
+const XLAYER_HKT = new Token(
+  UniverseChainId.XLayer,
+  '0x144331BB4C3026D135896CaFec3Ae3D667f4F376',
+  18,
+  'HKT',
+  'HookSwap Test',
+)
+
+/**
+ * A valid default OUTPUT token for `chainId` — the chain's canonical stablecoin
+ * (USDC/USDT/DAI) from the app's own common-bases list, falling back to the
+ * wrapped-native token. Returns `undefined` only if the chain exposes neither, in
+ * which case the caller keeps the X Layer default so the pair is never broken.
+ */
+function resolveDefaultOutput(chainId: UniverseChainId): Currency | undefined {
+  const tokens = (COMMON_BASES[chainId] ?? [])
+    .map((info) => info.currency)
+    .filter((currency): currency is Token => currency.isToken)
+  const stablecoin = tokens.find((currency) => /usd/i.test(currency.symbol ?? ''))
+  return stablecoin ?? tokens[tokens.length - 1] ?? WRAPPED_NATIVE_CURRENCY[chainId]
+}
+
 /**
  * B2 Swap screen. Mounts the same swap-engine provider stack the app's `/swap`
  * page uses (multichain → transaction settings → swap-and-limit → swap form
- * store), so the ticket reads a real live quote. Prefilled with a real default
- * pair (native OKB → HKT on the X Layer test pool); users swap tokens via the real selector.
+ * store), so the ticket reads a real live quote.
+ *
+ * Default pair: native OKB → HKT on the X Layer test pool when disconnected or the
+ * wallet is already on X Layer (196). When a wallet is connected on ANOTHER chain,
+ * HKT is invalid there — so the pair is re-seeded to that chain's native token → a
+ * REAL, valid output (its canonical stablecoin / wrapped-native from common-bases),
+ * so the header never renders a broken "native / —" pair. Keyed on the resolved
+ * chain so switching chains re-initializes a valid pair.
  */
 export function SwapScreen(): JSX.Element {
-  // Default to the X Layer test setup: native OKB → HKT (the seeded WOKB/HKT pool).
-  const initialInputCurrency = useMemo(() => nativeOnChain(UniverseChainId.XLayer), [])
-  const initialOutputCurrency = useMemo(
-    () => new Token(UniverseChainId.XLayer, '0x144331BB4C3026D135896CaFec3Ae3D667f4F376', 18, 'HKT', 'HookSwap Test'),
-    [],
-  )
+  const account = useAccount()
+  const activeChainId = account.chainId
+
+  const { chainId, initialInputCurrency, initialOutputCurrency } = useMemo(() => {
+    // Disconnected, or already on X Layer → keep the seeded OKB → HKT test pair.
+    if (activeChainId === undefined || activeChainId === UniverseChainId.XLayer) {
+      return {
+        chainId: UniverseChainId.XLayer,
+        initialInputCurrency: nativeOnChain(UniverseChainId.XLayer),
+        initialOutputCurrency: XLAYER_HKT as Currency,
+      }
+    }
+    // Connected on another chain → native → a valid canonical output on THAT chain.
+    const output = resolveDefaultOutput(activeChainId)
+    if (!output) {
+      return {
+        chainId: UniverseChainId.XLayer,
+        initialInputCurrency: nativeOnChain(UniverseChainId.XLayer),
+        initialOutputCurrency: XLAYER_HKT as Currency,
+      }
+    }
+    return {
+      chainId: activeChainId,
+      initialInputCurrency: nativeOnChain(activeChainId) as Currency,
+      initialOutputCurrency: output,
+    }
+  }, [activeChainId])
 
   // Minimal transaction-modal context (mirrors TransactionModal.web.tsx) — the
   // SwapTokenSelector's selection hooks require it even outside a modal flow.
@@ -625,7 +676,7 @@ export function SwapScreen(): JSX.Element {
   })
 
   return (
-    <MultichainContextProvider initialChainId={UniverseChainId.XLayer}>
+    <MultichainContextProvider key={chainId} initialChainId={chainId}>
       <SwapTransactionSettingsStoreContextProvider>
         <SwapAndLimitContextProvider
           initialInputCurrency={initialInputCurrency}

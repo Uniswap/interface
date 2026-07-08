@@ -279,7 +279,7 @@ export function ActivityScreen(): JSX.Element {
 
   if (!address) {
     return (
-      <div style={{ padding: '20px 24px 40px' }}>
+      <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
         <Header count={0} onRefresh={() => undefined} />
         <ConnectState onConnect={() => accountDrawer.open()} />
       </div>
@@ -287,11 +287,11 @@ export function ActivityScreen(): JSX.Element {
   }
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       <Header count={rows?.length ?? 0} onRefresh={() => activity.refetch()} />
 
       {/* KPI row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0,1fr))', gap: 14, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBottom: 20 }}>
         <StatCard
           size="lg"
           label="Transactions"
@@ -343,23 +343,27 @@ export function ActivityScreen(): JSX.Element {
         ) : activity.error ? (
           <ComingSoon variant="panel" subtext="Your activity feed goes live with the HookSwap indexer." minHeight={180} />
         ) : filteredRows && filteredRows.length > 0 ? (
-          filteredRows.map((row, index) => (
-            <NotificationRow
-              key={row.id}
-              unread={row.unread}
-              category={row.category}
-              badgeLabel={row.badge}
-              title={row.title}
-              detail={row.detail}
-              timestamp={row.timestamp}
-              divider={index < filteredRows.length - 1}
-              action={
-                row.explorerUrl
-                  ? { label: 'View', onClick: () => window.open(row.explorerUrl, '_blank', 'noopener,noreferrer') }
-                  : undefined
-              }
-            />
-          ))
+          // Bounded scroll region (~8–9 rows) so a long history scrolls INSIDE the
+          // card instead of making the page endlessly tall. No pagination controls.
+          <div style={{ maxHeight: 560, overflowY: 'auto' }}>
+            {filteredRows.map((row, index) => (
+              <NotificationRow
+                key={row.id}
+                unread={row.unread}
+                category={row.category}
+                badgeLabel={row.badge}
+                title={row.title}
+                detail={row.detail}
+                timestamp={row.timestamp}
+                divider={index < filteredRows.length - 1}
+                action={
+                  row.explorerUrl
+                    ? { label: 'View', onClick: () => window.open(row.explorerUrl, '_blank', 'noopener,noreferrer') }
+                    : undefined
+                }
+              />
+            ))}
+          </div>
         ) : (
           <FeedMessage>
             {filter === 'all' ? 'No transaction activity yet.' : `No ${filter} in your activity.`}

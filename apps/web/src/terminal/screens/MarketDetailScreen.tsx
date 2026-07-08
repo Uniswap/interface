@@ -731,7 +731,7 @@ export function MarketDetailScreen(): JSX.Element {
 
   if (!parsed) {
     return (
-      <div style={{ padding: '20px 24px' }}>
+      <div style={{ padding: '20px var(--tm-gutter)' }}>
         <CenteredState
           title="Market not found"
           detail="This market link is malformed. Open a pool from Markets to view its detail."
@@ -742,7 +742,7 @@ export function MarketDetailScreen(): JSX.Element {
 
   if (!poolLoading && !poolData) {
     return (
-      <div style={{ padding: '20px 24px' }}>
+      <div style={{ padding: '20px var(--tm-gutter)' }}>
         {poolError ? (
           <ComingSoon
             variant="panel"
@@ -771,7 +771,7 @@ export function MarketDetailScreen(): JSX.Element {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '18px 24px',
+          padding: '18px var(--tm-gutter)',
           borderBottom: `1px solid ${terminalColors.line2}`,
           background: terminalColors.bg,
           gap: 16,

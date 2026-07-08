@@ -585,7 +585,7 @@ export function PositionsScreen(): JSX.Element {
   /* Disconnected → connect empty state. */
   if (!address) {
     return (
-      <div style={{ padding: '20px 24px 40px' }}>
+      <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
         <Header address={undefined} onNewPosition={onNewPosition} showAction={false} />
         <ConnectState onConnect={() => accountDrawer.open()} />
       </div>
@@ -595,7 +595,7 @@ export function PositionsScreen(): JSX.Element {
   const showEmpty = !isLoading && !positionsResult.error && positions.length === 0
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       <Header address={address} onNewPosition={onNewPosition} showAction />
 
       {/* Stat tiles — real counts + totals over the returned positions. */}
@@ -630,24 +630,21 @@ export function PositionsScreen(): JSX.Element {
         {showEmpty ? (
           <EmptyState onNewPosition={onNewPosition} />
         ) : (
-          /* Wide table scrolls inside its own container so column minima never
-             widen the page at narrow content widths. */
-          <div style={{ overflowX: 'auto' }}>
-            <div style={{ minWidth: 760 }}>
-              <DataTable<PositionInfo>
-                columns={columns}
-                rows={isLoading ? undefined : positions}
-                rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
-                loading={isLoading}
-                comingSoon={Boolean(positionsResult.error)}
-                comingSoonSubtext="Live positions arrive with the HookSwap indexer."
-                emptyMessage="No positions."
-                initialSort={{ columnId: 'value', direction: 'desc' }}
-                skeletonRows={6}
-                onRowClick={(p) => navigate(getPositionUrl(p))}
-              />
-            </div>
-          </div>
+          /* Wide table scrolls inside its own container (built into DataTable) so
+             column minima never widen the page at narrow content widths. */
+          <DataTable<PositionInfo>
+            columns={columns}
+            rows={isLoading ? undefined : positions}
+            rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
+            loading={isLoading}
+            comingSoon={Boolean(positionsResult.error)}
+            comingSoonSubtext="Live positions arrive with the HookSwap indexer."
+            emptyMessage="No positions."
+            initialSort={{ columnId: 'value', direction: 'desc' }}
+            skeletonRows={6}
+            minWidth={760}
+            onRowClick={(p) => navigate(getPositionUrl(p))}
+          />
         )}
       </Card>
     </div>

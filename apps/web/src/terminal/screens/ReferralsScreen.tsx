@@ -479,7 +479,7 @@ export function ReferralsScreen(): JSX.Element {
   const networkValue = !connected ? '—' : deployed ? chainLabel : 'Not live'
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
         <h1

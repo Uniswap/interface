@@ -76,6 +76,7 @@ import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useAccount } from '~/hooks/useAccount'
 import { SparklineCell } from '~/terminal/components/SparklineCell'
 import { TerminalCommandPalette } from '~/terminal/components/TerminalCommandPalette'
@@ -91,6 +92,15 @@ const SANS = terminalFonts.sans
 
 const CONTENT_WIDTH = 1200
 
+/**
+ * ONE uniform column track shared by EVERY feature card grid (TRADE / EARN / TRACK
+ * groups + the "Why HookSwap" band). `auto-fill` (not `auto-fit`) keeps the column
+ * width constant regardless of how many cards a section has, so a 2-card, 3-card and
+ * 4-card row all align on the same grid — no stretched orphan cards. Collapses
+ * 4→2→1 columns as the viewport narrows.
+ */
+const FEATURE_GRID_COLUMNS = 'repeat(auto-fill, minmax(240px, 1fr))'
+
 /** Signed percent, 1 decimal: 2.4 → "+2.4%", -3.1 → "-3.1%". */
 function formatSignedPct(value: number): string {
   return `${value >= 0 ? '+' : '-'}${Math.abs(value).toFixed(1)}%`
@@ -103,11 +113,42 @@ function shortenAddress(address: string): string {
 
 /* ------------------------------------------------------------ keyframes (once) */
 
-/** Marquee + pulse keyframes, namespaced so they never collide with app CSS. */
+/** Marquee + pulse keyframes + clickable-ticker hover, namespaced so they never collide with app CSS. */
 const KEYFRAMES = `
 @keyframes hs-tape { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes hs-blip { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+.hs-ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.hs-ticker-item:hover { background: ${terminalColors.line3}; }
 `
+
+/**
+ * Current viewport width (px) with a resize listener — inline styles can't do
+ * media queries, so the landing switches layouts off this value. Self-contained
+ * (window resize) so it works inside the inline-styled marketing subtree.
+ */
+function useViewportWidth(): number {
+  const [width, setWidth] = useState<number>(() => (typeof window === 'undefined' ? 1200 : window.innerWidth))
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined
+    }
+    const onResize = (): void => setWidth(window.innerWidth)
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  return width
+}
 
 /* --------------------------------------------------- token-metric join (real) */
 
@@ -195,6 +236,9 @@ interface Ticker {
   symbol: string
   price?: number
   change1d?: number
+  /** Real token address + chain (from the token's first chainToken) → swap deep-link. */
+  address?: string
+  chainId?: number
 }
 
 const TICKER_COUNT = 10
@@ -203,11 +247,16 @@ function buildTickers(tokens: readonly MultichainToken[]): Ticker[] {
   return tokens
     .filter((token) => token.symbol !== '' && typeof token.stats?.price === 'number')
     .slice(0, TICKER_COUNT)
-    .map((token) => ({
-      symbol: token.symbol,
-      price: token.stats?.price,
-      change1d: token.stats?.priceChange1d,
-    }))
+    .map((token) => {
+      const chainToken = token.chainTokens[0]
+      return {
+        symbol: token.symbol,
+        price: token.stats?.price,
+        change1d: token.stats?.priceChange1d,
+        address: chainToken?.address || undefined,
+        chainId: chainToken?.chainId,
+      }
+    })
 }
 
 /* ----------------------------------------------- pool → presentation (real) */
@@ -328,6 +377,9 @@ function Header({
   onSearch,
   onConnect,
   onChainClick,
+  onHome,
+  compact,
+  padX,
 }: {
   navLinks: NavLink[]
   chainId?: UniverseChainId
@@ -335,7 +387,179 @@ function Header({
   onSearch: () => void
   onConnect: () => void
   onChainClick: () => void
+  onHome: () => void
+  /** Collapse the nav/search/chain into a hamburger menu (tablet + mobile). */
+  compact: boolean
+  padX: number
 }): JSX.Element {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const logoButton = (
+    <button
+      type="button"
+      onClick={onHome}
+      aria-label="HookSwap home"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 11,
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        cursor: 'pointer',
+      }}
+    >
+      <Logo />
+      <Wordmark />
+    </button>
+  )
+
+  if (compact) {
+    return (
+      <div style={{ position: 'relative', background: terminalColors.bgApp, borderBottom: `1px solid ${terminalColors.line2}`, zIndex: 20 }}>
+        <div style={{ height: 64, display: 'flex', alignItems: 'center', gap: 12, padding: `0 ${padX}px` }}>
+          {logoButton}
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((prev) => !prev)}
+            style={{
+              marginLeft: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 40,
+              height: 36,
+              background: terminalColors.bg,
+              border: `1px solid ${terminalColors.line}`,
+              borderRadius: 10,
+              cursor: 'pointer',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={terminalColors.ink} strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
+        {menuOpen ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 64,
+              background: terminalColors.bgApp,
+              borderBottom: `1px solid ${terminalColors.line2}`,
+              padding: `12px ${padX}px 18px`,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+              boxShadow: `0 24px 40px -24px rgba(0,0,0,0.6)`,
+            }}
+          >
+            {navLinks.map((link) => (
+              <button
+                key={link.label}
+                type="button"
+                onClick={() => {
+                  link.onClick()
+                  setMenuOpen(false)
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  padding: '11px 4px',
+                  fontFamily: SANS,
+                  fontSize: 15,
+                  fontWeight: link.active ? 600 : 400,
+                  color: link.active ? terminalColors.ink : terminalColors.ink2,
+                }}
+              >
+                {link.label}
+              </button>
+            ))}
+            <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+              <button
+                type="button"
+                onClick={() => {
+                  onSearch()
+                  setMenuOpen(false)
+                }}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 9,
+                  height: 40,
+                  background: terminalColors.bg,
+                  border: `1px solid ${terminalColors.line}`,
+                  borderRadius: 10,
+                  padding: '0 13px',
+                  cursor: 'pointer',
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={terminalColors.faint} strokeWidth="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                <span style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.faint }}>Search…</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onChainClick()
+                  setMenuOpen(false)
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  height: 40,
+                  background: terminalColors.bg,
+                  border: `1px solid ${terminalColors.line}`,
+                  borderRadius: 10,
+                  padding: '0 12px',
+                  cursor: 'pointer',
+                }}
+              >
+                {chainId !== undefined ? <ChainLogo chainId={chainId} size={16} /> : null}
+                <span style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: terminalColors.ink }}>
+                  {chainId !== undefined ? getChainLabel(chainId) : 'Network'}
+                </span>
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                onConnect()
+                setMenuOpen(false)
+              }}
+              style={{
+                marginTop: 6,
+                height: 42,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: terminalColors.brandGreen,
+                border: 'none',
+                borderRadius: 10,
+                cursor: 'pointer',
+                boxShadow: `0 0 18px -6px ${terminalColors.brandGreen}`,
+              }}
+            >
+              <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: terminalColors.btnInk }}>
+                {walletLabel ?? 'Connect'}
+              </span>
+            </button>
+          </div>
+        ) : null}
+      </div>
+    )
+  }
+
   return (
     <div
       style={{
@@ -345,14 +569,11 @@ function Header({
         display: 'flex',
         alignItems: 'center',
         gap: 20,
-        padding: '0 40px',
+        padding: `0 ${padX}px`,
         flexWrap: 'wrap',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-        <Logo />
-        <Wordmark />
-      </div>
+      {logoButton}
       <div style={{ display: 'flex', alignItems: 'center', gap: 22, marginLeft: 14 }}>
         {navLinks.map((link) => (
           <button
@@ -466,11 +687,13 @@ function TickerTape({
   loading,
   error,
   fiatPrice,
+  onSelect,
 }: {
   tickers: Ticker[]
   loading: boolean
   error: boolean
   fiatPrice: (value: number | undefined) => string
+  onSelect: (ticker: Ticker) => void
 }): JSX.Element {
   const hasData = tickers.length > 0
   const loop = hasData ? [...tickers, ...tickers] : []
@@ -502,11 +725,18 @@ function TickerTape({
             : 'Live token feed goes live with the HookSwap indexer.'}
         </span>
       ) : (
-        <div style={{ display: 'flex', gap: 34, whiteSpace: 'nowrap', animation: 'hs-tape 38s linear infinite', paddingLeft: 40 }}>
+        <div style={{ display: 'flex', gap: 26, whiteSpace: 'nowrap', animation: 'hs-tape 38s linear infinite', paddingLeft: 32 }}>
           {loop.map((ticker, i) => {
             const up = (ticker.change1d ?? 0) >= 0
             return (
-              <span key={`${ticker.symbol}-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: MONO, fontSize: 13 }}>
+              <button
+                key={`${ticker.symbol}-${i}`}
+                type="button"
+                className="hs-ticker-item"
+                onClick={() => onSelect(ticker)}
+                aria-label={`Swap ${ticker.symbol}`}
+                style={{ fontFamily: MONO, fontSize: 13 }}
+              >
                 <span style={{ color: terminalColors.faint }}>{ticker.symbol}</span>
                 <span style={{ color: terminalColors.ink2 }}>{fiatPrice(ticker.price)}</span>
                 <span
@@ -521,7 +751,7 @@ function TickerTape({
                 >
                   {ticker.change1d !== undefined ? formatSignedPct(ticker.change1d) : '—'}
                 </span>
-              </span>
+              </button>
             )
           })}
         </div>
@@ -699,6 +929,12 @@ function LandingScreenBody(): JSX.Element {
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
 
+  // Responsive breakpoints (inline styles can't do media queries).
+  const viewportWidth = useViewportWidth()
+  const isMobile = viewportWidth <= 640
+  const isCompactNav = viewportWidth <= 1024
+  const padX = isMobile ? 20 : 40
+
   // Capture ?ref=<code> for referral attribution (chrome normally does this).
   useCaptureRef()
 
@@ -819,6 +1055,23 @@ function LandingScreenBody(): JSX.Element {
 
   const displayChainId = account.chainId ?? defaultChainId ?? chains[0]
 
+  // Clickable ticker → open the swap screen with this token pre-selected as output
+  // (same deep-link pattern as the ⌘K command palette's goToSwap).
+  const goToTickerSwap = (ticker: Ticker): void => {
+    let path = '/swap'
+    if (ticker.address && ticker.chainId !== undefined) {
+      try {
+        path += serializeSwapAddressesToURLParameters({
+          outputTokenAddress: ticker.address,
+          chainId: ticker.chainId as UniverseChainId,
+        })
+      } catch {
+        path = '/swap'
+      }
+    }
+    navigate(path)
+  }
+
   const navLinks: NavLink[] = [
     { label: 'Trade', onClick: () => navigate('/swap'), active: true },
     { label: 'Markets', onClick: () => navigate('/terminal/markets') },
@@ -838,12 +1091,24 @@ function LandingScreenBody(): JSX.Element {
           onSearch={() => setPaletteOpen(true)}
           onConnect={() => accountDrawer.open()}
           onChainClick={() => accountDrawer.open()}
+          onHome={() => {
+            navigate('/')
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+          compact={isCompactNav}
+          padX={padX}
         />
 
-        <TickerTape tickers={tickers} loading={tokensLoading} error={tokensError} fiatPrice={fiatPrice} />
+        <TickerTape
+          tickers={tickers}
+          loading={tokensLoading}
+          error={tokensError}
+          fiatPrice={fiatPrice}
+          onSelect={goToTickerSwap}
+        />
 
         {/* ---------------------------------------------------------- HERO */}
-        <div style={{ padding: '44px 40px 30px', display: 'flex', gap: 28, position: 'relative', flexWrap: 'wrap' }}>
+        <div style={{ padding: `44px ${padX}px 30px`, display: 'flex', gap: 28, position: 'relative', flexWrap: 'wrap' }}>
           <div
             style={{
               position: 'absolute',
@@ -889,7 +1154,7 @@ function LandingScreenBody(): JSX.Element {
               style={{
                 fontFamily: DISPLAY,
                 fontWeight: 700,
-                fontSize: 52,
+                fontSize: isMobile ? 34 : 52,
                 lineHeight: 1.03,
                 letterSpacing: '-0.03em',
                 color: terminalColors.ink,
@@ -1066,7 +1331,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* ------------------------------------------- ORDER BOOK + DEPTH */}
-        <div style={{ padding: '6px 40px 34px', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ padding: `6px ${padX}px 34px`, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 300px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 14, color: terminalColors.ink }}>Order book</span>
@@ -1112,7 +1377,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* --------------------------------------------------- TOP MARKETS */}
-        <div style={{ padding: '0 40px 40px' }}>
+        <div style={{ padding: `0 ${padX}px 40px` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', color: terminalColors.ink }}>Top markets</span>
             <button
@@ -1242,7 +1507,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* ------------------------------------------------- FEATURE GRID */}
-        <div style={{ padding: '14px 40px 20px', borderTop: `1px solid ${terminalColors.line2}` }}>
+        <div style={{ padding: `14px ${padX}px 20px`, borderTop: `1px solid ${terminalColors.line2}` }}>
           <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 26, letterSpacing: '-0.02em', color: terminalColors.ink, marginTop: 26 }}>
             Everything in one terminal
           </div>
@@ -1255,7 +1520,7 @@ function LandingScreenBody(): JSX.Element {
               <div style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint, letterSpacing: '0.08em', margin: '26px 0 12px' }}>
                 {group.label}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(230px, 1fr))`, gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: FEATURE_GRID_COLUMNS, gap: 14 }}>
                 {group.features.map((feature) => (
                   <button
                     key={feature.title}
@@ -1305,7 +1570,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* ---------------------------------------------- WHY HOOKSWAP (replaces hook marketplace) */}
-        <div style={{ padding: '20px 40px 20px' }}>
+        <div style={{ padding: `20px ${padX}px 20px` }}>
           <div style={{ marginTop: 20, marginBottom: 16 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: MONO, fontSize: 11, color: terminalColors.brandGreen, letterSpacing: '0.06em' }}>
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: terminalColors.brandGreen, boxShadow: `0 0 6px ${terminalColors.brandGreen}` }} />
@@ -1315,7 +1580,7 @@ function LandingScreenBody(): JSX.Element {
               Every swap, best execution.
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: FEATURE_GRID_COLUMNS, gap: 14 }}>
             {WHY_CARDS.map((card) => (
               <div key={card.title} style={{ background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: 18 }}>
                 <span
@@ -1340,7 +1605,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* --------------------------------------------------- LIVE ACTIVITY */}
-        <div style={{ padding: '24px 40px 20px' }}>
+        <div style={{ padding: `24px ${padX}px 20px` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
             <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', color: terminalColors.ink }}>Live activity</span>
             <span
@@ -1399,14 +1664,14 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* --------------------------------------------------------- CTA BAND */}
-        <div style={{ padding: '30px 40px 44px' }}>
+        <div style={{ padding: `30px ${padX}px 44px` }}>
           <div
             style={{
               position: 'relative',
               background: `linear-gradient(120deg, ${terminalColors.greenBg} 0%, ${terminalColors.bgApp} 60%)`,
               border: `1px solid ${terminalColors.greenBorder}`,
               borderRadius: 20,
-              padding: '48px 44px',
+              padding: isMobile ? '32px 22px' : '48px 44px',
               overflow: 'hidden',
             }}
           >
@@ -1416,7 +1681,7 @@ function LandingScreenBody(): JSX.Element {
               <circle cx="24" cy="25" r="7.2" fill="none" stroke={terminalColors.brandGreen} strokeWidth="1.2" strokeLinecap="round" strokeDasharray="33 13" transform="rotate(118 24 25)" />
             </svg>
             <div style={{ position: 'relative' }}>
-              <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 38, letterSpacing: '-0.03em', color: terminalColors.ink, lineHeight: 1.05, maxWidth: 560 }}>
+              <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: isMobile ? 27 : 38, letterSpacing: '-0.03em', color: terminalColors.ink, lineHeight: 1.05, maxWidth: 560 }}>
                 Open the terminal.
                 <br />
                 Trade like a pro.
@@ -1468,7 +1733,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* ------------------------------------------------------------ FOOTER */}
-        <div style={{ borderTop: `1px solid ${terminalColors.line2}`, padding: '36px 40px 40px', display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+        <div style={{ borderTop: `1px solid ${terminalColors.line2}`, padding: `36px ${padX}px 40px`, display: 'flex', gap: 40, flexWrap: 'wrap' }}>
           <div style={{ flex: '1.4 1 260px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
               <Logo size={26} />
@@ -1525,7 +1790,7 @@ function LandingScreenBody(): JSX.Element {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: `1px solid ${terminalColors.line2}`, padding: '18px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ borderTop: `1px solid ${terminalColors.line2}`, padding: `18px ${padX}px`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint }}>© 2026 HookSwap Labs · All rights reserved</span>
           <div style={{ display: 'flex', gap: 20 }}>
             <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint }}>Terms</span>
@@ -1534,7 +1799,7 @@ function LandingScreenBody(): JSX.Element {
         </div>
 
         {/* Honest provenance note (no fabricated values). */}
-        <div style={{ padding: '0 40px 28px', fontFamily: SANS, fontSize: 11, color: terminalColors.faint, lineHeight: 1.5 }}>
+        <div style={{ padding: `0 ${padX}px 28px`, fontFamily: SANS, fontSize: 11, color: terminalColors.faint, lineHeight: 1.5 }}>
           Tickers &amp; the featured chart join the live token feed; TVL &amp; 24h volume are the live protocol-stats feed; top
           markets (including the seeded X&nbsp;Layer pool) come from the live pools feed; activity is your connected wallet&apos;s
           real history. Values with no live source render an honest &ldquo;—&rdquo;; the order book &amp; depth cards stay empty

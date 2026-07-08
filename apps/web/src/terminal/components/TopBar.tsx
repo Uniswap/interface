@@ -77,7 +77,7 @@ export function TopBar({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 22px',
+        padding: '0 var(--tm-gutter)',
         background: terminalColors.bg,
         fontFamily: terminalFonts.sans,
       }}
@@ -95,23 +95,35 @@ export function TopBar({
         style={{
           ...FIELD_BASE,
           gap: 7,
-          width: 280,
+          flex: '1 1 auto',
+          minWidth: 0,
+          maxWidth: 280,
+          marginRight: 10,
           height: 34,
           padding: '0 11px',
           color: terminalColors.ink3Alt,
           fontSize: 12.5,
           cursor: 'text',
+          overflow: 'hidden',
         }}
       >
-        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={terminalColors.ink3Alt} strokeWidth={2}>
+        <svg
+          width={14}
+          height={14}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke={terminalColors.ink3Alt}
+          strokeWidth={2}
+          style={{ flexShrink: 0 }}
+        >
           <circle cx={11} cy={11} r={7} />
           <path d="M20 20l-3.5-3.5" />
         </svg>
-        {searchPlaceholder}
+        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{searchPlaceholder}</span>
       </div>
 
       {/* Right cluster */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0 }}>
         {/* Gas pill (mono) — only shown when a real gwei reading is available;
             no live gas oracle for the custom chains yet, so hide rather than
             render a permanent empty "— gwei". */}

@@ -931,7 +931,7 @@ function AnalyticsScreenBody(): JSX.Element {
   const chartTitle = chartMetric === 'tvl' ? 'Total value locked' : chartMetric === 'volume' ? 'Volume' : 'Fees'
 
   return (
-    <div style={{ padding: '20px 24px 40px' }}>
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       {/* Header: title + timeframe + export */}
       <div
         style={{
@@ -1122,23 +1122,20 @@ function AnalyticsScreenBody(): JSX.Element {
 
         <div style={{ flex: '1.3 1 360px', minWidth: 0 }}>
           <Card title="Top pools">
-            {/* Table grid has a ~358px min-track floor — scroll it inside its own
-                container so it never pushes the page wide on narrow content. */}
-            <div style={{ overflowX: 'auto' }}>
-              <div style={{ minWidth: 360 }}>
-                <DataTable<PoolPresentation>
-                  columns={columns}
-                  rows={poolsLoading && !topByVolume ? undefined : topByVolume}
-                  rowKey={(row) => row.key}
-                  loading={poolsLoading && !topByVolume}
-                  comingSoon={poolsError}
-                  comingSoonSubtext="Pool liquidity data goes live with the HookSwap indexer."
-                  emptyMessage="No pools indexed yet — liquidity data goes live with the HookSwap indexer."
-                  initialSort={{ columnId: 'volume', direction: 'desc' }}
-                  skeletonRows={6}
-                />
-              </div>
-            </div>
+            {/* Table grid has a ~358px min-track floor — DataTable scrolls it inside
+                its own container so it never pushes the page wide on narrow content. */}
+            <DataTable<PoolPresentation>
+              columns={columns}
+              rows={poolsLoading && !topByVolume ? undefined : topByVolume}
+              rowKey={(row) => row.key}
+              loading={poolsLoading && !topByVolume}
+              comingSoon={poolsError}
+              comingSoonSubtext="Pool liquidity data goes live with the HookSwap indexer."
+              emptyMessage="No pools indexed yet — liquidity data goes live with the HookSwap indexer."
+              initialSort={{ columnId: 'volume', direction: 'desc' }}
+              skeletonRows={6}
+              minWidth={360}
+            />
           </Card>
         </div>
 

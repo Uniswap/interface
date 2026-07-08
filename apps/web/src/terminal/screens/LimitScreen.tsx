@@ -78,7 +78,7 @@ export function LimitScreen(): JSX.Element {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 22px',
+          padding: '0 var(--tm-gutter)',
         }}
       >
         <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 15, color: terminalColors.ink }}>Limit</span>
@@ -97,7 +97,7 @@ export function LimitScreen(): JSX.Element {
           overflowY: 'auto',
           display: 'flex',
           justifyContent: 'center',
-          padding: '28px 22px 48px',
+          padding: '28px var(--tm-gutter) 48px',
         }}
       >
         <div style={{ width: '100%', maxWidth: MODULE_WIDTH }}>
