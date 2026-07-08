@@ -105,7 +105,7 @@ function MarketTokenLogo({ url, size }: { url: string | undefined; size: number 
         height: size,
         borderRadius: '50%',
         background: url
-          ? `#fff center/cover no-repeat url(${JSON.stringify(url)})`
+          ? `${terminalColors.panel} center/cover no-repeat url(${JSON.stringify(url)})`
           : terminalTokenGradients.eth,
         flexShrink: 0,
         display: 'inline-block',

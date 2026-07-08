@@ -282,10 +282,10 @@ export function LeftRail({
             alignItems: 'center',
             justifyContent: collapsed ? 'center' : 'flex-start',
             gap: 9,
-            background: terminalColors.ink,
+            background: terminalColors.line,
             borderRadius: 12,
             padding: collapsed ? '9px 0' : '9px 10px',
-            color: '#fff',
+            color: terminalColors.ink,
             cursor: wallet ? 'default' : 'pointer',
           }}
         >

@@ -96,7 +96,7 @@ function TokenLogo({ url }: { url: string }): JSX.Element {
         width: 26,
         height: 26,
         borderRadius: '50%',
-        background: `#fff center/cover no-repeat url(${JSON.stringify(url)})`,
+        background: `${terminalColors.panel} center/cover no-repeat url(${JSON.stringify(url)})`,
         border: `1px solid ${terminalColors.line2}`,
         flexShrink: 0,
         display: 'inline-block',

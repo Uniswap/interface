@@ -32,8 +32,6 @@ import { TerminalNavId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { ActivityScreen } from '~/terminal/screens/ActivityScreen'
 import { AnalyticsScreen } from '~/terminal/screens/AnalyticsScreen'
-import { BuyScreen } from '~/terminal/screens/BuyScreen'
-import { LandingScreen } from '~/terminal/screens/LandingScreen'
 import { LimitScreen } from '~/terminal/screens/LimitScreen'
 import { LockerScreen } from '~/terminal/screens/LockerScreen'
 import { MarketDetailScreen } from '~/terminal/screens/MarketDetailScreen'
@@ -62,9 +60,6 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   if (pathname === '/limit' || pathname === '/limits') {
     return 'limit'
   }
-  if (pathname === '/buy') {
-    return 'buy'
-  }
   if (pathname === '/positions' || pathname.startsWith('/positions/')) {
     return 'positions'
   }
@@ -83,9 +78,6 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/limit')) {
     return 'limit'
-  }
-  if (rest.startsWith('/buy')) {
-    return 'buy'
   }
   if (rest.startsWith('/markets')) {
     return 'markets'
@@ -148,8 +140,8 @@ function ChainSwitcherMenu({
       <div
         style={{
           position: 'absolute',
-          top: 46,
-          right: 22,
+          top: 60,
+          right: 24,
           minWidth: 220,
           maxHeight: 360,
           overflowY: 'auto',
@@ -337,10 +329,11 @@ export default function TerminalApp(): JSX.Element {
     <TerminalChrome>
       <Routes>
         <Route index element={<Navigate to="swap" replace />} />
-        <Route path="landing" element={<LandingScreen />} />
+        {/* Landing is self-contained (own nav) — serve it standalone at `/`, not
+            inside the shell (which would double the nav). Redirect the legacy path. */}
+        <Route path="landing" element={<Navigate to="/" replace />} />
         <Route path="swap" element={<SwapScreen />} />
         <Route path="limit" element={<LimitScreen />} />
-        <Route path="buy" element={<BuyScreen />} />
         <Route path="markets" element={<MarketsScreen />} />
         <Route path="pools/new" element={<PoolsScreen />} />
         <Route path="pools" element={<PoolsScreen />} />

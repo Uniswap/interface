@@ -106,7 +106,7 @@ function statusStyle(status: PositionStatus): { label: string; color: string; ba
     case PositionStatus.OUT_OF_RANGE:
       return {
         label: 'Out of range',
-        color: '#C4712A',
+        color: terminalColors.warn,
         background: terminalColors.warnBg,
         border: terminalColors.warnBg,
       }

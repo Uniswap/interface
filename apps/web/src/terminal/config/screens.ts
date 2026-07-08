@@ -179,8 +179,6 @@ export const terminalAccountNav: TerminalNavItem[] = [
   { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
   // Referral codes + earnings (deployed referral router).
   { id: 'referrals', label: 'Referrals', icon: 'referral', path: `${TERMINAL_BASE}/referrals` },
-  // Fiat on-ramp — Terminal-native screen (frames the real on-ramp Buy form).
-  { id: 'buy', label: 'Buy', icon: 'buy', path: `${TERMINAL_BASE}/buy` },
 ]
 
 /**

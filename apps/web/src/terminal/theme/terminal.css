@@ -57,37 +57,37 @@
 /* --------------------------------------------------------- CSS variables -- */
 
 .tm-root {
-  /* Colors */
-  --tm-ink: #0b0f14;
-  --tm-ink-2: #59626f;
-  --tm-ink-3: #8a94a3;
-  --tm-ink-3-alt: #98a0ac;
-  --tm-faint: #b0b7c0;
-  --tm-line: #e6e9ee;
-  --tm-line-2: #eff1f4;
-  --tm-line-3: #f4f6f8;
-  --tm-bg: #ffffff;
-  --tm-bg-app: #fcfcfd;
-  --tm-panel: #f6f8fa;
-  --tm-panel-2: #f0f3f6;
-  --tm-panel-2-alt: #eef1f4;
+  /* Colors — DARK THEME (mirrors tokens.ts; roles preserved) */
+  --tm-ink: #e7ecf2;
+  --tm-ink-2: #9aa4b2;
+  --tm-ink-3: #7c8698;
+  --tm-ink-3-alt: #7c8698;
+  --tm-faint: #5c6675;
+  --tm-line: #232b36;
+  --tm-line-2: #1c232d;
+  --tm-line-3: #1a212b;
+  --tm-bg: #12181f;
+  --tm-bg-app: #0b0f14;
+  --tm-panel: #0e141b;
+  --tm-panel-2: #0e141b;
+  --tm-panel-2-alt: #0e141b;
   --tm-brand-green: #2fe07e;
-  --tm-green-deep: #0aa85a;
-  --tm-green-up: #12b866;
-  --tm-green-bg: #e9fbef;
-  --tm-green-border: #c7f3d8;
-  --tm-btn-ink: #08110a;
+  --tm-green-deep: #2fe07e;
+  --tm-green-up: #2fe07e;
+  --tm-green-bg: #0b2418;
+  --tm-green-border: #12502f;
+  --tm-btn-ink: #0b0f14;
   --tm-red-down: #ef4e4a;
-  --tm-red-bg: #fdebea;
+  --tm-red-bg: #2a1214;
   --tm-warn: #f0913a;
-  --tm-warn-bg: #fff3e8;
-  --tm-warn-bg-alt: #fff1e9;
+  --tm-warn-bg: #2a1e10;
+  --tm-warn-bg-alt: #2a1e10;
   --tm-accent-indigo: #5b6bff;
   --tm-accent-blue: #2e7cf6;
   --tm-accent-purple: #8a6bff;
   --tm-accent-pink: #e0517a;
   --tm-accent-teal: #12b0a8;
-  --tm-rail-icon-inactive: #8a92a0;
+  --tm-rail-icon-inactive: #7c8698;
   --tm-rail-wallet-sub: #7c8698;
 
   /* Fonts */
@@ -128,7 +128,7 @@
 
 /* Modal scrim */
 .tm-scrim {
-  background: rgba(11, 15, 20, 0.42);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 /* Convenience: every numeric/monetary/address value uses mono (hard rule). */

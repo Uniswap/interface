@@ -27,10 +27,10 @@
 
   /* ------------------------------------------------------ signal palette */
   :root{
-    --ink:#0B0F14; --slate:#59626F; --faint:#8A94A3;
-    --mist:#F6F8FA; --panel:#F0F3F6; --line:#E6E9EE; --line2:#EFF1F4; --white:#FFFFFF;
-    --green:#2FE07E; --green-deep:#0AA85A; --up:#12B866; --down:#EF4E4A;
-    --green-bg:#E9FBEF; --green-border:#C7F3D8; --btn-ink:#08110A;
+    --ink:#E7ECF2; --slate:#9AA4B2; --faint:#7C8698;
+    --mist:#0B0F14; --panel:#0E141B; --line:#232B36; --line2:#1C232D; --white:#12181F;
+    --green:#2FE07E; --green-deep:#2FE07E; --up:#2FE07E; --down:#EF4E4A;
+    --green-bg:#0B2418; --green-border:#12502F; --btn-ink:#0B0F14;
     --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     --display:'Space Grotesk',var(--sans);
     --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -76,7 +76,7 @@
   main img{max-width:100%}
 
   /* --------------------------------------------------------------- code */
-  main pre{position:relative;background:var(--ink);color:#E6E9EE;padding:15px 16px;border-radius:12px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
+  main pre{position:relative;background:#0E141B;color:#E6E9EE;padding:15px 16px;border-radius:12px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
   main code{font-family:var(--mono);font-size:.88em;background:var(--panel);color:var(--ink);padding:2px 6px;border-radius:6px}
   main pre code{background:none;padding:0;color:inherit}
   main a code{color:var(--green-deep)}
@@ -186,14 +186,14 @@ function setText(el, s){ el.textContent = s; }
 function heroHTML(){
   return ''+
   '<section class="hero">'+
-    '<svg class="hero-bg" viewBox="0 0 260 220" fill="none" stroke="#0AA85A" stroke-width="1.4" aria-hidden="true">'+
+    '<svg class="hero-bg" viewBox="0 0 260 220" fill="none" stroke="#2FE07E" stroke-width="1.4" aria-hidden="true">'+
       '<path d="M60 20 90 37 90 71 60 88 30 71 30 37Z"/>'+
       '<path d="M120 55 150 72 150 106 120 123 90 106 90 72Z"/>'+
       '<path d="M180 20 210 37 210 71 180 88 150 71 150 37Z"/>'+
       '<path d="M180 90 210 107 210 141 180 158 150 141 150 107Z"/>'+
     '</svg>'+
     '<div class="hero-top">'+
-      '<svg class="hero-logo" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#0B0F14" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2FE07E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>'+
+      '<svg class="hero-logo" viewBox="0 0 48 48" fill="none"><path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" stroke="#FFFFFF" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="25" r="7.2" fill="none" stroke="#2FE07E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)"/></svg>'+
       '<div><h1>Hook<span class="s">Swap</span> Documentation</h1>'+
       '<p class="tag">Self-hosted v2 + v3 DEX with an on-chain launchpad, token lockers, and referrals — deployed across 7 chains.</p></div>'+
     '</div>'+

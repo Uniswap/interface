@@ -113,7 +113,9 @@ function TerminalTokenLogo({
         width: size,
         height: size,
         borderRadius: '50%',
-        background: url ? `#fff center/cover no-repeat url(${JSON.stringify(url)})` : fallbackGradient,
+        background: url
+          ? `${terminalColors.panel} center/cover no-repeat url(${JSON.stringify(url)})`
+          : fallbackGradient,
         flexShrink: 0,
         display: 'inline-block',
       }}
@@ -496,7 +498,7 @@ export function SwapTicket(): JSX.Element {
               width: 16,
               height: 16,
               borderRadius: '50%',
-              background: '#fff',
+              background: terminalColors.ink,
               transition: 'left 120ms ease',
             }}
           />

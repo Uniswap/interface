@@ -16,43 +16,43 @@
 /* ------------------------------------------------------------------ colors */
 
 export const terminalColors = {
-  // Text / ink
-  ink: '#0B0F14', // primary text, dark buttons, wallet chip
-  ink2: '#59626F', // secondary text
-  ink3: '#8A94A3', // muted labels (primary)
-  ink3Alt: '#98A0AC', // muted labels (alt used in rail section labels)
-  faint: '#B0B7C0', // axis labels, timestamps
+  // Text / ink  — DARK THEME (roles preserved; hexes flipped for a dark surface)
+  ink: '#E7ECF2', // primary text / headings (was #0B0F14)
+  ink2: '#9AA4B2', // secondary text (was #59626F)
+  ink3: '#7C8698', // muted labels (primary) (was #8A94A3)
+  ink3Alt: '#7C8698', // muted labels (alt used in rail section labels) (was #98A0AC)
+  faint: '#5C6675', // axis labels, timestamps (was #B0B7C0)
 
   // Lines / dividers
-  line: '#E6E9EE', // card/frame borders
-  line2: '#EFF1F4', // inner dividers
-  line3: '#F4F6F8', // table row dividers
+  line: '#232B36', // card/frame borders (was #E6E9EE)
+  line2: '#1C232D', // inner dividers / section rules (was #EFF1F4)
+  line3: '#1A212B', // table row dividers (was #F4F6F8)
 
   // Surfaces
-  bg: '#FFFFFF', // cards, top bar
-  bgApp: '#FCFCFD', // main content background
-  panel: '#F6F8FA', // inputs, rail background, inset fields
-  panel2: '#F0F3F6', // segmented-control track, chips (primary)
-  panel2Alt: '#EEF1F4', // segmented-control track, chips (alt)
+  bg: '#12181F', // cards, top bar, active pills (was #FFFFFF)
+  bgApp: '#0B0F14', // main content / page background (was #FCFCFD)
+  panel: '#0E141B', // inputs, rail background, inset fields / chart wells (was #F6F8FA)
+  panel2: '#0E141B', // segmented-control track, chips (primary) (was #F0F3F6)
+  panel2Alt: '#0E141B', // segmented-control track, chips (alt) (was #EEF1F4)
 
   // Brand green
-  brandGreen: '#2FE07E', // primary buttons, active accent, "Swap" wordmark
-  greenDeep: '#0AA85A', // green text/links on light
-  greenUp: '#12B866', // positive values
-  greenBg: '#E9FBEF', // green badge/surface
-  greenBorder: '#C7F3D8', // green card border
-  btnInk: '#08110A', // text on brand-green buttons
+  brandGreen: '#2FE07E', // primary buttons, active accent, "Swap" wordmark (kept)
+  greenDeep: '#2FE07E', // green text/links — brightened for contrast on dark (was #0AA85A)
+  greenUp: '#2FE07E', // positive values (was #12B866)
+  greenBg: '#0B2418', // green badge/surface (was #E9FBEF)
+  greenBorder: '#12502F', // green card border (was #C7F3D8)
+  btnInk: '#0B0F14', // text on brand-green buttons — dark ink (was #08110A)
 
   // Red / negative
-  redDown: '#EF4E4A', // negative values
-  redBg: '#FDEBEA', // negative surface
+  redDown: '#EF4E4A', // negative values (kept)
+  redBg: '#2A1214', // negative surface — dark red well (was #FDEBEA)
 
   // Warn
-  warn: '#F0913A', // gas, out-of-range
-  warnBg: '#FFF3E8', // warn surface (primary)
-  warnBgAlt: '#FFF1E9', // warn surface (alt)
+  warn: '#F0913A', // gas, out-of-range (kept; legible amber on dark)
+  warnBg: '#2A1E10', // warn surface (primary) — dark amber well (was #FFF3E8)
+  warnBgAlt: '#2A1E10', // warn surface (alt) (was #FFF1E9)
 
-  // Accents (categories / token icons)
+  // Accents (categories / token icons) — kept: saturated, legible on dark
   accentIndigo: '#5B6BFF', // ETH icon, TWAMM category
   accentBlue: '#2E7CF6', // USDC icon
   accentPurple: '#8A6BFF', // governance
@@ -60,8 +60,8 @@ export const terminalColors = {
   accentTeal: '#12B0A8', // yield category
 
   // Rail-specific inactive icon (from NavRailB.dc.html)
-  railIconInactive: '#8A92A0',
-  railWalletSub: '#7C8698', // wallet chip subtext on dark
+  railIconInactive: '#7C8698', // inactive nav icon on dark rail (was #8A92A0)
+  railWalletSub: '#7C8698', // wallet chip subtext (kept — chip was already dark)
 } as const
 
 export type TerminalColorToken = keyof typeof terminalColors
@@ -154,7 +154,7 @@ export const terminalShadows = {
 } as const
 
 /** Modal scrim colour (B8/B9/B11). */
-export const terminalScrim = 'rgba(11,15,20,.42)'
+export const terminalScrim = 'rgba(0,0,0,.6)'
 
 /* --------------------------------------------------------------- layout */
 

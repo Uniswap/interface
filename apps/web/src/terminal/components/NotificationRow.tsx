@@ -16,10 +16,10 @@ export interface NotificationBadgeStyle {
  */
 export const notificationCategoryBadges: Record<NotificationCategory, NotificationBadgeStyle> = {
   fees: { label: 'FEES', color: terminalColors.greenDeep, background: terminalColors.greenBg },
-  range: { label: 'RANGE', color: '#C4712A', background: terminalColors.warnBg },
+  range: { label: 'RANGE', color: terminalColors.warn, background: terminalColors.warnBg },
   swap: { label: 'SWAP', color: terminalColors.ink2, background: terminalColors.panel2 },
-  alert: { label: 'ALERT', color: terminalColors.accentBlue, background: '#EAF2FE' },
-  governance: { label: 'GOV', color: terminalColors.accentPurple, background: '#F0ECFF' },
+  alert: { label: 'ALERT', color: terminalColors.accentBlue, background: 'rgba(46,124,246,0.14)' },
+  governance: { label: 'GOV', color: terminalColors.accentPurple, background: 'rgba(138,107,255,0.16)' },
 }
 
 export interface NotificationAction {

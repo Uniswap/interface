@@ -254,8 +254,7 @@ function EmptyChartOverlay({ spotLabel, loading }: { spotLabel: string; loading:
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage:
-            'repeating-linear-gradient(0deg,transparent 0 59px,#F1F3F6 59px 60px), repeating-linear-gradient(90deg,transparent 0 79px,#F1F3F6 79px 80px)',
+          backgroundImage: `repeating-linear-gradient(0deg,transparent 0 59px,${terminalColors.line2} 59px 60px), repeating-linear-gradient(90deg,transparent 0 79px,${terminalColors.line2} 79px 80px)`,
         }}
       />
       <div

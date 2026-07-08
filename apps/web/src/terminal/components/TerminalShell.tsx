@@ -1,28 +1,18 @@
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { BottomTabBar, BOTTOM_TAB_BAR_HEIGHT } from '~/terminal/components/BottomTabBar'
 import { LeftRail, LeftRailProps } from '~/terminal/components/LeftRail'
 import { TopBar, TopBarProps } from '~/terminal/components/TopBar'
+import { TopNav } from '~/terminal/components/TopNav'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
 import { terminalColors } from '~/terminal/theme/tokens'
 import '~/terminal/theme/terminal.css'
 
-const RAIL_COLLAPSE_KEY = 'hookswap.terminal.railCollapsed'
-
-/** Read the persisted rail state. Default: expanded (open by default). */
-function readRailCollapsed(): boolean {
-  try {
-    return globalThis.localStorage?.getItem(RAIL_COLLAPSE_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
 export interface TerminalShellProps {
-  /** Left-rail configuration (active screen, nav handler, live stats). */
+  /** Navigation configuration (active screen, nav handler, live wallet stats). */
   rail: LeftRailProps
-  /** Top-bar configuration (search, gas, chain, per-screen actions). */
+  /** Top-bar configuration (search, gas, chain, wallet, per-screen actions). */
   topBar: TopBarProps
-  /** Optional band directly under the top bar (e.g. B1 market ticker strip). */
+  /** Optional band directly under the top nav (e.g. B1 market ticker strip). */
   subBar?: ReactNode
   /** Screen body. */
   children: ReactNode
@@ -31,29 +21,19 @@ export interface TerminalShellProps {
 /**
  * Terminal app shell.
  *
- * • Desktop (≥ 900px): 226px fixed LeftRail + TopBar over a scrollable content region.
- * • Mobile (< 900px): the rail is replaced by a fixed bottom tab bar (Swap · Markets ·
- *   Pools · Portfolio · More); "More" opens the full nav as a left slide-in drawer.
- *   Content goes full-width and is bottom-padded to clear the tab bar + iOS home
- *   indicator. Breakpoint via `useIsMobileViewport` so the desktop layout is untouched.
+ * • Desktop (≥ 900px): a full-width 64px TOP navigation bar (TopNav) over a
+ *   scrollable, full-width content region — matched to the marketing landing
+ *   header (logo, Trade/Markets/Earn/Portfolio/Docs, ⌘K search, chain chip,
+ *   green Connect).
+ * • Mobile (< 900px): a compact TopBar (hamburger) + a fixed bottom tab bar
+ *   (Swap · Markets · Pools · Portfolio · More); "More" opens the full nav as a
+ *   left slide-in drawer (LeftRail reused). Content goes full-width and is
+ *   bottom-padded to clear the tab bar + iOS home indicator. Breakpoint via
+ *   `useIsMobileViewport` so the desktop layout is untouched.
  *
  * Wrapped in `.tm-root` so Terminal CSS variables + fonts apply only inside this subtree.
  */
 export function TerminalShell({ rail, topBar, subBar, children }: TerminalShellProps): JSX.Element {
-  // Rail collapse is a pure layout concern owned here; open by default, persisted.
-  const [collapsed, setCollapsed] = useState<boolean>(readRailCollapsed)
-  const toggleCollapsed = useCallback(() => {
-    setCollapsed((prev) => {
-      const next = !prev
-      try {
-        globalThis.localStorage?.setItem(RAIL_COLLAPSE_KEY, next ? '1' : '0')
-      } catch {
-        // ignore storage failures (private mode etc.)
-      }
-      return next
-    })
-  }, [])
-
   const isMobile = useIsMobileViewport()
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -127,16 +107,25 @@ export function TerminalShell({ rail, topBar, subBar, children }: TerminalShellP
       className="tm-root"
       style={{
         display: 'flex',
+        flexDirection: 'column',
         minHeight: '100vh',
         background: terminalColors.bgApp,
       }}
     >
-      <LeftRail {...rail} collapsed={collapsed} onToggleCollapse={toggleCollapsed} />
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: terminalColors.bgApp }}>
-        <TopBar {...topBar} />
-        {subBar}
-        <div style={{ flex: 1, minWidth: 0, overflow: 'auto' }}>{children}</div>
-      </div>
+      <TopNav
+        activeId={rail.activeId}
+        onNavigate={rail.onNavigate}
+        searchPlaceholder={topBar.searchPlaceholder}
+        onSearchClick={topBar.onSearchClick}
+        chain={topBar.chain}
+        onChainClick={topBar.onChainClick}
+        wallet={topBar.wallet}
+        onConnectWallet={topBar.onConnectWallet}
+        onWalletClick={topBar.onWalletClick}
+        actions={topBar.actions}
+      />
+      {subBar}
+      <div style={{ flex: 1, minWidth: 0, overflow: 'auto' }}>{children}</div>
     </div>
   )
 }

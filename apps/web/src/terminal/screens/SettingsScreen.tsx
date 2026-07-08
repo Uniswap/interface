@@ -246,7 +246,7 @@ function Toggle({
         width: 40,
         height: 23,
         borderRadius: 999,
-        background: on ? terminalColors.brandGreen : '#E1E5EA',
+        background: on ? terminalColors.brandGreen : terminalColors.line,
         position: 'relative',
         border: 'none',
         padding: 0,
@@ -263,7 +263,7 @@ function Toggle({
           width: 18,
           height: 18,
           borderRadius: '50%',
-          background: '#fff',
+          background: terminalColors.ink,
           transition: 'left 120ms ease',
         }}
       />
@@ -739,7 +739,7 @@ export function SettingsScreen(): JSX.Element {
                   border: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
-                  background: active ? '#F3FDF7' : 'transparent',
+                  background: active ? terminalColors.greenBg : 'transparent',
                   color: active ? terminalColors.ink : terminalColors.ink2,
                   fontFamily: SANS,
                   fontSize: 13.5,

@@ -325,7 +325,7 @@ export function CommandPalette({
             gap: 16,
             padding: '11px 20px',
             borderTop: `1px solid ${terminalColors.line2}`,
-            background: '#FAFBFC',
+            background: terminalColors.panel,
             fontFamily: terminalFonts.mono,
             fontSize: 11,
             color: terminalColors.ink3Alt,

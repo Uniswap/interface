@@ -1,16 +1,14 @@
 /**
  * HookSwap Terminal — landing mount for the core route `/`.
  *
- * The B1 Landing is the DEFAULT home page: `/` renders the Terminal chrome + the
- * Landing screen. `/swap` keeps rendering the Swap screen (see `TerminalSwapPage`).
+ * The B1 Landing is the DEFAULT home page. `LandingScreen` is a fully self-contained
+ * marketing page: it renders its OWN top nav header + footer + AccountDrawer + ⌘K
+ * command palette, so it must NOT be wrapped in `TerminalChrome` (which would add the
+ * app shell's TopNav on top → a duplicate second navigation bar). `/swap` etc. keep
+ * rendering inside the shell (see `TerminalApp`).
  */
 import { LandingScreen } from '~/terminal/screens/LandingScreen'
-import { TerminalChrome } from '~/terminal/TerminalApp'
 
 export default function TerminalLandingPage(): JSX.Element {
-  return (
-    <TerminalChrome>
-      <LandingScreen />
-    </TerminalChrome>
-  )
+  return <LandingScreen />
 }
