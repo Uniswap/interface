@@ -31,6 +31,7 @@ import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHa
 import { SwapTicket } from '~/terminal/screens/SwapScreen'
 import { TerminalSwapReviewFlow } from '~/terminal/screens/swap/TerminalSwapReviewFlow'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
+import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { parseEmbedConfig, type WidgetTheme } from '~/embed/embedParams'
 
 /** Page backdrop per theme — the ticket itself is a light card in both. */
@@ -122,22 +123,31 @@ export function SwapWidgetPage(): JSX.Element {
           overflow: 'hidden',
         }}
       >
-        <MultichainContextProvider initialChainId={config.chainId}>
-          <SwapTransactionSettingsStoreContextProvider>
-            <SwapAndLimitContextProvider>
-              <SwapFormStoreContextProvider prefilledState={prefilledState}>
-                <TransactionModalContextProvider
-                  bottomSheetViewStyles={{}}
-                  screen={txScreen}
-                  setScreen={setTxScreen}
-                  onClose={() => undefined}
-                >
-                  <EmbedSwapTicket />
-                </TransactionModalContextProvider>
-              </SwapFormStoreContextProvider>
-            </SwapAndLimitContextProvider>
-          </SwapTransactionSettingsStoreContextProvider>
-        </MultichainContextProvider>
+        {/*
+          Wallet-managers context (contracts / providers / viem clients / signers).
+          The chromeless embed skips the Terminal chrome, so the swap engine's
+          provider-manager reads must be backed by an explicit WalletContextProvider
+          here (the swap ticket + live-quote path read WalletContext). Only the React
+          context is mounted — no visual chrome — so the embed stays chromeless.
+        */}
+        <WalletContextProvider>
+          <MultichainContextProvider initialChainId={config.chainId}>
+            <SwapTransactionSettingsStoreContextProvider>
+              <SwapAndLimitContextProvider>
+                <SwapFormStoreContextProvider prefilledState={prefilledState}>
+                  <TransactionModalContextProvider
+                    bottomSheetViewStyles={{}}
+                    screen={txScreen}
+                    setScreen={setTxScreen}
+                    onClose={() => undefined}
+                  >
+                    <EmbedSwapTicket />
+                  </TransactionModalContextProvider>
+                </SwapFormStoreContextProvider>
+              </SwapAndLimitContextProvider>
+            </SwapTransactionSettingsStoreContextProvider>
+          </MultichainContextProvider>
+        </WalletContextProvider>
       </div>
       <PoweredByHookSwap theme={config.theme} />
     </div>
