@@ -1082,6 +1082,7 @@ function LandingScreenBody(): JSX.Element {
     { label: 'Earn', onClick: () => navigate('/terminal/pools/new') },
     { label: 'Portfolio', onClick: () => navigate('/terminal/portfolio') },
     { label: 'Docs', onClick: () => window.open(HOOKSWAP_LINKS.docs, '_blank', 'noreferrer') },
+    { label: 'Launchpad', onClick: () => window.open(HOOKSWAP_LINKS.launchpad, '_blank', 'noreferrer') },
   ]
 
   return (
