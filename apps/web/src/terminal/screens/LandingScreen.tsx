@@ -612,7 +612,11 @@ function Header({
         alignItems: 'center',
         gap: 20,
         padding: `0 ${padX}px`,
-        flexWrap: 'wrap',
+        // Never wrap: a wrapped header row overflows its fixed 64px height and
+        // overlaps the banner below. The `compact` hamburger (isCompactHeader)
+        // kicks in before the full nav would overflow, so nowrap is safe.
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
       }}
     >
       {logoButton}
@@ -1061,6 +1065,11 @@ function LandingScreenBody(): JSX.Element {
   const viewportWidth = useViewportWidth()
   const isMobile = viewportWidth <= 640
   const isCompactNav = viewportWidth <= 1024
+  // Header collapses to the hamburger EARLIER than the feature grid: the full nav
+  // (logo + 6 items with dropdown carets/arrows + search + chain + settings + connect)
+  // needs ~1240px, so below that we show the hamburger to avoid the row overflowing
+  // and overlapping the banner. Kept separate from isCompactNav (feature-grid columns).
+  const isCompactHeader = viewportWidth <= 1240
   const padX = isMobile ? 20 : 40
   // Feature grids: each section is ONE full, even row on desktop (columns = its
   // own card count), collapsing to 2 cols on tablet and 1 on mobile — so no
@@ -1254,7 +1263,7 @@ function LandingScreenBody(): JSX.Element {
             navigate('/')
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
-          compact={isCompactNav}
+          compact={isCompactHeader}
           padX={padX}
         />
 
