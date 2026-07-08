@@ -43,7 +43,10 @@
 
   /* -------------------------------------------------------------- header */
   header{display:flex;align-items:center;gap:12px;padding:13px 22px;border-bottom:1px solid var(--line);background:var(--white);position:sticky;top:0;z-index:10}
-  header .logo{height:24px;width:auto;display:block}
+  header .logo-link{display:flex;align-items:center;gap:9px;text-decoration:none}
+  header .logo-link svg{flex-shrink:0}
+  header .wordmark{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink)}
+  header .wordmark span{color:var(--green)}
   header .tab{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);border:1px solid var(--line);border-radius:999px;padding:3px 9px;line-height:1}
   header .right{margin-left:auto;display:flex;align-items:center;gap:14px}
   header .right a{font-size:13.5px;font-weight:600;color:var(--ink)}
@@ -139,7 +142,13 @@
 </head>
 <body>
 <header>
-  <a href="#README.md" aria-label="HookSwap Docs home"><img class="logo" src="/logo-horizontal.png" alt="HookSwap" /></a>
+  <a href="#README.md" aria-label="HookSwap Docs home" class="logo-link">
+    <svg width="26" height="26" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M24 3.5 L41.8 13.75 L41.8 34.25 L24 44.5 L6.2 34.25 L6.2 13.75 Z" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linejoin="round"/>
+      <circle cx="24" cy="25" r="7.2" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="33 13" transform="rotate(118 24 25)" style="filter:drop-shadow(0 0 3px var(--green))"/>
+    </svg>
+    <span class="wordmark">Hook<span>Swap</span></span>
+  </a>
   <span class="tab">Docs</span>
   <span class="right">
     <a href="https://hookswap.org" target="_blank" rel="noopener">Open App →</a>
