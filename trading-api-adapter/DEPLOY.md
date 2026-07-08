@@ -36,9 +36,12 @@ nginx (TLS, certbot)  ──►  trading-api-adapter  (this service, Node/Expres
 - **Option B (embed) — recommended.** One process. The adapter imports the HooksOS
   `@uniswap/smart-order-router` fork and computes routes directly against the deployed
   contracts + RPC. Avoids standing up routing-api's AWS-oriented wrapper on a VPS.
-  Status in this repo: the provider interface + translation are done; the actual SOR call is a
-  clearly-marked **TODO** in `src/routingClient.ts` (`EmbedRoutingProvider`). Implementing it =
-  add the 3 deps + dependency-override (below) and fill the ~30 lines sketched in that stub.
+  Status in this repo: **IMPLEMENTED.** `src/embedRouter.ts` runs `AlphaRouter` in-process with
+  static on-chain pool discovery + Universal Router (v2.0) calldata assembly, and is wired in
+  `src/routingClient.ts` (`ROUTING_MODE=embed`). The 3 deps are already declared in `package.json`
+  (`@uniswap/smart-order-router` → `file:../../smart-order-router` fork, `@uniswap/sdk-core` →
+  `file:../vendor/sdk-core` fork, `ethers@^5`) but NOT installed in this checkout (disk-constrained).
+  Remaining = `npm install` on the VPS; no code to write. (§7 below is now just the install step.)
 - **Option A (proxy).** Keep routing-api as a separate service and point `ROUTING_API_URL` at
   it. routing-api upstream is AWS-CDK/Lambda; to run it on a VPS you wrap its exported quote
   handler in a small Express server (map HTTP → Lambda `event`) — see routing-api/hookswap
@@ -163,14 +166,18 @@ The interface auto-appends `/v1` (see `TradingApiClient` `getApiPathPrefix`), so
 `https://trading.hookswap.org/v1/quote`. Leave this **unset** to keep the app on Uniswap's
 default (do not break current dev). Rebuild/restart the web app after setting it.
 
-## 7. (Option B embed) apply the SOR dependency override  **[code, no creds]**
+## 7. (Option B embed) install the SOR deps  **[install only — code already done]**
 
-If you chose `ROUTING_MODE=embed`, before `npm install`:
-1. Add to `package.json` deps: `@uniswap/smart-order-router`, `@uniswap/sdk-core`, `ethers@^5`.
-2. Override both `@uniswap/*` to the HooksOS forks (which define ChainId 999/4663/4326/57073/
-   196/4217 and carry the deployed addresses) via npm `overrides` or a git URL — the SAME
-   override routing-api needs (see `routing-api/hookswap/README.md` §3).
-3. Implement `EmbedRoutingProvider.quoteExactRoute` per the TODO in `src/routingClient.ts`.
+If you chose `ROUTING_MODE=embed`:
+1. The 3 deps are already in `package.json` and point at the forks:
+   `@uniswap/smart-order-router` → `file:../../smart-order-router` (HooksOS fork; defines ChainId
+   999/4663/4326/57073/196/4217 and carries the deployed factory/quoter/router addresses),
+   `@uniswap/sdk-core` → `file:../vendor/sdk-core` (fork), `ethers@^5`. So the two fork dirs must be
+   present relative to the adapter (`../../smart-order-router` and `../vendor/sdk-core` — both are in
+   this repo tree / sibling). No manual `overrides` edit needed.
+2. `npm install` (deferred in this checkout — disk-constrained). That's it.
+3. `EmbedRoutingProvider.quoteExactRoute` is **already implemented** in `src/embedRouter.ts` (verified
+   2026-07-07). No code to write.
 
 ## 8. THE HARD GATE — liquidity  **[REGGIE — on-chain action]**
 

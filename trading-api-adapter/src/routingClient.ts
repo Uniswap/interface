@@ -9,9 +9,10 @@
  *       translate.ts maps into the Trading API shape. This is the intended production wiring
  *       (see routing-api/hookswap/README.md §6 option B).
  *
- *   (B) EMBED mode  [TODO]        — import @uniswap/smart-order-router (HooksOS fork) and run
+ *   (B) EMBED mode  [IMPLEMENTED] — imports @uniswap/smart-order-router (HooksOS fork) and runs
  *       AlphaRouter in-process. Heavier (bundles the SOR + ethers + per-chain providers) but
- *       removes the routing-api hop. Scaffolded below as a clearly-marked TODO; NOT active.
+ *       removes the routing-api hop. Fully implemented in ./embedRouter.ts and wired below
+ *       (ROUTING_MODE=embed). Only requires `npm install` of the deps already in package.json.
  *
  * If no backend is configured, quoteExactRoute returns `undefined` and the handler returns a
  * proper Trading-API-shaped 404 — NEVER a fabricated price.

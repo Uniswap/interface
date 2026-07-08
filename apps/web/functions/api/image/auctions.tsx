@@ -169,7 +169,7 @@ export async function auctionImageHandler(c: Context) {
                 >
                   Token auction
                 </div>
-                <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="324px" />
+                <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="219px" />
               </div>
             </div>
           </div>

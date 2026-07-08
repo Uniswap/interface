@@ -250,7 +250,7 @@ export async function renderPoolOgImage({
                   </div>
                 )}
               </div>
-              <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="324px" />
+              <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="219px" />
             </div>
           </div>
         </div>

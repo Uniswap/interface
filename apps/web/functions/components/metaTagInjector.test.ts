@@ -53,7 +53,7 @@ describe('metaTagInjectionMiddleware', () => {
       '<meta name="description" content="Swap crypto on Sepolia, HyperEVM, and Robinhood Chain. The HookSwap DeFi platform."',
     )
     expect(responseText).toContain(
-      '<meta property="og:image" content="http://localhost:3000/images/1200x630_Rich_Link_Preview_Image.png"',
+      '<meta property="og:image" content="http://localhost:3000/brand/logo-horizontal.png"',
     )
     expect(responseText).toContain('<meta property="og:image:width" content="1200"')
     expect(responseText).toContain('<meta property="og:image:height" content="630"')
@@ -62,7 +62,7 @@ describe('metaTagInjectionMiddleware', () => {
     expect(responseText).toContain('<meta property="twitter:card" content="summary_large_image"')
     expect(responseText).toContain('<meta property="twitter:title" content="HookSwap Interface"')
     expect(responseText).toContain(
-      '<meta property="twitter:image" content="http://localhost:3000/images/1200x630_Rich_Link_Preview_Image.png"',
+      '<meta property="twitter:image" content="http://localhost:3000/brand/logo-horizontal.png"',
     )
     expect(responseText).toContain('<meta property="twitter:image:alt" content="HookSwap Interface"')
     expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/"')

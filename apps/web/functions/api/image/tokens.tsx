@@ -160,7 +160,7 @@ export async function tokenImageHandler(c: Context) {
               >
                 {data.tokenData?.symbol}
               </div>
-              <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="324px" />
+              <img src={WATERMARK_URL} alt="HookSwap" height="72px" width="219px" />
             </div>
           </div>
         </div>

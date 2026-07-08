@@ -219,7 +219,7 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
 
       data = positionMeta
     } else {
-      const imageUri = requestURL.origin + '/images/1200x630_Rich_Link_Preview_Image.png'
+      const imageUri = requestURL.origin + '/brand/logo-horizontal.png'
       data = {
         title: 'HookSwap Interface',
         image: imageUri,
