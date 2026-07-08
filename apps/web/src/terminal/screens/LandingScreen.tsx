@@ -387,6 +387,7 @@ function Header({
   onChainClick,
   onHome,
   compact,
+  tight,
   padX,
 }: {
   navLinks: NavLink[]
@@ -398,6 +399,8 @@ function Header({
   onHome: () => void
   /** Collapse the nav/search/chain into a hamburger menu (tablet + mobile). */
   compact: boolean
+  /** Narrow desktop: keep the full nav but collapse the search field to an icon so it fits. */
+  tight?: boolean
   padX: number
 }): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -620,7 +623,7 @@ function Header({
       }}
     >
       {logoButton}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 22, marginLeft: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginLeft: 14 }}>
         {navLinks.map((link) => {
           const hasDropdown = Boolean(link.children && link.children.length > 0)
           const isOpen = openNav === link.label
@@ -736,33 +739,39 @@ function Header({
             alignItems: 'center',
             gap: 9,
             height: 36,
+            justifyContent: 'center',
             background: terminalColors.bg,
             border: `1px solid ${terminalColors.line}`,
             borderRadius: 10,
-            padding: '0 13px',
-            width: 190,
+            padding: tight ? 0 : '0 13px',
+            width: tight ? 36 : 190,
             cursor: 'pointer',
           }}
+          aria-label="Search"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={terminalColors.faint} strokeWidth="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" />
           </svg>
-          <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.faint }}>Search…</span>
-          <span
-            style={{
-              marginLeft: 'auto',
-              fontFamily: MONO,
-              fontSize: 10.5,
-              color: terminalColors.faint,
-              background: terminalColors.bgApp,
-              border: `1px solid ${terminalColors.line}`,
-              padding: '2px 6px',
-              borderRadius: 5,
-            }}
-          >
-            ⌘K
-          </span>
+          {!tight && (
+            <>
+              <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.faint }}>Search…</span>
+              <span
+                style={{
+                  marginLeft: 'auto',
+                  fontFamily: MONO,
+                  fontSize: 10.5,
+                  color: terminalColors.faint,
+                  background: terminalColors.bgApp,
+                  border: `1px solid ${terminalColors.line}`,
+                  padding: '2px 6px',
+                  borderRadius: 5,
+                }}
+              >
+                ⌘K
+              </span>
+            </>
+          )}
         </button>
         <button
           type="button"
@@ -1065,11 +1074,13 @@ function LandingScreenBody(): JSX.Element {
   const viewportWidth = useViewportWidth()
   const isMobile = viewportWidth <= 640
   const isCompactNav = viewportWidth <= 1024
-  // Header collapses to the hamburger EARLIER than the feature grid: the full nav
-  // (logo + 6 items with dropdown carets/arrows + search + chain + settings + connect)
-  // needs ~1240px, so below that we show the hamburger to avoid the row overflowing
-  // and overlapping the banner. Kept separate from isCompactNav (feature-grid columns).
-  const isCompactHeader = viewportWidth <= 1240
+  // Header responsive (kept separate from isCompactNav, which drives feature-grid columns):
+  //  - > 1280px: full nav + full search field.
+  //  - 940–1280px: full nav stays (desktop!), but the 190px search field collapses to a
+  //    36px icon so the row fits without overflowing/overlapping the banner (isTightHeader).
+  //  - <= 940px: collapse to the hamburger menu (tablet/mobile).
+  const isCompactHeader = viewportWidth <= 940
+  const isTightHeader = viewportWidth <= 1280
   const padX = isMobile ? 20 : 40
   // Feature grids: each section is ONE full, even row on desktop (columns = its
   // own card count), collapsing to 2 cols on tablet and 1 on mobile — so no
@@ -1264,6 +1275,7 @@ function LandingScreenBody(): JSX.Element {
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           compact={isCompactHeader}
+          tight={isTightHeader}
           padX={padX}
         />
 
