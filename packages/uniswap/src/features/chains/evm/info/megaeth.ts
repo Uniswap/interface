@@ -3,12 +3,7 @@ import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, MEGAETH_LOGO } from 'ui/src/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
-import {
-  DEFAULT_MS_BEFORE_WARNING,
-  DEFAULT_NATIVE_ADDRESS_LEGACY,
-  getQuicknodeEndpointUrl,
-  getUniRpcEndpointUrl,
-} from 'uniswap/src/features/chains/evm/rpc'
+import { DEFAULT_MS_BEFORE_WARNING, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
@@ -64,11 +59,13 @@ export const MEGAETH_CHAIN_INFO = {
   blockTimeMs: 1000,
   subblockTimeMs: 10,
   pendingTransactionsRetryOptions: undefined,
+  // Verified real public MegaETH RPCs (each returns chainId 0x10e6 / 4326). HookSwap
+  // has no Uniswap-hosted UniRPC/QuickNode credentials, so pointing Public/Interface
+  // at those gateways 401s/CORS-fails every browser-side on-chain read (wagmi's
+  // public client uses RPCType.Public) — this silently broke Locker/Referrals
+  // ("Failed to load") despite the contracts/RPC working fine directly. Fix: real
+  // public RPC on every RPCType slot, mirroring the already-correct ink.ts pattern.
   rpcUrls: {
-    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.MegaETH)] },
-    // Verified real public MegaETH RPCs (each returns chainId 0x10e6 / 4326).
-    // Primary first; the rest act as fallbacks. Keep Public/Interface on the
-    // hosted proxies for auth; Default stays unkeyed/public for wallet connectors.
     [RPCType.Default]: {
       http: [
         'https://mainnet.megaeth.com/rpc',
@@ -76,7 +73,20 @@ export const MEGAETH_CHAIN_INFO = {
         'https://megaeth.blockscout.com/api/eth-rpc',
       ],
     },
-    [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.MegaETH)] },
+    [RPCType.Public]: {
+      http: [
+        'https://mainnet.megaeth.com/rpc',
+        'https://megaeth.drpc.org',
+        'https://megaeth.blockscout.com/api/eth-rpc',
+      ],
+    },
+    [RPCType.Interface]: {
+      http: [
+        'https://mainnet.megaeth.com/rpc',
+        'https://megaeth.drpc.org',
+        'https://megaeth.blockscout.com/api/eth-rpc',
+      ],
+    },
   },
   statusPage: 'https://uptime.megaeth.com/',
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],

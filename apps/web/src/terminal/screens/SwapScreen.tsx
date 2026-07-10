@@ -28,7 +28,7 @@ import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, THOOK_ROBINHOOD, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
@@ -646,20 +646,33 @@ function resolveDefaultOutput(chainId: UniverseChainId): Currency | undefined {
  * page uses (multichain → transaction settings → swap-and-limit → swap form
  * store), so the ticket reads a real live quote.
  *
- * Default pair: native OKB → HKT on the X Layer test pool when disconnected or the
- * wallet is already on X Layer (196). When a wallet is connected on ANOTHER chain,
- * HKT is invalid there — so the pair is re-seeded to that chain's native token → a
- * REAL, valid output (its canonical stablecoin / wrapped-native from common-bases),
- * so the header never renders a broken "native / —" pair. Keyed on the resolved
- * chain so switching chains re-initializes a valid pair.
+ * Default pair: native ETH → tHOOK on the Robinhood seeded pool when disconnected or
+ * the wallet is already on Robinhood (4663) — the only chain the Terminal offers for
+ * live trading right now. X Layer's seeded OKB → HKT pair is kept when actually
+ * connected there. When a wallet is connected on ANOTHER chain, tHOOK/HKT are invalid
+ * there — so the pair is re-seeded to that chain's native token → a REAL, valid output
+ * (its canonical stablecoin / wrapped-native from common-bases), so the header never
+ * renders a broken "native / —" pair. Keyed on the resolved chain so switching chains
+ * re-initializes a valid pair.
  */
 export function SwapScreen(): JSX.Element {
   const account = useAccount()
   const activeChainId = account.chainId
 
   const { chainId, initialInputCurrency, initialOutputCurrency } = useMemo(() => {
-    // Disconnected, or already on X Layer → keep the seeded OKB → HKT test pair.
-    if (activeChainId === undefined || activeChainId === UniverseChainId.XLayer) {
+    // Disconnected, or already on Robinhood → the seeded ETH → tHOOK pair. Robinhood
+    // is the only chain the Terminal offers for live trading right now (see
+    // TERMINAL_LIVE_CHAIN_IDS in TerminalApp.tsx) — it's the correct default, not
+    // USDG (resolveDefaultOutput's canonical-stablecoin pick), which has no pool.
+    if (activeChainId === undefined || activeChainId === UniverseChainId.Robinhood) {
+      return {
+        chainId: UniverseChainId.Robinhood,
+        initialInputCurrency: nativeOnChain(UniverseChainId.Robinhood),
+        initialOutputCurrency: THOOK_ROBINHOOD as Currency,
+      }
+    }
+    // Connected on X Layer → keep its seeded OKB → HKT test pair.
+    if (activeChainId === UniverseChainId.XLayer) {
       return {
         chainId: UniverseChainId.XLayer,
         initialInputCurrency: nativeOnChain(UniverseChainId.XLayer),
@@ -670,9 +683,9 @@ export function SwapScreen(): JSX.Element {
     const output = resolveDefaultOutput(activeChainId)
     if (!output) {
       return {
-        chainId: UniverseChainId.XLayer,
-        initialInputCurrency: nativeOnChain(UniverseChainId.XLayer),
-        initialOutputCurrency: XLAYER_HKT as Currency,
+        chainId: UniverseChainId.Robinhood,
+        initialInputCurrency: nativeOnChain(UniverseChainId.Robinhood),
+        initialOutputCurrency: THOOK_ROBINHOOD as Currency,
       }
     }
     return {

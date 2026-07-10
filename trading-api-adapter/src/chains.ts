@@ -40,6 +40,12 @@ export interface ChainConfig {
   protocols: Array<'v2' | 'v3'>
   /** contracts fully live? HyperEVM v3 quoter still pending per deployments/hyperevm.json. */
   ready: boolean
+  /**
+   * Known-real tokens beyond the wrapped-native (e.g. a chain's seeded test token),
+   * returned by /v1/swappable_tokens alongside wrappedNative. Real, static, verified
+   * metadata only — we do NOT invent tokens here. Optional; omit until a chain has one.
+   */
+  seededTokens?: Array<{ address: string; symbol: string; name: string; decimals: number }>
 }
 
 const PERMIT2 = '0x000000000022D473030F116dDEE9F6B43aC78BA3'
@@ -85,6 +91,8 @@ export const CHAINS: Record<number, ChainConfig> = {
     permit2: PERMIT2,
     protocols: ['v2', 'v3'],
     ready: true,
+    // Seeded WETH/tHOOK v2 pool (contracts/seed/broadcast/SeedPools.s.sol/4663/run-latest.json).
+    seededTokens: [{ address: '0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D', symbol: 'tHOOK', name: 'Test Hook Token', decimals: 18 }],
   },
 
   // ---- Ink (57073) — DEPLOYED ----

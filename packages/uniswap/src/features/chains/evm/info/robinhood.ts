@@ -3,11 +3,7 @@ import { GraphQLApi, TradingApi } from '@universe/api'
 import { ETH_LOGO, ROBINHOOD_LOGO } from 'ui/src/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
-import {
-  DEFAULT_MS_BEFORE_WARNING,
-  DEFAULT_NATIVE_ADDRESS_LEGACY,
-  getUniRpcEndpointUrl,
-} from 'uniswap/src/features/chains/evm/rpc'
+import { DEFAULT_MS_BEFORE_WARNING, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
@@ -67,12 +63,22 @@ export const ROBINHOOD_CHAIN_INFO = {
   networkLayer: NetworkLayer.L2,
   blockTimeMs: 100,
   pendingTransactionsRetryOptions: undefined,
+  // HookSwap has no Uniswap-hosted UniRPC gateway access, so `getUniRpcEndpointUrl()`
+  // (Uniswap's `entry-gateway`) 401s/CORS-fails for every browser-side on-chain read
+  // (wagmi's public client uses RPCType.Public — see apps/web/src/connection/wagmiConfig.ts)
+  // — this silently broke Locker/Referrals ("Failed to load") despite the contracts
+  // and RPC working fine directly (verified via `cast call`). Fix: real public RPC on
+  // every RPCType slot, mirroring the already-correct ink.ts/hyperevm.ts pattern.
   rpcUrls: {
-    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Robinhood)] },
     [RPCType.Default]: {
       http: ['https://rpc.mainnet.chain.robinhood.com/'],
     },
-    [RPCType.Interface]: { http: [getUniRpcEndpointUrl(UniverseChainId.Robinhood)] },
+    [RPCType.Public]: {
+      http: ['https://rpc.mainnet.chain.robinhood.com/'],
+    },
+    [RPCType.Interface]: {
+      http: ['https://rpc.mainnet.chain.robinhood.com/'],
+    },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: false,

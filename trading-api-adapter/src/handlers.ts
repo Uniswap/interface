@@ -197,8 +197,10 @@ export function handleSwappableTokens(params: {
   const chain = getChain(chainId)!
 
   // We return only tokens whose metadata we know statically & truthfully: the chain's
-  // wrapped-native token. A full swappable-token set requires a token-list / indexer service —
-  // wire TOKEN_LIST_URL (per-chain) here when available (TODO). We do NOT invent token metadata.
+  // wrapped-native token, plus any chain.seededTokens (real, verified metadata for tokens
+  // in a seeded pool — e.g. Robinhood's tHOOK). A full swappable-token set requires a
+  // token-list / indexer service — wire TOKEN_LIST_URL (per-chain) here when available
+  // (TODO). We do NOT invent token metadata.
   const response: GetSwappableTokensResponse = {
     requestId: randomUUID(),
     tokens: [
@@ -210,6 +212,14 @@ export function handleSwappableTokens(params: {
         decimals: chain.wrappedNative.decimals,
         project: {},
       },
+      ...(chain.seededTokens ?? []).map((token) => ({
+        address: token.address,
+        chainId: chain.chainId,
+        name: token.name,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        project: {},
+      })),
     ],
   }
   return { status: 200, body: response }
