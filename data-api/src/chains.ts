@@ -32,8 +32,15 @@ export interface ChainConfig {
   }
   /** deployed HookSwap v2 factory (from contracts/deployments/*.json). Used for CREATE2 pair discovery. */
   v2Factory: string
-  /** deployed HookSwap v3 factory. Present for future v3 pool discovery (Phase-1 discovers v2 only). */
+  /** deployed HookSwap v3 factory. Used for v3 `PoolCreated` log-scan discovery (see onchain.ts). */
   v3Factory: string
+  /**
+   * Block the v3 factory was deployed at — the start block for the `PoolCreated` log scan. Optional:
+   * UniswapV3Factory has no pool enumerator, so v3 discovery requires a start block (this, or env
+   * `V3_SCAN_FROM_BLOCK_<chainId>`) to avoid an unbounded full-history scan on every request. Omit
+   * until v3 pools are actually seeded on a chain — while unset, v3 discovery honestly returns [].
+   */
+  v3DeployBlock?: number
   /**
    * Known-real tokens beyond the wrapped-native (e.g. a chain's seeded test token).
    * Real, static, verified metadata only — we do NOT invent tokens. Optional; omit until a
@@ -95,11 +102,13 @@ export const CHAINS: Record<number, ChainConfig> = {
     wrappedNative: { address: '0xe538905cf8410324e03A5A23C1c177a474D59b2b', symbol: 'WOKB', name: 'Wrapped OKB', decimals: 18 },
     v2Factory: '0xD1Cf664944173140AFc302c169eFD55c24966B45',
     v3Factory: '0xAB34Bb3767020059A35e71D03f13E9e4fbCD07aC',
-    // NOTE: XLayer has a seeded WOKB/SeedTestToken v2 pool 0x1a95898916c7872f4712c92a1b665e54414728bd
-    // (verified on-chain, CLAUDE.md 2026-07-08). Its SeedTestToken address is `0x144331bb…` in the
-    // session log but only TRUNCATED there — do NOT fabricate the remaining bytes. Fill `seededTokens`
-    // from contracts/seed/broadcast/*/196/run-latest.json (the SeedTestToken deploy receipt) to enable
-    // XLayer pool discovery. Until then XLayer serves wrapped-native metadata only.
+    // NOTE: XLayer has TWO real on-chain v2 pools under this factory (verified via live allPairs()
+    // on 2026-07-10): pair[0] 0x782acfD69d0BeE76aC4B618D2f5fDD9060F5854E (HKT 0x0E88A920A522d2e858B5fB0e896F228f4619E0a6 / WOKB)
+    // and the seeded pair[1] 0x1A95898916C7872F4712c92A1b665E54414728Bd (HKT 0x144331BB4C3026D135896CaFec3Ae3D667f4F376 / WOKB,
+    // matching CLAUDE.md 2026-07-08). Both are now discovered automatically by onchain.ts factory
+    // ENUMERATION (allPairsLength/allPairs) with live-read ERC-20 metadata — no hardcoded seededTokens
+    // needed. Left empty deliberately: enumeration is authoritative and avoids duplicating the two
+    // same-symbol ("HKT") tokens with guessed names here.
   },
 
   // ---- HyperEVM (999) ----

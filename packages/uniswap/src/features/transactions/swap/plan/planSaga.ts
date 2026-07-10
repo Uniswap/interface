@@ -184,8 +184,9 @@ export function* plan(params: PlanParams) {
       yield* call(onSuccess)
       return
     }
-    // @ts-expect-error - TODO: SWAP-485: getDisplayableError needs to be updated to accept unknown errors
-    const displayableError = getDisplayableError({ error })
+    // TODO: SWAP-485: getDisplayableError should accept unknown errors; cast keeps
+    // both the strict-package (catch = unknown) and web (catch = any) typechecks green.
+    const displayableError = getDisplayableError({ error: error as Error })
     const onPressRetry = params.getOnPressRetry?.(displayableError)
     onFailure(displayableError, onPressRetry)
     logHelper({ planId: planId ?? 'notCreated', response, swapTxContext, error, wasPlanResumed, failurePhase: 'init' })
@@ -457,8 +458,9 @@ export function* plan(params: PlanParams) {
     }
   } catch (error) {
     const displayableError = getDisplayableError({
-      // @ts-expect-error - TODO: SWAP-485: getDisplayableError needs to be updated to accept unknown errors
-      error,
+      // TODO: SWAP-485: getDisplayableError should accept unknown errors; cast keeps
+      // both the strict-package (catch = unknown) and web (catch = any) typechecks green.
+      error: error as Error,
       step: currentStep,
     })
     if (displayableError) {

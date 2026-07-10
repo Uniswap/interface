@@ -4,31 +4,13 @@
     "composite": false,
     "noEmit": true
   },
-  "include": [],
+  "include": ["src/terminal/**/*.ts", "src/terminal/**/*.tsx"],
   "files": [
     "src/env.d.ts",
     "src/react-app-env.d.ts",
     "src/theme/styled.d.ts",
-    "src/terminal/components/SparklineCell.tsx",
-    "src/terminal/components/StatCard.tsx",
-    "src/terminal/components/HookLogo.tsx",
-    "src/terminal/components/DataTable.tsx",
-    "src/terminal/components/Modal.tsx",
-    "src/terminal/components/NotificationRow.tsx",
-    "src/terminal/components/CommandPalette.tsx",
-    "src/terminal/config/hooksGate.ts",
-    "src/terminal/screens/SwapScreen.tsx",
-    "src/terminal/screens/LandingScreen.tsx",
-    "src/terminal/screens/MarketsScreen.tsx",
-    "src/terminal/screens/PoolsScreen.tsx",
-    "src/terminal/screens/PortfolioScreen.tsx",
-    "src/terminal/screens/ActivityScreen.tsx",
-    "src/terminal/utils/time.ts",
-    "src/terminal/TerminalApp.tsx",
-    "src/terminal/TerminalSwapPage.tsx",
     "src/pages/RouteDefinitions.tsx",
-    "src/App.tsx",
-    "src/terminal/index.ts"
+    "src/App.tsx"
   ],
   "references": []
 }

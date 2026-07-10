@@ -138,3 +138,7 @@ terminal-*.png
 markets-*.png
 markets-*.log
 *-errors.log
+
+# JVM crash dumps (OOM hs_err + JIT replay logs)
+hs_err_pid*.log
+replay_pid*.log

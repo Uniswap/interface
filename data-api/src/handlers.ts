@@ -2,8 +2,10 @@
  * DataApiService method handlers for the HookSwap data-api.
  *
  * REAL (Phase 1, live on-chain reads):
- *   - listTokens   → each requested chain's native + wrapped-native + seeded ERC-20s.
- *   - listTopPools → each requested chain's live v2 pools (CREATE2-discovered, real reserves).
+ *   - listTokens   → each requested chain's native + wrapped-native + seeded ERC-20s, plus tokens
+ *                    discovered in its live v2/v3 pools (metadata read live on-chain).
+ *   - listTopPools → each requested chain's live v2 pools (CREATE2-discovered, real reserves) and v3
+ *                    pools (PoolCreated-log-discovered, real balances).
  *
  * STUBS (valid empty proto responses, NOT errors — so the interface degrades gracefully):
  *   - everything else (portfolio, wallet balances, transactions, positions, charts, rewards,
@@ -26,7 +28,7 @@ import {
 import { Pool, Token, TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
-import { getV2Pairs, TokenMeta, V2PairData } from './onchain'
+import { getV2Pairs, getV3Pools, TokenMeta, V2PairData, V3PoolData } from './onchain'
 
 /** Uniswap v2 fixed swap fee = 0.30%, expressed in pips (hundredths of a bip) as the proto expects. */
 const V2_FEE_TIER_PIPS = 3000
@@ -37,6 +39,7 @@ const V2_FEE_TIER_PIPS = 3000
  */
 const POOLS_TTL_MS = 15_000
 const poolsCache = new Map<number, { at: number; data: V2PairData[] }>()
+const v3PoolsCache = new Map<number, { at: number; data: V3PoolData[] }>()
 
 async function getV2PairsCached(chainId: number): Promise<V2PairData[]> {
   const hit = poolsCache.get(chainId)
@@ -46,6 +49,17 @@ async function getV2PairsCached(chainId: number): Promise<V2PairData[]> {
   }
   const data = await getV2Pairs(chainId)
   poolsCache.set(chainId, { at: now, data })
+  return data
+}
+
+async function getV3PoolsCached(chainId: number): Promise<V3PoolData[]> {
+  const hit = v3PoolsCache.get(chainId)
+  const now = Date.now()
+  if (hit && now - hit.at < POOLS_TTL_MS) {
+    return hit.data
+  }
+  const data = await getV3Pools(chainId)
+  v3PoolsCache.set(chainId, { at: now, data })
   return data
 }
 
@@ -109,6 +123,42 @@ async function handleListTokens(req: ListTokensRequest): Promise<ListTokensRespo
         toProtoErc20Token({ chainId, address: t.address, symbol: t.symbol, name: t.name, decimals: t.decimals, isWrappedNative: false }),
       )
     }
+    // Tokens discovered in this chain's REAL on-chain v2 pools (metadata read live on-chain). This
+    // surfaces tradable tokens that aren't in the curated seeded list (e.g. XLayer's on-chain HKT).
+    // De-duplicated against the static tokens already added above (by lowercased address).
+    const seen = new Set(tokens.filter((t) => t.chainId === chainId).map((t) => t.address.toLowerCase()))
+    try {
+      const pairs = await getV2PairsCached(chainId)
+      for (const p of pairs) {
+        for (const meta of [p.token0, p.token1]) {
+          const key = meta.address.toLowerCase()
+          if (seen.has(key)) {
+            continue
+          }
+          seen.add(key)
+          tokens.push(toProtoErc20Token(meta))
+        }
+      }
+    } catch {
+      // RPC down for this chain — still return its static tokens (native + wrapped + seeded).
+    }
+    // Same for tokens discovered in this chain's REAL on-chain v3 pools (PoolCreated-log-discovered,
+    // metadata read live on-chain). Deduped against everything already added (static + v2 tokens).
+    try {
+      const v3pools = await getV3PoolsCached(chainId)
+      for (const p of v3pools) {
+        for (const meta of [p.token0, p.token1]) {
+          const key = meta.address.toLowerCase()
+          if (seen.has(key)) {
+            continue
+          }
+          seen.add(key)
+          tokens.push(toProtoErc20Token(meta))
+        }
+      }
+    } catch {
+      // RPC down / no v3 discovery for this chain — non-fatal; static + v2 tokens still returned.
+    }
   }
 
   return new ListTokensResponse({ tokens, nextPageToken: '', multichainTokens: [] })
@@ -145,6 +195,35 @@ async function handleListTopPools(req: ListTopPoolsRequest): Promise<ListTopPool
           // stats (tvl / volume / apr) intentionally OMITTED: TVL needs a USD price oracle and
           // volume/APR need a historical event indexer — neither exists in Phase 1. The pool
           // itself (tokens, fee, existence) is real, on-chain-verified; value metrics render "—".
+        }),
+      )
+    }
+  }
+
+  // v3 pools (PoolCreated-log-discovered, real on-chain balances). Same per-chain error-safety as v2.
+  const perChainV3 = await Promise.all(
+    chainIds.map(async (chainId) => {
+      try {
+        return await getV3PoolsCached(chainId)
+      } catch {
+        return [] as V3PoolData[]
+      }
+    }),
+  )
+
+  for (const chainV3 of perChainV3) {
+    for (const p of chainV3) {
+      pools.push(
+        new Pool({
+          chainId: p.chainId,
+          poolId: p.poolAddress,
+          token0: toProtoErc20Token(p.token0),
+          token1: toProtoErc20Token(p.token1),
+          protocolVersion: ProtocolVersion.V3,
+          // real v3 fee (pips, straight from the PoolCreated event) — NOT the fixed v2 0.30%.
+          feeTier: p.fee,
+          isDynamicFee: false,
+          // stats (tvl / volume / apr) OMITTED for the same honest reason as v2 — no oracle/indexer.
         }),
       )
     }
