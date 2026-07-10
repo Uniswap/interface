@@ -1,6 +1,12 @@
 {
-  "defaultSrc": ["'self'"],
-  "scriptSrc": ["'self'", "'wasm-unsafe-eval'", "https://challenges.cloudflare.com"],
+  "defaultSrc": [
+    "'self'"
+  ],
+  "scriptSrc": [
+    "'self'",
+    "'wasm-unsafe-eval'",
+    "https://challenges.cloudflare.com"
+  ],
   "styleSrc": [
     "'self'",
     "'unsafe-inline'",
@@ -14,7 +20,11 @@
     "https://fonts.gstatic.com",
     "https://fonts.gstatic.com/s/inter/v18/*"
   ],
-  "imgSrc": ["*", "blob:", "data:"],
+  "imgSrc": [
+    "*",
+    "blob:",
+    "data:"
+  ],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
@@ -27,8 +37,13 @@
     "https://privy.app.corn-staging.com",
     "https://privy.app.uniswap.org"
   ],
-  "mediaSrc": ["'self'", "*"],
-  "formAction": ["'none'"],
+  "mediaSrc": [
+    "'self'",
+    "*"
+  ],
+  "formAction": [
+    "'none'"
+  ],
   "connectSrc": [
     "'self'",
     "blob:",
@@ -130,7 +145,14 @@
     "wss://relay.walletconnect.org",
     "wss://ws-us3.pusher.com/",
     "wss://nbstream.binance.com",
-    "wss://nbstream.binance.info"
+    "wss://nbstream.binance.info",
+    "https://*.hookswap.org",
+    "https://trading.hookswap.org",
+    "https://data.hookswap.org",
+    "https://robinhoodchain.blockscout.com"
   ],
-  "workerSrc": ["'self'", "blob:"]
+  "workerSrc": [
+    "'self'",
+    "blob:"
+  ]
 }
