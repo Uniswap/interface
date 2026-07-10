@@ -1,0 +1,31 @@
+{
+  "_readme": "Robinhood (4663) PRODUCTION liquidity seed — the on-chain step that turns RH from 'dust demo' into a tradeable production chain. Run: SEED_POOLS=config/robinhood-production.json ./scripts/seed.sh robinhood --broadcast (funded deployer key required — Claude cannot broadcast this). TWO pools: (1) deepen the existing WETH/tHOOK v2 pool so swaps route at normal size; (2) a WETH/USDG v2 pool — the STABLECOIN ANCHOR that unlocks USD prices/TVL/volume across the whole app (the Phase-2 indexer computes usdPerNative from this pool automatically once it exists). AMOUNTS + USDG holdings below are PLACEHOLDERS — they are Reggie's economic call (how much capital to commit). USDG is a REAL token (Global Dollar 0x5fc5360D...), NOT mintable — the deployer must actually hold the USDG + WETH amounts before broadcasting.",
+
+  "_before_you_run": [
+    "Fund the deployer on Robinhood with: the WETH (or ETH to wrap) for amountA of BOTH pools, and REAL USDG for the WETH/USDG pool, plus gas.",
+    "tHOOK (0x3b5a01Ef..) is the already-seeded MockERC20 the deployer already holds ~999.9B of — the deepen pool uses it by ADDRESS so it ADDS to the existing pair.",
+    "Set priceAperB for WETH/USDG to the real market rate (USDG per 1 WETH ≈ the live ETH/USD price). The placeholder 3500 is illustrative only.",
+    "After broadcast: set data-api chains.ts v3DeployBlock only if you later seed a v3 pool; for these v2 pools nothing else is needed — the indexer discovers them via factory enumeration."
+  ],
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 — deepen to tradeable size (PLACEHOLDER amounts — set to your capital)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 1.0,
+      "amountB": 1000
+    },
+    {
+      "protocol": "v2",
+      "label": "WETH / USDG v2 — STABLECOIN ANCHOR (unlocks USD across the app). USDG is REAL, deployer must hold it. priceAperB = live USDG-per-WETH.",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168", "symbol": "USDG", "decimals": 6 },
+      "priceAperB": 3500,
+      "amountA": 1.0,
+      "amountB": 3500
+    }
+  ]
+}

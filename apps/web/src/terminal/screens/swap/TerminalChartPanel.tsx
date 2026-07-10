@@ -10,18 +10,36 @@
  *   • Price series + spot price come from the interface's real token price-history
  *     stack (`useTokenPriceChartPanel` → GraphQL price history) rendered with the
  *     shared `PriceChartBody` (lightweight-charts). Real for backend-indexed chains
- *     (e.g. Mainnet); honest empty state ("awaiting pool data feed") for chains the
- *     hosted data API does not index — NO fabricated series is ever drawn.
- *   • 24h % change comes from `useTokenPriceChange`; 24h volume from
- *     `useTokenMarketStats().volume`. 24h high/low are derived from the price
- *     series ONLY on the 1D timeframe (otherwise "—" — never a 52-week value under
- *     a "24h" label).
+ *     (e.g. Mainnet); for chains the hosted GraphQL does not index (Robinhood — the
+ *     Terminal's live chain), the 1D timeframe instead renders HookSwap's OWN
+ *     data-api native relative price series (`TokenStats.priceHistory1d`, the same
+ *     feed Markets' sparklines read) as an UNLABELED line — no USD axis, since the
+ *     series is native-denominated (no stablecoin USD anchor exists pre-liquidity).
+ *     Other timeframes (1H/1W/1M/1Y), which the 1D indexer cannot serve, keep the
+ *     honest empty state ("awaiting pool data feed"). NO fabricated series is drawn.
+ *   • 24h % change is a UNITLESS %: sourced from the data-api token stats
+ *     (`TokenStats.priceChange1d`, real on Robinhood now) with the GraphQL
+ *     `useTokenPriceChange` as fallback for indexed chains; honest "—" when neither.
+ *   • The header "Price" cell prefers the GraphQL USD spot ($) on indexed chains; on
+ *     chains with no USD anchor it falls back to the NATIVE spot (latest data-api
+ *     priceHistory1d value = the token's price in the chain's wrapped-native), rendered
+ *     as "<value> <QUOTE>" (e.g. "0.00005 WETH") with a plain-number formatter — NEVER
+ *     under a "$"/USD label. Honest "—" when neither exists. A "Price in <QUOTE>" caption
+ *     over the native line makes the axis-less series explicitly native, not USD.
+ *   • 24h high / low / vol stat cells are USD-denominated → they stay on the GraphQL
+ *     stack and render honest "—" on chains without a USD anchor. They are deliberately
+ *     NOT populated from native data (that would mislabel a native ratio under a "$"/USD
+ *     label). 24h high/low are derived from the GraphQL price series ONLY on the 1D
+ *     timeframe (otherwise "—" — never a 52-week value under "24h").
  *
  * The component reads NO swap-form store and performs NO navigation — it is driven
  * purely by `inputCurrency` / `outputCurrency` props, so it is decoupled + reusable.
  */
+import type { TokenStats } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import type { UTCTimestamp } from 'lightweight-charts'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenMarketStats, useTokenPriceChange } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
@@ -30,10 +48,13 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
+import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PriceChartBody } from '~/components/Charts/PriceChart'
 import { PriceChartType } from '~/components/Charts/utils'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
+import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
+import { toStrictlyAscendingByTime } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
@@ -353,6 +374,72 @@ function PanelShell({
 const EMPTY_STATS = { price: '—', change: '—', high: '—', low: '—', vol: '—' } as const
 
 /**
+ * Looks up HookSwap's OWN data-api token stats (the SAME `useListTokens` feed the
+ * Markets screen joins for price/24H/sparklines) for the charted currency. Returns
+ * the native-denominated `TokenStats` sub-message, or `undefined` when the indexer
+ * has no entry for this token yet (→ honest empty). Join keys mirror MarketsScreen:
+ * exact `chainId:erc20Address`, then a symbol fallback.
+ */
+function useDataApiTokenStats(currency: Currency): TokenStats | undefined {
+  const { topTokens } = useListTokens(undefined)
+  return useMemo(() => {
+    const wantAddress = currency.isNative ? undefined : currency.address.toLowerCase()
+    const wantSymbol = currency.symbol?.toUpperCase()
+
+    // Primary: exact chainId + ERC-20 address match (mirrors MarketsScreen's byKey join).
+    if (wantAddress) {
+      const wantKey = `${currency.chainId}:${wantAddress}`
+      for (const token of topTokens) {
+        if (!token.stats) {
+          continue
+        }
+        for (const chainToken of token.chainTokens) {
+          if (chainToken.address && `${chainToken.chainId}:${chainToken.address.toLowerCase()}` === wantKey) {
+            return token.stats
+          }
+        }
+      }
+    }
+    // Fallback: symbol match (mirrors MarketsScreen's bySymbol join; covers native).
+    if (wantSymbol) {
+      for (const token of topTokens) {
+        if (token.stats && token.symbol.toUpperCase() === wantSymbol) {
+          return token.stats
+        }
+      }
+    }
+    return undefined
+  }, [topTokens, currency])
+}
+
+/**
+ * Converts the data-api native relative series (`TokenStats.priceHistory1d`,
+ * `TimestampedValue[]`) into lightweight-charts points. Line rendering only uses
+ * `time`+`value`; open/high/low/close are set to `value` (same shape the GraphQL
+ * fallback path uses). Timestamps are normalized to seconds (ms → s) since
+ * lightweight-charts expects UNIX seconds. Returns `[]` when there is nothing to
+ * plot (fewer than 2 usable points) so callers keep the honest empty state.
+ */
+function nativePriceHistoryToChartData(stats: TokenStats | undefined): PriceChartData[] {
+  const history = stats?.priceHistory1d
+  if (!history || history.length < 2) {
+    return []
+  }
+  const points: PriceChartData[] = []
+  for (const point of history) {
+    if (!Number.isFinite(point.value) || point.value <= 0) {
+      continue
+    }
+    const raw = Number(point.timestamp)
+    const timeSec = raw > 1e12 ? Math.floor(raw / 1000) : raw
+    const time = timeSec as UTCTimestamp
+    const value = point.value
+    points.push({ time, value, open: value, high: value, low: value, close: value })
+  }
+  return toStrictlyAscendingByTime(points)
+}
+
+/**
  * Live branch — mounted ONLY when the charted currency exists, so the data hooks
  * (which require a non-null `Currency`) are always called unconditionally here.
  * Mirrors SlideoutChartCard's variables build + useTokenPriceChartPanel usage.
@@ -374,7 +461,7 @@ function TerminalChartPanelBody({
   timePeriod: TimePeriod
   onTimePeriodChange: (period: TimePeriod) => void
 }): JSX.Element {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const variables = useMemo((): TokenPriceChartQueryVariables => {
     const chain = toGraphQLChain(chartedCurrency.chainId as UniverseChainId)
@@ -391,8 +478,16 @@ function TerminalChartPanelBody({
   const { entries, loading } = priceQuery
 
   const chartedCurrencyId = useMemo(() => currencyId(chartedCurrency), [chartedCurrency])
-  const change24h = useTokenPriceChange(chartedCurrencyId)
+  // 24h % change: prefer HookSwap's own data-api native stat (unitless %, real on
+  // Robinhood now); fall back to GraphQL for backend-indexed chains; else honest "—".
+  const dataApiStats = useDataApiTokenStats(chartedCurrency)
+  const graphChange24h = useTokenPriceChange(chartedCurrencyId)
+  const change24h = dataApiStats?.priceChange1d ?? graphChange24h
   const { volume } = useTokenMarketStats(chartedCurrencyId)
+
+  // Native 1D relative series from the data-api — plotted UNLABELED on the 1D tab for
+  // chains the GraphQL price history does not index (Robinhood). Empty on other tabs.
+  const nativeSeries = useMemo(() => nativePriceHistoryToChartData(dataApiStats), [dataApiStats])
 
   // Chart area needs a concrete pixel height for lightweight-charts — measure the
   // flex region so PriceChartBody always receives a non-zero height.
@@ -412,7 +507,25 @@ function TerminalChartPanelBody({
 
   // --- Header stats (all REAL, honest "—" when unavailable) -----------------
   const spot = entries.at(-1)?.value
-  const priceStr = spot === undefined ? '—' : convertFiatAmountFormatted(spot, NumberType.FiatTokenPrice)
+
+  // Native spot fallback for chains with no USD anchor: the latest data-api native
+  // priceHistory1d value = the charted token's price in the chain's wrapped-native.
+  // It is ALWAYS labeled with the quote symbol (e.g. "0.00005 WETH") and formatted
+  // with SwapPrice (a plain number formatter) — NEVER under a "$"/USD label.
+  const quoteSymbol = WRAPPED_NATIVE_CURRENCY[chartedCurrency.chainId]?.symbol
+  const nativeHistory = dataApiStats?.priceHistory1d
+  const nativeSpotRaw = nativeHistory && nativeHistory.length > 0 ? nativeHistory[nativeHistory.length - 1]?.value : undefined
+  const nativeSpot =
+    typeof nativeSpotRaw === 'number' && Number.isFinite(nativeSpotRaw) && nativeSpotRaw > 0 ? nativeSpotRaw : undefined
+
+  // Prefer the GraphQL USD spot ($) on indexed chains; else the native spot (labeled
+  // with its quote symbol, never $); else honest "—".
+  const priceStr =
+    spot !== undefined
+      ? convertFiatAmountFormatted(spot, NumberType.FiatTokenPrice)
+      : nativeSpot !== undefined && quoteSymbol
+        ? `${formatNumberOrString({ value: nativeSpot, type: NumberType.SwapPrice })} ${quoteSymbol}`
+        : '—'
 
   const changeStr = change24h === undefined ? '—' : `${change24h >= 0 ? '+' : ''}${change24h.toFixed(2)}%`
   const changeColor =
@@ -433,6 +546,9 @@ function TerminalChartPanelBody({
   const lowStr =
     low24h === undefined || !Number.isFinite(low24h) ? '—' : convertFiatAmountFormatted(low24h, NumberType.FiatTokenPrice)
 
+  // Only the 1D indexer window can serve the native series; 1H/1W/1M/1Y stay honest-empty.
+  const showNativeSeries = timePeriod === TimePeriod.DAY && nativeSeries.length >= 2
+
   return (
     <PanelShell
       inputCurrency={inputCurrency}
@@ -446,9 +562,30 @@ function TerminalChartPanelBody({
       }
     >
       <div ref={chartRef} style={{ position: 'relative', flex: 1, minHeight: 300, background: terminalColors.bgApp }}>
-        {showInvalidSkeleton ? (
-          <EmptyChartOverlay spotLabel={priceStr} loading={loading} />
-        ) : (
+        {/* Native-denomination caption — makes the UNLABELED native line explicitly "priced in
+            <wrapped-native>", so a viewer never reads the axis-less line as a USD chart. Only on the
+            native branch (GraphQL-unindexed 1D series). */}
+        {showInvalidSkeleton && showNativeSeries && quoteSymbol && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 10,
+              left: 12,
+              zIndex: 1,
+              fontFamily: MONO,
+              fontSize: 10.5,
+              color: terminalColors.ink3Alt,
+              background: terminalColors.panel2,
+              padding: '2px 6px',
+              borderRadius: 4,
+              pointerEvents: 'none',
+            }}
+          >
+            Price in {quoteSymbol}
+          </div>
+        )}
+        {!showInvalidSkeleton ? (
+          // Indexed chains (e.g. Mainnet): real USD-labeled GraphQL price series.
           <PriceChartBody
             data={entries}
             height={chartHeight}
@@ -459,6 +596,23 @@ function TerminalChartPanelBody({
             hideXAxis={false}
             hideMinMaxLines
           />
+        ) : showNativeSeries ? (
+          // GraphQL unindexed (Robinhood) + a data-api 1D native series exists → plot it
+          // UNLABELED: hideYAxis removes the price scale and yAxisFormatter guards the
+          // crosshair label, so a native-denominated ratio is never shown under a "$".
+          <PriceChartBody
+            data={nativeSeries}
+            height={chartHeight}
+            type={PriceChartType.LINE}
+            stale={false}
+            timePeriod={toHistoryDuration(timePeriod)}
+            hideYAxis
+            hideXAxis={false}
+            yAxisFormatter={() => ''}
+            hideMinMaxLines
+          />
+        ) : (
+          <EmptyChartOverlay spotLabel={priceStr} loading={loading} />
         )}
       </div>
     </PanelShell>

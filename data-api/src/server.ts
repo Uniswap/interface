@@ -18,6 +18,7 @@ import { connectNodeAdapter } from '@connectrpc/connect-node'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { createDataApiImpl } from './handlers'
 import { supportedChainIds } from './chains'
+import { startIngestLoop } from './indexer/ingest'
 
 // --- Connect router: register the DataApiService with our handlers ---
 const routes = (router: ConnectRouter): void => {
@@ -102,6 +103,19 @@ const PORT = Number(process.env.PORT || 4092)
 server.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`[hookswap-data-api] listening on :${PORT}  (Connect-RPC data.v1.DataApiService; /health for status)`)
+
+  // Phase-2 event indexer — OFF unless explicitly enabled. When on, it tails Swap/Sync logs into the
+  // SQLite store (see ./indexer). The current-state handlers (listTokens/listTopPools) are unaffected
+  // either way; the indexer only powers historical/volume/price-change reads once wired up.
+  if (process.env.INDEXER_ENABLED === 'true') {
+    const intervalMs = Number(process.env.INDEXER_INTERVAL_MS || 60_000)
+    // eslint-disable-next-line no-console
+    console.log(`[hookswap-data-api] event indexer ENABLED (tail interval ${intervalMs}ms; DB ${process.env.INDEXER_DB_PATH || './indexer.db'})`)
+    startIngestLoop(intervalMs)
+  } else {
+    // eslint-disable-next-line no-console
+    console.log('[hookswap-data-api] event indexer DISABLED (set INDEXER_ENABLED=true to backfill/tail Swap/Sync events)')
+  }
 })
 
 export { server }

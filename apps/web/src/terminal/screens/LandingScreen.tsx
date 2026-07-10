@@ -977,8 +977,24 @@ function StatCard({
 
 /* --------------------------------------------------- featured price chart */
 
-/** Real close-series line+area with a live last-price marker (no fabricated candles). */
-function PriceChart({ closes, fiatPrice }: { closes?: number[]; fiatPrice: (v: number | undefined) => string }): JSX.Element {
+/**
+ * Real close-series line+area with a live last-price marker (no fabricated candles).
+ *
+ * NATIVE-vs-USD labeling: `closes` is the featured token's NATIVE `priceHistory1d` series (subject token
+ * priced in wrapped-native), so the last point is a NATIVE value — it must NOT be shown under a `$`. The
+ * `$` last-price tag is therefore rendered ONLY when a real USD spot (`lastPriceUsd`, from `stats.price`)
+ * exists (indexed/anchored chains). Pre-liquidity that USD price is unset, so the tag is hidden and only
+ * the (unlabeled) sparkline shape + last-price line are drawn — no native ratio is ever labeled `$`.
+ */
+function PriceChart({
+  closes,
+  lastPriceUsd,
+  fiatPrice,
+}: {
+  closes?: number[]
+  lastPriceUsd?: number
+  fiatPrice: (v: number | undefined) => string
+}): JSX.Element {
   const VB_W = 640
   const VB_H = 240
   const geometry = useMemo(() => {
@@ -1038,23 +1054,26 @@ function PriceChart({ closes, fiatPrice }: { closes?: number[]; fiatPrice: (v: n
         <polygon points={geometry.area} fill="url(#hs-hero-area)" />
         <polyline points={geometry.line} fill="none" stroke={terminalColors.greenUp} strokeWidth={2.4} />
       </svg>
-      {/* Live last-price line + tag */}
+      {/* Live last-price line (native shape) + USD tag. The tag is shown ONLY when a real USD spot exists;
+          pre-liquidity the series is native-only, so no `$` is drawn on a native value (line still shown). */}
       <div style={{ position: 'absolute', left: 0, right: 0, top: `${lastPct}%`, height: 1, background: terminalColors.brandGreen, opacity: 0.4 }} />
-      <div
-        style={{
-          position: 'absolute',
-          right: 8,
-          top: `calc(${lastPct}% - 9px)`,
-          fontFamily: MONO,
-          fontSize: 10,
-          color: terminalColors.btnInk,
-          background: terminalColors.brandGreen,
-          padding: '1px 5px',
-          borderRadius: 3,
-        }}
-      >
-        {fiatPrice(geometry.lastValue)}
-      </div>
+      {lastPriceUsd !== undefined && lastPriceUsd > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            right: 8,
+            top: `calc(${lastPct}% - 9px)`,
+            fontFamily: MONO,
+            fontSize: 10,
+            color: terminalColors.btnInk,
+            background: terminalColors.brandGreen,
+            padding: '1px 5px',
+            borderRadius: 3,
+          }}
+        >
+          {fiatPrice(lastPriceUsd)}
+        </div>
+      )}
     </div>
   )
 }
@@ -1493,7 +1512,7 @@ function LandingScreenBody(): JSX.Element {
             {poolsLoading && !featured ? (
               <div style={{ height: 250, background: terminalColors.panel }} aria-busy="true" />
             ) : (
-              <PriceChart closes={featuredMetric?.sparkline} fiatPrice={fiatPrice} />
+              <PriceChart closes={featuredMetric?.sparkline} lastPriceUsd={featuredMetric?.price} fiatPrice={fiatPrice} />
             )}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: `1px solid ${terminalColors.line}` }}>
               <div style={{ padding: '11px 14px', borderRight: `1px solid ${terminalColors.line}` }}>

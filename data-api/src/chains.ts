@@ -47,6 +47,15 @@ export interface ChainConfig {
    * chain has one. On-chain pool discovery pairs each of these with the wrapped-native.
    */
   seededTokens?: Array<{ address: string; symbol: string; name: string; decimals: number }>
+  /**
+   * The chain's canonical USD stablecoin — the USD ANCHOR for this chain. When a
+   * wrapped-native/stablecoin v2 pool has been ingested, metrics.ts derives usdPerNative from that
+   * single pool's reserves (see getUsdPerNative) and every USD value on the chain flows from it. NO
+   * external oracle. Optional: leave UNSET until a chain's real stablecoin address is verified — an
+   * unset stablecoin means all USD fields stay `undefined` (never fabricated). Do NOT guess: only
+   * populate with an on-chain-verified stablecoin. Robinhood (4663) = USDG (6 decimals), verified.
+   */
+  stablecoin?: { address: string; symbol: string; decimals: number }
 }
 
 export const CHAINS: Record<number, ChainConfig> = {
@@ -63,6 +72,9 @@ export const CHAINS: Record<number, ChainConfig> = {
     v3Factory: '0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
     // Seeded WETH/tHOOK v2 pool (contracts/seed/broadcast/SeedPools.s.sol/4663/run-latest.json).
     seededTokens: [{ address: '0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D', symbol: 'tHOOK', name: 'Test Hook Token', decimals: 18 }],
+    // USD anchor: Robinhood's real stablecoin USDG (6 decimals, verified on-chain). Once a
+    // WETH/USDG v2 pool is seeded + ingested, usdPerNative (and all USD fields) light up automatically.
+    stablecoin: { address: '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168', symbol: 'USDG', decimals: 6 },
   },
 
   // ---- MegaETH (4326) ----
