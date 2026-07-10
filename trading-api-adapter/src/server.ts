@@ -18,9 +18,27 @@ const app = express()
 app.use(express.json({ limit: '1mb' }))
 
 // --- CORS (the interface calls this from the browser) ---
-const ALLOWED_ORIGIN = process.env.CORS_ALLOW_ORIGIN || '*'
+// The interface's web trading client fetches with `credentials: 'include'`
+// (createTradingApiFetchClient => defaultOptions.credentials='include'), so the browser
+// enforces credentialed-CORS rules: it DISCARDS the response body (even on a 200) unless
+// `Access-Control-Allow-Credentials: true` is present AND `Access-Control-Allow-Origin` is a
+// specific origin (never `*`). Without both, every quote request silently fails in-browser
+// (server logs 200, interface's fetch rejects) and the swap ticket is stuck on "Fetching…".
+const CONFIGURED_ORIGIN = process.env.CORS_ALLOW_ORIGIN || '*'
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
+  // With credentials, ACAO can't be `*`. Prefer the configured origin; otherwise echo the
+  // request's Origin so credentialed requests still get a concrete allow-origin. Only fall
+  // back to `*` for non-browser callers with no Origin (where credentials don't apply).
+  const requestOrigin = req.headers.origin
+  const allowOrigin =
+    CONFIGURED_ORIGIN !== '*' ? CONFIGURED_ORIGIN : (requestOrigin ?? '*')
+  res.header('Access-Control-Allow-Origin', allowOrigin)
+  // Vary on Origin so a cache/proxy never serves one origin's allow-origin to another.
+  res.header('Vary', 'Origin')
+  // Only valid (and only needed) when the allow-origin is a concrete origin.
+  if (allowOrigin !== '*') {
+    res.header('Access-Control-Allow-Credentials', 'true')
+  }
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
   res.header(
     'Access-Control-Allow-Headers',
