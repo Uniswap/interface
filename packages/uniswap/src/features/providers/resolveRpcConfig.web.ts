@@ -4,7 +4,7 @@ import { isE2eTestEnv, isExtensionApp, REQUEST_SOURCE } from '@universe/environm
 import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
-import { isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
+import { isPublicRpcOnlyChain, isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
 
 export { createRpcConfigResolver } from '@universe/chains'
 export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains'
@@ -28,7 +28,10 @@ const SHARED_UNI_RPC_CONFIG = {
   // so the flag read doesn't trigger StatsigClient.instance()'s broken-fallback
   // branch.
   getFeatureFlag: (chainId: UniverseChainId) =>
-    isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled)),
+    // Public-RPC-only chains (HookSwap chains with a working public RPC and no
+    // UniRPC gateway auth — e.g. Robinhood) must never route through UniRPC.
+    !isPublicRpcOnlyChain(chainId) &&
+    (isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled))),
   getEntryGatewayUrl,
   requestSource: REQUEST_SOURCE,
 } as const
@@ -41,7 +44,12 @@ const webResolveUniRpcConfig = createUniRpcConfigResolver({
   // fall through to the legacy chain-info URLs, which point at local anvil in e2e.
   // UniRPC-only chains intentionally follow this too — e2e has no gateway session
   // for them either — so this overrides the shared chain-aware getter.
-  getFeatureFlag: () => !isE2eTestEnv(),
+  //
+  // Exception: public-RPC-only chains (e.g. Robinhood) — HookSwap has no UniRPC
+  // gateway auth for them, so this "always UniRPC on web" default 401s/CORS-fails
+  // every browser read (swap balances, Locker/Referrals). Skip UniRPC for them so
+  // the resolver falls through to the chain-info public RPC (like Ink/HyperEVM).
+  getFeatureFlag: (chainId: UniverseChainId) => !isE2eTestEnv() && !isPublicRpcOnlyChain(chainId),
   credentials: 'include',
 })
 

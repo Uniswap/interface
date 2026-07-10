@@ -4,7 +4,7 @@ import { REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
-import { isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
+import { isPublicRpcOnlyChain, isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChains'
 
 export { createRpcConfigResolver } from '@universe/chains'
 export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains'
@@ -34,7 +34,10 @@ export const defaultResolveRpcConfig = createRpcConfigResolver({
     // so the flag read doesn't trigger StatsigClient.instance()'s broken-fallback
     // branch.
     getFeatureFlag: (chainId: UniverseChainId) =>
-      isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled)),
+      // Public-RPC-only chains (HookSwap chains with a working public RPC and no
+      // UniRPC gateway auth — e.g. Robinhood) must never route through UniRPC.
+      !isPublicRpcOnlyChain(chainId) &&
+      (isUniRpcOnlyChain(chainId) || (isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled))),
     getEntryGatewayUrl,
     requestSource: REQUEST_SOURCE,
     getRequestHeaders: resolveUniRpcHeaders,

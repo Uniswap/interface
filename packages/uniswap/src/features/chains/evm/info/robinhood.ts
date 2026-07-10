@@ -69,15 +69,20 @@ export const ROBINHOOD_CHAIN_INFO = {
   // — this silently broke Locker/Referrals ("Failed to load") despite the contracts
   // and RPC working fine directly (verified via `cast call`). Fix: real public RPC on
   // every RPCType slot, mirroring the already-correct ink.ts/hyperevm.ts pattern.
+  // Two verified public RPCs for chainId 4663, primary first (both return 4663,
+  // both send Access-Control-Allow-Origin:* so they're browser-safe). Ordered so
+  // wagmi's `orderedTransportUrls(chain)` → viem `fallback(...)` fails over to the
+  // Blockscout eth-rpc proxy if the official RPC is down. (The ethers balance path
+  // via rpcUrlSelector uses http[0] — the official RPC — as its single endpoint.)
   rpcUrls: {
     [RPCType.Default]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/'],
+      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
     },
     [RPCType.Public]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/'],
+      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
     },
     [RPCType.Interface]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/'],
+      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
     },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
