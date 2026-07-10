@@ -1,0 +1,27 @@
+{
+  "_readme": "Robinhood Chain (4663) seed pools. Run with: SEED_POOLS=config/robinhood.json ./scripts/seed.sh robinhood [--broadcast]. See ../README.md for the pool schema.",
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 (Robinhood demo)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test Hook Token", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.05,
+      "amountB": 50
+    },
+    {
+      "protocol": "v3",
+      "label": "WETH / tUSDC 0.30% concentrated (Robinhood demo)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test USD Coin", "symbol": "tUSDC", "decimals": 6 },
+      "fee": 3000,
+      "priceAperB": 2500,
+      "amountA": 0.08,
+      "amountB": 200,
+      "range": "concentrated",
+      "rangeTicks": 50
+    }
+  ]
+}
