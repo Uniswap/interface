@@ -118,9 +118,19 @@ function shortenAddress(address: string): string {
 }
 
 /**
+ * Chains the HookSwap Terminal actually offers for trading right now. Every other
+ * chain HookSwap has contracts deployed on (Sepolia, MegaETH, Ink, XLayer, HyperEVM,
+ * Tempo) still renders in the switcher for visibility, but disabled with a
+ * "Coming soon" badge — no liquidity/production traffic there yet. Update this set
+ * as each chain gets seeded liquidity and goes live.
+ */
+const TERMINAL_LIVE_CHAIN_IDS: ReadonlySet<UniverseChainId> = new Set([UniverseChainId.Robinhood])
+
+/**
  * Chain switcher dropdown, rendered in the top bar's `actions` slot. Lists the
- * app's real enabled chains (`useEnabledChains`) and switches the connected
- * wallet via `useSelectChain` (wagmi). No hardcoded chain list — all live.
+ * app's real enabled chains (`useEnabledChains`); only `TERMINAL_LIVE_CHAIN_IDS`
+ * are selectable — the rest render disabled with a "Coming soon" badge. Switches
+ * the connected wallet via `useSelectChain` (wagmi) for the live chain(s).
  */
 function ChainSwitcherMenu({
   chains,
@@ -133,6 +143,12 @@ function ChainSwitcherMenu({
   onSelect: (id: UniverseChainId) => void
   onClose: () => void
 }): JSX.Element {
+  // Live chains first, so the one thing you can actually pick is right at the top.
+  const orderedChains = [...chains].sort((a, b) => {
+    const aLive = TERMINAL_LIVE_CHAIN_IDS.has(a) ? 0 : 1
+    const bLive = TERMINAL_LIVE_CHAIN_IDS.has(b) ? 0 : 1
+    return aLive - bLive
+  })
   return (
     <>
       {/* Click-away backdrop */}
@@ -166,13 +182,16 @@ function ChainSwitcherMenu({
         >
           SWITCH NETWORK
         </div>
-        {chains.map((id) => {
+        {orderedChains.map((id) => {
           const active = id === activeChainId
+          const isLive = TERMINAL_LIVE_CHAIN_IDS.has(id)
           return (
             <button
               key={id}
               type="button"
-              onClick={() => onSelect(id)}
+              disabled={!isLive}
+              aria-disabled={!isLive}
+              onClick={isLive ? () => onSelect(id) : undefined}
               style={{
                 width: '100%',
                 display: 'flex',
@@ -181,9 +200,10 @@ function ChainSwitcherMenu({
                 padding: '9px 10px',
                 borderRadius: 9,
                 border: 'none',
-                cursor: 'pointer',
+                cursor: isLive ? 'pointer' : 'not-allowed',
                 textAlign: 'left',
                 background: active ? terminalColors.panel : 'transparent',
+                opacity: isLive ? 1 : 0.5,
               }}
             >
               <ChainLogo chainId={id} size={18} />
@@ -199,6 +219,23 @@ function ChainSwitcherMenu({
               </span>
               {active ? (
                 <span style={{ fontSize: 11, color: terminalColors.greenDeep, fontWeight: 600 }}>●</span>
+              ) : !isLive ? (
+                <span
+                  style={{
+                    fontFamily: terminalFonts.mono,
+                    fontSize: 9.5,
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: terminalColors.ink3,
+                    background: terminalColors.panel2,
+                    border: `1px solid ${terminalColors.line}`,
+                    borderRadius: 5,
+                    padding: '2px 6px',
+                  }}
+                >
+                  Soon
+                </span>
               ) : null}
             </button>
           )
@@ -251,8 +288,14 @@ export function TerminalChrome({
 
   // Chain chip: show the connected chain when a wallet is connected, else the
   // default enabled HookSwap chain (so the chip shows a real network + logo and
-  // the switcher is always meaningful — never a bare "—").
-  const displayChainId = account.chainId ?? defaultChainId ?? enabledChains[0]
+  // the switcher is always meaningful — never a bare "—"). Prefer Robinhood — the
+  // only chain the Terminal currently offers for trading (see TERMINAL_LIVE_CHAIN_IDS)
+  // — over whatever `defaultChainId`/ordering would otherwise surface.
+  const displayChainId =
+    account.chainId ??
+    (enabledChains.includes(UniverseChainId.Robinhood) ? UniverseChainId.Robinhood : undefined) ??
+    defaultChainId ??
+    enabledChains[0]
   const chain = displayChainId
     ? { name: getChainLabel(displayChainId), chainId: displayChainId }
     : undefined

@@ -54,7 +54,7 @@ import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
@@ -1206,7 +1206,14 @@ function LandingScreenBody(): JSX.Element {
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
 
-  const displayChainId = account.chainId ?? defaultChainId ?? chains[0]
+  // Prefer Robinhood — the only chain the Terminal currently offers for trading
+  // (see TERMINAL_LIVE_CHAIN_IDS in TerminalApp.tsx) — over whatever `defaultChainId`
+  // ordering would otherwise surface, matching the in-app chain chip's default.
+  const displayChainId =
+    account.chainId ??
+    (chains.includes(UniverseChainId.Robinhood) ? UniverseChainId.Robinhood : undefined) ??
+    defaultChainId ??
+    chains[0]
 
   // Clickable ticker → open the swap screen with this token pre-selected as output
   // (same deep-link pattern as the ⌘K command palette's goToSwap).
