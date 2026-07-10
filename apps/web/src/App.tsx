@@ -28,12 +28,29 @@ const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH, '/embed/swap']
  * drawer itself.
  *
  * These core paths mount their OWN `TerminalChrome` per-route (e.g.
- * `TerminalSwapPage`, `TerminalApp`), so App only renders `<Body />` for them.
- * Every OTHER path is wrapped in `TerminalChrome` here (see render) so the whole
- * app shares the HookSwap Terminal shell instead of the legacy unicorn Header.
+ * `TerminalSwapPage`, `TerminalMarketsPage`, `TerminalPoolsPage`, `TerminalApp`),
+ * so App only renders `<Body />` for them. Every OTHER path is wrapped in
+ * `TerminalChrome` here (see render) so the whole app shares the HookSwap
+ * Terminal shell instead of the legacy unicorn Header.
  */
 function isTerminalLayoutPath(pathname: string): boolean {
-  return pathname === '/' || pathname === '/swap' || pathname.startsWith('/terminal')
+  return (
+    pathname === '/' ||
+    pathname === '/swap' ||
+    pathname.startsWith('/terminal') ||
+    pathname === '/markets' ||
+    pathname.startsWith('/markets/') ||
+    pathname === '/pools' ||
+    pathname === '/pools/new' ||
+    pathname === '/positions' ||
+    pathname === '/locker' ||
+    pathname.startsWith('/portfolio') ||
+    pathname === '/activity' ||
+    pathname === '/analytics' ||
+    pathname === '/referrals' ||
+    pathname === '/settings' ||
+    pathname === '/widget'
+  )
 }
 
 export function App() {

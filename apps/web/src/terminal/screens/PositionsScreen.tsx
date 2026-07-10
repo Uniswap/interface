@@ -2,7 +2,7 @@
  * HookSwap Terminal — Positions (LP positions list).
  *
  * Terminal-native replacement for the legacy Uniswap `/positions` page, mounted at
- * `/terminal/positions`. Matches the Atlas light theme (same tokens/components the
+ * `/positions`. Matches the Atlas light theme (same tokens/components the
  * Portfolio and Pools screens use) and is **v2 + v3 ONLY** — HookSwap ships no v4
  * (locked decision 2026-07-04: hooks are a v4-only feature and are not part of this
  * product). v4 positions are excluded at the query level AND defensively filtered
@@ -579,7 +579,7 @@ export function PositionsScreen(): JSX.Element {
   )
 
   const onNewPosition = (): void => {
-    void navigate('/terminal/pools/new')
+    void navigate('/pools/new')
   }
 
   /* Disconnected → connect empty state. */

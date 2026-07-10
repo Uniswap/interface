@@ -15,7 +15,7 @@
  * in a portal so connect-wallet still works.
  */
 import { ReactNode, useEffect, useState } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router'
+import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -30,20 +30,9 @@ import { TerminalCommandPalette } from '~/terminal/components/TerminalCommandPal
 import { TerminalShell } from '~/terminal/components/TerminalShell'
 import { TerminalNavId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
-import { ActivityScreen } from '~/terminal/screens/ActivityScreen'
-import { AnalyticsScreen } from '~/terminal/screens/AnalyticsScreen'
 import { LimitScreen } from '~/terminal/screens/LimitScreen'
-import { LockerScreen } from '~/terminal/screens/LockerScreen'
-import { MarketDetailScreen } from '~/terminal/screens/MarketDetailScreen'
-import { MarketsScreen } from '~/terminal/screens/MarketsScreen'
-import { PoolsScreen } from '~/terminal/screens/PoolsScreen'
-import { PortfolioScreen } from '~/terminal/screens/PortfolioScreen'
-import { PositionsScreen } from '~/terminal/screens/PositionsScreen'
-import { ReferralsScreen } from '~/terminal/screens/ReferralsScreen'
 import { useCaptureRef } from '~/terminal/referral/useCaptureRef'
-import { SettingsScreen } from '~/terminal/screens/SettingsScreen'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
-import { WidgetBuilderScreen } from '~/terminal/screens/WidgetBuilderScreen'
 
 const TERMINAL_BASE = '/terminal'
 
@@ -65,6 +54,30 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (pathname === '/portfolio' || pathname.startsWith('/portfolio/')) {
     return 'portfolio'
+  }
+  if (pathname === '/markets' || pathname.startsWith('/markets/')) {
+    return 'markets'
+  }
+  if (pathname === '/pools' || pathname === '/pools/new') {
+    return 'create-position'
+  }
+  if (pathname === '/locker') {
+    return 'locker'
+  }
+  if (pathname === '/activity') {
+    return 'notifications'
+  }
+  if (pathname === '/analytics') {
+    return 'analytics'
+  }
+  if (pathname === '/referrals') {
+    return 'referrals'
+  }
+  if (pathname === '/settings') {
+    return 'settings'
+  }
+  if (pathname === '/widget') {
+    return 'widget-builder'
   }
   if (pathname.startsWith('/explore') || pathname.startsWith('/tokens')) {
     return 'markets'
@@ -367,6 +380,12 @@ export function TerminalChrome({
   )
 }
 
+/** Forwards `/terminal/markets/:poolId` to the canonical `/markets/:poolId`, keeping the param. */
+function MarketDetailRedirect(): JSX.Element {
+  const { poolId } = useParams<{ poolId: string }>()
+  return <Navigate to={`/markets/${poolId ?? ''}`} replace />
+}
+
 export default function TerminalApp(): JSX.Element {
   return (
     <TerminalChrome>
@@ -377,19 +396,21 @@ export default function TerminalApp(): JSX.Element {
         <Route path="landing" element={<Navigate to="/" replace />} />
         <Route path="swap" element={<SwapScreen />} />
         <Route path="limit" element={<LimitScreen />} />
-        <Route path="markets" element={<MarketsScreen />} />
-        <Route path="pools/new" element={<PoolsScreen />} />
-        <Route path="pools" element={<PoolsScreen />} />
-        <Route path="positions" element={<PositionsScreen />} />
-        <Route path="locker" element={<LockerScreen />} />
-        <Route path="portfolio" element={<PortfolioScreen />} />
-        <Route path="activity" element={<ActivityScreen />} />
-        <Route path="notifications" element={<ActivityScreen />} />
-        <Route path="markets/:poolId" element={<MarketDetailScreen />} />
-        <Route path="analytics" element={<AnalyticsScreen />} />
-        <Route path="referrals" element={<ReferralsScreen />} />
-        <Route path="settings" element={<SettingsScreen />} />
-        <Route path="widget" element={<WidgetBuilderScreen />} />
+        {/* Every other screen now has a canonical un-prefixed route — redirect old
+            `/terminal/*` bookmarks/links there instead of rendering a second copy. */}
+        <Route path="markets" element={<Navigate to="/markets" replace />} />
+        <Route path="markets/:poolId" element={<MarketDetailRedirect />} />
+        <Route path="pools/new" element={<Navigate to="/pools/new" replace />} />
+        <Route path="pools" element={<Navigate to="/pools" replace />} />
+        <Route path="positions" element={<Navigate to="/positions" replace />} />
+        <Route path="locker" element={<Navigate to="/locker" replace />} />
+        <Route path="portfolio" element={<Navigate to="/portfolio" replace />} />
+        <Route path="activity" element={<Navigate to="/activity" replace />} />
+        <Route path="notifications" element={<Navigate to="/activity" replace />} />
+        <Route path="analytics" element={<Navigate to="/analytics" replace />} />
+        <Route path="referrals" element={<Navigate to="/referrals" replace />} />
+        <Route path="settings" element={<Navigate to="/settings" replace />} />
+        <Route path="widget" element={<Navigate to="/widget" replace />} />
         <Route path="*" element={<Navigate to="swap" replace />} />
       </Routes>
     </TerminalChrome>

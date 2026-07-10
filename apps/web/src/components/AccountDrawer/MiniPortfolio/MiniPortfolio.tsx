@@ -56,7 +56,7 @@ export function MiniPortfolio({
       <ViewAllButton
         label={t('portfolio.view')}
         elementName={ElementName.MiniPortfolioViewPortfolioButton}
-        href="/terminal/portfolio"
+        href="/portfolio"
         onPress={accountDrawer.close}
         fullWidth
       />
@@ -71,7 +71,7 @@ export function MiniPortfolio({
       <ViewAllButton
         label={t('portfolio.overview.activity.table.viewAllActivity')}
         elementName={ElementName.PortfolioViewAllActivity}
-        href="/terminal/activity"
+        href="/activity"
         onPress={accountDrawer.close}
       />
     </Flex>

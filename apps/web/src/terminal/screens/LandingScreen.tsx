@@ -309,7 +309,7 @@ function buildMarketRow(pool: PoolStat, index: number, maps: TokenMetricMaps): M
   return {
     key: pool.id ? `${pool.id}-${index}` : `row-${index}`,
     rank: index + 1,
-    detailPath: chainId !== undefined && pool.id ? `/terminal/markets/${chainId}-${pool.id}` : undefined,
+    detailPath: chainId !== undefined && pool.id ? `/markets/${chainId}-${pool.id}` : undefined,
     currency0,
     currency1,
     symbol0: currency0?.symbol ?? pool.token0?.symbol ?? '—',
@@ -617,9 +617,10 @@ function Header({
         padding: `0 ${padX}px`,
         // Never wrap: a wrapped header row overflows its fixed 64px height and
         // overlaps the banner below. The `compact` hamburger (isCompactHeader)
-        // kicks in before the full nav would overflow, so nowrap is safe.
+        // kicks in before the full nav would overflow, so nowrap alone is enough —
+        // do NOT add overflow:hidden here, it clips the nav dropdown panels (which
+        // are position:absolute and intentionally extend below this row).
         flexWrap: 'nowrap',
-        overflow: 'hidden',
       }}
     >
       {logoButton}
@@ -1239,27 +1240,27 @@ function LandingScreenBody(): JSX.Element {
       children: [
         { label: 'Swap', onClick: () => navigate('/swap') },
         { label: 'Limit', onClick: () => navigate('/terminal/limit') },
-        { label: 'Widget builder', onClick: () => navigate('/terminal/widget') },
+        { label: 'Widget builder', onClick: () => navigate('/widget') },
       ],
     },
-    { label: 'Markets', onClick: () => navigate('/terminal/markets') },
+    { label: 'Markets', onClick: () => navigate('/markets') },
     {
       label: 'Earn',
-      onClick: () => navigate('/terminal/pools/new'),
+      onClick: () => navigate('/pools/new'),
       children: [
-        { label: 'Pools', onClick: () => navigate('/terminal/pools/new') },
-        { label: 'Positions', onClick: () => navigate('/terminal/positions') },
-        { label: 'Locker', onClick: () => navigate('/terminal/locker') },
-        { label: 'Referrals', onClick: () => navigate('/terminal/referrals') },
+        { label: 'Pools', onClick: () => navigate('/pools/new') },
+        { label: 'Positions', onClick: () => navigate('/positions') },
+        { label: 'Locker', onClick: () => navigate('/locker') },
+        { label: 'Referrals', onClick: () => navigate('/referrals') },
       ],
     },
     {
       label: 'Portfolio',
-      onClick: () => navigate('/terminal/portfolio'),
+      onClick: () => navigate('/portfolio'),
       children: [
-        { label: 'Overview', onClick: () => navigate('/terminal/portfolio') },
-        { label: 'Activity', onClick: () => navigate('/terminal/activity') },
-        { label: 'Analytics', onClick: () => navigate('/terminal/analytics') },
+        { label: 'Overview', onClick: () => navigate('/portfolio') },
+        { label: 'Activity', onClick: () => navigate('/activity') },
+        { label: 'Analytics', onClick: () => navigate('/analytics') },
       ],
     },
     { label: 'Docs', external: true, onClick: () => window.open(HOOKSWAP_LINKS.docs, '_blank', 'noreferrer') },
@@ -1382,7 +1383,7 @@ function LandingScreenBody(): JSX.Element {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/terminal/markets')}
+                onClick={() => navigate('/markets')}
                 style={{
                   fontFamily: SANS,
                   fontSize: 14,
@@ -1569,7 +1570,7 @@ function LandingScreenBody(): JSX.Element {
             <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', color: terminalColors.ink }}>Top markets</span>
             <button
               type="button"
-              onClick={() => navigate('/terminal/markets')}
+              onClick={() => navigate('/markets')}
               style={{
                 fontFamily: MONO,
                 fontSize: 11.5,
@@ -1623,7 +1624,7 @@ function LandingScreenBody(): JSX.Element {
                     <button
                       key={row.key}
                       type="button"
-                      onClick={() => (row.detailPath ? navigate(row.detailPath) : navigate('/terminal/markets'))}
+                      onClick={() => (row.detailPath ? navigate(row.detailPath) : navigate('/markets'))}
                       style={{
                         display: 'grid',
                         gridTemplateColumns: '32px 2.4fr 1fr 1fr 0.8fr 150px',
@@ -2126,24 +2127,24 @@ const FEATURE_GROUPS: ReadonlyArray<{ label: string; features: readonly FeatureM
     label: 'TRADE',
     features: [
       { icon: 'swap', title: 'Swap', desc: 'Market & limit orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
-      { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/terminal/markets' },
+      { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/markets' },
     ],
   },
   {
     label: 'EARN',
     features: [
-      { icon: 'liquidity', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add', path: '/terminal/pools/new' },
-      { icon: 'positions', title: 'Positions', desc: 'Manage open LP positions, collect fees, and adjust ranges.', cta: 'View', path: '/terminal/positions' },
-      { icon: 'locker', title: 'Locker', desc: 'Lock LP tokens, ERC-20s, and v3 positions with a vesting schedule.', cta: 'Lock', path: '/terminal/locker' },
-      { icon: 'referral', title: 'Referrals', desc: 'Share your code and earn a cut of every referred swap, on every chain.', cta: 'Get code', path: '/terminal/referrals' },
+      { icon: 'liquidity', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add', path: '/pools/new' },
+      { icon: 'positions', title: 'Positions', desc: 'Manage open LP positions, collect fees, and adjust ranges.', cta: 'View', path: '/positions' },
+      { icon: 'locker', title: 'Locker', desc: 'Lock LP tokens, ERC-20s, and v3 positions with a vesting schedule.', cta: 'Lock', path: '/locker' },
+      { icon: 'referral', title: 'Referrals', desc: 'Share your code and earn a cut of every referred swap, on every chain.', cta: 'Get code', path: '/referrals' },
     ],
   },
   {
     label: 'TRACK',
     features: [
-      { icon: 'portfolio', title: 'Portfolio', desc: 'Balances, open LP positions, PnL, and claimable fees in one view.', cta: 'View', path: '/terminal/portfolio' },
-      { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/terminal/analytics' },
-      { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/terminal/activity' },
+      { icon: 'portfolio', title: 'Portfolio', desc: 'Balances, open LP positions, PnL, and claimable fees in one view.', cta: 'View', path: '/portfolio' },
+      { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/analytics' },
+      { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/activity' },
     ],
   },
 ]
@@ -2167,9 +2168,9 @@ const FOOTER_COLUMNS: ReadonlyArray<{ label: string; links: readonly FooterLink[
     label: 'PROTOCOL',
     links: [
       { label: 'Swap', href: '/swap' },
-      { label: 'Markets', href: '/terminal/markets' },
-      { label: 'Liquidity', href: '/terminal/pools/new' },
-      { label: 'Positions', href: '/terminal/positions' },
+      { label: 'Markets', href: '/markets' },
+      { label: 'Liquidity', href: '/pools/new' },
+      { label: 'Positions', href: '/positions' },
     ],
   },
   {
@@ -2177,7 +2178,7 @@ const FOOTER_COLUMNS: ReadonlyArray<{ label: string; links: readonly FooterLink[
     links: [
       { label: 'Documentation', href: HOOKSWAP_LINKS.docs, external: true },
       { label: 'GitHub', href: HOOKSWAP_LINKS.github, external: true },
-      { label: 'Analytics', href: '/terminal/analytics' },
+      { label: 'Analytics', href: '/analytics' },
     ],
   },
   {

@@ -22,6 +22,21 @@ import TerminalLandingPage from '~/terminal/TerminalLandingPage'
 import TerminalSwapPage from '~/terminal/TerminalSwapPage'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
+// HookSwap Terminal — canonical top-level wrapper pages for the remaining B-screens
+// (each mounts its own TerminalChrome, mirroring TerminalSwapPage; see the `/terminal/*`
+// namespace below, kept only as a compatibility redirect for old bookmarked links).
+const TerminalMarketsPage = lazy(() => import('~/terminal/TerminalMarketsPage'))
+const TerminalMarketDetailPage = lazy(() => import('~/terminal/TerminalMarketDetailPage'))
+const TerminalPoolsPage = lazy(() => import('~/terminal/TerminalPoolsPage'))
+const TerminalPositionsPage = lazy(() => import('~/terminal/TerminalPositionsPage'))
+const TerminalLockerPage = lazy(() => import('~/terminal/TerminalLockerPage'))
+const TerminalPortfolioPage = lazy(() => import('~/terminal/TerminalPortfolioPage'))
+const TerminalActivityPage = lazy(() => import('~/terminal/TerminalActivityPage'))
+const TerminalAnalyticsPage = lazy(() => import('~/terminal/TerminalAnalyticsPage'))
+const TerminalReferralsPage = lazy(() => import('~/terminal/TerminalReferralsPage'))
+const TerminalSettingsPage = lazy(() => import('~/terminal/TerminalSettingsPage'))
+const TerminalWidgetPage = lazy(() => import('~/terminal/TerminalWidgetPage'))
+
 const AddLiquidity = lazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
 const CreatePosition = lazy(() => import('~/pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('~/pages/AddLiquidityV3/redirects'))
@@ -29,7 +44,6 @@ const AddLiquidityV2WithTokenRedirects = lazy(() => import('~/pages/AddLiquidity
 const RedirectExplore = lazy(() => import('~/pages/Explore/redirects'))
 const MigrateV3 = lazy(() => import('~/pages/Migrate'))
 const NotFound = lazy(() => import('~/pages/NotFound'))
-const Pool = lazy(() => import('~/pages/Positions'))
 const LegacyPoolRedirects = lazy(() =>
   import('~/pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolRedirects })),
 )
@@ -297,7 +311,10 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
   }),
-  // HookSwap Terminal namespace — alias kept while remaining B-screens are ported.
+  // HookSwap Terminal namespace — compatibility alias only; every screen now has a
+  // canonical un-prefixed route below (`/markets`, `/pools`, `/positions`, etc). Old
+  // `/terminal/*` links still resolve here and TerminalApp's nested routes redirect
+  // to the canonical path (see TerminalApp.tsx).
   createRouteDefinition({
     path: '/terminal/*',
     getTitle: () => 'HookSwap Terminal',
@@ -305,6 +322,87 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <TerminalApp />
+      </Suspense>
+    ),
+  }),
+  // HookSwap Terminal — canonical top-level routes for the remaining B-screens.
+  createRouteDefinition({
+    path: '/markets',
+    getTitle: () => 'HookSwap Markets',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalMarketsPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/markets/:poolId',
+    getTitle: () => 'HookSwap Markets',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalMarketDetailPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/locker',
+    getTitle: () => 'HookSwap Locker',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalLockerPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/activity',
+    getTitle: () => 'HookSwap Activity',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalActivityPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/analytics',
+    getTitle: () => 'HookSwap Analytics',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalAnalyticsPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/referrals',
+    getTitle: () => 'HookSwap Referrals',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalReferralsPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/settings',
+    getTitle: () => 'HookSwap Settings',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalSettingsPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/widget',
+    getTitle: () => 'HookSwap Widget Builder',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalWidgetPage />
       </Suspense>
     ),
   }),
@@ -335,7 +433,14 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/positions',
-    getElement: () => <Pool />,
+    // HookSwap Terminal owns the positions experience — render the Atlas Terminal
+    // screen directly (see the /portfolio precedent below); the legacy `Pool`
+    // component stays in the tree, just unrouted here.
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalPositionsPage />
+      </Suspense>
+    ),
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -401,8 +506,27 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
+    path: '/pools/new',
+    // HookSwap Terminal owns pool creation — render the Atlas Terminal screen
+    // directly (see the /portfolio precedent below).
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalPoolsPage />
+      </Suspense>
+    ),
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
     path: '/pools',
-    getElement: () => <LegacyPoolRedirects />,
+    // HookSwap Terminal owns the pools experience — render the Atlas Terminal
+    // screen directly; the legacy `LegacyPoolRedirects` component stays in the
+    // tree, just unrouted here.
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalPoolsPage />
+      </Suspense>
+    ),
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -457,9 +581,14 @@ export const routes: RouteDefinition[] = [
   // Portfolio Pages
   createRouteDefinition({
     path: '/portfolio',
-    // HookSwap Terminal owns the portfolio experience — redirect the legacy Uniswap
-    // portfolio page to the Atlas Terminal screen so the old UI is never shown.
-    getElement: () => <Navigate to="/terminal/portfolio" replace />,
+    // HookSwap Terminal owns the portfolio experience — render the Atlas Terminal
+    // screen directly (canonical top-level route) so the legacy Uniswap portfolio
+    // page is never shown.
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalPortfolioPage />
+      </Suspense>
+    ),
     getTitle: getPortfolioTitle,
     getDescription: getPortfolioDescription,
     nestedPaths: [

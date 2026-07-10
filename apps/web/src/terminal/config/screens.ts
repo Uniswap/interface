@@ -164,21 +164,21 @@ export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
   // Limit is NOT a separate rail item — it's a tab inside the Swap ticket
   // (Market / Limit) that routes to /terminal/limit. The route still exists.
-  { id: 'markets', label: 'Markets', icon: 'markets', path: `${TERMINAL_BASE}/markets` },
-  { id: 'create-position', label: 'Pools', icon: 'pools', path: `${TERMINAL_BASE}/pools/new` },
+  { id: 'markets', label: 'Markets', icon: 'markets', path: '/markets' },
+  { id: 'create-position', label: 'Pools', icon: 'pools', path: '/pools/new' },
   // View existing liquidity positions — Terminal-native screen (v2/v3 only).
-  { id: 'positions', label: 'Positions', icon: 'positions', path: `${TERMINAL_BASE}/positions` },
+  { id: 'positions', label: 'Positions', icon: 'positions', path: '/positions' },
   // Lock LP/tokens + v3 positions (HookSwap locker contracts).
-  { id: 'locker', label: 'Locker', icon: 'locker', path: `${TERMINAL_BASE}/locker` },
-  { id: 'analytics', label: 'Analytics', icon: 'analytics', path: `${TERMINAL_BASE}/analytics` },
+  { id: 'locker', label: 'Locker', icon: 'locker', path: '/locker' },
+  { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */
 export const terminalAccountNav: TerminalNavItem[] = [
-  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: `${TERMINAL_BASE}/portfolio` },
-  { id: 'notifications', label: 'Activity', icon: 'activity', path: `${TERMINAL_BASE}/activity` },
+  { id: 'portfolio', label: 'Portfolio', icon: 'portfolio', path: '/portfolio' },
+  { id: 'notifications', label: 'Activity', icon: 'activity', path: '/activity' },
   // Referral codes + earnings (deployed referral router).
-  { id: 'referrals', label: 'Referrals', icon: 'referral', path: `${TERMINAL_BASE}/referrals` },
+  { id: 'referrals', label: 'Referrals', icon: 'referral', path: '/referrals' },
 ]
 
 /**
@@ -186,8 +186,8 @@ export const terminalAccountNav: TerminalNavItem[] = [
  * Docs + Launchpad are external links (open in a new tab).
  */
 export const terminalResourcesNav: TerminalNavItem[] = [
-  { id: 'settings', label: 'Settings', icon: 'settings', path: `${TERMINAL_BASE}/settings` },
-  { id: 'widget-builder', label: 'Widget', icon: 'widget', path: `${TERMINAL_BASE}/widget` },
+  { id: 'settings', label: 'Settings', icon: 'settings', path: '/settings' },
+  { id: 'widget-builder', label: 'Widget', icon: 'widget', path: '/widget' },
   { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_LINKS.docs, externalHref: HOOKSWAP_LINKS.docs },
   { id: 'docs', label: 'Launchpad', icon: 'launchpad', path: HOOKSWAP_LINKS.launchpad, externalHref: HOOKSWAP_LINKS.launchpad },
 ]

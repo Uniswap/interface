@@ -73,7 +73,7 @@ interface TokenMetricMaps {
 /** One row of the markets table. Raw values; formatting happens in the cells. */
 interface MarketRow {
   key: string
-  /** `/terminal/markets/:poolId` route target (chainId-poolId), when resolvable. */
+  /** `/markets/:poolId` route target (chainId-poolId), when resolvable. */
   detailPath?: string
   currency0?: Currency
   currency1?: Currency
@@ -192,7 +192,7 @@ function buildRows(pools: PoolStat[] | undefined, maps: TokenMetricMaps): Market
     return {
       key: pool.id ? `${pool.id}-${index}` : `row-${index}`,
       // Same encoding Landing uses (`chainId-poolId`) so the row opens MarketDetailScreen.
-      detailPath: chainId !== undefined && pool.id ? `/terminal/markets/${chainId}-${pool.id}` : undefined,
+      detailPath: chainId !== undefined && pool.id ? `/markets/${chainId}-${pool.id}` : undefined,
       currency0,
       currency1,
       symbol0: currency0?.symbol ?? pool.token0?.symbol ?? '—',

@@ -709,7 +709,7 @@ export function MarketDetailScreen(): JSX.Element {
       params.set('token1', symbol1)
     }
     const qs = params.toString()
-    return qs ? `/terminal/pools/new?${qs}` : '/terminal/pools/new'
+    return qs ? `/pools/new?${qs}` : '/pools/new'
   }, [symbol0, symbol1])
 
   // Derived price stats from the real close series.
@@ -808,7 +808,7 @@ export function MarketDetailScreen(): JSX.Element {
       {/* Back to Markets */}
       <button
         type="button"
-        onClick={() => navigate('/terminal/markets')}
+        onClick={() => navigate('/markets')}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -1052,7 +1052,7 @@ export function MarketDetailScreen(): JSX.Element {
                 positions={poolPositions}
                 loading={positionsResult.isLoading && !positionsResult.hasData}
                 fiat={fiatBalance}
-                onAddLiquidity={() => navigate('/terminal/pools/new')}
+                onAddLiquidity={() => navigate('/pools/new')}
               />
             )}
           </div>

@@ -1090,7 +1090,7 @@ function AnalyticsScreenBody(): JSX.Element {
               error={poolsError}
             />
             <a
-              href="/terminal/markets"
+              href="/markets"
               style={{
                 display: 'block',
                 textAlign: 'center',

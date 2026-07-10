@@ -54,31 +54,31 @@ const NAV_SECTIONS: NavSection[] = [
     children: [
       { label: 'Swap', path: '/swap', navId: 'swap' },
       { label: 'Limit', path: '/terminal/limit', navId: 'limit' },
-      { label: 'Widget builder', path: '/terminal/widget', navId: 'widget-builder' },
+      { label: 'Widget builder', path: '/widget', navId: 'widget-builder' },
     ],
   },
-  { label: 'Markets', path: '/terminal/markets', navId: 'markets', activeIds: ['markets'] },
+  { label: 'Markets', path: '/markets', navId: 'markets', activeIds: ['markets'] },
   {
     label: 'Earn',
-    path: '/terminal/pools/new',
+    path: '/pools/new',
     navId: 'create-position',
     activeIds: ['create-position', 'positions', 'locker', 'referrals'],
     children: [
-      { label: 'Pools', path: '/terminal/pools/new', navId: 'create-position' },
-      { label: 'Positions', path: '/terminal/positions', navId: 'positions' },
-      { label: 'Locker', path: '/terminal/locker', navId: 'locker' },
-      { label: 'Referrals', path: '/terminal/referrals', navId: 'referrals' },
+      { label: 'Pools', path: '/pools/new', navId: 'create-position' },
+      { label: 'Positions', path: '/positions', navId: 'positions' },
+      { label: 'Locker', path: '/locker', navId: 'locker' },
+      { label: 'Referrals', path: '/referrals', navId: 'referrals' },
     ],
   },
   {
     label: 'Portfolio',
-    path: '/terminal/portfolio',
+    path: '/portfolio',
     navId: 'portfolio',
     activeIds: ['portfolio', 'notifications', 'analytics'],
     children: [
-      { label: 'Overview', path: '/terminal/portfolio', navId: 'portfolio' },
-      { label: 'Activity', path: '/terminal/activity', navId: 'notifications' },
-      { label: 'Analytics', path: '/terminal/analytics', navId: 'analytics' },
+      { label: 'Overview', path: '/portfolio', navId: 'portfolio' },
+      { label: 'Activity', path: '/activity', navId: 'notifications' },
+      { label: 'Analytics', path: '/analytics', navId: 'analytics' },
     ],
   },
   { label: 'Docs', externalHref: DOCS_URL, activeIds: [] },
@@ -367,7 +367,7 @@ export function TopNav({
           type="button"
           aria-label="Settings"
           title="Settings"
-          onClick={() => onNavigate?.('/terminal/settings', 'settings')}
+          onClick={() => onNavigate?.('/settings', 'settings')}
           style={{
             ...FIELD_BASE,
             justifyContent: 'center',
