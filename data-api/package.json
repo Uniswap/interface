@@ -1,0 +1,31 @@
+{
+  "name": "@hookswap/data-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HookSwap's own Connect-RPC data-api (the 'indexer' backend). Speaks the exact data.v1.DataApiService protobuf schema the HookSwap interface calls (listTokens, listTopPools, getPortfolio, ...) so the interface can point its v2 Connect transport here instead of Uniswap's hosted data-api (which only serves Uniswap chains). Phase 1: current-state data from live on-chain reads only (NO historical DB / event indexer yet).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "//": "NOTE: dependencies are NOT installed in this repo checkout (disk constrained). Run `npm install` on Reggie's machine / the VPS before build/serve. See DEPLOY.md.",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@connectrpc/connect": "^1.5.0",
+    "@connectrpc/connect-node": "^1.5.0",
+    "@bufbuild/protobuf": "^1.10.0",
+    "@uniswap/client-data-api": "0.0.113",
+    "ethers": "^5.7.2"
+  },
+  "//deps": "Versions pinned to what the root HookSwap monorepo already resolves: @connectrpc/connect 1.5.0 and @bufbuild/protobuf 1.10.0 (see root node_modules), @uniswap/client-data-api 0.0.113 (the SAME proto package the interface imports, so request/response Message classes are guaranteed to match). @connectrpc/connect-node is the Node server adapter (NOT installed in the root repo — added here). ethers v5 matches the trading-api-adapter for on-chain reads.",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
