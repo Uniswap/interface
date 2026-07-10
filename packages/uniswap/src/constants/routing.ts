@@ -21,6 +21,7 @@ import {
   OP,
   PATHUSD_TEMPO,
   PORTAL_ETH_CELO,
+  THOOK_ROBINHOOD,
   UNI,
   USDC_ARBITRUM,
   USDC_ARC,
@@ -180,6 +181,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Robinhood),
     USDG_ROBINHOOD,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Robinhood] as Token,
+    THOOK_ROBINHOOD,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Arc]: [USDC_ARC, EURC_ARC, CIRBTC_ARC, WETH_ARC, USYC_ARC].map(buildPartialCurrencyInfo),

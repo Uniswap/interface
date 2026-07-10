@@ -61,6 +61,15 @@ export const HKT_XLAYER = new Token(
   'HookSwap Test',
 )
 
+// HookSwap test token seeded into the Robinhood WETH/tHOOK pool so the seeded pool is swappable in the UI.
+export const THOOK_ROBINHOOD = new Token(
+  UniverseChainId.Robinhood,
+  '0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D',
+  18,
+  'tHOOK',
+  'Test Hook Token',
+)
+
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 
 export const { pathUSD: PATHUSD_TEMPO, 'USDC.e': USDC_E_TEMPO } = TEMPO_CHAIN_INFO.tokens
