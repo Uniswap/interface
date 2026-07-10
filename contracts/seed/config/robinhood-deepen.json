@@ -1,0 +1,15 @@
+{
+  "_readme": "Robinhood (4663) — DEEPEN the EXISTING seeded WETH/tHOOK v2 pool so the swap UI can quote normal amounts without tripping the price-impact guard. Uses tHOOK by ADDRESS (0x3b5a01Ef.., the already-seeded MockERC20 the deployer already holds ~999.9B of) so addLiquidity ADDS to the existing pair rather than creating a new pool/token. Run: SEED_POOLS=config/robinhood-deepen.json ./scripts/seed.sh robinhood [--broadcast]. FUNDING: the deployer needs ~0.055 ETH on Robinhood (0.05 to wrap into WETH + gas); it already has the tHOOK. Price kept at 1 WETH = 1000 tHOOK (matches the existing pool ratio) so the add is balanced.",
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 — deepen existing pool (+0.05 WETH / +50 tHOOK)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.05,
+      "amountB": 50
+    }
+  ]
+}
