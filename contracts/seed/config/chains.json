@@ -18,8 +18,8 @@
     "chainId": 4663,
     "rpc": "https://rpc.mainnet.chain.robinhood.com",
     "rpcEnvVar": "ROBINHOOD_RPC_URL",
-    "gasPriceGwei": 0.05,
-    "note": "Real ETH. Low base fee (~0.02 gwei); 0.05 gwei clears comfortably."
+    "gasPriceGwei": 0.07,
+    "note": "Real ETH. Base fee observed ~0.054 gwei on 2026-07-10; 0.07 gwei clears with headroom."
   },
   "ink": {
     "chainId": 57073,
