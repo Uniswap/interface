@@ -313,7 +313,26 @@ const RootApp = (): JSX.Element => {
   )
 }
 
-createRoot(container).render(<RootApp />)
+// Embed widget deep-link fix.
+// The embeddable swap widget is advertised + iframed via a PATH url
+// (`/embed/swap?…` — see WidgetBuilderScreen / the copy-paste snippet), but on
+// hookswap.org this app runs a HashRouter (see `isBrowserRouterEnabled`: only
+// app.uniswap.org / staging / localhost get BrowserRouter). Under HashRouter the
+// route is read from `location.hash`, so a path url has an EMPTY hash and the
+// router falls through to `/` — the landing page — instead of mounting the widget.
+// Rewrite the path form to the hash form so both the Widget Builder live-preview
+// iframe and any third-party `<iframe src="…/embed/swap">` resolve to the real
+// chromeless swap ticket. Scoped to `/embed/swap` only — `/swap` and every other
+// route are untouched. Runs before `createRoot` so no landing frame is ever shown.
+if (
+  !isBrowserRouterEnabled() &&
+  window.location.pathname === '/embed/swap' &&
+  !window.location.hash
+) {
+  window.location.replace(`/#${window.location.pathname}${window.location.search}`)
+} else {
+  createRoot(container).render(<RootApp />)
+}
 
 // We once had a ServiceWorker, and users who have not visited since then may still have it registered.
 // This ensures it is truly gone.

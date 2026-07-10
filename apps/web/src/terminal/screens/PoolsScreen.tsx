@@ -11,8 +11,11 @@
  * is no hook step, hook selector, or "Hook" summary row anywhere in this screen.
  *
  * DATA POLICY (no mock data — handoff hard rule):
- *   • Token pickers — LIVE from the app's real token list (`useListTokens`, the same
- *     feed the Markets screen and legacy Explore use). Real symbols + logos + USD prices.
+ *   • Token pickers — LIVE from the app's real per-chain token list: the active chain's
+ *     static common-bases (`COMMON_BASES[chainId]` from routing.ts — the same source the
+ *     Swap screen uses), which always covers HookSwap's own chains (e.g. Robinhood → ETH,
+ *     USDG, WETH, tHOOK). Merged with `useListTokens` (the hosted feed the Markets screen
+ *     uses) for live prices/logos + extra symbols on chains the backend indexes.
  *   • Fee tiers — real protocol fee tiers (0.01 / 0.05 / 0.30 / 1.00%).
  *   • Current price + the range band — derived from the two selected tokens' real USD
  *     prices; Min/Max are real user inputs; the band + handles reflect them.
@@ -24,6 +27,8 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
@@ -393,11 +398,50 @@ function PoolsScreenBody(): JSX.Element {
 
   const { topTokens, isLoading: tokensLoading } = useListTokens(undefined)
 
+  // The active chain — the connected wallet's chain, defaulting to Robinhood (the
+  // Terminal's live chain) when disconnected, mirroring SwapScreen. Determines which
+  // static common-bases list seeds the token pickers.
+  const chainId = account.chainId ?? UniverseChainId.Robinhood
+
   // Real token options (dedup by symbol, keep price + logo).
+  //
+  // PRIMARY source: the active chain's static common-bases list
+  // (`COMMON_BASES[chainId]` from routing.ts). This is the app's own per-chain token
+  // list and is ALWAYS populated for HookSwap's own chains (e.g. Robinhood → ETH,
+  // USDG, WETH, tHOOK). The hosted token backend behind `useListTokens` does NOT index
+  // HookSwap chains, so on those chains `topTokens` is empty — using it alone left the
+  // pickers with nothing selectable.
+  //
+  // SECONDARY source: `topTokens` (the hosted token list) is merged in for chains the
+  // backend DOES serve — it enriches the static entries with live USD prices/logos and
+  // appends extra symbols. It never removes a static base.
   const options: TokenOption[] = useMemo(() => {
     const bySymbol = new Map<string, TokenOption>()
+
+    for (const info of COMMON_BASES[chainId] ?? []) {
+      const symbol = info.currency.symbol
+      if (!symbol || bySymbol.has(symbol)) {
+        continue
+      }
+      bySymbol.set(symbol, {
+        symbol,
+        logoUrl: info.logoUrl ?? undefined,
+      })
+    }
+
     for (const token of topTokens) {
-      if (!token.symbol || bySymbol.has(token.symbol)) {
+      if (!token.symbol) {
+        continue
+      }
+      const existing = bySymbol.get(token.symbol)
+      if (existing) {
+        // Enrich the static base with live data where it's missing.
+        if (existing.price === undefined && token.stats?.price !== undefined) {
+          existing.price = token.stats.price
+        }
+        if (!existing.logoUrl && token.logoUrl) {
+          existing.logoUrl = token.logoUrl
+        }
         continue
       }
       bySymbol.set(token.symbol, {
@@ -406,8 +450,9 @@ function PoolsScreenBody(): JSX.Element {
         price: token.stats?.price,
       })
     }
+
     return Array.from(bySymbol.values()).slice(0, 50)
-  }, [topTokens])
+  }, [topTokens, chainId])
 
   const [token0, setToken0] = useState<TokenOption | undefined>()
   const [token1, setToken1] = useState<TokenOption | undefined>()
@@ -445,9 +490,12 @@ function PoolsScreenBody(): JSX.Element {
   const [amount0, setAmount0] = useState('')
   const [amount1, setAmount1] = useState('')
 
-  // Seed defaults once tokens load (ETH/USDC when available), plus a sensible range.
-  const resolvedToken0 = token0 ?? options.find((o) => o.symbol === 'ETH' || o.symbol === 'WETH')
-  const resolvedToken1 = token1 ?? options.find((o) => o.symbol === 'USDC')
+  // Seed defaults once tokens load (ETH/USDC when available). When those symbols are
+  // absent for the active chain (e.g. Robinhood has no USDC), fall back to the first
+  // available options so the form is never empty and the two picks always differ.
+  const resolvedToken0 = token0 ?? options.find((o) => o.symbol === 'ETH' || o.symbol === 'WETH') ?? options[0]
+  const resolvedToken1 =
+    token1 ?? options.find((o) => o.symbol === 'USDC') ?? options.find((o) => o.symbol !== resolvedToken0?.symbol)
 
   // Current price of token0 in token1 (real, from USD prices).
   const currentPrice =
