@@ -84,6 +84,22 @@ type ChainCurrencyList = {
  * Instead, see the list used in the token selector's quick-select common options section at useAllCommonBaseCurrencies.ts.
  * This list is currently used as fallback list when Token GQL query fails for above list + for hardcoded tokens on testnet chains.
  */
+// HookSwap tokens that have no logo in the Uniswap assets repo (custom-chain
+// wrapped-natives + seeded test tokens) — serve a real logo so they don't render
+// the initials fallback. Keyed by chainId → lowercased address.
+// MUST be declared BEFORE COMMON_BASES: COMMON_BASES runs `.map(buildPartialCurrencyInfo)`
+// at module-init → getTokenLogoURI → reads this const. Declaring it after COMMON_BASES
+// put it in the temporal dead zone and crashed routing.ts init (blank app).
+const HOOKSWAP_TOKEN_LOGOS: Partial<Record<UniverseChainId, Record<string, ImageSourcePropType | string>>> = {
+  [UniverseChainId.Robinhood]: {
+    '0x0bd7d308f8e1639fab988df18a8011f41eacad73': ETH_LOGO as ImageSourcePropType, // WETH → ETH glyph
+    '0x3b5a01efc59f3465b8eb04697f97cfe0ba700d9d': 'https://hookswap.org/brand/glyph-mark.png', // tHOOK
+  },
+  [UniverseChainId.XLayer]: {
+    '0x144331bb4c3026d135896cafec3ae3d667f4f376': 'https://hookswap.org/brand/glyph-mark.png', // HKT (seeded test token)
+  },
+}
+
 export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.Mainnet]: [
     nativeOnChain(UniverseChainId.Mainnet),
@@ -270,19 +286,6 @@ function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): I
   }
 
   return getChainInfo(chainId).nativeCurrency.logo
-}
-
-// HookSwap tokens that have no logo in the Uniswap assets repo (custom-chain
-// wrapped-natives + seeded test tokens) — serve a real logo so they don't render
-// the initials fallback. Keyed by chainId → lowercased address.
-const HOOKSWAP_TOKEN_LOGOS: Partial<Record<UniverseChainId, Record<string, ImageSourcePropType | string>>> = {
-  [UniverseChainId.Robinhood]: {
-    '0x0bd7d308f8e1639fab988df18a8011f41eacad73': ETH_LOGO as ImageSourcePropType, // WETH → ETH glyph
-    '0x3b5a01efc59f3465b8eb04697f97cfe0ba700d9d': 'https://hookswap.org/brand/glyph-mark.png', // tHOOK
-  },
-  [UniverseChainId.XLayer]: {
-    '0x144331bb4c3026d135896cafec3ae3d667f4f376': 'https://hookswap.org/brand/glyph-mark.png', // HKT (seeded test token)
-  },
 }
 
 function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSourcePropType | string | undefined {
