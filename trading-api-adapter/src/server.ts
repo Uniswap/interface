@@ -24,21 +24,33 @@ app.use(express.json({ limit: '1mb' }))
 // `Access-Control-Allow-Credentials: true` is present AND `Access-Control-Allow-Origin` is a
 // specific origin (never `*`). Without both, every quote request silently fails in-browser
 // (server logs 200, interface's fetch rejects) and the swap ticket is stuck on "Fetching…".
-const CONFIGURED_ORIGIN = process.env.CORS_ALLOW_ORIGIN || '*'
+// Strict allowlist: comma-separated exact origins from CORS_ALLOW_ORIGIN
+// (e.g. "https://hookswap.org,http://localhost:3000"). We NEVER reflect an arbitrary
+// Origin with credentials — that would let any site make credentialed requests here.
+// A request Origin is echoed (with Access-Control-Allow-Credentials) ONLY if it's an
+// exact member of the allowlist; otherwise no ACAO/ACAC is sent (browser blocks it).
+// The literal "*" is allowed for non-credentialed public access, but ACAC is then omitted
+// (credentials + `*` is invalid per spec anyway).
+const CORS_ALLOWLIST = new Set(
+  (process.env.CORS_ALLOW_ORIGIN || '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
+)
+const CORS_WILDCARD = CORS_ALLOWLIST.has('*')
 app.use((req: Request, res: Response, next: NextFunction) => {
-  // With credentials, ACAO can't be `*`. Prefer the configured origin; otherwise echo the
-  // request's Origin so credentialed requests still get a concrete allow-origin. Only fall
-  // back to `*` for non-browser callers with no Origin (where credentials don't apply).
   const requestOrigin = req.headers.origin
-  const allowOrigin =
-    CONFIGURED_ORIGIN !== '*' ? CONFIGURED_ORIGIN : (requestOrigin ?? '*')
-  res.header('Access-Control-Allow-Origin', allowOrigin)
-  // Vary on Origin so a cache/proxy never serves one origin's allow-origin to another.
+  // Always Vary on Origin so a cache/proxy can't serve one origin's ACAO to another.
   res.header('Vary', 'Origin')
-  // Only valid (and only needed) when the allow-origin is a concrete origin.
-  if (allowOrigin !== '*') {
+  if (requestOrigin && CORS_ALLOWLIST.has(requestOrigin)) {
+    // Exact-match allowlisted browser origin → echo it + allow credentials.
+    res.header('Access-Control-Allow-Origin', requestOrigin)
     res.header('Access-Control-Allow-Credentials', 'true')
+  } else if (CORS_WILDCARD) {
+    // Public, non-credentialed access. ACAC intentionally omitted (invalid with `*`).
+    res.header('Access-Control-Allow-Origin', '*')
   }
+  // else: origin not allowlisted → send no ACAO/ACAC; the browser blocks the response.
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
   res.header(
     'Access-Control-Allow-Headers',
