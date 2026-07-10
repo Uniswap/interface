@@ -11,8 +11,8 @@ Source + full runbook: [`trading-api-adapter/`](../../trading-api-adapter/) —
 
 - **Option B — EMBED (recommended for a single VPS).** One process; the adapter imports the
   HooksOS `@uniswap/smart-order-router` fork and runs AlphaRouter in-process against the deployed
-  contracts + RPC. The in-process call (`EmbedRoutingProvider`) is a **marked TODO** in
-  `src/routingClient.ts`.
+  contracts + RPC. The in-process call (`EmbedRoutingProvider`) is **implemented** in
+  `src/embedRouter.ts` (wired via `src/routingClient.ts`) and runs live at `trading.hookswap.org`.
 - **Option A — PROXY.** Keep `routing-api` as a separate service and set `ROUTING_API_URL`. Upstream
   routing-api is AWS-CDK/Lambda; on a VPS you wrap its quote handler in a small Express server.
 
@@ -115,7 +115,8 @@ If `ROUTING_MODE=embed`, before `npm install`:
 2. Override both `@uniswap/*` to the HooksOS forks (which define ChainId 999/4663/4326/57073/196/4217
    and carry the deployed addresses) — the same override the SDK stack uses
    ([developers/sdk.md](../developers/sdk.md)).
-3. Implement `EmbedRoutingProvider.quoteExactRoute` per the TODO in `src/routingClient.ts`.
+3. Set `ROUTING_MODE=embed`. `EmbedRoutingProvider.quoteExactRoute` is already implemented in
+   `src/embedRouter.ts` — no code work needed; the deps + override above are all that's required.
 
 ## 8. The hard gate — liquidity  [on-chain action]
 

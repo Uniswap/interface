@@ -2,9 +2,9 @@ import { CSSProperties } from 'react'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 export interface ComingSoonProps {
-  /** Badge text. Default `COMING SOON` (rendered uppercase mono). */
+  /** Badge text. Default `NO DATA YET` (rendered uppercase mono). */
   label?: string
-  /** Muted one-liner under the badge. Default indexer copy. Pass `null` to omit. */
+  /** Muted one-liner under the badge. Default empty-data copy. Pass `null` to omit. */
   subtext?: string | null
   /**
    * `panel` (default): centered badge + subtext, for empty tables / charts / big
@@ -18,19 +18,20 @@ export interface ComingSoonProps {
   style?: CSSProperties
 }
 
-const DEFAULT_SUBTEXT = 'Live metrics arrive with the HookSwap indexer.'
+const DEFAULT_SUBTEXT = 'No data yet — builds as on-chain activity occurs.'
 
 /**
- * HookSwap Terminal "Coming soon" state.
+ * HookSwap Terminal empty-data state.
  *
- * The honest pre-launch placeholder for data that requires the self-hosted
- * indexer / data backend (protocol TVL, 24h volume, top movers, analytics
- * series, markets, positions, activity …) which is not live yet. Rendered in
- * place of error / "failed to load" states so the app reads as intentional
- * rather than broken. Uses only the Terminal theme tokens — no red/error colour.
+ * The honest placeholder for metrics that have no data yet (protocol TVL, 24h
+ * volume, top movers, analytics series, markets, positions, activity …). The
+ * indexer is live and ingesting; these panels populate as on-chain trading and
+ * liquidity accrue on Robinhood. Rendered in place of error / "failed to load"
+ * states so the app reads as intentional rather than broken. Uses only the
+ * Terminal theme tokens — no red/error colour.
  */
 export function ComingSoon({
-  label = 'COMING SOON',
+  label = 'NO DATA YET',
   subtext = DEFAULT_SUBTEXT,
   variant = 'panel',
   minHeight,

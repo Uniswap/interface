@@ -1146,10 +1146,10 @@ interface LockBreakdown {
 }
 
 /**
- * Lock analytics card. Time-series "value locked / locks over time" needs the
- * HookSwap indexer (not live) → honest empty state, never a fabricated series.
- * When the user has REAL locks, a live Locked/Unlockable status split IS shown
- * (computed from on-chain unlock times).
+ * Lock analytics card. Time-series "value locked / locks over time" builds up as
+ * locks accrue on-chain → honest empty state, never a fabricated series. When the
+ * user has REAL locks, a live Locked/Unlockable status split IS shown (computed
+ * from on-chain unlock times).
  */
 function LockAnalyticsCard({
   breakdown,
@@ -1169,7 +1169,7 @@ function LockAnalyticsCard({
           Lock analytics
         </span>
         <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.06em', color: terminalColors.ink3Alt }}>
-          {hasData ? 'YOUR LOCKS' : 'INDEXER PENDING'}
+          {hasData ? 'YOUR LOCKS' : 'NO LOCKS YET'}
         </span>
       </div>
 
@@ -1198,17 +1198,17 @@ function LockAnalyticsCard({
             </div>
           </div>
           <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 12, lineHeight: 1.5 }}>
-            Live status from your on-chain locks. Value-locked and locks-over-time charts arrive with the HookSwap indexer.
+            Live status from your on-chain locks. Historical value-locked and locks-over-time charts build as locks accrue.
           </div>
         </>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 8, padding: '18px 12px' }}>
           <PadlockGraphic />
           <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink2 }}>
-            Lock analytics go live with the HookSwap indexer.
+            No locks yet.
           </div>
           <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.faint, maxWidth: 300, lineHeight: 1.5 }}>
-            Historical value-locked and lock-count charts need the indexer (not live yet). Your live locks appear in the
+            Historical value-locked and lock-count charts build as locks accrue. Your live locks appear in the
             tabs below.
           </div>
         </div>
@@ -1359,7 +1359,7 @@ export function LockerScreen(): JSX.Element {
         <StatCard size="lg" label="Network" value={networkValue} valueColor={deployed ? 'up' : 'ink'} />
       </div>
 
-      {/* Lock analytics — honest indexer-pending empty state, or a real status split. */}
+      {/* Lock analytics — honest no-locks-yet empty state, or a real status split. */}
       <div style={{ marginBottom: 20 }}>
         <LockAnalyticsCard breakdown={breakdown} loading={Boolean(locksLoading)} />
       </div>

@@ -9,7 +9,7 @@ Reggie: keys, gas, VPS, domain, Infura, seed capital).
 - ✅ **Contracts deployed** on all 6 custom chains; Sepolia canonical.
   ([contract-addresses.md](../developers/contract-addresses.md))
 - ✅ **Interface** rebranded + address override applied (bridge). Terminal redesign in progress.
-- 🔄 **Routing backend** scaffolded, not live (`EmbedRoutingProvider` TODO).
+- ✅ **Routing backend** live in embed mode at `trading.hookswap.org` (`EmbedRoutingProvider` implemented); quotes gated on pool liquidity.
 - ⏳ **Subgraphs** forked, not yet self-hosted per chain.
 - ⏳ **Liquidity** — the real launch blocker.
 
@@ -22,8 +22,8 @@ Gated only on disk freeing to ~8-10 GB. See [developers/sdk.md](../developers/sd
 
 ### 2. Stand up the routing adapter — [credential: VPS + domain + Infura] + [code]
 - Provision the VPS + DNS + TLS; put the Infura key in `config/rpc.env`.
-- Choose **embed** mode and implement `EmbedRoutingProvider.quoteExactRoute` (apply the SOR
-  dependency override, fill the ~30 sketched lines), **or** run `routing-api` in **proxy** mode.
+- Choose **embed** mode (`EmbedRoutingProvider.quoteExactRoute` is already implemented — just
+  apply the SOR dependency override + `npm install`), **or** run `routing-api` in **proxy** mode.
 - Verify `GET /health` returns `routingMode: embed|proxy`.
 - Full steps: [run-routing.md](./run-routing.md).
 

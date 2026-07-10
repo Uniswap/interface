@@ -81,9 +81,14 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
       JSON.stringify({
         status: 'ok',
         service: 'hookswap-data-api',
-        mode: 'onchain-current-state',
+        mode: 'onchain-current-state + event-indexer',
+        indexer: process.env.INDEXER_ENABLED === 'true' ? 'enabled' : 'disabled',
         implemented: ['listTokens', 'listTopPools'],
-        stubbed: 'all other DataApiService methods (need phase-2 event indexer / USD oracle)',
+        // listTokens/listTopPools return live on-chain pools/tokens plus real NATIVE-denominated metrics
+        // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,
+        // volume, apr) populate only once a stablecoin (USDG) anchor pool exists — otherwise left unset.
+        stubbed:
+          'remaining DataApiService methods (portfolio, transactions, positions, charts, protocol stats, ...) — need higher-level time-series / protocol-stats endpoints, not the event indexer (which is live)',
         supportedChainIds: supportedChainIds(),
       }),
     )
@@ -104,9 +109,11 @@ server.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`[hookswap-data-api] listening on :${PORT}  (Connect-RPC data.v1.DataApiService; /health for status)`)
 
-  // Phase-2 event indexer — OFF unless explicitly enabled. When on, it tails Swap/Sync logs into the
-  // SQLite store (see ./indexer). The current-state handlers (listTokens/listTopPools) are unaffected
-  // either way; the indexer only powers historical/volume/price-change reads once wired up.
+  // Event indexer — OFF unless explicitly enabled. When on, it tails Swap/Sync logs into the SQLite
+  // store (see ./indexer). listTokens/listTopPools always return live current-state pools/tokens; when
+  // the indexer is on they ALSO carry real native metrics (priceChange1d, priceHistory1d) it feeds, and
+  // USD fields (price/tvl/volume/apr) once a stablecoin anchor pool exists. When off, those stats are
+  // simply omitted (honest "—") and the core current-state data is unaffected.
   if (process.env.INDEXER_ENABLED === 'true') {
     const intervalMs = Number(process.env.INDEXER_INTERVAL_MS || 60_000)
     // eslint-disable-next-line no-console

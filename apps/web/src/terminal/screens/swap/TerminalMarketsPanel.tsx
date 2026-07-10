@@ -354,7 +354,7 @@ export function TerminalMarketsPanel({
             }}
           >
             {isError
-              ? 'Markets unavailable — token feed goes live with the HookSwap indexer.'
+              ? 'Markets unavailable right now.'
               : 'No markets on this network yet.'}
           </div>
         )}

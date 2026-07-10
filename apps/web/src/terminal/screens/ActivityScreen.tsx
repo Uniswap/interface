@@ -341,7 +341,7 @@ export function ActivityScreen(): JSX.Element {
         {loadingFeed ? (
           <FeedSkeleton />
         ) : activity.error ? (
-          <ComingSoon variant="panel" subtext="Your activity feed goes live with the HookSwap indexer." minHeight={180} />
+          <ComingSoon variant="panel" subtext="Your activity feed fills with on-chain transactions as they happen." minHeight={180} />
         ) : filteredRows && filteredRows.length > 0 ? (
           // Bounded scroll region (~8–9 rows) so a long history scrolls INSIDE the
           // card instead of making the page endlessly tall. No pagination controls.

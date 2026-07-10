@@ -31,9 +31,9 @@ export interface StatCardProps {
   /** Error message — renders an em-dash value + 11px red message. */
   error?: string
   /**
-   * Renders a clean "Coming soon" state (em-dash value + muted caption, no red)
-   * for metrics that depend on the not-yet-live indexer/backend. Takes
-   * precedence over `error`.
+   * Renders a clean "No data yet" state (em-dash value + muted caption, no red)
+   * for metrics that have no data yet (empty until on-chain activity accrues).
+   * Takes precedence over `error`.
    */
   comingSoon?: boolean
 }
@@ -63,7 +63,7 @@ export function StatCard({
   comingSoon = false,
 }: StatCardProps): JSX.Element {
   const s = SIZE[size]
-  // "Coming soon" wins over both value and error: the metric can't exist yet.
+  // The empty-data placeholder wins over both value and error: no data yet.
   const isLoading = !comingSoon && (loading || (value === undefined && !error))
   const isPlaceholder = comingSoon || Boolean(error)
   const resolvedValueColor = valueColor === 'ink' ? terminalColors.ink : trendColor(valueColor)
@@ -116,7 +116,7 @@ export function StatCard({
         {labelNode}
         {valueNode}
         {comingSoon ? (
-          <div style={{ fontSize: 11, color: terminalColors.ink3Alt, marginTop: 4 }}>Coming soon</div>
+          <div style={{ fontSize: 11, color: terminalColors.ink3Alt, marginTop: 4 }}>No data yet</div>
         ) : error ? (
           <div style={{ fontSize: 11, color: terminalColors.redDown, marginTop: 4 }}>{error}</div>
         ) : null}

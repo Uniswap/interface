@@ -43,9 +43,9 @@ export interface DataTableProps<Row> {
   error?: string
   onRetry?: () => void
   /**
-   * Renders a clean "Coming soon" state (in place of rows/error/empty) for data
-   * that depends on the not-yet-live indexer/backend. Takes precedence over
-   * `error`/`loading`. Optionally override the muted subtext.
+   * Renders a clean "No data yet" state (in place of rows/error/empty) for data
+   * that has none yet (empty until on-chain activity/liquidity accrues). Takes
+   * precedence over `error`/`loading`. Optionally override the muted subtext.
    */
   comingSoon?: boolean
   comingSoonSubtext?: string
@@ -193,7 +193,7 @@ export function DataTable<Row>({
         })}
       </div>
 
-      {/* Coming-soon state (indexer/backend not live) — takes precedence. */}
+      {/* Empty-data state (no rows yet — awaiting on-chain activity) — takes precedence. */}
       {comingSoon ? (
         <ComingSoon variant="panel" subtext={comingSoonSubtext} minHeight={180} />
       ) : error ? (

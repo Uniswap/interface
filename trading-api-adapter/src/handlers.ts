@@ -59,7 +59,7 @@ export async function handleQuote(req: QuoteRequest): Promise<HandlerResult> {
       404,
       'NO_ROUTE_FOUND',
       'No routing backend configured. Set ROUTING_API_URL to a deployed HookSwap routing-api ' +
-        '(or ROUTING_MODE=embed once the in-process SOR is implemented). See DEPLOY.md.',
+        '(or ROUTING_MODE=embed to run the in-process SOR). See DEPLOY.md.',
     )
   }
 
@@ -133,7 +133,7 @@ export async function handleSwap(req: CreateSwapRequest): Promise<HandlerResult>
       404,
       'NO_ROUTE_FOUND',
       'No routing backend configured. Set ROUTING_API_URL to a deployed HookSwap routing-api ' +
-        '(or ROUTING_MODE=embed once the in-process SOR is implemented). See DEPLOY.md.',
+        '(or ROUTING_MODE=embed to run the in-process SOR). See DEPLOY.md.',
     )
   }
 

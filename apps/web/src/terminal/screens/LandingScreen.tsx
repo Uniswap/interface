@@ -863,8 +863,8 @@ function TickerTape({
       ) : !hasData ? (
         <span style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.faint, paddingLeft: 40 }}>
           {error
-            ? 'Live token feed arrives with the HookSwap indexer.'
-            : 'Live token feed goes live with the HookSwap indexer.'}
+            ? 'Token feed unavailable right now.'
+            : 'No token prices yet — builds as trading activity accrues.'}
         </span>
       ) : (
         <div style={{ display: 'flex', gap: 26, whiteSpace: 'nowrap', animation: 'hs-tape 38s linear infinite', paddingLeft: 32 }}>
@@ -1036,7 +1036,7 @@ function PriceChart({
           color: terminalColors.faint,
         }}
       >
-        Live chart — price history arrives with the HookSwap indexer.
+        No price history yet — builds as trades occur.
       </div>
     )
   }
@@ -1557,7 +1557,7 @@ function LandingScreenBody(): JSX.Element {
                 color: terminalColors.ink3Alt,
               }}
             >
-              HookSwap pools are AMMs — a live order book streams with the HookSwap indexer.
+              HookSwap pools are AMMs — there is no order book; depth is set by live pool reserves.
             </div>
           </div>
           <div style={{ flex: '1.6 1 380px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
@@ -1578,7 +1578,7 @@ function LandingScreenBody(): JSX.Element {
                 color: terminalColors.ink3Alt,
               }}
             >
-              Live liquidity-depth curves arrive with the HookSwap indexer feed.
+              Depth curve builds from live pool reserves once pools have liquidity.
             </div>
           </div>
         </div>
@@ -1630,11 +1630,11 @@ function LandingScreenBody(): JSX.Element {
               </div>
               {poolsError ? (
                 <div style={{ padding: '32px 20px', textAlign: 'center', fontFamily: SANS, fontSize: 13, color: terminalColors.ink3Alt }}>
-                  Live markets arrive with the HookSwap indexer.
+                  Markets unavailable right now.
                 </div>
               ) : marketRows && marketRows.length === 0 ? (
                 <div style={{ padding: '32px 20px', textAlign: 'center', fontFamily: SANS, fontSize: 13, color: terminalColors.ink3Alt }}>
-                  No pools indexed yet — markets appear once the HookSwap indexer is live.
+                  No pools with liquidity yet — markets appear once pools have liquidity.
                 </div>
               ) : marketRows ? (
                 marketRows.map((row) => {
@@ -2009,8 +2009,8 @@ function LandingScreenBody(): JSX.Element {
         <div style={{ padding: `0 ${padX}px 28px`, fontFamily: SANS, fontSize: 11, color: terminalColors.faint, lineHeight: 1.5 }}>
           Tickers &amp; the featured chart join the live token feed; TVL &amp; 24h volume are the live protocol-stats feed; top
           markets (including the seeded X&nbsp;Layer pool) come from the live pools feed; activity is your connected wallet&apos;s
-          real history. Values with no live source render an honest &ldquo;—&rdquo;; the order book &amp; depth cards stay empty
-          until the HookSwap indexer is live.
+          real history. Values with no live source render an honest &ldquo;—&rdquo;; the depth card stays empty
+          until pools have liquidity (HookSwap pools are AMMs — there is no order book).
         </div>
       </div>
 

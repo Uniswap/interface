@@ -5,7 +5,7 @@
  * on-chain HookSwap-owned v2+v3+UR stack). These are used for:
  *   - swappable_tokens (wrapped-native metadata is real, static, safe to serve)
  *   - documentation / sanity checks
- *   - the direct-SOR-embed mode (TODO in routingClient.ts) which needs factory/quoter/router
+ *   - the direct-SOR-embed mode (implemented in routingClient.ts/embedRouter.ts) which needs factory/quoter/router
  *
  * RPC URLs are read from env (see config/rpc.example.env). Public endpoints are the
  * defaults; Reggie replaces with hosted (Alchemy/QuickNode/etc) URLs + keys.
@@ -31,7 +31,7 @@ export interface ChainConfig {
   v2Factory: string
   v2Router02: string
   v3Factory: string
-  v3QuoterV2?: string // undefined where not yet deployed (HyperEVM/Tempo quoter pending)
+  v3QuoterV2?: string // optional in the type; in practice all 7 chains have a deployed QuoterV2
   swapRouter02: string
   universalRouter: string
   multicall2: string

@@ -323,7 +323,7 @@ function ActivityFeed({
     )
   }
   if (error) {
-    return <ComingSoon variant="inline" subtext="Activity goes live with the HookSwap indexer." />
+    return <ComingSoon variant="inline" subtext="Activity fills with on-chain transactions as they happen." />
   }
   if (!items || items.length === 0) {
     return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>No recent activity.</div>
@@ -626,7 +626,7 @@ export function PortfolioScreen(): JSX.Element {
               rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
               loading={positionsResult.isLoading && !positionsResult.hasData}
               comingSoon={Boolean(positionsResult.error)}
-              comingSoonSubtext="Live positions arrive with the HookSwap indexer."
+              comingSoonSubtext="Positions appear once you add on-chain liquidity."
               emptyMessage="No open liquidity positions."
               initialSort={{ columnId: 'value', direction: 'desc' }}
               skeletonRows={5}

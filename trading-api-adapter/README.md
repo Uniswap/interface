@@ -6,11 +6,13 @@ against HookSwap's own pools. It exists because Uniswap's hosted Trading API
 (`trading.gateway.uniswap.org`) only serves Uniswap chains — the HookSwap interface needs its
 **own** Trading API endpoint for chains 4326 / 4663 / 57073 / 196 / 999 / 4217 / 11155111.
 
-> **Status: scaffold.** The HTTP contract, request validation, response translation, chain
-> config (real deployed addresses), and both routing modes' wiring are real and typed. The
-> in-process route computation (`EmbedRoutingProvider`) is a marked TODO; use PROXY mode
-> (`ROUTING_API_URL`) against a deployed routing-api until it's filled in. **No quote numbers
-> are ever fabricated** — with no backend, `/v1/quote` returns a Trading-API-shaped 404.
+> **Status: implemented & deployed.** The HTTP contract, request validation, response
+> translation, chain config (real deployed addresses), and both routing modes are real and
+> typed. The in-process route computation (`EmbedRoutingProvider`) is fully implemented; the
+> adapter runs live in EMBED mode (`ROUTING_MODE=embed`) at `trading.hookswap.org`. PROXY mode
+> (`ROUTING_API_URL`, against a deployed routing-api) remains available as an alternative.
+> **No quote numbers are ever fabricated** — with no route/liquidity, `/v1/quote` returns a
+> Trading-API-shaped 404.
 >
 > Dependencies are **not installed** in this checkout (disk-constrained). `npm install` happens
 > on the VPS at deploy time — see [DEPLOY.md](./DEPLOY.md).
@@ -24,7 +26,7 @@ calls, under a `/v1` prefix (`TradingApiClient.getApiPathPrefix`):
 |---|---|---|
 | `fetchQuote` | `POST /v1/quote` | **implemented** → routes via SOR, returns `ClassicQuote` (routing=CLASSIC) |
 | `fetchSwappableTokens` | `GET /v1/swappable_tokens?tokenIn=&tokenInChainId=` | **implemented** (returns wrapped-native; TODO full token list) |
-| `fetchSwap` | `POST /v1/swap` | **TODO** (assemble Universal Router calldata) |
+| `fetchSwap` | `POST /v1/swap` | **implemented** → re-quotes with recipient, returns real Universal Router calldata (`methodParameters`) |
 | `fetchCheckApproval` | `POST /v1/check_approval` | **TODO** (Permit2/ERC20 allowance check) |
 | `submitOrder`/`fetchOrders`/plan/wallet/* | various | out of scope (UniswapX / 4337 / 7702 — not used by classic v2/v3 swaps) |
 
@@ -40,7 +42,7 @@ quote:{ input, output, route[][], gasUseEstimate, ... }, permitData:null }`. Ful
 src/
   tradingApiTypes.ts  Trading API schema subset (mirror of interface's generated models)
   chains.ts           per-chain config w/ REAL deployed addresses (from contracts/deployments/*)
-  routingClient.ts    RoutingProvider: (A) PROXY deployed routing-api  (B) EMBED SOR [TODO]  (none)
+  routingClient.ts    RoutingProvider: (A) PROXY deployed routing-api  (B) EMBED SOR [implemented]  (none)
   translate.ts        routing-api classic response  ->  Trading API ClassicQuote (no fabrication)
   handlers.ts         validate + dispatch: handleQuote / handleSwappableTokens / handleHealth
   server.ts           Express host (mounts /v1/* and /*, CORS, /health)

@@ -279,7 +279,7 @@ function AreaChart({
     return <div style={{ height, borderRadius: 10, background: terminalColors.line2 }} aria-busy="true" />
   }
   if (error) {
-    return <ComingSoon variant="panel" minHeight={height} subtext="Protocol analytics arrive with the HookSwap indexer." />
+    return <ComingSoon variant="panel" minHeight={height} subtext="Protocol analytics build as on-chain trading activity accrues." />
   }
   if (!geometry) {
     return (
@@ -349,7 +349,7 @@ function BarChart({
     return <div style={{ height: height + 24, borderRadius: 10, background: terminalColors.line2 }} aria-busy="true" />
   }
   if (error) {
-    return <ComingSoon variant="panel" minHeight={height + 24} subtext="Volume metrics arrive with the HookSwap indexer." />
+    return <ComingSoon variant="panel" minHeight={height + 24} subtext="Volume builds as on-chain trades occur." />
   }
   if (!points || points.length === 0) {
     return (
@@ -367,7 +367,7 @@ function BarChart({
           color: terminalColors.ink3Alt,
         }}
       >
-        No volume yet — arrives with the HookSwap indexer.
+        No volume yet — builds as on-chain trades occur.
       </div>
     )
   }
@@ -539,10 +539,10 @@ function NetworkDonut({
             </div>
           ))
         ) : error ? (
-          <ComingSoon variant="inline" subtext="Network allocation arrives with the HookSwap indexer." />
+          <ComingSoon variant="inline" subtext="Network allocation appears once pools have liquidity." />
         ) : (
           <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink3Alt }}>
-            No pool TVL yet — network allocation appears with the HookSwap indexer.
+            No pool TVL yet — appears once pools have liquidity.
           </div>
         )}
       </div>
@@ -698,12 +698,12 @@ function TopPoolsByTvlList({
     )
   }
   if (error) {
-    return <ComingSoon variant="inline" subtext="Pool rankings arrive with the HookSwap indexer." />
+    return <ComingSoon variant="inline" subtext="Pool rankings appear once pools have liquidity." />
   }
   if (!presentations || presentations.length === 0) {
     return (
       <div style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.5, color: terminalColors.ink3Alt }}>
-        No pools indexed yet — liquidity data goes live with the HookSwap indexer.
+        No pools with liquidity yet — rankings appear once pools have liquidity.
       </div>
     )
   }
@@ -1075,7 +1075,7 @@ function AnalyticsScreenBody(): JSX.Element {
               emptyMessage={
                 chartMetric === 'fees'
                   ? 'Fee-over-time series is not exposed by the protocol stats feed. 24h fees are shown in the stat card above (aggregated from live pools).'
-                  : 'No protocol series yet — analytics populate once the HookSwap indexer is live.'
+                  : 'No protocol series yet — builds as on-chain trading activity accrues.'
               }
             />
           </Card>
@@ -1130,8 +1130,8 @@ function AnalyticsScreenBody(): JSX.Element {
               rowKey={(row) => row.key}
               loading={poolsLoading && !topByVolume}
               comingSoon={poolsError}
-              comingSoonSubtext="Pool liquidity data goes live with the HookSwap indexer."
-              emptyMessage="No pools indexed yet — liquidity data goes live with the HookSwap indexer."
+              comingSoonSubtext="Pool data appears once pools have liquidity."
+              emptyMessage="No pools with liquidity yet — appears once pools have liquidity."
               initialSort={{ columnId: 'volume', direction: 'desc' }}
               skeletonRows={6}
               minWidth={360}

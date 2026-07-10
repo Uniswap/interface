@@ -252,7 +252,7 @@ function PriceAreaChart({
           }}
         >
           <span style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.faint }}>
-            {loading ? 'Loading price history…' : 'No price history for this window.'}
+            {loading ? 'Loading price history…' : 'No price history yet — builds as trades occur.'}
           </span>
         </div>
       )}
@@ -369,7 +369,7 @@ function TradesTab({
             </div>
           ))
         ) : error ? (
-          <ComingSoon variant="panel" subtext="Live trades arrive with the HookSwap indexer." minHeight={140} />
+          <ComingSoon variant="panel" subtext="Trades appear here as they occur on-chain." minHeight={140} />
         ) : rows.length === 0 ? (
           <div style={{ padding: '24px 16px', textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>
             No recent trades.
@@ -786,7 +786,7 @@ export function MarketDetailScreen(): JSX.Element {
         {poolError ? (
           <ComingSoon
             variant="panel"
-            subtext="Market detail data arrives with the HookSwap indexer."
+            subtext="Market detail appears once this pool has liquidity and trades."
             minHeight={480}
           />
         ) : (

@@ -1,17 +1,25 @@
 /**
  * DataApiService method handlers for the HookSwap data-api.
  *
- * REAL (Phase 1, live on-chain reads):
+ * REAL (live on-chain reads + event indexer):
  *   - listTokens   → each requested chain's native + wrapped-native + seeded ERC-20s, plus tokens
- *                    discovered in its live v2/v3 pools (metadata read live on-chain).
+ *                    discovered in its live v2/v3 pools (metadata read live on-chain). Each token also
+ *                    carries real NATIVE-denominated stats (priceChange1d, priceHistory1d) fed by the
+ *                    event indexer when it's enabled (see buildTokenStats).
  *   - listTopPools → each requested chain's live v2 pools (CREATE2-discovered, real reserves) and v3
- *                    pools (PoolCreated-log-discovered, real balances).
+ *                    pools (PoolCreated-log-discovered, real balances), with USD-anchored PoolStats
+ *                    from the indexer once a stablecoin anchor pool exists (see buildPoolStats).
+ *
+ * The event indexer EXISTS and is deployed (gated on INDEXER_ENABLED): it tails Swap/Sync events into
+ * SQLite and feeds the TokenStats/PoolStats above. What it powers NOW is native metrics; USD-denominated
+ * fields stay unset until a stablecoin (USDG) anchor pool exists on the chain.
  *
  * STUBS (valid empty proto responses, NOT errors — so the interface degrades gracefully):
  *   - everything else (portfolio, wallet balances, transactions, positions, charts, rewards,
- *     protocol stats, token prices, RWAs, token-factory, reports, ...). These need the Phase-2
- *     event indexer / a USD price oracle, which don't exist yet. Returning an empty-but-valid
- *     Message keeps the frontend from crashing (it renders honest empty/"—" states).
+ *     protocol stats, token prices, RWAs, token-factory, reports, ...). These need higher-level
+ *     time-series / protocol-stats endpoints (NOT the event indexer, which is live) and/or a USD price
+ *     oracle. Returning an empty-but-valid Message keeps the frontend from crashing (it renders honest
+ *     empty/"—" states).
  *
  * NO FABRICATED DATA: value/USD/volume fields we can't source truthfully are left unset (proto
  * default / undefined), never invented. See the pricing note in onchain.ts.
@@ -106,15 +114,17 @@ function toProtoErc20Token(meta: TokenMeta): Token {
     name: meta.name,
     decimals: meta.decimals,
     type: TokenType.ERC20,
-    // metadata/stats intentionally omitted: no logo registry, no USD price oracle, no volume
-    // indexer yet. Leaving them unset renders honest "—"/empty in the UI (no fabricated values).
+    // metadata/stats intentionally omitted HERE: no logo registry, and USD price/volume need a
+    // stablecoin (USDG) anchor pool that doesn't exist on these chains yet. Native stats
+    // (priceChange1d/priceHistory1d) are attached separately by buildTokenStats when the event indexer
+    // is live. Leaving unset fields empty renders honest "—" in the UI (no fabricated values).
   })
 }
 
-// ---------- Phase-2 stats: native-sourceable token metrics from the SQLite indexer ----------
+// ---------- Event-indexer stats: native-sourceable token metrics from the SQLite indexer ----------
 
 /**
- * Build the `TokenStats` sub-message for one token from the Phase-2 indexer.
+ * Build the `TokenStats` sub-message for one token from the event indexer.
  *
  * WHAT WE POPULATE NOW (fully real, unit-safe):
  *   - `priceChange1d` — a UNITLESS PERCENT. Sourced from `get24hPriceChangeNative`, which returns a
@@ -253,7 +263,7 @@ function buildTokenStats(
   return stats
 }
 
-// ---------- Phase-2 stats: USD-anchored pool metrics from the SQLite indexer ----------
+// ---------- Event-indexer stats: USD-anchored pool metrics from the SQLite indexer ----------
 
 /**
  * Build the `PoolStats` sub-message for one pool, USD-anchored. Returns undefined (→ `stats` omitted,
@@ -275,7 +285,7 @@ function buildTokenStats(
  *       (the consumer maps only `boostedApr: stats.rewardApr`).
  *   - `volume30d` — UNSET: the metrics layer exposes only a 24h USD volume helper (no 30d source).
  *
- * NOTE: the Phase-2 indexer ingests only v2 Sync/Swap events, so v3 pools have no pool_meta → every
+ * NOTE: the event indexer ingests only v2 Sync/Swap events, so v3 pools have no pool_meta → every
  * metric returns undefined → this returns undefined for v3 (honest empty), never faked.
  */
 function buildPoolStats(db: SqliteDatabase, chainId: number, poolAddress: string): PoolStats | undefined {
@@ -513,7 +523,7 @@ async function handleListTopPools(req: ListTopPoolsRequest): Promise<ListTopPool
         feeTier: p.fee,
         isDynamicFee: false,
       })
-      // The Phase-2 indexer currently ingests only v2 Sync/Swap events (see ingest.ts), so v3 pools have
+      // The event indexer currently ingests only v2 Sync/Swap events (see ingest.ts), so v3 pools have
       // no pool_meta → buildPoolStats returns undefined and stats stays UNSET (honest "—"). Wired anyway so
       // v3 USD stats light up automatically if/when v3 event ingestion is added. Never fabricated.
       if (db) {

@@ -15,8 +15,8 @@
  *     data-api native relative price series (`TokenStats.priceHistory1d`, the same
  *     feed Markets' sparklines read) as an UNLABELED line — no USD axis, since the
  *     series is native-denominated (no stablecoin USD anchor exists pre-liquidity).
- *     Other timeframes (1H/1W/1M/1Y), which the 1D indexer cannot serve, keep the
- *     honest empty state ("awaiting pool data feed"). NO fabricated series is drawn.
+ *     Other timeframes (1H/1W/1M/1Y), which the 1D series cannot serve, keep the
+ *     honest empty state ("No price history yet"). NO fabricated series is drawn.
  *   • 24h % change is a UNITLESS %: sourced from the data-api token stats
  *     (`TokenStats.priceChange1d`, real on Robinhood now) with the GraphQL
  *     `useTokenPriceChange` as fallback for indexed chains; honest "—" when neither.
@@ -288,7 +288,7 @@ function EmptyChartOverlay({ spotLabel, loading }: { spotLabel: string; loading:
         }}
       >
         <span style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.faint }}>
-          {loading ? 'Loading price history…' : 'Price history — awaiting pool data feed'}
+          {loading ? 'Loading price history…' : 'No price history yet — builds as trades occur'}
         </span>
       </div>
       {spotLabel !== '—' && (

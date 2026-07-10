@@ -394,9 +394,9 @@ function TopMovers({
         }}
       >
         {error ? (
-          <ComingSoon variant="inline" subtext="Top movers arrive with the HookSwap indexer." />
+          <ComingSoon variant="inline" subtext="Top movers appear as trading activity accrues." />
         ) : (
-          'No market movers yet — token price data goes live with the HookSwap indexer.'
+          'No market movers yet — builds as trading activity accrues.'
         )}
       </div>
     )
@@ -467,10 +467,10 @@ function MarketsScreenBody(): JSX.Element {
 
   const emptyMessage =
     filter === 'new'
-      ? 'New-pool data requires the self-hosted indexer feed (not yet wired).'
+      ? 'New-pool sorting by creation time is not available yet.'
       : filter === 'stable'
         ? 'No stablecoin pools in the current data set.'
-        : 'No pools indexed yet — liquidity data goes live with the HookSwap indexer.'
+        : 'No pools with liquidity yet — appears once pools have liquidity.'
 
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
@@ -648,7 +648,7 @@ function MarketsScreenBody(): JSX.Element {
         onRowClick={(row) => (row.detailPath ? navigate(row.detailPath) : undefined)}
         loading={poolsLoading}
         comingSoon={poolsError}
-        comingSoonSubtext="Live markets arrive with the HookSwap indexer."
+        comingSoonSubtext="Markets appear once pools have liquidity."
         emptyMessage={emptyMessage}
         initialSort={{ columnId: 'tvl', direction: 'desc' }}
         skeletonRows={8}
@@ -656,8 +656,8 @@ function MarketsScreenBody(): JSX.Element {
 
       {/* Honest data-provenance note (visible-but-muted; no fabricated values). */}
       <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 14, lineHeight: 1.5 }}>
-        Price · 24H · 7d spark join the live token feed by pool base token; 7D change arrives with the self-hosted
-        indexer feed.
+        Price · 24H · 7d spark join the live token feed by pool base token; 7D change builds as trading history
+        accrues.
       </div>
     </div>
   )

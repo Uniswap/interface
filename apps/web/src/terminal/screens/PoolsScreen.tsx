@@ -680,8 +680,8 @@ function PoolsScreenBody(): JSX.Element {
             </div>
 
             <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 12, lineHeight: 1.5 }}>
-              Current price derived from live token prices. Full liquidity-distribution histogram arrives with the
-              self-hosted indexer.
+              Current price derived from live token prices. Full liquidity-distribution histogram builds as pools gain
+              liquidity.
             </div>
           </Panel>
         </div>

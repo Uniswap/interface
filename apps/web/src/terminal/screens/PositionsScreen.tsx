@@ -638,7 +638,7 @@ export function PositionsScreen(): JSX.Element {
             rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
             loading={isLoading}
             comingSoon={Boolean(positionsResult.error)}
-            comingSoonSubtext="Live positions arrive with the HookSwap indexer."
+            comingSoonSubtext="Positions appear once you add on-chain liquidity."
             emptyMessage="No positions."
             initialSort={{ columnId: 'value', direction: 'desc' }}
             skeletonRows={6}
