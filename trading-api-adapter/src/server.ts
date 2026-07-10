@@ -11,8 +11,8 @@
  */
 
 import express, { NextFunction, Request, Response } from 'express'
-import { handleHealth, handleQuote, handleSwappableTokens } from './handlers'
-import { QuoteRequest } from './tradingApiTypes'
+import { handleHealth, handleQuote, handleSwap, handleSwappableTokens } from './handlers'
+import { CreateSwapRequest, QuoteRequest } from './tradingApiTypes'
 
 const app = express()
 app.use(express.json({ limit: '1mb' }))
@@ -46,6 +46,11 @@ function mount(prefix: string): void {
 
   app.post(`${prefix}/quote`, async (req: Request, res: Response) => {
     const result = await handleQuote(req.body as QuoteRequest)
+    res.status(result.status).json(result.body)
+  })
+
+  app.post(`${prefix}/swap`, async (req: Request, res: Response) => {
+    const result = await handleSwap(req.body as CreateSwapRequest)
     res.status(result.status).json(result.body)
   })
 }

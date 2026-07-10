@@ -8,6 +8,8 @@ import { getChain, isSupportedChain } from './chains'
 import { createRoutingProvider } from './routingClient'
 import { toTradingApiQuoteResponse } from './translate'
 import {
+  CreateSwapRequest,
+  CreateSwapResponse,
   GetSwappableTokensResponse,
   QuoteRequest,
   TradeType,
@@ -88,6 +90,91 @@ export async function handleQuote(req: QuoteRequest): Promise<HandlerResult> {
     }
 
     return { status: 200, body: toTradingApiQuoteResponse({ request: req, routing, requestId }) }
+  } catch (e) {
+    return err(500, 'INTERNAL_ERROR', `Routing backend error: ${(e as Error).message}`)
+  }
+}
+
+// ---- POST /v1/swap ---------------------------------------------------------
+// Takes the ClassicQuote /v1/quote just returned (echoed back by the client in `quote`) and
+// re-quotes with a recipient set so the SOR also computes real Universal Router calldata
+// (route.methodParameters). We never fabricate a tx — no route/methodParameters => 404.
+
+export async function handleSwap(req: CreateSwapRequest): Promise<HandlerResult> {
+  // Validate the request against the Trading API contract.
+  if (!req || typeof req !== 'object') {
+    return err(400, 'VALIDATION_ERROR', 'Request body must be a JSON CreateSwapRequest object.')
+  }
+  const quote = req.quote
+  if (!quote || typeof quote !== 'object') {
+    return err(400, 'VALIDATION_ERROR', '`quote` must be the ClassicQuote object returned by /v1/quote.')
+  }
+  if (typeof quote.chainId !== 'number') {
+    return err(400, 'VALIDATION_ERROR', '`quote.chainId` is required.')
+  }
+  if (!quote.input?.token || !quote.output?.token) {
+    return err(400, 'VALIDATION_ERROR', '`quote.input.token` and `quote.output.token` are required.')
+  }
+  if (quote.tradeType !== TradeType.EXACT_INPUT && quote.tradeType !== TradeType.EXACT_OUTPUT) {
+    return err(400, 'VALIDATION_ERROR', '`quote.tradeType` must be EXACT_INPUT or EXACT_OUTPUT.')
+  }
+  if (!quote.swapper) {
+    return err(400, 'VALIDATION_ERROR', '`quote.swapper` is required to build an executable swap transaction.')
+  }
+  if (!isSupportedChain(quote.chainId)) {
+    return err(400, 'VALIDATION_ERROR', `Unsupported chainId ${quote.chainId}.`)
+  }
+
+  const chain = getChain(quote.chainId)!
+
+  // No routing backend wired → honest 404 (NOT a fabricated transaction).
+  if (routingProvider.mode === 'none') {
+    return err(
+      404,
+      'NO_ROUTE_FOUND',
+      'No routing backend configured. Set ROUTING_API_URL to a deployed HookSwap routing-api ' +
+        '(or ROUTING_MODE=embed once the in-process SOR is implemented). See DEPLOY.md.',
+    )
+  }
+
+  const requestId = randomUUID()
+
+  try {
+    const routing = await routingProvider.quoteExactRoute({
+      chain,
+      tokenInAddress: quote.input.token,
+      tokenOutAddress: quote.output.token,
+      tradeType: quote.tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
+      amount: String(quote.input.amount ?? quote.output.amount),
+      protocols: chain.protocols,
+      recipient: quote.swapper,
+      slippageTolerancePct: quote.slippage ?? 0.5,
+      deadlineSeconds: req.deadline,
+    })
+
+    if (!routing || !routing.methodParameters) {
+      // No route (empty pools / no liquidity) or the SOR didn't build calldata → Trading-API-shaped
+      // 404, matching handleQuote's honest-404 pattern. We NEVER fabricate calldata.
+      return err(
+        404,
+        'NO_ROUTE_FOUND',
+        `No executable route found for the requested swap on chain ${chain.chainId}. ` +
+          'This is expected until on-chain liquidity exists in the HookSwap pools.',
+      )
+    }
+
+    const body: CreateSwapResponse = {
+      requestId,
+      swap: {
+        to: routing.methodParameters.to,
+        from: quote.swapper,
+        data: routing.methodParameters.calldata,
+        value: routing.methodParameters.value,
+        chainId: chain.chainId,
+      },
+    }
+
+    return { status: 200, body }
   } catch (e) {
     return err(500, 'INTERNAL_ERROR', `Routing backend error: ${(e as Error).message}`)
   }

@@ -6,9 +6,9 @@
  *   HookSwap/packages/api/src/clients/trading/createTradingApiClient.ts (paths + verbs)
  *
  * We mirror (rather than import) so this service has no dependency on the interface build.
- * Kept intentionally minimal: only /quote (POST) and /swappable_tokens (GET) response
- * shapes are needed for the interface's swap-quote flow. /swap, /check_approval etc. are
- * documented in DEPLOY.md as the next endpoints to add.
+ * Kept intentionally minimal: only /quote (POST), /swap (POST), and /swappable_tokens (GET)
+ * request/response shapes are needed for the interface's swap flow. /check_approval etc. are
+ * documented in DEPLOY.md as further endpoints to add.
  */
 
 // ---- Primitives -----------------------------------------------------------
@@ -147,6 +147,48 @@ export interface QuoteResponse {
   quote: ClassicQuote
   routing: Routing
   permitData: null | Record<string, unknown>
+}
+
+// ---- Swap request/response (POST /v1/swap) ---------------------------------
+// Mirrors CreateSwapRequest.ts / CreateSwapResponse.ts. `quote` is the exact ClassicQuote
+// object /v1/quote just returned, echoed back by the client. Only fields the adapter reads
+// (from `quote`) or returns (in the response) are strongly typed; the rest are optional
+// passthrough, matching the minimal-mirror style of QuoteRequest/QuoteResponse above.
+
+export interface CreateSwapRequest {
+  quote: ClassicQuote
+  signature?: string
+  /** @deprecated kept for schema parity with the real Trading API */
+  includeGasInfo?: boolean
+  refreshGasPrice?: boolean
+  simulateTransaction?: boolean
+  permitData?: Record<string, unknown> | null
+  safetyMode?: string
+  deadline?: number
+  urgency?: string
+  gasStrategies?: unknown[]
+  // ...other Trading API fields are accepted but ignored by this adapter.
+  [k: string]: unknown
+}
+
+/** A real, sendable EVM transaction (mirrors the Trading API's TransactionRequest). */
+export interface TransactionRequest {
+  to: string
+  from: string
+  data: string
+  value: string
+  chainId: ChainId
+  gasLimit?: string
+  gasPrice?: string
+}
+
+export interface CreateSwapResponse {
+  requestId: string
+  swap: TransactionRequest
+  /** OPTIONAL — only present when the adapter has a real number; never fabricated. */
+  gasFee?: Record<string, unknown>
+  /** OPTIONAL — only present when the adapter has real numbers; never fabricated. */
+  gasEstimates?: Record<string, unknown>[]
 }
 
 // ---- Swappable tokens (GET /v1/swappable_tokens) --------------------------
