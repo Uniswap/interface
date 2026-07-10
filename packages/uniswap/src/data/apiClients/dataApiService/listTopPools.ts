@@ -3,7 +3,7 @@ import { createPromiseClient } from '@connectrpc/connect'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import type { ListTopPoolsRequest, ListTopPoolsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { createDataApiServiceClient } from '@universe/api'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
+import { dataApiPostTransport } from 'uniswap/src/data/rest/base'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableInfiniteQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
@@ -15,7 +15,7 @@ export type ListTopPoolsInput = {
 type ListTopPoolsQueryKey = readonly [ReactQueryCacheKey.DataApiService, 'listTopPools', ListTopPoolsInput['params']]
 
 const client = createDataApiServiceClient({
-  rpcClient: createPromiseClient(DataApiService, uniswapPostTransport),
+  rpcClient: createPromiseClient(DataApiService, dataApiPostTransport),
 })
 
 export function getListTopPoolsQueryOptions({

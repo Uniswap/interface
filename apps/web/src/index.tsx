@@ -40,6 +40,7 @@ import { BrowserRouter, HashRouter, useLocation } from 'react-router'
 import { PortalProvider } from 'ui/src'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
+import { applyHookSwapForcedFlags } from '~/featureFlags/hookswapForcedFlags'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
@@ -215,6 +216,12 @@ function StatsigProvider({ children }: PropsWithChildren) {
   }, [account])
 
   const onStatsigInit = () => {
+    // HookSwap: force the V2-endpoints gates ON so Markets/token-list surfaces use
+    // our own data-api (data.hookswap.org) instead of Uniswap's hosted backend,
+    // which does not index HookSwap chains. Statsig is unreachable in prod so these
+    // gates would otherwise default OFF. Applied here (post-init) so the override
+    // adapter's client refresh takes effect. See hookswapForcedFlags.ts.
+    applyHookSwapForcedFlags()
     // oxlint-disable-next-line typescript/no-unnecessary-condition
     if (!isDevEnv() || localDevDatadogEnabled) {
       initializeDatadog('web').catch(() => undefined)

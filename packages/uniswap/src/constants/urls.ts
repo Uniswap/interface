@@ -192,6 +192,7 @@ export interface UniswapUrlOverrides {
   amplitudeProxyUrlOverride?: string
   apiBaseUrlOverride?: string
   apiBaseUrlV2Override?: string
+  dataApiBaseUrlV2Override?: string
   forApiUrlOverride?: string
   graphqlUrlOverride?: string
   liquidityServiceUrlOverride?: string
@@ -254,8 +255,14 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
         ? STAGING_ENTRY_GATEWAY_API_BASE_URL
         : PROD_ENTRY_GATEWAY_API_BASE_URL,
 
+    // HookSwap: prefer the DEDICATED data-api override so pointing the DataApiService
+    // (listTopPools/listTokens) at data.hookswap.org does NOT drag the general v2 REST
+    // API (exploreStats/protocolStats/tokenRankings/portfolio/positions) along with it.
+    // Falls back to the shared apiBaseUrlV2Override for back-compat, then Cloudflare.
     dataApiBaseUrlV2:
-      overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
+      overrides.dataApiBaseUrlV2Override ||
+      overrides.apiBaseUrlV2Override ||
+      getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
 
     dataApiServiceUrl: getCloudflareApiBaseUrl({ postfix: 'v2/data.v1.DataApiService' }),
 

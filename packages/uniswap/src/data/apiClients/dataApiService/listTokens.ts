@@ -4,7 +4,7 @@ import { type InfiniteData } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import type { ListTokensRequest, ListTokensResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { createDataApiServiceClient } from '@universe/api'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
+import { dataApiPostTransport } from 'uniswap/src/data/rest/base'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableInfiniteQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
@@ -18,7 +18,7 @@ export type ListTokensInput = {
 type ListTokensQueryKey = readonly [ReactQueryCacheKey.DataApiService, 'listTokens', ListTokensInput['params']]
 
 export const dataApiServiceClient = createDataApiServiceClient({
-  rpcClient: createPromiseClient(DataApiService, uniswapPostTransport),
+  rpcClient: createPromiseClient(DataApiService, dataApiPostTransport),
 })
 
 export function getListTokensQueryOptions({
