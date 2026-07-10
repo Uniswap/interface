@@ -23,7 +23,7 @@
  * NO hook UI on this screen: no hook-fee strip, no active-hook selector, no hook
  * config bar. The order ticket is Market / Limit only.
  */
-import { Token } from '@uniswap/sdk-core'
+import { Percent, Token } from '@uniswap/sdk-core'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -50,6 +50,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
+import { maxAmountSpend } from '~/utils/maxAmountSpend'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
 import { TerminalChartPanel } from '~/terminal/screens/swap/TerminalChartPanel'
@@ -126,8 +127,10 @@ function TerminalTokenLogo({
 
 /* -------------------------------------------------------------- swap ticket */
 
-// v2/v3 only — Market + Limit. (TWAMM is a v4 hook; excluded per LOCKED decision.)
-const TICKET_TABS = ['Market', 'Limit'] as const
+// v2/v3 only — Market + Limit + Send. (TWAMM is a v4 hook; excluded per LOCKED decision.)
+// "Limit" and "Send" route to their own Terminal screens (/terminal/limit, /terminal/send);
+// "Market" is this screen.
+const TICKET_TABS = ['Market', 'Limit', 'Send'] as const
 
 function CurrencyField_Panel({
   side,
@@ -138,6 +141,7 @@ function CurrencyField_Panel({
   editable,
   onAmountChange,
   onSelectToken,
+  belowInput,
 }: {
   side: 'Sell' | 'Buy'
   amountValue: string
@@ -147,6 +151,7 @@ function CurrencyField_Panel({
   editable: boolean
   onAmountChange: (v: string) => void
   onSelectToken: () => void
+  belowInput?: JSX.Element | null
 }): JSX.Element {
   const symbol = currencyInfo?.currency.symbol
   return (
@@ -212,6 +217,68 @@ function CurrencyField_Panel({
           </svg>
         </button>
       </div>
+      {belowInput}
+    </div>
+  )
+}
+
+/* ----------------------------------------------------------- amount presets */
+
+/** The four quick-amount fractions of the sell balance (Max leaves gas for native). */
+const PRESET_PERCENTS = [25, 50, 75, 100] as const
+
+/**
+ * 25 / 50 / 75 / Max quick-amount buttons for the Sell field. Each fraction is
+ * computed from the REAL connected-wallet sell balance; "Max" uses
+ * `maxAmountSpend` so native tokens leave a gas reserve (never the raw balance).
+ * 25/50/75 are also capped at the spendable max (matches the app's
+ * PresetAmountButton semantics). Clicking sets EXACT_INPUT with the computed
+ * amount via the SAME setter the manual input uses (`onSetAmount` →
+ * `onChangeSell`). Rendered only when connected with a positive sell balance.
+ */
+function AmountPresetRow({
+  balance,
+  onSetAmount,
+}: {
+  balance: CurrencyAmount<Currency>
+  onSetAmount: (v: string) => void
+}): JSX.Element {
+  // Spendable ceiling: full balance for tokens; balance minus a gas reserve for native.
+  const spendableMax = maxAmountSpend(balance)
+
+  return (
+    <div style={{ display: 'flex', gap: 5, marginTop: 10 }}>
+      {PRESET_PERCENTS.map((pct) => {
+        const isMax = pct === 100
+        const amount = isMax ? spendableMax : balance.multiply(new Percent(pct, 100))
+        // Cap fractional presets at the spendable max (only bites for native w/ gas reserve).
+        const capped = !isMax && spendableMax && amount && amount.greaterThan(spendableMax) ? spendableMax : amount
+        const disabled = !capped || !capped.greaterThan(0)
+        return (
+          <button
+            key={pct}
+            type="button"
+            disabled={disabled}
+            onClick={capped && !disabled ? () => onSetAmount(capped.toExact()) : undefined}
+            style={{
+              flex: 1,
+              fontFamily: MONO,
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.01em',
+              color: disabled ? terminalColors.ink3Alt : terminalColors.ink2,
+              background: terminalColors.panel2,
+              border: `1px solid ${terminalColors.line2}`,
+              borderRadius: 7,
+              padding: '5px 0',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              opacity: disabled ? 0.55 : 1,
+            }}
+          >
+            {isMax ? 'Max' : `${pct}%`}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -354,20 +421,21 @@ export function SwapTicket(): JSX.Element {
       >
         {TICKET_TABS.map((tab) => {
           const active = tab === 'Market'
+          // "Limit"/"Send" are their own Terminal screens — clicking the tab routes
+          // there (real limit-order / real transfer flow) rather than duplicating a form here.
+          const to = tab === 'Limit' ? '/terminal/limit' : tab === 'Send' ? '/terminal/send' : undefined
           return (
             <span
               key={tab}
               role={active ? undefined : 'link'}
               tabIndex={active ? undefined : 0}
-              // "Limit" is the same limit-order flow as the /terminal/limit screen —
-              // clicking the tab routes there rather than duplicating the form here.
-              onClick={active ? undefined : () => navigate('/terminal/limit')}
+              onClick={active || !to ? undefined : () => navigate(to)}
               onKeyDown={
-                active
+                active || !to
                   ? undefined
                   : (e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
-                        navigate('/terminal/limit')
+                        navigate(to)
                       }
                     }
               }
@@ -400,6 +468,12 @@ export function SwapTicket(): JSX.Element {
         editable
         onAmountChange={onChangeSell}
         onSelectToken={() => updateSwapForm({ selectingCurrencyField: CurrencyField.INPUT })}
+        // 25/50/75/Max — only with a connected wallet + a positive sell balance.
+        belowInput={
+          account.address && sellBalance && sellBalance.greaterThan(0) ? (
+            <AmountPresetRow balance={sellBalance} onSetAmount={onChangeSell} />
+          ) : null
+        }
       />
 
       {/* Switch node */}

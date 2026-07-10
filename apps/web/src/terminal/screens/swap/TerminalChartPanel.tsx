@@ -20,12 +20,16 @@
  *   • 24h % change is a UNITLESS %: sourced from the data-api token stats
  *     (`TokenStats.priceChange1d`, real on Robinhood now) with the GraphQL
  *     `useTokenPriceChange` as fallback for indexed chains; honest "—" when neither.
- *   • The header "Price" cell prefers the GraphQL USD spot ($) on indexed chains; on
- *     chains with no USD anchor it falls back to the NATIVE spot (latest data-api
- *     priceHistory1d value = the token's price in the chain's wrapped-native), rendered
- *     as "<value> <QUOTE>" (e.g. "0.00005 WETH") with a plain-number formatter — NEVER
- *     under a "$"/USD label. Honest "—" when neither exists. A "Price in <QUOTE>" caption
- *     over the native line makes the axis-less series explicitly native, not USD.
+ *   • The header "Price" cell precedence: (1) GraphQL USD spot ($) on indexed chains; else
+ *     (2) the data-api NATIVE spot (latest priceHistory1d value = the token's price in the
+ *     chain's wrapped-native); else (3) a LIVE native spot derived from the pool's CURRENT
+ *     on-chain v2 reserves (`useV2Pair` → `Pair.priceOf`, used on custom chains like
+ *     Robinhood whose pool has reserves but no indexed history yet); else honest "—". Both
+ *     native branches render as "<value> <QUOTE>" (e.g. "0.00005 WETH") with a plain-number
+ *     formatter — NEVER under a "$"/USD label; the reserves branch only engages when the
+ *     OTHER charted currency IS the wrapped-native, so <QUOTE> is always the true
+ *     denomination. A "Price in <QUOTE>" caption over the native line makes the axis-less
+ *     series explicitly native, not USD.
  *   • 24h high / low / vol stat cells are USD-denominated → they stay on the GraphQL
  *     stack and render honest "—" on chains without a USD anchor. They are deliberately
  *     NOT populated from native data (that would mislabel a native ratio under a "$"/USD
@@ -56,6 +60,7 @@ import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 import { toStrictlyAscendingByTime } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
+import { useV2Pair } from '~/hooks/useV2Pairs'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
@@ -518,14 +523,42 @@ function TerminalChartPanelBody({
   const nativeSpot =
     typeof nativeSpotRaw === 'number' && Number.isFinite(nativeSpotRaw) && nativeSpotRaw > 0 ? nativeSpotRaw : undefined
 
-  // Prefer the GraphQL USD spot ($) on indexed chains; else the native spot (labeled
-  // with its quote symbol, never $); else honest "—".
+  // Live native spot from CURRENT on-chain v2 reserves — the deepest fallback for custom
+  // chains (e.g. Robinhood) whose pool HAS reserves but no indexed price history yet (the
+  // data-api priceHistory1d is empty). Engaged ONLY when the OTHER charted currency IS the
+  // chain's wrapped-native, so the pool price of the charted token is denominated in the
+  // wrapped-native (== `quoteSymbol`) and is NEVER mislabeled. `useV2Pair` reads reserves
+  // via the chain's own v2 factory (`V2_FACTORY_ADDRESSES`, wired for the custom chains);
+  // on chains without a factory entry it returns a null pair → this contributes nothing.
+  const otherCurrency = selectedField === CurrencyField.INPUT ? outputCurrency : inputCurrency
+  const wrappedNative = WRAPPED_NATIVE_CURRENCY[chartedCurrency.chainId]
+  const otherIsQuote = !!otherCurrency && !!wrappedNative && otherCurrency.wrapped.equals(wrappedNative)
+  const [, reservesPair] = useV2Pair(chartedCurrency, otherIsQuote ? otherCurrency : undefined)
+  const reservesSpot = useMemo(() => {
+    if (!reservesPair) {
+      return undefined
+    }
+    try {
+      // priceOf(chartedToken) = price of the charted token denominated in the OTHER token
+      // (here the wrapped-native), decimal-adjusted by the SDK. Reserves-derived, so real.
+      const price = Number(reservesPair.priceOf(chartedCurrency.wrapped).toSignificant(8))
+      return Number.isFinite(price) && price > 0 ? price : undefined
+    } catch {
+      return undefined
+    }
+  }, [reservesPair, chartedCurrency])
+
+  // Prefer the GraphQL USD spot ($) on indexed chains; else the data-api native spot; else
+  // the LIVE reserves native spot; else honest "—". Native branches are labeled with the
+  // quote symbol (e.g. "0.001 WETH"), never under a "$"/USD label.
   const priceStr =
     spot !== undefined
       ? convertFiatAmountFormatted(spot, NumberType.FiatTokenPrice)
       : nativeSpot !== undefined && quoteSymbol
         ? `${formatNumberOrString({ value: nativeSpot, type: NumberType.SwapPrice })} ${quoteSymbol}`
-        : '—'
+        : reservesSpot !== undefined && quoteSymbol
+          ? `${formatNumberOrString({ value: reservesSpot, type: NumberType.SwapPrice })} ${quoteSymbol}`
+          : '—'
 
   const changeStr = change24h === undefined ? '—' : `${change24h >= 0 ? '+' : ''}${change24h.toFixed(2)}%`
   const changeColor =

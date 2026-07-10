@@ -31,6 +31,7 @@ import { TerminalShell } from '~/terminal/components/TerminalShell'
 import { TerminalNavId } from '~/terminal/config/screens'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { LimitScreen } from '~/terminal/screens/LimitScreen'
+import { SendScreen } from '~/terminal/screens/SendScreen'
 import { useCaptureRef } from '~/terminal/referral/useCaptureRef'
 import { SwapScreen } from '~/terminal/screens/SwapScreen'
 
@@ -91,6 +92,10 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/limit')) {
     return 'limit'
+  }
+  // Send is a sub-mode of the swap ticket (no dedicated rail item) — keep the Swap pill active.
+  if (rest.startsWith('/send')) {
+    return 'swap'
   }
   if (rest.startsWith('/markets')) {
     return 'markets'
@@ -396,6 +401,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="landing" element={<Navigate to="/" replace />} />
         <Route path="swap" element={<SwapScreen />} />
         <Route path="limit" element={<LimitScreen />} />
+        <Route path="send" element={<SendScreen />} />
         {/* Every other screen now has a canonical un-prefixed route — redirect old
             `/terminal/*` bookmarks/links there instead of rendering a second copy. */}
         <Route path="markets" element={<Navigate to="/markets" replace />} />
