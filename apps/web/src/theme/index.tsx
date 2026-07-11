@@ -98,9 +98,10 @@ function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Pa
 }
 
 export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildren<Partial<ThemeColors>>) {
-  // HookSwap is light-only (Atlas theme) — force light so legacy styled-components
-  // pages match the Terminal shell instead of following the system dark setting.
-  const darkMode = false
+  // HookSwap ships a single DARK "Terminal" theme (shell + screens are hardcoded dark).
+  // Force dark so legacy styled-components pages render light text on dark surfaces that
+  // match the shell — the old light Atlas default rendered dark-on-dark (invisible).
+  const darkMode = true
   // oxlint-disable-next-line react/exhaustive-deps -- Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 
