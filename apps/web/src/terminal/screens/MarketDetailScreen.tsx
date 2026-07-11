@@ -49,7 +49,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -90,10 +90,15 @@ function parsePoolId(poolId: string | undefined): { chainId: UniverseChainId; ad
   const chainRaw = poolId.slice(0, dash)
   const address = poolId.slice(dash + 1)
   const chainNum = Number(chainRaw)
-  if (!Number.isInteger(chainNum) || chainNum <= 0 || !isEVMAddress(address)) {
+  // Reject unregistered chains up front: `toGraphQLChain(chainId)` (called
+  // unguarded when building the price-chart variables during render) does
+  // `getChainInfo(chainId).backendChain.chain`, which THROWS on a chainId not in
+  // ALL_CHAIN_IDS → white-screen that beats the not-found guard. `isUniverseChainId`
+  // is the app's chain-registration check (membership in ALL_CHAIN_IDS).
+  if (!Number.isInteger(chainNum) || chainNum <= 0 || !isEVMAddress(address) || !isUniverseChainId(chainNum)) {
     return undefined
   }
-  return { chainId: chainNum as UniverseChainId, address }
+  return { chainId: chainNum, address }
 }
 
 /** Format a pool price ratio (no currency symbol), adaptive decimals. */
@@ -792,7 +797,7 @@ export function MarketDetailScreen(): JSX.Element {
         ) : (
           <CenteredState
             title="Market not found"
-            detail="No pool exists at this address on the selected network."
+            detail="This pool isn't indexed yet on the selected network."
           />
         )}
       </div>
@@ -1052,7 +1057,7 @@ export function MarketDetailScreen(): JSX.Element {
                 positions={poolPositions}
                 loading={positionsResult.isLoading && !positionsResult.hasData}
                 fiat={fiatBalance}
-                onAddLiquidity={() => navigate('/pools/new')}
+                onAddLiquidity={() => navigate(poolsPath)}
               />
             )}
           </div>

@@ -26,6 +26,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -215,7 +216,12 @@ export function ActivityScreen(): JSX.Element {
   })
 
   // Live LP position fees (real) for the "Fees claimable" KPI.
-  const positionsResult = useWalletPositions({ account: address ?? '', disabled: !address })
+  // Restricted to v2 + v3 (no v4 in HookSwap), mirroring PositionsScreen.
+  const positionsResult = useWalletPositions({
+    account: address ?? '',
+    disabled: !address,
+    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3],
+  })
   const feesClaimable = useMemo(
     () => positionsResult.positions.reduce((sum, p) => sum + (p.uncollectedFeesUsd ?? 0), 0),
     [positionsResult.positions],

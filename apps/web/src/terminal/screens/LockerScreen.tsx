@@ -8,26 +8,33 @@
  *                     while still collecting its trading fees during the lock.
  *
  * DATA POLICY (facts-only, no fabricated data — handoff hard rule):
- *   • The locker contracts are being built at `contracts/locker/` and are NOT yet
- *     deployed on any chain (see `~/terminal/lockers/addresses.ts` — every address
- *     is intentionally UNSET). While unset, the screen renders an honest
- *     "Lockers aren't deployed on {chain} yet" state — never an error, never mock data.
+ *   • Locker addresses are config-driven (`~/terminal/lockers/addresses.ts`). Where a
+ *     chain has deployed HookSwapTokenLockerManager / HookSwapV3PositionLocker
+ *     contracts the panel is live; where an address is unset the screen renders an
+ *     honest "Lockers aren't deployed on {chain} yet" state — never an error, never
+ *     mock data.
  *   • lockFee / feeReceiver / tokenLockerCount / the user's locks all come from REAL
- *     on-chain reads (wagmi `useReadContract`/`useReadContracts`) once addresses exist.
- *     Until then they read "—".
+ *     on-chain reads (wagmi `useReadContract`/`useReadContracts`). Until a chain has
+ *     addresses they read "—".
  *   • Create / withdraw / extend / collect-fees are REAL writes (`useWriteContract`)
- *     wired to the exact contract signatures; disabled with an honest note when the
- *     contracts aren't deployed or the wallet is disconnected.
+ *     wired to the exact contract signatures. Because create/lock PULL the user's
+ *     tokens / position NFT, the Lock button is GATED behind the required allowance:
+ *     an ERC-20 `approve(manager, amount)` on the token/LP path and an ERC-721
+ *     `approve(locker, tokenId)` on the v3-position path. It stays "Approve …" until
+ *     the approval is confirmed on-chain (read back via a live allowance/getApproved
+ *     read), so a user can never sign a create tx that would revert for missing
+ *     allowance. Disabled with an honest note when contracts aren't deployed or the
+ *     wallet is disconnected.
  *
  * Contract signatures: see `~/terminal/lockers/abis.ts`.
  */
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
-import { useMemo, useState } from 'react'
-import { useReadContract, useReadContracts, useWriteContract } from 'wagmi'
+import { useEffect, useMemo, useState } from 'react'
+import { useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { erc20Abi, formatUnits, isAddress, parseUnits, type Address } from '~/chains'
+import { erc20Abi, erc721Abi, formatUnits, isAddress, parseUnits, type Address, type Hash } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from '~/hooks/useAccount'
 import { StatCard } from '~/terminal/components/StatCard'
@@ -376,34 +383,75 @@ function TokenLpTab({
   const unlockUnix = toUnix(unlock)
   const amountValid = amount !== '' && Number(amount) > 0
   const futureUnlock = unlockUnix !== undefined && unlockUnix > Math.floor(Date.now() / 1000)
-  const canLock =
-    deployed &&
-    connected &&
-    validToken &&
-    amountValid &&
-    futureUnlock &&
-    decimals !== undefined &&
-    !isPending
+
+  // Allowance gate — createTokenLocker pulls the ERC-20/LP tokens, so the manager must
+  // hold a sufficient allowance first. Read the live allowance and require it to cover
+  // the amount before enabling the Lock write (otherwise the tx reverts + wastes gas).
+  const amountRaw = amountValid && decimals !== undefined ? parseUnits(amount, decimals) : undefined
+  const allowanceRead = useReadContract({
+    address: assume0xAddress(validToken ? tokenAddr : undefined),
+    chainId,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: owner && manager ? [owner, manager] : undefined,
+    query: { enabled: deployed && validToken && Boolean(owner && manager) },
+  })
+  const allowance = allowanceRead.data as bigint | undefined
+  const needsApproval = amountRaw !== undefined && allowance !== undefined && allowance < amountRaw
+
+  const [approveHash, setApproveHash] = useState<Hash | undefined>(undefined)
+  const approveReceipt = useWaitForTransactionReceipt({ hash: approveHash, chainId })
+  const approving = Boolean(approveHash) && approveReceipt.isLoading
+  useEffect(() => {
+    if (approveReceipt.isSuccess) {
+      void allowanceRead.refetch()
+      setApproveHash(undefined)
+    }
+  }, [approveReceipt.isSuccess, allowanceRead])
+
+  const baseValid = deployed && connected && validToken && amountValid && futureUnlock && decimals !== undefined
+  const canApprove = baseValid && needsApproval && !isPending && !approving
+  const canLock = baseValid && amountRaw !== undefined && allowance !== undefined && !needsApproval && !isPending
+
+  const onApprove = async (): Promise<void> => {
+    if (!manager || amountRaw === undefined) {
+      return
+    }
+    const hash = await writeContractAsync({
+      address: assume0xAddress(tokenAddr),
+      chainId,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [manager, amountRaw],
+    })
+    setApproveHash(hash)
+  }
 
   const onLock = async (): Promise<void> => {
     if (!connected) {
       onConnect()
       return
     }
-    if (!manager || !unlockUnix || decimals === undefined) {
+    if (!manager || !unlockUnix || amountRaw === undefined || needsApproval) {
       return
     }
-    // NOTE: an ERC-20 approve(manager, amount) is required before this pulls tokens;
-    // the approval step is added alongside the contracts/locker deploy.
     await writeContractAsync({
       address: manager,
       chainId,
       abi: tokenLockerManagerAbi,
       functionName: 'createTokenLocker',
-      args: [assume0xAddress(tokenAddr), parseUnits(amount, decimals), unlockUnix],
+      args: [assume0xAddress(tokenAddr), amountRaw, unlockUnix],
       value: lockFee,
     })
     setAmount('')
+  }
+
+  const onPrimary = (): void => {
+    if (!connected) {
+      onConnect()
+      return
+    }
+    void (needsApproval ? onApprove() : onLock())
   }
 
   const locks = useTokenLocks(manager, owner, chainId)
@@ -460,17 +508,27 @@ function TokenLpTab({
                 ? 'Not available on this network'
                 : !connected
                   ? 'Connect wallet to lock'
-                  : isPending
-                    ? 'Confirm in wallet…'
-                    : 'Lock'
+                  : !baseValid
+                    ? 'Lock'
+                    : allowance === undefined
+                      ? 'Checking approval…'
+                      : needsApproval
+                        ? approving
+                          ? 'Approving…'
+                          : isPending
+                            ? 'Confirm in wallet…'
+                            : 'Approve token'
+                        : isPending
+                          ? 'Confirm in wallet…'
+                          : 'Lock'
             }
-            onClick={() => void onLock()}
-            disabled={deployed ? !canLock && connected : true}
+            onClick={onPrimary}
+            disabled={!deployed ? true : !connected ? false : needsApproval ? !canApprove : !canLock}
           />
           {deployed ? (
             <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
-              Locking transfers the tokens to a dedicated lock contract until the unlock time. A one-time lock fee is
-              sent with the transaction.
+              You approve the token once, then lock. Locking transfers the tokens to a dedicated lock contract until the
+              unlock time; a one-time lock fee is sent with the lock transaction.
             </div>
           ) : null}
         </Panel>
@@ -720,27 +778,90 @@ function V3Tab({
 
   const unlockUnix = toUnix(unlock)
   const futureUnlock = unlockUnix !== undefined && unlockUnix > Math.floor(Date.now() / 1000)
-  const canLock = deployed && connected && validNftManager && validTokenId && futureUnlock && !isPending
+
+  // Approval gate — lock() pulls the position NFT via transferFrom, so the locker must
+  // be approved for this tokenId (or via an operator-wide approval) first. Read the
+  // live approval and require it before enabling the Lock write (else the tx reverts).
+  const nftManagerAddr = assume0xAddress(validNftManager ? effectiveNftManager : undefined)
+  const tokenIdBig = validTokenId ? BigInt(tokenId) : undefined
+  const getApprovedRead = useReadContract({
+    address: nftManagerAddr,
+    chainId,
+    abi: erc721Abi,
+    functionName: 'getApproved',
+    args: tokenIdBig !== undefined ? [tokenIdBig] : undefined,
+    query: { enabled: deployed && validNftManager && validTokenId },
+  })
+  const approvedForAllRead = useReadContract({
+    address: nftManagerAddr,
+    chainId,
+    abi: erc721Abi,
+    functionName: 'isApprovedForAll',
+    args: owner && locker ? [owner, locker] : undefined,
+    query: { enabled: deployed && validNftManager && Boolean(owner && locker) },
+  })
+  const approvedAddr = getApprovedRead.data as Address | undefined
+  const approvedForAll = approvedForAllRead.data as boolean | undefined
+  const nftApproved =
+    (locker !== undefined && approvedAddr !== undefined && approvedAddr.toLowerCase() === locker.toLowerCase()) ||
+    approvedForAll === true
+  const approvalKnown = approvedAddr !== undefined || approvedForAll !== undefined
+  const needsApproval = validNftManager && validTokenId && approvalKnown && !nftApproved
+
+  const [approveHash, setApproveHash] = useState<Hash | undefined>(undefined)
+  const approveReceipt = useWaitForTransactionReceipt({ hash: approveHash, chainId })
+  const approving = Boolean(approveHash) && approveReceipt.isLoading
+  useEffect(() => {
+    if (approveReceipt.isSuccess) {
+      void getApprovedRead.refetch()
+      void approvedForAllRead.refetch()
+      setApproveHash(undefined)
+    }
+  }, [approveReceipt.isSuccess, getApprovedRead, approvedForAllRead])
+
+  const baseValid = deployed && connected && validNftManager && validTokenId && futureUnlock
+  const canApprove = baseValid && needsApproval && !isPending && !approving
+  const canLock = baseValid && approvalKnown && nftApproved && !isPending
+
+  const onApprove = async (): Promise<void> => {
+    if (!locker || nftManagerAddr === undefined || tokenIdBig === undefined) {
+      return
+    }
+    const hash = await writeContractAsync({
+      address: nftManagerAddr,
+      chainId,
+      abi: erc721Abi,
+      functionName: 'approve',
+      args: [locker, tokenIdBig],
+    })
+    setApproveHash(hash)
+  }
 
   const onLock = async (): Promise<void> => {
     if (!connected) {
       onConnect()
       return
     }
-    if (!locker || !unlockUnix || !validTokenId) {
+    if (!locker || !unlockUnix || nftManagerAddr === undefined || tokenIdBig === undefined || needsApproval) {
       return
     }
-    // NOTE: the position NFT must be approved to the locker before lock() pulls it;
-    // the approval step is added alongside the contracts/locker deploy.
     await writeContractAsync({
       address: locker,
       chainId,
       abi: v3PositionLockerAbi,
       functionName: 'lock',
-      args: [assume0xAddress(effectiveNftManager), BigInt(tokenId), unlockUnix],
+      args: [nftManagerAddr, tokenIdBig, unlockUnix],
       value: lockFee,
     })
     setTokenId('')
+  }
+
+  const onPrimary = (): void => {
+    if (!connected) {
+      onConnect()
+      return
+    }
+    void (needsApproval ? onApprove() : onLock())
   }
 
   const locks = useV3Locks(locker, owner, chainId)
@@ -801,17 +922,27 @@ function V3Tab({
                 ? 'Not available on this network'
                 : !connected
                   ? 'Connect wallet to lock'
-                  : isPending
-                    ? 'Confirm in wallet…'
-                    : 'Lock position'
+                  : !baseValid
+                    ? 'Lock position'
+                    : !approvalKnown
+                      ? 'Checking approval…'
+                      : needsApproval
+                        ? approving
+                          ? 'Approving…'
+                          : isPending
+                            ? 'Confirm in wallet…'
+                            : 'Approve NFT'
+                        : isPending
+                          ? 'Confirm in wallet…'
+                          : 'Lock position'
             }
-            onClick={() => void onLock()}
-            disabled={deployed ? !canLock && connected : true}
+            onClick={onPrimary}
+            disabled={!deployed ? true : !connected ? false : needsApproval ? !canApprove : !canLock}
           />
           {deployed ? (
             <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
-              The position NFT is held by the locker until unlock. You can still collect the position&apos;s trading fees
-              while it is locked.
+              You approve the position NFT to the locker once, then lock. The NFT is held by the locker until unlock; you
+              can still collect its trading fees while it is locked.
             </div>
           ) : null}
         </Panel>

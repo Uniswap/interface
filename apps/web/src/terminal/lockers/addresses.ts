@@ -1,15 +1,18 @@
 /**
  * HookSwap Terminal — Locker contract addresses (config-driven).
  *
- * FACTS-ONLY: these are DELIBERATELY UNSET. The locker contracts
- * (HookSwapTokenLockerManager + HookSwapV3PositionLocker) are being built at
- * `contracts/locker/` and are NOT deployed yet on any chain. Until they are, every
- * entry stays `undefined` and the Locker screen renders an honest
- * "Lockers aren't deployed on {chain} yet" state — never fabricated data.
+ * FACTS-ONLY: the entries below are REAL deployed HookSwapTokenLockerManager /
+ * HookSwapV3PositionLocker contracts. The deployer used deterministic CREATE
+ * (same key + nonce across chains), so several chains share the same address —
+ * that is expected, not a copy/paste bug. Verified live on Robinhood (4663):
+ * `eth_getCode` returns real bytecode for both lockers and `lockFee()` on the
+ * manager returns 0.04 native (2026-07-10).
  *
- * When a chain's locker contracts deploy, fill its addresses below (from
- * `contracts/deployments/<chain>.json` or the locker deploy output) and the screen
- * lights up automatically — no other change needed.
+ * A chain with NO entry (or an `undefined` inner address) has no locker yet; the
+ * Locker screen then renders an honest "Lockers aren't deployed on {chain} yet"
+ * state — never fabricated data. When a new chain's lockers deploy, fill its
+ * addresses below (from `contracts/deployments/<chain>.json` or the locker deploy
+ * output) and the screen lights up automatically — no other change needed.
  */
 
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

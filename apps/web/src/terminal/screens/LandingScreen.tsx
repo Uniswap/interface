@@ -1258,7 +1258,6 @@ function LandingScreenBody(): JSX.Element {
       onClick: () => navigate('/swap'),
       children: [
         { label: 'Swap', onClick: () => navigate('/swap') },
-        { label: 'Limit', onClick: () => navigate('/terminal/limit') },
         { label: 'Widget builder', onClick: () => navigate('/widget') },
       ],
     },
@@ -1894,7 +1893,7 @@ function LandingScreenBody(): JSX.Element {
                 Trade like a pro.
               </div>
               <div style={{ fontFamily: SANS, fontSize: 15, color: terminalColors.ink2, marginTop: 12, maxWidth: 460 }}>
-                MEV protection, limit orders, and concentrated liquidity on every HookSwap pool — self-custodied, on-chain, on
+                MEV protection and concentrated liquidity on every HookSwap pool — self-custodied, on-chain, on
                 every supported chain.
               </div>
               <div style={{ display: 'flex', gap: 12, marginTop: 26, flexWrap: 'wrap' }}>
@@ -2145,7 +2144,7 @@ const FEATURE_GROUPS: ReadonlyArray<{ label: string; features: readonly FeatureM
   {
     label: 'TRADE',
     features: [
-      { icon: 'swap', title: 'Swap', desc: 'Market & limit orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
+      { icon: 'swap', title: 'Swap', desc: 'Market orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
       { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/markets' },
     ],
   },

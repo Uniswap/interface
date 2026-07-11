@@ -1,17 +1,24 @@
 /**
  * HookSwap Terminal — Referrals.
  *
- * Earn a share of the swap fee on every trade routed with your referral code.
+ * Reserve a referral code on-chain. NOTE: reward PAYOUTS are not live yet — swap
+ * routing does not attach referral codes today (`useCaptureRef` captures `?ref=` but
+ * nothing consumes it into the swap path yet), so no fees accrue through HookSwap and
+ * `claimable` structurally reads 0 until that routing ships. The screen registers /
+ * shares codes (real on-chain), but does NOT present a live-looking earnings flow.
  *
  * DATA POLICY (facts-only, no fabricated data — handoff hard rule):
  *   • The referral router is deployed on a subset of chains (see
  *     `~/terminal/referral/addresses.ts`). On a chain without a router the screen
  *     renders an honest "Referrals aren't live on {chain} yet" state — never mock
  *     data, never an error.
- *   • defaultFeeBps / codeOwner / claimable all come from REAL on-chain reads
- *     (wagmi `useReadContract`). Until they resolve they read "—" / skeletons.
- *   • registerCode / claim are REAL writes (`useWriteContract`) wired to the exact
- *     router ABI; disabled with an honest note when not deployed / disconnected.
+ *   • defaultFeeBps / codeOwner come from REAL on-chain reads (wagmi `useReadContract`).
+ *     Until they resolve they read "—" / skeletons.
+ *   • registerCode is a REAL write (`useWriteContract`) wired to the exact router ABI;
+ *     disabled with an honest note when not deployed / disconnected.
+ *   • The Earnings/Claim flow is intentionally NOT rendered: fees can't accrue until the
+ *     swap path attaches referral codes, so a claimable-reader + Claim button would be a
+ *     live-looking flow that always pays out 0. Shown as an honest "not live yet" note.
  *
  * The on-chain code is `keccak256(toBytes(<code>))` (bytes32); the shareable link
  * carries the PLAIN code as `?ref=<code>`, captured app-wide by `useCaptureRef`.
@@ -21,9 +28,8 @@
 import { useMemo, useState } from 'react'
 import { keccak256, toBytes, type Hex } from 'viem'
 import { useReadContract, useWriteContract } from 'wagmi'
-import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { erc20Abi, formatUnits, isAddress, zeroAddress, type Address } from '~/chains'
+import { zeroAddress, type Address } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from '~/hooks/useAccount'
 import { StatCard } from '~/terminal/components/StatCard'
@@ -193,29 +199,29 @@ function NotLiveNote({ chainLabel }: { chainLabel: string }): JSX.Element {
   )
 }
 
-function ConnectInline({ onConnect }: { onConnect: () => void }): JSX.Element {
+/**
+ * Honest Earnings state. Reward payouts are NOT live (the swap path doesn't attach the
+ * captured `?ref=` code, so no fees accrue and on-chain claimable is structurally 0). We
+ * do NOT render a token-input / claimable-reader / Claim button — that would be a
+ * live-looking flow that can never pay out. No fabricated numbers.
+ */
+function RewardsNotLiveNote(): JSX.Element {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10, padding: '10px 0' }}>
-      <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink2 }}>
-        Connect a wallet to register a code and track earnings.
-      </div>
-      <button
-        type="button"
-        onClick={onConnect}
-        style={{
-          fontFamily: SANS,
-          fontSize: 13,
-          fontWeight: 600,
-          color: terminalColors.btnInk,
-          background: terminalColors.brandGreen,
-          border: 'none',
-          padding: '9px 18px',
-          borderRadius: 11,
-          cursor: 'pointer',
-        }}
-      >
-        Connect wallet
-      </button>
+    <div
+      style={{
+        fontFamily: SANS,
+        fontSize: 12.5,
+        color: terminalColors.ink3Alt,
+        lineHeight: 1.5,
+        border: `1px dashed ${terminalColors.line}`,
+        borderRadius: 11,
+        background: terminalColors.panel,
+        padding: '11px 13px',
+      }}
+    >
+      Referral reward payouts aren&apos;t live yet. Swaps don&apos;t attach referral codes today, so no fees accrue through
+      HookSwap and there&apos;s nothing to claim. Reserve your code now — this panel will show real claimable earnings once
+      fee routing ships.
     </div>
   )
 }
@@ -399,67 +405,13 @@ export function ReferralsScreen(): JSX.Element {
             ? 'Code taken'
             : 'Register code'
 
-  /* ---------------------------------------------------------------- earnings / claim */
-  const wrappedNative = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
-  const [tokenAddr, setTokenAddr] = useState('')
-  const validToken = isAddress(tokenAddr)
-
-  const decimalsRead = useReadContract({
-    address: assume0xAddress(validToken ? tokenAddr : undefined),
-    chainId,
-    abi: erc20Abi,
-    functionName: 'decimals',
-    query: { enabled: deployed && validToken },
-  })
-  const tokenDecimals = decimalsRead.data as number | undefined
-
-  const symbolRead = useReadContract({
-    address: assume0xAddress(validToken ? tokenAddr : undefined),
-    chainId,
-    abi: erc20Abi,
-    functionName: 'symbol',
-    query: { enabled: deployed && validToken },
-  })
-  const tokenSymbol = symbolRead.data as string | undefined
-
-  const claimableRead = useReadContract({
-    address: router,
-    chainId,
-    abi: referralRouterAbi,
-    functionName: 'claimable',
-    args: hash && validToken ? [hash, assume0xAddress(tokenAddr) as Address] : undefined,
-    query: { enabled: deployed && Boolean(hash) && validToken },
-  })
-  const claimableAmt = claimableRead.data as bigint | undefined
-
-  const claimableLabel =
-    !deployed || !hash || !validToken
-      ? '—'
-      : claimableAmt !== undefined && tokenDecimals !== undefined
-        ? `${formatUnits(claimableAmt, tokenDecimals)} ${tokenSymbol ?? ''}`.trim()
-        : claimableRead.isLoading
-          ? '…'
-          : '—'
-
-  const { writeContractAsync: writeClaim, isPending: claimPending } = useWriteContract()
-  const hasClaimable = claimableAmt !== undefined && claimableAmt > 0n
-  const canClaim = deployed && connected && Boolean(hash) && validToken && hasClaimable && !claimPending
-  const onClaim = async (): Promise<void> => {
-    if (!connected) {
-      onConnect()
-      return
-    }
-    if (!router || !hash || !validToken) {
-      return
-    }
-    await writeClaim({
-      address: router,
-      chainId,
-      abi: referralRouterAbi,
-      functionName: 'claim',
-      args: [hash, assume0xAddress(tokenAddr) as Address],
-    })
-  }
+  /* ---------------------------------------------------------------- earnings / claim
+   * INTENTIONALLY NOT WIRED. Reward payouts are not live: the swap path does not attach
+   * the captured `?ref=` code (`getStoredReferrer` has no consumer), so no fees are ever
+   * routed to a code and on-chain `claimable` is structurally 0. Presenting a token-input
+   * + claimable-reader + Claim button here would be a live-looking flow that can never pay
+   * out — so the Earnings panel shows an honest "not live yet" state instead (no fabricated
+   * numbers, no pointless zero-value claim tx). Re-wire this when fee routing ships. */
 
   /* ---------------------------------------------------------------- stat tiles */
   const statusLoading = deployed && Boolean(hash) && ownerRead.isLoading && codeOwnerAddr === undefined
@@ -495,12 +447,13 @@ export function ReferralsScreen(): JSX.Element {
           Referrals
         </h1>
         <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: terminalColors.ink3Alt }}>
-          {feeValue && feeValue !== '—' ? `${feeValue} of swap fee` : ''}
+          {feeValue && feeValue !== '—' ? `${feeValue} configured fee · payouts not live` : ''}
         </span>
       </div>
       <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink2, marginBottom: 18, maxWidth: 600, lineHeight: 1.5 }}>
-        Register a referral code and earn a share of the swap fee on every trade routed with your code. Share your link —
-        the code is captured automatically when someone lands on HookSwap with it.
+        Reserve a referral code on-chain and share your link — the code is captured automatically when someone lands on
+        HookSwap with it. Note: reward payouts aren&apos;t live yet, so no fees accrue and there&apos;s nothing to claim
+        today. Your code is reserved for when fee routing ships.
       </div>
 
       {/* Stat tiles — real contract reads (honest "—" when not deployed / no code). */}
@@ -582,8 +535,8 @@ export function ReferralsScreen(): JSX.Element {
             <PrimaryButton label={registerLabel} onClick={() => void onRegister()} disabled={deployed ? !canRegister && connected : true} />
             {deployed ? (
               <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
-                Registering claims the code on-chain and sets your connected wallet as the claim wallet. Fees accrued to
-                the code are withdrawn to it.
+                Registering claims the code on-chain and sets your connected wallet as the claim wallet. Reward payouts
+                aren&apos;t live yet — once fee routing ships, fees accrued to the code will be withdrawable to this wallet.
               </div>
             ) : null}
           </Panel>
@@ -592,83 +545,8 @@ export function ReferralsScreen(): JSX.Element {
         {/* Earnings / claim */}
         <div style={{ flex: '1 1 340px', minWidth: 0 }}>
           <Panel>
-            <StepLabel index="02" label="Earnings" note={deployed ? undefined : 'not live'} />
-            {!deployed ? (
-              <NotLiveNote chainLabel={chainLabel} />
-            ) : !connected ? (
-              <ConnectInline onConnect={onConnect} />
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink2, lineHeight: 1.5 }}>
-                  Fees accrue per token. Enter a token address to see what your code has earned in that token, then claim
-                  it to your claim wallet.
-                </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 5 }}>
-                    <FieldLabel>Token address</FieldLabel>
-                    {wrappedNative?.address ? (
-                      <button
-                        type="button"
-                        onClick={() => setTokenAddr(wrappedNative.address)}
-                        style={{
-                          fontFamily: SANS,
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: terminalColors.greenDeep,
-                          background: 'transparent',
-                          border: 'none',
-                          cursor: 'pointer',
-                          padding: 0,
-                        }}
-                      >
-                        Use {wrappedNative.symbol ?? 'wrapped native'}
-                      </button>
-                    ) : null}
-                  </div>
-                  <TextField value={tokenAddr} onChange={setTokenAddr} placeholder="0x…" />
-                  {tokenAddr !== '' && !validToken ? (
-                    <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.redDown, marginTop: 5 }}>
-                      Enter a valid token address.
-                    </div>
-                  ) : null}
-                </div>
-
-                <div
-                  style={{
-                    border: `1px solid ${terminalColors.line}`,
-                    borderRadius: 12,
-                    background: terminalColors.panel,
-                    padding: '13px 14px',
-                  }}
-                >
-                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginBottom: 5 }}>
-                    Claimable{!hash ? ' (enter a code above)' : ''}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: MONO,
-                      fontSize: 20,
-                      fontWeight: 600,
-                      letterSpacing: '-0.02em',
-                      color: hasClaimable ? terminalColors.greenUp : terminalColors.ink,
-                    }}
-                  >
-                    {claimableLabel}
-                  </div>
-                </div>
-
-                <PrimaryButton
-                  label={claimPending ? 'Confirm in wallet…' : hasClaimable ? 'Claim' : 'Nothing to claim'}
-                  onClick={() => void onClaim()}
-                  disabled={!canClaim}
-                />
-                {hash && validToken && !hasClaimable && claimableAmt !== undefined ? (
-                  <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.faint, lineHeight: 1.5 }}>
-                    No fees accrued for this code in this token yet.
-                  </div>
-                ) : null}
-              </div>
-            )}
+            <StepLabel index="02" label="Earnings" note="not live yet" />
+            {!deployed ? <NotLiveNote chainLabel={chainLabel} /> : <RewardsNotLiveNote />}
           </Panel>
         </div>
       </div>

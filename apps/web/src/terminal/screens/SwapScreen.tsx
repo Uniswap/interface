@@ -21,7 +21,8 @@
  *
  * HookSwap ships v2 + v3 only (no Uniswap v4 / hooks — LOCKED decision). There is
  * NO hook UI on this screen: no hook-fee strip, no active-hook selector, no hook
- * config bar. The order ticket is Market / Limit only.
+ * config bar. The order ticket is Market / Send only — Limit orders are excluded
+ * (UniswapX-only, and unsupported on Robinhood, the launch chain).
  */
 import { Percent, Token } from '@uniswap/sdk-core'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
@@ -127,10 +128,12 @@ function TerminalTokenLogo({
 
 /* -------------------------------------------------------------- swap ticket */
 
-// v2/v3 only — Market + Limit + Send. (TWAMM is a v4 hook; excluded per LOCKED decision.)
-// "Limit" and "Send" route to their own Terminal screens (/terminal/limit, /terminal/send);
-// "Market" is this screen.
-const TICKET_TABS = ['Market', 'Limit', 'Send'] as const
+// v2/v3 only — Market + Send. (TWAMM is a v4 hook; excluded per LOCKED decision.)
+// "Send" routes to its own Terminal screen (/terminal/send); "Market" is this screen.
+// "Limit" is intentionally omitted: limit orders are UniswapX-only (a hosted off-chain
+// orderbook HookSwap does NOT run) and Robinhood — the launch chain — is not in
+// LIMIT_SUPPORTED_CHAINS, so a Limit tab would be a non-functional control.
+const TICKET_TABS = ['Market', 'Send'] as const
 
 function CurrencyField_Panel({
   side,
@@ -408,7 +411,7 @@ export function SwapTicket(): JSX.Element {
 
   return (
     <div style={{ width: 326, flexShrink: 0, background: terminalColors.bg, padding: 16 }}>
-      {/* Market / Limit tabs */}
+      {/* Market / Send tabs */}
       <div
         style={{
           display: 'flex',
@@ -421,9 +424,9 @@ export function SwapTicket(): JSX.Element {
       >
         {TICKET_TABS.map((tab) => {
           const active = tab === 'Market'
-          // "Limit"/"Send" are their own Terminal screens — clicking the tab routes
-          // there (real limit-order / real transfer flow) rather than duplicating a form here.
-          const to = tab === 'Limit' ? '/terminal/limit' : tab === 'Send' ? '/terminal/send' : undefined
+          // "Send" is its own Terminal screen — clicking the tab routes there (real
+          // transfer flow) rather than duplicating a form here.
+          const to = tab === 'Send' ? '/terminal/send' : undefined
           return (
             <span
               key={tab}

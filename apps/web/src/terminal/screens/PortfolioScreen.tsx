@@ -25,7 +25,7 @@
  * Disconnected → an honest "Connect wallet" empty state (B9 style). All loading / empty
  * states are real over the live hooks.
  */
-import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -439,7 +439,12 @@ export function PortfolioScreen(): JSX.Element {
   const balancesResult = usePortfolioData({ evmAddress: address })
 
   // Live LP positions (real) — feeds the open-positions table + fees KPI.
-  const positionsResult = useWalletPositions({ account: address ?? '', disabled: !address })
+  // Restricted to v2 + v3 (no v4 in HookSwap), mirroring PositionsScreen.
+  const positionsResult = useWalletPositions({
+    account: address ?? '',
+    disabled: !address,
+    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3],
+  })
 
   // Live activity (real local + indexed tx history) — feeds the compact activity card.
   const activity = useActivityData({

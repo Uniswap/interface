@@ -32,11 +32,13 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useAccount } from '~/hooks/useAccount'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const MONO = terminalFonts.mono
 const DISPLAY = terminalFonts.display
@@ -48,6 +50,16 @@ interface TokenOption {
   symbol: string
   logoUrl?: string
   price?: number
+  // Real on-chain identity, resolved from the token registry (never fabricated):
+  //   • `address` — the token's on-chain address for `chainId`, or the NATIVE sentinel
+  //     (`NATIVE_CHAIN_ID`) for the native currency (ETH on Robinhood). Undefined when
+  //     the option came from a source that carries no address for the active chain.
+  //   • `chainId` — the chain the address belongs to (the active chain).
+  // These let the Create hand-off preselect the pair in the position manager
+  // (`?currencyA=&currencyB=&chain=`); an option without an address falls back to
+  // forwarding just the fee tier.
+  address?: string
+  chainId?: UniverseChainId
 }
 
 interface FeeTier {
@@ -419,13 +431,19 @@ function PoolsScreenBody(): JSX.Element {
     const bySymbol = new Map<string, TokenOption>()
 
     for (const info of COMMON_BASES[chainId] ?? []) {
-      const symbol = info.currency.symbol
+      const { currency } = info
+      const symbol = currency.symbol
       if (!symbol || bySymbol.has(symbol)) {
         continue
       }
       bySymbol.set(symbol, {
         symbol,
         logoUrl: info.logoUrl ?? undefined,
+        // Real address from the app's own per-chain registry: the NATIVE sentinel for
+        // the native currency, else the token's on-chain address. Carried so the Create
+        // hand-off can preselect this token.
+        address: currency.isNative ? NATIVE_CHAIN_ID : currency.address,
+        chainId: currency.chainId as UniverseChainId,
       })
     }
 
@@ -433,6 +451,9 @@ function PoolsScreenBody(): JSX.Element {
       if (!token.symbol) {
         continue
       }
+      // The hosted feed lists a token across chains; take the entry for the active chain
+      // (if any) for its real on-chain address.
+      const chainToken = token.chainTokens.find((ct) => ct.chainId === chainId)
       const existing = bySymbol.get(token.symbol)
       if (existing) {
         // Enrich the static base with live data where it's missing.
@@ -442,12 +463,18 @@ function PoolsScreenBody(): JSX.Element {
         if (!existing.logoUrl && token.logoUrl) {
           existing.logoUrl = token.logoUrl
         }
+        if (!existing.address && chainToken?.address) {
+          existing.address = chainToken.address
+          existing.chainId = chainToken.chainId as UniverseChainId
+        }
         continue
       }
       bySymbol.set(token.symbol, {
         symbol: token.symbol,
         logoUrl: token.logoUrl || undefined,
         price: token.stats?.price,
+        address: chainToken?.address,
+        chainId: chainToken ? (chainToken.chainId as UniverseChainId) : undefined,
       })
     }
 
@@ -539,14 +566,23 @@ function PoolsScreenBody(): JSX.Element {
     // in hundredths of a bip: 0.05% → 500). The create route's URL migration expands
     // it into the full fee object.
     //
-    // NOT forwarded (the create route can't consume them from this form): the token
-    // pair — this form models tokens by SYMBOL only (`TokenOption` has no address or
-    // chainId), whereas the create route requires validated on-chain `currencyA`/
-    // `currencyB` addresses + a `chain` id; and the price range / deposit amounts —
-    // the route reads tick-based `priceRangeState` (minTick/maxTick) and a
-    // `depositState` keyed by PositionField, not the raw min/max prices + amounts this
-    // form holds. Forwarding those would require fabricating addresses/ticks, so only
-    // the fee tier is carried.
+    // The token PAIR is carried too, so the manager lands preselected on the pair the
+    // user configured here (not the route's ETH default). The create route
+    // (`useLiquidityUrlState` → `replaceStateParser`) parses:
+    //   • `currencyA` / `currencyB` — a validated on-chain address, or the NATIVE
+    //     sentinel for native ETH (see `parseCurrencyFromURLParameter`); this is exactly
+    //     the address `TokenOption.address` now carries, resolved from the token registry.
+    //   • `chain` — a chain URL-param SLUG (e.g. `robinhood`), NOT the numeric id — the
+    //     route parses it via `getChainIdFromChainUrlParam`, so we serialize with
+    //     `getChainUrlParam` (mirrors how the route itself serializes `chain`).
+    // Both tokens must resolve to a real address; if either is unresolved we forward
+    // feeTier ONLY (never fabricate an address) — the manager then falls back to its
+    // own defaults, matching the prior behavior.
+    //
+    // Still NOT forwarded: the price range / deposit amounts — the route reads
+    // tick-based `priceRangeState` (minTick/maxTick) + a `depositState` keyed by
+    // PositionField, not the raw min/max prices + amounts this form holds. Forwarding
+    // those would require fabricating ticks, so range/amounts are re-entered downstream.
     //
     // Explicit `/v3` path segment: the Terminal is Robinhood-only, which is v2/v3-only
     // (no v4 — locked decision). Without this, the create route's own default falls
@@ -555,6 +591,16 @@ function PoolsScreenBody(): JSX.Element {
     // are v3-style tiers, so v3 is also the semantically correct destination.
     const feeAmount = Math.round(FEE_TIERS[feeIndex].bps * 10000)
     const params = new URLSearchParams({ feeTier: String(feeAmount) })
+
+    const addressA = resolvedToken0?.address
+    const addressB = resolvedToken1?.address
+    const pairChainId = resolvedToken0?.chainId
+    if (addressA && addressB && pairChainId !== undefined) {
+      params.set('currencyA', addressA)
+      params.set('currencyB', addressB)
+      params.set('chain', getChainUrlParam(pairChainId))
+    }
+
     navigate(`/positions/create/v3?${params.toString()}`)
   }
 

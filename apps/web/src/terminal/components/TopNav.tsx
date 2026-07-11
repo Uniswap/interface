@@ -50,10 +50,9 @@ const NAV_SECTIONS: NavSection[] = [
     label: 'Trade',
     path: '/swap',
     navId: 'swap',
-    activeIds: ['swap', 'limit', 'widget-builder'],
+    activeIds: ['swap', 'widget-builder'],
     children: [
       { label: 'Swap', path: '/swap', navId: 'swap' },
-      { label: 'Limit', path: '/terminal/limit', navId: 'limit' },
       { label: 'Widget builder', path: '/widget', navId: 'widget-builder' },
     ],
   },
