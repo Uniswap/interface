@@ -4,10 +4,13 @@
  */
 
 import { randomUUID } from 'crypto'
-import { getChain, isSupportedChain } from './chains'
+import { ethers } from 'ethers'
+import { ChainConfig, getChain, isSupportedChain, resolveRpcUrl } from './chains'
 import { createRoutingProvider } from './routingClient'
 import { toTradingApiQuoteResponse } from './translate'
 import {
+  ApprovalRequest,
+  ApprovalResponse,
   CreateSwapRequest,
   CreateSwapResponse,
   GetSwappableTokensResponse,
@@ -95,6 +98,18 @@ export async function handleQuote(req: QuoteRequest): Promise<HandlerResult> {
   }
 }
 
+// ---- POST /v1/indicative_quote --------------------------------------------
+// The interface's `fetchIndicativeQuote` (createTradingApiClient.ts) is just a quote with
+// routingPreference=FASTEST, and it consumes the SAME `DiscriminatedQuoteResponse` (=QuoteResponse)
+// shape as `fetchQuote`. In this interface build it POSTs to /v1/quote, but the deployed client
+// can also hit /v1/indicative_quote — so we serve it here with identical behavior (same real
+// routing, same honest 404). No lighter/fabricated price: the indicative display reads
+// quote.input.amount / quote.output.amount off this exact response.
+
+export async function handleIndicativeQuote(req: QuoteRequest): Promise<HandlerResult> {
+  return handleQuote(req)
+}
+
 // ---- POST /v1/swap ---------------------------------------------------------
 // Takes the ClassicQuote /v1/quote just returned (echoed back by the client in `quote`) and
 // re-quotes with a recipient set so the SOR also computes real Universal Router calldata
@@ -177,6 +192,105 @@ export async function handleSwap(req: CreateSwapRequest): Promise<HandlerResult>
     return { status: 200, body }
   } catch (e) {
     return err(500, 'INTERNAL_ERROR', `Routing backend error: ${(e as Error).message}`)
+  }
+}
+
+// ---- POST /v1/check_approval ----------------------------------------------
+// Determines whether `walletAddress` must approve `token` to Permit2 before it can be swapped.
+// HookSwap swaps route through the Universal Router, which pulls the input token via Permit2
+// (canonical 0x0000…78BA3) — so the on-chain gate is the ERC20 allowance(walletAddress, permit2).
+// We read that allowance for real (no fabrication). Response mirrors the Trading API
+// ApprovalResponse the interface's useTokenApprovalInfo consumes:
+//   - native input           → { approval: null, cancel: null }      (no ERC20 approval possible)
+//   - allowance >= amount     → { approval: null, cancel: null }      (already approved)
+//   - allowance <  amount     → { approval: <approve(permit2, MaxUint256) tx>, cancel: null }
+
+/** Native sentinels the interface/Trading-API use for "the chain's native currency". */
+const NATIVE_APPROVAL_SENTINELS = new Set([
+  '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  '0x0000000000000000000000000000000000000000',
+])
+
+const ERC20_ALLOWANCE_ABI = [
+  'function allowance(address owner, address spender) view returns (uint256)',
+  'function approve(address spender, uint256 amount) returns (bool)',
+]
+
+/** One JsonRpcProvider per chain, reused across requests (avoids re-handshaking each call). */
+const approvalProviders = new Map<number, ethers.providers.JsonRpcProvider>()
+function getApprovalProvider(chain: ChainConfig): ethers.providers.JsonRpcProvider {
+  let p = approvalProviders.get(chain.chainId)
+  if (!p) {
+    p = new ethers.providers.JsonRpcProvider(resolveRpcUrl(chain), chain.chainId)
+    approvalProviders.set(chain.chainId, p)
+  }
+  return p
+}
+
+function noApprovalNeeded(requestId: string): HandlerResult<ApprovalResponse> {
+  // Interface branches on `data.approval === null` → ApprovalAction.None (see useTokenApprovalInfo).
+  return { status: 200, body: { requestId, approval: null, cancel: null } }
+}
+
+export async function handleCheckApproval(req: ApprovalRequest): Promise<HandlerResult> {
+  // Validate the request against the Trading API contract.
+  if (!req || typeof req !== 'object') {
+    return err(400, 'VALIDATION_ERROR', 'Request body must be a JSON ApprovalRequest object.')
+  }
+  if (!req.walletAddress || !ethers.utils.isAddress(req.walletAddress)) {
+    return err(400, 'VALIDATION_ERROR', '`walletAddress` must be a valid address.')
+  }
+  if (!req.token) {
+    return err(400, 'VALIDATION_ERROR', '`token` is required.')
+  }
+  if (!req.amount || !/^\d+$/.test(String(req.amount))) {
+    return err(400, 'VALIDATION_ERROR', '`amount` must be a positive base-unit integer string.')
+  }
+  if (!isSupportedChain(req.chainId)) {
+    return err(400, 'VALIDATION_ERROR', `Unsupported chainId ${req.chainId}.`)
+  }
+
+  const chain = getChain(req.chainId)!
+  const requestId = randomUUID()
+
+  // Native currency can't be (and needn't be) approved — the router wraps it in-tx.
+  if (NATIVE_APPROVAL_SENTINELS.has(req.token.toLowerCase())) {
+    return noApprovalNeeded(requestId)
+  }
+  if (!ethers.utils.isAddress(req.token)) {
+    return err(400, 'VALIDATION_ERROR', '`token` must be a valid ERC20 address or native sentinel.')
+  }
+
+  try {
+    const provider = getApprovalProvider(chain)
+    const erc20 = new ethers.Contract(req.token, ERC20_ALLOWANCE_ABI, provider)
+
+    // REAL on-chain read: current ERC20 allowance granted by the wallet to Permit2.
+    const allowance: ethers.BigNumber = await erc20.allowance(req.walletAddress, chain.permit2)
+    const needed = ethers.BigNumber.from(String(req.amount))
+
+    if (allowance.gte(needed)) {
+      return noApprovalNeeded(requestId)
+    }
+
+    // Insufficient → return a real approve(permit2, MaxUint256) transaction for the wallet to sign.
+    // MaxUint256 matches the Trading API default (approve max so future swaps need no re-approval).
+    const data = erc20.interface.encodeFunctionData('approve', [chain.permit2, ethers.constants.MaxUint256])
+
+    const body: ApprovalResponse = {
+      requestId,
+      approval: {
+        to: req.token,
+        from: req.walletAddress,
+        data,
+        value: '0',
+        chainId: chain.chainId,
+      },
+      cancel: null,
+    }
+    return { status: 200, body }
+  } catch (e) {
+    return err(500, 'INTERNAL_ERROR', `Failed to read on-chain allowance: ${(e as Error).message}`)
   }
 }
 

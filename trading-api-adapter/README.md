@@ -25,10 +25,19 @@ calls, under a `/v1` prefix (`TradingApiClient.getApiPathPrefix`):
 | Interface call | HTTP | This adapter |
 |---|---|---|
 | `fetchQuote` | `POST /v1/quote` | **implemented** → routes via SOR, returns `ClassicQuote` (routing=CLASSIC) |
+| `fetchIndicativeQuote` | `POST /v1/indicative_quote` (also served at `/v1/quote` w/ `routingPreference=FASTEST`) | **implemented** → same real routing + `QuoteResponse` shape as `/quote` (drives the "Fetching best price…" display) |
 | `fetchSwappableTokens` | `GET /v1/swappable_tokens?tokenIn=&tokenInChainId=` | **implemented** (returns wrapped-native; TODO full token list) |
 | `fetchSwap` | `POST /v1/swap` | **implemented** → re-quotes with recipient, returns real Universal Router calldata (`methodParameters`) |
-| `fetchCheckApproval` | `POST /v1/check_approval` | **TODO** (Permit2/ERC20 allowance check) |
+| `fetchCheckApproval` | `POST /v1/check_approval` | **implemented** → reads the real on-chain ERC20→Permit2 allowance; returns `approval:null` if sufficient, else an `approve(permit2, MaxUint256)` tx |
 | `submitOrder`/`fetchOrders`/plan/wallet/* | various | out of scope (UniswapX / 4337 / 7702 — not used by classic v2/v3 swaps) |
+
+`POST /v1/check_approval` request (subset): `walletAddress`, `token` (input token, or native
+sentinel `0x0000…`/`0xEeee…`), `amount` (base units), `chainId`. Response:
+`{ requestId, approval, cancel }` where `approval` is `null` when no approval is needed (native,
+or existing allowance ≥ `amount`) — the interface's `useTokenApprovalInfo` branches on
+`approval === null`. When insufficient, `approval` is a real ERC20 `approve(Permit2, MaxUint256)`
+transaction (`{ to: token, from: walletAddress, data, value:"0", chainId }`); `cancel` is always
+`null` (this adapter never revokes). Any failure returns a Trading-API-shaped JSON error, never HTML.
 
 `POST /v1/quote` request (subset used): `type` (EXACT_INPUT|EXACT_OUTPUT), `amount`
 (base units), `tokenIn`/`tokenOut`, `tokenInChainId`/`tokenOutChainId`, `swapper`,

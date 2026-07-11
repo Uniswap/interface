@@ -6,9 +6,10 @@
  *   HookSwap/packages/api/src/clients/trading/createTradingApiClient.ts (paths + verbs)
  *
  * We mirror (rather than import) so this service has no dependency on the interface build.
- * Kept intentionally minimal: only /quote (POST), /swap (POST), and /swappable_tokens (GET)
- * request/response shapes are needed for the interface's swap flow. /check_approval etc. are
- * documented in DEPLOY.md as further endpoints to add.
+ * Kept intentionally minimal: the request/response shapes needed for the interface's swap flow —
+ * /quote (POST), /indicative_quote (POST, same shape as /quote), /swap (POST),
+ * /check_approval (POST), and /swappable_tokens (GET). UniswapX / 4337 / 7702 order & plan
+ * endpoints are out of scope (not used by classic v2/v3 swaps).
  */
 
 // ---- Primitives -----------------------------------------------------------
@@ -207,6 +208,45 @@ export interface SwappableToken {
 export interface GetSwappableTokensResponse {
   requestId: string
   tokens: SwappableToken[]
+}
+
+// ---- Check approval (POST /v1/check_approval) -----------------------------
+// Mirrors ApprovalRequest.ts / ApprovalResponse.ts. The interface's fetchCheckApproval
+// (createTradingApiClient.ts) POSTs an ApprovalRequest and reads back an ApprovalResponse to
+// decide whether the input token must be approved to Permit2 before swapping.
+//
+// IMPORTANT (runtime contract): the generated ApprovalResponse types `approval`/`cancel` as a
+// non-null TransactionRequest, but the real Trading API returns `null` when NO approval is
+// needed, and the interface explicitly branches on `data.approval === null`
+// (packages/uniswap/.../useTokenApprovalInfo.ts). So this mirror types them as nullable — that
+// is the honest wire shape the interface consumes.
+
+export interface ApprovalRequest {
+  /** the wallet that will do the swap (spender check is for this address). */
+  walletAddress: string
+  /** input token address (0x…) or native sentinel (0x0000… / 0xEeee…). */
+  token: string
+  /** raw base-unit amount to be spent (string). */
+  amount: string
+  chainId: ChainId
+  urgency?: string
+  includeGasInfo?: boolean
+  tokenOut?: string
+  tokenOutChainId?: ChainId
+  // ...other Trading API fields are accepted but ignored by this adapter.
+  [k: string]: unknown
+}
+
+export interface ApprovalResponse {
+  requestId: string
+  /** The ERC20→Permit2 approve() tx, or null when the existing allowance already covers `amount`. */
+  approval: TransactionRequest | null
+  /** A revoke tx (only used by the revoke-then-approve flow). This adapter never revokes → null. */
+  cancel: TransactionRequest | null
+  /** OPTIONAL — only present when the adapter has a real number; never fabricated. */
+  gasFee?: string
+  /** OPTIONAL — only present when the adapter has a real number; never fabricated. */
+  cancelGasFee?: string
 }
 
 // ---- Errors (Trading-API-shaped) ------------------------------------------

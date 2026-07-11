@@ -11,8 +11,15 @@
  */
 
 import express, { NextFunction, Request, Response } from 'express'
-import { handleHealth, handleQuote, handleSwap, handleSwappableTokens } from './handlers'
-import { CreateSwapRequest, QuoteRequest } from './tradingApiTypes'
+import {
+  handleCheckApproval,
+  handleHealth,
+  handleIndicativeQuote,
+  handleQuote,
+  handleSwap,
+  handleSwappableTokens,
+} from './handlers'
+import { ApprovalRequest, CreateSwapRequest, QuoteRequest } from './tradingApiTypes'
 
 const app = express()
 app.use(express.json({ limit: '1mb' }))
@@ -74,14 +81,44 @@ function mount(prefix: string): void {
     res.status(result.status).json(result.body)
   })
 
-  app.post(`${prefix}/quote`, async (req: Request, res: Response) => {
-    const result = await handleQuote(req.body as QuoteRequest)
-    res.status(result.status).json(result.body)
+  app.post(`${prefix}/quote`, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await handleQuote(req.body as QuoteRequest)
+      res.status(result.status).json(result.body)
+    } catch (e) {
+      next(e)
+    }
   })
 
-  app.post(`${prefix}/swap`, async (req: Request, res: Response) => {
-    const result = await handleSwap(req.body as CreateSwapRequest)
-    res.status(result.status).json(result.body)
+  // Indicative quote: a FASTEST-preference quote for the "Fetching best price…" display.
+  // Same real routing + same QuoteResponse shape as /quote (the interface's fetchIndicativeQuote
+  // consumes the identical DiscriminatedQuoteResponse).
+  app.post(`${prefix}/indicative_quote`, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await handleIndicativeQuote(req.body as QuoteRequest)
+      res.status(result.status).json(result.body)
+    } catch (e) {
+      next(e)
+    }
+  })
+
+  app.post(`${prefix}/swap`, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await handleSwap(req.body as CreateSwapRequest)
+      res.status(result.status).json(result.body)
+    } catch (e) {
+      next(e)
+    }
+  })
+
+  // Permit2/ERC20 allowance check before a swap (reads real on-chain allowance).
+  app.post(`${prefix}/check_approval`, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await handleCheckApproval(req.body as ApprovalRequest)
+      res.status(result.status).json(result.body)
+    } catch (e) {
+      next(e)
+    }
   })
 }
 
@@ -92,6 +129,21 @@ mount('')
 app.get('/health', (_req: Request, res: Response) => {
   const result = handleHealth()
   res.status(result.status).json(result.body)
+})
+
+// Any unmatched path → Trading-API-shaped JSON 404 (never an HTML page). A stray HTML body
+// breaks the interface's fetch with "Unexpected token '<'"; keeping errors JSON avoids that.
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ errorCode: 'NOT_FOUND', detail: `No such endpoint: ${req.method} ${req.path}` })
+})
+
+// Final error handler: any thrown/rejected handler error becomes a JSON 500, not Express's
+// default HTML error page. (Signature MUST take 4 args for Express to treat it as an error mw.)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
+  // eslint-disable-next-line no-console
+  console.error('[hookswap-trading-api-adapter] unhandled error:', error)
+  res.status(500).json({ errorCode: 'INTERNAL_ERROR', detail: error?.message ?? 'Unhandled error' })
 })
 
 const PORT = Number(process.env.PORT || 4000)
