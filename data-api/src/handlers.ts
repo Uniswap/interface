@@ -77,7 +77,7 @@ const POOLS_TTL_MS = 15_000
 const poolsCache = new Map<number, { at: number; data: V2PairData[] }>()
 const v3PoolsCache = new Map<number, { at: number; data: V3PoolData[] }>()
 
-async function getV2PairsCached(chainId: number): Promise<V2PairData[]> {
+export async function getV2PairsCached(chainId: number): Promise<V2PairData[]> {
   const hit = poolsCache.get(chainId)
   const now = Date.now()
   if (hit && now - hit.at < POOLS_TTL_MS) {
@@ -88,7 +88,7 @@ async function getV2PairsCached(chainId: number): Promise<V2PairData[]> {
   return data
 }
 
-async function getV3PoolsCached(chainId: number): Promise<V3PoolData[]> {
+export async function getV3PoolsCached(chainId: number): Promise<V3PoolData[]> {
   const hit = v3PoolsCache.get(chainId)
   const now = Date.now()
   if (hit && now - hit.at < POOLS_TTL_MS) {

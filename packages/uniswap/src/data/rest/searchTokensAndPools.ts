@@ -13,7 +13,11 @@ import {
 } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel, SharedQueryClient } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { entryGatewayProdPostTransport } from 'uniswap/src/data/rest/base'
+// HookSwap: token/pool search is served by the HookSwap data-api (dataApiPostTransport →
+// dataApiBaseUrlV2, e.g. data.hookswap.org), NOT Uniswap's hosted entry-gateway SearchService — the
+// hosted one only knows Uniswap's chains and errors on HookSwap's custom chains (e.g. Robinhood 4663).
+// The data-api implements data.v1.SearchService.SearchTokens (see data-api/src/searchHandlers.ts).
+import { dataApiPostTransport } from 'uniswap/src/data/rest/base'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
@@ -42,7 +46,7 @@ export function useSearchTokensAndPoolsQuery<TSelectType>({
   select?: ((data: SearchTokensResponse) => TSelectType) | undefined
 }): UseQueryResult<TSelectType, ConnectError> {
   return useQuery(searchTokens, input, {
-    transport: entryGatewayProdPostTransport,
+    transport: dataApiPostTransport,
     enabled: !!input && enabled,
     select,
   })
@@ -74,7 +78,7 @@ export async function fetchTokenByAddress({
           size: 1,
           page: 1,
         },
-        { transport: entryGatewayProdPostTransport },
+        { transport: dataApiPostTransport },
       ),
       // Token data does not change often, so we can use stale data here.
       // This data will be refreshed when fetching the portfolio balances anyway.

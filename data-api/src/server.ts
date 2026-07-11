@@ -16,19 +16,23 @@ import { createServer, IncomingMessage, ServerResponse } from 'http'
 import type { ConnectRouter } from '@connectrpc/connect'
 import { connectNodeAdapter } from '@connectrpc/connect-node'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
+import { SearchService } from '@uniswap/client-data-api/dist/data/v1/search_connect'
 import { createDataApiImpl } from './handlers'
+import { createSearchApiImpl } from './searchHandlers'
 import { supportedChainIds } from './chains'
 import { startIngestLoop } from './indexer/ingest'
 
-// --- Connect router: register the DataApiService with our handlers ---
+// --- Connect router: register the DataApiService + SearchService with our handlers ---
 const routes = (router: ConnectRouter): void => {
   router.service(DataApiService, createDataApiImpl())
+  router.service(SearchService, createSearchApiImpl())
 }
 const rpcHandler = connectNodeAdapter({ routes })
 
-// The Connect service path always contains this marker; we slice the request URL from here so any
-// upstream prefix (`/v2`, `/`, an nginx sub-path, ...) is tolerated without extra config.
-const SERVICE_PATH_MARKER = '/data.v1.DataApiService/'
+// Every Connect service path under this package looks like `/data.v1.<Service>/<Method>`. We slice the
+// request URL from this marker so any upstream prefix (`/v2`, `/`, an nginx sub-path, ...) is tolerated
+// without extra config, for BOTH DataApiService and SearchService.
+const SERVICE_PATH_MARKER = '/data.v1.'
 
 // --- CORS (browser calls this with credentials: 'include') ---
 // Identical policy to trading-api-adapter/src/server.ts: strict exact-origin allowlist from
@@ -83,7 +87,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         service: 'hookswap-data-api',
         mode: 'onchain-current-state + event-indexer',
         indexer: process.env.INDEXER_ENABLED === 'true' ? 'enabled' : 'disabled',
-        implemented: ['listTokens', 'listTopPools'],
+        implemented: ['listTokens', 'listTopPools', 'searchTokens'],
         // listTokens/listTopPools return live on-chain pools/tokens plus real NATIVE-denominated metrics
         // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,
         // volume, apr) populate only once a stablecoin (USDG) anchor pool exists — otherwise left unset.

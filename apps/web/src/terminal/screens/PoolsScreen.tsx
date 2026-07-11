@@ -103,14 +103,21 @@ function fmtPrice(value: number): string {
 /* ------------------------------------------------------------------ token select */
 
 function TokenCircle({ token, size = 22 }: { token?: TokenOption; size?: number }): JSX.Element {
-  if (token?.logoUrl) {
+  // Track the URL that failed to load so a raw <img> 404 (e.g. Robinhood tokens with no
+  // logo in the Uniswap assets repo, like USDG) falls back to the symbol monogram below
+  // instead of the browser's broken-image glyph. Keyed by URL (not a boolean) so a newly
+  // selected token with a valid logo isn't suppressed by a previous token's failure.
+  const [erroredUrl, setErroredUrl] = useState<string | undefined>(undefined)
+  const logoUrl = token?.logoUrl
+  if (logoUrl && logoUrl !== erroredUrl) {
     return (
       <img
-        src={token.logoUrl}
+        src={logoUrl}
         alt=""
         width={size}
         height={size}
         style={{ borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }}
+        onError={() => setErroredUrl(logoUrl)}
       />
     )
   }
