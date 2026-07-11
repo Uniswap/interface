@@ -29,6 +29,7 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/d
 import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
@@ -38,6 +39,7 @@ import {
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { isSectionHeader, isLoadingItem } from 'uniswap/src/components/activity/utils'
@@ -429,6 +431,7 @@ export function PortfolioScreen(): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
+  const navigate = useNavigate()
   const address = account.address
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
@@ -636,6 +639,7 @@ export function PortfolioScreen(): JSX.Element {
               initialSort={{ columnId: 'value', direction: 'desc' }}
               skeletonRows={5}
               minWidth={560}
+              onRowClick={(p) => navigate(getPositionUrl(p))}
             />
           </Card>
         </div>

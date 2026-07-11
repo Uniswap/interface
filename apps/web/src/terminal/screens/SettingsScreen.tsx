@@ -41,7 +41,7 @@
  * "Default hook" row is REMOVED entirely (not "coming soon" — gone), per hard rule.
  */
 import { Percent } from '@uniswap/sdk-core'
-import { CSSProperties, ReactNode, useMemo, useState } from 'react'
+import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
 import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -625,9 +625,33 @@ export function SettingsScreen(): JSX.Element {
     [userSlippage, userDeadlineSec, storeAppearance],
   )
 
-  // Local DRAFT — seeded once from the stores; "Save" commits it back.
+  // Local DRAFT — initially seeded from the stores; "Save" commits it back.
   const [draft, setDraftState] = useState<TradingDraft>(committed)
   const setDraft = (patch: Partial<TradingDraft>): void => setDraftState((prev) => ({ ...prev, ...patch }))
+
+  // Re-seed the draft when the persisted store rehydrates late (redux-persist can
+  // resolve AFTER first render, changing `committed` from its initial defaults). Only
+  // re-seed while the draft is still pristine relative to the PREVIOUS committed value,
+  // so an in-progress user edit is never clobbered.
+  const prevCommittedRef = useRef<TradingDraft>(committed)
+  useEffect(() => {
+    const prev = prevCommittedRef.current
+    const committedChanged =
+      !slippageStringsEqual(prev.slippage, committed.slippage) ||
+      prev.deadlineMin !== committed.deadlineMin ||
+      prev.appearance !== committed.appearance
+    if (!committedChanged) {
+      return
+    }
+    prevCommittedRef.current = committed
+    setDraftState((current) => {
+      const draftPristine =
+        slippageStringsEqual(current.slippage, prev.slippage) &&
+        current.deadlineMin === prev.deadlineMin &&
+        current.appearance === prev.appearance
+      return draftPristine ? committed : current
+    })
+  }, [committed])
 
   const isDirty =
     !slippageStringsEqual(draft.slippage, committed.slippage) ||

@@ -286,7 +286,7 @@ export function ActivityScreen(): JSX.Element {
   if (!address) {
     return (
       <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
-        <Header count={0} onRefresh={() => undefined} />
+        <Header count={0} showRefresh={false} />
         <ConnectState onConnect={() => accountDrawer.open()} />
       </div>
     )
@@ -382,7 +382,15 @@ export function ActivityScreen(): JSX.Element {
 
 /* --------------------------------------------------------------- sub-pieces */
 
-function Header({ count, onRefresh }: { count: number; onRefresh: () => void }): JSX.Element {
+function Header({
+  count,
+  onRefresh,
+  showRefresh = true,
+}: {
+  count: number
+  onRefresh?: () => void
+  showRefresh?: boolean
+}): JSX.Element {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -415,23 +423,25 @@ function Header({ count, onRefresh }: { count: number; onRefresh: () => void }):
           </span>
         ) : null}
       </div>
-      <button
-        type="button"
-        onClick={onRefresh}
-        style={{
-          fontFamily: SANS,
-          fontSize: 12.5,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          background: terminalColors.bg,
-          border: `1px solid ${terminalColors.line}`,
-          padding: '8px 14px',
-          borderRadius: 9,
-          cursor: 'pointer',
-        }}
-      >
-        Refresh
-      </button>
+      {showRefresh ? (
+        <button
+          type="button"
+          onClick={onRefresh}
+          style={{
+            fontFamily: SANS,
+            fontSize: 12.5,
+            fontWeight: 600,
+            color: terminalColors.ink,
+            background: terminalColors.bg,
+            border: `1px solid ${terminalColors.line}`,
+            padding: '8px 14px',
+            borderRadius: 9,
+            cursor: 'pointer',
+          }}
+        >
+          Refresh
+        </button>
+      ) : null}
     </div>
   )
 }

@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { nativeOnChain, THOOK_ROBINHOOD, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import {
@@ -51,6 +52,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
@@ -232,12 +234,13 @@ const PRESET_PERCENTS = [25, 50, 75, 100] as const
 
 /**
  * 25 / 50 / 75 / Max quick-amount buttons for the Sell field. Each fraction is
- * computed from the REAL connected-wallet sell balance; "Max" uses
- * `maxAmountSpend` so native tokens leave a gas reserve (never the raw balance).
- * 25/50/75 are also capped at the spendable max (matches the app's
- * PresetAmountButton semantics). Clicking sets EXACT_INPUT with the computed
- * amount via the SAME setter the manual input uses (`onSetAmount` →
- * `onChangeSell`). Rendered only when connected with a positive sell balance.
+ * computed from the REAL connected-wallet sell balance. 25/50/75 are a raw
+ * fraction of the FULL balance (NOT gas-reserve-capped) so they stay usable on
+ * cheap-L2 dust balances below the ~0.01 native gas reserve `maxAmountSpend`
+ * withholds; only "Max" uses `maxAmountSpend` so native tokens still leave a gas
+ * reserve. Clicking sets EXACT_INPUT with the computed amount via the SAME setter
+ * the manual input uses (`onSetAmount` → `onChangeSell`). Rendered only when
+ * connected with a positive sell balance.
  */
 function AmountPresetRow({
   balance,
@@ -246,23 +249,25 @@ function AmountPresetRow({
   balance: CurrencyAmount<Currency>
   onSetAmount: (v: string) => void
 }): JSX.Element {
-  // Spendable ceiling: full balance for tokens; balance minus a gas reserve for native.
+  // "Max" ceiling: full balance for tokens; balance minus a gas reserve for native.
   const spendableMax = maxAmountSpend(balance)
+  const hasBalance = balance.greaterThan(0)
 
   return (
     <div style={{ display: 'flex', gap: 5, marginTop: 10 }}>
       {PRESET_PERCENTS.map((pct) => {
         const isMax = pct === 100
+        // 25/50/75 = raw fraction of the full balance (never gas-capped); Max = spendable.
         const amount = isMax ? spendableMax : balance.multiply(new Percent(pct, 100))
-        // Cap fractional presets at the spendable max (only bites for native w/ gas reserve).
-        const capped = !isMax && spendableMax && amount && amount.greaterThan(spendableMax) ? spendableMax : amount
-        const disabled = !capped || !capped.greaterThan(0)
+        // Fractions disable only on a zero balance; Max disables when nothing is spendable
+        // after the gas reserve (undefined/zero spendableMax).
+        const disabled = isMax ? !amount || !amount.greaterThan(0) : !hasBalance
         return (
           <button
             key={pct}
             type="button"
             disabled={disabled}
-            onClick={capped && !disabled ? () => onSetAmount(capped.toExact()) : undefined}
+            onClick={amount && !disabled ? () => onSetAmount(amount.toExact()) : undefined}
             style={{
               flex: 1,
               fontFamily: MONO,
@@ -648,6 +653,78 @@ export function SwapTicket(): JSX.Element {
 
 /* ------------------------------------------------------------------- body */
 
+/**
+ * Honest prompt shown when the connected wallet is on a chain HookSwap doesn't
+ * offer for trading yet. HookSwap launches on Robinhood Chain only (see
+ * TERMINAL_LIVE_CHAIN_IDS in TerminalApp.tsx). On any other connected chain the
+ * ticket seeds a native → canonical-token pair that has no HookSwap pool, so quotes
+ * return NO_ROUTE — rather than fail silently, guide the user to switch. Non-blocking:
+ * the ticket still renders below (e.g. an X Layer wallet's seeded test pair keeps
+ * working), the banner just points to the live launch chain. Reuses the same
+ * `useSelectChain` wallet chain-switch action the Terminal's top-bar switcher uses.
+ */
+function WrongChainBanner(): JSX.Element | null {
+  const account = useAccount()
+  const selectChain = useSelectChain()
+  const [switching, setSwitching] = useState(false)
+  const connectedChainId = account.chainId
+
+  // Only relevant once a wallet is connected on a non-Robinhood chain.
+  if (connectedChainId === undefined || connectedChainId === UniverseChainId.Robinhood) {
+    return null
+  }
+
+  return (
+    <div
+      role="status"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 10,
+        margin: '0 0 12px',
+        padding: '10px 14px',
+        background: terminalColors.panel2,
+        border: `1px solid ${terminalColors.line2}`,
+        borderRadius: 12,
+      }}
+    >
+      <span style={{ fontFamily: terminalFonts.sans, fontSize: 12.5, color: terminalColors.ink2, lineHeight: 1.45 }}>
+        Your wallet is on <strong style={{ color: terminalColors.ink }}>{getChainLabel(connectedChainId)}</strong>.
+        HookSwap trades on Robinhood Chain.
+      </span>
+      <button
+        type="button"
+        disabled={switching}
+        onClick={async () => {
+          setSwitching(true)
+          try {
+            await selectChain(UniverseChainId.Robinhood)
+          } finally {
+            setSwitching(false)
+          }
+        }}
+        style={{
+          fontFamily: terminalFonts.sans,
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: terminalColors.btnInk,
+          background: terminalColors.brandGreen,
+          border: 'none',
+          padding: '8px 14px',
+          borderRadius: 9,
+          cursor: switching ? 'not-allowed' : 'pointer',
+          opacity: switching ? 0.6 : 1,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {switching ? 'Switching…' : 'Switch to Robinhood Chain'}
+      </button>
+    </div>
+  )
+}
+
 function SwapScreenBody(): JSX.Element {
   const derived = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencies: s.currencies,
@@ -667,6 +744,7 @@ function SwapScreenBody(): JSX.Element {
       <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 8px 28px' }}>
           <div style={{ width: 326, maxWidth: '100%' }}>
+            <WrongChainBanner />
             <TerminalSwapReviewFlow>
               <SwapTicket />
             </TerminalSwapReviewFlow>
@@ -678,15 +756,18 @@ function SwapScreenBody(): JSX.Element {
 
   return (
     <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
-      <div style={{ display: 'flex', flex: 1, minHeight: 660 }}>
-        <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
-        {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
-            uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
-            the row height and steal the chart's width / bottom-align the ticket. */}
-        <div style={{ width: 326, flexShrink: 0, alignSelf: 'flex-start' }}>
-          <TerminalSwapReviewFlow>
-            <SwapTicket />
-          </TerminalSwapReviewFlow>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 660 }}>
+        <WrongChainBanner />
+        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+          <TerminalChartPanel inputCurrency={inputCurrency} outputCurrency={outputCurrency} />
+          {/* Fixed-width, top-aligned wrapper: TransactionModal (rendered inside the flow)
+              uses <Flex fill justifyContent="flex-end">, which would otherwise stretch to
+              the row height and steal the chart's width / bottom-align the ticket. */}
+          <div style={{ width: 326, flexShrink: 0, alignSelf: 'flex-start' }}>
+            <TerminalSwapReviewFlow>
+              <SwapTicket />
+            </TerminalSwapReviewFlow>
+          </div>
         </div>
       </div>
     </SwapDependenciesStoreContextProvider>

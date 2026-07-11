@@ -47,6 +47,7 @@ import type { TimestampedAmount, TokenStats } from '@uniswap/client-explore/dist
 import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { ReactNode, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -752,6 +753,7 @@ function TopPoolsByTvlList({
 /* ------------------------------------------------------------------ the body */
 
 function AnalyticsScreenBody(): JSX.Element {
+  const navigate = useNavigate()
   const [timeframe, setTimeframe] = useState<Timeframe>('30D')
   const [chartMetric, setChartMetric] = useState<ChartMetric>('tvl')
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -1089,10 +1091,12 @@ function AnalyticsScreenBody(): JSX.Element {
               loading={poolsLoading && !allocation}
               error={poolsError}
             />
-            <a
-              href="/markets"
+            <button
+              type="button"
+              onClick={() => navigate('/markets')}
               style={{
                 display: 'block',
+                width: '100%',
                 textAlign: 'center',
                 marginTop: 18,
                 fontFamily: SANS,
@@ -1104,10 +1108,11 @@ function AnalyticsScreenBody(): JSX.Element {
                 padding: '11px 16px',
                 borderRadius: 12,
                 textDecoration: 'none',
+                cursor: 'pointer',
               }}
             >
               Browse markets
-            </a>
+            </button>
           </Card>
         </div>
       </div>
