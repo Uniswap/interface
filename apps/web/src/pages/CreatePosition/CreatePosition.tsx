@@ -35,6 +35,7 @@ import {
 import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 function CreatePositionInner({
   currencyInputs,
@@ -110,7 +111,7 @@ const Toolbar = () => {
 
   const [showResetModal, setShowResetModal] = useState(false)
 
-  const { reset: resetMultichainState } = useMultichainContext()
+  const { reset: resetMultichainState, chainId } = useMultichainContext()
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
@@ -153,6 +154,9 @@ const Toolbar = () => {
     () =>
       [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
         .filter((version) => version !== protocolVersion)
+        // Don't offer v4 as an option on chains that don't support it (e.g. Robinhood) —
+        // selecting it would land the user on the "not supported for v4 pools" dead end.
+        .filter((version) => version !== ProtocolVersion.V4 || !isV4UnsupportedChain(chainId))
         .map((version) => (
           <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
             <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
@@ -160,7 +164,7 @@ const Toolbar = () => {
             </Flex>
           </TouchableArea>
         )),
-    [handleVersionChange, protocolVersion, t],
+    [handleVersionChange, protocolVersion, chainId, t],
   )
 
   return (
@@ -251,7 +255,12 @@ function CreatePositionContent({
   paramsProtocolVersion: ProtocolVersion | undefined
   autoSlippageTolerance: number
 }) {
-  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
+  // HookSwap chains that don't support v4 (e.g. Robinhood) must never default new
+  // positions into the v4 flow — it dead-ends on "This chain is not supported for
+  // v4 pools." Fall back to v3 (v2/v3-only chains still support v3).
+  const initialProtocolVersion =
+    paramsProtocolVersion ??
+    (isV4UnsupportedChain(initialInputs.chainId) ? ProtocolVersion.V3 : ProtocolVersion.V4)
 
   const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
     tokenA: initialInputs.tokenA,

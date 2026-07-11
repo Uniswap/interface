@@ -547,9 +547,15 @@ function PoolsScreenBody(): JSX.Element {
     // `depositState` keyed by PositionField, not the raw min/max prices + amounts this
     // form holds. Forwarding those would require fabricating addresses/ticks, so only
     // the fee tier is carried.
+    //
+    // Explicit `/v3` path segment: the Terminal is Robinhood-only, which is v2/v3-only
+    // (no v4 — locked decision). Without this, the create route's own default falls
+    // back to v4 for chains it can't otherwise infer a version for, which 404s into
+    // "This chain is not supported for v4 pools." These fee tiers (0.01/0.05/0.30/1.00%)
+    // are v3-style tiers, so v3 is also the semantically correct destination.
     const feeAmount = Math.round(FEE_TIERS[feeIndex].bps * 10000)
     const params = new URLSearchParams({ feeTier: String(feeAmount) })
-    navigate(`/positions/create?${params.toString()}`)
+    navigate(`/positions/create/v3?${params.toString()}`)
   }
 
   return (
