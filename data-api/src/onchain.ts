@@ -114,6 +114,21 @@ export async function getTokenMeta(chainId: number, address: string): Promise<To
   return { chainId, address, symbol, name, decimals, isWrappedNative: false }
 }
 
+/**
+ * Live ERC-20 `balanceOf(owner)` for one token on a chain — the raw on-chain balance (BigNumber, in the
+ * token's base units). Throws on RPC/contract error so callers can decide how to degrade (the portfolio
+ * handler catches per-token and skips, never fabricating a balance).
+ */
+export async function getErc20Balance(chainId: number, token: string, owner: string): Promise<BigNumber> {
+  const c = new ethers.Contract(token, ERC20_ABI, getProvider(chainId))
+  return (await c.balanceOf(owner)) as BigNumber
+}
+
+/** Live native-coin balance (`eth_getBalance`) for an address on a chain — raw wei (BigNumber). */
+export async function getNativeBalance(chainId: number, owner: string): Promise<BigNumber> {
+  return getProvider(chainId).getBalance(owner)
+}
+
 /** CREATE2 v2 pair address for (tokenA, tokenB) under the given factory. Order-independent. */
 export function computePairAddress(factory: string, tokenA: string, tokenB: string): string {
   const [token0, token1] =

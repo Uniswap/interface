@@ -9,35 +9,47 @@
  *   - listTopPools → each requested chain's live v2 pools (CREATE2-discovered, real reserves) and v3
  *                    pools (PoolCreated-log-discovered, real balances), with USD-anchored PoolStats
  *                    from the indexer once a stablecoin anchor pool exists (see buildPoolStats).
+ *   - getPortfolio → a connected wallet's live on-chain token holdings on each requested chain: the same
+ *                    token set listTokens surfaces, batch-read via balanceOf / eth_getBalance, returning
+ *                    only non-zero balances with real raw + human quantities. USD (priceUsd/valueUsd) is
+ *                    anchor-gated (unset until a WETH/USDG pool exists — see handleGetPortfolio).
  *
  * The event indexer EXISTS and is deployed (gated on INDEXER_ENABLED): it tails Swap/Sync events into
  * SQLite and feeds the TokenStats/PoolStats above. What it powers NOW is native metrics; USD-denominated
  * fields stay unset until a stablecoin (USDG) anchor pool exists on the chain.
  *
  * STUBS (valid empty proto responses, NOT errors — so the interface degrades gracefully):
- *   - everything else (portfolio, wallet balances, transactions, positions, charts, rewards,
- *     protocol stats, token prices, RWAs, token-factory, reports, ...). These need higher-level
- *     time-series / protocol-stats endpoints (NOT the event indexer, which is live) and/or a USD price
- *     oracle. Returning an empty-but-valid Message keeps the frontend from crashing (it renders honest
- *     empty/"—" states).
+ *   - everything else (wallet balances, transactions, positions, charts, rewards, protocol stats, token
+ *     prices, RWAs, token-factory, reports, ...). These need higher-level time-series / protocol-stats
+ *     endpoints (NOT the event indexer, which is live) and/or a USD price oracle. Returning an
+ *     empty-but-valid Message keeps the frontend from crashing (it renders honest empty/"—" states).
+ *     NOTE: net worth / 24h PnL on the Terminal Portfolio come from GetWalletBalances (still stubbed,
+ *     USD-aggregate-only), NOT GetPortfolio — they stay "—" until a USD anchor pool exists.
  *
  * NO FABRICATED DATA: value/USD/volume fields we can't source truthfully are left unset (proto
  * default / undefined), never invented. See the pricing note in onchain.ts.
  */
 
 import type { ServiceImpl } from '@connectrpc/connect'
+import { BigNumber, ethers } from 'ethers'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import {
+  GetPortfolioRequest,
+  GetPortfolioResponse,
   ListTokensRequest,
   ListTokensResponse,
   ListTopPoolsRequest,
   ListTopPoolsResponse,
+  Platform,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import {
+  Amount,
+  Balance,
   ChainToken,
   MultichainToken,
   Pool,
   PoolStats,
+  Portfolio,
   TimestampedValue,
   Token,
   TokenStats,
@@ -45,7 +57,15 @@ import {
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
-import { getV2Pairs, getV3Pools, TokenMeta, V2PairData, V3PoolData } from './onchain'
+import {
+  getErc20Balance,
+  getNativeBalance,
+  getV2Pairs,
+  getV3Pools,
+  TokenMeta,
+  V2PairData,
+  V3PoolData,
+} from './onchain'
 import {
   get24hPriceChangeNative,
   getPoolTvlUsd,
@@ -539,6 +559,266 @@ async function handleListTopPools(req: ListTopPoolsRequest): Promise<ListTopPool
   return new ListTopPoolsResponse({ pools, nextPageToken: '' })
 }
 
+// ---------- REAL: getPortfolio ----------
+
+/**
+ * One token in a wallet's holdings on a chain, plus the flags needed to price it against the USD anchor.
+ * Built from the SAME token set listTokens surfaces: native + wrapped-native + seeded ERC-20s + tokens
+ * discovered in the chain's live v2/v3 pools (metadata read on-chain). `address` is '' for the native
+ * asset (the native sentinel the interface treats as native — buildCurrency maps an empty address to
+ * `nativeOnChain`).
+ */
+interface PortfolioTokenEntry {
+  token: Token
+  address: string
+  decimals: number
+  isNative: boolean
+  isWrappedNative: boolean
+}
+
+/**
+ * Collect the candidate token set for a wallet on one chain — identical sources to listTokens. Every
+ * token here is real (static-verified or on-chain-discovered); balances are read separately. Never
+ * throws: an RPC failure on the pool discovery just yields the static tokens (native + wrapped + seeded).
+ */
+async function collectPortfolioTokens(chainId: number): Promise<PortfolioTokenEntry[]> {
+  const chain = getChain(chainId)
+  if (!chain) {
+    return []
+  }
+  const entries: PortfolioTokenEntry[] = []
+  const seen = new Set<string>()
+
+  // Native asset (no on-chain contract → empty address, type NATIVE).
+  entries.push({
+    token: new Token({
+      chainId,
+      address: '',
+      symbol: chain.nativeSymbol,
+      name: chain.nativeSymbol,
+      decimals: chain.nativeDecimals,
+      type: TokenType.NATIVE,
+    }),
+    address: '',
+    decimals: chain.nativeDecimals,
+    isNative: true,
+    isWrappedNative: false,
+  })
+
+  const pushErc20 = (meta: TokenMeta): void => {
+    const key = meta.address.toLowerCase()
+    if (!key || seen.has(key)) {
+      return
+    }
+    seen.add(key)
+    entries.push({
+      token: toProtoErc20Token(meta),
+      address: meta.address,
+      decimals: meta.decimals,
+      isNative: false,
+      isWrappedNative: meta.isWrappedNative,
+    })
+  }
+
+  // Wrapped-native + seeded tokens (static, verified).
+  pushErc20({
+    chainId,
+    address: chain.wrappedNative.address,
+    symbol: chain.wrappedNative.symbol,
+    name: chain.wrappedNative.name,
+    decimals: chain.wrappedNative.decimals,
+    isWrappedNative: true,
+  })
+  for (const t of chain.seededTokens ?? []) {
+    pushErc20({ chainId, address: t.address, symbol: t.symbol, name: t.name, decimals: t.decimals, isWrappedNative: false })
+  }
+
+  // Tokens discovered in the chain's live v2 / v3 pools (metadata read on-chain).
+  try {
+    for (const p of await getV2PairsCached(chainId)) {
+      pushErc20(p.token0)
+      pushErc20(p.token1)
+    }
+  } catch {
+    // RPC down — keep the static tokens already collected.
+  }
+  try {
+    for (const p of await getV3PoolsCached(chainId)) {
+      pushErc20(p.token0)
+      pushErc20(p.token1)
+    }
+  } catch {
+    // Non-fatal — static + v2 tokens still returned.
+  }
+
+  return entries
+}
+
+/**
+ * USD spot price of ONE portfolio token, gated entirely on the chain's USD anchor (getUsdPerNative).
+ * Returns undefined (→ valueUsd left unset, honest "—") unless the chain has an ingested wrapped-native/
+ * stablecoin anchor pool. Native + wrapped-native are priced directly at usdPerNative; any other ERC-20
+ * is priced via its representative wrapped-native v2 pool's reserve-derived native spot × usdPerNative
+ * (same orientation as buildTokenStats). NOTHING is fabricated: no anchor / no native pool / any DB
+ * failure → undefined. Lights up automatically once a WETH/USDG pool is seeded + indexed.
+ */
+function priceUsdForEntry(
+  db: SqliteDatabase | undefined,
+  chainId: number,
+  entry: PortfolioTokenEntry,
+  usdPerNative: number | undefined,
+  pairs: V2PairData[],
+): number | undefined {
+  if (!db || usdPerNative === undefined) {
+    return undefined
+  }
+  // Native and wrapped-native are 1:1 in value → priced directly at the anchor's usdPerNative.
+  if (entry.isNative || entry.isWrappedNative) {
+    return usdPerNative
+  }
+  const chain = getChain(chainId)
+  if (!chain) {
+    return undefined
+  }
+  const wnative = chain.wrappedNative.address.toLowerCase()
+  const addr = entry.address.toLowerCase()
+  // Representative pool = this token's pair vs the chain's wrapped-native.
+  const pair = pairs.find((p) => {
+    const a0 = p.token0.address.toLowerCase()
+    const a1 = p.token1.address.toLowerCase()
+    return (a0 === addr && a1 === wnative) || (a1 === addr && a0 === wnative)
+  })
+  if (!pair) {
+    return undefined
+  }
+  try {
+    const spot = getSpotPriceNative(db, chainId, pair.pairAddress.toLowerCase())
+    if (!spot) {
+      return undefined
+    }
+    const tokenIsToken0 = pair.token0.address.toLowerCase() === addr
+    const priceInNative = tokenIsToken0 ? spot.priceToken0InToken1 : spot.priceToken1InToken0
+    const priceUsd = getTokenPriceUsd(db, chainId, priceInNative)
+    return priceUsd !== undefined && priceUsd > 0 && Number.isFinite(priceUsd) ? priceUsd : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * REAL portfolio: a connected wallet's live on-chain token holdings on each requested supported chain.
+ *
+ * For the request's EVM address(es), on each chain we take the SAME token set listTokens surfaces and
+ * batch-read the raw on-chain balance of each (native via eth_getBalance, ERC-20 via balanceOf), summed
+ * across the provided addresses. Only tokens with a NON-ZERO balance are returned. `amount.raw` is the
+ * exact base-unit balance; `amount.amount` is the decimal-adjusted human quantity (a double, matching
+ * the proto + the interface's `convertRestBalanceToPortfolioBalance`, which gates on amount.amount > 0).
+ *
+ * USD is anchor-gated: `priceUsd`/`valueUsd` populate ONLY when the chain has an ingested wrapped-native/
+ * stablecoin anchor pool (see priceUsdForEntry). Until that pool is seeded there is NO truthful USD price
+ * source on these chains, so every USD field is left UNSET (proto default 0) — the interface renders an
+ * honest "—"/$0 for per-token value while token QUANTITIES still populate (and flow into the token
+ * selector, account drawer, and any quantity consumer). NEVER fabricated; the USD fields light up
+ * automatically once a WETH/USDG pool exists. Aggregate portfolio totals (totalValueUsd/…change) are
+ * likewise left unset until the anchor exists.
+ *
+ * NOTE on the Terminal Portfolio screen specifically: its net-worth/24h KPIs read GetWalletBalances (a
+ * different, USD-aggregate-only method, still stubbed) and its allocation donut is weighted by USD value
+ * (buildAllocation filters valueUsd > 0). Both therefore stay "—"/empty until the USD anchor exists —
+ * NOT because of this handler. This handler makes the real per-token quantities available; visible USD on
+ * that screen is gated on liquidity (the WETH/USDG anchor pool), by design.
+ *
+ * `pricePercentChange1d` is left unset: it is a USD price change in the UI, and no USD price history is
+ * sourced here — reusing a native ratio would mislabel it (same rule as buildTokenStats).
+ */
+async function handleGetPortfolio(req: GetPortfolioRequest): Promise<GetPortfolioResponse> {
+  const chainIds = resolveChainIds(req.chainIds)
+  // The interface sends the wallet as walletAccount.platformAddresses (see @universe/api transformInput).
+  // We read EVM addresses only — these chains are all EVM; SVM (Solana) is not a HookSwap chain.
+  const evmAddresses = (req.walletAccount?.platformAddresses ?? [])
+    .filter((p) => p.platform === Platform.EVM && !!p.address)
+    .map((p) => p.address)
+  if (evmAddresses.length === 0) {
+    // No EVM address → honest empty portfolio (valid, not an error).
+    return new GetPortfolioResponse({ portfolio: new Portfolio() })
+  }
+
+  // Indexer DB handle for the USD anchor. Unavailable (e.g. better-sqlite3 not installed) → balances
+  // are still returned, just without USD. Never throw, never fabricate.
+  let db: SqliteDatabase | undefined
+  try {
+    db = getDb()
+  } catch {
+    db = undefined
+  }
+
+  const perChainBalances = await Promise.all(
+    chainIds.map(async (chainId): Promise<Balance[]> => {
+      const entries = await collectPortfolioTokens(chainId)
+      // v2 pairs (cached) for per-token USD pricing against the wrapped-native; empty on RPC failure.
+      let pairs: V2PairData[] = []
+      try {
+        pairs = await getV2PairsCached(chainId)
+      } catch {
+        pairs = []
+      }
+      let usdPerNative: number | undefined
+      if (db) {
+        try {
+          usdPerNative = getUsdPerNative(db, chainId)
+        } catch {
+          usdPerNative = undefined
+        }
+      }
+
+      const balances = await Promise.all(
+        entries.map(async (entry): Promise<Balance | undefined> => {
+          // Sum the raw balance across every provided EVM address (the interface sends one).
+          let total = BigNumber.from(0)
+          for (const owner of evmAddresses) {
+            try {
+              const bal = entry.isNative
+                ? await getNativeBalance(chainId, owner)
+                : await getErc20Balance(chainId, entry.address, owner)
+              total = total.add(bal)
+            } catch {
+              // RPC hiccup / non-conforming contract for this owner+token — skip it, never fabricate.
+            }
+          }
+          if (total.isZero()) {
+            return undefined
+          }
+          const amount = new Amount({
+            raw: total.toString(),
+            amount: Number(ethers.utils.formatUnits(total, entry.decimals)),
+          })
+          const balance = new Balance({ token: entry.token, amount })
+          // USD (anchor-gated). Left unset (0) when there's no anchor → honest "—" in the UI.
+          const priceUsd = priceUsdForEntry(db, chainId, entry, usdPerNative, pairs)
+          if (priceUsd !== undefined) {
+            balance.priceUsd = priceUsd
+            balance.valueUsd = amount.amount * priceUsd
+          }
+          return balance
+        }),
+      )
+      return balances.filter((b): b is Balance => b !== undefined)
+    }),
+  )
+
+  const balances = perChainBalances.flat()
+  const portfolio = new Portfolio({ balances })
+
+  // Aggregate totals are USD-denominated → populate ONLY when every returned balance carries a real
+  // valueUsd (i.e. the anchor exists). Otherwise leave totalValueUsd unset (0) → honest "—" net worth.
+  // (totalValue* change fields need USD price history we don't source → always left unset.)
+  if (balances.length > 0 && balances.every((b) => b.valueUsd > 0)) {
+    portfolio.totalValueUsd = balances.reduce((sum, b) => sum + b.valueUsd, 0)
+  }
+
+  return new GetPortfolioResponse({ portfolio })
+}
+
 // ---------- Build the full ServiceImpl: 2 real handlers + honest empty stubs for the rest ----------
 
 /**
@@ -559,6 +839,7 @@ export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   // Real implementations override the stubs.
   impl.listTokens = (req: unknown) => handleListTokens(req as ListTokensRequest)
   impl.listTopPools = (req: unknown) => handleListTopPools(req as ListTopPoolsRequest)
+  impl.getPortfolio = (req: unknown) => handleGetPortfolio(req as GetPortfolioRequest)
 
   return impl as unknown as ServiceImpl<typeof DataApiService>
 }
