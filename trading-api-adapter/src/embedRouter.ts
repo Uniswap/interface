@@ -28,6 +28,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { ethers } from 'ethers'
 import type { ChainConfig } from './chains'
 import { resolveRpcUrl } from './chains'
+import { patchMinHopPriceCalldata } from './urCalldata'
 import type {
   QuoteExactRouteParams,
   RoutingApiPoolInRoute,
@@ -188,7 +189,9 @@ function mapSwapRouteToResponse(route: SwapRoute, tradeType: TradeType): Routing
     routeString: undefined,
     methodParameters: route.methodParameters
       ? {
-          calldata: route.methodParameters.calldata,
+          // The SDK emits canonical 5-field UR swap inputs; the deployed HookSwap UR fork decodes
+          // 6 (trailing minHopPriceX36[]). Re-encode to match, else every swap reverts at decode.
+          calldata: patchMinHopPriceCalldata(route.methodParameters.calldata),
           value: route.methodParameters.value,
           to: route.methodParameters.to,
         }
