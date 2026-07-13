@@ -21,15 +21,16 @@ export const pull = Cli.create('pull', {
     env: z.enum(Environment).default(Environment.Development).describe('Environment stage'),
     overwrite: z
       .boolean()
-      .default(false)
+      .default(true)
       .describe('Replace the env file. When false, merge with existing values (fetched keys win).'),
   }),
   async run(c) {
+    console.info('Pulling config for app', c.args.app, 'in environment', c.options.env)
     const { auth } = vars(c)
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
     const fetcher = createConfigFetcherService({ client })
 
-    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}`))
+    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}/${c.options.env}`))
 
     if (parameters.length === 0) {
       return c.error({

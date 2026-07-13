@@ -11,6 +11,7 @@ interface PoolsActionRowProps {
   selectedStatus: PositionStatus[]
   selectedVersions: ProtocolVersion[]
   createPositionEntryPoint: string
+  showCreateButton?: boolean
   onSearchChange: (search: string) => void
   onStatusChange: (status: PositionStatus) => void
   onVersionChange: (version: ProtocolVersion) => void
@@ -21,6 +22,7 @@ export function PoolsActionRow({
   selectedStatus,
   selectedVersions,
   createPositionEntryPoint,
+  showCreateButton = true,
   onSearchChange,
   onStatusChange,
   onVersionChange,
@@ -41,6 +43,7 @@ export function PoolsActionRow({
       <PositionsHeader
         showTitle={false}
         showNetworkFilter={false}
+        showCreateButton={showCreateButton}
         stackControlsAt="md"
         selectedChain={null}
         selectedVersions={selectedVersions}
@@ -55,7 +58,7 @@ export function PoolsActionRow({
         onChangeText={onSearchChange}
         dataTestId={TestID.PortfolioPoolsSearchInput}
         placeholder={t('tokens.table.search.placeholder.pools')}
-        width={media.md ? '100%' : 360}
+        width={media.md ? '100%' : media.xl ? 280 : 360}
       />
     </Flex>
   )

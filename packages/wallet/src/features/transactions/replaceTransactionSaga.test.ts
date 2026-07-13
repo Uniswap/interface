@@ -111,7 +111,7 @@ describe('attemptReplaceTransaction', () => {
           original_transaction_hash: baseTransaction.hash,
           replacement_transaction_hash: txResponse.hash,
           chain_id: baseTransaction.chainId,
-          nonce: baseTransaction.options.request.nonce,
+          nonce: baseTransaction.options.request?.nonce,
         })
         .silentRun()
     })

@@ -13,6 +13,7 @@ export enum MobileScreens {
   Home = 'Home',
   OnboardingStack = 'OnboardingStack',
   PortfolioChartDetails = 'PortfolioChartDetails',
+  PositionDetails = 'PositionDetails',
   UnitagStack = 'UnitagStack',
   Settings = 'Settings',
   SettingsCloudBackupPasswordCreate = 'SettingsCloudBackupPasswordCreate',

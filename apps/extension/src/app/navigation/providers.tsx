@@ -9,7 +9,7 @@ import {
   focusOrCreateUniswapInterfaceTab,
   SidebarLocationState,
 } from 'src/app/navigation/utils'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
@@ -211,7 +211,7 @@ function useNavigateToPoolDetails(): (args: { poolId: Address; chainId: Universe
       url: getPoolDetailsURL(poolId, chainId),
       // We want to reuse the active tab only if it's already in any other PDP.
       // oxlint-disable-next-line security/detect-non-literal-regexp
-      reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfacePoolsUrl)}`),
+      reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(UniswapStaticUrls.webInterfacePoolsUrl)}`),
     })
   }, [])
 }

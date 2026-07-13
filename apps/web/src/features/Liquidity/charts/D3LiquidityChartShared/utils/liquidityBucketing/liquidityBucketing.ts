@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { nearestUsableTick } from '@uniswap/v3-sdk'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { logger } from 'utilities/src/logger/logger'
 import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
@@ -95,12 +95,57 @@ function getBucketBoundaries({
   visibleMaxTick,
   desiredBars,
   tickSpacing,
+  fixedGrid = false,
 }: {
   visibleMinTick: number
   visibleMaxTick: number
   desiredBars: number
   tickSpacing: number
+  /**
+   * When true, anchor bucket boundaries to a global grid (multiples of `step` from tick 0) and
+   * derive `step` from the raw viewport span — which depends only on zoom, not pan. This keeps a
+   * given bucket's tick range identical frame-to-frame while scrolling, so bars translate smoothly
+   * with the pan instead of jittering as a viewport-anchored grid slides underneath them.
+   */
+  fixedGrid?: boolean
 }): number[] {
+  if (fixedGrid) {
+    // Step from the raw (unsnapped) viewport span: this is pan-independent, so it stays constant
+    // while scrolling and the grid doesn't re-tile (it only changes on zoom).
+    const rawRange = Math.max(tickSpacing, visibleMaxTick - visibleMinTick)
+    const rawStep = rawRange / desiredBars
+    // Quantize the step to a whole number of tick-spacings. `rawStep / tickSpacing` is
+    // pan-independent (it derives from the zoom-only viewport span), but it can land exactly on an
+    // N.5 boundary — and because visibleMin/MaxTick come from axis math, the last bit of
+    // floating-point noise then flips Math.round between N and N+1 on consecutive frames. That flip
+    // re-tiles the whole grid (every bar changes width and snaps to a new x), which is the
+    // horizontal jitter seen while scrolling. Bias the half-way case up by an epsilon that dwarfs
+    // the FP noise (~1e-12) yet is far smaller than any genuine step change, so the step is stable
+    // frame-to-frame and only ever changes on a real zoom.
+    const STEP_ROUNDING_EPSILON = 1e-9
+    const step = Math.max(tickSpacing, Math.round(rawStep / tickSpacing + STEP_ROUNDING_EPSILON) * tickSpacing)
+
+    // Align to multiples of `step` from the global origin (so boundaries don't drift as you pan),
+    // extend one bucket past each edge so bars are fully formed as they scroll into view, and clamp
+    // into the valid tick range — boundaries flow into TickMath downstream, which throws on
+    // out-of-range ticks ("Invariant failed: TICK").
+    const minUsableTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
+    const maxUsableTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
+    const gridStart = Math.max(minUsableTick, Math.floor(visibleMinTick / step) * step - step)
+    const gridEnd = Math.min(maxUsableTick, Math.ceil(visibleMaxTick / step) * step + step)
+
+    const boundaries: number[] = []
+    for (let tick = gridStart; tick < gridEnd; tick += step) {
+      boundaries.push(tick)
+    }
+    // Ensure the final boundary reaches gridEnd (which may be clamped and not step-aligned).
+    if (boundaries[boundaries.length - 1] !== gridEnd) {
+      boundaries.push(gridEnd)
+    }
+
+    return boundaries
+  }
+
   // Snap min/max to valid tick boundaries
   const snappedMin = nearestUsableTick(Math.floor(visibleMinTick), tickSpacing)
   const snappedMax = nearestUsableTick(Math.ceil(visibleMaxTick), tickSpacing)
@@ -162,18 +207,21 @@ export function buildBuckets({
   visibleMaxTick,
   desiredBars,
   tickSpacing,
+  fixedGrid = false,
 }: {
   segments: LiquiditySegment[]
   visibleMinTick: number
   visibleMaxTick: number
   desiredBars: number
   tickSpacing: number
+  /** Anchor boundaries to a global grid so bars don't jitter while scrolling. See getBucketBoundaries. */
+  fixedGrid?: boolean
 }): LiquidityBucket[] {
   if (segments.length === 0) {
     return []
   }
 
-  const boundaries = getBucketBoundaries({ visibleMinTick, visibleMaxTick, desiredBars, tickSpacing })
+  const boundaries = getBucketBoundaries({ visibleMinTick, visibleMaxTick, desiredBars, tickSpacing, fixedGrid })
 
   const buckets: LiquidityBucket[] = []
 

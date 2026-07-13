@@ -5,7 +5,7 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { GraduationCap } from 'ui/src/components/icons/GraduationCap'
 import { SpeechBubbles } from 'ui/src/components/icons/SpeechBubbles'
 import { X } from 'ui/src/components/icons/X'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface HelpContentProps {
@@ -56,17 +56,17 @@ export function HelpContent({ onClose }: HelpContentProps) {
       <HelpItem
         icon={<GraduationCap size="$icon.20" color="$neutral2" />}
         title={t('settings.action.help')}
-        href={uniswapUrls.helpUrl}
+        href={UniswapHelpUrls.baseUrl}
       />
       <HelpItem
         icon={<BookOpen size="$icon.20" color="$neutral2" />}
         title={t('common.docs')}
-        href={uniswapUrls.docsUrl}
+        href={UniswapStaticUrls.docsUrl}
       />
       <HelpItem
         icon={<SpeechBubbles size="$icon.20" color="$neutral2" />}
         title={t('common.contactUs.button')}
-        href={uniswapUrls.helpRequestUrl}
+        href={UniswapHelpUrls.requestUrl}
       />
     </Flex>
   )

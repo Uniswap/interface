@@ -1,6 +1,6 @@
 import { call, select } from '@redux-saga/core/effects'
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
-import { TradingApi, type UnwrapQuoteResponse, type WrapQuoteResponse } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { ensure0xHex } from '@universe/encoding'
 import JSBI from 'jsbi'
 import { expectSaga } from 'redux-saga-test-plan'
@@ -8,7 +8,7 @@ import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/provi
 import { USDC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { type UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
@@ -31,23 +31,6 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // Mock dependencies
 jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
-
-const mockPrivateRpcFlag = jest.fn().mockReturnValue(true)
-
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  getStatsigClient: jest.fn(() => ({
-    checkGate: jest.fn().mockImplementation((flagName: string) => {
-      if (flagName === 'mev-blocker') {
-        return mockPrivateRpcFlag()
-      }
-      return false // Default for other flags
-    }),
-    getLayer: jest.fn(() => ({
-      get: jest.fn(() => false),
-    })),
-  })),
-}))
 
 const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
@@ -122,7 +105,6 @@ describe('prepareAndSignSwapSaga', () => {
     mockTransactionService.getNextNonce.mockResolvedValue({ nonce: 1 })
     mockTransactionService.prepareAndSignTransaction.mockResolvedValue(mockSignedTransactionRequest)
     mockTransactionSigner.signTypedData.mockResolvedValue('0xsignedTypedData')
-    mockPrivateRpcFlag.mockReturnValue(true)
   })
 
   describe('Classic routing', () => {
@@ -244,37 +226,49 @@ describe('prepareAndSignSwapSaga', () => {
   })
 
   describe('Wrap and Unwrap routing', () => {
-    const mockWrapTrade = new WrapTrade({
+    const mockWrapTrade = {
       quote: {
+        requestId: 'wrap-request',
+        routing: TradingApi.Routing.WRAP,
+        permitData: null,
         quote: {
           input: {
             amount: '1000000000000000000',
+            maximumAmount: '1000000000000000000',
           },
           output: {
             amount: '1000000000000000000',
+            minimumAmount: '1000000000000000000',
           },
         },
-      } as WrapQuoteResponse,
-      currencyIn: ETH,
-      currencyOut: WETH,
+      },
+      routing: TradingApi.Routing.WRAP,
+      inputAmount: { currency: ETH },
+      outputAmount: { currency: WETH },
       tradeType: TradeType.EXACT_INPUT,
-    })
+    } as unknown as WrapTrade
 
-    const mockUnwrapTrade = new UnwrapTrade({
+    const mockUnwrapTrade = {
       quote: {
+        requestId: 'unwrap-request',
+        routing: TradingApi.Routing.UNWRAP,
+        permitData: null,
         quote: {
           input: {
             amount: '1000000000000000000',
+            maximumAmount: '1000000000000000000',
           },
           output: {
             amount: '1000000000000000000',
+            minimumAmount: '1000000000000000000',
           },
         },
-      } as UnwrapQuoteResponse,
-      currencyIn: WETH,
-      currencyOut: ETH,
+      },
+      routing: TradingApi.Routing.UNWRAP,
+      inputAmount: { currency: WETH },
+      outputAmount: { currency: ETH },
       tradeType: TradeType.EXACT_INPUT,
-    })
+    } as unknown as UnwrapTrade
 
     it('should prepare and sign a wrap transaction', async () => {
       const params = prepareAndSignSwapSagaParams({
@@ -617,24 +611,19 @@ describe('shouldSubmitViaPrivateRpc', () => {
     expect(result.returnValue).toBe(false)
   })
 
-  it('should return false when privateRpcFeatureEnabled is false', async () => {
-    mockPrivateRpcFlag.mockReturnValue(false)
-
-    const result = await expectSaga(shouldSubmitViaPrivateRpc, chainId)
-      .provide([
-        [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On],
-        [call(isPrivateRpcSupportedOnChain, chainId), true],
-      ])
-      .run()
-    expect(result.returnValue).toBe(false)
-  })
-
   it('should return false when privateRpcSupportedOnChain is false', async () => {
     const result = await expectSaga(shouldSubmitViaPrivateRpc, chainId)
       .provide([
         [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On],
         [call(isPrivateRpcSupportedOnChain, chainId), false],
       ])
+      .run()
+    expect(result.returnValue).toBe(false)
+  })
+
+  it('should return false when chainId is falsy', async () => {
+    const result = await expectSaga(shouldSubmitViaPrivateRpc, 0)
+      .provide([[select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On]])
       .run()
     expect(result.returnValue).toBe(false)
   })

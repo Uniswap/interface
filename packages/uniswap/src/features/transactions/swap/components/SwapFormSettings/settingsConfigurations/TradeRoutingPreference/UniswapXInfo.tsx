@@ -8,7 +8,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import type { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function UniswapXInfo({
@@ -24,10 +24,7 @@ export function UniswapXInfo({
   return (
     <WarningInfo
       infoButton={
-        <LearnMoreLink
-          textVariant={isWebPlatform ? 'body4' : undefined}
-          url={uniswapUrls.helpArticleUrls.uniswapXInfo}
-        />
+        <LearnMoreLink textVariant={isWebPlatform ? 'body4' : undefined} url={UniswapHelpUrls.articles.uniswapXInfo} />
       }
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),

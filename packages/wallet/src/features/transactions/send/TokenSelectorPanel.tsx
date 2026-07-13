@@ -77,12 +77,11 @@ export function TokenSelectorPanel({
               </Text>
               {currencyInfo && (
                 <Text color="$neutral2" variant="body3">
-                  {/* oxlint-disable typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here */}
                   {t('send.input.token.balance.title', {
+                    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
                     balance: formattedCurrencyBalance ?? '',
                     symbol: currencyInfo.currency.symbol ?? '',
                   })}
-                  {/* oxlint-enable typescript/no-unnecessary-condition */}
                 </Text>
               )}
             </Flex>

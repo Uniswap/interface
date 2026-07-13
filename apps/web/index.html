@@ -55,6 +55,16 @@
           url('/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
 
+      /* Subsetted Inter Regular, fetched lazily only when the Privy watermark renders (PrivyWatermark.tsx). */
+      @font-face {
+        font-family: 'Inter';
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+        unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF;
+        src: url('/fonts/Inter-Regular-Latin.woff2') format('woff2');
+      }
+
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;

@@ -31,6 +31,7 @@ import {
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { useDebounce } from 'utilities/src/time/timing'
+import { v4 as uuidv4 } from 'uuid'
 import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
 import { useCurrencyBalance } from '~/lib/hooks/useCurrencyBalance'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from '~/pages/Swap/Buy/hooks'
@@ -73,6 +74,7 @@ type BuyFormContextType = {
   buyFormState: BuyFormState
   setBuyFormState: Dispatch<SetStateAction<BuyFormState>>
   derivedBuyFormInfo: BuyInfo
+  externalTransactionIdSuffix: string
 }
 
 export const ethCurrencyInfo = buildPartialCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
@@ -105,6 +107,7 @@ export const BuyFormContext = createContext<BuyFormContextType>({
     error: undefined,
     providerSourceAmount: undefined,
   },
+  externalTransactionIdSuffix: '',
 })
 
 export function useBuyFormContext() {
@@ -314,6 +317,7 @@ export function BuyFormContextProvider({
   rampDirection,
 }: PropsWithChildren<{ rampDirection: RampDirection }>) {
   const [buyFormState, setBuyFormState] = useState<BuyFormState>({ ...DEFAULT_BUY_FORM_STATE, rampDirection })
+  const [externalTransactionIdSuffix] = useState<string>(() => uuidv4().split('-').slice(1).join('-'))
   const derivedBuyFormInfo = useDerivedBuyFormInfo(buyFormState)
 
   const value = useMemo(
@@ -321,8 +325,9 @@ export function BuyFormContextProvider({
       buyFormState,
       setBuyFormState,
       derivedBuyFormInfo,
+      externalTransactionIdSuffix,
     }),
-    [buyFormState, derivedBuyFormInfo],
+    [buyFormState, derivedBuyFormInfo, externalTransactionIdSuffix],
   )
 
   return <BuyFormContext.Provider value={value}>{children}</BuyFormContext.Provider>

@@ -14,6 +14,11 @@ type MultichainContextMenuAddressSubviewProps = {
   onCopyAddress: (address: string, chainId: UniverseChainId) => void | Promise<void>
   onBack: () => void
   title: string
+  /** Skip the bordered/fixed-width card chrome — use when the parent surface (e.g. a popover) already supplies it. */
+  bare?: boolean
+  /** Override the panel size. Only meaningful with `bare`; otherwise the standard menu layout constants apply. */
+  width?: number
+  maxHeight?: number
 }
 
 /**
@@ -25,8 +30,12 @@ export function MultichainContextMenuAddressSubview({
   onCopyAddress,
   onBack,
   title,
+  bare = false,
+  width,
+  maxHeight,
 }: MultichainContextMenuAddressSubviewProps): JSX.Element {
   const isSheet = useMedia().sm
+  const showChrome = !isSheet && !bare
   return (
     // oxlint-disable-next-line react/forbid-elements -- needed to stop event propagation to parent row
     <div
@@ -43,27 +52,45 @@ export function MultichainContextMenuAddressSubview({
     >
       <Flex
         alignItems="stretch"
-        pt="$spacing8"
-        px="$spacing8"
-        {...(isSheet
+        overflow="hidden"
+        width={showChrome ? (width ?? MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_WIDTH) : width}
+        maxHeight={showChrome ? (maxHeight ?? MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_MAX_HEIGHT) : maxHeight}
+        gap={bare ? '$spacing8' : undefined}
+        {...(bare
           ? undefined
           : {
+              pt: '$spacing8',
+              px: '$spacing8',
+            })}
+        {...(showChrome
+          ? {
               backgroundColor: '$surface1',
               borderRadius: '$rounded20',
               borderWidth: 1,
               borderColor: '$surface3',
-              width: MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_WIDTH,
-              maxHeight: MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_MAX_HEIGHT,
-            })}
+            }
+          : undefined)}
       >
-        <TouchableArea row alignItems="center" gap="$spacing8" p="$spacing8" onPress={onBack}>
+        <TouchableArea
+          row
+          alignItems="center"
+          gap="$spacing8"
+          px={bare ? 0 : '$spacing8'}
+          py="$spacing8"
+          onPress={onBack}
+        >
           <RotatableChevron direction="left" color="$neutral2" size="$icon.16" />
           <Text variant="buttonLabel3" color="$neutral1" flex={1} textAlign="center">
             {title}
           </Text>
         </TouchableArea>
         <Flex flex={1} minHeight={0}>
-          <MultichainAddressList chains={orderedEntries} renderedInModal={isSheet} onCopyAddress={onCopyAddress} />
+          <MultichainAddressList
+            chains={orderedEntries}
+            renderedInModal={isSheet}
+            padding={bare ? 0 : undefined}
+            onCopyAddress={onCopyAddress}
+          />
         </Flex>
       </Flex>
     </div>

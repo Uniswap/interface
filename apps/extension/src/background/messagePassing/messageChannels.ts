@@ -57,6 +57,10 @@ import {
   SignTypedDataResponseSchema,
   UniswapOpenSidebarRequest,
   UniswapOpenSidebarRequestSchema,
+  ProviderDirectRequest,
+  ProviderDirectRequestSchema,
+  ProviderDirectResponse,
+  ProviderDirectResponseSchema,
   UniswapOpenSidebarResponse,
   UniswapOpenSidebarResponseSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -174,6 +178,7 @@ type ContentScriptToBackgroundMessageSchemas = {
   [DappRequestType.SendCalls]: SendCallsRequest
   [DappRequestType.GetCallsStatus]: GetCallsStatusRequest
   [DappRequestType.GetCapabilities]: GetCapabilitiesRequest
+  [DappRequestType.ProviderDirect]: ProviderDirectRequest
 }
 const contentScriptToBackgroundMessageParsers: MessageParsers<
   DappRequestType,
@@ -197,6 +202,7 @@ const contentScriptToBackgroundMessageParsers: MessageParsers<
   [DappRequestType.SendCalls]: (message): SendCallsRequest => SendCallsRequestSchema.parse(message),
   [DappRequestType.GetCallsStatus]: (message): GetCallsStatusRequest => GetCallsStatusRequestSchema.parse(message),
   [DappRequestType.GetCapabilities]: (message): GetCapabilitiesRequest => GetCapabilitiesRequestSchema.parse(message),
+  [DappRequestType.ProviderDirect]: (message): ProviderDirectRequest => ProviderDirectRequestSchema.parse(message),
 }
 
 function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageChannel<
@@ -226,6 +232,7 @@ type DappResponseMessageSchemas = {
   [DappResponseType.SendCallsResponse]: SendCallsResponse
   [DappResponseType.GetCallsStatusResponse]: GetCallsStatusResponse
   [DappResponseType.GetCapabilitiesResponse]: GetCapabilitiesResponse
+  [DappResponseType.ProviderDirectResponse]: ProviderDirectResponse
 }
 const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseMessageSchemas> = {
   [DappResponseType.AccountResponse]: (message): AccountResponse => AccountResponseSchema.parse(message),
@@ -252,6 +259,8 @@ const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseM
     GetCallsStatusResponseSchema.parse(message),
   [DappResponseType.GetCapabilitiesResponse]: (message): GetCapabilitiesResponse =>
     GetCapabilitiesResponseSchema.parse(message),
+  [DappResponseType.ProviderDirectResponse]: (message): ProviderDirectResponse =>
+    ProviderDirectResponseSchema.parse(message),
 }
 
 function createDappResponseMessageChannel(): TypedRuntimeMessageChannel<DappResponseType, DappResponseMessageSchemas> {

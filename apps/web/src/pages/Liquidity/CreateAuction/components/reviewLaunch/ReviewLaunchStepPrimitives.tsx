@@ -3,7 +3,7 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import { formatUtcOffset } from '~/pages/Liquidity/CreateAuction/components/DatePicker/datePickerCardShared'
+import { formatTimeForDisplay } from '~/pages/Liquidity/CreateAuction/components/DatePicker/datePickerCardShared'
 
 export function EditButton({ onPress }: { onPress: () => void }): JSX.Element {
   const { t } = useTranslation()
@@ -55,18 +55,14 @@ export function ReviewRow({ label, children }: { label: string; children: React.
   )
 }
 
-/** Locale-aware numeric date (2-digit year) + neutral 24h time and UTC offset — Figma 11223:39682. */
+/** Locale-aware abbreviated date ("Feb. 10, '26") + neutral 12h/24h time, on a single line — Figma 11223:39682. */
 export function ReviewAuctionDateTime({ date }: { date: Date }): JSX.Element {
   const dayjsInstance = useLocalizedDayjs()
   const { locale } = useCurrentLanguageInfo()
-  const dateLabel = new Intl.DateTimeFormat(locale, {
-    year: '2-digit',
-    month: 'numeric',
-    day: 'numeric',
-  }).format(date)
-  const timeLabel = `${dayjsInstance(date).format('HH:mm')} ${formatUtcOffset(date)}`
+  const dateLabel = dayjsInstance(date).format("MMM. D, 'YY")
+  const timeLabel = formatTimeForDisplay({ date, locale })
   return (
-    <Flex row alignItems="center" gap="$spacing6" flexWrap="wrap">
+    <Flex row alignItems="center" gap="$spacing6">
       <Text variant="body1" color="$neutral1">
         {dateLabel}
       </Text>

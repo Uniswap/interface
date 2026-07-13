@@ -19,7 +19,11 @@ export function InsufficientNativeTokenBaseComponent({
   const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
   const textComponentWithNetworkColor = (
-    <Text style={{ color: networkColors.foreground }} variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT} />
+    <Text
+      key="highlight"
+      style={{ color: networkColors.foreground }}
+      variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}
+    />
   )
 
   return (

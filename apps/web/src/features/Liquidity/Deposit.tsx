@@ -12,6 +12,8 @@ import {
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import SlippageWarningModal from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SlippageWarningModal'
 import { ErrorCallout } from '~/components/ErrorCallout'
+import { BlockedTokensErrorCallout } from '~/features/Liquidity/BlockedTokensErrorCallout'
+import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { DepositInputForm } from '~/features/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
@@ -161,11 +163,14 @@ export const DepositStep = () => {
     }
   }, [deposit0Disabled, deposit1Disabled, setDepositState])
 
+  // Blocks creation when deep-linked straight to this step with a blocked token, bypassing the select-tokens step.
+  const { hasBlockedToken, blockedTokenSymbols } = useBlockedTokens(TOKEN0, TOKEN1)
+
   if (!TOKEN0 || !TOKEN1) {
     return null
   }
 
-  const disabled = !!inputError || !txInfo?.txRequest
+  const disabled = !!inputError || !txInfo?.txRequest || hasBlockedToken
 
   const requestLoading = Boolean(
     !transactionError &&
@@ -207,6 +212,7 @@ export const DepositStep = () => {
       <LowLPSlippageWarning
         isNativePool={Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative)}
       />
+      <BlockedTokensErrorCallout blockedTokenSymbols={blockedTokenSymbols} />
       <Flex row>
         {account.isConnected ? (
           <Button

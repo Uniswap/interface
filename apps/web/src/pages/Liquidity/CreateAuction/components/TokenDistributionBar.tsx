@@ -8,7 +8,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useCreateAuctionDistributionBarColors } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionDistributionBarColors'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
-import { amountToPercent } from '~/pages/Liquidity/CreateAuction/utils'
+import { amountToPercent, getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 const BAR_GAP_PX = 4
 const SOLD_BRACKET_HEIGHT_PX = 8
@@ -39,6 +39,7 @@ export function TokenDistributionBar({
 }: TokenDistributionBarProps) {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const raiseCurrencySymbol = getRaiseCurrencyAsCurrency(raiseCurrency, chainId)?.symbol ?? ''
   const { fundraiseColor, raiseSideLpColor, tokenSideLpColor } = useCreateAuctionDistributionBarColors({
     chainId,
     raiseCurrency,
@@ -202,7 +203,7 @@ export function TokenDistributionBar({
             color: fundraiseColor,
             amount: formatAmount(fundraiseAmount),
             description: t('toucan.createAuction.step.configureAuction.distribution.fundraiseSold', {
-              raiseToken: raiseCurrency,
+              raiseToken: raiseCurrencySymbol,
             }),
           })}
         {renderLegendItem({
@@ -210,7 +211,7 @@ export function TokenDistributionBar({
           color: raiseSideLpColor,
           amount: formatAmount(postAuctionLiquidityAmount),
           description: t('toucan.createAuction.step.configureAuction.distribution.tokenLpSoldRaiseSide', {
-            token: raiseCurrency,
+            token: raiseCurrencySymbol,
           }),
         })}
         {renderLegendItem({

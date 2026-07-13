@@ -8,6 +8,7 @@ export const DatadogLogMetrics = {
   UniswapXSwapFailed: 'uniswapx_swap_failed',
   SwapSubmitted: 'swap_submitted',
   PriceQuoteFetch: 'price_quote_fetch',
+  TransactionSubmissionError: 'transaction_submission_error',
 } as const
 
 type CommonLogMetricData = {
@@ -37,6 +38,12 @@ export interface DatadogLogMetricData {
     isUSDQuote: boolean
     quoteSource?: string
     pollInterval?: number
+  }
+  [DatadogLogMetrics.TransactionSubmissionError]: {
+    chainId: number
+    errorCategory: string
+    submitViaPrivateRpc?: boolean
+    includesDelegation?: boolean
   }
 }
 

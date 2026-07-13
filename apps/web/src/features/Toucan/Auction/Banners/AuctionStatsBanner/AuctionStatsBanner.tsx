@@ -5,6 +5,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
+import { CommittedVolumeTooltipContent } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/CommittedVolumeTooltipContent'
 import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBannerData'
 
 const Divider = styled(Flex, {
@@ -210,8 +211,8 @@ export function AuctionStatsBanner() {
     concentrationEndFiatValue,
     totalBidVolumeFormatted,
     totalBidVolumeFiatFormatted,
-    currencyRaisedFormatted,
-    requiredCurrencyFormatted,
+    committedVolumeBreakdown,
+    isLowVolumeHighFdv,
     hasData,
     isAuctionEnded,
     isAuctionNotStarted,
@@ -327,42 +328,51 @@ export function AuctionStatsBanner() {
           pr: '$spacing12',
         }}
       >
-        <Tooltip placement="top" delay={75} offset={{ mainAxis: 8 }}>
-          <Tooltip.Trigger>
-            <Flex cursor="pointer">
-              <StatPrimaryText>{totalBidVolumeFiatFormatted ?? totalBidVolumeFormatted ?? '--'}</StatPrimaryText>
-              {!isAuctionNotStarted && totalBidVolumeFiatFormatted && (
-                <StatSecondaryText>{totalBidVolumeFormatted}</StatSecondaryText>
-              )}
-            </Flex>
-          </Tooltip.Trigger>
-          <Tooltip.Content
-            backgroundColor="$surface1"
-            borderRadius="$rounded12"
-            borderWidth="$spacing1"
-            borderColor="$surface3"
-            py="$spacing8"
-            px="$spacing12"
-          >
-            <Flex gap="$spacing4">
-              <Flex row justifyContent="space-between" gap="$spacing12">
-                <Text variant="body4" color="$neutral2">
-                  {t('toucan.statsBanner.totalCurrencyRaised')}
-                </Text>
-                <Text variant="body4" color="$neutral1">
-                  {currencyRaisedFormatted ?? '--'}
-                </Text>
+        {committedVolumeBreakdown ? (
+          <Tooltip placement="top" delay={75} offset={{ mainAxis: 8 }}>
+            <Tooltip.Trigger>
+              <Flex cursor="pointer">
+                <StatPrimaryText>{totalBidVolumeFiatFormatted ?? totalBidVolumeFormatted ?? '--'}</StatPrimaryText>
+                {!isAuctionNotStarted && totalBidVolumeFiatFormatted && (
+                  <StatSecondaryText>{totalBidVolumeFormatted}</StatSecondaryText>
+                )}
               </Flex>
-              {requiredCurrencyFormatted && (
-                <Text variant="body4" color="$neutral2">
-                  {t('toucan.statsBanner.requiredCurrency', {
-                    amount: requiredCurrencyFormatted,
-                  })}
-                </Text>
-              )}
-            </Flex>
-          </Tooltip.Content>
-        </Tooltip>
+            </Tooltip.Trigger>
+            <Tooltip.Content
+              backgroundColor="$surface1"
+              borderRadius="$rounded12"
+              borderWidth="$spacing1"
+              borderColor="$surface3"
+              py="$spacing8"
+              px="$spacing12"
+            >
+              <CommittedVolumeTooltipContent
+                total={committedVolumeBreakdown.totalFiatFormatted ?? committedVolumeBreakdown.totalFormatted}
+                required={
+                  committedVolumeBreakdown.requiredRaw !== null && committedVolumeBreakdown.requiredRaw > 0n
+                    ? (committedVolumeBreakdown.requiredFiatFormatted ?? committedVolumeBreakdown.requiredFormatted)
+                    : undefined
+                }
+                distribution={{
+                  filled: committedVolumeBreakdown.filledFiatFormatted ?? committedVolumeBreakdown.filledFormatted,
+                  inRange:
+                    committedVolumeBreakdown.inRangeOutstandingFiatFormatted ??
+                    committedVolumeBreakdown.inRangeOutstandingFormatted,
+                  outOfRange:
+                    committedVolumeBreakdown.outOfRangeFiatFormatted ?? committedVolumeBreakdown.outOfRangeFormatted,
+                }}
+                showLowVolumeHighFdv={isLowVolumeHighFdv}
+              />
+            </Tooltip.Content>
+          </Tooltip>
+        ) : (
+          <Flex>
+            <StatPrimaryText>{totalBidVolumeFiatFormatted ?? totalBidVolumeFormatted ?? '--'}</StatPrimaryText>
+            {!isAuctionNotStarted && totalBidVolumeFiatFormatted && (
+              <StatSecondaryText>{totalBidVolumeFormatted}</StatSecondaryText>
+            )}
+          </Flex>
+        )}
       </StatCell>
 
       <Divider />

@@ -1,8 +1,11 @@
+import { TradingApi } from '@universe/api'
 import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
@@ -15,6 +18,11 @@ import {
   waitForReceipt,
   waitForTransactionStatus,
 } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
+
+jest.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: jest.fn(),
+  sendAppsFlyerEvent: jest.fn(),
+}))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
 const { ethersTxReceipt, txReceipt, txDetailsPending } = getTxFixtures(
@@ -121,6 +129,10 @@ describe(waitForTransactionStatus, () => {
     }
   }
 
+  beforeEach(() => {
+    jest.mocked(sendAnalyticsEvent).mockClear()
+  })
+
   it('polls /swaps 20 times for UserOps before timing out', async () => {
     const userOpTx = transactionDetailsFixture({
       from: ACTIVE_ACCOUNT_ADDRESS,
@@ -155,5 +167,71 @@ describe(waitForTransactionStatus, () => {
       .run()
 
     expect(counter.getCount()).toBe(10)
+  })
+
+  // SWAP-2471 (S1): poll-exhaustion telemetry. A classic pending tx whose /swaps polling never
+  // resolves to a terminal status hits the `!swapStatus` branch and, because isClassic is true,
+  // emits PendingTransactionStuck with reason 'poll_exhausted'.
+  it('emits PendingTransactionStuck (poll_exhausted) for a classic tx when polling exhausts', async () => {
+    const classicTx = transactionDetailsFixture({
+      from: ACTIVE_ACCOUNT_ADDRESS,
+      chainId: CHAIN_ID,
+      hash: CLASSIC_HASH,
+      userOpHash: undefined,
+      status: TransactionStatus.Pending,
+    })
+    const counter = buildPollCounter()
+
+    await expectSaga(waitForTransactionStatus, classicTx)
+      .withState(stateWithPendingTx(classicTx))
+      .provide(counter.provider)
+      .run()
+
+    // Polling exhausted with no terminal status.
+    expect(counter.getCount()).toBe(10)
+
+    expect(jest.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
+      WalletEventName.PendingTransactionStuck,
+      expect.objectContaining({ reason: 'poll_exhausted', transaction_id: classicTx.id }),
+    )
+
+    // This emit site never probes a chain provider, so provider_knows_tx must be omitted entirely
+    // (the builder only includes it when it was actually measured).
+    const stuckCall = jest
+      .mocked(sendAnalyticsEvent)
+      .mock.calls.find(([eventName]) => eventName === WalletEventName.PendingTransactionStuck)
+    expect(stuckCall).toBeDefined()
+    const payload = stuckCall?.[1] as Record<string, unknown>
+    expect(payload).not.toHaveProperty('provider_knows_tx')
+    expect('provider_knows_tx' in payload).toBe(false)
+  })
+
+  // Negative: the isClassic guard. A non-classic on-chain tx (BRIDGE) on the same exhausting path
+  // must NOT emit PendingTransactionStuck.
+  it('does not emit PendingTransactionStuck for a non-classic tx when polling exhausts', async () => {
+    const bridgeTx = {
+      ...transactionDetailsFixture({
+        from: ACTIVE_ACCOUNT_ADDRESS,
+        chainId: CHAIN_ID,
+        hash: CLASSIC_HASH,
+        userOpHash: undefined,
+        status: TransactionStatus.Pending,
+      }),
+      routing: TradingApi.Routing.BRIDGE,
+    } as unknown as Parameters<typeof waitForTransactionStatus>[0]
+    const counter = buildPollCounter()
+
+    await expectSaga(waitForTransactionStatus, bridgeTx)
+      .withState(stateWithPendingTx(bridgeTx))
+      .provide(counter.provider)
+      .run()
+
+    // Same exhausting poll path as the classic case.
+    expect(counter.getCount()).toBe(10)
+
+    expect(jest.mocked(sendAnalyticsEvent)).not.toHaveBeenCalledWith(
+      WalletEventName.PendingTransactionStuck,
+      expect.anything(),
+    )
   })
 })

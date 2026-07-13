@@ -50,7 +50,9 @@ export enum WarningLabel {
   ViewOnlyAccount = 'view_only_account',
   NetworkError = 'network_error',
   BlockedToken = 'blocked_token',
+  GeoRestricted = 'geo_restricted',
   NoQuotesFound = 'no_quotes_found',
+  GasSponsorshipFailed = 'gas_sponsorship_failed',
 }
 
 export interface Warning {

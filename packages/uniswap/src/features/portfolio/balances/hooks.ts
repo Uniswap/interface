@@ -1,4 +1,3 @@
-import { QueryHookOptions } from '@apollo/client/react/types/types'
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -7,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
   PortfolioDataResult,
   PortfolioDataResultMultichain,
+  UsePortfolioDataQueryOptions,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { usePortfolioData, usePortfolioDataMultichain } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
@@ -43,10 +43,7 @@ export function usePortfolioBalances({
   evmAddress?: Address
   svmAddress?: Address
   chainIds?: UniverseChainId[]
-} & QueryHookOptions<
-  GraphQLApi.PortfolioBalancesQuery,
-  GraphQLApi.PortfolioBalancesQueryVariables
->): PortfolioDataResult {
+} & UsePortfolioDataQueryOptions): PortfolioDataResult {
   return usePortfolioData({
     evmAddress,
     svmAddress,
@@ -73,10 +70,7 @@ export function usePortfolioBalancesMultichain({
   chainIds?: UniverseChainId[]
   /** When true, request multichain from backend. Default false. */
   requestMultichainFromBackend?: boolean
-} & QueryHookOptions<
-  GraphQLApi.PortfolioBalancesQuery,
-  GraphQLApi.PortfolioBalancesQueryVariables
->): PortfolioDataResultMultichain {
+} & UsePortfolioDataQueryOptions): PortfolioDataResultMultichain {
   return usePortfolioDataMultichain({
     evmAddress,
     svmAddress,
@@ -141,7 +135,7 @@ export function usePortfolioValueModifiers(
  * Returns portfolio balances for a given address sorted by USD value.
  */
 export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOptions): SortedPortfolioBalancesResult {
-  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds } = options
+  const { evmAddress, svmAddress, pollInterval, chainIds } = options
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const {
@@ -153,7 +147,6 @@ export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOp
     evmAddress,
     svmAddress,
     pollInterval,
-    onCompleted,
     fetchPolicy: 'cache-and-network',
     chainIds,
   })
@@ -206,7 +199,7 @@ export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOp
 export function useSortedPortfolioBalancesMultichain(
   options: UseSortedPortfolioBalancesOptions,
 ): SortedPortfolioBalancesResultMultichain {
-  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds, requestMultichainFromBackend } = options
+  const { evmAddress, svmAddress, pollInterval, chainIds, requestMultichainFromBackend } = options
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const {
@@ -220,7 +213,6 @@ export function useSortedPortfolioBalancesMultichain(
     evmAddress,
     svmAddress,
     pollInterval,
-    onCompleted,
     fetchPolicy: 'cache-and-network',
     chainIds,
     requestMultichainFromBackend,

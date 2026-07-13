@@ -1,8 +1,5 @@
-import { FORTransactionStatus, GraphQLApi, TradingApi } from '@universe/api'
-import parseGraphQLOnRampTransaction from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
-import { remoteTxStatusToLocalTxStatus } from 'uniswap/src/features/activity/utils/remote'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { FORTransactionStatus, TradingApi } from '@universe/api'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { FORTransaction, FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { isValidIsoCurrencyCode } from 'uniswap/src/features/fiatOnRamp/utils'
 import type {
@@ -10,11 +7,8 @@ import type {
   OnRampPurchaseInfo,
   OnRampTransactionInfo,
   OnRampTransferInfo,
-  TransactionDetails,
-  TransactionListQueryResponse,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
-  TransactionDetailsType,
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
@@ -145,31 +139,5 @@ export function extractFORTransactionDetails({
       },
     })
     return undefined
-  }
-}
-
-// TODO: WALL-5532 - Add support for offramp transactions on the graphql service
-export function extractOnRampTransactionDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
-  if (transaction?.details.__typename !== TransactionDetailsType.OnRamp) {
-    return null
-  }
-
-  const typeInfo = parseGraphQLOnRampTransaction(transaction)
-
-  if (!typeInfo) {
-    return null
-  }
-
-  return {
-    routing: TradingApi.Routing.CLASSIC,
-    id: transaction.details.onRampTransfer.externalSessionId,
-    // TODO: WALL-4919: Remove hardcoded Mainnet
-    chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
-    addedTime: transaction.timestamp * 1000, // convert to ms,
-    status: remoteTxStatusToLocalTxStatus(GraphQLApi.TransactionType.OnRamp, transaction.details.status),
-    from: transaction.details.receiverAddress, // This transaction is not on-chain, so use the receiver address as the from address
-    typeInfo,
-    options: { request: {} },
-    transactionOriginType: TransactionOriginType.Internal,
   }
 }

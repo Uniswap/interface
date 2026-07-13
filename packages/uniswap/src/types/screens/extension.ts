@@ -1,6 +1,7 @@
 export enum HomeTabs {
   Tokens = 'Tokens',
   NFTs = 'NFTs',
+  Pools = 'Pools',
   Activity = 'Activity',
 }
 

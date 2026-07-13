@@ -2,6 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { Flex, styled, Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { getProtocolColor, getProtocolName } from '~/appGraphql/data/util'
@@ -68,9 +69,15 @@ interface HeaderValueDisplayProps {
   value?: number | ReactElement
   /** Used to override default format NumberType (FiatTokenStats) */
   valueFormatterType?: FiatNumberType
+  /** When true (crosshair hover), suppresses animation so rapid price updates don't trigger slots */
+  isHovered?: boolean
 }
 
-function HeaderValueDisplay({ value, valueFormatterType = NumberType.FiatTokenStats }: HeaderValueDisplayProps) {
+function HeaderValueDisplay({
+  value,
+  valueFormatterType = NumberType.FiatTokenStats,
+  isHovered,
+}: HeaderValueDisplayProps) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (typeof value !== 'number' && typeof value !== 'undefined') {
@@ -78,9 +85,12 @@ function HeaderValueDisplay({ value, valueFormatterType = NumberType.FiatTokenSt
   }
 
   return (
-    <Text variant="heading2" {...EllipsisTamaguiStyle}>
-      {convertFiatAmountFormatted(value, valueFormatterType)}
-    </Text>
+    <AnimatedNumber
+      value={convertFiatAmountFormatted(value, valueFormatterType)}
+      numericValue={isHovered ? undefined : value}
+      disableAnimations={isHovered}
+      textVariant="$heading2"
+    />
   )
 }
 
@@ -117,7 +127,7 @@ export function ChartHeader({
   return (
     <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" zIndex="$mask" id="chart-header">
       <Flex position="absolute" gap="$gap4" pb="$padding8" pr="$padding8" pointerEvents="none">
-        <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
+        <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} isHovered={isHovered} />
         <Flex row gap="$gap8" $sm={{ flexDirection: 'column' }} {...EllipsisTamaguiStyle}>
           {additionalFields}
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />

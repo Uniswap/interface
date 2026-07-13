@@ -15,7 +15,7 @@ interface SortedAddressData {
   balance: number
 }
 
-type Portfolio = NonNullable<NonNullable<NonNullable<GraphQLApi.AccountListQuery['portfolios']>[0]>>
+type Portfolio = NonNullable<NonNullable<NonNullable<GraphQLApi.PortfoliosTotalValueQuery['portfolios']>[0]>>
 
 function AssociatedAccountsListInner({ accounts }: { accounts: Account[] }): JSX.Element {
   const addresses = useMemo(() => accounts.map((account) => account.address), [accounts])

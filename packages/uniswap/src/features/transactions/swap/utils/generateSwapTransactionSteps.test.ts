@@ -5,7 +5,7 @@ import {
   SwapTxAndGasInfo,
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import {
@@ -68,7 +68,7 @@ describe('Swap', () => {
     },
     trade: mockTrade.trade as ClassicTrade,
     txRequests: [mockTxRequest],
-    unsigned: false,
+    hasUnsignedPermit: false,
     includesDelegation: false,
   } as const satisfies SwapTxAndGasInfo
 
@@ -142,7 +142,7 @@ describe('Swap', () => {
       const swapTxContext = {
         ...baseSwapTxContext,
         approveTxRequest: mockApproveRequest,
-        unsigned: true,
+        hasUnsignedPermit: true,
         permit: mockPermit,
       }
 

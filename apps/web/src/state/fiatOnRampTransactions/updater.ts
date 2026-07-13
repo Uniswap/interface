@@ -1,20 +1,13 @@
-import { GraphQLApi } from '@universe/api'
 import ms from 'ms'
-import { useEffect } from 'react'
 import { ForApiClient } from 'uniswap/src/data/apiClients/forApi/ForApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
 import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/reducer'
-import {
-  backendStatusToFiatOnRampStatus,
-  FiatOnRampTransactionStatus,
-  FiatOnRampTransactionType,
-} from '~/state/fiatOnRampTransactions/types'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 import { statusToTransactionInfoStatus } from '~/state/fiatOnRampTransactions/utils'
 import { useAppDispatch } from '~/state/hooks'
 import { popupRegistry } from '~/state/popups/registry'
@@ -23,12 +16,8 @@ import { PopupType } from '~/state/popups/types'
 export default function Updater(): null {
   const transactions = useFiatOnRampTransactions()
   const dispatch = useAppDispatch()
-  const [, query] = GraphQLApi.useActivityWebLazyQuery()
 
   // Polls the fiat on-ramp API for new FOR transactions, until Meld returns a valid result for each.
-  // Once we find this initial record for a transaction, we start polling the GQL ActivityWeb endpoint
-  // to find it and include it in the assetActivities result.
-  // See the useInterval hook in AssetActivityProvider for the polling logic.
   useInterval(() => {
     Object.values(transactions).forEach(async (transaction) => {
       if (!transaction.forceFetched && transaction.type === FiatOnRampTransactionType.BUY) {
@@ -111,46 +100,6 @@ export default function Updater(): null {
       }
     })
   }, ms('5s'))
-
-  // Triggers when the ActivityWeb query result changes, and updates the local status.
-  // Once all FOR transactions are syncedWithBackend, we stop polling the GQL server for updates.
-  // See the useInterval hook in AssetActivityProvider for the polling logic.
-  useEffect(() => {
-    query.data?.portfolios?.[0]?.assetActivities?.forEach((activity) => {
-      if (
-        activity?.details.__typename === 'TransactionDetails' &&
-        activity.details.type === GraphQLApi.TransactionType.OnRamp &&
-        activity.details.assetChanges.length > 0
-      ) {
-        const assetChange = activity.details.assetChanges[0]
-        if (assetChange?.__typename !== 'OnRampTransfer') {
-          logger.error('Unexpected asset change type, expected OnRampTransfer', {
-            tags: {
-              file: 'AssetActivityProvider',
-              function: 'useInterval',
-            },
-          })
-          return
-        }
-        const transaction = transactions[assetChange.externalSessionId]
-        // oxlint-disable-next-line typescript/no-unnecessary-condition
-        if (transaction) {
-          dispatch(
-            updateFiatOnRampTransaction({
-              ...transaction,
-              syncedWithBackend: true,
-              status: backendStatusToFiatOnRampStatus(activity.details.status),
-            }),
-          )
-          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransactionUpdated, {
-            status: backendStatusToFiatOnRampStatus(activity.details.status),
-            externalTransactionId: transaction.externalSessionId,
-            serviceProvider: transaction.provider,
-          })
-        }
-      }
-    })
-  }, [dispatch, transactions, query.data?.portfolios])
 
   return null
 }

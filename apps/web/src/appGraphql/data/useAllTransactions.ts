@@ -5,6 +5,8 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import i18n from 'uniswap/src/i18n'
 import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 
+export const EXPLORE_TRANSACTIONS_APOLLO_QUERY_NAMES = ['V4Transactions', 'V3Transactions', 'V2Transactions'] as const
+
 export enum TransactionType {
   SWAP = 'Swap',
   ADD = 'Add',

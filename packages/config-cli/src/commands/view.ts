@@ -21,10 +21,10 @@ export const view = Cli.create('view', {
       `Print ${c.args.app} config parameters in ${c.options.env}? Agents such as Claude or Cursor should not use this command as it may leak sensitive information.`,
     )
     const { auth } = vars(c)
-    const client = await unwrap(buildConfigClient({ auth, environment: c.options.env }))
+    const client = await unwrap(buildConfigClient(auth))
     const fetcher = createConfigFetcherService({ client })
 
-    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}`))
+    const parameters = await unwrap(fetcher.getParameterValuesInScope(`/${c.args.app}/${c.options.env}`))
 
     if (parameters.length === 0) {
       return c.error({

@@ -1,16 +1,17 @@
 import { isExtensionApp } from '@universe/environment'
-import { memo, PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
+import { memo, PropsWithChildren, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, TouchableArea, useMedia } from 'ui/src'
+import { TouchableArea, useMedia } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { COPY_CLOSE_DELAY } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import type { MenuOptionItemWithId } from 'uniswap/src/components/menus/ContextMenu'
 import { MENU_CONTENT_SHEET_CONTAINER_STYLES, MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { MultichainContextMenuAddressSubview } from 'uniswap/src/components/MultichainTokenDetails/MultichainContextMenuAddressSubview'
+import { MultichainAddressTransitionPanel } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressTransitionPanel'
+import { useMultichainAddressViewState } from 'uniswap/src/components/MultichainTokenDetails/useMultichainAddressViewState'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import type { TokenBalanceItemContextMenuProps } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItemContextMenu'
+import { COPY_CLOSE_DELAY } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList, type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
@@ -22,8 +23,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-
-type ViewState = 'actions' | 'addresses'
 
 type TokensMultichainParentContextMenuProps = PropsWithChildren<
   TokenBalanceItemContextMenuProps & { tokenCurrencyInfos: CurrencyInfo[] }
@@ -46,8 +45,7 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
   const { t } = useTranslation()
   const isSheet = useMedia().sm
   const { value: isOpen, setTrue: openMenu, setFalse: rawCloseMenu, toggle } = useBooleanState(false)
-  const [viewState, setViewState] = useState<ViewState>('actions')
-  const [animationType, setAnimationType] = useState<'forward' | 'backward'>('forward')
+  const { viewIndex, animationType, goToAddresses, goBack, resetView } = useMultichainAddressViewState()
   const skipNextClose = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -73,8 +71,8 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
   const handleCloseMenu = useCallback(() => {
     clearTimeout(timerRef.current)
     rawCloseMenu()
-    setViewState('actions')
-  }, [rawCloseMenu])
+    resetView()
+  }, [rawCloseMenu, resetView])
 
   const handleContentClose = useCallback(() => {
     if (skipNextClose.current) {
@@ -86,9 +84,8 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
 
   const onPressCopyAddressOverride = useCallback(() => {
     skipNextClose.current = true
-    setAnimationType('forward')
-    setViewState('addresses')
-  }, [])
+    goToAddresses()
+  }, [goToAddresses])
 
   const menuActionsRaw = useTokenContextMenuOptions({
     excludedActions,
@@ -111,13 +108,10 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
 
   const menuActions = useMemo((): MenuOptionItemWithId[] => {
     return menuActionsRaw.map((action) => {
-      if (action.id !== TokenMenuActionType.CopyAddress) {
-        return action
+      if (action.id === TokenMenuActionType.CopyAddress) {
+        return { ...action, trailingIcon: <RotatableChevron direction="right" color="$neutral3" size="$icon.16" /> }
       }
-      return {
-        ...action,
-        trailingIcon: <RotatableChevron direction="right" color="$neutral3" size="$icon.16" />,
-      }
+      return action
     })
   }, [menuActionsRaw])
 
@@ -135,16 +129,16 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
     [copyAddressToClipboard, handleCloseMenu],
   )
 
-  const handleBack = useCallback(() => {
-    setAnimationType('backward')
-    setViewState('actions')
-  }, [])
-
-  const viewIndex = viewState === 'actions' ? 0 : 1
-
   const contentOverride = useMemo(
     () => (
-      <AnimateTransition currentIndex={viewIndex} animationType={animationType} animation="200ms">
+      <MultichainAddressTransitionPanel
+        viewIndex={viewIndex}
+        animationType={animationType}
+        orderedEntries={orderedEntries}
+        title={t('common.copy.address')}
+        onCopyAddress={onCopyMultichainAddress}
+        onBack={goBack}
+      >
         <MenuContent
           trackItemClicks
           items={menuActions}
@@ -153,13 +147,7 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
           sectionName={SectionName.PortfolioTokensTab}
           containerStyles={isSheet ? MENU_CONTENT_SHEET_CONTAINER_STYLES : undefined}
         />
-        <MultichainContextMenuAddressSubview
-          orderedEntries={orderedEntries}
-          title={t('common.copy.address')}
-          onCopyAddress={onCopyMultichainAddress}
-          onBack={handleBack}
-        />
-      </AnimateTransition>
+      </MultichainAddressTransitionPanel>
     ),
     [
       viewIndex,
@@ -169,7 +157,7 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
       isSheet,
       orderedEntries,
       onCopyMultichainAddress,
-      handleBack,
+      goBack,
       t,
     ],
   )

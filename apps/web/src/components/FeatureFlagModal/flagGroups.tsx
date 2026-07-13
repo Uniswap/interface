@@ -21,6 +21,7 @@ export function buildFlagGroups(extras: {
   extensionDropdown: ReactNode
   networkRequestsConfig: ReactNode
   layerOptions: ReactNode
+  complianceOverrides: ReactNode
 }): FlagGroupDef[] {
   return [
     {
@@ -45,10 +46,6 @@ export function buildFlagGroups(extras: {
       flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
     {
-      name: 'Multichain Token UX Improvements',
-      flags: [{ flag: FeatureFlags.MultichainTokenUx, label: 'Enable Updated Multichain Token UX' }],
-    },
-    {
       name: 'Swap Features',
       flags: [
         { flag: FeatureFlags.NoUniswapInterfaceFees, label: 'Turn off Uniswap interface fees' },
@@ -57,6 +54,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.GasFeeOverrides, label: 'Enable Custom Gas Fee Overrides' },
         { flag: FeatureFlags.UniquoteEnabled, label: 'Enable Uniquote' },
         { flag: FeatureFlags.UnirouteEnabled, label: 'Enable Uniroute' },
+        { flag: FeatureFlags.RequestSwapSteps, label: 'Request SwapSteps in classic quotes' },
         { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },
         { flag: FeatureFlags.ViemProviderEnabled, label: 'Enable Viem Provider' },
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
@@ -78,12 +76,7 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'UniswapX',
-      flags: [
-        { flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' },
-        { flag: FeatureFlags.UniswapXPriorityOrdersBase, label: 'UniswapX Priority Orders (on Base)' },
-        { flag: FeatureFlags.UniswapXPriorityOrdersUnichain, label: 'UniswapX Priority Orders (on Unichain)' },
-        { flag: FeatureFlags.ArbitrumDutchV3, label: 'Enable Dutch V3 on Arbitrum' },
-      ],
+      flags: [{ flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' }],
     },
     {
       name: 'LP',
@@ -92,13 +85,13 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
+        { flag: FeatureFlags.LpIncentivesTablesColumn, label: 'Enable LP Reward APR Column' },
       ],
     },
     {
       name: 'Toucan',
       flags: [
         { flag: FeatureFlags.ToucanAuctionKYC, label: 'Enable Toucan Auction KYC' },
-        { flag: FeatureFlags.ToucanLaunchAuction, label: 'Enable Toucan Launch Auction' },
         {
           flag: FeatureFlags.ToucanTickDetailsTooltip,
           label: 'Show Remaining (currency required) on chart-bar tooltip',
@@ -107,13 +100,22 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'Embedded Wallet',
-      flags: [{ flag: FeatureFlags.EmbeddedWallet, label: 'Add internal embedded wallet functionality' }],
+      flags: [
+        { flag: FeatureFlags.EmbeddedWallet, label: 'Add internal embedded wallet functionality' },
+        {
+          flag: FeatureFlags.Support7677GasSponsorship,
+          label: 'Advertise EIP-7677 paymaster sponsorship in wallet_getCapabilities',
+        },
+      ],
       extra: extras.extensionDropdown,
     },
     {
       name: 'New Chains',
       flags: [
+        { flag: FeatureFlags.Arc, label: 'Enable Arc' },
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
+        { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
+        { flag: FeatureFlags.Robinhood, label: 'Enable Robinhood' },
         { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
       ],
     },
@@ -135,11 +137,21 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
+      name: 'V2 Endpoints',
+      flags: [
+        { flag: FeatureFlags.V2EndpointsTokens, label: 'Enable V2 Endpoints Tokens' },
+        { flag: FeatureFlags.V2EndpointsTransactions, label: 'Enable V2 Endpoints Transactions' },
+        { flag: FeatureFlags.V2EndpointsPools, label: 'Enable V2 Endpoints Pools' },
+        { flag: FeatureFlags.V2EndpointsPositions, label: 'Enable V2 Endpoints Positions' },
+        { flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' },
+        { flag: FeatureFlags.V2EndpointsSearch, label: 'Enable V2 Endpoints Search' },
+      ],
+    },
+    {
       name: 'Portfolio',
       flags: [
         { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
         { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
-        { flag: FeatureFlags.ProfitLoss, label: 'Enable Profit/Loss' },
         { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
       ],
     },
@@ -154,6 +166,7 @@ export function buildFlagGroups(extras: {
     {
       name: 'Misc',
       flags: [
+        { flag: FeatureFlags.DataLivelinessUI, label: 'Enable Data Liveliness UI' },
         { flag: FeatureFlags.UniswapWrapped2025, label: 'Enable Uniswap Wrapped 2025' },
         { flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' },
       ],
@@ -162,11 +175,29 @@ export function buildFlagGroups(extras: {
       name: 'Prices',
       flags: [{ flag: FeatureFlags.CentralizedPrices, label: 'Enable Centralized Prices' }],
     },
+    {
+      name: 'RWA',
+      flags: [
+        { flag: FeatureFlags.RwaGeoblocked, label: 'Geo-block RWA tokens (treat region as restricted)' },
+        { flag: FeatureFlags.RWACoinGeckoData, label: 'Enable RWA CoinGecko Data' },
+        { flag: FeatureFlags.RWATdp, label: 'Enable RWA TDP' },
+        { flag: FeatureFlags.RWATdpRelatedTokens, label: 'Enable RWA TDP Related Tokens' },
+        { flag: FeatureFlags.RWATdpSiblings, label: 'Enable RWA TDP More Ways to Trade (Siblings)' },
+        { flag: FeatureFlags.RWAUX, label: 'Enable RWA UX' },
+        { flag: FeatureFlags.RWAUXExplore, label: 'Enable RWA UX Explore (table)' },
+        { flag: FeatureFlags.RwaUxSearch, label: 'Enable Stocks in Search' },
+      ],
+    },
     { name: 'Experiments', flags: [] },
     {
       name: 'Layers',
       flags: [],
       extra: extras.layerOptions,
+    },
+    {
+      name: 'Compliance / Geo',
+      flags: [],
+      extra: extras.complianceOverrides,
     },
   ]
 }

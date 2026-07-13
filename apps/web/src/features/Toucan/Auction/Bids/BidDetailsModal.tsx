@@ -11,7 +11,7 @@ import { BidSpendSummary } from '~/features/Toucan/Auction/Bids/BidDetailsModal/
 import { BidTotalsSection } from '~/features/Toucan/Auction/Bids/BidDetailsModal/BidTotalsSection'
 import { useBidDetails } from '~/features/Toucan/Auction/hooks/useBidDetails'
 import { AuctionDetails, AuctionProgressState, BidTokenInfo, UserBid } from '~/features/Toucan/Auction/store/types'
-import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { useAuctionStore, useIsAuctionFailed } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 
@@ -177,6 +177,7 @@ function BidDetailsModalContent({
   const shouldShowRefundButton = buttonState.isVisible && isRefundEligible
 
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
+  const isAuctionFailed = useIsAuctionFailed()
   // Pass isPreClaimWindow when we're in pre-claim window for a graduated auction
   const shouldUsePreClaimWindow = isAuctionEnded && isGraduated && isInPreClaimWindow
 
@@ -204,8 +205,7 @@ function BidDetailsModalContent({
             refundBudgetLabel={refundBudgetLabel}
             refundBudgetAmount={refundBudgetAmount}
             refundBudgetSubtext={refundBudgetSubtext}
-            isGraduated={isGraduated}
-            isAuctionEnded={isAuctionEnded}
+            isAuctionFailed={isAuctionFailed}
           />
           {averagePriceData ? (
             <BidAveragePriceSection
@@ -214,32 +214,28 @@ function BidDetailsModalContent({
               avgPriceFiat={averagePriceData.avgPriceFiat}
               fdvFromAvgPriceDisplay={averagePriceData.fdvFromAvgPriceDisplay}
               percentBelowClearing={averagePriceData.percentBelowClearing}
-              isGraduated={isGraduated}
-              isAuctionEnded={isAuctionEnded}
             />
           ) : null}
-          {!(isAuctionEnded && !isGraduated) && (
-            <Flex row gap="$spacing12">
-              <BidSpendSummary
-                spentAmount={spentAmount}
-                maxBudgetAmount={maxBudgetAmount}
-                bidTokenSymbol={bidTokenInfo.symbol}
-                spentFraction={spentFraction}
-                displayState={displayState}
-                isAuctionEnded={auctionProgressState === AuctionProgressState.ENDED}
-              />
+          <Flex row gap="$spacing12">
+            <BidSpendSummary
+              spentAmount={spentAmount}
+              maxBudgetAmount={maxBudgetAmount}
+              bidTokenSymbol={bidTokenInfo.symbol}
+              spentFraction={spentFraction}
+              displayState={displayState}
+              isAuctionEnded={auctionProgressState === AuctionProgressState.ENDED}
+            />
 
-              <Flex width={1} backgroundColor="$surface3" />
+            <Flex width={1} backgroundColor="$surface3" />
 
-              <BidFdvSummary
-                currentFdvDisplay={currentFdvDisplay}
-                maxFdvDisplay={maxFdvDisplay}
-                fdvFraction={fdvFraction}
-                displayState={displayState}
-                isAuctionEnded={auctionProgressState === AuctionProgressState.ENDED && isGraduated}
-              />
-            </Flex>
-          )}
+            <BidFdvSummary
+              currentFdvDisplay={currentFdvDisplay}
+              maxFdvDisplay={maxFdvDisplay}
+              fdvFraction={fdvFraction}
+              displayState={displayState}
+              isAuctionEnded={auctionProgressState === AuctionProgressState.ENDED && isGraduated}
+            />
+          </Flex>
 
           <BidDescription description={description} />
         </Flex>

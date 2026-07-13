@@ -4,6 +4,7 @@ import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { UserCheck } from 'ui/src/components/icons/UserCheck'
 import { X } from 'ui/src/components/icons/X'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { shortenAddress } from 'utilities/src/addresses'
 import { KycHookSetupModal } from '~/pages/Liquidity/CreateAuction/components/KycHookSetupModal'
 import {
@@ -11,8 +12,6 @@ import {
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { ExternalLink } from '~/theme/components/Links'
-
-const KYC_SUPPORT_URL = 'https://support.uniswap.org/hc/en-us'
 
 function KycCardShell({ children }: PropsWithChildren) {
   return (
@@ -43,7 +42,7 @@ function KycDescriptionAndLearnMore() {
       <Text variant="body4" color="$neutral1">
         {t('toucan.createAuction.step.configureAuction.kyc.description')}
       </Text>
-      <ExternalLink href={KYC_SUPPORT_URL}>
+      <ExternalLink href={UniswapHelpUrls.articles.toucanLaunchAuctionConfigureAuctionHelp}>
         <Text variant="buttonLabel4" color="$neutral2">
           {t('toucan.createAuction.step.configureAuction.kyc.learnMore')}
         </Text>

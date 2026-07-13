@@ -5,26 +5,32 @@ import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
-import { convertTempoGasFeeForDisplay } from 'uniswap/src/features/gas/tempo'
+import {
+  convertShiftedGasFeeForDisplay,
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
- * Shows a warning in 2 different cases:
- * 1. When the user doesn't have enough funds to cover the transaction's network cost.
- * 2. When the user is trying to swap a native token and they don't have enough of that token.
+ * Shows a warning when the user doesn't have enough funds to cover the transaction's network cost.
+ *
+ * Note: a general `InsufficientFunds` warning (input amount exceeds balance) is intentionally not
+ * surfaced here — the gas-themed copy in this banner/modal is misleading when the user simply
+ * doesn't have enough of the token they're swapping. That case is handled by the generic
+ * insufficient-balance warning on the form / CTA instead.
  */
 export function useInsufficientNativeTokenWarning({
   flow,
@@ -44,16 +50,9 @@ export function useInsufficientNativeTokenWarning({
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const insufficientGasFundsWarning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
+  const warning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
 
-  const insufficientFundsWarning: Warning | undefined =
-    flow === 'swap' ? warnings.find((w) => w.type === WarningLabel.InsufficientFunds) : undefined
-
-  const warning = insufficientGasFundsWarning ?? insufficientFundsWarning
-
-  const shouldShowWarning =
-    warning?.type === WarningLabel.InsufficientGasFunds ||
-    (warning?.type === WarningLabel.InsufficientFunds && warning.currency?.isNative)
+  const shouldShowWarning = warning?.type === WarningLabel.InsufficientGasFunds
 
   const nativeCurrency = warning?.currency
   const chainId = nativeCurrency?.chainId ?? defaultChainId
@@ -72,11 +71,14 @@ export function useInsufficientNativeTokenWarning({
     if (!gasFee.value || !nativeCurrency?.chainId) {
       return undefined
     }
-    // For Tempo: use warning.currency directly (pathUSD from upstream) and convert
-    // the 18-decimal gas fee to 6-decimal pathUSD units
-    const isTempo = nativeCurrency.chainId === UniverseChainId.Tempo
-    const currency = isTempo ? nativeCurrency : nativeOnChain(nativeCurrency.chainId)
-    const value = isTempo ? convertTempoGasFeeForDisplay(gasFee.value) : gasFee.value
+    // On chains that pay gas in a non-native shifted token (e.g. Tempo pathUSD, Arc
+    // USDC): use warning.currency directly (the gas token, set upstream) and convert
+    // the 18-decimal native gas fee to the gas token's decimals.
+    const shiftGasToken = hasShiftedGasToken(nativeCurrency.chainId)
+    const currency = shiftGasToken ? nativeCurrency : nativeOnChain(nativeCurrency.chainId)
+    const value = shiftGasToken
+      ? convertShiftedGasFeeForDisplay(gasFee.value, getGasFeeDecimalsShift(nativeCurrency.chainId))
+      : gasFee.value
     return getCurrencyAmount({ value, valueType: ValueType.Raw, currency })
   }, [gasFee.value, nativeCurrency])
 
@@ -88,7 +90,7 @@ export function useInsufficientNativeTokenWarning({
     return null
   }
 
-  if (warning.type === WarningLabel.InsufficientGasFunds && !gasAmount) {
+  if (!gasAmount) {
     logger.warn(
       'useInsufficientNativeTokenWarning',
       'useInsufficientNativeTokenWarning',
@@ -127,51 +129,25 @@ export function useInsufficientNativeTokenWarning({
     const warningValues = {
       networkName,
       tokenSymbol: nativeCurrency.symbol,
-      tokenAmount: gasAmount ? gasAmount.toSignificant(2) : '',
+      tokenAmount: gasAmount.toSignificant(2),
     }
 
-    if (warning.type === WarningLabel.InsufficientGasFunds) {
-      if (isTestnetModeEnabled) {
-        return (
-          <Trans
-            components={warningComponents}
-            i18nKey="transaction.warning.insufficientGas.modal.message.noAction"
-            values={warningValues}
-          />
-        )
-      } else {
-        return (
-          <Trans
-            components={warningComponents}
-            i18nKey="transaction.warning.insufficientGas.modal.message"
-            values={warningValues}
-          />
-        )
-      }
-    } else {
-      // When the user is trying to swap a native token and they don't have enough of that token.
-      const values = {
-        networkName,
-        tokenSymbol: nativeCurrency.symbol,
-      }
-
-      if (isTestnetModeEnabled) {
-        return (
-          <Trans
-            i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount.noAction"
-            values={values}
-          />
-        )
-      } else {
-        return (
-          <Trans
-            components={warningComponents}
-            i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount"
-            values={warningValues}
-          />
-        )
-      }
+    if (isTestnetModeEnabled) {
+      return (
+        <Trans
+          components={warningComponents}
+          i18nKey="transaction.warning.insufficientGas.modal.message.noAction"
+          values={warningValues}
+        />
+      )
     }
+    return (
+      <Trans
+        components={warningComponents}
+        i18nKey="transaction.warning.insufficientGas.modal.message"
+        values={warningValues}
+      />
+    )
   }
 
   return {

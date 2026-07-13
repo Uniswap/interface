@@ -1,15 +1,23 @@
 import { sortBalancesByName } from 'uniswap/src/features/dataApi/balances/utils'
 import { PortfolioBalance, PortfolioChainBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 
+/** USD value used for multichain balance sorting; falls back to per-chain token values when row total is missing. */
+function getMultichainBalanceUsdValue(balance: PortfolioMultichainBalance): number {
+  if (balance.totalValueUsd != null && balance.totalValueUsd > 0) {
+    return balance.totalValueUsd
+  }
+  return balance.tokens.reduce((sum, token) => sum + (token.valueUsd ?? 0), 0)
+}
+
 /**
  * Sorts multichain balances by totalValueUsd desc, then by name.
  * Defensive checks tolerate malformed API rows (e.g. empty `tokens`, missing `name`).
  */
-/* oxlint-disable typescript/no-unnecessary-condition -- defensive checks for malformed API data */
 export function sortMultichainBalances(
   balances: PortfolioMultichainBalance[],
   isTestnetModeEnabled: boolean,
 ): PortfolioMultichainBalance[] {
+  /* oxlint-disable-next-line typescript/no-unnecessary-condition -- defensive checks for malformed API data */
   const safeName = (b: PortfolioMultichainBalance): string => b.name ?? ''
   if (isTestnetModeEnabled) {
     const nativeBalances = balances.filter((b) => b.tokens[0] && b.tokens[0].currencyInfo.currency.isNative)
@@ -18,14 +26,13 @@ export function sortMultichainBalances(
     const sortedNonNative = [...nonNative].sort((a, b) => safeName(a).localeCompare(safeName(b)))
     return [...sortedNative, ...sortedNonNative]
   }
-  const withValue = balances.filter((b) => b.totalValueUsd != null && b.totalValueUsd > 0)
-  const withoutValue = balances.filter((b) => !b.totalValueUsd || b.totalValueUsd === 0)
+  const withValue = balances.filter((b) => getMultichainBalanceUsdValue(b) > 0)
+  const withoutValue = balances.filter((b) => getMultichainBalanceUsdValue(b) <= 0)
   return [
-    ...withValue.sort((a, b) => (b.totalValueUsd ?? 0) - (a.totalValueUsd ?? 0)),
+    ...withValue.sort((a, b) => getMultichainBalanceUsdValue(b) - getMultichainBalanceUsdValue(a)),
     ...withoutValue.sort((a, b) => safeName(a).localeCompare(safeName(b))),
   ]
 }
-/* oxlint-enable typescript/no-unnecessary-condition */
 
 /**
  * Stable sort by descending balanceUSD – or native balance tokens in testnet mode –

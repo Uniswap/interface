@@ -1,9 +1,10 @@
 import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { TFunction } from 'i18next'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { TimePeriod } from '~/appGraphql/data/util'
 import {
   sortMultichainTokenByVolume,
@@ -37,7 +38,7 @@ export function getChainLogoUrl(chainId: UniverseChainId | undefined): string | 
   if (!networkName) {
     return undefined
   }
-  return `${uniswapUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/info/logo.png`
+  return `${UniswapStaticUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/info/logo.png`
 }
 
 export function getVolumeBreakdownForPeriod(
@@ -67,26 +68,26 @@ export type VolumePopoverTokenDetailsInput = { chainId: number; address: string 
 
 export type NavigateVolumePopoverToTokenDetails = (
   currency: VolumePopoverTokenDetailsInput,
-  chainFilter?: UniverseChainId,
+  chainSelection?: TdpChainSelection,
 ) => void
 
 /**
- * Opens TDP for the given chain's deployment of a multichain token, optionally setting the chain query param.
+ * Opens TDP for the given chain's deployment of a multichain token, optionally setting aggregate multichain state.
  */
 export function navigateVolumePopoverToTokenDetails({
   navigateToTokenDetails,
   mcToken,
   chainId,
-  chainQueryFilter,
+  chainSelection,
 }: {
   navigateToTokenDetails: NavigateVolumePopoverToTokenDetails
   mcToken: MultichainToken | undefined
   chainId: UniverseChainId
-  chainQueryFilter?: UniverseChainId
+  chainSelection?: TdpChainSelection
 }): void {
   const deployment = mcToken?.chainTokens.find((ct) => ct.chainId === chainId)
   if (!deployment) {
     return
   }
-  navigateToTokenDetails({ chainId: deployment.chainId, address: deployment.address }, chainQueryFilter)
+  navigateToTokenDetails({ chainId: deployment.chainId, address: deployment.address }, chainSelection)
 }

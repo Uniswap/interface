@@ -24,7 +24,7 @@ function useLowestPendingNonce(): BigNumberish | undefined {
     }
     pending.map((txn: TransactionDetails) => {
       if (isClassic(txn)) {
-        const currentNonce = txn.options.request.nonce
+        const currentNonce = txn.options.request?.nonce
         min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
       }
     })
@@ -39,6 +39,6 @@ export function useIsQueuedTransaction(tx: TransactionDetails): boolean {
     return false
   }
 
-  const nonce = tx.options.request.nonce
+  const nonce = tx.options.request?.nonce
   return nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 }

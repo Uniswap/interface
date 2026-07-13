@@ -89,6 +89,16 @@ function getTransactionTypeVerbs(
         canceling: t('transaction.status.send.canceling'),
         canceled: t('transaction.status.send.canceled'),
       }
+    case TransactionType.Deposit:
+      return {
+        success: externalDappName
+          ? t('transaction.status.deposit.successDapp', { externalDappName })
+          : t('transaction.status.deposit.success'),
+        pending: t('transaction.status.deposit.pending'),
+        failed: t('transaction.status.deposit.failed'),
+        canceling: t('transaction.status.deposit.canceling'),
+        canceled: t('transaction.status.deposit.canceled'),
+      }
     case TransactionType.Wrap:
       if (typeInfo.unwrapped) {
         return {
@@ -272,6 +282,14 @@ function getTransactionTypeVerbs(
         success: t('transaction.status.withdrawBid.success'),
         pending: t('transaction.status.withdrawBid.pending'),
         failed: t('transaction.status.withdrawBid.failed'),
+      }
+    case TransactionType.AuctionLaunch:
+      return {
+        success: t('toucan.createAuction.transaction.success'),
+        pending: t('toucan.createAuction.transaction.pending'),
+        failed: t('toucan.createAuction.transaction.failed'),
+        canceling: t('toucan.createAuction.transaction.canceling'),
+        canceled: t('toucan.createAuction.transaction.canceled'),
       }
     case TransactionType.CreatePair:
       return {

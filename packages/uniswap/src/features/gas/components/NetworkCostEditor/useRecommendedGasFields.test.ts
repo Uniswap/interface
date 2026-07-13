@@ -2,7 +2,10 @@ import { renderHook } from '@testing-library/react'
 import { Level } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import type { providers } from 'ethers/lib/ethers'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { useRecommendedGasFields } from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
+import {
+  getRecommendedGasFieldsFromQuoteGas,
+  useRecommendedGasFields,
+} from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import type { Mock } from 'vitest'
 
 vi.mock('uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery', () => ({
@@ -152,5 +155,81 @@ describe('useRecommendedGasFields', () => {
     expect(result.current.recommendedMaxBaseFeeGwei).toBe('0')
     expect(result.current.recommendedPriorityFeeGwei).toBe('2')
     expect(result.current.currentNetworkBaseFeeGwei).toBe('0')
+  })
+
+  it('returns the quote-derived fallback when no tx-based estimate is available', () => {
+    // No tx → query skipped → use the fallback (e.g. permit-signature swap).
+    mockUseGasFeeQuery.mockReturnValue({ data: undefined, isLoading: false, error: null })
+    const fallback = {
+      recommendedMaxBaseFeeGwei: '0.0005',
+      recommendedPriorityFeeGwei: '0.001',
+      recommendedGasLimit: '522820',
+      currentNetworkBaseFeeGwei: '0.0005',
+    }
+    const { result } = renderHook(() => useRecommendedGasFields({ fallback }))
+    expect(result.current.recommendedMaxBaseFeeGwei).toBe('0.0005')
+    expect(result.current.recommendedPriorityFeeGwei).toBe('0.001')
+    expect(result.current.recommendedGasLimit).toBe('522820')
+    expect(result.current.currentNetworkBaseFeeGwei).toBe('0.0005')
+  })
+
+  it('prefers the tx-based estimate over the fallback when both are available', () => {
+    // beforeEach mock provides tx-based params (12/2 GWEI). The fallback must NOT win.
+    const fallback = {
+      recommendedMaxBaseFeeGwei: '0.0005',
+      recommendedPriorityFeeGwei: '0.001',
+      recommendedGasLimit: '522820',
+      currentNetworkBaseFeeGwei: '0.0005',
+    }
+    const tx = { chainId: 1, from: '0x1', to: '0x2' } as providers.TransactionRequest
+    const { result } = renderHook(() => useRecommendedGasFields({ tx, fallback }))
+    expect(result.current.recommendedMaxBaseFeeGwei).toBe('10') // tx-based, not fallback
+    expect(result.current.recommendedGasLimit).toBe('21000')
+  })
+})
+
+describe('getRecommendedGasFieldsFromQuoteGas', () => {
+  // Unichain-style gas estimate: sub-GWEI fees, with a fixed/unreliable
+  // gasEstimate.gasLimit — so the gas limit must come from gasUseEstimate.
+  const gasEstimate = {
+    maxFeePerGas: '1500000',
+    maxPriorityFeePerGas: '1000000',
+    gasLimit: '61861', // intentionally ignored
+    strategy: { limitInflationFactor: 1.15 },
+  }
+
+  it('derives base/priority from gasEstimate and gas limit from gasUseEstimate × inflation', () => {
+    const result = getRecommendedGasFieldsFromQuoteGas({ gasUseEstimate: '454626', gasEstimate })
+    expect(result.recommendedMaxBaseFeeGwei).toBe('0.0005') // (1500000 - 1000000) wei
+    expect(result.recommendedPriorityFeeGwei).toBe('0.001') // 1000000 wei
+    expect(result.recommendedGasLimit).toBe('522820') // round(454626 * 1.15), NOT 61861
+    expect(result.currentNetworkBaseFeeGwei).toBe('0.0005')
+  })
+
+  it('falls back to gasEstimate.gasLimit when gasUseEstimate is absent', () => {
+    const result = getRecommendedGasFieldsFromQuoteGas({ gasEstimate })
+    expect(result.recommendedGasLimit).toBe('61861')
+  })
+
+  it('treats a missing limitInflationFactor as 1x', () => {
+    const result = getRecommendedGasFieldsFromQuoteGas({
+      gasUseEstimate: '454626',
+      gasEstimate: { maxFeePerGas: '1500000', maxPriorityFeePerGas: '1000000' },
+    })
+    expect(result.recommendedGasLimit).toBe('454626')
+  })
+
+  it('returns all-undefined when the fee params are missing (e.g. legacy estimate)', () => {
+    const result = getRecommendedGasFieldsFromQuoteGas({ gasUseEstimate: '454626', gasEstimate: { gasLimit: '61861' } })
+    expect(result.recommendedMaxBaseFeeGwei).toBeUndefined()
+    expect(result.recommendedPriorityFeeGwei).toBeUndefined()
+    expect(result.recommendedGasLimit).toBeUndefined()
+    expect(result.currentNetworkBaseFeeGwei).toBeUndefined()
+  })
+
+  it('returns all-undefined when given nothing', () => {
+    const result = getRecommendedGasFieldsFromQuoteGas({})
+    expect(result.recommendedMaxBaseFeeGwei).toBeUndefined()
+    expect(result.recommendedGasLimit).toBeUndefined()
   })
 })

@@ -40,6 +40,11 @@ export enum WalletEventName {
   ViewRecoveryPhrase = 'View Recovery Phrase',
   WalletAdded = 'Wallet Added',
   WalletRemoved = 'Wallet Removed',
+  NonceCalculated = 'Nonce Calculated',
+  OnchainTransactionSubmissionError = 'Onchain Transaction Submission Error',
+  PendingTransactionBacklogOnStartup = 'Pending Transaction Backlog On Startup',
+  PendingTransactionStuck = 'Pending Transaction Stuck',
+  SwapExecutionWindow = 'Swap Execution Window',
   // alphabetize additional values.
 }
 

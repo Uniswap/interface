@@ -1,5 +1,9 @@
 import { Page } from '@playwright/test'
-import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import {
+  getWalletBalances,
+  listTransactions,
+} from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
@@ -12,34 +16,25 @@ const test = getTest()
 // Token row ID from portfolio mock (chainId-address, lowercase) for Tether USD
 const USDT_TOKEN_ID = '1-0xdac17f958d2ee523a2206206994597c13d831ec7'
 
-type GraphqlFixture = {
-  intercept: (op: string, path: string) => Promise<void>
-  waitForResponse: (op: string) => Promise<void>
-}
 type DataApiFixture = {
   intercept: (method: { service: { typeName: string }; name: string }, mockPath: string) => Promise<void>
 }
 
 async function goToPortfolioOverview({
   page,
-  graphql,
   dataApi,
-  portfolioBalancesMock = Mocks.PortfolioBalances.hayden,
   getPortfolioMock = Mocks.DataApiService.get_portfolio,
   externalAddress,
   waitForGetPortfolio = true,
   waitForListTransactions = true,
 }: {
   page: Page
-  graphql: GraphqlFixture
   dataApi?: DataApiFixture
-  portfolioBalancesMock?: string
   getPortfolioMock?: string | null
   externalAddress?: string
   waitForGetPortfolio?: boolean
   waitForListTransactions?: boolean
 }): Promise<void> {
-  await graphql.intercept('PortfolioBalances', portfolioBalancesMock)
   if (dataApi) {
     await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
   }
@@ -47,7 +42,7 @@ async function goToPortfolioOverview({
     await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
   }
 
-  const waits: Promise<unknown>[] = [graphql.waitForResponse('PortfolioBalances')]
+  const waits: Promise<unknown>[] = []
   if (waitForGetPortfolio) {
     waits.push(page.waitForResponse((res) => res.request().url().includes('GetPortfolio')))
   }
@@ -55,9 +50,10 @@ async function goToPortfolioOverview({
     waits.push(page.waitForResponse((res) => res.url().includes('ListTransactions')))
   }
 
-  const path = externalAddress ? `/portfolio/${externalAddress}` : '/portfolio'
-  const query = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
-  await page.goto(`${path}?${query}`)
+  // Always navigate as external wallet (address in URL path) so isExternalWallet=true and the
+  // demo overlay (pointer-events:none) never blocks interactions, regardless of wallet connect timing.
+  const address = externalAddress ?? HAYDEN_ADDRESS
+  await page.goto(`/portfolio/${address}?eagerlyConnect=false`)
   await Promise.all(waits)
 }
 
@@ -72,8 +68,8 @@ test.describe(
   },
   () => {
     test.describe('Portfolio Chart', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+      test.beforeEach(async ({ page, dataApi }) => {
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display portfolio value', async ({ page }) => {
@@ -99,29 +95,31 @@ test.describe(
     })
 
     test.describe('Action Tiles - Connected Wallet', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+      test.beforeEach(async ({ page }) => {
+        // Navigate with eagerlyConnectAddress (not in path) so isExternalWallet=false.
+        // Wallet connect is async, so explicitly wait for the demo overlay to leave the DOM.
+        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        await expect(page.getByTestId(TestID.DemoWalletDisplay)).not.toBeVisible()
       })
 
-      test('should display all action tiles for connected wallet', async ({ page }) => {
+      test('should display connected wallet action tiles', async ({ page }) => {
         const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
-        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileSend)).toBeVisible()
-        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileReceive)).toBeVisible()
         await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
         await expect(actionTiles.getByTestId(TestID.PortfolioActionTileMore)).toBeVisible()
       })
 
-      test('should navigate to buy page when clicking Buy tile', async ({ page }) => {
-        await page.getByTestId(TestID.PortfolioActionTiles).getByTestId(TestID.PortfolioActionTileBuy).click()
-        await expect(page).toHaveURL(/\/buy/)
+      test('should not show CopyAddress or Share tiles for connected wallet', async ({ page }) => {
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
+        await expect(page.getByTestId(TestID.PortfolioActionTileCopyAddress)).not.toBeVisible()
+        await expect(page.getByTestId(TestID.PortfolioShareButton)).not.toBeVisible()
       })
     })
 
     test.describe('Action Tiles - External Wallet', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           externalAddress: HAYDEN_ADDRESS,
           waitForListTransactions: false,
@@ -145,9 +143,9 @@ test.describe(
     })
 
     test.describe('Mini Tokens Table', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Token rows come from GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display tokens section header', async ({ page }) => {
@@ -165,7 +163,7 @@ test.describe(
 
       test('should navigate to tokens tab when clicking View all tokens', async ({ page }) => {
         await page.getByTestId(TestID.PortfolioOverviewViewAllTokens).click()
-        await expect(page).toHaveURL(/\/portfolio\/tokens/)
+        await expect(page).toHaveURL(/\/portfolio\/.+\/tokens/)
       })
 
       test('should navigate to token details when clicking a token row', async ({ page }) => {
@@ -175,10 +173,9 @@ test.describe(
     })
 
     test.describe('Mini Activity Table', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           getPortfolioMock: null,
           waitForGetPortfolio: false,
@@ -195,17 +192,17 @@ test.describe(
 
       test('should navigate to activity tab when clicking View all activity', async ({ page }) => {
         await page.getByTestId(TestID.PortfolioOverviewViewAllActivity).click()
-        await expect(page).toHaveURL(/\/portfolio\/activity/)
+        await expect(page).toHaveURL(/\/portfolio\/.+\/activity/)
       })
     })
 
     test.describe('Empty Portfolio State', () => {
-      test.beforeEach(async ({ page, graphql }) => {
-        // No dataApi: useActivityData is skipped when isPortfolioZero, so ListTransactions is never called.
+      test.beforeEach(async ({ page, dataApi }) => {
+        // useIsPortfolioZero reads GetWalletBalances (not GetPortfolio), so mock both to zero.
+        // useActivityData is skipped when isPortfolioZero, so ListTransactions is never called.
+        await dataApi.intercept(getWalletBalances, Mocks.DataApiService.get_wallet_balances_empty)
         await goToPortfolioOverview({
           page,
-          graphql,
-          portfolioBalancesMock: Mocks.PortfolioBalances.empty,
           getPortfolioMock: Mocks.DataApiService.get_portfolio_empty,
           waitForListTransactions: false,
         })
@@ -241,11 +238,10 @@ test.describe(
     })
 
     test.describe('External Wallet View', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Token row and share UI need GetPortfolio only.
         await goToPortfolioOverview({
           page,
-          graphql,
           dataApi,
           externalAddress: HAYDEN_ADDRESS,
           waitForListTransactions: false,
@@ -267,17 +263,14 @@ test.describe(
     })
 
     test.describe('Network Filter Integration', () => {
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         // Filter and View all tokens link need GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should filter overview data by network', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        const ethereumOption = getVisibleDropdownElementByTestId(
-          page,
-          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
-        )
+        const ethereumOption = getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`)
         await ethereumOption.waitFor({ state: 'visible' })
         await ethereumOption.click()
         await page.waitForURL(/chain=ethereum/)
@@ -285,30 +278,30 @@ test.describe(
 
       test('should preserve chain filter when navigating to tokens tab', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        const ethereumOption = getVisibleDropdownElementByTestId(
-          page,
-          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
-        )
+        const ethereumOption = getVisibleDropdownElementByTestId(page, `${ElementName.NetworkButton}-1`)
         await ethereumOption.waitFor({ state: 'visible' })
         await ethereumOption.click()
         await page.waitForURL(/chain=ethereum/)
 
-        // Wait for View all tokens link to re-render with chain param (href is on the <a>, test id is on the child Button)
-        const viewAllTokensLink = page.locator(`a:has([data-testid="${TestID.PortfolioOverviewViewAllTokens}"])`)
-        await expect(viewAllTokensLink).toHaveAttribute('href', /chain=ethereum/)
-        await viewAllTokensLink.click()
+        const viewAllTokensButton = page.getByTestId(TestID.PortfolioOverviewViewAllTokens)
+        // href is on the wrapping <a>; test id is on the child Button (same pattern as Mini Tokens Table tests).
+        await expect(page.locator(`a:has([data-testid="${TestID.PortfolioOverviewViewAllTokens}"])`)).toHaveAttribute(
+          'href',
+          /chain=ethereum/,
+        )
+        await viewAllTokensButton.click()
         await expect(page).toHaveURL(/chain=ethereum/)
-        await expect(page).toHaveURL(/\/portfolio\/tokens/)
+        await expect(page).toHaveURL(/\/portfolio\/.+\/tokens/)
       })
     })
 
     test.describe('Responsive Behavior', () => {
       const MOBILE_VIEWPORT = { width: 375, height: 667 }
 
-      test.beforeEach(async ({ page, graphql, dataApi }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
         await page.setViewportSize(MOBILE_VIEWPORT)
         // Chart, tiles, token row need GetPortfolio only.
-        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
+        await goToPortfolioOverview({ page, dataApi, waitForListTransactions: false })
       })
 
       test('should display overview chart on mobile', async ({ page }) => {
@@ -317,7 +310,7 @@ test.describe(
 
       test('should display action tiles on mobile', async ({ page }) => {
         const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
-        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileSend)).toBeVisible()
       })
 
       test('should display tokens table on mobile', async ({ page }) => {

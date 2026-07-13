@@ -58,7 +58,7 @@ import {
   Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -321,7 +321,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.walletFeedbackForm,
+              uriLink: UniswapStaticUrls.walletFeedbackForm,
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
@@ -330,7 +330,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.helpArticleUrls.mobileWalletHelp,
+              uriLink: UniswapHelpUrls.articles.mobileWalletHelp,
               headerTitle: t('settings.action.help'),
             },
             text: t('settings.action.help'),

@@ -1,4 +1,4 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { createPrivyBlobStore } from 'uniswap/src/features/passkey/privyBlobStore.shared'
 
 /**
@@ -12,6 +12,6 @@ export const { storeEncryptedBlob, fetchEncryptedBlob } = createPrivyBlobStore({
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
     'privy-app-id': privyAppId,
-    Origin: uniswapUrls.requestOriginUrl,
+    Origin: UniswapStaticUrls.requestOriginUrl,
   }),
 })

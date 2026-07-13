@@ -103,36 +103,3 @@ export function createConcentrationGradientColors(tokenColor: string): { startCo
     endColor: `rgba(${r}, ${g}, ${b}, ${CONCENTRATION_GRADIENT_END_OPACITY})`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Demand chart background gradient colors
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Demand chart gradient configuration
-// These opacities create per-bar background gradients (vertical: top darker → bottom transparent)
-const DEMAND_GRADIENT_START_OPACITY = 0.08 // Top of gradient
-const DEMAND_GRADIENT_END_OPACITY = 0.003 // Bottom of gradient (nearly transparent)
-
-/**
- * Creates gradient colors for the demand chart per-bar background based on the token color.
- * The gradient goes from darker at the top to nearly transparent at the bottom.
- *
- * @param tokenColor - The token's brand color in hex format (e.g., '#7482FF')
- * @returns Object with startColor (top) and endColor (bottom) for the vertical gradient
- */
-export function createDemandBackgroundGradient(tokenColor: string): { startColor: string; endColor: string } {
-  const rgb = hexToRGB(tokenColor)
-  if (!rgb) {
-    logger.warn('colors', 'createDemandBackgroundGradient', 'Failed to parse token color', { tokenColor })
-    return {
-      startColor: 'rgba(0, 0, 0, 0)',
-      endColor: 'rgba(0, 0, 0, 0)',
-    }
-  }
-  const { r, g, b } = rgb
-
-  return {
-    startColor: `rgba(${r}, ${g}, ${b}, ${DEMAND_GRADIENT_START_OPACITY})`,
-    endColor: `rgba(${r}, ${g}, ${b}, ${DEMAND_GRADIENT_END_OPACITY})`,
-  }
-}

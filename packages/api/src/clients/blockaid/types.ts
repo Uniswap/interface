@@ -1,5 +1,4 @@
-// The lint rule is disabled because we want to use the zod schema factory pattern to avoid bundle size bloat
-/* oxlint-disable typescript/explicit-function-return-type */
+/* oxlint-disable typescript/explicit-function-return-type -- zod schema factory pattern to avoid bundle size bloat */
 import { z } from 'zod'
 
 /**

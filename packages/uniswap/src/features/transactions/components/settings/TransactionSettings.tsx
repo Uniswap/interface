@@ -1,4 +1,5 @@
 import { isMobileApp, isWebApp } from '@universe/environment'
+import type { ReactNode } from 'react'
 import type { ColorTokens, FlexProps, GeneratedIcon } from 'ui/src'
 import { Flex, Popover, TouchableArea } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
@@ -30,10 +31,10 @@ export interface TransactionSettingsProps {
   iconSize?: IconSizeTokens
   defaultTitle?: string
   shouldShowSettingsIconTooltip?: boolean
-  IconLabel?: React.ReactNode
+  IconLabel?: ReactNode
   CustomIconComponent?: GeneratedIcon
   testID?: string
-  CustomSettingsButton?: React.ReactNode
+  CustomSettingsButton?: ReactNode
   onClose?: () => void
 }
 

@@ -2,6 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
+import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokensProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -11,6 +12,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { MAX_TOKENS_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { usePortfolioSectionTotalValue } from '~/pages/Portfolio/Overview/hooks/usePortfolioSectionTotalValue'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
@@ -19,6 +21,12 @@ import { TokensTableInner } from '~/pages/Portfolio/Tokens/Table/TokensTableInne
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
+const MINI_TOKENS_HIDDEN_COLUMNS = [TokenColumns.Change1d, TokenColumns.Allocation, TokenColumns.AvgCost]
+const MINI_TOKENS_ANALYTICS_CONTEXT = {
+  element: ElementName.PortfolioMiniTokenRow,
+  section: SectionName.PortfolioOverviewTab,
+}
+
 interface MiniTokensTableProps {
   maxTokens?: number
   chainId?: UniverseChainId
@@ -26,10 +34,9 @@ interface MiniTokensTableProps {
 
 export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps) {
   const { t } = useTranslation()
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const { externalAddress, chainId: routeChainId } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { chains: enabledChains } = useEnabledChains()
   const modifier = useRestPortfolioValueModifier(portfolioAddresses.evmAddress ?? portfolioAddresses.svmAddress)
   const viewAllHref = buildPortfolioUrl({
@@ -39,7 +46,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   })
 
   // Same as Portfolio tokens tab: single-chain view should use flat `tokenProfitLosses`, not multichain shape.
-  const requestMultichainPnlShape = multichainTokenUxEnabled && chainId === undefined
+  const requestMultichainPnlShape = chainId === undefined
 
   const { data: tokenProfitLossData, isError: isProfitLossError } = useGetWalletTokensProfitLossQuery({
     input: {
@@ -49,7 +56,6 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
       modifier,
       multichain: requestMultichainPnlShape || undefined,
     },
-    enabled: isProfitLossEnabled,
   })
 
   const {
@@ -66,10 +72,11 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   const tableData = tokenData ?? []
   const tableLoading = loading && !tokenData
 
-  const hiddenColumns = [TokenColumns.Change1d, TokenColumns.Allocation, TokenColumns.AvgCost]
-  if (!isProfitLossEnabled) {
-    hiddenColumns.push(TokenColumns.UnrealizedPnl)
-  }
+  const sectionTotalValue = usePortfolioSectionTotalValue({
+    part: PortfolioBalancePart.Tokens,
+    chainId,
+    enabled: portfolioPoolsBalancesEnabled,
+  })
 
   return (
     <Flex grow gap="$gap12">
@@ -78,21 +85,19 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
         subtitle={t('portfolio.tokens.balance.totalTokens', { count: totalCount ?? tableData.length })}
         loading={tableLoading}
         testId={TestID.PortfolioOverviewTokensSection}
+        {...sectionTotalValue}
       >
         <TokensTableInner
           tokenData={tableData}
           columnSortEnabled={false}
           loading={tableLoading}
           error={error}
-          hiddenColumns={hiddenColumns}
+          hiddenColumns={MINI_TOKENS_HIDDEN_COLUMNS}
           maxHeight={undefined}
           loadingRowsCount={MAX_TOKENS_ROWS}
           externalScrollSync={false}
           showUnrealizedPnlPercent
-          analyticsContext={{
-            element: ElementName.PortfolioMiniTokenRow,
-            section: SectionName.PortfolioOverviewTab,
-          }}
+          analyticsContext={MINI_TOKENS_ANALYTICS_CONTEXT}
         />
       </TableSectionHeader>
       <ViewAllButton

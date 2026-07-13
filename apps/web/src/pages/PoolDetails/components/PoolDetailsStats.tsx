@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +16,8 @@ import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { calculateTotalApr } from '~/features/Liquidity/LPIncentives/utils'
 import { useCurrency } from '~/hooks/Tokens'
 import { DetailBubble } from '~/pages/PoolDetails/components/shared'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -162,6 +164,8 @@ interface PoolDetailsStatsProps {
   isReversed?: boolean
   chainId?: number
   loading?: boolean
+  poolApr?: Percent
+  rewardsApr?: number
 }
 
 export function PoolDetailsStats({
@@ -171,6 +175,8 @@ export function PoolDetailsStats({
   isReversed,
   chainId,
   loading,
+  poolApr,
+  rewardsApr,
 }: PoolDetailsStatsProps) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -242,6 +248,7 @@ export function PoolDetailsStats({
           </Flex>
         )}
       </StatItemColumn>
+      {poolApr && <AprStatItem poolApr={poolApr} rewardsApr={rewardsApr} />}
       {poolData.tvlUSD && (
         <StatItem title={t('common.totalValueLocked')} value={poolData.tvlUSD} delta={poolData.tvlUSDChange} />
       )}
@@ -302,6 +309,45 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
           </Flex>
         )}
       </StatsTextContainer>
+    </StatItemColumn>
+  )
+}
+
+function AprStatItem({ poolApr, rewardsApr }: { poolApr: Percent; rewardsApr?: number }) {
+  const { t } = useTranslation()
+  const { formatPercent } = useLocalizationContext()
+
+  const showAprBreakdown = rewardsApr !== undefined && rewardsApr > 0
+  const totalApr = rewardsApr
+    ? formatPercent(calculateTotalApr(poolApr, rewardsApr).toSignificant(), 2)
+    : formatPercent(poolApr.toSignificant(), 2)
+
+  return (
+    <StatItemColumn>
+      <Text variant="body1" color="$neutral2">
+        {t('pool.totalAPR')}
+      </Text>
+      <StatsTextContainer>
+        <StatItemText>{totalApr}</StatItemText>
+      </StatsTextContainer>
+      {showAprBreakdown && (
+        <Flex mt="$spacing8" gap="$spacing6">
+          <Flex row justifyContent="space-between" alignItems="center" gap="$gap8">
+            <Text variant="body3" color="$neutral2">
+              {t('pool.apr.base')}
+            </Text>
+            <Text variant="body3" color="$neutral1">
+              {formatPercent(poolApr.toSignificant())}
+            </Text>
+          </Flex>
+          <Flex row justifyContent="space-between" alignItems="center" gap="$gap8">
+            <Text variant="body3" color="$neutral2">
+              {t('pool.apr.reward')}
+            </Text>
+            <LpIncentivesAprDisplay lpIncentiveRewardApr={rewardsApr} hideBackground showTokenSymbol />
+          </Flex>
+        </Flex>
+      )}
     </StatItemColumn>
   )
 }

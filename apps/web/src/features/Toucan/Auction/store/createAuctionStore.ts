@@ -28,6 +28,7 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
         auctionDetailsError: null,
         checkpointData: null,
         onchainCheckpoint: null,
+        totalCleared: null,
         tokenColor: undefined, // Will be set by useSrcColor in provider
         tokenColorLoading: true,
         currentBlockNumber: INITIAL_CURRENT_BLOCK,
@@ -199,6 +200,9 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
           },
           setOnchainCheckpoint: (data) => {
             set({ onchainCheckpoint: data })
+          },
+          setTotalCleared: (totalCleared) => {
+            set({ totalCleared })
           },
           setSelectedTickPrice: (price) => {
             set({ selectedTickPrice: price })

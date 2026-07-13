@@ -1,23 +1,49 @@
-import { type ComponentRef, useRef, useState } from 'react'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
+import {
+  Button,
+  Flex,
+  Input,
+  Popover,
+  SpinningLoader,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  UniversalImageResizeMode,
+} from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { ImageUpload } from 'ui/src/components/icons/ImageUpload'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { NEW_LAUNCH_CHAINS } from '~/features/Toucan/supportedChains'
+import { getAuctionTokenInfoEnteredProperties } from '~/pages/Liquidity/CreateAuction/analytics'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
 import { TokenAdditionalInfoSection } from '~/pages/Liquidity/CreateAuction/components/TokenAdditionalInfoSection'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useCreateNewTokenAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
-import { useCreateNewTokenAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useCreateNewTokenAllowedNetworks'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
-import { CreateAuctionStep, type CreateNewTokenFormState } from '~/pages/Liquidity/CreateAuction/types'
+import { useReconcileCreateNewTokenNetwork } from '~/pages/Liquidity/CreateAuction/hooks/useReconcileCreateNewTokenNetwork'
+import { useTokenImageUpload } from '~/pages/Liquidity/CreateAuction/hooks/useTokenImageUpload'
+import {
+  CreateAuctionStep,
+  type CreateNewTokenFormState,
+  NEW_TOKEN_SYMBOL_MAX_LENGTH,
+} from '~/pages/Liquidity/CreateAuction/types'
+import { resolveCreateNewTokenDisplayImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveCreateNewTokenDisplayImageSrc'
 
 function NetworkSelector({
   network,
@@ -79,6 +105,7 @@ function NetworkSelector({
                 >
                   <NetworkLogo chainId={chainId} size={iconSizes.icon20} />
                   <Text variant="buttonLabel3">{info.label}</Text>
+                  {NEW_LAUNCH_CHAINS.includes(chainId) && <NewTag ml="$none" />}
                   {isSelected && <CheckCircleFilled color="$neutral1" size="$icon.20" />}
                 </TouchableArea>
               </Popover.Close>
@@ -100,6 +127,48 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const canContinue = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
   const allowedNetworks = useCreateNewTokenAllowedNetworks()
   const address = useActiveAddress(Platform.EVM)
+  const trace = useTrace()
+
+  const handleContinue = useEvent(() => {
+    sendAnalyticsEvent(
+      AuctionEventName.AuctionTokenInfoEntered,
+      getAuctionTokenInfoEnteredProperties({ trace, tokenForm: createNew }),
+    )
+    commitTokenFormAndAdvance()
+  })
+
+  // The name display swaps to an edit input on press; fire the token-name click here because
+  // wrapping the container Flex in <Trace logPress> doesn't catch the inner TouchableArea's press.
+  const handleEnterNameEdit = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionTokenName })
+    setIsEditingName(true)
+  })
+
+  // Testnet mode re-partitions the allowed networks, so the default selection (Unichain) can fall
+  // out of the offered list; snap it back to a valid chain.
+  useReconcileCreateNewTokenNetwork({ selectedNetwork: createNew.network, allowedNetworks })
+
+  const { status: imageStatus, errorReason: imageErrorReason, start: startImageUpload } = useTokenImageUpload()
+  const isImageProcessing = imageStatus === 'uploading' || imageStatus === 'verifying'
+  // Blob preview (step-local upload) wins until the Pinata URL loads in the background; see
+  // `useTokenImageUpload` + `localImagePreviewUri` on the store.
+  const displayImageUri = resolveCreateNewTokenDisplayImageSrc(createNew.localImagePreviewUri, createNew.imageUrl)
+
+  const imageErrorMessage = useMemo((): string | undefined => {
+    switch (imageErrorReason) {
+      case 'invalid-type':
+        return t('toucan.createAuction.step.tokenInfo.image.error.invalidType')
+      case 'too-large':
+        return t('toucan.createAuction.step.tokenInfo.image.error.tooLarge')
+      // A single generic message for every moderation slug — never surface the category.
+      case 'rejected':
+        return t('toucan.createAuction.step.tokenInfo.image.error.rejected')
+      case 'upload-failed':
+        return t('toucan.createAuction.step.tokenInfo.image.error.failed')
+      default:
+        return undefined
+    }
+  }, [imageErrorReason, t])
 
   const handleDisabledContinue = () => {
     if (createNew.name.trim().length === 0) {
@@ -131,17 +200,44 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
       </Flex>
       <Flex gap="$spacing16">
         <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible">
-          <TouchableArea
-            width={80}
-            height={80}
-            borderRadius="$roundedFull"
-            backgroundColor="$surface3"
-            alignItems="center"
-            justifyContent="center"
-            onPress={() => {}} // TODO: launch S3 upload flow
-          >
-            <ImageUpload color="$neutral2" size="$icon.24" />
-          </TouchableArea>
+          <Trace logPress element={ElementName.AuctionTokenImageUpload}>
+            <TouchableArea
+              width={80}
+              height={80}
+              borderRadius="$roundedFull"
+              backgroundColor="$surface3"
+              alignItems="center"
+              justifyContent="center"
+              overflow="hidden"
+              onPress={startImageUpload}
+              accessibilityRole="button"
+              accessibilityLabel={t('toucan.createAuction.step.tokenInfo.image.upload')}
+            >
+              {displayImageUri ? (
+                <UniversalImage
+                  uri={displayImageUri}
+                  size={{ width: 80, height: 80, resizeMode: UniversalImageResizeMode.Cover }}
+                  allowLocalUri
+                />
+              ) : (
+                <ImageUpload color="$neutral2" size="$icon.24" />
+              )}
+              {isImageProcessing && (
+                <Flex
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  right={0}
+                  bottom={0}
+                  alignItems="center"
+                  justifyContent="center"
+                  backgroundColor="$scrim"
+                >
+                  <SpinningLoader color="$white" />
+                </Flex>
+              )}
+            </TouchableArea>
+          </Trace>
           <Flex flex={1} gap="$spacing4" justifyContent="center">
             <Text variant="body3" color="$neutral2">
               {t('toucan.createAuction.step.tokenInfo.name')}
@@ -164,44 +260,47 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               />
             ) : (
               <Flex row alignItems="center" justifyContent="space-between">
-                <TouchableArea flex={1} minWidth={0} onPress={() => setIsEditingName(true)}>
+                <TouchableArea flex={1} minWidth={0} onPress={handleEnterNameEdit}>
                   <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
                     {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
                   </Text>
                 </TouchableArea>
-                <TouchableArea
-                  alignItems="center"
-                  px="$spacing12"
-                  py="$spacing8"
-                  onPress={() => setIsEditingName(true)}
-                >
+                <TouchableArea alignItems="center" px="$spacing12" py="$spacing8" onPress={handleEnterNameEdit}>
                   <Edit color="$neutral1" size="$icon.20" />
                 </TouchableArea>
               </Flex>
             )}
           </Flex>
         </Flex>
+        {imageErrorMessage && (
+          <Text variant="body3" color="$statusCritical">
+            {imageErrorMessage}
+          </Text>
+        )}
         <Flex gap="$spacing8">
           <Flex row gap="$spacing8">
             <Flex flex={3} backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing2">
               <Text variant="body3" color="$neutral2">
                 {t('toucan.createAuction.step.tokenInfo.ticker')}
               </Text>
-              <Input
-                ref={symbolInputRef}
-                flex={1}
-                value={createNew.symbol}
-                onChangeText={(text) => updateCreateNewTokenField('symbol', text)}
-                placeholder={t('toucan.createAuction.step.tokenInfo.tickerPlaceholder')}
-                unstyled
-                outlineStyle="none"
-                fontFamily="$body"
-                fontSize={fonts.body1.fontSize}
-                lineHeight={fonts.body1.lineHeight}
-                fontWeight={fonts.body1.fontWeight}
-                color="$neutral1"
-                placeholderTextColor="$neutral3"
-              />
+              <Trace logFocus element={ElementName.AuctionTokenTicker}>
+                <Input
+                  ref={symbolInputRef}
+                  flex={1}
+                  value={createNew.symbol}
+                  onChangeText={(text) => updateCreateNewTokenField('symbol', text)}
+                  maxLength={NEW_TOKEN_SYMBOL_MAX_LENGTH}
+                  placeholder={t('toucan.createAuction.step.tokenInfo.tickerPlaceholder')}
+                  unstyled
+                  outlineStyle="none"
+                  fontFamily="$body"
+                  fontSize={fonts.body1.fontSize}
+                  lineHeight={fonts.body1.lineHeight}
+                  fontWeight={fonts.body1.fontWeight}
+                  color="$neutral1"
+                  placeholderTextColor="$neutral3"
+                />
+              </Trace>
             </Flex>
             <Flex flex={2}>
               <NetworkSelector
@@ -215,23 +314,23 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           <TokenAdditionalInfoSection
             description={createNew.description}
             onDescriptionChange={(v) => updateCreateNewTokenField('description', v)}
-            websiteLink={createNew.websiteLink}
-            onWebsiteLinkChange={(v) => updateCreateNewTokenField('websiteLink', v)}
           />
         </Flex>
       </Flex>
       <Flex row>
-        <Button
-          size="large"
-          emphasis="primary"
-          onPress={commitTokenFormAndAdvance}
-          isDisabled={!canContinue}
-          onDisabledPress={canContinue ? undefined : handleDisabledContinue}
-          fill
-          backgroundColor={tokenColor}
-        >
-          {t('common.button.continue')}
-        </Button>
+        <Trace logPress element={ElementName.Continue} properties={{ token_source: 'new' }}>
+          <Button
+            size="large"
+            emphasis="primary"
+            onPress={handleContinue}
+            isDisabled={!canContinue}
+            onDisabledPress={canContinue ? undefined : handleDisabledContinue}
+            fill
+            backgroundColor={canContinue ? tokenColor : undefined}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
       </Flex>
     </Flex>
   )

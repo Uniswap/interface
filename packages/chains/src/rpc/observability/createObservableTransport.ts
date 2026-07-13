@@ -1,4 +1,5 @@
 import { Chain, ClientConfig, EIP1193RequestFn, Transport, TransportConfig } from 'viem'
+import { extractRpcErrorMeta } from './extractRpcErrorMeta'
 import { generateRequestId, type RpcObserver } from './rpcObserver'
 
 export function createObservableTransport({
@@ -30,7 +31,9 @@ export function createObservableTransport({
         observer.onResponse({ ...ctx, durationMs: performance.now() - start })
         return result
       } catch (error) {
-        observer.onError({ ...ctx, durationMs: performance.now() - start, error })
+        // viem throws raw HttpRequestError (`.status`) / RpcError (`.code`) here —
+        // extract before they're flattened to a message string downstream.
+        observer.onError({ ...ctx, durationMs: performance.now() - start, error, ...extractRpcErrorMeta(error) })
         throw error
       }
     }) as EIP1193RequestFn

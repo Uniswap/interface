@@ -15,14 +15,12 @@ import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/use
 import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
 import { TextLoaderWrapper, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import {
-  ADDITIONAL_WIDTH_FOR_ANIMATIONS,
-  AnimatedCharStyles,
-  DIGIT_HEIGHT,
-  NUMBER_ARRAY,
-  NUMBER_WIDTH_ARRAY,
-} from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient'
+import { ADDITIONAL_WIDTH_FOR_ANIMATIONS, DIGIT_HEIGHT } from 'uniswap/src/components/AnimatedNumber/native/constants'
+
+const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+import { AnimatedCharStyles } from 'uniswap/src/components/AnimatedNumber/styles'
+import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
+import { NUMBER_WIDTH_ARRAY } from 'uniswap/src/components/AnimatedNumber/utils/constants'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 

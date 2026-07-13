@@ -11,7 +11,7 @@ import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useFiatOnRampAggregatorOffRampTransferDetailsQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
@@ -266,7 +266,7 @@ export const OffRampConfirmTransferModal = ({
                 {t('common.youreSelling')}
               </Text>
             }
-            link={uniswapUrls.helpArticleUrls.fiatOffRampHelp}
+            link={UniswapHelpUrls.articles.fiatOffRampHelp}
             closeModal={onClose}
           />
           <Flex py="$gap12" gap="$gap16">

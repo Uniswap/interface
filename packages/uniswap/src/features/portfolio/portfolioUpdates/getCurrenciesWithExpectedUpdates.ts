@@ -51,6 +51,8 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
       }
       break
     case TransactionType.Send:
+    case TransactionType.Deposit:
+    case TransactionType.Withdraw:
       currenciesWithBalToUpdate.add(
         buildCurrencyId(txChainId, normalizeTokenAddressForCache(transaction.typeInfo.tokenAddress)),
       )

@@ -4,7 +4,11 @@ import { getPlanCompoundSlippageTolerance } from 'uniswap/src/features/transacti
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { prepareTradingApiTradeInput } from 'uniswap/src/features/transactions/swap/services/tradeService/evmTradeService'
 import { ValidatedTradeInput } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
-import { ChainedActionTrade, TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  createChainedActionTrade,
+  type TradeWithStatus,
+  type UseTradeArgs,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { useStore } from 'zustand'
 
 export interface TransformPlanParams {
@@ -22,10 +26,12 @@ export function transformPlanResponseToChainedQuote({
   const inputAmount = validatedInput.amount.quotient.toString()
   const input: TradingApi.QuoteInput = {
     amount: inputAmount,
+    maximumAmount: inputAmount,
     token: validatedInput.tokenInAddress,
   }
   const output: TradingApi.QuoteOutput = {
     amount: planResponse.expectedOutput,
+    minimumAmount: getMinimumAmountOut(planResponse.expectedOutput, slippageTolerance),
     token: validatedInput.tokenOutAddress,
     recipient: planResponse.recipient,
   }
@@ -84,11 +90,15 @@ export function useTradeFromExistingPlan(params: UseTradeArgs): TradeWithStatus 
       slippageTolerance,
     })
 
-    const trade = new ChainedActionTrade({
+    const trade = createChainedActionTrade({
       quote: adaptedChainedQuote,
       currencyIn: validatedInput.currencyIn,
       currencyOut: validatedInput.currencyOut,
     })
+
+    if (!trade) {
+      return undefined
+    }
 
     return {
       trade,
@@ -100,4 +110,10 @@ export function useTradeFromExistingPlan(params: UseTradeArgs): TradeWithStatus 
       gasEstimate: undefined,
     }
   }, [activePlanResponse, params])
+}
+
+function getMinimumAmountOut(amount: string, slippageTolerance: number): string {
+  const slippageBps = BigInt(Math.round(slippageTolerance * 100))
+  const bipsBase = BigInt(10_000)
+  return ((BigInt(amount) * (bipsBase - slippageBps)) / bipsBase).toString()
 }

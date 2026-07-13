@@ -18,7 +18,7 @@ interface UsePriceOptions {
  *
  * Requires a PriceServiceProvider in the tree.
  */
-export function usePrice(options: UsePriceOptions): number | undefined {
+export function usePrice(options: UsePriceOptions): { price: number | undefined; isLoading: boolean } {
   const { chainId, address, live = true } = options
   const { wsClient, restBatcher } = usePricesContext()
   const queryClient = useQueryClient()
@@ -31,7 +31,7 @@ export function usePrice(options: UsePriceOptions): number | undefined {
   // When restBatcher is provided and WS is disconnected, queryFn fires as a
   // fallback. When WS is connected, refetchInterval is disabled to avoid
   // redundant REST calls.
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     enabled
       ? tokenPriceQueryOptions({ chainId, address, restBatcher, queryClient, getIsWsConnected })
       : queryOptions<TokenPriceData | null>({ queryKey: priceKeys.all, queryFn: skipToken, enabled: false }),
@@ -48,5 +48,5 @@ export function usePrice(options: UsePriceOptions): number | undefined {
   }, [enabled, live, chainId, address, wsClient])
 
   const price: number | undefined = enabled ? (data?.price ?? undefined) : undefined
-  return price
+  return { price, isLoading: enabled && isLoading }
 }

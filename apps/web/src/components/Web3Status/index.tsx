@@ -10,7 +10,6 @@ import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { AccountDrawer as PortfolioDrawer } from '~/components/AccountDrawer'
 import { usePendingActivity } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
@@ -195,7 +194,7 @@ function Web3StatusInner() {
 export function Web3Status() {
   const { isOpen: recentlyConnectedModalIsOpen } = useModalState(ModalName.RecentlyConnectedModal)
   return (
-    <PrefetchBalancesWrapper>
+    <>
       <Popover
         placement="bottom"
         stayInFrame
@@ -211,6 +210,6 @@ export function Web3Status() {
       <Portal>
         <PortfolioDrawer />
       </Portal>
-    </PrefetchBalancesWrapper>
+    </>
   )
 }

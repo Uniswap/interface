@@ -8,6 +8,7 @@ import {
   TransactionOriginType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { type RpcUserOperation } from 'viem/account-abstraction'
 import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import type { CalculatedNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
@@ -19,11 +20,10 @@ export interface PrepareTransactionParams {
   submitViaPrivateRpc: boolean
 }
 
-export interface SubmitTransactionParams {
+type SubmitTransactionParamsBase = {
   txId?: string
   chainId: UniverseChainId
   account: SignerMnemonicAccountMeta
-  request: SignedTransactionRequest
   options: TransactionOptions
   transactionOriginType: TransactionOriginType
   // When undefined, the transaction is submitted but not added to the local state
@@ -31,7 +31,26 @@ export interface SubmitTransactionParams {
   analytics?: SwapTradeBaseProperties
 }
 
-export interface SubmitTransactionParamsWithTypeInfo extends SubmitTransactionParams {
+export type EoaSubmitTransactionParams = SubmitTransactionParamsBase & {
+  request: SignedTransactionRequest
+  userOp?: never
+}
+
+export type UserOpSubmitTransactionParams = SubmitTransactionParamsBase & {
+  request?: never
+  userOp: RpcUserOperation<'0.8'>
+  // When true, the service requests Uniswap gas sponsorship to fill paymaster fields before signing.
+  requestUniswapGasSponsorship: boolean
+  paymasterServiceContext?: Record<string, unknown>
+}
+
+export type SubmitTransactionParams = EoaSubmitTransactionParams | UserOpSubmitTransactionParams
+
+export type SubmitTransactionParamsWithTypeInfo = SubmitTransactionParams & {
+  typeInfo: TransactionTypeInfo
+}
+
+export type ExecuteUserOpParams = UserOpSubmitTransactionParams & {
   typeInfo: TransactionTypeInfo
 }
 
@@ -79,6 +98,14 @@ export interface TransactionService {
   executeTransaction(input: ExecuteTransactionParams): Promise<{
     transactionHash: string
   }>
+
+  /**
+   * Execute a 4337 UserOperation: optionally sponsor it, sign it, and submit it to the bundler.
+   *
+   * @param input UserOp parameters
+   * @returns The userOp hash returned by the bundler
+   */
+  executeUserOp(input: ExecuteUserOpParams): Promise<{ userOpHash: string }>
 
   /**
    * Calculate the next nonce for an account on a chain

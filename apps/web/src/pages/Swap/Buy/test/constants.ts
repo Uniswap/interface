@@ -43,4 +43,5 @@ export const mockBuyFormContext = {
     fetchingQuotes: false,
   },
   setBuyFormState: vi.fn(),
+  externalTransactionIdSuffix: 'test-transaction-id-suffix',
 }

@@ -1,9 +1,9 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { setOpenModal } from '~/state/application/reducer'
 
 export const OAUTH_PENDING_KEY = 'addBackupLogin:oauthProvider'
@@ -24,7 +24,7 @@ export function useOAuthRedirectRouter(): void {
   const dispatch = useDispatch()
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()
-  const { ready } = usePrivy()
+  const { ready } = useMaybePrivy()
 
   useEffect(() => {
     if (!ready) {

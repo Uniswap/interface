@@ -1,20 +1,16 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { NetworkBalanceBreakdown } from 'uniswap/src/components/tokenDetails/NetworkBalanceBreakdown'
 import { computeAggregateBalance } from 'uniswap/src/components/tokenDetails/utils'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { Balance } from '~/pages/TokenDetails/components/balances/Balance'
 import { BridgedAssetWithdrawButton } from '~/pages/TokenDetails/components/balances/BridgedAssetWithdrawButton'
@@ -23,11 +19,11 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
 export function BalanceSummary(): JSX.Element | null {
   const { isDisconnected } = useConnectionStatus()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const { currencyChain, multiChainMap, balanceError } = useTDPStore((s) => ({
+  const { currencyChain, multiChainMap, balanceError, tokenQuery } = useTDPStore((s) => ({
     currencyChain: s.currencyChain,
     multiChainMap: s.multiChainMap,
     balanceError: s.balanceError,
+    tokenQuery: s.tokenQuery,
   }))
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
@@ -44,10 +40,9 @@ export function BalanceSummary(): JSX.Element | null {
 
   const isMultichainBalance = otherChainBalances.length > 0
 
-  const displayBalance =
-    multichainTokenUxEnabled && isMultichainBalance
-      ? computeAggregateBalance(allBalances, pageChainBalance?.currencyInfo)
-      : pageChainBalance
+  const displayBalance = isMultichainBalance
+    ? computeAggregateBalance(allBalances, pageChainBalance?.currencyInfo)
+    : pageChainBalance
 
   const hasBalances = Boolean(displayBalance || isMultichainBalance)
   const isOutage = !!balanceError
@@ -55,13 +50,16 @@ export function BalanceSummary(): JSX.Element | null {
   if (isDisconnected || !hasBalances) {
     return null
   }
+  const projectName = tokenQuery.data?.token?.project?.name ?? undefined
+
   return (
     <Flex gap="$gap24" height="fit-content" width="100%">
       <Flex gap="$gap16">
         <PageChainBalanceSummary
           pageChainBalance={displayBalance}
-          isMultichainBalance={multichainTokenUxEnabled && isMultichainBalance}
+          isMultichainBalance={isMultichainBalance}
           isOutage={isOutage}
+          projectName={projectName}
         />
         {isMultichainBalance && (
           <BreakdownSection
@@ -80,10 +78,12 @@ function PageChainBalanceSummary({
   pageChainBalance,
   isMultichainBalance = false,
   isOutage = false,
+  projectName,
 }: {
   pageChainBalance?: PortfolioBalance
   isMultichainBalance?: boolean
   isOutage?: boolean
+  projectName?: string
 }): JSX.Element | null {
   const { t } = useTranslation()
   if (!pageChainBalance) {
@@ -108,6 +108,7 @@ function PageChainBalanceSummary({
         fetchedBalance={pageChainBalance}
         isAggregate={isMultichainBalance}
         isMultichainBalance={isMultichainBalance}
+        projectName={projectName}
       />
     </Flex>
   )
@@ -123,18 +124,13 @@ function BreakdownSection({
   hasPageChainBalance: boolean
 }): JSX.Element | null {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const navigate = useNavigate()
   const trace = useTrace()
   const { setSelectedMultichainChainId } = useTDPSelectedMultichainChain()
   const { defaultChainId } = useEnabledChains()
 
   const displayBalances = useMemo(
-    () =>
-      multichainTokenUxEnabled
-        ? [...(pageChainBalance ? [pageChainBalance] : []), ...otherChainBalances]
-        : [...otherChainBalances],
-    [multichainTokenUxEnabled, pageChainBalance, otherChainBalances],
+    () => [...(pageChainBalance ? [pageChainBalance] : []), ...otherChainBalances],
+    [pageChainBalance, otherChainBalances],
   )
 
   const handleSelectBalance = useCallback(
@@ -146,25 +142,12 @@ function BreakdownSection({
         element: ElementName.NetworkBalanceRow,
         chain_id: chainId,
       })
-      if (multichainTokenUxEnabled) {
-        setSelectedMultichainChainId(chainId)
-        return
-      }
-      Promise.resolve(
-        navigate(
-          getTokenDetailsURL({
-            address: currency.isToken ? currency.address : undefined,
-            chain: toGraphQLChain(chainId),
-          }),
-        ),
-      ).catch(() => {})
+      setSelectedMultichainChainId(chainId)
     },
-    [defaultChainId, multichainTokenUxEnabled, navigate, setSelectedMultichainChainId, trace],
+    [defaultChainId, setSelectedMultichainChainId, trace],
   )
 
-  const collapseLabel = multichainTokenUxEnabled
-    ? t('tdp.balanceSummary.breakdown')
-    : t('tdp.balanceSummary.otherNetworks')
+  const collapseLabel = t('tdp.balanceSummary.breakdown')
 
   const [isBreakdownExpanded, setIsBreakdownExpanded] = useState(true)
 

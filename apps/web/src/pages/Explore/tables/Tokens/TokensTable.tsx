@@ -3,19 +3,22 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { usePrice } from '@universe/prices'
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isRemotePriceServiceSupportedChain } from 'uniswap/src/features/prices/isRemotePriceServiceSupportedChain'
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { SparklineMap } from '~/appGraphql/data/types'
@@ -24,7 +27,7 @@ import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
-import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
+import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
@@ -38,6 +41,7 @@ import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTable
 import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
 import { TokenStat } from '~/types/explore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const VOLUME_INFO_ICON_WIDTH = 16
 
@@ -49,23 +53,37 @@ interface TokenTableValue {
   percentChange1hr: ReactElement
   percentChange1d: ReactElement
   fdv: string
+  fdvRawValue?: number
   volume: string
+  volumeRawValue?: number
   sparkline: ReactElement
   link: string
   /** Used for pre-loading TDP with logo to extract color from */
   linkState: { preloadedLogoSrc?: string }
 }
 
+const ROW_HEIGHT = 64
+
 function LivePriceCell({ token }: { token?: TokenStat }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const chainId = token ? fromGraphQLChain(token.chain) : undefined
-  const currencyId = chainId && token?.address ? buildCurrencyId(chainId, token.address) : undefined
-  const livePrice = useTokenSpotPrice(currencyId)
 
-  const price = livePrice ?? token?.price?.value
+  const chainId = token ? fromGraphQLChain(token.chain) : undefined
+  const rawAddress = token?.address
+  const isLegacyNative = areAddressesEqual({
+    addressInput1: { address: rawAddress, platform: Platform.EVM },
+    addressInput2: { address: DEFAULT_NATIVE_ADDRESS_LEGACY, platform: Platform.EVM },
+  })
+  const address = isLegacyNative ? DEFAULT_NATIVE_ADDRESS : rawAddress
+  const isRemoteSupported = chainId != null && isRemotePriceServiceSupportedChain(chainId)
+  const { price: remotePrice } = usePrice({
+    chainId: isRemoteSupported ? chainId : undefined,
+    address: isRemoteSupported ? address : undefined,
+  })
+
+  const price = remotePrice ?? token?.price?.value
   const formatted = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : '-'
 
-  return <TableText>{formatted}</TableText>
+  return <AnimatedNumber numericValue={price} textVariant="$body2" value={formatted} />
 }
 
 export function TokenTable({
@@ -85,7 +103,6 @@ export function TokenTable({
 }) {
   const { t } = useTranslation()
   const trace = useTrace()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const { defaultChainId } = useEnabledChains()
   const { sortMethod, sortAscending } = useTokenTableSortStore((s) => ({
@@ -135,17 +152,19 @@ export function TokenTable({
             percentChange1hr: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1hr} formattedDelta={formatPercent(delta1hrAbs)} />
-                <TableText>{formatPercent(delta1hrAbs)}</TableText>
+                <AnimatedNumber numericValue={delta1hr} textVariant="$body2" value={formatPercent(delta1hrAbs)} />
               </Flex>
             ),
             percentChange1d: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1d} formattedDelta={formatPercent(delta1dAbs)} />
-                <TableText>{formatPercent(delta1dAbs)}</TableText>
+                <AnimatedNumber numericValue={delta1d} textVariant="$body2" value={formatPercent(delta1dAbs)} />
               </Flex>
             ),
             fdv: parseAmount(token.fullyDilutedValuation?.value, NumberType.FiatTokenStats),
+            fdvRawValue: token.fullyDilutedValuation?.value,
             volume: parseAmount(token.volume?.value, NumberType.FiatTokenStats),
+            volumeRawValue: token.volume?.value,
             sparkline: (
               <SparklineChart
                 width={80}
@@ -159,7 +178,8 @@ export function TokenTable({
               address: unwrappedToken.address,
               chain: toGraphQLChain(chainId ?? defaultChainId),
               chainUrlParam: chainFilter,
-              chainQueryParam: chainFilter,
+              chainQueryParam:
+                !chainFilter && mcToken.chainTokens.length > 1 ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
             }),
             analytics: {
               elementName: ElementName.TokensTableRow,
@@ -195,7 +215,7 @@ export function TokenTable({
   const showLoadingSkeleton = loading || !!error
 
   useEffect(() => {
-    if (!multichainTokenUxEnabled || showLoadingSkeleton) {
+    if (showLoadingSkeleton) {
       return
     }
     const { totalTokenRowCount, multichainRowReductionCount, multichainAssetCount } =
@@ -208,15 +228,13 @@ export function TokenTable({
       element: ElementName.ExploreTokensTab,
       section: SectionName.ExploreTopTokensSection,
     })
-  }, [multichainTokenUxEnabled, showLoadingSkeleton, tokens, trace])
+  }, [showLoadingSkeleton, tokens, trace])
 
-  const rowHeight = useMemo(() => (multichainTokenUxEnabled ? 64 : undefined), [multichainTokenUxEnabled])
-
-  const media = useMedia()
+  const { lg: isLg } = useMedia()
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TokenTableValue>()
     const filteredColumns = [
-      !media.lg
+      !isLg
         ? columnHelper.accessor((row) => row.index, {
             id: 'index',
             size: 60,
@@ -236,7 +254,7 @@ export function TokenTable({
         : null,
       columnHelper.accessor((row) => row.tokenDescription, {
         id: 'tokenDescription',
-        size: getTokenDescriptionColumnSize(media.lg, multichainTokenUxEnabled),
+        size: getTokenDescriptionColumnSize(isLg),
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
@@ -256,7 +274,7 @@ export function TokenTable({
         id: 'price',
         maxSize: 140,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.PRICE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.PRICE}
@@ -274,7 +292,7 @@ export function TokenTable({
         id: 'percentChange1hr',
         maxSize: 100,
         header: () => (
-          <HeaderCell>
+          <HeaderCell clickable>
             <TokenTableHeader
               category={TokenSortMethod.HOUR_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.HOUR_CHANGE}
@@ -292,7 +310,7 @@ export function TokenTable({
         id: 'percentChange1d',
         maxSize: 140,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.DAY_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.DAY_CHANGE}
@@ -310,7 +328,7 @@ export function TokenTable({
         id: 'fdv',
         maxSize: 120,
         header: () => (
-          <HeaderCell justifyContent="flex-end">
+          <HeaderCell clickable justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.FULLY_DILUTED_VALUATION}
               isCurrentSortMethod={sortMethod === TokenSortMethod.FULLY_DILUTED_VALUATION}
@@ -318,18 +336,26 @@ export function TokenTable({
             />
           </HeaderCell>
         ),
-        cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
-            <EllipsisText>{fdv.getValue?.()}</EllipsisText>
-          </Cell>
-        ),
+        cell: (fdv) => {
+          const row = fdv.row?.original as TokenTableValue | undefined
+          return (
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
+              <AnimatedNumber
+                ellipsis
+                numericValue={row?.fdvRawValue}
+                textVariant="$body2"
+                value={fdv.getValue?.() ?? '-'}
+              />
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((row) => row.volume, {
         id: 'volume',
         meta: { overflowVisible: true },
         maxSize: 150,
         header: () => (
-          <HeaderCell>
+          <HeaderCell clickable>
             <TokenTableHeader
               category={TokenSortMethod.VOLUME}
               isCurrentSortMethod={sortMethod === TokenSortMethod.VOLUME}
@@ -342,19 +368,30 @@ export function TokenTable({
           if (!row) {
             return (
               <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
-                <EllipsisText>{volume.getValue?.()}</EllipsisText>
+                <AnimatedNumber
+                  ellipsis
+                  alignRight
+                  numericValue={undefined}
+                  textVariant="$body2"
+                  value={volume.getValue?.() ?? '-'}
+                />
               </Cell>
             )
           }
           const isMultichainAsset = (row.mcToken?.chainTokens.length ?? 0) > 1
-          const showMultichainVolumeInfoIcon = multichainTokenUxEnabled && isMultichainAsset
           return (
             <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
               <Flex flex={1} minWidth={0} justifyContent="flex-end">
                 <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
                   <Flex position="relative">
-                    <EllipsisText textAlign="right">{volume.getValue?.()}</EllipsisText>
-                    {showMultichainVolumeInfoIcon ? (
+                    <AnimatedNumber
+                      ellipsis
+                      alignRight
+                      numericValue={row.volumeRawValue}
+                      textVariant="$body2"
+                      value={volume.getValue?.() ?? '-'}
+                    />
+                    {isMultichainAsset ? (
                       <Flex
                         centered
                         position="absolute"
@@ -393,7 +430,7 @@ export function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [multichainTokenUxEnabled, orderDirection, showLoadingSkeleton, sortMethod, media, t, timePeriod])
+  }, [orderDirection, showLoadingSkeleton, sortMethod, isLg, t, timePeriod])
 
   return (
     <Table
@@ -401,9 +438,8 @@ export function TokenTable({
       data={tokenTableValues}
       loading={loading}
       error={error}
-      v2={multichainTokenUxEnabled}
-      rowHeight={rowHeight}
-      compactRowHeight={rowHeight}
+      rowHeight={ROW_HEIGHT}
+      compactRowHeight={ROW_HEIGHT}
       loadMore={loadMore}
       maxWidth={1200}
       defaultPinnedColumns={['index', 'tokenDescription']}

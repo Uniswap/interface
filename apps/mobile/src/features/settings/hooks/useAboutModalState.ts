@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core'
 import { useTranslation } from 'react-i18next'
 import type { SettingsStackNavigationProp } from 'src/app/navigation/types'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useEvent } from 'utilities/src/react/hooks'
 import type { AboutModalState } from 'wallet/src/components/settings/about/AboutModal'
@@ -17,14 +17,14 @@ export function useAboutModalState(): AboutModalState {
 
   const onPressPrivacyPolicy = useEvent((): void => {
     navigation.navigate(MobileScreens.WebView, {
-      uriLink: uniswapUrls.privacyPolicyUrl,
+      uriLink: UniswapStaticUrls.privacyPolicyUrl,
       headerTitle: t('settings.action.privacy'),
     })
   })
 
   const onPressTermsOfService = useEvent((): void => {
     navigation.navigate(MobileScreens.WebView, {
-      uriLink: uniswapUrls.termsOfServiceUrl,
+      uriLink: UniswapStaticUrls.termsOfServiceUrl,
       headerTitle: t('settings.action.terms'),
     })
   })

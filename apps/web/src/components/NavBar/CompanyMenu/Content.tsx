@@ -4,7 +4,7 @@ import { LayerGroup } from 'ui/src/components/icons/LayerGroup'
 import { Unichain } from 'ui/src/components/icons/Unichain'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { UniswapXGeneric } from 'ui/src/components/icons/UniswapXGeneric'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export interface MenuItem {
@@ -51,28 +51,28 @@ export const useMenuContent = (args?: {
         items: [
           {
             label: t('common.wallet.label'),
-            href: uniswapUrls.downloadWalletUrl,
+            href: UniswapStaticUrls.downloadWalletUrl,
             icon: MENU_ICONS.wallet,
             body: t('nav.products.wallet'),
             elementName: ElementName.NavbarCompanyMenuWallet,
           },
           {
             label: t('common.uniswapX'),
-            href: uniswapUrls.uniswapXUrl,
+            href: UniswapStaticUrls.uniswapXUrl,
             icon: MENU_ICONS.uniswapX,
             body: t('nav.products.uniswapX'),
             elementName: ElementName.NavbarCompanyMenuUniswapX,
           },
           {
             label: t('landing.api'),
-            href: uniswapUrls.tradingApiDocsUrl,
+            href: UniswapStaticUrls.tradingApiDocsUrl,
             icon: MENU_ICONS.tradingApi,
             body: t('nav.products.tradingApi'),
             elementName: ElementName.NavbarCompanyMenuTradingApi,
           },
           {
             label: t('common.unichain'),
-            href: uniswapUrls.unichainUrl,
+            href: UniswapStaticUrls.unichainUrl,
             icon: MENU_ICONS.unichain,
             body: t('nav.products.unichain'),
             elementName: ElementName.NavbarCompanyMenuUnichain,
@@ -82,15 +82,15 @@ export const useMenuContent = (args?: {
       [MenuSectionTitle.Protocol]: {
         title: t('common.protocol'),
         items: [
-          { label: t('common.vote'), href: uniswapUrls.voteUrl, elementName: ElementName.NavbarCompanyMenuVote },
+          { label: t('common.vote'), href: UniswapStaticUrls.voteUrl, elementName: ElementName.NavbarCompanyMenuVote },
           {
             label: t('common.governance'),
-            href: uniswapUrls.governanceUrl,
+            href: UniswapStaticUrls.governanceUrl,
             elementName: ElementName.NavbarCompanyMenuGovernance,
           },
           {
             label: t('common.developers'),
-            href: uniswapUrls.developersUrl,
+            href: UniswapStaticUrls.developersUrl,
             elementName: ElementName.NavbarCompanyMenuDevelopers,
           },
         ],
@@ -98,13 +98,17 @@ export const useMenuContent = (args?: {
       [MenuSectionTitle.Company]: {
         title: t('common.company'),
         items: [
-          { label: t('common.about'), href: uniswapUrls.aboutUrl, elementName: ElementName.NavbarCompanyMenuAbout },
+          {
+            label: t('common.about'),
+            href: UniswapStaticUrls.aboutUrl,
+            elementName: ElementName.NavbarCompanyMenuAbout,
+          },
           {
             label: t('common.careers'),
-            href: uniswapUrls.careersUrl,
+            href: UniswapStaticUrls.careersUrl,
             elementName: ElementName.NavbarCompanyMenuCareers,
           },
-          { label: t('common.blog'), href: uniswapUrls.blogUrl, elementName: ElementName.NavbarCompanyMenuBlog },
+          { label: t('common.blog'), href: UniswapStaticUrls.blogUrl, elementName: ElementName.NavbarCompanyMenuBlog },
         ],
       },
       [MenuSectionTitle.NeedHelp]: {
@@ -112,17 +116,17 @@ export const useMenuContent = (args?: {
         items: [
           {
             label: t('common.helpCenter'),
-            href: uniswapUrls.helpCenterUrl,
+            href: UniswapStaticUrls.helpCenterUrl,
             elementName: ElementName.NavbarCompanyMenuHelpCenter,
           },
           {
             label: t('common.contactUs.button'),
-            href: uniswapUrls.helpRequestUrl,
+            href: UniswapHelpUrls.requestUrl,
             elementName: ElementName.NavbarCompanyMenuContactUs,
           },
           {
             label: t('common.bugBounty'),
-            href: uniswapUrls.bugBountyUrl,
+            href: UniswapStaticUrls.bugBountyUrl,
             elementName: ElementName.NavbarCompanyMenuBugBounty,
           },
         ],

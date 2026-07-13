@@ -6,7 +6,7 @@ import { SwipeableCard } from 'ui/src/components/swipeablecards/SwipeableCard'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 // Extra padding at the bottom of the container to prevent card shadows from being clipped
-const SHADOW_OVERFLOW_PADDING = 8
+const SHADOW_OVERFLOW_PADDING = 2
 
 export function BaseSwipeableCardStack<T extends PickedCardProps>({
   cards,

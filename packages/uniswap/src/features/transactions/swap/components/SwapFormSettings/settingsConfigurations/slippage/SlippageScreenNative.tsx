@@ -10,12 +10,12 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
-import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 
 function SlippageMessage({
@@ -85,7 +85,8 @@ export function SlippageScreenNative(): JSX.Element {
   const colors = useSporeColors()
   const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade).trade
 
-  const isBridgeTrade = trade instanceof BridgeTrade
+  const isBridgeTrade = Boolean(trade && isBridge(trade))
+  const tradeWithSlippage = trade && !isBridge(trade) ? trade : null
 
   const {
     isEditingSlippage,
@@ -119,12 +120,12 @@ export function SlippageScreenNative(): JSX.Element {
         <SlippageMessage
           inputWarning={inputWarning}
           showSlippageWarning={showSlippageWarning}
-          trade={trade}
+          trade={tradeWithSlippage}
           color={inputValueTextColor}
         />
       )
     }
-  }, [inputWarning, isBridgeTrade, showSlippageWarning, t, trade, inputValueTextColor])
+  }, [inputWarning, isBridgeTrade, showSlippageWarning, t, tradeWithSlippage, inputValueTextColor])
 
   return (
     <Flex centered gap="$spacing16">
@@ -133,7 +134,7 @@ export function SlippageScreenNative(): JSX.Element {
           {t('swap.settings.slippage.description')}
         </Text>
       )}
-      {!isBridgeTrade && <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />}
+      {!isBridgeTrade && <LearnMoreLink url={UniswapHelpUrls.articles.swapSlippage} />}
       <Flex gap="$spacing12">
         <Flex centered row gap="$spacing16" mt="$spacing12">
           <PlusMinusButton

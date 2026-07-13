@@ -16,11 +16,14 @@ save = "exact"
 # updated alongside backend proto changes and are trusted as first-party packages.
 # @privy-io/expo, @privy-io/js-sdk-core, and @privy-io/routes are allowed for
 # time-sensitive SDK upgrades coordinated with Privy.
+# @uniswap/liquidity-launcher-sdk is a first-party SDK (Uniswap/sdks) consumed by the
+# create-auction flow; excluded so a fresh publish can be adopted without the age delay.
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
   "@privy-io/expo",
   "@privy-io/js-sdk-core",
   "@privy-io/routes",
+  "@uniswap/client-compliancev2",
   "@uniswap/client-conversion-proxy",
   "@uniswap/client-data-api",
   "@uniswap/client-enclave-data-proxy",
@@ -33,6 +36,7 @@ minimumReleaseAgeExcludes = [
   "@uniswap/client-trading",
   "@uniswap/client-unirpc-v2",
   "@uniswap/client-unitag",
+  "@uniswap/liquidity-launcher-sdk",
 ]
 
 # Pin the default registry explicitly to prevent registry confusion attacks

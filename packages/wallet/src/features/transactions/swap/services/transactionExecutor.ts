@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { call, SagaGenerator } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
@@ -41,6 +42,21 @@ export function createTransactionExecutor(transactionService: TransactionService
 
       const result = yield* call(transactionService.submitTransaction, params)
       const hash = result.transactionHash
+
+      // SWAP-2471: capture per-step submit timing + the assigned nonce so the inter-submit gap
+      // between an approval and its swap (the gapped-nonce window) is measurable in prod.
+      logger.info('transactionExecutor', 'executeStep', 'Step submitted', {
+        stepType: step.type,
+        txId: params.txId,
+        chainId: params.chainId,
+        nonce:
+          params.request?.request.nonce !== undefined
+            ? BigNumber.from(params.request.request.nonce).toNumber()
+            : undefined,
+        shouldWait,
+        hash,
+        submittedAtMs: Date.now(),
+      })
 
       // Handle transaction spacing if required
       if (shouldWait) {

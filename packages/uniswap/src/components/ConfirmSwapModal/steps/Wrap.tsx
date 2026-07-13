@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 
 export function WrapTransactionStepRow({
@@ -30,7 +30,7 @@ export function WrapTransactionStepRow({
       title={title}
       currency={currency}
       learnMore={{
-        url: uniswapUrls.helpArticleUrls.wethExplainer,
+        url: UniswapHelpUrls.articles.wethExplainer,
         text: t('common.whyWrap', { symbol }),
       }}
       status={status}

@@ -7,6 +7,7 @@ import {
   type GasStrategy,
   type TransactionEip1559FeeParams,
   type TransactionLegacyFeeParams,
+  tryProvideSession,
 } from '@universe/api'
 import {
   DynamicConfigs,
@@ -24,13 +25,21 @@ import {
   NORMAL_GAS_STRATEGY,
   URGENT_GAS_STRATEGY,
 } from 'uniswap/src/features/gas/consts'
-import { hasSufficientFundsIncludingTempoGas } from 'uniswap/src/features/gas/tempo'
+import {
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+  hasSufficientFundsIncludingShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { type Prettify } from 'viem'
 
-const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
+const createProvider = createEthersProviderFactory({
+  resolveRpcConfig: defaultResolveRpcConfig,
+  getSessionGate: tryProvideSession,
+})
 
 export enum GasSpeed {
   Normal = 'normal',
@@ -129,11 +138,12 @@ export function hasSufficientGasBalance({
   if (!gasFee || !gasBalance) {
     return true
   }
-  if (chainId === UniverseChainId.Tempo) {
-    return hasSufficientFundsIncludingTempoGas({
-      pathUsdBalance: gasBalance,
+  if (hasShiftedGasToken(chainId)) {
+    return hasSufficientFundsIncludingShiftedGasToken({
+      gasTokenBalance: gasBalance,
       gasFee,
-      pathUsdTransactionAmount: gasTokenTransactionAmount,
+      gasTokenTransactionAmount,
+      decimalShift: getGasFeeDecimalsShift(chainId),
     })
   }
   return hasSufficientFundsIncludingGas({
@@ -164,7 +174,7 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
   )
 }
 
-function getIsStatsigReady(): boolean {
+export function getIsStatsigReady(): boolean {
   return getStatsigClient().loadingStatus === 'Ready'
 }
 
@@ -298,4 +308,14 @@ const GAS_BUFFER_DENOMINATOR = BigInt(10)
 
 export function applyGasBuffer(gas: bigint): bigint {
   return (gas * GAS_BUFFER_NUMERATOR) / GAS_BUFFER_DENOMINATOR
+}
+
+/** True when the user has saved at least one per-tx gas override. */
+export function hasGasOverrides(gasOverrides: GasFeeOverrides | undefined): boolean {
+  return Boolean(
+    gasOverrides &&
+    (gasOverrides.maxBaseFeeGwei !== undefined ||
+      gasOverrides.priorityFeeGwei !== undefined ||
+      gasOverrides.gasLimit !== undefined),
+  )
 }

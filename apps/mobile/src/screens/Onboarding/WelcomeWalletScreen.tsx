@@ -16,7 +16,6 @@ import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
@@ -43,7 +42,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const media = useMedia()
-  const isRightToLeft = i18next.dir() === 'rtl'
 
   const walletName = useDisplayName(onboardingAccountAddress)
 
@@ -80,14 +78,11 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           )}
           <DisplayNameText displayName={displayName} justifyContent="flex-start" textProps={{ variant: 'body1' }} />
           <AnimatedNumber
-            balance={0}
+            numericValue={0}
             colorIndicationDuration={0}
-            isRightToLeft={isRightToLeft}
-            loading={false}
             loadingPlaceholderText="0.00"
             shouldFadeDecimals={true}
             value={zeroBalance}
-            warmLoading={false}
           />
           <Loader.Token repeat={2} />
         </Flex>

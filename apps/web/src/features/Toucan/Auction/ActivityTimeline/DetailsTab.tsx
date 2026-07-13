@@ -2,7 +2,9 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
+import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { SupplyScheduleChart } from '~/features/Toucan/Auction/ActivityTimeline/SupplyScheduleChart'
 import { formatImpliedTokenPrice } from '~/features/Toucan/Auction/AuctionStats/AuctionStats'
 import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
@@ -47,7 +49,10 @@ export function DetailsTab() {
     chainId: auctionDetails?.chainId,
   })
 
+  const activeAddress = useActiveAddress(auctionDetails?.chainId ?? UniverseChainId.Mainnet)
+
   const { auctionNeedsVerification, auctionHasPresale } = useAuctionKycStatus({
+    walletAddress: activeAddress,
     auctionAddress: auctionDetails?.address,
     chainId: auctionDetails?.chainId,
   })

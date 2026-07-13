@@ -45,7 +45,12 @@ interface UseExtensionRecoveryBridgeResult {
    * with the extension-provided HPKE key, ships the ciphertext back via messaging, and
    * closes the popup window.
    */
-  onPinDecryptSuccess: (args: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => Promise<void>
+  onPinDecryptSuccess: (args: {
+    authPrivateKey: Uint8Array
+    authMethodId: string
+    email: string
+    accessToken: string
+  }) => Promise<void>
   /** Notify the extension of a popup-side failure so it can exit its loading state. */
   sendErrorToExtension: (error: string) => void
 }
@@ -137,7 +142,16 @@ export function useExtensionRecoveryBridge({
   }, [enabled, extensionId, preProvidedEncryptionKey, requestId, status])
 
   const onPinDecryptSuccess = useEvent(
-    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+    async ({
+      authPrivateKey,
+      authMethodId,
+      accessToken,
+    }: {
+      authPrivateKey: Uint8Array
+      authMethodId: string
+      email: string
+      accessToken: string
+    }) => {
       const encryptionKey = encryptionKeyRef.current
       if (!encryptionKey) {
         throw new Error('Missing HPKE encryption key from extension')
@@ -146,6 +160,7 @@ export function useExtensionRecoveryBridge({
         authPrivateKey,
         authMethodId,
         encryptionKey,
+        accessToken,
         generateAuthorizationSignature,
       })
       await sendResultToExtension(exportResult)

@@ -3,11 +3,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   commitDraftToFloorPrice,
+  commitWouldNormalizeDraft,
   getDisplayValueForMode,
   getMinimumRepresentableFloorPrice,
   isDraftFloorBelowMinimumRepresentable,
   pickDisplayValueForToggleTarget,
   previewFloorPriceForFdvUsdDraft,
+  resolveUnfocusedDraftSync,
+  shouldRejectDraftBelowMinimum,
 } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
 
 const addr = (n: number): string => `0x${n.toString(16).padStart(40, '0')}`
@@ -222,6 +225,444 @@ describe('isDraftFloorBelowMinimumRepresentable', () => {
   })
 })
 
+describe('shouldRejectDraftBelowMinimum', () => {
+  // Regression: USD FDV with USDC raise (6 decimals) and 1e9 supply has a $1000 minimum FDV.
+  // Every intermediate prefix of a legitimate FDV ("1" → "1000000") is below that minimum, so
+  // rejecting keystrokes on sub-minimum FDV drafts made the input swallow all typing.
+  it('fdv+usd sub-minimum intermediate with USDC → false (typing the first digit of "1000000")', () => {
+    expect(
+      shouldRejectDraftBelowMinimum({
+        localValue: '1',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(false)
+  })
+
+  it('fdv+raise sub-minimum intermediate with USDC → false', () => {
+    expect(
+      shouldRejectDraftBelowMinimum({
+        localValue: '1',
+        denomination: 'fdv',
+        inputCurrency: 'raise',
+        usdPriceNum: null,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(false)
+  })
+
+  it('fdv+usd sub-minimum with ETH → false (FDV drafts are clamped on commit, never blocked)', () => {
+    expect(
+      shouldRejectDraftBelowMinimum({
+        localValue: '0.00000001',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 3000,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: ethRaise,
+      }),
+    ).toBe(false)
+  })
+
+  // floorPrice drafts: appending digits can never grow the value past its prefix, so a
+  // sub-minimum draft is a dead end and the keystroke rejection stays.
+  it('floorPrice+usd sub-wei implied floor with USDC → true', () => {
+    expect(
+      shouldRejectDraftBelowMinimum({
+        localValue: '0.0000001',
+        denomination: 'floorPrice',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(true)
+  })
+
+  it('floorPrice+usd valid floor → false', () => {
+    expect(
+      shouldRejectDraftBelowMinimum({
+        localValue: '1',
+        denomination: 'floorPrice',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(false)
+  })
+})
+
+describe('commitWouldNormalizeDraft', () => {
+  // The PR-feedback case: typed FDV `300` with USDC raise and 1e9 supply is below the $1000
+  // minimum FDV — commit clamps it, so the input must re-sync its display after blur.
+  it('fdv+usd below-minimum draft with USDC → true', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '300',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(true)
+  })
+
+  it('fdv+usd at/above the minimum with USDC → false (typed string is kept)', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '5000',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(false)
+  })
+
+  it('fdv+raise below-minimum draft with USDC → true', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '300',
+        denomination: 'fdv',
+        inputCurrency: 'raise',
+        usdPriceNum: null,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(true)
+  })
+
+  it('floorPrice+usd sub-wei draft with USDC → true (e.g. left behind by a denomination toggle)', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '0.0000003',
+        denomination: 'floorPrice',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(true)
+  })
+
+  it('empty draft → false', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '   ',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe(false)
+  })
+
+  it('missing raiseCurrency → false', () => {
+    expect(
+      commitWouldNormalizeDraft({
+        localValue: '300',
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: undefined,
+      }),
+    ).toBe(false)
+  })
+})
+
+describe('resolveUnfocusedDraftSync', () => {
+  // FDV + USD with USDC raise and 1e9 supply: minimum FDV is $1000 (canonical floor 0.000001).
+  const fdvUsdUsdc = {
+    denomination: 'fdv' as const,
+    inputCurrency: 'usd' as const,
+    usdPriceNum: 1,
+    tokenTotalSupply: supply1e9,
+    raiseCurrency: usdcRaise,
+    hasValidFloorPrice: true,
+  }
+
+  it('replaces a clamped draft with the display derived from the committed canonical', () => {
+    // Typed `300`, commit clamped to the $1000-minimum canonical; snapshot holds the stale raw.
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '300',
+      floorPrice: '0.000001',
+      floorPriceInput: { floorPrice: '0.000001', rawValue: '300', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'replace', value: '1000' })
+  })
+
+  it('keeps a faithful draft that matches the persisted snapshot', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '5000',
+      floorPrice: '0.000005',
+      floorPriceInput: { floorPrice: '0.000005', rawValue: '5000', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'keep' })
+  })
+
+  it('restores the snapshot rawValue when the local draft drifted but the snapshot is faithful', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '',
+      floorPrice: '0.000005',
+      floorPriceInput: { floorPrice: '0.000005', rawValue: '5000', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'restoreSnapshot', value: '5000' })
+  })
+
+  it('keeps a snapshot-less draft that commits to the same canonical floor', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '5000',
+      floorPrice: '0.000005',
+      floorPriceInput: undefined,
+    })
+    expect(result).toEqual({ action: 'keep' })
+  })
+
+  it('replaces a stale draft that commits to a different canonical floor', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '5000',
+      floorPrice: '0.002',
+      floorPriceInput: undefined,
+    })
+    // Canonical 0.002 USDC/token × 1e9 supply × $1 = $2,000,000 FDV.
+    expect(result).toEqual({ action: 'replace', value: '2000000' })
+  })
+
+  it('does not ping-pong: the replacement display resolves to keep on the next pass', () => {
+    const replaced = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '300',
+      floorPrice: '0.000001',
+      floorPriceInput: { floorPrice: '0.000001', rawValue: '300', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    if (replaced.action !== 'replace') {
+      throw new Error('expected replace')
+    }
+    // Even before the snapshot updates to the synced value, the new draft commits to the same
+    // canonical and is not normalized, so it is kept as-is.
+    const next = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: replaced.value,
+      floorPrice: '0.000001',
+      floorPriceInput: { floorPrice: '0.000001', rawValue: '300', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(next).toEqual({ action: 'keep' })
+  })
+
+  // With USDC raise and 1e9 supply the floor granularity is 1 USDC wei per token, so FDV is only
+  // representable in $1000 steps: typed `23222` commits to the `23000`-equivalent canonical. The
+  // unfocused display must always equal the committed canonical — granularity truncation is a
+  // divergence just like the below-minimum clamp.
+  it('replaces a sub-granularity draft with the canonical display (typed 23222 → shows 23000)', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '23222',
+      floorPrice: '0.000023',
+      floorPriceInput: { floorPrice: '0.000023', rawValue: '23222', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'replace', value: '23000' })
+  })
+
+  it('does not restore a snapshot whose rawValue numerically diverges from the canonical display', () => {
+    // A persisted truncated value must not resurrect the stale typed string on remount.
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '',
+      floorPrice: '0.000023',
+      floorPriceInput: { floorPrice: '0.000023', rawValue: '23222', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'replace', value: '23000' })
+  })
+
+  it('does not ping-pong after a sub-granularity replace: the resync is canonical-preserving', () => {
+    const replaced = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '23222',
+      floorPrice: '0.000023',
+      floorPriceInput: { floorPrice: '0.000023', rawValue: '23222', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    if (replaced.action !== 'replace') {
+      throw new Error('expected replace')
+    }
+    // The replaced display string re-commits to the same canonical (the resync never moves the
+    // floor) and is kept on the next pass, even before the snapshot catches up.
+    expect(
+      commitDraftToFloorPrice({
+        localValue: replaced.value,
+        denomination: 'fdv',
+        inputCurrency: 'usd',
+        usdPriceNum: 1,
+        tokenTotalSupply: supply1e9,
+        raiseCurrency: usdcRaise,
+      }),
+    ).toBe('0.000023')
+    const next = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: replaced.value,
+      floorPrice: '0.000023',
+      floorPriceInput: { floorPrice: '0.000023', rawValue: '23222', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(next).toEqual({ action: 'keep' })
+  })
+
+  it('formatting-only differences are not divergence (trailing zeros keep the typed string)', () => {
+    const result = resolveUnfocusedDraftSync({
+      ...fdvUsdUsdc,
+      localValue: '5000.0',
+      floorPrice: '0.000005',
+      floorPriceInput: { floorPrice: '0.000005', rawValue: '5000.0', denomination: 'fdv', inputCurrency: 'usd' },
+    })
+    expect(result).toEqual({ action: 'keep' })
+  })
+
+  it('fdv+raise: replaces a typed raise FDV truncated to wei granularity (23222 USDC → 23000)', () => {
+    const result = resolveUnfocusedDraftSync({
+      denomination: 'fdv',
+      inputCurrency: 'raise',
+      usdPriceNum: null,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+      hasValidFloorPrice: true,
+      localValue: '23222',
+      floorPrice: '0.000023',
+      floorPriceInput: { floorPrice: '0.000023', rawValue: '23222', denomination: 'fdv', inputCurrency: 'raise' },
+    })
+    expect(result).toEqual({ action: 'replace', value: '23000' })
+  })
+
+  it('floorPrice+usd: replaces a typed USD/token value truncated to wei granularity', () => {
+    // $0.0000015/token with USDC@$1 truncates to 1 wei (0.000001 USDC) — above the minimum, so the
+    // keystroke is accepted, but the committed canonical reads back as 0.000001.
+    const result = resolveUnfocusedDraftSync({
+      denomination: 'floorPrice',
+      inputCurrency: 'usd',
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+      hasValidFloorPrice: true,
+      localValue: '0.0000015',
+      floorPrice: '0.000001',
+      floorPriceInput: {
+        floorPrice: '0.000001',
+        rawValue: '0.0000015',
+        denomination: 'floorPrice',
+        inputCurrency: 'usd',
+      },
+    })
+    expect(result).toEqual({ action: 'replace', value: '0.000001' })
+  })
+})
+
+describe('blur resync pipeline (commit clamp → display from canonical)', () => {
+  // End-to-end over the pure functions backing the FloorPriceSelector hydrate effect:
+  // a clamped draft must be replaced by the display derived from the committed canonical,
+  // while a faithful draft is kept as typed.
+  it('typed FDV "300" (USD, USDC raise) commits to the $1000-FDV minimum and re-displays as "1000"', () => {
+    const params = {
+      localValue: '300',
+      denomination: 'fdv' as const,
+      inputCurrency: 'usd' as const,
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    }
+    const committed = commitDraftToFloorPrice(params)
+    expect(committed).toBe('0.000001') // 1 USDC wei per token — the clamped minimum
+
+    // The hydrate effect must NOT keep "300": commit normalized it.
+    expect(commitWouldNormalizeDraft(params)).toBe(true)
+
+    const display = getDisplayValueForMode({
+      denomination: 'fdv',
+      inputCurrency: 'usd',
+      floorPrice: committed,
+      hasValidFloorPrice: true,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+      usdPriceNum: 1,
+    })
+    expect(display).toBe('1000')
+
+    // The synced display is now a faithful draft: it round-trips to the same canonical and is
+    // not normalized again, so the resync settles (no ping-pong with the snapshot restore).
+    expect(commitDraftToFloorPrice({ ...params, localValue: display })).toBe(committed)
+    expect(commitWouldNormalizeDraft({ ...params, localValue: display })).toBe(false)
+  })
+
+  it('typed FDV "23222" (USD, USDC raise) commits to the $1000-granularity floor and re-displays as "23000"', () => {
+    const params = {
+      localValue: '23222',
+      denomination: 'fdv' as const,
+      inputCurrency: 'usd' as const,
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    }
+    // 23222 / 1e9 supply = 23.222 USDC wei per token → truncates to 23 wei.
+    const committed = commitDraftToFloorPrice(params)
+    expect(committed).toBe('0.000023')
+
+    // NOT a below-minimum clamp — the clamp predicate alone cannot catch this divergence; the
+    // resync compares the draft against the canonical's display numerically.
+    expect(commitWouldNormalizeDraft(params)).toBe(false)
+
+    const display = getDisplayValueForMode({
+      denomination: 'fdv',
+      inputCurrency: 'usd',
+      floorPrice: committed,
+      hasValidFloorPrice: true,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+      usdPriceNum: 1,
+    })
+    expect(display).toBe('23000')
+
+    // The synced display round-trips stably: it re-commits to the same canonical (the resync
+    // never moves the floor) and is itself displayed unchanged.
+    expect(commitDraftToFloorPrice({ ...params, localValue: display })).toBe(committed)
+  })
+
+  it('a valid typed FDV commits and is kept as typed (no resync)', () => {
+    const params = {
+      localValue: '5000',
+      denomination: 'fdv' as const,
+      inputCurrency: 'usd' as const,
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    }
+    expect(commitDraftToFloorPrice(params)).toBe('0.000005')
+    expect(commitWouldNormalizeDraft(params)).toBe(false)
+  })
+
+  it('retyping a valid value after a resync commits the new value (refocus + retype)', () => {
+    const params = {
+      localValue: '2000000',
+      denomination: 'fdv' as const,
+      inputCurrency: 'usd' as const,
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    }
+    expect(commitDraftToFloorPrice(params)).toBe('0.002')
+    expect(commitWouldNormalizeDraft(params)).toBe(false)
+  })
+})
+
 describe('commitDraftToFloorPrice', () => {
   describe.each(currencyCases)('with $label raise', ({ raise, usdOfOneRaiseToken }) => {
     it('floorPrice+raise round-trips "0.01"', () => {
@@ -312,6 +753,31 @@ describe('commitDraftToFloorPrice', () => {
     const result = commitDraftToFloorPrice({
       localValue: '0.0000001',
       denomination: 'floorPrice',
+      inputCurrency: 'usd',
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    })
+    expect(result).toBe('0.000001')
+  })
+
+  it('fdv+usd "1000000" with USDC raise and 1e9 supply → "0.001" (typed USD FDV commits exactly)', () => {
+    const result = commitDraftToFloorPrice({
+      localValue: '1000000',
+      denomination: 'fdv',
+      inputCurrency: 'usd',
+      usdPriceNum: 1,
+      tokenTotalSupply: supply1e9,
+      raiseCurrency: usdcRaise,
+    })
+    expect(result).toBe('0.001')
+  })
+
+  it('clamps fdv+usd sub-minimum draft with USDC raise to 1 wei per token (left-behind "1")', () => {
+    // $1 FDV / 1e9 supply implies 1e-9 USDC per token — below the 1e-6 minimum → clamps to min.
+    const result = commitDraftToFloorPrice({
+      localValue: '1',
+      denomination: 'fdv',
       inputCurrency: 'usd',
       usdPriceNum: 1,
       tokenTotalSupply: supply1e9,

@@ -6,7 +6,6 @@ import type {
   FloorPriceDenomination,
   InputCurrency,
 } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 
 /** Subscript when there are this many leading zeros after the decimal (pill, bottom row, unfocused main value). */
 export const FLOOR_PRICE_SELECTOR_SUBSCRIPT_THRESHOLD = 3
@@ -15,7 +14,8 @@ interface UseFloorPriceSelectorDisplayParams {
   denomination: FloorPriceDenomination
   inputCurrency: InputCurrency
   fiatCurrencyCode: string
-  raiseCurrency: RaiseCurrency
+  /** Resolved ticker of the raise currency (e.g. ETH, AVAX, USDG) — never the RaiseCurrency slot name. */
+  raiseCurrencySymbol: string
   usdPriceNum: number | null
   fdvRaiseNum: number | null
   hasValidFloorPrice: boolean
@@ -27,7 +27,7 @@ export function useFloorPriceSelectorDisplay({
   denomination,
   inputCurrency,
   fiatCurrencyCode,
-  raiseCurrency,
+  raiseCurrencySymbol,
   usdPriceNum,
   fdvRaiseNum,
   hasValidFloorPrice,
@@ -40,13 +40,13 @@ export function useFloorPriceSelectorDisplay({
   const { t } = useTranslation()
 
   const inputLabel = useMemo(() => {
-    const currencyStr = inputCurrency === 'usd' ? fiatCurrencyCode : raiseCurrency
+    const currencyStr = inputCurrency === 'usd' ? fiatCurrencyCode : raiseCurrencySymbol
     return denomination === 'fdv' ? `${currencyStr} ${t('stats.fdv')}` : currencyStr
-  }, [inputCurrency, denomination, fiatCurrencyCode, raiseCurrency, t])
+  }, [inputCurrency, denomination, fiatCurrencyCode, raiseCurrencySymbol, t])
 
   const pillContent = useMemo((): ReactNode => {
     const usdMode = inputCurrency === 'usd' && usdPriceNum !== null && usdPriceNum > 0
-    const symbol = usdMode ? fiatCurrencyCode : raiseCurrency
+    const symbol = usdMode ? fiatCurrencyCode : raiseCurrencySymbol
     const raiseValue = denomination === 'floorPrice' ? fdvRaiseNum : hasValidFloorPrice ? floorPriceNum : null
     const value = usdMode && raiseValue !== null ? raiseValue * usdPriceNum : raiseValue
     const suffix =
@@ -105,7 +105,7 @@ export function useFloorPriceSelectorDisplay({
     fdvRaiseNum,
     hasValidFloorPrice,
     floorPriceNum,
-    raiseCurrency,
+    raiseCurrencySymbol,
     t,
   ])
 
@@ -115,14 +115,14 @@ export function useFloorPriceSelectorDisplay({
         if (!hasValidFloorPrice) {
           return (
             <Text variant="subheading2" color="$neutral2">
-              0 {raiseCurrency}
+              0 {raiseCurrencySymbol}
             </Text>
           )
         }
         return (
           <SubscriptZeroPrice
             value={floorPriceNum}
-            symbol={raiseCurrency}
+            symbol={raiseCurrencySymbol}
             variant="subheading2"
             color="$neutral2"
             minSignificantDigits={1}
@@ -137,7 +137,7 @@ export function useFloorPriceSelectorDisplay({
           <>
             <SubscriptZeroPrice
               value={fdvRaiseNum}
-              symbol={raiseCurrency}
+              symbol={raiseCurrencySymbol}
               variant="subheading2"
               color="$neutral2"
               minSignificantDigits={1}
@@ -153,7 +153,7 @@ export function useFloorPriceSelectorDisplay({
       }
       return (
         <Text variant="subheading2" color="$neutral2">
-          0 {raiseCurrency} {t('stats.fdv')}
+          0 {raiseCurrencySymbol} {t('stats.fdv')}
         </Text>
       )
     }
@@ -193,7 +193,7 @@ export function useFloorPriceSelectorDisplay({
     hasValidFloorPrice,
     floorPriceNum,
     fdvRaiseNum,
-    raiseCurrency,
+    raiseCurrencySymbol,
     usdPriceNum,
     fiatCurrencyCode,
     t,

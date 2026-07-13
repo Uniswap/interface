@@ -1,10 +1,12 @@
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
+import { TradingApi } from '@universe/api'
 import { ensure0xHex } from '@universe/encoding'
 import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionOriginType,
   TransactionStatus,
@@ -12,6 +14,9 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
+import type { Address } from 'viem'
+import type { RpcUserOperation } from 'viem/account-abstraction'
+import { entryPoint08Address } from 'viem/account-abstraction'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
@@ -25,6 +30,17 @@ import {
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
+
+type RequestSubmitTransactionParamsWithTypeInfo = Exclude<
+  SubmitTransactionParamsWithTypeInfo,
+  { userOp: RpcUserOperation<'0.8'> }
+>
+
+type UserOpSubmitTransactionParamsWithTypeInfo = Extract<
+  SubmitTransactionParamsWithTypeInfo,
+  { userOp: RpcUserOperation<'0.8'> }
+>
 
 // Mock external utilities
 jest.mock('wallet/src/features/providers/utils', () => ({
@@ -47,6 +63,7 @@ describe('TransactionService', () => {
     updateTransaction: jest.fn(),
     finalizeTransaction: jest.fn(),
     getPendingPrivateTransactionCount: jest.fn(),
+    getPendingPrivateTransactionDetails: jest.fn(),
     getTransactionsByAddress: jest.fn(),
   }
 
@@ -74,10 +91,12 @@ describe('TransactionService', () => {
   // Create a properly mocked provider with proper jest function mocks
   const mockGetTransactionCount = jest.fn().mockImplementation(() => Promise.resolve(42))
   const mockGetInternalBlockNumber = jest.fn().mockImplementation(() => Promise.resolve(123456))
+  const mockGetTransaction = jest.fn().mockResolvedValue(null)
 
   const mockBaseProvider = {
     _getInternalBlockNumber: mockGetInternalBlockNumber,
     getTransactionCount: mockGetTransactionCount,
+    getTransaction: mockGetTransaction,
   } as unknown as BaseProvider & Provider
 
   const mockLogger = {
@@ -99,6 +118,8 @@ describe('TransactionService', () => {
 
     // Reset the mocks with their default implementations
     mockGetTransactionCount.mockImplementation(() => Promise.resolve(42))
+    mockGetTransaction.mockResolvedValue(null)
+    mockTransactionRepository.getPendingPrivateTransactionDetails.mockResolvedValue([])
 
     // Setup default mock for private RPC support check
     const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.Mock
@@ -149,8 +170,8 @@ describe('TransactionService', () => {
   })
 
   const createSubmitTransactionParams = (
-    overrides: Partial<SubmitTransactionParams> = {},
-  ): SubmitTransactionParamsWithTypeInfo => {
+    overrides: Partial<RequestSubmitTransactionParamsWithTypeInfo> = {},
+  ): RequestSubmitTransactionParamsWithTypeInfo => {
     const defaultValidatedRequest = {
       to: '0xabcdef1234567890123456789012345678901234',
       value: '0x1234',
@@ -992,6 +1013,68 @@ describe('TransactionService', () => {
       expect(mockLogger.error).toHaveBeenCalled()
     })
 
+    it('treats an already-submitted sync error as Pending and defers to the watcher when the tx is known on-chain', async () => {
+      // INC-320: node already knows our hash → recover as Pending, don't fail.
+      const params = createTestParams()
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Distinct from receipt hash to prove the lookup keys off keccak256(signedRequest).
+      const signedTxHash = '0x1111111111111111111111111111111111111111111111111111111111111111'
+      const mockKeccak256 = utils.keccak256 as jest.Mock
+      mockKeccak256.mockReturnValue(signedTxHash)
+
+      mockTransactionSigner.sendTransactionSync.mockRejectedValue(new Error('nonce too low: next nonce 6, tx nonce 5'))
+      // The node already knows our deterministic tx hash → it landed.
+      mockGetTransaction.mockResolvedValue({ hash: signedTxHash })
+
+      const result = await syncService.submitTransactionSync(params)
+
+      // Looked up the hash derived from the signed request, not the receipt hash.
+      expect(mockGetTransaction).toHaveBeenCalledWith(signedTxHash)
+      // Recovered as Pending and handed to the watcher (skipProcessing:false) — NOT finalized Failed.
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          hash: signedTxHash,
+          status: TransactionStatus.Pending,
+        }),
+        skipProcessing: false,
+      })
+      expect(mockTransactionRepository.finalizeTransaction).not.toHaveBeenCalled()
+      expect(result).toEqual(expect.objectContaining({ hash: signedTxHash, status: TransactionStatus.Pending }))
+    })
+
+    it('finalizes Failed when an already-submitted error fires but the tx is NOT known on-chain (different tx took the nonce)', async () => {
+      const params = createTestParams()
+      const syncService = createTestServiceWithJsonRpc()
+
+      mockTransactionSigner.sendTransactionSync.mockRejectedValue(new Error('nonce too low: next nonce 6, tx nonce 5'))
+      // A different tx (RBF/concurrent send) consumed the nonce → our hash never lands.
+      mockGetTransaction.mockResolvedValue(null)
+
+      await expect(syncService.submitTransactionSync(params)).rejects.toThrow('Failed to send transaction:')
+
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+      expect(mockTransactionRepository.updateTransaction).not.toHaveBeenCalled()
+    })
+
+    it('finalizes Failed when the on-chain lookup itself throws (treated as not known)', async () => {
+      const params = createTestParams()
+      const syncService = createTestServiceWithJsonRpc()
+
+      mockTransactionSigner.sendTransactionSync.mockRejectedValue(new Error('already known'))
+      mockGetTransaction.mockRejectedValue(new Error('RPC unavailable'))
+
+      await expect(syncService.submitTransactionSync(params)).rejects.toThrow('Failed to send transaction:')
+
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+    })
+
     it('should handle bridge transactions with analytics', async () => {
       const validatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
@@ -1507,6 +1590,55 @@ describe('TransactionService', () => {
       })
       expect(result).toEqual({ nonce: 8, pendingPrivateTxCount: 3 }) // 5 + 3 = 8
     })
+
+    it('emits a NonceCalculated analytics event with inflating-tx detail when count > 0', async () => {
+      const service = createTestService()
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+      mockGetTransactionCount.mockReturnValue(5)
+      mockConfigService.shouldUsePrivateRpc.mockReturnValue(false)
+      mockTransactionRepository.getPendingPrivateTransactionCount.mockResolvedValue(2)
+      mockTransactionRepository.getPendingPrivateTransactionDetails.mockResolvedValue([
+        { id: 'stuck1', hash: '0xaaa', nonce: 5, addedTime: 1234567000, status: 'pending' },
+        { id: 'stuck2', hash: '0xbbb', nonce: 6, addedTime: 1234567100, status: 'pending' },
+      ])
+      ;(isPrivateRpcSupportedOnChain as jest.Mock).mockReturnValue(true)
+
+      await service.getNextNonce({ account: mockAccount, chainId: UniverseChainId.Mainnet })
+
+      expect(mockTransactionRepository.getPendingPrivateTransactionDetails).toHaveBeenCalledWith({
+        address: mockAccount.address,
+        chainId: UniverseChainId.Mainnet,
+      })
+      expect(mockAnalyticsService.trackTransactionEvent as jest.Mock).toHaveBeenCalledWith(
+        WalletEventName.NonceCalculated,
+        expect.objectContaining({
+          final_nonce: 7,
+          on_chain_pending_nonce: 5,
+          pending_private_tx_count: 2,
+          inflating_tx_ids: ['stuck1', 'stuck2'],
+        }),
+      )
+    })
+
+    it('does NOT emit a NonceCalculated analytics event when count is 0', async () => {
+      const service = createTestService()
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+      mockGetTransactionCount.mockReturnValue(5)
+      mockConfigService.shouldUsePrivateRpc.mockReturnValue(false)
+      mockTransactionRepository.getPendingPrivateTransactionCount.mockResolvedValue(0)
+      ;(isPrivateRpcSupportedOnChain as jest.Mock).mockReturnValue(true)
+
+      await service.getNextNonce({ account: mockAccount, chainId: UniverseChainId.Mainnet })
+
+      expect(mockTransactionRepository.getPendingPrivateTransactionDetails).not.toHaveBeenCalled()
+      expect(mockAnalyticsService.trackTransactionEvent as jest.Mock).not.toHaveBeenCalled()
+    })
   })
 
   describe('trackTransactionAnalytics', () => {
@@ -1887,5 +2019,243 @@ describe('TransactionService', () => {
         byzantium: true,
         confirmations: 1,
       }) as unknown as TransactionReceipt
+  })
+
+  describe('executeUserOp', () => {
+    const mockSignUserOp = jest.fn()
+    const mockSendUserOp = jest.fn()
+    const mockSponsorUniswapUserOp = jest.fn()
+
+    const mockUserOpSigner: UserOpSigner = {
+      signUserOp: mockSignUserOp,
+      sendUserOp: mockSendUserOp,
+      sponsorUniswapUserOp: mockSponsorUniswapUserOp,
+    }
+
+    const userOpHash = '0xuserophash'
+
+    const paymasterFields = {
+      paymaster: '0x2222222222222222222222222222222222222222' as Address,
+      paymasterData: '0xabcd' as const,
+      paymasterVerificationGasLimit: '0x186a0' as const,
+      paymasterPostOpGasLimit: '0x186a0' as const,
+    }
+
+    const buildUserOp = (overrides: Partial<RpcUserOperation<'0.8'>> = {}): RpcUserOperation<'0.8'> =>
+      ({
+        sender: '0x1111111111111111111111111111111111111111',
+        nonce: '0x0',
+        callData: '0x',
+        callGasLimit: '0x186a0',
+        verificationGasLimit: '0x186a0',
+        preVerificationGas: '0x5208',
+        maxFeePerGas: '0x59682f00',
+        maxPriorityFeePerGas: '0x59682f00',
+        signature: '0x',
+        ...overrides,
+      }) as RpcUserOperation<'0.8'>
+
+    const swapTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.Swap,
+      tradeType: 0,
+      inputCurrencyId: 'eth',
+      outputCurrencyId: 'usdc',
+      inputCurrencyAmountRaw: '1000000000000000000',
+      expectedOutputCurrencyAmountRaw: '1700000000',
+      minimumOutputCurrencyAmountRaw: '1683000000',
+    }
+
+    const sendCallsTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.SendCalls,
+      unsignedUserOperation: buildUserOp(),
+      dappInfo: { name: 'Test Dapp' },
+    }
+
+    const createUserOpService = (): TransactionService =>
+      createTransactionService({
+        transactionRepository: mockTransactionRepository,
+        transactionSigner: mockTransactionSigner,
+        analyticsService: mockAnalyticsService,
+        configService: mockConfigService,
+        logger: mockLogger,
+        getProvider: jest.fn().mockResolvedValue(mockBaseProvider),
+        userOpSigner: mockUserOpSigner,
+      })
+
+    const createExecuteUserOpParams = (
+      overrides: Partial<UserOpSubmitTransactionParamsWithTypeInfo> = {},
+    ): UserOpSubmitTransactionParamsWithTypeInfo => ({
+      userOp: buildUserOp(),
+      chainId: UniverseChainId.Mainnet,
+      account: createMockAccount(),
+      typeInfo: sendCallsTypeInfo,
+      transactionOriginType: TransactionOriginType.External,
+      requestUniswapGasSponsorship: false,
+      options: { request: {} },
+      ...overrides,
+    })
+
+    beforeEach(() => {
+      mockSignUserOp.mockImplementation((userOp: RpcUserOperation<'0.8'>) =>
+        Promise.resolve({ ...userOp, signature: '0xsigned' }),
+      )
+      mockSendUserOp.mockResolvedValue(userOpHash)
+      mockSponsorUniswapUserOp.mockImplementation(({ initialUserOp }: { initialUserOp: RpcUserOperation<'0.8'> }) =>
+        Promise.resolve({ ...initialUserOp, ...paymasterFields }),
+      )
+    })
+
+    it('should throw when the service was created without a userOpSigner', async () => {
+      const service = createTestService() // no userOpSigner
+
+      await expect(service.executeUserOp(createExecuteUserOpParams())).rejects.toThrow('requires a userOpSigner')
+      expect(mockTransactionRepository.addTransaction).not.toHaveBeenCalled()
+    })
+
+    it('should register the pending transaction, submit, and persist the userOpHash on success', async () => {
+      const service = createUserOpService()
+
+      const result = await service.executeUserOp(createExecuteUserOpParams())
+
+      // addTransaction on entry (pending, no hash/userOpHash yet)
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          status: TransactionStatus.Pending,
+          typeInfo: sendCallsTypeInfo,
+        }),
+      })
+
+      // updateTransaction with the userOpHash on success
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          userOpHash,
+          status: TransactionStatus.Pending,
+        }),
+        skipProcessing: false,
+      })
+      expect(mockTransactionRepository.finalizeTransaction).not.toHaveBeenCalled()
+      expect(result).toEqual({ userOpHash })
+    })
+
+    it('should skip the paymaster when sponsorship is not requested', async () => {
+      const service = createUserOpService()
+      const userOp = buildUserOp()
+
+      await service.executeUserOp(createExecuteUserOpParams({ userOp, requestUniswapGasSponsorship: false }))
+
+      expect(mockSponsorUniswapUserOp).not.toHaveBeenCalled()
+      expect(mockSignUserOp).toHaveBeenCalledWith(userOp)
+      expect(mockSendUserOp).toHaveBeenCalledTimes(1)
+    })
+
+    it('should request sponsorship before signing when requested and userOp has no paymaster', async () => {
+      const service = createUserOpService()
+      const userOp = buildUserOp()
+
+      await service.executeUserOp(createExecuteUserOpParams({ userOp, requestUniswapGasSponsorship: true }))
+
+      expect(mockSponsorUniswapUserOp).toHaveBeenCalledWith({
+        initialUserOp: userOp,
+        entryPoint: entryPoint08Address,
+        paymasterServiceContext: undefined,
+        chainId: UniverseChainId.Mainnet,
+      })
+      const sponsorOrder = mockSponsorUniswapUserOp.mock.invocationCallOrder[0] as number
+      const signOrder = mockSignUserOp.mock.invocationCallOrder[0] as number
+      expect(sponsorOrder).toBeLessThan(signOrder)
+
+      // Paymaster fields are merged into the signed userOp
+      const signedArg = mockSignUserOp.mock.calls[0]?.[0] as RpcUserOperation<'0.8'>
+      expect(signedArg.paymaster).toBe(paymasterFields.paymaster)
+    })
+
+    it('should skip the paymaster when the userOp already has paymaster fields', async () => {
+      const service = createUserOpService()
+      const preFilledUserOp = buildUserOp({ paymaster: '0x3333333333333333333333333333333333333333' as Address })
+
+      await service.executeUserOp(
+        createExecuteUserOpParams({ userOp: preFilledUserOp, requestUniswapGasSponsorship: true }),
+      )
+
+      expect(mockSponsorUniswapUserOp).not.toHaveBeenCalled()
+      expect(mockSignUserOp).toHaveBeenCalledWith(preFilledUserOp)
+    })
+
+    it('should finalize the transaction as failed and log when the bundler submission throws', async () => {
+      const service = createUserOpService()
+      mockSendUserOp.mockRejectedValue(new Error('bundler rejected'))
+
+      await expect(service.executeUserOp(createExecuteUserOpParams())).rejects.toThrow('Failed to send transaction')
+
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+      expect(mockLogger.warn).toHaveBeenCalled()
+      expect(mockLogger.error).toHaveBeenCalled()
+    })
+
+    it('should finalize as failed without signing or sending when sponsorship throws', async () => {
+      const service = createUserOpService()
+      mockSponsorUniswapUserOp.mockRejectedValue(new Error('paymaster down'))
+
+      await expect(
+        service.executeUserOp(createExecuteUserOpParams({ requestUniswapGasSponsorship: true })),
+      ).rejects.toThrow('Failed to send transaction')
+
+      expect(mockSignUserOp).not.toHaveBeenCalled()
+      expect(mockSendUserOp).not.toHaveBeenCalled()
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+    })
+
+    it('should track swap analytics when given swap typeInfo and analytics', async () => {
+      const service = createUserOpService()
+
+      const analytics = {
+        token_in_symbol: 'ETH',
+        token_out_symbol: 'USDC',
+        token_in_amount: '1.0',
+        token_out_amount: '1700.0',
+        routing: 'classic' as const,
+        transactionOriginType: 'internal',
+      }
+
+      await service.executeUserOp(
+        createExecuteUserOpParams({
+          typeInfo: swapTypeInfo,
+          transactionOriginType: TransactionOriginType.Internal,
+          analytics,
+        }),
+      )
+
+      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
+        expect.objectContaining({
+          typeInfo: swapTypeInfo,
+          userOpHash,
+        }),
+        analytics,
+      )
+    })
+
+    it('should fail without submitting when sponsorship was requested but the userOp comes back unsponsored', async () => {
+      const service = createUserOpService()
+      mockSponsorUniswapUserOp.mockImplementation(({ initialUserOp }: { initialUserOp: RpcUserOperation<'0.8'> }) =>
+        Promise.resolve({ ...initialUserOp }),
+      )
+
+      await expect(
+        service.executeUserOp(createExecuteUserOpParams({ requestUniswapGasSponsorship: true })),
+      ).rejects.toThrow()
+
+      expect(mockSendUserOp).not.toHaveBeenCalled()
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+    })
   })
 })

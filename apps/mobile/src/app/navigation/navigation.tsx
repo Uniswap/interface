@@ -35,8 +35,12 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { AboutSettingsScreen } from 'src/components/modals/ReactNavigationModals/AboutSettingsScreen'
 import { AdvancedSettingsModal } from 'src/components/modals/ReactNavigationModals/AdvancedSettingsModal'
 import { BridgedAssetModalScreen } from 'src/components/modals/ReactNavigationModals/BridgedAssetModal'
+import { EarnDepositAmountModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositAmountModal'
 import { EarnDepositReviewModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositReviewModal'
+import { EarnDepositSourceSelectorModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositSourceSelectorModal'
 import { EarnVaultModalScreen } from 'src/components/modals/ReactNavigationModals/EarnVaultModal'
+import { EarnWithdrawNetworkSelectorModalScreen } from 'src/components/modals/ReactNavigationModals/EarnWithdrawNetworkSelectorModal'
+import { EarnWithdrawReviewModalScreen } from 'src/components/modals/ReactNavigationModals/EarnWithdrawReviewModal'
 import { EarnYouNeedTokenModalScreen } from 'src/components/modals/ReactNavigationModals/EarnYouNeedTokenModal'
 import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
@@ -100,6 +104,7 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
 import { PortfolioChartDetailsScreen } from 'src/screens/PortfolioChartDetailsScreen'
+import { PositionDetailsScreen } from 'src/screens/PositionDetailsScreen/PositionDetailsScreen'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
@@ -394,6 +399,7 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={UnitagStackNavigator} name={MobileScreens.UnitagStack} />
       <AppStack.Screen component={ExternalProfileScreen} name={MobileScreens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+      <AppStack.Screen component={PositionDetailsScreen} name={MobileScreens.PositionDetails} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
       <AppStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />
@@ -403,8 +409,15 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <AppStack.Screen component={SwapModal} name={ModalName.Swap} />
         <AppStack.Screen component={ExploreModal} name={ModalName.Explore} />
+        <AppStack.Screen component={EarnDepositAmountModalScreen} name={ModalName.EarnDepositAmount} />
         <AppStack.Screen component={EarnDepositReviewModalScreen} name={ModalName.EarnDepositReview} />
+        <AppStack.Screen component={EarnDepositSourceSelectorModalScreen} name={ModalName.EarnDepositSourceSelector} />
         <AppStack.Screen component={EarnVaultModalScreen} name={ModalName.EarnVault} />
+        <AppStack.Screen
+          component={EarnWithdrawNetworkSelectorModalScreen}
+          name={ModalName.EarnWithdrawNetworkSelector}
+        />
+        <AppStack.Screen component={EarnWithdrawReviewModalScreen} name={ModalName.EarnWithdrawReview} />
         <AppStack.Screen component={EarnYouNeedTokenModalScreen} name={ModalName.EarnYouNeedToken} />
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <AppStack.Screen component={FiatOnRampActionModal} name={ModalName.FiatOnRampAction} />

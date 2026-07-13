@@ -1,7 +1,16 @@
 import { settings } from '../../config'
 import { MonitorDefinition } from '../../types'
 import { snakeCase } from '../../util'
-import { APM_METRIC_PREFIX, PRIVY_EMBEDDED_WALLET_RUNBOOK, SERVICE_README_URL, TEAM, apmTagFilter } from './constants'
+import {
+  APM_METRIC_PREFIX,
+  MIN_REQUESTS_5M,
+  PRIVY_EMBEDDED_WALLET_RUNBOOK,
+  SERVICE_README_URL,
+  TEAM,
+  apmTagFilter,
+  rateDenominatorFloor,
+  webResourceName,
+} from './constants'
 
 const env = settings.environment
 const apmFilter = apmTagFilter(env)
@@ -140,12 +149,14 @@ const endpoints: EndpointSpec[] = [
 function endpointLatencyMonitor(spec: EndpointSpec): MonitorDefinition {
   const id = snakeCase(spec.name)
   const metric = `${APM_METRIC_PREFIX}_${spec.name}`
+  // Volume-gate: scale p95 by (hits / clamp_min(hits, floor)) so a lone slow request in a quiet window can't page.
+  const hits = `count:${metric}{${apmFilter}}.as_count()`
   return {
     id: `privy_embedded_wallet_${id}_latency_p95`,
     name: `P95 latency on ${spec.name}`,
     type: 'query alert',
-    query: `avg(last_5m):p95:${metric}{${apmFilter}} > ${spec.latency.critical}`,
-    alertBody: `P95 latency on \`${spec.name}\` exceeded ${spec.latency.critical}s over the last 5 minutes.${spec.notes ? `\n\n${spec.notes}` : ''}`,
+    query: `avg(last_5m):( p95:${metric}{${apmFilter}} * ${hits} / clamp_min(${hits}, ${MIN_REQUESTS_5M}) ) > ${spec.latency.critical}`,
+    alertBody: `P95 latency on \`${spec.name}\` exceeded ${spec.latency.critical}s over the last 5 minutes. Requires at least ${MIN_REQUESTS_5M} requests in the window before it can alert.${spec.notes ? `\n\n${spec.notes}` : ''}`,
     recoveryBody: `P95 latency on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,
@@ -161,16 +172,24 @@ function endpointLatencyMonitor(spec: EndpointSpec): MonitorDefinition {
 
 function endpointErrorMonitor(spec: EndpointSpec): MonitorDefinition {
   const id = snakeCase(spec.name)
-  const metric = `${APM_METRIC_PREFIX}_${spec.name}`
+  // Rate from the entry web span (5xx-only via webResourceName), not the handler-span
+  // `.errors` metric which also counts handled 4xx and paged on routine activity.
+  // 4xx spikes are still watched by privy_embedded_wallet_4xx_anomaly.
+  const resource = webResourceName(spec.name)
+  const errors = `sum:trace.web.request.errors{${apmFilter},resource_name:${resource}}.as_count()`
+  const hits = `sum:trace.web.request.hits{${apmFilter},resource_name:${resource}}.as_count()`
+  const minRequests = rateDenominatorFloor(spec.errorRate.critical, MIN_REQUESTS_5M)
   return {
     id: `privy_embedded_wallet_${id}_error_rate`,
-    name: `Error rate on ${spec.name}`,
+    name: `5xx error rate on ${spec.name}`,
     type: 'query alert',
-    // Note: `.errors` metric is only emitted when at least one error has occurred,
-    // so the formula is null-safe via `default_zero` semantics in as_count().
-    query: `sum(last_5m):( sum:${metric}.errors{${apmFilter}}.as_count() / sum:${metric}.hits{${apmFilter}}.as_count() ) * 100 > ${spec.errorRate.critical}`,
-    alertBody: `Error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes.`,
-    recoveryBody: `Error rate on \`${spec.name}\` has recovered.`,
+    // `.errors` is only emitted once an error has occurred; when absent the division is
+    // null, not zero (as_count() does not zero-fill), so the monitor stays silent via
+    // `notifyNoData: false` below (do not flip it to true). The `hits` denominator is
+    // floored via clamp_min so a lone 5xx in a low-traffic window cannot trip the rate.
+    query: `sum(last_5m):( ${errors} / clamp_min(${hits}, ${minRequests}) ) * 100 > ${spec.errorRate.critical}`,
+    alertBody: `5xx (server) error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes. Handled 4xx (auth / origin / validation failures) are excluded; see the 4xx anomaly monitor for client-error spikes. Requires at least ${minRequests} requests in the window before the rate can alert.`,
+    recoveryBody: `5xx error rate on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,
     thresholds: { critical: spec.errorRate.critical, warning: Math.max(1, spec.errorRate.critical / 2) },

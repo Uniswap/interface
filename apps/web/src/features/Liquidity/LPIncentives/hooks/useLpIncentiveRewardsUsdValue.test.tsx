@@ -2,12 +2,12 @@ import { renderHook } from '@testing-library/react'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { mocked } from '~/test-utils/mocked'
 
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPriceWrapper', () => ({
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
   useUSDCValue: vi.fn(),
 }))
 

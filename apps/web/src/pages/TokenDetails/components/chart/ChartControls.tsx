@@ -1,15 +1,13 @@
 import { useAtomValue } from 'jotai/utils'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
+import { TimePeriod } from '~/appGraphql/data/util'
 import { refitChartContentAtom } from '~/components/Charts/ChartModel'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
 import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
-import {
-  DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
-  DISPLAYS,
-  getTimePeriodFromDisplay,
-  TimePeriodDisplay,
-} from '~/features/Explore/constants'
+import { getPillTimeSelectorOptions } from '~/features/Explore/timeLabels'
 import { AdvancedPriceChartToggle } from '~/pages/TokenDetails/components/chart/AdvancedPriceChartToggle'
 import {
   getDisplayPriceChartType,
@@ -20,6 +18,7 @@ import { useTDPChartStateContext } from '~/pages/TokenDetails/components/chart/T
 const TOKEN_DETAILS_CHART_OPTIONS: TokenDetailsChartType[] = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]
 
 export function ChartControls() {
+  const { t } = useTranslation()
   const {
     chartType,
     timePeriod,
@@ -32,6 +31,7 @@ export function ChartControls() {
   const refitChartContent = useAtomValue(refitChartContentAtom)
   const media = useMedia()
   const isMediumScreen = media.lg
+  const timeSelectorOptions = useMemo(() => getPillTimeSelectorOptions(t), [t])
   const showAdvancedPriceChartToggle = chartType === ChartType.PRICE
   const displayPriceChartType = getDisplayPriceChartType(priceChartType, disableCandlestickUI)
 
@@ -72,14 +72,13 @@ export function ChartControls() {
       <Flex $md={{ width: '100%' }}>
         <SegmentedControl
           fullWidth={isMediumScreen}
-          options={DEFAULT_PILL_TIME_SELECTOR_OPTIONS}
-          selectedOption={DISPLAYS[timePeriod]}
-          onSelectOption={(option) => {
-            const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
-            if (time === timePeriod) {
+          options={timeSelectorOptions}
+          selectedOption={timePeriod}
+          onSelectOption={(option: TimePeriod) => {
+            if (option === timePeriod) {
               refitChartContent?.()
             } else {
-              setTimePeriod(time)
+              setTimePeriod(option)
             }
           }}
         />

@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { isWarmLoadingStatus } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -28,6 +27,8 @@ type TokenBalanceListContextState = {
   isPortfolioBalancesLoading: boolean
   isWarmLoading: boolean
   rows: Array<TokenBalanceListRow>
+  /** Row ids in the hidden-tokens section (hide fiat USD; still show token quantity). */
+  hiddenBalanceRowIds: Set<string>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   toggleExpanded: (currencyId: string) => void
   onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
@@ -51,8 +52,6 @@ export function TokenBalanceListContextProvider({
   isExternalProfile: boolean
   onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
 }>): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   const {
     data: sortedData,
     balancesById,
@@ -65,7 +64,7 @@ export function TokenBalanceListContextProvider({
     evmAddress: evmOwner,
     svmAddress: svmOwner,
     pollInterval: PollingInterval.KindaFast,
-    requestMultichainFromBackend: multichainTokenUxEnabled,
+    requestMultichainFromBackend: true,
   })
 
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -101,6 +100,11 @@ export function TokenBalanceListContextProvider({
     isPortfolioBalancesLoading,
   })
 
+  const hiddenBalanceRowIds = useMemo(
+    () => new Set(sortedDataForList?.hiddenBalances.map((balance) => balance.id) ?? []),
+    [sortedDataForList?.hiddenBalances],
+  )
+
   const state = useMemo<TokenBalanceListContextState>(
     (): TokenBalanceListContextState => ({
       balancesById: balancesByIdForList,
@@ -108,6 +112,7 @@ export function TokenBalanceListContextProvider({
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
+      hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,
@@ -127,6 +132,7 @@ export function TokenBalanceListContextProvider({
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
+      hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,

@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo, useRef } from 'react'
 import { getMultichainRowReductionMetricsFromChainCounts } from 'uniswap/src/features/portfolio/getMultichainPortfolioMetrics'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -7,7 +6,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 /**
  * Emits {@link UniswapEventName.MultichainExploreMetrics} when explore token row metrics
- * change (e.g. mobile Explore rankings / Home explore list). Only when MultichainTokenUx is enabled.
+ * change (e.g. mobile Explore rankings / Home explore list).
  */
 export function useMultichainExploreMetricsAnalytics({
   rowChainCounts,
@@ -16,7 +15,6 @@ export function useMultichainExploreMetricsAnalytics({
   rowChainCounts: readonly number[]
   isExploreTokensLoading: boolean
 }): void {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const trace = useTrace()
   const traceRef = useRef(trace)
   traceRef.current = trace
@@ -27,7 +25,7 @@ export function useMultichainExploreMetricsAnalytics({
   )
 
   useEffect(() => {
-    if (!multichainTokenUxEnabled || isExploreTokensLoading) {
+    if (isExploreTokensLoading) {
       return
     }
 
@@ -37,5 +35,5 @@ export function useMultichainExploreMetricsAnalytics({
       multichain_asset_count: exploreTableMetrics.multichainAssetCount,
       ...traceRef.current,
     })
-  }, [multichainTokenUxEnabled, isExploreTokensLoading, exploreTableMetrics])
+  }, [isExploreTokensLoading, exploreTableMetrics])
 }

@@ -1,14 +1,13 @@
 import { act, renderHook } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
 import type { ReactNode } from 'react'
-import { MemoryRouter, useSearchParams } from 'react-router'
+import { MemoryRouter, useLocation, useSearchParams } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
-import { getChainUrlParam } from '~/utils/params/chainParams'
-import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
+import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 
@@ -28,16 +27,31 @@ function createPendingTDPState(overrides: { selectedMultichainChainId?: Universe
   } as unknown as TDPState
 }
 
+function createMultichainTDPState(
+  overrides: { selectedMultichainChainId?: UniverseChainId | undefined } = {},
+): TDPState {
+  return {
+    ...createPendingTDPState(overrides),
+    multiChainMap: {
+      [GraphQLApi.Chain.Ethereum]: { address: '0x1111111111111111111111111111111111111111' },
+      [GraphQLApi.Chain.Arbitrum]: { address: '0x3333333333333333333333333333333333333333' },
+    },
+  } as unknown as TDPState
+}
+
 function useSelectedMultichainChainWithSearchString(): {
   selectedMultichainChainId: UniverseChainId | undefined
   setSelectedMultichainChainId: (chainId: UniverseChainId | undefined) => void
+  pathname: string
   searchString: string
 } {
   const { selectedMultichainChainId, setSelectedMultichainChainId } = useTDPSelectedMultichainChain()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
   return {
     selectedMultichainChainId,
     setSelectedMultichainChainId,
+    pathname: location.pathname,
     searchString: searchParams.toString(),
   }
 }
@@ -69,24 +83,31 @@ describe('useTDPSelectedMultichainChain', () => {
     expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.Base)
   })
 
-  it('sets ?chain= when selecting a network', () => {
-    const { result, store } = renderWithStore('/explore/tokens/ethereum/0xabc?foo=bar', createPendingTDPState())
+  beforeEach(() => {
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('shallowly replaces the URL and store state when selecting a network', () => {
+    window.history.replaceState(null, '', '/explore/tokens/ethereum/0xabc?foo=bar')
+    const { result, store } = renderWithStore('/explore/tokens/ethereum/0xabc?foo=bar', createMultichainTDPState())
 
     act(() => {
       result.current.setSelectedMultichainChainId(UniverseChainId.ArbitrumOne)
     })
 
-    expect(store.getState().selectedMultichainChainId).toBeUndefined()
-    expect(result.current.searchString).toContain(
-      `${CHAIN_SEARCH_PARAM}=${getChainUrlParam(UniverseChainId.ArbitrumOne)}`,
-    )
+    expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.ArbitrumOne)
+    expect(window.location.pathname).toBe('/explore/tokens/arbitrum/0x3333333333333333333333333333333333333333')
+    expect(window.location.search).toBe('?foo=bar')
+    expect(result.current.pathname).toBe('/explore/tokens/ethereum/0xabc')
+    expect(result.current.searchString).not.toContain(CHAIN_SEARCH_PARAM)
     expect(result.current.searchString).toContain('foo=bar')
-    expect(result.current.selectedMultichainChainId).toBeUndefined()
+    expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.ArbitrumOne)
   })
 
-  it('removes ?chain= when selecting undefined', () => {
+  it('shallowly sets ?chain=multichain and clears store state when selecting undefined', () => {
+    window.history.replaceState(null, '', '/explore/tokens/ethereum/0xabc?foo=bar')
     const { result, store } = renderWithStore(
-      `/explore/tokens/ethereum/0xabc?${CHAIN_SEARCH_PARAM}=base`,
+      '/explore/tokens/ethereum/0xabc?foo=bar',
       createPendingTDPState({ selectedMultichainChainId: UniverseChainId.Base }),
     )
 
@@ -94,8 +115,11 @@ describe('useTDPSelectedMultichainChain', () => {
       result.current.setSelectedMultichainChainId(undefined)
     })
 
-    expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Base)
+    expect(store.getState().selectedMultichainChainId).toBeUndefined()
+    expect(window.location.pathname).toBe('/explore/tokens/ethereum/0xabc')
+    expect(window.location.search).toContain(`${CHAIN_SEARCH_PARAM}=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`)
+    expect(window.location.search).toContain('foo=bar')
     expect(result.current.searchString).not.toContain(CHAIN_SEARCH_PARAM)
-    expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.Base)
+    expect(result.current.selectedMultichainChainId).toBeUndefined()
   })
 })

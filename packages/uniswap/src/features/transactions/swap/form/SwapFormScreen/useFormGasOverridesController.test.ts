@@ -7,12 +7,14 @@ import {
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { useFormGasOverridesController } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useFormGasOverridesController'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 vi.mock('uniswap/src/features/gas/hooks/useGasChipDispatch')
 vi.mock(
   'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
 )
 vi.mock('uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore')
+vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore')
 vi.mock('uniswap/src/features/gas/components/NetworkCostEditor/NetworkCostEditorModal', () => ({
   NetworkCostEditorModal: (): null => null,
 }))
@@ -30,6 +32,7 @@ const mockUseGasChipDispatch = useGasChipDispatch as ReturnType<typeof vi.fn>
 const mockUseTransactionSettingsStore = useTransactionSettingsStore as unknown as ReturnType<typeof vi.fn>
 const mockUseTransactionSettingsActions = useTransactionSettingsActions as ReturnType<typeof vi.fn>
 const mockUseSwapFormScreenStore = useSwapFormScreenStore as unknown as ReturnType<typeof vi.fn>
+const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as unknown as ReturnType<typeof vi.fn>
 
 describe('useFormGasOverridesController', () => {
   const setGasOverrides = vi.fn()
@@ -42,6 +45,10 @@ describe('useFormGasOverridesController', () => {
     mockUseTransactionSettingsActions.mockReturnValue({ setGasOverrides })
     mockUseSwapFormScreenStore.mockImplementation((selector: (s: { isCrossChain: boolean }) => unknown) =>
       selector({ isCrossChain: false }),
+    )
+    // No trade/quote → no quote-derived fallback (these tests only assert modal state).
+    mockUseSwapFormStoreDerivedSwapInfo.mockImplementation(
+      (selector: (s: { trade: { trade: undefined } }) => unknown) => selector({ trade: { trade: undefined } }),
     )
   })
 

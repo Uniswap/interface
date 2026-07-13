@@ -42,13 +42,11 @@ export type SwapFormStore = UseBoundStore<StoreApi<SwapFormStoreState>>
 
 export const createSwapFormStore = ({
   hideFooter,
-  hideSettings,
   initialState,
   derivedSwapInfo,
   dependenciesForSideEffect: { dispatch },
 }: {
   hideFooter?: boolean
-  hideSettings?: boolean
   initialState?: SwapFormState
   derivedSwapInfo: DerivedSwapInfo
   dependenciesForSideEffect: {
@@ -90,7 +88,6 @@ export const createSwapFormStore = ({
           showPendingUI: false,
           isConfirmed: false,
           hideFooter,
-          hideSettings,
           prefilledCurrencies: undefined,
           isPrefilled: undefined,
           derivedSwapInfo,

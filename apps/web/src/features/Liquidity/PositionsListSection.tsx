@@ -4,9 +4,28 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Flex, type FlexProps, Text, useMedia } from 'ui/src'
 import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpandoRow'
+import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getPositionKey } from 'uniswap/src/features/positions/utils'
+import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { logPositionCardClick } from '~/features/Liquidity/analytics'
 import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
-import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
+
+function getPositionCardLinkTarget({
+  position,
+  readOnly,
+  entryPoint,
+}: {
+  position: PositionInfo
+  readOnly: boolean
+  entryPoint?: string
+}): string {
+  if (readOnly) {
+    return getPoolDetailsURL(position.poolId, position.chainId)
+  }
+  return getPositionUrl(position, { entryPoint })
+}
 
 interface HiddenSectionPadding {
   px?: FlexProps['px']
@@ -25,6 +44,7 @@ interface PositionsListSectionProps {
   hiddenSectionLabel?: string
   hiddenSectionPadding?: HiddenSectionPadding
   entryPoint?: string
+  readOnly?: boolean
 }
 
 export function PositionsListSection({
@@ -39,6 +59,7 @@ export function PositionsListSection({
   hiddenSectionLabel,
   hiddenSectionPadding,
   entryPoint,
+  readOnly = false,
 }: PositionsListSectionProps) {
   return (
     <Flex gap="$gap16" opacity={isPlaceholderData ? 0.6 : 1}>
@@ -48,6 +69,7 @@ export function PositionsListSection({
         hasNextPage={hasNextPage}
         isFetching={isFetching}
         entryPoint={entryPoint}
+        readOnly={readOnly}
       />
       <HiddenPositions
         showHiddenPositions={showHiddenPositions}
@@ -56,6 +78,7 @@ export function PositionsListSection({
         hiddenSectionLabel={hiddenSectionLabel}
         hiddenSectionPadding={hiddenSectionPadding}
         entryPoint={entryPoint}
+        readOnly={readOnly}
       />
     </Flex>
   )
@@ -67,15 +90,18 @@ function VirtualizedPositionsList({
   hasNextPage,
   isFetching,
   entryPoint,
+  readOnly,
 }: {
   positions: PositionInfo[]
   onLoadMore: () => void
   hasNextPage: boolean
   isFetching: boolean
   entryPoint?: string
+  readOnly: boolean
 }) {
   const { t } = useTranslation()
   const media = useMedia()
+  const trace = useTrace()
 
   const positionItemHeight = useMemo(() => {
     return media.sm ? 366 : media.md ? 284 : 184
@@ -90,6 +116,10 @@ function VirtualizedPositionsList({
     overscan: 3,
     scrollMargin: containerOffsetTop,
   })
+
+  useEffect(() => {
+    virtualizer.measure()
+  }, [virtualizer, positionItemHeight])
 
   const virtualItems = virtualizer.getVirtualItems()
 
@@ -107,7 +137,7 @@ function VirtualizedPositionsList({
           const position = positions[virtualItem.index]
           return (
             <Flex
-              key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+              key={getPositionKey(position)}
               position="absolute"
               top={0}
               left={0}
@@ -117,8 +147,17 @@ function VirtualizedPositionsList({
                 transform: `translateY(${virtualItem.start - virtualizer.options.scrollMargin}px)`,
               }}
             >
-              <Link style={{ textDecoration: 'none' }} to={getPositionUrl(position, { entryPoint })}>
-                <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
+              <Link
+                style={{ textDecoration: 'none' }}
+                to={getPositionCardLinkTarget({ position, readOnly, entryPoint })}
+                onClick={() => logPositionCardClick(position, trace)}
+              >
+                <LiquidityPositionCard
+                  showVisibilityOption
+                  liquidityPosition={position}
+                  showMigrateButton
+                  readOnly={readOnly}
+                />
               </Link>
             </Flex>
           )
@@ -143,6 +182,7 @@ interface HiddenPositionsProps {
   hiddenSectionLabel?: string
   hiddenSectionPadding?: HiddenSectionPadding
   entryPoint?: string
+  readOnly: boolean
 }
 
 function HiddenPositions({
@@ -152,8 +192,10 @@ function HiddenPositions({
   hiddenSectionLabel,
   hiddenSectionPadding,
   entryPoint,
+  readOnly,
 }: HiddenPositionsProps) {
   const { t } = useTranslation()
+  const trace = useTrace()
 
   if (hiddenPositions.length === 0) {
     return null
@@ -168,17 +210,25 @@ function HiddenPositions({
         label={hiddenSectionLabel ?? `${t('common.hidden')} (${hiddenPositions.length})`}
         onPress={() => setShowHiddenPositions(!showHiddenPositions)}
         body={
-          <Flex gap="$gap16">
-            {hiddenPositions.map((position) => (
-              <Link
-                key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                style={{ textDecoration: 'none' }}
-                to={getPositionUrl(position, { entryPoint })}
-              >
-                <LiquidityPositionCard showVisibilityOption liquidityPosition={position} isVisible={false} />
-              </Link>
-            ))}
-          </Flex>
+          showHiddenPositions ? (
+            <Flex gap="$gap16">
+              {hiddenPositions.map((position) => (
+                <Link
+                  key={getPositionKey(position)}
+                  style={{ textDecoration: 'none' }}
+                  to={getPositionCardLinkTarget({ position, readOnly, entryPoint })}
+                  onClick={() => logPositionCardClick(position, trace)}
+                >
+                  <LiquidityPositionCard
+                    showVisibilityOption
+                    liquidityPosition={position}
+                    isVisible={false}
+                    readOnly={readOnly}
+                  />
+                </Link>
+              ))}
+            </Flex>
+          ) : undefined
         }
         px={hiddenSectionPadding?.px}
         py={hiddenSectionPadding?.py}

@@ -11,18 +11,16 @@ import type { TokenPriceMessage, TokenSubscriptionParams } from '@universe/price
 import {
   createPriceKey,
   createPriceSubscriptionHandler,
-  PriceServiceProvider,
   parseConnectionMessage,
   parseTokenPriceMessage,
   priceKeys,
-  RestPriceBatcher,
 } from '@universe/prices'
 import type { WebSocketClient } from '@universe/websocket'
 import { createWebSocketClient, createZustandConnectionStore } from '@universe/websocket'
 import type { ReactElement, ReactNode } from 'react'
 import { useState } from 'react'
+import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
 import { logger } from 'utilities/src/logger/logger'
-import { createRestPriceClient } from '~/state/livePrices/createRestPriceClient'
 
 function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, TokenPriceMessage['data']> | null {
   const wsUrl = getWebSocketUrl()
@@ -85,10 +83,10 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
 }
 
 export function LivePricesProvider({ children }: { children: ReactNode }): ReactElement {
-  const useCentralized = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const usesAuroraLivePrices = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
-  if (!useCentralized) {
-    return <>{children}</>
+  if (!usesAuroraLivePrices) {
+    return <RemotePriceProvider>{children}</RemotePriceProvider>
   }
 
   return <LivePricesProviderInner>{children}</LivePricesProviderInner>
@@ -96,11 +94,6 @@ export function LivePricesProvider({ children }: { children: ReactNode }): React
 
 function LivePricesProviderInner({ children }: { children: ReactNode }): ReactElement {
   const [wsClient] = useState(() => createLivePricesClient())
-  const [restBatcher] = useState(() => new RestPriceBatcher(createRestPriceClient({ preferQuotePrices: false })))
 
-  return (
-    <PriceServiceProvider wsClient={wsClient ?? undefined} queryClient={SharedQueryClient} restBatcher={restBatcher}>
-      {children}
-    </PriceServiceProvider>
-  )
+  return <RemotePriceProvider wsClient={wsClient ?? undefined}>{children}</RemotePriceProvider>
 }

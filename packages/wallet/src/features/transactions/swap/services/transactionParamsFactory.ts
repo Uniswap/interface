@@ -160,6 +160,12 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       gasEstimate: gasFeeEstimation.swapEstimate,
       swapStartTimestamp: context.analytics.swap_start_timestamp,
       isFinalStep: context.analytics.is_final_step,
+      rwaAnalytics: {
+        marketClosed: context.analytics.market_closed,
+        priceWarning: context.analytics.price_warning,
+        tokenInStocks: context.analytics.token_in_stocks,
+        tokenOutStocks: context.analytics.token_out_stocks,
+      },
     })
 
     const options: TransactionOptions = {
@@ -221,6 +227,12 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       gasEstimate: gasFeeEstimation.swapEstimate,
       swapStartTimestamp: context.analytics.swap_start_timestamp,
       isFinalStep: context.analytics.is_final_step,
+      rwaAnalytics: {
+        marketClosed: context.analytics.market_closed,
+        priceWarning: context.analytics.price_warning,
+        tokenInStocks: context.analytics.token_in_stocks,
+        tokenOutStocks: context.analytics.token_out_stocks,
+      },
     })
 
     const submitOrderParams: SubmitUniswapXOrderParams = {

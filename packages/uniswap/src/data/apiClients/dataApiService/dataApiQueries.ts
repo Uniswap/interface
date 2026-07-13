@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { type InfiniteData, infiniteQueryOptions } from '@tanstack/react-query'
 import type { ListTokensResponse, ListTopPoolsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { getListTokensQueryOptions, type ListTokensInput } from 'uniswap/src/data/apiClients/dataApiService/listTokens'
@@ -15,9 +16,9 @@ export const dataApiQueries: {
     input: ListTokensInput,
   ) => ReturnType<
     typeof infiniteQueryOptions<
-      ListTokensResponse,
+      PlainMessage<ListTokensResponse>,
       Error,
-      InfiniteData<ListTokensResponse, string>,
+      InfiniteData<PlainMessage<ListTokensResponse>, string>,
       ListTokensQueryKey,
       string
     >
@@ -25,7 +26,13 @@ export const dataApiQueries: {
   listTopPools: (
     input: ListTopPoolsInput,
   ) => ReturnType<
-    typeof infiniteQueryOptions<ListTopPoolsResponse, Error, ListTopPoolsResponse, ListTopPoolsQueryKey, string>
+    typeof infiniteQueryOptions<
+      PlainMessage<ListTopPoolsResponse>,
+      Error,
+      PlainMessage<ListTopPoolsResponse>,
+      ListTopPoolsQueryKey,
+      string
+    >
   >
 } = {
   listTokens: (input) => getListTokensQueryOptions(input),

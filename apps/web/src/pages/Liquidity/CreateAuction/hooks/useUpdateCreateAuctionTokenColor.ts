@@ -7,6 +7,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { parseTokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
+import { resolveCreateNewTokenDisplayImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveCreateNewTokenDisplayImageSrc'
 
 /** Passed as `defaultColor` so extraction failures stay distinguishable from real colors. */
 const TOKEN_COLOR_EXTRACTION_SENTINEL = '#feedface'
@@ -18,7 +19,9 @@ export function useUpdateCreateAuctionTokenColor(): void {
 
   const imageUrl = useMemo(() => {
     if (tokenForm.mode === TokenMode.CREATE_NEW) {
-      return tokenForm.imageUrl || undefined
+      // Prefer the blob preview while the Pinata URL is still warming up; then resolve ipfs:// for
+      // canvas-based extraction (same gateway as logo render).
+      return resolveCreateNewTokenDisplayImageSrc(tokenForm.localImagePreviewUri, tokenForm.imageUrl)
     }
     return tokenForm.existingTokenCurrencyInfo?.logoUrl ?? undefined
   }, [tokenForm])

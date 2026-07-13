@@ -23,6 +23,34 @@ export function envName(key: string): string {
 }
 
 /**
+ * Web app env vars are read with optional `VITE_` / `REACT_APP_` prefixes (see
+ * BaseConfig.ts), so a hand-written .env may carry either form. The Config Service
+ * stores canonical (unprefixed) names — strip both before converting to a param name
+ * so `pull → push` round-trips don't silently fork into a second key under the wrong
+ * prefixed name.
+ */
+const STRIPPABLE_ENV_PREFIXES = ['VITE_', 'REACT_APP_'] as const
+
+export function stripEnvPrefix(envVar: string): string {
+  for (const prefix of STRIPPABLE_ENV_PREFIXES) {
+    if (envVar.startsWith(prefix)) {
+      return envVar.slice(prefix.length)
+    }
+  }
+  return envVar
+}
+
+/**
+ * Inverse of {@link envName}: convert an env-var-style name to a Config Service
+ * parameter name. `'APP_ID'` -> `'app-id'`, `'VITE_APP_ID'` -> `'app-id'`. Used when
+ * pushing local .env entries back into the service, which expects kebab-cased
+ * lower-case names without web-framework prefixes.
+ */
+export function paramName(envVar: string): string {
+  return stripEnvPrefix(envVar).replaceAll('_', '-').toLowerCase()
+}
+
+/**
  * Convert a list of Config Service parameter entries into a record keyed by env-var name.
  * Skips entries with no `key` (server returns them as missing fields rather than empty strings).
  */

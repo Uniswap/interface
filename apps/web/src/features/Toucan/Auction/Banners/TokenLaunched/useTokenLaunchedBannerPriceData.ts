@@ -29,6 +29,10 @@ interface UseTokenLaunchedBannerPriceDataResult {
   data: TokenLaunchedBannerData | undefined
   loading: boolean
   error?: Error
+  // True when the launched token has a live market price, i.e. a pool with liquidity is actually
+  // trading. Independent of `data`, which additionally requires price history. Used to gate the
+  // "Trade now" CTA so a graduated auction with no pool isn't advertised as tradeable.
+  hasMarketPrice: boolean
 }
 
 /**
@@ -99,5 +103,6 @@ export function useTokenLaunchedBannerPriceData({
     data: bannerData,
     loading,
     error: error ? new Error(error.message) : undefined,
+    hasMarketPrice: Boolean(data?.token?.market?.price?.value),
   }
 }

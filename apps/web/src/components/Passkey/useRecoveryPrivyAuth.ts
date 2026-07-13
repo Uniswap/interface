@@ -1,10 +1,15 @@
-import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { useCallback } from 'react'
 import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { useEvent } from 'utilities/src/react/hooks'
 import { RECOVER_OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
+import {
+  useMaybeAuthorizationSignature,
+  useMaybeLoginWithEmail,
+  useMaybeLoginWithOAuth,
+  useMaybePrivy,
+} from '~/hooks/useMaybePrivy'
 
 /**
  * Web implementation of {@link RecoveryPrivyAuth} — thin wrapper around `@privy-io/react-auth`
@@ -16,15 +21,15 @@ import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 export function useRecoveryPrivyAuth({
   onOAuthError,
 }: { onOAuthError?: (err: string) => void } = {}): RecoveryPrivyAuth {
-  const { ready, getAccessToken, user, logout } = usePrivy()
-  const { sendCode, loginWithCode } = useLoginWithEmail()
-  const { initOAuth: privyInitOAuth } = useLoginWithOAuth({
+  const { ready, getAccessToken, user, logout } = useMaybePrivy()
+  const { sendCode, loginWithCode } = useMaybeLoginWithEmail()
+  const { initOAuth: privyInitOAuth } = useMaybeLoginWithOAuth({
     onError: (e) => {
       sessionStorage.removeItem(RECOVER_OAUTH_PENDING_KEY)
       onOAuthError?.(typeof e === 'string' ? e : ((e as { message?: string }).message ?? 'OAuth error'))
     },
   })
-  const { generateAuthorizationSignature } = useAuthorizationSignature()
+  const { generateAuthorizationSignature } = useMaybeAuthorizationSignature()
 
   const oauthReturn = useOAuthResult(RECOVER_OAUTH_PENDING_KEY)
 

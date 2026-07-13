@@ -18,6 +18,12 @@ vi.mock('@privy-io/react-auth', async (importOriginal) => ({
   usePrivy: vi.fn(() => ({ ready: true })),
 }))
 
+// `useMaybePrivy` only calls the (mocked) `usePrivy` when Privy is configured, so mark it configured here.
+vi.mock('~/config', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/config')>()),
+  getPrivyConfig: () => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' }),
+}))
+
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal()),
   useFeatureFlag: vi.fn(),

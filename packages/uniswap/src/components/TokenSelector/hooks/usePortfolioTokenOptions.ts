@@ -10,11 +10,13 @@ import { sortPortfolioBalances } from 'uniswap/src/features/portfolio/balances/s
 
 export function usePortfolioTokenOptions({
   chainFilter,
+  chainIds,
   searchFilter,
   includeHidden = false,
   portfolioData,
 }: {
   chainFilter: UniverseChainId | null
+  chainIds?: UniverseChainId[]
   searchFilter?: string
   includeHidden?: boolean
   portfolioData: PortfolioBalancesResult
@@ -49,16 +51,18 @@ export function usePortfolioTokenOptions({
   )
 
   const filteredPortfolioBalances = useMemo(
-    () => portfolioBalances && filter({ tokenOptions: portfolioBalances, chainFilter, searchFilter, hideWSOL: true }),
-    [chainFilter, portfolioBalances, searchFilter],
+    () =>
+      portfolioBalances &&
+      filter({ tokenOptions: portfolioBalances, chainFilter, chainIds, searchFilter, hideWSOL: true }),
+    [chainFilter, chainIds, portfolioBalances, searchFilter],
   )
 
   const filteredHiddenPortfolioBalances = useMemo(
     () =>
       includeHidden && hiddenPortfolioBalances
-        ? filter({ tokenOptions: hiddenPortfolioBalances, chainFilter, searchFilter, hideWSOL: true })
+        ? filter({ tokenOptions: hiddenPortfolioBalances, chainFilter, chainIds, searchFilter, hideWSOL: true })
         : undefined,
-    [chainFilter, hiddenPortfolioBalances, includeHidden, searchFilter],
+    [chainFilter, chainIds, hiddenPortfolioBalances, includeHidden, searchFilter],
   )
 
   return {

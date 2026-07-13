@@ -250,7 +250,6 @@ export function useUniswapXSwapCallback({
       const resultTime = Math.floor(Date.now() / 1000)
       if (deadline < resultTime) {
         sendAnalyticsEvent(InterfaceEventName.UniswapXSignatureDeadlineExpired, {
-          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,
@@ -265,7 +264,6 @@ export function useUniswapXSwapCallback({
         throw new SignatureExpiredError()
       }
       sendAnalyticsEvent(SwapEventName.SwapSigned, {
-        // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
         ...formatSwapSignedAnalyticsEventProperties({
           trade,
           allowedSlippage,
@@ -314,7 +312,6 @@ export function useUniswapXSwapCallback({
       // check for status code and perform this type narrowing.
       if (isErrorResponse(res, responseBody)) {
         sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
-          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,

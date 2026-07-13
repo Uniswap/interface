@@ -1,5 +1,6 @@
 import { isMobileApp, isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import {
@@ -15,7 +16,7 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, MultichainSearchResult, SearchMultichainParent } from 'uniswap/src/features/dataApi/types'
 import {
   isEtherscanSearchHistoryResult,
   isMultichainTokenSearchHistoryResult,
@@ -26,22 +27,10 @@ import {
   SearchHistoryResult,
 } from 'uniswap/src/features/search/SearchHistoryResult'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { dedupeCurrencyIds } from 'uniswap/src/features/search/SearchModal/utils/dedupeCurrencyIds'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-
-function dedupeCurrencyIds(ids: string[]): string[] {
-  const seen = new Set<string>()
-  const out: string[] = []
-  for (const id of ids) {
-    const k = normalizeCurrencyIdForMapLookup(id)
-    if (!seen.has(k)) {
-      seen.add(k)
-      out.push(id)
-    }
-  }
-  return out
-}
 
 function multichainHistoryToTokenOption(
   history: MultichainTokenSearchHistoryResult,
@@ -58,18 +47,24 @@ function multichainHistoryToTokenOption(
   if (!primaryCurrencyInfo) {
     return undefined
   }
+  // Use history.tokenCurrencyIds (the full saved list) so multichain detection
+  // works even when some chain tokens haven't been loaded into the cache yet.
+  const searchMultichainParent: SearchMultichainParent = {
+    id: history.multichainId,
+    tokenCurrencyIds: history.tokenCurrencyIds,
+  }
   const multichainResult: MultichainSearchResult = {
     id: history.multichainId,
     name: history.name,
     symbol: history.symbol,
     logoUrl: history.logoUrl,
-    tokens,
+    tokens: tokens.map((t) => ({ ...t, searchMultichainParent })),
     safetyInfo: primaryCurrencyInfo.safetyInfo,
   }
   return {
     type: OnchainItemListOptionType.MultichainToken,
     multichainResult,
-    primaryCurrencyInfo,
+    primaryCurrencyInfo: { ...primaryCurrencyInfo, searchMultichainParent },
     ...(history.tdpChainFilter != null ? { tdpChainFilter: history.tdpChainFilter } : {}),
   }
 }
@@ -83,7 +78,17 @@ export function useRecentlySearchedOptions({
   activeTab: SearchTab
   numberOfRecentSearchResults: number
 }): SearchModalOption[] {
-  const recentHistory = useSelector(selectSearchHistory)
+  // Snapshot the search history when the modal opens to prevent a layout shift due to modifier-clicks (web only).
+  const liveHistory = useSelector(selectSearchHistory)
+  const [snapshot, setSnapshot] = useState(liveHistory)
+
+  if (liveHistory.length === 0 && snapshot.length > 0) {
+    setSnapshot(liveHistory)
+  }
+
+  const history = isWebApp ? snapshot : liveHistory
+
+  const recentHistory = history
     .filter((searchResult) => {
       switch (activeTab) {
         case SearchTab.Tokens:

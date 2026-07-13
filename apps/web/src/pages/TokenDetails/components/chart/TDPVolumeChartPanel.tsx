@@ -15,7 +15,7 @@ interface TDPVolumeChartPanelProps {
 export function TDPVolumeChartPanel({ variables, tokenColor, timePeriod }: TDPVolumeChartPanelProps): JSX.Element {
   const { t } = useTranslation()
 
-  const volumeQuery = useTDPVolumeChartData(variables, false)
+  const volumeQuery = useTDPVolumeChartData({ variables, skip: false })
 
   if (volumeQuery.dataQuality === DataQuality.INVALID) {
     return (

@@ -1,5 +1,4 @@
-/* oxlint-disable max-depth */
-/* oxlint-disable max-lines */
+/* oxlint-disable max-depth max-lines */
 
 import { RankingType } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'

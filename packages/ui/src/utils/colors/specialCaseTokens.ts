@@ -18,6 +18,10 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   // ETH
   'https://token-icons.s3.amazonaws.com/eth.png': '#4970D5',
   'https://didcmo2jyrnku.cloudfront.net/assets/eth.png': '#4970D5',
+  // Ethereum L1 chain logo (`…/ethereum/info/logo.png` from chain assets — same accent as ETH icons above)
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/info/logo.png': '#4970D5',
+  // Monad chain logo — vibrant extraction skews dark/indigo; use brand purple from networkColors.monad
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/monad/info/logo.png': '#836EF9',
   // HARRYPOTTERSHIBAINUBITCOIN
   'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567': '#DE3110',
   // PEPE

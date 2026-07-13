@@ -7,6 +7,7 @@ import { createTDPStore } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPChainSearchParamSync } from '~/pages/TokenDetails/context/TDPChainSearchParamSync'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useCreateTDPContext } from '~/pages/TokenDetails/context/useCreateTDPContext'
+import { useTDPHeartbeatCoordinator } from '~/pages/TokenDetails/hooks/useTDPHeartbeatCoordinator'
 
 interface TDPStoreContextProviderProps {
   children: ReactNode
@@ -19,7 +20,7 @@ function useTDPIdentity() {
 }
 
 export function TDPStoreContextProvider({ children }: TDPStoreContextProviderProps): JSX.Element {
-  const derivedState = useCreateTDPContext()
+  const { state: derivedState, balancesRefetch } = useCreateTDPContext()
   const [store] = useState(() => createTDPStore(derivedState))
   const identity = useTDPIdentity()
   const prevIdentityRef = useRef(identity)
@@ -32,7 +33,7 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
       prevIdentityRef.current.chainName !== identity.chainName
 
     if (isNewIdentity) {
-      store.setState({ ...derivedState })
+      store.setState({ ...derivedState, refreshEpoch: 0 })
       prevIdentityRef.current = { tokenAddress: identity.tokenAddress, chainName: identity.chainName }
       return
     }
@@ -46,6 +47,9 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
     // Use Zustand shallow compare so we only update when top-level slice content changed
     if (!shallow(state.tokenQuery, derivedState.tokenQuery)) {
       actions.setTokenQuery(derivedState.tokenQuery)
+    }
+    if (!shallow(state.tokenProjectQuery, derivedState.tokenProjectQuery)) {
+      actions.setTokenProjectQuery(derivedState.tokenProjectQuery)
     }
     if (!shallow(state.multiChainMap, derivedState.multiChainMap)) {
       actions.setMultiChainMap(derivedState.multiChainMap)
@@ -70,6 +74,13 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
       storeWithDevtools.devtools?.cleanup()
     }
   }, [store])
+
+  useTDPHeartbeatCoordinator({
+    tokenQueryRefetch: derivedState.tokenQuery.refetch,
+    balancesRefetch,
+    incrementRefreshEpoch: store.getState().actions.incrementRefreshEpoch,
+    enabled: Boolean(derivedState.currency),
+  })
 
   return (
     <TDPStoreContext.Provider value={store}>

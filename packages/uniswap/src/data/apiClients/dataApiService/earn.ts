@@ -1,4 +1,4 @@
-import { type PartialMessage } from '@bufbuild/protobuf'
+import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { keepPreviousData } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v2/api_connect'
@@ -22,22 +22,22 @@ const dataApiV2ServiceClient = createPromiseClient(DataApiService, entryGatewayP
 type NonPaginatedListEarnVaultsRequest = Omit<PartialMessage<ListEarnVaultsRequest>, 'pageToken'>
 type NonPaginatedListEarnPositionsRequest = Omit<PartialMessage<ListEarnPositionsRequest>, 'pageToken'>
 
-export type ListEarnVaultsInput<TSelectData = ListEarnVaultsResponse> = {
+export type ListEarnVaultsInput<TSelectData = PlainMessage<ListEarnVaultsResponse>> = {
   params?: NonPaginatedListEarnVaultsRequest
   enabled?: boolean
-  select?: (data: ListEarnVaultsResponse | undefined) => TSelectData
+  select?: (data: PlainMessage<ListEarnVaultsResponse> | undefined) => TSelectData
 }
 
-export type ListEarnPositionsInput<TSelectData = ListEarnPositionsResponse> = {
+export type ListEarnPositionsInput<TSelectData = PlainMessage<ListEarnPositionsResponse>> = {
   params?: NonPaginatedListEarnPositionsRequest
   enabled?: boolean
-  select?: (data: ListEarnPositionsResponse | undefined) => TSelectData
+  select?: (data: PlainMessage<ListEarnPositionsResponse> | undefined) => TSelectData
 }
 
-export type GetEarnPositionInput<TSelectData = GetEarnPositionResponse> = {
+export type GetEarnPositionInput<TSelectData = PlainMessage<GetEarnPositionResponse>> = {
   params?: PartialMessage<GetEarnPositionRequest>
   enabled?: boolean
-  select?: (data: GetEarnPositionResponse | undefined) => TSelectData
+  select?: (data: PlainMessage<GetEarnPositionResponse> | undefined) => TSelectData
 }
 
 type ListEarnVaultsQueryKey = readonly [
@@ -58,23 +58,23 @@ type GetEarnPositionQueryKey = readonly [
   PartialMessage<GetEarnPositionRequest> | undefined,
 ]
 
-export function getListEarnVaultsQueryOptions<TSelectData = ListEarnVaultsResponse>({
+export function getListEarnVaultsQueryOptions<TSelectData = PlainMessage<ListEarnVaultsResponse>>({
   params,
   enabled = true,
   select,
 }: ListEarnVaultsInput<TSelectData>): QueryOptionsResult<
-  ListEarnVaultsResponse | undefined,
+  PlainMessage<ListEarnVaultsResponse> | undefined,
   Error,
   TSelectData,
   ListEarnVaultsQueryKey
 > {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnVaults', params] as const,
-    queryFn: async (): Promise<ListEarnVaultsResponse | undefined> => {
+    queryFn: async (): Promise<PlainMessage<ListEarnVaultsResponse> | undefined> => {
       if (!params) {
         return undefined
       }
-      return dataApiV2ServiceClient.listEarnVaults(params)
+      return toPlainMessage(await dataApiV2ServiceClient.listEarnVaults(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
@@ -82,23 +82,23 @@ export function getListEarnVaultsQueryOptions<TSelectData = ListEarnVaultsRespon
   })
 }
 
-export function getListEarnPositionsQueryOptions<TSelectData = ListEarnPositionsResponse>({
+export function getListEarnPositionsQueryOptions<TSelectData = PlainMessage<ListEarnPositionsResponse>>({
   params,
   enabled = true,
   select,
 }: ListEarnPositionsInput<TSelectData>): QueryOptionsResult<
-  ListEarnPositionsResponse | undefined,
+  PlainMessage<ListEarnPositionsResponse> | undefined,
   Error,
   TSelectData,
   ListEarnPositionsQueryKey
 > {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnPositions', params] as const,
-    queryFn: async (): Promise<ListEarnPositionsResponse | undefined> => {
+    queryFn: async (): Promise<PlainMessage<ListEarnPositionsResponse> | undefined> => {
       if (!params) {
         return undefined
       }
-      return dataApiV2ServiceClient.listEarnPositions(params)
+      return toPlainMessage(await dataApiV2ServiceClient.listEarnPositions(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
@@ -106,23 +106,23 @@ export function getListEarnPositionsQueryOptions<TSelectData = ListEarnPositions
   })
 }
 
-export function getEarnPositionQueryOptions<TSelectData = GetEarnPositionResponse>({
+export function getEarnPositionQueryOptions<TSelectData = PlainMessage<GetEarnPositionResponse>>({
   params,
   enabled = true,
   select,
 }: GetEarnPositionInput<TSelectData>): QueryOptionsResult<
-  GetEarnPositionResponse | undefined,
+  PlainMessage<GetEarnPositionResponse> | undefined,
   Error,
   TSelectData,
   GetEarnPositionQueryKey
 > {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.DataApiService, 'getEarnPosition', params] as const,
-    queryFn: async (): Promise<GetEarnPositionResponse | undefined> => {
+    queryFn: async (): Promise<PlainMessage<GetEarnPositionResponse> | undefined> => {
       if (!params) {
         return undefined
       }
-      return dataApiV2ServiceClient.getEarnPosition(params)
+      return toPlainMessage(await dataApiV2ServiceClient.getEarnPosition(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,

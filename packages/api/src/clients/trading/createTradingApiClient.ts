@@ -4,6 +4,8 @@ import type {
   ApprovalRequest,
   ApprovalResponse,
   ChainId,
+  CheckApproval4337Request,
+  CheckApproval4337Response,
   CreateSwap5792Request,
   CreateSwap5792Response,
   CreateSwap7702Request,
@@ -12,6 +14,8 @@ import type {
   CreateSwapResponse,
   Encode4337Request,
   Encode4337Response,
+  Swap4337Request,
+  Swap4337Response,
   Encode7702ResponseBody,
   GetOrdersResponse,
   GetSwappableTokensResponse,
@@ -34,14 +38,15 @@ import type {
 } from '@universe/api/src/clients/trading/tradeTypes'
 import { logger } from 'utilities/src/logger/logger'
 
-// TODO(app-infra), de-duplicate with uniswapUrls.tradingApiPaths when other consumers are migrated to use TradingApiClient
 export const TRADING_API_PATHS = {
   approval: 'check_approval',
+  approval4337: 'check_approval_4337',
   order: 'order',
   orders: 'orders',
   quote: 'quote',
   plan: 'plan',
   swap: 'swap',
+  swap4337: 'swap_4337',
   swap5792: 'swap_5792',
   swap7702: 'swap_7702',
   swappableTokens: 'swappable_tokens',
@@ -52,6 +57,23 @@ export const TRADING_API_PATHS = {
     encode4337: 'wallet/encode_4337',
   },
 }
+
+export type TradingApiPaths = typeof TRADING_API_PATHS
+
+/** Prefixes each trading API path (e.g. with the '/v1' version prefix). */
+export function getVersionedTradingApiPaths(apiPathPrefix: string): TradingApiPaths {
+  const addPrefix = <T extends Record<string, string | Record<string, string>>>(paths: T): T =>
+    Object.fromEntries(
+      Object.entries(paths).map(([key, value]) =>
+        typeof value === 'string' ? [key, `${apiPathPrefix}/${value}`] : [key, addPrefix(value)],
+      ),
+      // Object.fromEntries widens to a generic record; the structure is unchanged so reassert T.
+    ) as T
+  return addPrefix(TRADING_API_PATHS)
+}
+
+/** Trading API paths under the default v1 prefix. */
+export const V1_TRADING_API_PATHS = getVersionedTradingApiPaths('/v1')
 
 export interface TradingClientContext {
   fetchClient: FetchClient
@@ -66,14 +88,18 @@ export interface TradingApiClient {
   fetchQuote: (params: QuoteRequest & { isUSDQuote?: boolean }) => Promise<DiscriminatedQuoteResponse>
   fetchIndicativeQuote: (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
   fetchSwap: (params: CreateSwapRequest) => Promise<CreateSwapResponse>
+  fetchSwap4337: (params: Swap4337Request) => Promise<Swap4337Response>
   fetchSwap5792: (params: CreateSwap5792Request) => Promise<CreateSwap5792Response>
   fetchSwap7702: (params: CreateSwap7702Request) => Promise<CreateSwap7702Response>
   fetchSwaps: (params: {
     txHashes?: TransactionHash[]
     userOpHashes?: string[]
     chainId: ChainId
+    // When provided, the endpoint decorates matching sponsored swaps with `sponsorship` metadata.
+    swapper?: string
   }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
+  fetchCheckApproval4337: (params: CheckApproval4337Request) => Promise<CheckApproval4337Response>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
   fetchOrders: (params: { orderIds: string[] }) => Promise<GetOrdersResponse>
   fetchOrdersWithoutIds: (params: {
@@ -147,12 +173,24 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
+  const fetchSwap4337 = createFetcher<Swap4337Request, Swap4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.swap4337),
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap4337, params.quote.chainId),
+    }),
+  })
+
   const fetchSwap5792 = createFetcher<CreateSwap5792Request, CreateSwap5792Response>({
     client,
     url: getApiPath(TRADING_API_PATHS.swap5792),
     method: 'post',
     transformRequest: async ({ params }) => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap5792, params.quote.chainId),
+      headers: await getFeatureFlagHeaders(
+        TRADING_API_PATHS.swap5792,
+        'chainId' in params.quote ? params.quote.chainId : undefined,
+      ),
     }),
   })
 
@@ -171,6 +209,15 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     method: 'post',
     transformRequest: async ({ params }) => ({
       headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval, params.chainId),
+    }),
+  })
+
+  const fetchCheckApproval4337 = createFetcher<CheckApproval4337Request, CheckApproval4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.approval4337),
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval4337, params.chainId),
     }),
   })
 
@@ -230,6 +277,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
       txHashes?: TransactionHash[]
       userOpHashes?: string[]
       chainId: ChainId
+      swapper?: string
     },
     GetSwapsResponse
   >({
@@ -241,6 +289,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
       params: {
         ...(params.txHashes ? { txHashes: params.txHashes.join(',') } : {}),
         ...(params.userOpHashes ? { userOpHashes: params.userOpHashes.join(',') } : {}),
+        ...(params.swapper ? { swapper: params.swapper } : {}),
         chainId: params.chainId,
       },
     }),
@@ -335,10 +384,12 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchQuote,
     fetchIndicativeQuote,
     fetchSwap,
+    fetchSwap4337,
     fetchSwap5792,
     fetchSwap7702,
     fetchSwaps,
     fetchCheckApproval,
+    fetchCheckApproval4337,
     submitOrder,
     fetchOrders,
     fetchOrdersWithoutIds,

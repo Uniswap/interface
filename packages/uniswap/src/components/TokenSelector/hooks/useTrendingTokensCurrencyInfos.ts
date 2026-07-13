@@ -6,13 +6,14 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 export function useTrendingTokensCurrencyInfos(
   chainFilter: Maybe<UniverseChainId>,
-  skip?: boolean,
+  options: { skip?: boolean; chainIds?: UniverseChainId[] } = {},
 ): {
   data: CurrencyInfo[] | undefined
   error: Error | undefined
   refetch: () => void
   loading: boolean
 } {
+  const { skip, chainIds } = options
   const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery(
     {
       chainId: chainFilter?.toString() ?? ALL_NETWORKS_ARG,
@@ -21,9 +22,14 @@ export function useTrendingTokensCurrencyInfos(
   )
 
   const trendingTokens = data?.tokenRankings[CustomRankingType.Trending]?.tokens
+  const chainIdSet = useMemo(() => (chainIds ? new Set(chainIds) : undefined), [chainIds])
   const formattedTokens = useMemo(
-    () => trendingTokens?.map(tokenRankingsStatToCurrencyInfo).filter((t): t is CurrencyInfo => Boolean(t)),
-    [trendingTokens],
+    () =>
+      trendingTokens
+        ?.map(tokenRankingsStatToCurrencyInfo)
+        .filter((t): t is CurrencyInfo => Boolean(t))
+        .filter((t) => (chainFilter ? true : (chainIdSet?.has(t.currency.chainId) ?? true))),
+    [chainFilter, chainIdSet, trendingTokens],
   )
 
   return { data: formattedTokens, loading: isLoading || isFetching, error: error ?? undefined, refetch }

@@ -7,7 +7,8 @@ import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from '~
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from '~/hooks/useTokenAllowance'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { TradeFillType } from '~/state/routing/types'
-import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from '~/state/transactions/hooks'
+import { useTransactionAdderFromHash } from '~/state/transactions/adder'
+import { useHasPendingApproval, useHasPendingRevocation } from '~/state/transactions/hooks'
 
 enum ApprovalState {
   PENDING = 0,
@@ -136,11 +137,11 @@ export function usePermit2Allowance({
   // UniswapX trades do not need a permit signature step in between because the swap step _is_ the permit signature
   const shouldRequestSignature = tradeFillType === TradeFillType.Classic && !(isPermitted || isSigned)
 
-  const addTransaction = useTransactionAdder()
+  const addTransaction = useTransactionAdderFromHash()
   const approveAndPermit = useCallback(async () => {
     if (shouldRequestApproval) {
-      const { response, info } = await updateTokenAllowance()
-      addTransaction(response, info)
+      const { hash, chainId, info } = await updateTokenAllowance()
+      addTransaction({ hash, chainId }, info)
     }
     if (shouldRequestSignature) {
       await updatePermitAllowance()
@@ -148,13 +149,13 @@ export function usePermit2Allowance({
   }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
 
   const approve = useCallback(async () => {
-    const { response, info } = await updateTokenAllowance()
-    addTransaction(response, info)
+    const { hash, chainId, info } = await updateTokenAllowance()
+    addTransaction({ hash, chainId }, info)
   }, [addTransaction, updateTokenAllowance])
 
   const revoke = useCallback(async () => {
-    const { response, info } = await revokeTokenAllowance()
-    addTransaction(response, info)
+    const { hash, chainId, info } = await revokeTokenAllowance()
+    addTransaction({ hash, chainId }, info)
   }, [addTransaction, revokeTokenAllowance])
 
   return useMemo(() => {

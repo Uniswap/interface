@@ -1,9 +1,9 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useListTokensService } from '~/features/Explore/state/listTokens/services/useListTokensService'
 import { type UseListTokensOptions, type UseListTokensResult } from '~/features/Explore/state/listTokens/types'
 import { buildSparklinesFromMultichain } from '~/features/Explore/state/listTokens/utils/buildSparklinesFromMultichain'
-import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
 import { useExploreQueryLatencyTracking } from '~/features/Explore/state/useExploreQueryLatencyTracking'
 
 /**
@@ -17,14 +17,14 @@ export function useListTokens(
   chainId: UniverseChainId | undefined,
   options?: UseListTokensOptions,
 ): UseListTokensResult {
-  const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
+  const tokensV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
   const result = useListTokensService(chainId, options)
 
   const sparklines = useMemo(() => buildSparklinesFromMultichain(result.topTokens), [result.topTokens])
 
   useExploreQueryLatencyTracking({
     queryType: 'tokens',
-    isBackendSortingEnabled: isExploreBackendSortingEnabled,
+    isBackendSortingEnabled: tokensV2EndpointsEnabled,
     isLoading: result.isLoading,
     resultCount: result.topTokens.length,
     chainId,

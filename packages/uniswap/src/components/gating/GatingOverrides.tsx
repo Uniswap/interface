@@ -1,3 +1,4 @@
+import { clearComplianceOverrides } from '@universe/compliance'
 import { isExtensionApp, isMobileApp } from '@universe/environment'
 import {
   DynamicConfigs,
@@ -15,6 +16,7 @@ import {
 import React, { PropsWithChildren, useCallback } from 'react'
 import { Accordion, Flex, Separator, Switch, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOverrides'
 import {
   DynamicConfigDropdown,
   DynamicConfigDropdownBoolean,
@@ -90,6 +92,7 @@ export function GatingOverrides(): JSX.Element {
 
   const onClearAllGatingOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
+    clearComplianceOverrides()
   })
 
   return (
@@ -192,6 +195,16 @@ export function GatingOverrides(): JSX.Element {
                   selected={JSON.stringify(useForceUpgradeTranslations())}
                 />
               </DynamicConfigGroup>
+            </Flex>
+          </Accordion.Content>
+        </Accordion.Item>
+
+        <Accordion.Item value="compliance">
+          <AccordionHeader title="🌍 Compliance / Geo" />
+
+          <Accordion.Content>
+            <Flex gap="$spacing12" mt="$spacing12">
+              <ComplianceOverrides />
             </Flex>
           </Accordion.Content>
         </Accordion.Item>

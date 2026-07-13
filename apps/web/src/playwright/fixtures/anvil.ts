@@ -9,8 +9,8 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sleep } from 'utilities/src/time/timing'
-import { type Address, erc20Abi } from 'viem'
 import { mainnet } from 'viem/chains'
+import { type Address, erc20Abi } from '~/chains'
 import type { AnvilClient as BaseAnvilClient } from '~/playwright/anvil/anvil-manager'
 import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
 import { setErc20BalanceWithMultipleSlots } from '~/playwright/anvil/utils'
@@ -107,6 +107,8 @@ const createAnvilClient = () => {
         args: [spender, amount],
         account: owner ?? TEST_WALLET_ADDRESS,
         chain: mainnet,
+        maxFeePerGas: 100000000000n,
+        maxPriorityFeePerGas: 1000000000n,
       })
     },
     async getPermit2Allowance({ owner, token, spender }: { owner?: Address; token: Address; spender: Address }) {

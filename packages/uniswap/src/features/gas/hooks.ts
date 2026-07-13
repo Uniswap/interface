@@ -14,25 +14,28 @@ import {
   WarningSeverity,
 } from 'uniswap/src/components/modals/WarningModal/types'
 import { type PollingInterval } from 'uniswap/src/constants/misc'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainGasToken, useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
-import { convertTempoGasFeeForDisplay } from 'uniswap/src/features/gas/tempo'
+import {
+  convertShiftedGasFeeForDisplay,
+  getGasFeeDecimalsShift,
+  hasShiftedGasToken,
+} from 'uniswap/src/features/gas/shiftedGasToken'
 import { getActiveGasStrategy, hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
 export type CancellationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
@@ -52,11 +55,9 @@ export function useActiveGasStrategy(chainId: number | undefined, type: GasStrat
  * We use the `displayLimitInflationFactor` to calculate the display value, which can be
  * different from the `limitInflationFactor` so that the gas fee displayed is more accurate.
  *
- * When `hasOverrides` is true, the upstream quote was built with per-tx gas overrides
- * (`urgency.overrides.{maxFeePerGas, maxPriorityFeePerGas, gasLimit}`). In that case the
- * gas service has already used the user's explicit `gasLimit` top-level without inflation,
- * so backing it out a second time would understate the displayed max cost — short-circuit
- * and return the raw `gasFee` as the display value.
+ * When `hasOverrides` is true the user applied gas overrides, so the raw `gasFee`
+ * is returned without the inflation backoff (deflating it would understate the
+ * displayed cost). Callers that show the full max cost handle that separately.
  */
 export function convertGasFeeToDisplayValue({
   gasFee,
@@ -164,8 +165,10 @@ function getGasFeeCurrencyAmount({
     return undefined
   }
   const gasToken = getChainGasToken(chainId)
-  const isTempoChain = chainId === UniverseChainId.Tempo
-  const adjustedFee = isTempoChain && feeValueInWei ? convertTempoGasFeeForDisplay(feeValueInWei) : feeValueInWei
+  const adjustedFee =
+    hasShiftedGasToken(chainId) && feeValueInWei
+      ? convertShiftedGasFeeForDisplay(feeValueInWei, getGasFeeDecimalsShift(chainId))
+      : feeValueInWei
 
   return (
     getCurrencyAmount({
@@ -227,13 +230,20 @@ export function useTransactionGasWarning({
   accountAddress,
   derivedInfo,
   gasFee,
+  isGasSponsored,
 }: {
   accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
+  /** When gas is sponsored we skip the native gas-token balance check entirely. */
+  isGasSponsored?: boolean
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
+
+  // Wallets that pay gas via a non-native method don't need a native balance to swap.
+  const hasAlternateGasFees = useUniswapContextSelector((ctx) => ctx.getHasAlternateGasFees?.(chainId)) ?? false
+  const skipGasBalanceCheck = hasAlternateGasFees || Boolean(isGasSponsored)
 
   const { gasToken, gasBalance } = useChainGasToken({ chainId, accountAddress })
 
@@ -256,6 +266,10 @@ export function useTransactionGasWarning({
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
   return useMemo(() => {
+    if (skipGasBalanceCheck) {
+      return undefined
+    }
+
     // if balance is already insufficient, dont need to show warning about network fee
     if (isSmartContractAddress || balanceInsufficient || !gasBalance) {
       return undefined
@@ -285,7 +299,7 @@ export function useTransactionGasWarning({
       message: undefined,
       currency: gasBalance.currency,
     }
-  }, [gasFee, isSmartContractAddress, balanceInsufficient, gasBalance, hasGasFunds, t])
+  }, [gasFee, isSmartContractAddress, balanceInsufficient, gasBalance, hasGasFunds, skipGasBalanceCheck, t])
 }
 
 type GasFeeFormattedAmounts<T extends string | undefined> = T extends string
@@ -317,11 +331,13 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const gasToken = getChainGasToken(chainId)
-  const isTempoChain = chainId === UniverseChainId.Tempo
 
-  // For Tempo, convert 18-decimal attodollar gas fee to 6-decimal pathUSD before wrapping
+  // On chains that pay gas in a non-native shifted token (e.g. Tempo pathUSD, Arc
+  // USDC), convert the 18-decimal native gas fee to the gas token's decimals before wrapping.
   const displayValue =
-    isTempoChain && gasFee?.displayValue ? convertTempoGasFeeForDisplay(gasFee.displayValue) : gasFee?.displayValue
+    hasShiftedGasToken(chainId) && gasFee?.displayValue
+      ? convertShiftedGasFeeForDisplay(gasFee.displayValue, getGasFeeDecimalsShift(chainId))
+      : gasFee?.displayValue
 
   const gasTokenAmount = getCurrencyAmount({
     currency: gasToken,

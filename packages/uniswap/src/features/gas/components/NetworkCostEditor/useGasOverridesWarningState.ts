@@ -4,6 +4,7 @@ import { useGasFieldValidation } from 'uniswap/src/features/gas/components/Netwo
 import { useRecommendedGasFields } from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
+import { hasGasOverrides } from 'uniswap/src/features/gas/utils'
 
 export interface GasOverridesWarningState {
   /** Wallet-level opt-in for the Network cost editor. */
@@ -54,12 +55,7 @@ export function useGasOverridesWarningState({
     recommended,
   })
 
-  const hasOverrides = Boolean(
-    gasOverrides &&
-    (gasOverrides.maxBaseFeeGwei !== undefined ||
-      gasOverrides.priorityFeeGwei !== undefined ||
-      gasOverrides.gasLimit !== undefined),
-  )
+  const hasOverrides = hasGasOverrides(gasOverrides)
 
   // Sticky-cache the warning bit across in-flight gas-service requests. Every
   // /swap poll produces a new populated tx (different deadline, sometimes

@@ -4,11 +4,19 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toLegacyVerifyWalletResponse, useVerifyWalletQuery } from 'uniswap/src/data/rest/auctions/useVerifyWallet'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { zeroAddress } from '~/chains'
 
 interface UseAuctionKycStatusParams {
+  /**
+   * Connected wallet address. When omitted/undefined the hook falls back to the
+   * zero address so the verify-wallet query still runs and the auction's
+   * KYC/allowlist requirements resolve for logged-out users. Pass the connected
+   * address to additionally resolve that wallet's own verification status.
+   */
   walletAddress?: string
   auctionAddress?: string
   chainId?: UniverseChainId
+  currentBlockNumber?: number
 }
 
 export interface AuctionKycStatus {
@@ -34,20 +42,26 @@ export interface AuctionKycStatus {
   auctionNeedsVerification: boolean
   /** The current status of the KYC verification */
   status: KycVerificationStatus
+  /** Block at which the allowlist-only restriction lifts and general sale opens */
+  allowlistEndBlock?: number
 }
 
 export function useAuctionKycStatus({
   walletAddress,
   auctionAddress,
   chainId,
+  currentBlockNumber,
 }: UseAuctionKycStatusParams): AuctionKycStatus {
   const { t } = useTranslation()
   const isToucanAuctionKYCEnabled = useFeatureFlag(FeatureFlags.ToucanAuctionKYC)
-  const { data, isLoading, isError } = useVerifyWalletQuery({
-    walletAddress,
-    auctionAddress,
-    chainId: chainId as unknown as ChainId,
-  })
+  const { data, isLoading, isError } = useVerifyWalletQuery(
+    {
+      walletAddress: walletAddress ?? zeroAddress,
+      auctionAddress,
+      chainId: chainId as unknown as ChainId,
+    },
+    currentBlockNumber,
+  )
 
   const legacyData = useMemo(() => {
     if (data?.validations) {
@@ -110,7 +124,12 @@ export function useAuctionKycStatus({
       }
     }
 
-    const { isAllowlisted, hasPresale: auctionHasPresale, hasKycVerification: auctionNeedsVerification } = legacyData
+    const {
+      isAllowlisted,
+      hasPresale: auctionHasPresale,
+      hasKycVerification: auctionNeedsVerification,
+      allowlistEndBlock,
+    } = legacyData
 
     // Compute whitelistLabel once - shown when presale is active but user is not whitelisted
     const whitelistLabel = auctionHasPresale && !isAllowlisted ? t('toucan.kyc.generalSaleStartsSoon') : undefined
@@ -128,6 +147,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -144,6 +164,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -161,6 +182,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -178,6 +200,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -195,6 +218,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -211,6 +235,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -227,6 +252,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        allowlistEndBlock,
       }
     }
 
@@ -242,6 +268,7 @@ export function useAuctionKycStatus({
       auctionHasPresale: false,
       auctionNeedsVerification: false,
       status: KycVerificationStatus.VERIFICATION_STATUS_COMPLETED,
+      allowlistEndBlock,
     }
   }, [legacyData, isLoading, isError, t, isToucanAuctionKYCEnabled, redirectToKyc])
 }

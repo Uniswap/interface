@@ -900,6 +900,50 @@ const noToLowerCaseAddressCurrencyId = {
   },
 }
 
+// ── no-platform-gate-in-chain-flags ──────────────────────────────────
+// Platform restrictions belong in chain metadata (supportedApps), not feature flags.
+
+const CHAIN_FLAGS_FILE = 'useFeatureFlaggedChainIds.ts'
+const PLATFORM_GATE_IMPORTS = new Set(['isWebApp', 'isMobileApp', 'isExtensionApp'])
+
+const noPlatformGateInChainFlags = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Disallow platform booleans in useFeatureFlaggedChainIds — gate chains by app using supportedApps on chain info.',
+    },
+    schema: [],
+    messages: {
+      noPlatformGate:
+        'Do not use {{name}} as a chain gate in useFeatureFlaggedChainIds. Set supportedApps on the chain info instead.',
+    },
+  },
+  create(context) {
+    const filename = (context.filename ?? context.getFilename?.() ?? '').split(/[/\\]/).join('/')
+    if (!filename.endsWith(CHAIN_FLAGS_FILE)) {
+      return {}
+    }
+
+    return {
+      ImportDeclaration(node) {
+        if (node.source?.value !== '@universe/environment') {
+          return
+        }
+        for (const specifier of node.specifiers) {
+          if (specifier.type !== 'ImportSpecifier' || specifier.imported.type !== 'Identifier') {
+            continue
+          }
+          const name = specifier.imported.name
+          if (PLATFORM_GATE_IMPORTS.has(name)) {
+            context.report({ node: specifier, messageId: 'noPlatformGate', data: { name } })
+          }
+        }
+      },
+    }
+  },
+}
+
 // ── import-boundary (JSON) ─────────────────────────────────────────────
 // Modes:
 //   importerAllowlist — only paths matching allowedImporterPathMarkers may import
@@ -1049,6 +1093,131 @@ const importBoundary = {
   },
 }
 
+// ── no-direct-viem-ethers-import ───────────────────────────────────────
+// Routes viem/ethers/@ethersproject consumers through `@universe/chains`.
+// Allowlist below names every file that imports these directly today.
+// It's ok to update the allowlist if you're unable to use chains.
+
+const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
+  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel.ts',
+  'apps/web/src/connection/bundlerClient.ts',
+  'apps/web/src/connection/EmbeddedWalletConnector.ts',
+  'apps/web/src/connection/EmbeddedWalletProvider.ts',
+  'apps/web/src/connection/sendCalls.ts',
+  'apps/web/src/connection/userOpSigning.ts',
+  'apps/web/src/connection/rejectableConnector.ts',
+  'apps/web/src/connection/wagmiConfig.ts',
+  'apps/web/src/constants/providers.ts',
+  'apps/web/src/features/accounts/store/updater.tsx',
+  'apps/web/src/features/Swap/hooks/useSendCallback.ts',
+  'apps/web/src/pages/Swap/Send/state/hooks.tsx',
+  'apps/web/src/features/Toucan/Auction/BidForm/BidReviewModal/useBidPermit2Flow.ts',
+  'apps/web/src/hooks/useContract.ts',
+  'apps/web/src/hooks/useEthersProvider.ts',
+  'apps/web/src/hooks/useEthersSigner.ts',
+  'apps/web/src/hooks/useSelectChain.ts',
+  'apps/web/src/hooks/useTransactionGasFee.ts',
+  'apps/web/src/hooks/useUniswapXSwapCallback.ts',
+  'apps/web/src/lib/utils/resolveENSContentHash.ts',
+  'apps/web/src/pages/PoolDetails/Pools/hooks/useContractMultichain.tsx',
+  'apps/web/src/pages/PoolDetails/Pools/hooks/useMultiChainPositions.tsx',
+  'apps/web/src/playwright/anvil/anvil-manager.ts',
+  'apps/web/src/playwright/anvil/utils.ts',
+  'apps/web/src/playwright/fixtures/anvil.ts',
+  'apps/web/src/rpc/AppJsonRpcProvider.ts',
+  'apps/web/src/rpc/ConfiguredJsonRpcProvider.ts',
+  'apps/web/src/state/activity/polling/batch.ts',
+  'apps/web/src/features/claim/hooks.ts',
+  'apps/web/src/state/logs/slice.ts',
+  'apps/web/src/state/logs/updater.ts',
+  'apps/web/src/state/logs/utils.ts',
+  'apps/web/src/state/routing/types.ts',
+  'apps/web/src/state/routing/utils.ts',
+  'apps/web/src/state/sagas/transactions/5792.ts',
+  'apps/web/src/state/sagas/transactions/cancelOrderSaga.ts',
+  'apps/web/src/state/sagas/transactions/cancelPlanStepSaga.ts',
+  'apps/web/src/state/sagas/transactions/utils.ts',
+  'apps/web/src/state/transactions/hooks.tsx',
+  'apps/web/src/state/transactions/types.ts',
+  'apps/web/src/utils/transfer.ts',
+  'apps/web/src/utils/walletMeta.ts',
+])
+
+/**
+ * Checks if an import is directly viem/ethers.
+ * Matching what we consider to be a banned source.
+ */
+function isDirectViemEthersSource(source) {
+  if (typeof source !== 'string') {
+    return false
+  }
+  return (
+    source === 'viem' ||
+    source.startsWith('viem/') ||
+    source === 'ethers' ||
+    source.startsWith('ethers/') ||
+    source.startsWith('@ethersproject/')
+  )
+}
+
+/**
+ * Checks if a path is in the direct viem/ethers allow
+ * list. We only allow what's currently existing.
+ */
+function isDirectViemEthersAllowlisted(physicalPath) {
+  for (const allowed of DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST) {
+    if (physicalPath === allowed || physicalPath.endsWith('/' + allowed)) {
+      return true
+    }
+  }
+  return false
+}
+
+// TODO: Replace this custom rule with `no-restricted-imports`
+// when most of the remaining exceptions have been migrated.
+// We can use that rule w/ single-line disabling comments.
+const noDirectViemEthersImport = {
+  meta: {
+    type: 'problem',
+    docs: { description: 'Disallow direct viem/ethers imports; route through @universe/chains.' },
+    schema: [],
+    messages: {},
+  },
+  create(context) {
+    const fn = context.filename ?? context.getFilename?.()
+    if (typeof fn !== 'string' || fn === '<input>' || fn === '<text>') {
+      return {}
+    }
+    const physicalPath = fn.split('\\').join('/')
+    if (isDirectViemEthersAllowlisted(physicalPath)) {
+      return {}
+    }
+    function reportIfDirect(node, source) {
+      if (isDirectViemEthersSource(source)) {
+        context.report({
+          node,
+          message: [
+            'Import from `@universe/chains` instead, not viem/ethers directly.',
+            "If what you need isn't there, update the allowlist in `universe-custom.js`.",
+            'Entries in `DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST` are exempt.',
+          ].join(' '),
+        })
+      }
+    }
+    return {
+      ImportDeclaration(node) {
+        reportIfDirect(node, node.source?.value)
+      },
+      ImportExpression(node) {
+        if (node.source?.type !== 'Literal' || typeof node.source.value !== 'string') {
+          return
+        }
+        reportIfDirect(node.source, node.source.value)
+      },
+    }
+  },
+}
+
 // ── Plugin export ──────────────────────────────────────────────────────
 
 const plugin = {
@@ -1062,10 +1231,12 @@ const plugin = {
     'no-redux-modals': noReduxModals,
     'no-relative-import-paths': noRelativeImportPaths,
     'import-boundary': importBoundary,
+    'no-direct-viem-ethers-import': noDirectViemEthersImport,
     'no-nested-component-definitions': noNestedComponentDefinitions,
     'jsx-prop-order': jsxPropOrder,
     'enum-member-naming': enumMemberNaming,
     'no-tolowercase-address-currencyid': noToLowerCaseAddressCurrencyId,
+    'no-platform-gate-in-chain-flags': noPlatformGateInChainFlags,
   },
 }
 

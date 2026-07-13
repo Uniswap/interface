@@ -19,6 +19,7 @@ export enum RecoveryStep {
   EnterPin = 'ENTER_PIN',
   AddPasskey = 'ADD_PASSKEY',
   Recovering = 'RECOVERING',
+  NoWalletFound = 'NO_WALLET_FOUND',
 }
 
 const emailSchema = z.email()
@@ -29,6 +30,8 @@ interface PostPinArgs {
   authPrivateKey: Uint8Array
   authMethodId: string
   email: string
+  // Forwarded to the recovery RPCs, which now require a Bearer token.
+  accessToken: string
 }
 
 interface UseRecoveryFlowOptions {
@@ -103,9 +106,10 @@ export function useRecoveryFlow({
       setAccessToken(token)
 
       const authMethodId = hashAuthMethodId(providerEmail)
-      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({ authMethodId })
+      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({ authMethodId }, token)
       if (!recoveryConfig.encryptedKeyId) {
-        throw new Error('No recovery data found for this account')
+        setStep(RecoveryStep.NoWalletFound)
+        return
       }
       if (isActive && !isActive()) {
         return
@@ -207,11 +211,13 @@ export function useRecoveryFlow({
       }
       setAccessToken(token)
 
-      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig({
-        authMethodId: hashAuthMethodId(effectiveEmail),
-      })
+      const recoveryConfig = await EmbeddedWalletApiClient.fetchGetRecoveryConfig(
+        { authMethodId: hashAuthMethodId(effectiveEmail) },
+        token,
+      )
       if (!recoveryConfig.encryptedKeyId) {
-        throw new Error('No recovery data found for this account')
+        setStep(RecoveryStep.NoWalletFound)
+        return
       }
       setEncryptedKeyId(recoveryConfig.encryptedKeyId)
       if (recoveryConfig.walletAddress) {
@@ -243,6 +249,16 @@ export function useRecoveryFlow({
   })
 
   const runPostPinAction = useEvent(async (key: Uint8Array) => {
+    if (!accessToken) {
+      // Unreachable in practice (a successful decrypt implies a token); guards the
+      // type since the post-PIN RPCs now require it.
+      logger.error(new Error('Missing access token for post-PIN action'), {
+        tags: { file: 'useRecoveryFlow', function: 'runPostPinAction' },
+      })
+      setAuthPrivateKey(null)
+      setStep(RecoveryStep.Login)
+      return
+    }
     setStep(RecoveryStep.Recovering)
     setFinalStepError(undefined)
     try {
@@ -250,6 +266,7 @@ export function useRecoveryFlow({
         authPrivateKey: key,
         authMethodId: hashAuthMethodId(effectiveEmail),
         email: effectiveEmail,
+        accessToken,
       })
       setAuthPrivateKey(null)
     } catch (e) {

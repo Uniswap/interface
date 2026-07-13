@@ -66,7 +66,7 @@ interface ComputeCurrentValuationFiatFormattedParams {
   convertFiatAmountFormatted: (fromAmount: string | number | null | undefined, numberType: FiatNumberType) => string
 }
 
-export function computeCurrentValuationFiatFormatted({
+export function computeCurrentValuationUsd({
   totalSupplyRaw,
   auctionProgressState,
   auctionTokenDecimals,
@@ -75,10 +75,9 @@ export function computeCurrentValuationFiatFormatted({
   bidTokenInfo,
   auctionTokenMarketPriceUsd,
   bidTokenMarketPriceUsd,
-  convertFiatAmountFormatted,
-}: ComputeCurrentValuationFiatFormattedParams): string {
+}: Omit<ComputeCurrentValuationFiatFormattedParams, 'convertFiatAmountFormatted'>): number | undefined {
   if (!totalSupplyRaw || totalSupplyRaw === '0') {
-    return '--'
+    return undefined
   }
 
   const launchBidTokenPriceUsd = launchBidTokenPriceUsdRaw ? Number(launchBidTokenPriceUsdRaw) : undefined
@@ -92,29 +91,27 @@ export function computeCurrentValuationFiatFormatted({
       bidTokenInfo,
       auctionTokenMarketPriceUsd,
     })
-    const completedAuctionFormatted = convertToStatsFiat({
-      valuationUsd: completedAuctionValuation,
-      convertFiatAmountFormatted,
-    })
-
-    if (completedAuctionFormatted) {
-      return completedAuctionFormatted
+    if (completedAuctionValuation !== undefined) {
+      return completedAuctionValuation
     }
   }
 
   const bidTokenPriceUsd =
     bidTokenMarketPriceUsd ?? (bidTokenInfo?.priceFiat === 0 ? undefined : bidTokenInfo?.priceFiat)
-  const currentValuation = computeCurrentValuationFiat({
+  return computeCurrentValuationFiat({
     totalSupplyRaw,
     auctionTokenDecimals,
     clearingPriceQ96,
     bidTokenInfo,
     bidTokenPriceUsd,
   })
-  const currentValuationFormatted = convertToStatsFiat({
-    valuationUsd: currentValuation,
-    convertFiatAmountFormatted,
-  })
+}
 
-  return currentValuationFormatted ?? '--'
+export function computeCurrentValuationFiatFormatted(params: ComputeCurrentValuationFiatFormattedParams): string {
+  return (
+    convertToStatsFiat({
+      valuationUsd: computeCurrentValuationUsd(params),
+      convertFiatAmountFormatted: params.convertFiatAmountFormatted,
+    }) ?? '--'
+  )
 }

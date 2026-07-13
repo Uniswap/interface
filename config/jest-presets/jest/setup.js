@@ -134,6 +134,7 @@ jest.mock('@universe/gating', () => {
     // Mock functions
     useDynamicConfigValue: jest.fn((args) => args.defaultValue),
     useFeatureFlag: jest.fn(() => false),
+    useFeatureFlagWithExposureLoggingDisabled: jest.fn(() => false),
     useGate: jest.fn(() => ({ isLoading: false, value: false })),
     useConfig: jest.fn(() => ({})),
     getStatsigClient: jest.fn(() => ({

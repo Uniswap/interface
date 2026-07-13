@@ -1,4 +1,4 @@
-import { PlainMessage } from '@bufbuild/protobuf'
+import { PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { GetUsernameRequest, GetUsernameResponse } from '@universe/api'
 import { UseQueryApiHelperHookArgs } from '@universe/api'
@@ -12,10 +12,9 @@ import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_MINUTE_MS } from 'utilities/src/time
 export function useUnitagsUsernameQuery({
   params,
   ...rest
-}: UseQueryApiHelperHookArgs<
-  PlainMessage<GetUsernameRequest>,
-  GetUsernameResponse
->): UseQueryResult<GetUsernameResponse> {
+}: UseQueryApiHelperHookArgs<PlainMessage<GetUsernameRequest>, PlainMessage<GetUsernameResponse>>): UseQueryResult<
+  PlainMessage<GetUsernameResponse>
+> {
   const { t } = useTranslation()
   const queryKey = [ReactQueryCacheKey.UnitagsApi, 'username', params]
 
@@ -23,18 +22,20 @@ export function useUnitagsUsernameQuery({
   const shouldQueryForUnitag = params && formatError === undefined
 
   return useQuery(
-    persistableQueryOptions<GetUsernameResponse>({
+    persistableQueryOptions<PlainMessage<GetUsernameResponse>>({
       queryKey,
       queryFn: shouldQueryForUnitag
-        ? async (): Promise<GetUsernameResponse> => {
+        ? async (): Promise<PlainMessage<GetUsernameResponse>> => {
             const response = await unitagsApiClient.fetchUsername(params)
-            return new GetUsernameResponse({
-              available: response.available,
-              requiresEnsMatch: response.requiresEnsMatch,
-              username: response.username,
-              metadata: response.metadata,
-              address: response.address,
-            })
+            return toPlainMessage(
+              new GetUsernameResponse({
+                available: response.available,
+                requiresEnsMatch: response.requiresEnsMatch,
+                username: response.username,
+                metadata: response.metadata,
+                address: response.address,
+              }),
+            )
           }
         : skipToken,
       staleTime: ONE_MINUTE_MS,

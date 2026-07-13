@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -13,12 +14,21 @@ import {
   ExecuteSwapParams,
   SwapHandlers,
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
-import { getEVMTxRequest, isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  getEVMTxRequest,
+  isChained,
+  isClassic,
+  isUserOpSwap,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccountsStore, useActiveAddress } from 'wallet/src/features/accounts/store/hooks'
-import { executePlanActions, executeSwapActions } from 'wallet/src/features/transactions/swap/configuredSagas'
+import {
+  executePlanActions,
+  executeSwapActions,
+  executeUserOpSwapActions,
+} from 'wallet/src/features/transactions/swap/configuredSagas'
 import { useSwapSigning } from 'wallet/src/features/transactions/swap/hooks/useSwapSigning'
 
 /**
@@ -32,6 +42,7 @@ export function useSwapHandlers(): SwapHandlers {
   const evmAddress = useActiveAddress(Platform.EVM)
 
   const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
+  const rwaWhitelist = useRWAWhitelist()
 
   const caip25Info = useAccountsStore((state) => {
     return state.getActiveConnector(Platform.EVM).session?.caip25Info
@@ -78,6 +89,7 @@ export function useSwapHandlers(): SwapHandlers {
         includesDelegation: swapTxContext.includesDelegation,
         isSmartWalletTransaction,
         swapStartTimestamp,
+        rwaWhitelist,
       })
 
       // Clear signing state after getting the transaction
@@ -98,6 +110,8 @@ export function useSwapHandlers(): SwapHandlers {
       }
       if (isChained(swapTxContext)) {
         dispatch(executePlanActions.trigger(commonParams))
+      } else if (isUserOpSwap(swapTxContext)) {
+        dispatch(executeUserOpSwapActions.trigger(commonParams))
       } else {
         const preSignedTransaction = await signing.getValidSignedTransaction(swapTxContext)
         dispatch(executeSwapActions.trigger({ ...commonParams, preSignedTransaction }))
@@ -120,7 +134,7 @@ export function useSwapHandlers(): SwapHandlers {
       // Reset swap start timestamp
       dispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info],
+    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info, rwaWhitelist],
   )
 
   return useMemo(

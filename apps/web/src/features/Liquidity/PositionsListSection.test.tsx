@@ -57,6 +57,7 @@ function setVirtualItems(positions: PositionInfo[], lastIndex?: number) {
   mocked(useWindowVirtualizer).mockReturnValue({
     getVirtualItems: () => items,
     getTotalSize: () => positions.length * 200,
+    measure: vi.fn(),
     options: { scrollMargin: 0 },
   } as unknown as ReturnType<typeof useWindowVirtualizer>)
 }
@@ -189,5 +190,20 @@ describe('PositionsListSection', () => {
     render(<PositionsListSection {...baseProps} isFetching={true} hasNextPage={false} />)
 
     expect(screen.queryByText('Loading more positions...')).not.toBeInTheDocument()
+  })
+
+  it('links cards to the owner-only position page by default', () => {
+    render(<PositionsListSection {...baseProps} />)
+
+    expect(screen.getByText('pool-a-a').closest('a')).toHaveAttribute('href', '/positions/v4/ethereum/a')
+  })
+
+  it('links cards to the public pool details page in readOnly mode', () => {
+    render(<PositionsListSection {...baseProps} readOnly showHiddenPositions={true} />)
+
+    // visible position
+    expect(screen.getByText('pool-a-a').closest('a')).toHaveAttribute('href', '/explore/pools/ethereum/pool-a')
+    // hidden position
+    expect(screen.getByText('pool-h1-h1').closest('a')).toHaveAttribute('href', '/explore/pools/ethereum/pool-h1')
   })
 })

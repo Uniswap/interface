@@ -36,6 +36,7 @@ export function Modal({
   hideHandlebar,
   borderWidth,
   borderColor,
+  borderRadius,
   overlayOpacity,
   snapPointsMode,
   snapPoints,
@@ -74,6 +75,7 @@ export function Modal({
           shadowOpacity={isExtensionApp ? 0 : undefined}
           borderWidth={borderWidth !== undefined ? borderWidth : isExtensionApp ? 1 : undefined}
           borderColor={borderColor !== undefined ? borderColor : isExtensionApp ? '$surface2' : undefined}
+          borderRadius={borderRadius}
           overlayOpacity={overlayOpacity !== undefined ? overlayOpacity : isExtensionApp ? 1 : undefined}
           adaptToSheet={isWebApp}
           alignment={alignment}

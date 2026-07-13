@@ -125,6 +125,54 @@ describe(getTradingApiSwapFee, () => {
     })
   })
 
+  it('handles fractional bps from aggregatedOutputs without throwing (e.g. 12.5)', () => {
+    const quote: DiscriminatedQuoteResponse = {
+      ...CLASSIC_QUOTE_RESPONSE,
+      quote: {
+        ...CLASSIC_QUOTE_RESPONSE.quote,
+        aggregatedOutputs: [
+          {
+            amount: '10000000000',
+            token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+            recipient: '0xAAAA44272dc658575Ba38f43C438447dDED45358',
+            bps: 9987.5,
+          },
+          {
+            amount: PORTION_AMOUNT_AGGREGATED_OUTPUTS,
+            token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+            recipient: PORTION_RECIPIENT_AGGREGATED_OUTPUTS,
+            bps: 12.5,
+          },
+        ],
+      },
+    }
+
+    expect(getTradingApiSwapFee(quote)).toEqual({
+      recipient: PORTION_RECIPIENT_AGGREGATED_OUTPUTS,
+      percent: new Percent(1250, 1_000_000),
+      amount: PORTION_AMOUNT_AGGREGATED_OUTPUTS,
+      feeField: CurrencyField.OUTPUT,
+    })
+  })
+
+  it('handles fractional portionBips from legacy fields without throwing (e.g. 12.5)', () => {
+    const quote: DiscriminatedQuoteResponse = {
+      ...CLASSIC_QUOTE_RESPONSE,
+      quote: {
+        ...CLASSIC_QUOTE_RESPONSE.quote,
+        aggregatedOutputs: undefined,
+        portionBips: 12.5,
+      },
+    }
+
+    expect(getTradingApiSwapFee(quote)).toEqual({
+      recipient: PORTION_RECIPIENT_PORTION_FIELDS,
+      percent: new Percent(1250, 1_000_000),
+      amount: PORTION_AMOUNT_PORTION_FIELDS,
+      feeField: CurrencyField.OUTPUT,
+    })
+  })
+
   it('returns undefined if no fee found in aggregatedOutputs', () => {
     const quote: DiscriminatedQuoteResponse = {
       ...CLASSIC_QUOTE_RESPONSE,

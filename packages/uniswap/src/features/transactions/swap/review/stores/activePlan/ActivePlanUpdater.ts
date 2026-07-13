@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { V1_TRADING_API_PATHS } from '@universe/api'
 import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
 import { useEffect } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -29,7 +29,7 @@ function useActivePlanQuery(params: {
   return useQuery(
     // Plans should always be fresh, so we query without cache.
     queryWithoutCache({
-      queryKey: [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.plan, 'refresh', activePlanId],
+      queryKey: [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.plan, 'refresh', activePlanId],
       queryFn: () =>
         activePlanId
           ? TradingApiSessionClient.refreshExistingPlan({ planId: activePlanId })
