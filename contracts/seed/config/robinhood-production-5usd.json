@@ -1,0 +1,23 @@
+{
+  "_readme": "Robinhood (4663) $5 PRODUCTION seed — a real, ready-to-broadcast deepen of the EXISTING WETH/tHOOK v2 pair (0xbf54dFaC1fB1820fBeb5Be6fF09c4dc990DC0dC6) sized to ~$5 of WETH. Uses tHOOK by ADDRESS so addLiquidity ADDS to the existing pair (does NOT create a new pool/token). Run: SEED_POOLS=config/robinhood-production-5usd.json ./scripts/seed.sh robinhood [--broadcast]. See RUNBOOK-robinhood-5usd.md for the exact fund + broadcast + verify commands. Claude cannot broadcast — Reggie runs it with the funded deployer key.",
+
+  "_sizing": "ETH/USD = 1779.59 on 2026-07-12 -> $5 = 0.00281 WETH. The on-chain pair reserves (verified via eth_call getReserves) are EXACTLY 0.0002 WETH / 0.2 tHOOK = ratio 1 WETH : 1000 tHOOK. amountA:amountB = 0.00281:2.81 is exactly 1:1000, so the v2 router consumes BOTH sides fully (amountBOptimal == amountBDesired) and adds at the current price with no leftover and no price move.",
+
+  "_funding": "Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125 currently holds 0 WETH, ~1e12 tHOOK, and 0.0000146 ETH on RH. The seeder AUTO-WRAPS the 0.00281 WETH from native ETH (SeedPools _prepare), so the deployer must be funded with native ETH >= 0.00281 (wrap) + gas. Fund with ~0.0032 ETH total (0.00281 wrap + generous gas headroom; a full seed is ~0.00004 ETH gas at the 0.07 gwei chains.json floor). tHOOK is already held — no tHOOK funding needed.",
+
+  "_omitted": "The WETH/USDG stablecoin anchor pool (present in robinhood-production.json) is INTENTIONALLY OMITTED here. USDG (Global Dollar, 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168) is a REAL, non-mintable token and the deployer holds 0 USDG on-chain (must actually acquire it first) — so that pool is a separate capital/acquisition step, not part of this $5 tHOOK deepen. Add it back as its own broadcast once USDG is acquired.",
+
+  "_price_impact_caveat": "At $5 depth the pool is very thin. After this add, reserves are ~0.00301 WETH / ~3.01 tHOOK (~$10.7 total TVL, ~15x deeper than the current dust). Constant-product means even sub-dollar swaps move the price a lot: a ~$0.53 (0.0003 WETH) swap ~= 9% price impact; a ~$1 swap ~= 16%. This unblocks routing/quoting but only supports tiny demo swaps at reasonable slippage — deepen further for real trading.",
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 — $5 deepen of the existing pair (+0.00281 WETH / +2.81 tHOOK at the 1:1000 pool ratio)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.00281,
+      "amountB": 2.81
+    }
+  ]
+}
