@@ -13,13 +13,19 @@
  *                    token set listTokens surfaces, batch-read via balanceOf / eth_getBalance, returning
  *                    only non-zero balances with real raw + human quantities. USD (priceUsd/valueUsd) is
  *                    anchor-gated (unset until a WETH/USDG pool exists — see handleGetPortfolio).
+ *   - listTransactions / getTransaction → a connected wallet's real swap history (Terminal Activity feed
+ *                    + pool/token tx lists), built from the event indexer's `swap_events` (each stored
+ *                    from a real on-chain v2 Swap log). Each swap maps to an OnChainTransaction(SWAP) with
+ *                    a real SEND (input token) + RECEIVE (output token) Transfer, tx hash, block, and
+ *                    timestamp. USD-valued transfer fields are left unset (no oracle — honest). Indexed
+ *                    v2 swaps only (v3 Swap ingestion isn't wired yet — see buildPoolStats note).
  *
  * The event indexer EXISTS and is deployed (gated on INDEXER_ENABLED): it tails Swap/Sync events into
- * SQLite and feeds the TokenStats/PoolStats above. What it powers NOW is native metrics; USD-denominated
- * fields stay unset until a stablecoin (USDG) anchor pool exists on the chain.
+ * SQLite and feeds the TokenStats/PoolStats + transaction history above. What the stats power NOW is
+ * native metrics; USD-denominated fields stay unset until a stablecoin (USDG) anchor pool exists.
  *
  * STUBS (valid empty proto responses, NOT errors — so the interface degrades gracefully):
- *   - everything else (wallet balances, transactions, positions, charts, rewards, protocol stats, token
+ *   - everything else (wallet balances, positions, charts, rewards, protocol stats, token
  *     prices, RWAs, token-factory, reports, ...). These need higher-level time-series / protocol-stats
  *     endpoints (NOT the event indexer, which is live) and/or a USD price oracle. Returning an
  *     empty-but-valid Message keeps the frontend from crashing (it renders honest empty/"—" states).
@@ -36,24 +42,36 @@ import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connec
 import {
   GetPortfolioRequest,
   GetPortfolioResponse,
+  GetTransactionRequest,
+  GetTransactionResponse,
   ListTokensRequest,
   ListTokensResponse,
   ListTopPoolsRequest,
   ListTopPoolsResponse,
+  ListTransactionsRequest,
+  ListTransactionsResponse,
   Platform,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import {
   Amount,
   Balance,
   ChainToken,
+  Direction,
   MultichainToken,
+  OnChainTransaction,
+  OnChainTransactionLabel,
+  OnChainTransactionStatus,
   Pool,
   PoolStats,
   Portfolio,
+  ProtocolMetadata,
   TimestampedValue,
   Token,
   TokenStats,
   TokenType,
+  Transaction,
+  TransactionTypeFilter,
+  Transfer,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
@@ -75,7 +93,15 @@ import {
   getTokenPriceUsd,
   getUsdPerNative,
 } from './indexer/metrics'
-import { getDb, SqliteDatabase } from './indexer/schema'
+import {
+  getDb,
+  getPoolMeta,
+  getSwapEventsByTx,
+  getWalletSwapEvents,
+  PoolMetaRow,
+  SqliteDatabase,
+  SwapEventRow,
+} from './indexer/schema'
 
 /** Uniswap v2 fixed swap fee = 0.30%, expressed in pips (hundredths of a bip) as the proto expects. */
 const V2_FEE_TIER_PIPS = 3000
@@ -819,14 +845,358 @@ async function handleGetPortfolio(req: GetPortfolioRequest): Promise<GetPortfoli
   return new GetPortfolioResponse({ portfolio })
 }
 
-// ---------- Build the full ServiceImpl: 2 real handlers + honest empty stubs for the rest ----------
+// ---------- REAL: listTransactions / getTransaction (wallet swap history from the indexer) ----------
 
 /**
- * Every DataApiService method must be implemented for the Connect router. We implement listTokens
- * and listTopPools for real, and auto-generate an empty-response stub for every other method by
- * instantiating that method's response Message class (`methodInfo.O`) with no args — always a valid,
- * empty proto response. This is intentionally NOT an error/unimplemented: the interface treats an
- * empty response as "no data" and shows honest empty states rather than crashing.
+ * Hard cap on how many of a wallet's most-recent swap events we pull per chain per request. A single
+ * wallet's swap history on these chains is small; this bounds memory and keeps pagination deterministic
+ * (the same query each page → stable slices). A wallet with > this many swaps won't page past the cap
+ * (honest limit, documented) — not a correctness issue for launch-scale history.
+ */
+const WALLET_SWAP_ROW_CAP = 5_000
+/** Default / max page size for ListTransactions when the request omits/oversizes pageSize. */
+const DEFAULT_TX_PAGE_SIZE = 50
+const MAX_TX_PAGE_SIZE = 100
+
+/** One resolved leg of a swap (a token side + the exact raw amount that flowed). */
+interface SwapLeg {
+  address: string
+  decimals: number
+  symbol: string
+  raw: BigNumber
+}
+
+/**
+ * Resolve the input (token sent to the pool) and output (token received) legs of a single v2 Swap
+ * row against its pool_meta. A well-formed v2 swap has exactly one non-zero *In and the opposite *Out;
+ * returns undefined for a degenerate/unpaired row (never fabricates a leg).
+ */
+function resolveSwapLegs(row: SwapEventRow, meta: PoolMetaRow): { input: SwapLeg; output: SwapLeg } | undefined {
+  const a0In = BigNumber.from(row.amount0In)
+  const a1In = BigNumber.from(row.amount1In)
+  const a0Out = BigNumber.from(row.amount0Out)
+  const a1Out = BigNumber.from(row.amount1Out)
+  if (a0In.gt(0) && a1Out.gt(0)) {
+    return {
+      input: { address: meta.token0, decimals: meta.decimals0, symbol: meta.symbol0, raw: a0In },
+      output: { address: meta.token1, decimals: meta.decimals1, symbol: meta.symbol1, raw: a1Out },
+    }
+  }
+  if (a1In.gt(0) && a0Out.gt(0)) {
+    return {
+      input: { address: meta.token1, decimals: meta.decimals1, symbol: meta.symbol1, raw: a1In },
+      output: { address: meta.token0, decimals: meta.decimals0, symbol: meta.symbol0, raw: a0Out },
+    }
+  }
+  return undefined
+}
+
+/** Build a Transfer for one swap leg (real token + exact raw + decimal-adjusted human amount). */
+function makeTransfer(leg: SwapLeg, chainId: number, direction: Direction, from: string, to: string): Transfer {
+  return new Transfer({
+    direction,
+    from,
+    to,
+    asset: {
+      case: 'token',
+      value: new Token({
+        chainId,
+        address: leg.address,
+        symbol: leg.symbol,
+        name: leg.symbol,
+        decimals: leg.decimals,
+        type: TokenType.ERC20,
+      }),
+    },
+    amount: new Amount({
+      raw: leg.raw.toString(),
+      amount: Number(ethers.utils.formatUnits(leg.raw, leg.decimals)),
+    }),
+  })
+}
+
+/**
+ * Assemble one OnChainTransaction(SWAP) for a wallet from the input/output legs of a transaction's
+ * swap(s). For a multi-hop tx the input is the FIRST hop's input and the output is the LAST hop's
+ * output (the user-facing net swap). Two Transfers (SEND input, RECEIVE output) from the wallet's
+ * perspective — exactly what the interface's parseSwapTransaction consumes.
+ *
+ * `from` is set to the wallet this feed is for. HONEST CAVEAT: the v2 Swap event does not carry the
+ * tx-origin EOA, so `from` is the indexed swap participant (Swap.to / Swap.sender we matched on), not
+ * a separately-sourced tx sender. `status` = CONFIRMED (the event is mined). USD-valued fields are
+ * left unset (no oracle). `fee`/gas is not indexed → left unset (interface renders no network fee).
+ */
+function assembleSwapTransaction(args: {
+  chainId: number
+  blockNumber: number
+  timestampSec: number
+  txHash: string
+  sendPool: string
+  recvPool: string
+  owner: string
+  input: SwapLeg
+  output: SwapLeg
+}): OnChainTransaction {
+  const { chainId, blockNumber, timestampSec, txHash, sendPool, recvPool, owner, input, output } = args
+  return new OnChainTransaction({
+    chainId,
+    blockNumber,
+    // block timestamps are unix SECONDS; the proto field is uint64 MILLIS (bigint). timestampSec*1000
+    // stays well under 2^53 so the Number multiply is exact before widening to bigint.
+    timestampMillis: BigInt(timestampSec * 1000),
+    transactionHash: txHash,
+    from: owner,
+    to: sendPool,
+    transfers: [
+      makeTransfer(input, chainId, Direction.SEND, owner, sendPool),
+      makeTransfer(output, chainId, Direction.RECEIVE, recvPool, owner),
+    ],
+    label: OnChainTransactionLabel.SWAP,
+    status: OnChainTransactionStatus.CONFIRMED,
+    // Real: these pools are HookSwap's own v2 deployment. No fabricated logo (unset).
+    protocol: new ProtocolMetadata({ name: 'HookSwap' }),
+  })
+}
+
+/** pool_meta lookup with a per-request cache (many swaps share a pool). */
+function poolMetaCached(
+  db: SqliteDatabase,
+  cache: Map<string, PoolMetaRow | undefined>,
+  chainId: number,
+  pool: string,
+): PoolMetaRow | undefined {
+  const key = `${chainId}:${pool}`
+  if (!cache.has(key)) {
+    let meta: PoolMetaRow | undefined
+    try {
+      meta = getPoolMeta(db, chainId, pool)
+    } catch {
+      meta = undefined
+    }
+    cache.set(key, meta)
+  }
+  return cache.get(key)
+}
+
+/**
+ * Collapse all swap rows of ONE transaction (multi-hop = several) into a single net OnChainTransaction.
+ * Returns undefined when pool_meta is missing or the legs are unresolvable (skip — never fabricate).
+ */
+function buildTxFromSwapRows(
+  db: SqliteDatabase,
+  metaCache: Map<string, PoolMetaRow | undefined>,
+  rows: SwapEventRow[],
+  owner: string,
+): OnChainTransaction | undefined {
+  const sorted = [...rows].sort((a, b) => a.blockNumber - b.blockNumber || a.logIndex - b.logIndex)
+  const first = sorted[0]
+  const last = sorted[sorted.length - 1]
+  if (!first || !last) {
+    return undefined
+  }
+  const firstMeta = poolMetaCached(db, metaCache, first.chainId, first.pool)
+  const lastMeta = poolMetaCached(db, metaCache, last.chainId, last.pool)
+  if (!firstMeta || !lastMeta) {
+    return undefined
+  }
+  const firstLegs = resolveSwapLegs(first, firstMeta)
+  const lastLegs = resolveSwapLegs(last, lastMeta)
+  if (!firstLegs || !lastLegs) {
+    return undefined
+  }
+  return assembleSwapTransaction({
+    chainId: first.chainId,
+    blockNumber: last.blockNumber,
+    timestampSec: last.timestamp,
+    txHash: last.txHash,
+    sendPool: first.pool,
+    recvPool: last.pool,
+    owner,
+    input: firstLegs.input,
+    output: lastLegs.output,
+  })
+}
+
+/** Whether swaps should be included given the request's type filter (empty/UNSPECIFIED/SWAP → yes). */
+function swapsIncludedByFilter(filters: TransactionTypeFilter[]): boolean {
+  if (!filters || filters.length === 0) {
+    return true
+  }
+  return filters.some((f) => f === TransactionTypeFilter.UNSPECIFIED || f === TransactionTypeFilter.SWAP)
+}
+
+/** Case-insensitive substring match of a searchText against a built swap tx's real token metadata + hash. */
+function txMatchesSearch(tx: OnChainTransaction, search: string): boolean {
+  if (tx.transactionHash.toLowerCase().includes(search)) {
+    return true
+  }
+  for (const transfer of tx.transfers) {
+    const token = transfer.asset.case === 'token' ? transfer.asset.value : undefined
+    if (!token) {
+      continue
+    }
+    if (token.symbol.toLowerCase().includes(search) || token.address.toLowerCase().includes(search)) {
+      return true
+    }
+  }
+  return false
+}
+
+function clampPageSize(pageSize: number | undefined): number {
+  if (!pageSize || !Number.isFinite(pageSize) || pageSize <= 0) {
+    return DEFAULT_TX_PAGE_SIZE
+  }
+  return Math.min(Math.floor(pageSize), MAX_TX_PAGE_SIZE)
+}
+
+/** Parse the opaque pageToken (a non-negative integer offset). Bad/absent → 0. */
+function parseOffset(pageToken: string | undefined): number {
+  if (!pageToken) {
+    return 0
+  }
+  const n = Number(pageToken)
+  return Number.isInteger(n) && n >= 0 ? n : 0
+}
+
+/**
+ * REAL: a connected wallet's swap history across the requested supported chains, from the indexer's
+ * swap_events. Each transaction (multi-hop collapsed) → one OnChainTransaction(SWAP). Honors the
+ * request's wallet (walletAccount), chainIds, filterTransactionTypes (swap-only source), searchText,
+ * and offset/pageSize pagination. Honest-empty (valid response) when: no EVM wallet, the type filter
+ * excludes swaps, the indexer DB is unavailable, or nothing matches. NEVER throws, NEVER fabricates.
+ */
+async function handleListTransactions(req: ListTransactionsRequest): Promise<ListTransactionsResponse> {
+  const empty = new ListTransactionsResponse({ transactions: [], nextPageToken: '' })
+
+  const chainIds = resolveChainIds(req.chainIds)
+  const evmAddresses = (req.walletAccount?.platformAddresses ?? [])
+    .filter((p) => p.platform === Platform.EVM && !!p.address)
+    .map((p) => p.address)
+  if (evmAddresses.length === 0 || chainIds.length === 0) {
+    return empty
+  }
+  if (!swapsIncludedByFilter(req.filterTransactionTypes)) {
+    // Only swap history is indexed → a filter that excludes swaps has nothing to return (honest empty).
+    return empty
+  }
+
+  let db: SqliteDatabase | undefined
+  try {
+    db = getDb()
+  } catch {
+    // Indexer DB unavailable (e.g. better-sqlite3 not installed) — honest empty, never crash.
+    db = undefined
+  }
+  if (!db) {
+    return empty
+  }
+
+  const pageSize = clampPageSize(req.pageSize)
+  const offset = parseOffset(req.pageToken)
+  const search = (req.searchText ?? '').trim().toLowerCase()
+  const walletsLower = evmAddresses.map((a) => a.toLowerCase())
+  // `from`/owner shown on each tx: the request's first EVM address (original casing).
+  const owner = evmAddresses[0]
+
+  const metaCache = new Map<string, PoolMetaRow | undefined>()
+  const built: { tx: OnChainTransaction; ts: number; block: number }[] = []
+
+  for (const chainId of chainIds) {
+    let rows: SwapEventRow[]
+    try {
+      rows = getWalletSwapEvents(db, chainId, walletsLower, WALLET_SWAP_ROW_CAP)
+    } catch {
+      // One chain's read failing must not fail the whole feed — skip it.
+      continue
+    }
+    // Group this chain's rows by tx hash (multi-hop = several swap logs → one user-facing swap).
+    const byTx = new Map<string, SwapEventRow[]>()
+    for (const row of rows) {
+      const key = row.txHash.toLowerCase()
+      const list = byTx.get(key)
+      if (list) {
+        list.push(row)
+      } else {
+        byTx.set(key, [row])
+      }
+    }
+    for (const group of byTx.values()) {
+      const tx = buildTxFromSwapRows(db, metaCache, group, owner)
+      if (!tx) {
+        continue
+      }
+      if (search && !txMatchesSearch(tx, search)) {
+        continue
+      }
+      const last = group.reduce((acc, r) =>
+        r.blockNumber > acc.blockNumber || (r.blockNumber === acc.blockNumber && r.logIndex > acc.logIndex) ? r : acc,
+      )
+      built.push({ tx, ts: last.timestamp, block: last.blockNumber })
+    }
+  }
+
+  // Newest first, stable across chains.
+  built.sort((a, b) => b.ts - a.ts || b.block - a.block)
+
+  const pageItems = built.slice(offset, offset + pageSize)
+  const hasMore = built.length > offset + pageSize
+  const transactions = pageItems.map(
+    (b) => new Transaction({ transaction: { case: 'onChain', value: b.tx } }),
+  )
+  return new ListTransactionsResponse({
+    transactions,
+    nextPageToken: hasMore ? String(offset + pageSize) : '',
+  })
+}
+
+/**
+ * REAL: a single transaction by hash, from the indexer's swap_events (multi-hop collapsed to one net
+ * swap). Honest-empty (transaction unset) when the chain is unsupported, the hash is absent, the DB is
+ * unavailable, or no swap is indexed for that hash. NEVER throws, NEVER fabricates.
+ */
+async function handleGetTransaction(req: GetTransactionRequest): Promise<GetTransactionResponse> {
+  const empty = new GetTransactionResponse({})
+  if (!isSupportedChain(req.chainId) || !req.hash) {
+    return empty
+  }
+  let db: SqliteDatabase | undefined
+  try {
+    db = getDb()
+  } catch {
+    db = undefined
+  }
+  if (!db) {
+    return empty
+  }
+  let rows: SwapEventRow[]
+  try {
+    rows = getSwapEventsByTx(db, req.chainId, req.hash.toLowerCase())
+  } catch {
+    return empty
+  }
+  if (rows.length === 0) {
+    return empty
+  }
+  // Owner: the caller-supplied address if present, else the last hop's on-chain recipient.
+  const owner = req.address || rows[rows.length - 1].recipient
+  const tx = buildTxFromSwapRows(db, new Map<string, PoolMetaRow | undefined>(), rows, owner)
+  if (!tx) {
+    return empty
+  }
+  return new GetTransactionResponse({
+    transaction: new Transaction({ transaction: { case: 'onChain', value: tx } }),
+  })
+}
+
+// ---------- Build the full ServiceImpl: real handlers + honest empty stubs for the rest ----------
+
+/**
+ * Every DataApiService method must be implemented for the Connect router. We implement listTokens,
+ * listTopPools, getPortfolio, listTransactions and getTransaction for real, and auto-generate an
+ * empty-response stub for every other method by instantiating that method's response Message class
+ * (`methodInfo.O`) with no args — always a valid, empty proto response. This is intentionally NOT an
+ * error/unimplemented: the interface treats an empty response as "no data" and shows honest empty
+ * states rather than crashing.
  */
 export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   const impl: Record<string, (...args: unknown[]) => unknown> = {}
@@ -840,6 +1210,8 @@ export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   impl.listTokens = (req: unknown) => handleListTokens(req as ListTokensRequest)
   impl.listTopPools = (req: unknown) => handleListTopPools(req as ListTopPoolsRequest)
   impl.getPortfolio = (req: unknown) => handleGetPortfolio(req as GetPortfolioRequest)
+  impl.listTransactions = (req: unknown) => handleListTransactions(req as ListTransactionsRequest)
+  impl.getTransaction = (req: unknown) => handleGetTransaction(req as GetTransactionRequest)
 
   return impl as unknown as ServiceImpl<typeof DataApiService>
 }

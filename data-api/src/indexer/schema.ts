@@ -118,6 +118,10 @@ CREATE TABLE IF NOT EXISTS swap_events (
 );
 CREATE INDEX IF NOT EXISTS idx_swap_pool_block ON swap_events (chainId, pool, blockNumber);
 CREATE INDEX IF NOT EXISTS idx_swap_pool_ts    ON swap_events (chainId, pool, timestamp);
+-- Wallet-scoped activity feed (ListTransactions) filters by the swap's on-chain participant
+-- (Swap.to = recipient, Swap.sender = the caller/router). These indexes make that lookup cheap.
+CREATE INDEX IF NOT EXISTS idx_swap_recipient  ON swap_events (chainId, recipient);
+CREATE INDEX IF NOT EXISTS idx_swap_sender     ON swap_events (chainId, sender);
 
 CREATE TABLE IF NOT EXISTS sync_events (
   chainId      INTEGER NOT NULL,
@@ -266,4 +270,59 @@ export function setCursor(db: SqliteDatabase, chainId: number, pool: string, las
     `INSERT INTO ingest_cursor (chainId, pool, lastBlock) VALUES (?,?,?)
      ON CONFLICT(chainId, pool) DO UPDATE SET lastBlock=excluded.lastBlock`,
   ).run(chainId, pool, lastBlock)
+}
+
+// ---------- transaction/activity reads (ListTransactions / GetTransaction) ----------
+
+const SWAP_EVENT_COLUMNS = `chainId, pool, blockNumber, logIndex, txHash, sender, recipient,
+       amount0In, amount1In, amount0Out, amount1Out, timestamp`
+
+/**
+ * Read a wallet's swap events on one chain — every indexed Swap where the wallet is the on-chain
+ * participant: the swap's recipient (Swap.to) OR its sender (msg.sender to the pair; usually the
+ * router, but the wallet itself when it calls the pair directly). Matching is case-insensitive
+ * (stored sender/recipient are checksummed, callers pass lowercased addresses).
+ *
+ * Ordered most-recent-first (timestamp, then block, then log) and hard-capped by `limit` to bound
+ * memory — a single wallet's swap history on these chains is small. Returns [] when nothing matches
+ * or the address list is empty. NOTE: the v2 Swap event does NOT carry the tx-origin EOA, so a swap
+ * whose output is fully intermediated by the router (swept to the router, not the wallet) is not
+ * attributable to the wallet from Swap logs alone — that is an honest coverage gap, never faked.
+ */
+export function getWalletSwapEvents(
+  db: SqliteDatabase,
+  chainId: number,
+  walletsLower: string[],
+  limit: number,
+): SwapEventRow[] {
+  if (walletsLower.length === 0) {
+    return []
+  }
+  const placeholders = walletsLower.map(() => '?').join(',')
+  return db
+    .prepare(
+      `SELECT ${SWAP_EVENT_COLUMNS}
+         FROM swap_events
+        WHERE chainId=?
+          AND ( LOWER(recipient) IN (${placeholders}) OR LOWER(sender) IN (${placeholders}) )
+        ORDER BY timestamp DESC, blockNumber DESC, logIndex DESC
+        LIMIT ?`,
+    )
+    .all(chainId, ...walletsLower, ...walletsLower, limit) as SwapEventRow[]
+}
+
+/**
+ * Read every swap event of a single transaction on one chain (a multi-hop swap emits one Swap per
+ * hop), ordered by log index ascending. `txHashLower` must be lowercased; stored txHash is the
+ * lowercased hex from the log. Returns [] when the tx has no indexed swap.
+ */
+export function getSwapEventsByTx(db: SqliteDatabase, chainId: number, txHashLower: string): SwapEventRow[] {
+  return db
+    .prepare(
+      `SELECT ${SWAP_EVENT_COLUMNS}
+         FROM swap_events
+        WHERE chainId=? AND LOWER(txHash)=?
+        ORDER BY blockNumber ASC, logIndex ASC`,
+    )
+    .all(chainId, txHashLower) as SwapEventRow[]
 }
