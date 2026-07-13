@@ -1,4 +1,4 @@
-import { type PartialMessage } from '@bufbuild/protobuf'
+import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import type { ListTopPoolsRequest, ListTopPoolsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
@@ -23,23 +23,24 @@ export function getListTopPoolsQueryOptions({
   enabled,
 }: ListTopPoolsInput): ReturnType<
   typeof persistableInfiniteQueryOptions<
-    ListTopPoolsResponse,
+    PlainMessage<ListTopPoolsResponse>,
     Error,
-    ListTopPoolsResponse,
+    PlainMessage<ListTopPoolsResponse>,
     ListTopPoolsQueryKey,
     string
   >
 > {
   return persistableInfiniteQueryOptions({
     queryKey: [ReactQueryCacheKey.DataApiService, 'listTopPools', params] as const,
-    queryFn: async ({ pageParam }: { pageParam: string }): Promise<ListTopPoolsResponse> => {
+    // toPlainMessage strips the Message prototype so the value survives disk persistence.
+    queryFn: async ({ pageParam }: { pageParam: string }): Promise<PlainMessage<ListTopPoolsResponse>> => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.listTopPools({ ...params, pageToken: pageParam }) as Promise<ListTopPoolsResponse>
+      return toPlainMessage(await client.listTopPools({ ...params, pageToken: pageParam }))
     },
     initialPageParam: '',
-    getNextPageParam: (lastPage: ListTopPoolsResponse) => lastPage.nextPageToken || undefined,
+    getNextPageParam: (lastPage: PlainMessage<ListTopPoolsResponse>) => lastPage.nextPageToken || undefined,
     enabled,
   })
 }

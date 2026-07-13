@@ -10,7 +10,7 @@ import { SwapTransactionDetails } from 'uniswap/src/components/activity/details/
 import { isSwapTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -92,7 +92,7 @@ export function QueuedOrderModal(): JSX.Element | null {
             <LearnMoreLink
               textColor="$neutral1"
               textVariant="buttonLabel2"
-              url={uniswapUrls.helpArticleUrls.uniswapXFailure}
+              url={UniswapHelpUrls.articles.uniswapXFailure}
             />
           </Flex>
           <Separator />

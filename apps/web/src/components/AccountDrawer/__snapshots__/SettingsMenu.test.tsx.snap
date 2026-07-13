@@ -66,14 +66,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls="«r29»-content-system"
+                      aria-controls="«r2d»-content-system"
                       aria-selected="true"
                       class="is_TabsTrigger  is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="active"
-                      id="«r29»-trigger-system"
+                      id="«r2d»-trigger-system"
                       role="button"
                       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); cursor: pointer; border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; outline-color: transparent; text-decoration-line: none;"
                       tabindex="0"
@@ -97,14 +97,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls="«r29»-content-light"
+                      aria-controls="«r2d»-content-light"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id="«r29»-trigger-light"
+                      id="«r2d»-trigger-light"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -137,14 +137,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls="«r29»-content-dark"
+                      aria-controls="«r2d»-content-dark"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id="«r29»-trigger-dark"
+                      id="«r2d»-trigger-dark"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -218,7 +218,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -284,7 +284,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -342,7 +342,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -406,7 +406,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -456,7 +456,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -515,7 +515,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -842,7 +842,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -908,7 +908,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -966,7 +966,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -1035,7 +1035,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                 <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
                 >
                   <path

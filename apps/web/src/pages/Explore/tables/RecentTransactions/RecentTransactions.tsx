@@ -3,14 +3,16 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -44,7 +46,6 @@ const TableRow = styled(Flex, {
 type RecentTransactionType = GraphQLApi.PoolTransaction & { usdValueFormatted: string }
 
 export const RecentTransactionsTable = memo(function RecentTransactions() {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -164,7 +165,7 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
           </Cell>
         ),
       }),
-      columnHelper.accessor((transaction) => transaction.usdValueFormatted, {
+      columnHelper.accessor((transaction) => transaction, {
         id: 'fiat-value',
         maxSize: 125,
         header: () => (
@@ -174,9 +175,13 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
             </Text>
           </HeaderCell>
         ),
-        cell: (fiat) => (
+        cell: (transaction) => (
           <Cell loading={showLoadingSkeleton}>
-            <TableText>{fiat.getValue?.()}</TableText>
+            <AnimatedNumber
+              numericValue={transaction.getValue?.().usdValue.value}
+              textVariant="$body2"
+              value={transaction.getValue?.().usdValueFormatted}
+            />
           </Cell>
         ),
       }),
@@ -268,15 +273,17 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
   ])
 
   return (
-    <Table
-      columns={columns}
-      data={filteredTransactionsWithFiat}
-      loading={allDataStillLoading}
-      error={combinedError}
-      v2={multichainTokenUxEnabled}
-      loadMore={loadMore}
-      maxWidth={1200}
-      defaultPinnedColumns={['timestamp', 'swap-type']}
-    />
+    <Trace section={SectionName.ExploreRecentTransactions}>
+      <Table
+        columns={columns}
+        data={filteredTransactionsWithFiat}
+        loading={allDataStillLoading}
+        error={combinedError}
+        loadMore={loadMore}
+        maxWidth={1200}
+        defaultPinnedColumns={['timestamp', 'swap-type']}
+        getRowId={(row) => row.id}
+      />
+    </Trace>
   )
 })

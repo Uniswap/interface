@@ -1,4 +1,6 @@
+import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
 import type {
@@ -19,15 +21,13 @@ import {
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { transformQuoteToTrade } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/transformQuoteToTrade'
 import {
-  IndicativeTrade,
+  createIndicativeTrade,
+  type IndicativeTrade,
   type UseTradeArgs,
   validateIndicativeQuoteResponse,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getIdentifierForQuote } from 'uniswap/src/features/transactions/swap/utils/getIdForQuote'
-import {
-  createGetProtocolsForChain,
-  DEFAULT_PROTOCOL_OPTIONS,
-} from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { DEFAULT_PROTOCOL_OPTIONS, filterProtocols } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import {
   createGetQuoteRoutingParams,
   createGetQuoteSlippageParams,
@@ -40,21 +40,15 @@ interface EVMTradeServiceContext {
   logger?: Logger
 
   // Configuration dependencies
-  getIsUniswapXSupported?: (chainId?: number) => boolean
-  getEnabledChains: () => UniverseChainId[]
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
   getMinAutoSlippageToleranceL2: () => number
+  // Some accounts (e.g. those with a delegation mismatch) can't use UniswapX even when the global flag is on.
+  // Defaults to supported when not provided.
+  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
 }
 
 export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService {
-  const { tradeRepository, getIsUniswapXSupported, getEnabledChains, getIsL2ChainId, getMinAutoSlippageToleranceL2 } =
-    ctx
-
-  // Create protocols filter
-  const getProtocolsForChain = createGetProtocolsForChain({
-    getIsUniswapXSupported,
-    getEnabledChains,
-  })
+  const { tradeRepository, getIsL2ChainId, getMinAutoSlippageToleranceL2, getIsUniswapXSupported } = ctx
 
   return {
     prepareTradeInput: prepareTradingApiTradeInput,
@@ -64,12 +58,12 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
 
       try {
         // Create routing params getter for this specific request
+        const chainId = input.amountSpecified?.currency.chainId
+        // UniswapX requires the global flag AND that it's supported for this account/chain
+        // (e.g. accounts with a delegation mismatch can't use UniswapX).
+        const uniswapXEnabled = getFeatureFlag(FeatureFlags.UniswapX) && (getIsUniswapXSupported?.(chainId) ?? true)
         const getRoutingParams = createGetQuoteRoutingParams({
-          getProtocols: () =>
-            getProtocolsForChain(
-              input.selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS,
-              input.amountSpecified?.currency.chainId,
-            ),
+          getProtocols: () => filterProtocols(input.selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, uniswapXEnabled),
           getIsV4HookPoolsEnabled: () => input.isV4HookPoolsEnabled ?? true,
         })
 
@@ -145,10 +139,11 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
           return null
         }
 
-        const trade = new IndicativeTrade({
+        const trade = createIndicativeTrade({
           quote: validatedResponse,
           currencyIn: validatedInput.currencyIn,
           currencyOut: validatedInput.currencyOut,
+          tradeType: toSdkTradeType(validatedInput.requestTradeType),
         })
 
         return trade
@@ -161,6 +156,10 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
       }
     },
   }
+}
+
+function toSdkTradeType(tradeType: TradingApi.TradeType): TradeType {
+  return tradeType === TradingApi.TradeType.EXACT_OUTPUT ? TradeType.EXACT_OUTPUT : TradeType.EXACT_INPUT
 }
 
 /**

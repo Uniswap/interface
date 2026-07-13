@@ -119,6 +119,14 @@ export const parseAsPositionFlowStep = createParser({
   serialize: (value: PositionFlowStep) => value.toString(),
 })
 
+// Step uses push history so each step is its own browser-history entry, and is kept in the URL
+// even at the default value so the flow step can be read back reliably.
+export const parseAsStep = parseAsPositionFlowStep.withOptions({
+  history: 'push',
+  clearOnDefault: false,
+  shallow: false,
+})
+
 export const parseAsHookAddress = createParser({
   parse: (query: string) => {
     if (!query || typeof query !== 'string') {

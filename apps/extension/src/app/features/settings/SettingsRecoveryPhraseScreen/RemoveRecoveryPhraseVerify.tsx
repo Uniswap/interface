@@ -59,12 +59,11 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
     await Keyring.removePassword()
 
     await removeAllDappConnectionsFromExtension()
-    /* oxlint-disable typescript/await-thenable -- biome-parity: oxlint is stricter here */
+    // oxlint-disable-next-line typescript/await-thenable -- biome-parity: oxlint is stricter here
     await dispatch(setIsTestnetModeEnabled(false))
 
     await dispatch(
       editAccountActions.trigger({
-        /* oxlint-enable typescript/await-thenable -- biome-parity: oxlint is stricter here */
         type: EditAccountAction.Remove,
         accounts: accountsToRemove,
       }),

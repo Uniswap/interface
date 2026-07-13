@@ -67,4 +67,11 @@ export const CHAIN_GAS_STRATEGY_OVERRIDES: Record<number, Partial<GasStrategy>> 
     minPriorityFeeGwei: 0,
     maxPriorityFeeGwei: 0,
   },
+  // Arc uses EIP-1559 with EWMA-smoothed base fees; maxPriorityFeePerGas of 0 is accepted.
+  // Zero out priority-fee bidding to keep gas (paid in USDC) minimal — tune via Statsig if
+  // inclusion suffers under high utilization. https://docs.arc.network/arc/references/gas-and-fees
+  [UniverseChainId.Arc]: {
+    minPriorityFeeGwei: 0,
+    maxPriorityFeeGwei: 0,
+  },
 }

@@ -1,18 +1,20 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Separator, styled, useMedia } from 'ui/src'
 import {
   getPortfolioHistoricalValueChartQuery,
   useGetPortfolioHistoricalValueChartQuery,
 } from 'uniswap/src/data/rest/getPortfolioChart'
+import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   usePortfolioBalanceBreakdown,
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
@@ -22,11 +24,13 @@ import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddre
 import { OverviewActionTiles } from '~/pages/Portfolio/Overview/ActionTiles'
 import { OVERVIEW_RIGHT_COLUMN_WIDTH } from '~/pages/Portfolio/Overview/constants'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
-import { usePortfolioChartSeries } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
+import {
+  PortfolioChartCategory,
+  usePortfolioChartSeries,
+} from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
 import { PortfolioPerformance } from '~/pages/Portfolio/Overview/PortfolioPerformance'
-import { OverviewStatsTiles } from '~/pages/Portfolio/Overview/StatsTiles'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const ActionsAndStatsContainer = styled(Flex, {
@@ -50,7 +54,6 @@ const ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER = 92
 export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const showBalanceHeaderRow = portfolioPoolsBalancesEnabled
   const { chainId, isExternalWallet } = usePortfolioRoutes()
@@ -61,8 +64,32 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   const queryClient = useQueryClient()
 
   const [selectedPeriod, setSelectedPeriod] = useState<ChartPeriod>(ChartPeriod.DAY)
+  const [selectedCategory, setSelectedCategory] = useState<PortfolioChartCategory>(PortfolioChartCategory.Total)
 
   const filterChainIds = useMemo(() => (chainId ? [chainId] : allChainIds), [chainId, allChainIds])
+
+  const includeCategories = useWalletBalancesIncludeCategories()
+  const portfolioValueModifier = useRestPortfolioValueModifier(portfolioAddresses.evmAddress)
+
+  const chartInput = useMemo(
+    () => ({
+      evmAddress: portfolioAddresses.evmAddress,
+      svmAddress: portfolioAddresses.svmAddress,
+      chainIds: filterChainIds,
+      includeCategories,
+      ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
+        poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
+        poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
+      }),
+    }),
+    [
+      portfolioAddresses.evmAddress,
+      portfolioAddresses.svmAddress,
+      filterChainIds,
+      includeCategories,
+      portfolioValueModifier,
+    ],
+  )
 
   const { data: portfolioData } = usePortfolioTotalValue({
     evmAddress: portfolioAddresses.evmAddress,
@@ -84,19 +111,30 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     isPending: isChartPending,
     error: chartError,
   } = useGetPortfolioHistoricalValueChartQuery({
-    input: {
-      evmAddress: portfolioAddresses.evmAddress,
-      svmAddress: portfolioAddresses.svmAddress,
-      chainIds: filterChainIds,
-      chartPeriod: selectedPeriod,
-    },
+    input: { ...chartInput, chartPeriod: selectedPeriod },
     enabled: !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
   })
 
-  const { series, chartPercentChange } = usePortfolioChartSeries({
+  const {
+    series,
+    tokensSeries,
+    poolsSeries,
+    chartPercentChange,
+    tokensPercentChange,
+    poolsPercentChange,
+    hasCategoryBreakdown,
+  } = usePortfolioChartSeries({
     chartData: portfolioChartData,
     selectedPeriod,
+    selectedCategory,
   })
+
+  // Reset to total when the selector hides, so a stale selection doesn't strand the chart on a now-hidden series.
+  useEffect(() => {
+    if (!hasCategoryBreakdown && selectedCategory !== PortfolioChartCategory.Total) {
+      setSelectedCategory(PortfolioChartCategory.Total)
+    }
+  }, [hasCategoryBreakdown, selectedCategory])
   const isChartLoading = isChartPending || !series.length
   const isChartEmpty = useMemo(() => {
     if (!series.length) {
@@ -134,12 +172,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
         return
       }
       const periodQuery = getPortfolioHistoricalValueChartQuery({
-        input: {
-          evmAddress: portfolioAddresses.evmAddress,
-          svmAddress: portfolioAddresses.svmAddress,
-          chainIds: filterChainIds,
-          chartPeriod: period,
-        },
+        input: { ...chartInput, chartPeriod: period },
       })
       const existingPeriodQueryState = queryClient.getQueryState(periodQuery.queryKey)
       if (existingPeriodQueryState?.fetchStatus === 'fetching' || existingPeriodQueryState?.status === 'success') {
@@ -147,10 +180,10 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
       }
       queryClient.prefetchQuery(periodQuery).catch(() => undefined)
     },
-    [queryClient, portfolioAddresses.evmAddress, portfolioAddresses.svmAddress, filterChainIds, selectedPeriod],
+    [queryClient, portfolioAddresses.evmAddress, portfolioAddresses.svmAddress, selectedPeriod, chartInput],
   )
 
-  // Fetch activity data once at the top level to share between useSwapsThisWeek and MiniActivityTable
+  // Fetch activity data once at the top level to share across the overview tables
   const activityData = useActivityData({
     evmOwner: portfolioAddresses.evmAddress,
     svmOwner: portfolioAddresses.svmAddress,
@@ -171,7 +204,11 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
               poolsValue={portfolioBreakdown?.pools}
               isPortfolioZero={isPortfolioZero}
               series={series}
+              tokensSeries={tokensSeries}
+              poolsSeries={poolsSeries}
               chartPercentChange={chartPercentChange}
+              tokensPercentChange={tokensPercentChange}
+              poolsPercentChange={poolsPercentChange}
               isLoading={isChartLoading}
               isChartEmpty={isChartEmpty}
               error={chartError}
@@ -180,6 +217,9 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
               onHoverPeriod={handleHoverPeriod}
               isTotalValueMatch={isTotalValueMatch}
               showBalanceHeaderRow={showBalanceHeaderRow}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              hasCategoryBreakdown={hasCategoryBreakdown}
             />
           </Trace>
           {isPortfolioZero ? (
@@ -199,7 +239,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
                 pt={showBalanceHeaderRow && !isFullWidth ? ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER : undefined}
               >
                 <OverviewActionTiles />
-                {isProfitLossEnabled ? <PortfolioPerformance /> : <OverviewStatsTiles activityData={activityData} />}
+                <PortfolioPerformance />
               </ActionsAndStatsContainer>
             </Trace>
           )}

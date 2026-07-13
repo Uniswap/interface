@@ -5,7 +5,21 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { USDC_BASE, USDC_LINEA, USDT_LINEA, USDT0_XLAYER } from 'uniswap/src/constants/tokens'
+import {
+  BTC_B_MEGAETH,
+  CIRBTC_ARC,
+  EURC_ARC,
+  USDC_ARC,
+  USDC_BASE,
+  USDC_LINEA,
+  USDE_MEGAETH,
+  USDG_ROBINHOOD,
+  USDM_MEGAETH,
+  USDT_LINEA,
+  USDT0_XLAYER,
+  USYC_ARC,
+  WETH_ARC,
+} from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -35,6 +49,32 @@ const BASE_CURRENCY_IDS = [
   buildCurrencyId(UniverseChainId.Base, '0xfde4c96c8593536e31f229ea8f37b2ada2699bb2'), // USDT
   buildCurrencyId(UniverseChainId.Base, '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf'), // cbBTC
   buildCurrencyId(UniverseChainId.Base, '0x4200000000000000000000000000000000000006'), // WETH
+]
+
+// MegaETH quick-select tokens
+const MEGAETH_CURRENCY_IDS = [
+  buildNativeCurrencyId(UniverseChainId.MegaETH), // ETH
+  buildCurrencyId(UniverseChainId.MegaETH, '0x4200000000000000000000000000000000000006'), // WETH
+  buildCurrencyId(UniverseChainId.MegaETH, USDM_MEGAETH.address), // USDM
+  buildCurrencyId(UniverseChainId.MegaETH, USDE_MEGAETH.address), // USDe
+  buildCurrencyId(UniverseChainId.MegaETH, BTC_B_MEGAETH.address), // BTC.b
+]
+
+// Robinhood quick-select tokens
+const ROBINHOOD_CURRENCY_IDS = [
+  buildNativeCurrencyId(UniverseChainId.Robinhood), // ETH
+  buildCurrencyId(UniverseChainId.Robinhood, USDG_ROBINHOOD.address), // USDG
+  buildCurrencyId(UniverseChainId.Robinhood, '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73'), // WETH
+]
+
+// Arc quick-select tokens. No native entry — Arc's gas/native asset is USDC itself,
+// canonically represented by the ERC-20 (see ARC_CHAIN_INFO.gasTokenOverride).
+const ARC_CURRENCY_IDS = [
+  buildCurrencyId(UniverseChainId.Arc, USDC_ARC.address), // USDC
+  buildCurrencyId(UniverseChainId.Arc, EURC_ARC.address), // EURC
+  buildCurrencyId(UniverseChainId.Arc, CIRBTC_ARC.address), // cirBTC
+  buildCurrencyId(UniverseChainId.Arc, WETH_ARC.address), // wETH
+  buildCurrencyId(UniverseChainId.Arc, USYC_ARC.address), // USYC
 ]
 
 export function useCommonTokensOptions({
@@ -79,6 +119,27 @@ export function useCommonTokensOptions({
     loading: loadingBaseCurrencies,
   } = useCurrencyInfosWithLoading(BASE_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Base })
 
+  const {
+    data: megaEthCurrencies,
+    error: megaEthCurrenciesError,
+    refetch: refetchMegaEthCurrencies,
+    loading: loadingMegaEthCurrencies,
+  } = useCurrencyInfosWithLoading(MEGAETH_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.MegaETH })
+
+  const {
+    data: robinhoodCurrencies,
+    error: robinhoodCurrenciesError,
+    refetch: refetchRobinhoodCurrencies,
+    loading: loadingRobinhoodCurrencies,
+  } = useCurrencyInfosWithLoading(ROBINHOOD_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Robinhood })
+
+  const {
+    data: arcCurrencies,
+    error: arcCurrenciesError,
+    refetch: refetchArcCurrencies,
+    loading: loadingArcCurrencies,
+  } = useCurrencyInfosWithLoading(ARC_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Arc })
+
   // this is a one-off filter for USDT on Unichain which at time of launch does not have enough liquidity for swapping so we are filtering it out of quick select
   // TODO(WEB-6284): Replace useAllCommonBaseCurrencies static filter with a dynamic filter
   const USDT_UNICHAIN_ADDRESS = '0x588ce4f028d8e7b53b687865d6a67b3a54c75518'
@@ -104,8 +165,26 @@ export function useCommonTokensOptions({
     if (chainFilter === UniverseChainId.Base) {
       return baseCurrencies
     }
+    if (chainFilter === UniverseChainId.MegaETH) {
+      return megaEthCurrencies
+    }
+    if (chainFilter === UniverseChainId.Robinhood) {
+      return robinhoodCurrencies
+    }
+    if (chainFilter === UniverseChainId.Arc) {
+      return arcCurrencies
+    }
     return filtered
-  }, [chainFilter, commonBaseCurrencies, lineaCurrencies, xLayerCurrencies, baseCurrencies])
+  }, [
+    chainFilter,
+    commonBaseCurrencies,
+    lineaCurrencies,
+    xLayerCurrencies,
+    baseCurrencies,
+    megaEthCurrencies,
+    robinhoodCurrencies,
+    arcCurrencies,
+  ])
 
   const commonBaseTokenOptions = useCurrencyInfosToTokenOptions({
     currencyInfos: filteredCommonBaseCurrencies,
@@ -118,12 +197,18 @@ export function useCommonTokensOptions({
     refetchXLayerCurrencies?.()
     refetchLineaCurrencies?.()
     refetchBaseCurrencies?.()
+    refetchMegaEthCurrencies?.()
+    refetchRobinhoodCurrencies?.()
+    refetchArcCurrencies?.()
   }, [
     portfolioBalancesByIdRefetch,
     refetchCommonBaseCurrencies,
     refetchXLayerCurrencies,
     refetchLineaCurrencies,
     refetchBaseCurrencies,
+    refetchMegaEthCurrencies,
+    refetchRobinhoodCurrencies,
+    refetchArcCurrencies,
   ])
 
   const error =
@@ -131,7 +216,10 @@ export function useCommonTokensOptions({
     (!commonBaseCurrencies && commonBaseCurrenciesError) ||
     (!xLayerCurrencies?.length && xLayerCurrenciesError) ||
     (!lineaCurrencies?.length && lineaCurrenciesError) ||
-    (!baseCurrencies?.length && baseCurrenciesError)
+    (!baseCurrencies?.length && baseCurrenciesError) ||
+    (!megaEthCurrencies?.length && megaEthCurrenciesError) ||
+    (!robinhoodCurrencies?.length && robinhoodCurrenciesError) ||
+    (!arcCurrencies?.length && arcCurrenciesError)
 
   const filteredCommonBaseTokenOptions = useMemo(
     () => commonBaseTokenOptions && filter({ tokenOptions: commonBaseTokenOptions, chainFilter }),
@@ -148,7 +236,10 @@ export function useCommonTokensOptions({
         loadingCommonBaseCurrencies ||
         loadingXLayerCurrencies ||
         loadingLineaCurrencies ||
-        loadingBaseCurrencies,
+        loadingBaseCurrencies ||
+        loadingMegaEthCurrencies ||
+        loadingRobinhoodCurrencies ||
+        loadingArcCurrencies,
     }),
     [
       error,
@@ -156,6 +247,9 @@ export function useCommonTokensOptions({
       loadingLineaCurrencies,
       loadingXLayerCurrencies,
       loadingBaseCurrencies,
+      loadingMegaEthCurrencies,
+      loadingRobinhoodCurrencies,
+      loadingArcCurrencies,
       loadingPorfolioBalancesById,
       filteredCommonBaseTokenOptions,
       refetch,

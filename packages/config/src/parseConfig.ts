@@ -18,7 +18,7 @@ interface ParseConfigParams<S extends ConfigSchema> {
  *
  * @example
  * const config = parseConfig({
- *   values: { awsApiEndpoint: process.env.REACT_APP_AWS_API_ENDPOINT },
+ *   values: { awsApiEndpoint: process.env.AWS_API_ENDPOINT },
  *   schema: z.object({ awsApiEndpoint: z.string().min(1) }),
  * })
  * // config includes all BaseConfig fields + awsApiEndpoint

@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 
 /**
@@ -14,7 +15,7 @@ export function interpolateCurrencyRequiredQ96({
   ticks,
   tickQ96,
 }: {
-  ticks: TickDetail[] | null | undefined
+  ticks: PlainMessage<TickDetail>[] | null | undefined
   tickQ96: string
 }): string | null {
   if (!ticks || ticks.length === 0) {
@@ -92,7 +93,7 @@ export function interpolateFillRatio({
   ticks,
   tickQ96,
 }: {
-  ticks: TickDetail[] | null | undefined
+  ticks: PlainMessage<TickDetail>[] | null | undefined
   tickQ96: string
 }): number | null {
   if (!ticks || ticks.length === 0) {

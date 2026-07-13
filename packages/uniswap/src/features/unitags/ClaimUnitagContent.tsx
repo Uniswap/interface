@@ -18,7 +18,7 @@ import { getUnitagFormatError } from 'uniswap/src/features/unitags/getUnitagForm
 import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { UnitagInfoModal } from 'uniswap/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
-import { getYourNameString } from 'uniswap/src/features/unitags/utils'
+import { getYourNameString, normalizeUnitagUsernameInput } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   OnboardingScreens,
@@ -170,23 +170,30 @@ export function ClaimUnitagContent({
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
-      if (text.length === 0) {
+      const normalized = normalizeUnitagUsernameInput(text)
+
+      if (normalized.length === 0) {
         onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
       } else {
-        onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
+        onSetFontSize(normalized + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
       setIsUnitagAvailable(false)
       setShowVerificationLoading(false)
       setUnitagAvailableError(undefined)
 
-      if (text.length > MAX_UNITAG_CHAR_LENGTH) {
-        setUnitagAvailableError(getUnitagFormatError(text, t))
-        setUnitagInputValue(text.slice(0, MAX_UNITAG_CHAR_LENGTH).trim())
+      if (normalized.length > MAX_UNITAG_CHAR_LENGTH) {
+        setUnitagAvailableError(getUnitagFormatError(normalized, t))
+        setUnitagInputValue(normalized.slice(0, MAX_UNITAG_CHAR_LENGTH) || undefined)
         return
       }
 
-      setUnitagInputValue(text.trim())
+      const nextValue = normalized || undefined
+      setUnitagInputValue(nextValue)
+
+      if (!nextValue) {
+        setUnitagNameInputMinWidth(undefined)
+      }
     },
     [inputPlaceholder, onSetFontSize, t],
   )
@@ -331,6 +338,8 @@ export function ClaimUnitagContent({
                   blurOnSubmit={!isWebPlatform}
                   autoCapitalize="none"
                   autoCorrect={false}
+                  autoComplete="off"
+                  spellCheck={false}
                   borderWidth="$none"
                   borderRadius={isWebPlatform ? 0 : undefined}
                   fontFamily="$heading"
@@ -341,6 +350,7 @@ export function ClaimUnitagContent({
                   placeholder={inputPlaceholder}
                   placeholderTextColor="$neutral3"
                   returnKeyType="done"
+                  enterKeyHint="done"
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   maxLength={MAX_UNITAG_CHAR_LENGTH}
@@ -411,6 +421,8 @@ export function ClaimUnitagContent({
           <Button
             size="large"
             variant="branded"
+            animation="200ms"
+            animateOnly={['transform', 'background-color']}
             isDisabled={shouldBlockContinue || !isUnitagAvailable || !!unitagAvailableError}
             testID={TestID.Continue}
             loading={showVerificationLoading && isCheckingUnitag} // the validation happens really quickly so only show a loading spinner when the user explicitly tries to continue and we're still checking availability
@@ -426,8 +438,9 @@ export function ClaimUnitagContent({
 }
 
 const animationProps: FlexProps = {
-  animation: 'quick',
-  enterStyle: { opacity: 0, y: 10 },
+  animation: '200ms',
+  enterStyle: { opacity: 0, y: 12 },
+  exitStyle: { opacity: 0, y: 12 },
 }
 
 function AvailabilityStatus({

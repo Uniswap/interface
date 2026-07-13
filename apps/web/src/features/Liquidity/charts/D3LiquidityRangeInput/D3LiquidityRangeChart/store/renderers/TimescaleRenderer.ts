@@ -1,7 +1,6 @@
 import * as d3 from 'd3'
 import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import type {
-  ChartState,
   Renderer,
   RenderingContext,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
@@ -10,14 +9,11 @@ import { getTimeFormat } from '~/features/Liquidity/charts/D3LiquidityRangeInput
 export function createTimescaleRenderer({
   g,
   context,
-  getState,
 }: {
   g: d3.Selection<SVGGElement, unknown, null, undefined>
   context: RenderingContext
-  getState: () => ChartState
 }): Renderer {
   const timescaleGroup = g.append('g').attr('class', 'timescale-group')
-  const { selectedHistoryDuration } = getState()
 
   const draw = (): void => {
     // Clear previous timescale elements
@@ -36,14 +32,15 @@ export function createTimescaleRenderer({
 
     // Create time scale for the x-axis
     const dateExtent = d3.extent(priceDataMapped, (d) => d.date)
+    const dateDomain: [Date, Date] = dateExtent[0] ? dateExtent : [new Date(), new Date()]
 
     const xScale = d3
       .scaleTime()
-      .domain(dateExtent[0] ? dateExtent : [new Date(), new Date()])
+      .domain(dateDomain)
       // Start HEIGHT from the left of the chart for padding
       .range([CHART_DIMENSIONS.TIMESCALE_HEIGHT, dimensions.width])
 
-    const timeFormat = getTimeFormat(selectedHistoryDuration)
+    const timeFormat = getTimeFormat(dateDomain)
 
     const ticks = xScale.ticks(4)
 

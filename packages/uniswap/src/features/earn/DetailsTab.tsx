@@ -1,17 +1,17 @@
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { GauntletLogo } from 'ui/src/components/icons/GauntletLogo'
 import { MorphoLogoFull } from 'ui/src/components/icons/MorphoLogoFull'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_MEDIUM, useFormattedDate } from 'uniswap/src/features/language/localizedDayjs'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -209,12 +209,17 @@ function ExposureTokenLogo({ currencyId }: { currencyId: string }): JSX.Element 
 
 function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
-  const curatorAddress = vault.curator.address
-  const curatorTvlUsd = vault.curator.tvlUsd
-
   const formattedDeploymentDate = useFormattedDate(dayjs(vault.deploymentDate ?? 0), FORMAT_DATE_MEDIUM)
   const deploymentDateLabel = vault.deploymentDate ? formattedDeploymentDate : '--'
+
+  const vaultExplorerUrl = getExplorerLink({
+    chainId: vault.chainId,
+    data: vault.vaultAddress,
+    type: ExplorerDataType.ADDRESS,
+  })
+  const onOpenVaultExplorer = useCallback(() => {
+    openUri({ uri: vaultExplorerUrl }).catch(() => undefined)
+  }, [vaultExplorerUrl])
 
   return (
     <Flex gap="$spacing12">
@@ -222,7 +227,13 @@ function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
         label={t('explore.earn.vault.curator')}
         value={
           <Flex row alignItems="center" gap="$spacing4">
-            <GauntletLogo color="$neutral2" size="$icon.16" />
+            {vault.curator.imageUrl && (
+              <UniversalImage
+                size={{ width: iconSizes.icon16, height: iconSizes.icon16 }}
+                style={{ image: { borderRadius: borderRadii.roundedFull } }}
+                uri={vault.curator.imageUrl}
+              />
+            )}
             <Text variant="body3" color="$neutral1">
               {vault.curator.name}
             </Text>
@@ -230,37 +241,14 @@ function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
         }
       />
       <DetailRow
-        label={t('explore.earn.vault.curatorAddress')}
+        label={t('explore.earn.vault.vault')}
         value={
-          curatorAddress ? (
-            <TouchableArea
-              row
-              alignItems="center"
-              gap="$spacing4"
-              onPress={() => {
-                // TODO(CONS-1781): link to etherscan with the real curator address once backend provides it.
-              }}
-            >
-              <Text variant="body3" color="$neutral1">
-                {shortenAddress({ address: curatorAddress })}
-              </Text>
-              <ExternalLink color="$neutral2" size="$icon.16" />
-            </TouchableArea>
-          ) : (
+          <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
             <Text variant="body3" color="$neutral1">
-              --
+              {shortenAddress({ address: vault.vaultAddress })}
             </Text>
-          )
-        }
-      />
-      <DetailRow
-        label={t('explore.earn.vault.curatorTvl')}
-        value={
-          <Text variant="body3" color="$neutral1">
-            {curatorTvlUsd === undefined
-              ? '--'
-              : formatNumberOrString({ value: curatorTvlUsd, type: NumberType.FiatTokenDetails })}
-          </Text>
+            <ExternalLink color="$neutral2" size="$icon.16" />
+          </TouchableArea>
         }
       />
       <DetailRow

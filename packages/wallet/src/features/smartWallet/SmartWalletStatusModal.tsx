@@ -9,7 +9,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -105,7 +105,7 @@ export function SmartWalletStatusModal({
                 <LearnMoreLink
                   textVariant="buttonLabel4"
                   textColor={isWebPlatform ? '$accent1' : '$accent3'}
-                  url={uniswapUrls.helpArticleUrls.multichainDelegation}
+                  url={UniswapHelpUrls.articles.multichainDelegation}
                 />
               }
               trigger={<InfoCircle alignSelf="flex-start" color="$neutral3" size="$icon.16" />}

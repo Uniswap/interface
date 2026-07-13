@@ -31,7 +31,9 @@ export function NftView({ item, onPress, index, openContextMenu, hoverAnimation 
   const baseFlexProps: FlexProps = {
     alignItems: 'center',
     aspectRatio: 1,
-    backgroundColor: '$surface3',
+    // Opaque fill so iOS can merge shadow paths
+    // Visual tint still reads as a card; $surface3 is translucent rgba and triggers the warning.
+    backgroundColor: '$surface3Solid',
     borderRadius: '$rounded12',
     overflow: 'hidden',
     width: '100%',

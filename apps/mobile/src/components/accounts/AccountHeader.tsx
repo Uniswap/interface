@@ -42,7 +42,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 
   const tap = Gesture.Tap()
     .withTestId(TestID.AccountHeaderSettings)
-    .hitSlop(20)
+    .hitSlop(5)
     .shouldCancelWhenOutside(true)
     .onBegin(() => {
       pressProgress.value = withTiming(1)
@@ -180,6 +180,7 @@ export function AccountHeader(): JSX.Element {
             </Flex>
             <Flex row alignItems="flex-start" gap="$spacing12">
               <TouchableArea
+                hitSlop={5}
                 scaleTo={SCAN_ICON_ACTIVE_SCALE}
                 activeOpacity={1}
                 dd-action-name="Scan"

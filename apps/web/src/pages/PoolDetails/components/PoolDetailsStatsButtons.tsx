@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactNode, useCallback, useState } from 'react'
@@ -23,6 +24,9 @@ import { gqlToCurrency } from '~/appGraphql/data/util'
 import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
+import { PositionFlowStep } from '~/features/Liquidity/Create/types'
+import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { useAccount } from '~/hooks/useAccount'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
@@ -35,7 +39,6 @@ const PoolDetailsStatsButtonsRow = styled(Flex, {
   row: true,
   gap: '$gap12',
   zIndex: 1,
-  mb: '$spacing24',
   $xl: {
     gap: '$gap8',
     bottom: 0,
@@ -168,6 +171,13 @@ export function PoolDetailsStatsButtons({
           hookAddress,
           protocolVersion: protocolVersion?.toLowerCase(),
         })
+        // The pool already exists here, so creatingPoolOrPair is false.
+        const nextStep = getNextFlowStep({
+          currentStep: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
+          protocolVersion: getProtocolVersionFromLabel(protocolVersion?.toLowerCase()) ?? ProtocolVersion.V4,
+          creatingPoolOrPair: false,
+        })
+        params.set('step', String(nextStep))
         const search = params.toString()
         navigate(`/positions/add/${chainUrlParam}/${poolIdOrAddress}${search ? `?${search}` : ''}`, {
           state: { from: location.pathname, entryPoint: location.pathname },

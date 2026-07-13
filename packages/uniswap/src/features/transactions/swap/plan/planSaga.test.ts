@@ -7,7 +7,7 @@ import type { FetchAndTransformPlanResult } from 'uniswap/src/features/transacti
 import type { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import type { WatchPlanStepResult } from 'uniswap/src/features/transactions/swap/plan/watchPlanStepSaga'
 import type { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 interface InitializePlanResult extends FetchAndTransformPlanResult {
   response?: TradingApi.PlanResponse
@@ -133,14 +133,19 @@ function createTransactionAndPlanStep(overrides: Partial<TransactionAndPlanStep>
 }
 
 function createChainedTrade(outputAmount: string): ChainedActionTrade {
-  return new ChainedActionTrade({
+  const trade = createChainedActionTrade({
     quote: {
       routing: TradingApi.Routing.CHAINED,
       requestId: 'test-request',
       permitData: null,
       quote: {
-        input: { amount: INPUT_AMOUNT, token: INPUT_TOKEN.address },
-        output: { amount: outputAmount, token: OUTPUT_TOKEN.address, recipient: '0xrecipient' },
+        input: { amount: INPUT_AMOUNT, maximumAmount: INPUT_AMOUNT, token: INPUT_TOKEN.address },
+        output: {
+          amount: outputAmount,
+          minimumAmount: outputAmount,
+          token: OUTPUT_TOKEN.address,
+          recipient: '0xrecipient',
+        },
         swapper: '0xswapper',
         tokenInChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
         tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
@@ -158,6 +163,12 @@ function createChainedTrade(outputAmount: string): ChainedActionTrade {
     currencyIn: INPUT_TOKEN,
     currencyOut: OUTPUT_TOKEN,
   })
+
+  if (!trade) {
+    throw new Error('Expected test chained trade to be created')
+  }
+
+  return trade
 }
 
 function createPlanResponse(expectedOutput: string, steps?: TradingApi.PlanStep[]): TradingApi.PlanResponse {

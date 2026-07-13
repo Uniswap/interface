@@ -146,7 +146,7 @@ export function BidReceiveOutput({
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start" width="auto" overflow="hidden">
             {isEmpty ? (
               <Text variant="body4" color="$neutral3" width="100%">
-                {t('toucan.bidForm.enterBudgetTokenPrice')}
+                {t('toucan.bidForm.enterBudgetMaxFdv')}
               </Text>
             ) : (
               <Flex flexDirection="row" gap="$spacing4" width="100%">

@@ -69,7 +69,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
         class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
         data-disable-theme="true"
       >
-        -10.00%
+        -10%
       </span>
     </div>
     <div

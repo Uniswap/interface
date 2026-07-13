@@ -7,6 +7,7 @@ import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
@@ -50,6 +51,10 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
 
   const inputChainId = currencies.input?.currency.chainId
   const outputChainId = currencies.output?.currency.chainId
+  // Prefer the output chain's canonical bridge, falling back to the input chain's — L1s like mainnet have none
+  const bridgeChainId = [outputChainId, inputChainId].find(
+    (chainId): chainId is UniverseChainId => chainId !== undefined && getChainInfo(chainId).bridge !== undefined,
+  )
   const showCanonicalBridge = isWebApp && warning?.type === WarningLabel.NoQuotesFound && inputChainId !== outputChainId
 
   return (
@@ -76,8 +81,8 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
         )}
       </Flex>
 
-      {showCanonicalBridge ? (
-        <CanonicalBridgeLinkBanner chainId={outputChainId ?? UniverseChainId.Mainnet} />
+      {showCanonicalBridge && bridgeChainId ? (
+        <CanonicalBridgeLinkBanner chainId={bridgeChainId} />
       ) : debouncedTrade ? (
         <Accordion.Trigger
           p="$none"

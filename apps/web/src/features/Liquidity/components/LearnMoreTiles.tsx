@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
 import V4_HOOK from '~/assets/images/v4Hooks.png'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -53,13 +53,13 @@ export function LiquidityLearnMoreTiles() {
           width="100%"
           img={PROVIDE_LIQUIDITY}
           text={t('liquidity.provideOnProtocols')}
-          link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
+          link={UniswapHelpUrls.articles.providingLiquidityInfo}
         />
         <LearnMoreTile
           width="100%"
           img={V4_HOOK}
           text={t('liquidity.hooks')}
-          link={uniswapUrls.helpArticleUrls.v4HooksInfo}
+          link={UniswapHelpUrls.articles.v4HooksInfo}
         />
       </Flex>
     </Flex>

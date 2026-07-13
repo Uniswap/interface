@@ -1,11 +1,18 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import {
+  createWrapTransactionStep,
+  createWrapTransactionStepWalletCall,
+  type WrapTransactionStep,
+  type WrapTransactionStepWalletCall,
+} from 'uniswap/src/features/transactions/steps/wrap'
+import {
   ExecuteSwapCallback,
   ExecuteSwapParams,
   PrepareSwapCallback,
   SwapHandlers,
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
+import type { WrapSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useSwapCallback } from '~/features/Swap/hooks/useSwapHandlers/useSwapSagaCallback'
@@ -27,6 +34,34 @@ export function validateWrapParams(params: ExecuteSwapParams): {
     inputCurrencyAmount: params.inputCurrencyAmount,
     wrapType: params.wrapType,
   }
+}
+
+/**
+ * Picks the wrap step variant based on whether the quote is sponsored:
+ * - Sponsored (quote.sponsorshipInfo.sponsored + paymasterService present): emit a
+ *   wallet-call step so the saga routes through `wallet_sendCalls` with the paymaster
+ *   capability, mirroring the sponsored classic/bridge swap path.
+ * - Otherwise: emit the existing single-tx step.
+ */
+export function buildWrapStep({
+  swapTxContext,
+  inputCurrencyAmount,
+}: {
+  swapTxContext: WrapSwapTxAndGasInfo
+  inputCurrencyAmount: CurrencyAmount<Currency>
+}): WrapTransactionStep | WrapTransactionStepWalletCall | undefined {
+  const { txRequests, paymasterService, trade } = swapTxContext
+
+  if (!txRequests || txRequests.length === 0) {
+    return undefined
+  }
+
+  const isSponsored = Boolean(trade.quote.sponsorshipInfo?.sponsored && paymasterService)
+  if (isSponsored) {
+    return createWrapTransactionStepWalletCall({ txRequests, inputAmount: inputCurrencyAmount, paymasterService })
+  }
+
+  return createWrapTransactionStep(txRequests[0], inputCurrencyAmount)
 }
 
 /**
@@ -66,12 +101,17 @@ export function useSwapHandlers(): SwapHandlers {
         // Handle wrap transactions
         try {
           const { inputCurrencyAmount, wrapType } = validateWrapParams(params)
-          const txRequest = swapTxContext.txRequests[0]
+
+          const step = buildWrapStep({ swapTxContext, inputCurrencyAmount })
+          if (!step) {
+            onFailure(new Error('Missing wrap transaction request'))
+            return
+          }
 
           wrapCallback({
             address,
             inputCurrencyAmount,
-            txRequest,
+            step,
             txId,
             wrapType,
             gasEstimate: swapTxContext.gasFeeEstimation.wrapEstimate,

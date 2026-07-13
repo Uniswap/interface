@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { createHash } from 'node:crypto'
 import path from 'path'
+import { parse as parseDotEnv } from 'dotenv'
 import { loadEnv, transformWithEsbuild } from 'vite'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -12,6 +13,37 @@ import { getTsconfigAliases } from './config/getTsconfigAliases'
 // process.env.APP_ID is used by @universe/config. Set at the Node level so the
 // Tamagui static extractor can resolve it.
 process.env.APP_ID = 'extension'
+
+// New config system is enabled by default; opt out by explicitly setting USE_NEW_CONFIGS=false.
+const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS !== 'false'
+const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env.new')
+const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.new.override')
+
+function parseEnvFile(filePath: string): Record<string, string> {
+  return parseDotEnv(fs.readFileSync(filePath))
+}
+
+function buildNewConfigsEnv(): Record<string, string> {
+  // Read apps/extension/.env.new as the base layer (an empty object if it doesn't
+  // exist), then apply apps/extension/.env.new.override on top (overrides win).
+  const envVars = fs.existsSync(NEW_ENV_PATH) ? parseEnvFile(NEW_ENV_PATH) : {}
+
+  // Apply .env.new.override on top, logging every value it overrides
+  if (fs.existsSync(NEW_ENV_OVERRIDE_PATH)) {
+    const overrideVars = parseEnvFile(NEW_ENV_OVERRIDE_PATH)
+    for (const [key, value] of Object.entries(overrideVars)) {
+      if (key in envVars && envVars[key] !== value) {
+        // oxlint-disable-next-line no-console -- CLI output for env loading
+        console.log(`ENV_OVERRIDE: ${key}`)
+      }
+      envVars[key] = value
+    }
+  }
+
+  return envVars
+}
+
+const NEW_CONFIGS_ENV = USE_NEW_CONFIGS ? buildNewConfigsEnv() : {}
 
 const icons = {
   16: 'assets/icon16.png',
@@ -37,7 +69,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.74.0'
+const BASE_VERSION = '1.78.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -114,9 +146,9 @@ export default defineConfig({
         }
       }
     },
-    // Post-process generated manifest to add content_script `id` fields and ensure parity
-    // with the legacy webpack-generated manifest. WXT's `defineContentScript()` doesn't
-    // expose an `id` option (as of 0.20.x), so we inject it here based on the js filename.
+    // Post-process generated manifest to add content_script `id` fields. WXT's
+    // `defineContentScript()` doesn't expose an `id` option (as of 0.20.x), so we inject
+    // it here based on the js filename.
     // See https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#id
     'build:manifestGenerated': (_wxt, manifest) => {
       if (!manifest.content_scripts) {
@@ -261,32 +293,26 @@ export default defineConfig({
 
   // Vite configuration copied from web project
   vite: (env) => {
-    // Load ALL env variables (including those without VITE_ prefix). Matches webpack's
-    // DotenvPlugin behavior: read the monorepo-root `.env` (user-provided) AND the
-    // monorepo-root `.env.defaults` (checked-in defaults), with `.env` taking precedence.
-    // Vite only reads from one directory per call and doesn't know about `.env.defaults`,
-    // so we do both loads and merge.
-    const monorepoRoot = path.resolve(import.meta.dirname, '../..')
-    const envDefaults = loadEnv(env.mode, monorepoRoot, '')
-    // Re-read with a custom-named prefix file: loadEnv only looks at `.env`, `.env.local`,
-    // `.env.<mode>`, `.env.<mode>.local`. Manually parse `.env.defaults` since Vite won't.
-    const defaultsPath = path.join(monorepoRoot, '.env.defaults')
-    const parsedDefaults: Record<string, string> = {}
-    if (fs.existsSync(defaultsPath)) {
-      for (const rawLine of fs.readFileSync(defaultsPath, 'utf-8').split('\n')) {
-        const line = rawLine.trim()
-        if (!line || line.startsWith('#')) continue
-        const eq = line.indexOf('=')
-        if (eq === -1) continue
-        const key = line.slice(0, eq).trim()
-        const value = line
-          .slice(eq + 1)
-          .trim()
-          .replace(/^['"]|['"]$/g, '')
-        parsedDefaults[key] = value
-      }
+    let envVars: Record<string, string>
+    if (USE_NEW_CONFIGS) {
+      // New unified config (built once at module scope from apps/extension/.env.new
+      // + .env.new.override). Other env sources (monorepo-root .env / .env.defaults
+      // / etc.) are ignored.
+      envVars = NEW_CONFIGS_ENV
+    } else {
+      // Load ALL env variables (including those without VITE_ prefix): read the
+      // monorepo-root `.env` (user-provided) AND the monorepo-root `.env.defaults`
+      // (checked-in defaults), with `.env` taking precedence.
+      // Vite only reads from one directory per call and doesn't know about `.env.defaults`,
+      // so we do both loads and merge.
+      const monorepoRoot = path.resolve(import.meta.dirname, '../..')
+      const envDefaults = loadEnv(env.mode, monorepoRoot, '')
+      // Re-read with a custom-named prefix file: loadEnv only looks at `.env`, `.env.local`,
+      // `.env.<mode>`, `.env.<mode>.local`. Manually parse `.env.defaults` since Vite won't.
+      const defaultsPath = path.join(monorepoRoot, '.env.defaults')
+      const parsedDefaults = fs.existsSync(defaultsPath) ? parseEnvFile(defaultsPath) : {}
+      envVars = { ...parsedDefaults, ...envDefaults }
     }
-    const envVars = { ...parsedDefaults, ...envDefaults }
 
     const __dirname = path.dirname(new URL(import.meta.url).pathname)
     const isProduction = process.env.NODE_ENV === 'production'
@@ -332,12 +358,9 @@ export default defineConfig({
       // to `i.BigInt(0)` where `i` is the namespace without the static methods — runtime
       // TypeError in the service worker at module evaluation time.
       jsbi: path.resolve(__dirname, 'src/shims/jsbi.mjs'),
-      // Vite-only override: route the hashcash worker helper to a `?worker`-based
-      // variant. Vite's `new Worker(new URL(...))` detection doesn't fire when the URL
-      // escapes the Vite root (apps/extension → packages/sessions), so we use the
-      // `?worker` query instead. Webpack doesn't read this alias and falls through
-      // to `src/workers/hashcashWorker.ts` (which uses `new URL()` — webpack handles
-      // it correctly regardless of cross-package path).
+      // Route the hashcash worker helper to a `?worker`-based variant. Vite's
+      // `new Worker(new URL(...))` detection doesn't fire when the URL escapes the Vite
+      // root (apps/extension → packages/sessions), so the `?worker` query is used instead.
       'src/workers/hashcashWorker': path.resolve(__dirname, 'src/workers/hashcashWorker.vite'),
       // Dynamically load all monorepo package aliases from tsconfig.base.json
       ...getTsconfigAliases(),
@@ -544,7 +567,7 @@ export default defineConfig({
   // Development server configuration
   dev: {
     server: {
-      port: 9998, // Different from webpack (9997) to avoid conflicts
+      port: 9998,
     },
   },
 

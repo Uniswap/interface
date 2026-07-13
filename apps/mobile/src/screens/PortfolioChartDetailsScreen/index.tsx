@@ -1,22 +1,33 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
 import { PortfolioPerformance } from 'src/components/home/PortfolioPerformance'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
+import { getBreakdownCardProps } from 'src/screens/PortfolioChartDetailsScreen/getBreakdownCardProps'
+import { PortfolioBalanceBreakdownCard } from 'src/screens/PortfolioChartDetailsScreen/PortfolioBalanceBreakdownCard'
 import { PortfolioChartDetailsMenu } from 'src/screens/PortfolioChartDetailsScreen/PortfolioChartDetailsMenu'
 import { useChartScrub } from 'src/screens/PortfolioChartDetailsScreen/useChartScrub'
-import { Flex, ScrollView } from 'ui/src'
+import { Flex, ScrollView, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { getPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/rest/getPortfolioChart'
+import {
+  getUnavailableCategories,
+  useWalletBalancesIncludeCategories,
+} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { usePortfolioBalanceBreakdown } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { CHART_PERIOD_OPTIONS } from 'uniswap/src/features/portfolio/chartPeriod'
+import { PoolsDataIssueBanner } from 'uniswap/src/features/portfolio/pools/PoolsDataIssueBanner'
+import { usePoolsOutageBanner } from 'uniswap/src/features/portfolio/pools/usePoolsOutageBanner'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
@@ -25,24 +36,33 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function PortfolioChartDetailsScreen(): JSX.Element {
+  const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
-  const displayName = useDisplayName(activeAccount.address, { includeUnitagSuffix: true })
+  const displayName = useDisplayName(activeAccount.address)
   const { chains } = useEnabledChains()
   const insets = useAppInsets()
   const queryClient = useQueryClient()
-  const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const [chartPeriod, setChartPeriod] = useState(ChartPeriod.DAY)
-  const { chartScrubFiatValue, handleScrub } = useChartScrub()
+  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
+  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
+  const includeCategories = useWalletBalancesIncludeCategories()
+  const portfolioValueModifier = useRestPortfolioValueModifier(activeAccount.address)
 
   const {
     data: chartData,
+    tokensData,
+    poolsData,
     loading: chartLoading,
     chartColor,
   } = usePortfolioChartData({
     evmAddress: activeAccount.address,
     chartPeriod,
     chainIds: chains,
-    enabled: isPnLEnabled,
+  })
+
+  const { chartScrubFiatValue, chartScrubTokensValue, chartScrubPoolsValue, handleScrub } = useChartScrub({
+    tokensData,
+    poolsData,
   })
 
   const chartPercentChange = useMemo(() => {
@@ -61,21 +81,55 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     return chartData[chartData.length - 1]?.value
   }, [chartData])
 
-  const { data: portfolioData } = usePortfolioTotalValue({
+  const { data: breakdown, requestedCategories } = usePortfolioBalanceBreakdown({
     evmAddress: activeAccount.address,
     chainIds: chains,
   })
 
-  const { isTotalValueMatch } = usePortfolioChartBalanceMismatch({
-    lastChartValue,
-    portfolioTotalBalanceUSD: portfolioData?.balanceUSD,
+  const poolsUnavailable = useMemo(
+    () => getUnavailableCategories({ breakdown, requestedCategories }).includes(WalletBalanceCategory.POOLS),
+    [breakdown, requestedCategories],
+  )
+
+  const outageBanner = usePoolsOutageBanner({
+    evmAddress: activeAccount.address,
+    enabled: portfolioPoolsBalancesEnabled,
   })
 
-  const canShowChart = isPnLEnabled && chartData.length > 0
+  const { isTotalValueMatch } = usePortfolioChartBalanceMismatch({
+    lastChartValue,
+    portfolioTotalBalanceUSD: breakdown?.total.balanceUSD,
+  })
+
+  const canShowChart = chartData.length > 0
   const isAllTimePeriod = chartPeriod === ChartPeriod.MAX
 
+  const breakdownCardProps = useMemo(
+    () =>
+      getBreakdownCardProps({
+        enabled: portfolioPoolsBalancesEnabled,
+        poolsUnavailable,
+        breakdown,
+        scrub: { total: chartScrubFiatValue, tokens: chartScrubTokensValue, pools: chartScrubPoolsValue },
+        tokensData,
+        poolsData,
+        isAllTimePeriod,
+      }),
+    [
+      portfolioPoolsBalancesEnabled,
+      poolsUnavailable,
+      breakdown,
+      chartScrubFiatValue,
+      chartScrubTokensValue,
+      chartScrubPoolsValue,
+      tokensData,
+      poolsData,
+      isAllTimePeriod,
+    ],
+  )
+
   useEffect(() => {
-    if (!isPnLEnabled || !activeAccount.address) {
+    if (!activeAccount.address) {
       return
     }
 
@@ -87,12 +141,21 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
       queryClient
         .prefetchQuery(
           getPortfolioHistoricalValueChartQuery({
-            input: { evmAddress: activeAccount.address, chartPeriod: period, chainIds: chains },
+            input: {
+              evmAddress: activeAccount.address,
+              chartPeriod: period,
+              chainIds: chains,
+              includeCategories,
+              ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
+                poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
+                poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
+              }),
+            },
           }),
         )
         .catch(() => undefined)
     }
-  }, [activeAccount.address, chartPeriod, chains, isPnLEnabled, queryClient])
+  }, [activeAccount.address, chartPeriod, chains, includeCategories, portfolioValueModifier, queryClient])
 
   const centerElement = useMemo(
     () => (
@@ -107,8 +170,8 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
           borderWidth="$spacing1"
         />
         <DisplayNameText
-          includeUnitagSuffix
           displayName={displayName}
+          unitagIconSize={iconSizes.icon16}
           flexShrink={1}
           textProps={{ ellipsizeMode: 'tail', numberOfLines: 1, variant: 'body3' }}
         />
@@ -120,8 +183,33 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   return (
     <ScreenWithHeader centerElement={centerElement} rightElement={<PortfolioChartDetailsMenu />}>
       <ScrollView flex={1} showsVerticalScrollIndicator={false} testID={TestID.PortfolioChartDetailsScreen}>
-        <Flex gap="$spacing24" px="$spacing24" pt="$spacing20" pb={insets.bottom + spacing.spacing24}>
+        {poolsUnavailable && (
+          <Flex
+            row
+            alignItems="center"
+            gap="$spacing12"
+            backgroundColor="$surface2"
+            px="$spacing24"
+            py="$spacing12"
+            testID={TestID.PoolsUnavailableBanner}
+          >
+            <AlertTriangleFilled color="$neutral2" size="$icon.20" />
+            <Text color="$neutral2" variant="body3">
+              {t('pool.balances.unavailable')}
+            </Text>
+          </Flex>
+        )}
+        {!poolsUnavailable && outageBanner.isVisible && (
+          <PoolsDataIssueBanner fullWidth message={outageBanner.message} onDismiss={outageBanner.onDismiss} />
+        )}
+        <Flex
+          gap={breakdownCardProps ? '$spacing4' : '$spacing24'}
+          px="$spacing24"
+          pt="$spacing20"
+          pb={insets.bottom + spacing.spacing24}
+        >
           <PortfolioBalance
+            hideUnavailableIndicator
             evmOwner={activeAccount.address}
             chartPeriod={canShowChart ? chartPeriod : undefined}
             overrideBalanceUSD={chartScrubFiatValue}
@@ -129,6 +217,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
             overrideAbsoluteChangeUSD={canShowChart ? chartPercentChange?.absoluteChangeUSD : undefined}
             hidePercentChange={isAllTimePeriod}
           />
+          {breakdownCardProps && <PortfolioBalanceBreakdownCard {...breakdownCardProps} />}
           <Flex>
             <PortfolioChart
               data={chartData}

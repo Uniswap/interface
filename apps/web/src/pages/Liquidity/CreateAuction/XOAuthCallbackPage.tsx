@@ -26,8 +26,10 @@ export function XOAuthCallbackPage() {
       return
     }
 
-    const storedState = sessionStorage.getItem('x_oauth_state')
-    sessionStorage.removeItem('x_oauth_state')
+    // Paired with the localStorage write in useXOAuthFlow — sessionStorage isn't shared with this popup
+    // when it runs in an isolated browsing-context group under COOP (see the comment there).
+    const storedState = localStorage.getItem('x_oauth_state')
+    localStorage.removeItem('x_oauth_state')
 
     if (state !== storedState) {
       const message = 'State mismatch — possible CSRF attack'

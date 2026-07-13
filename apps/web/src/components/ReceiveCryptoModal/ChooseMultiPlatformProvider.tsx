@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
+import { UNISWAP_WEB_URL, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
@@ -212,12 +212,12 @@ export function ChooseMultiPlatformProvider({
             }}
             components={{
               tosLink: (
-                <StyledLink color={colors.neutral3.val} href={uniswapUrls.termsOfServiceUrl}>
+                <StyledLink color={colors.neutral3.val} href={UniswapStaticUrls.termsOfServiceUrl}>
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={colors.neutral3.val} href={uniswapUrls.privacyPolicyUrl}>
+                <StyledLink color={colors.neutral3.val} href={UniswapStaticUrls.privacyPolicyUrl}>
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

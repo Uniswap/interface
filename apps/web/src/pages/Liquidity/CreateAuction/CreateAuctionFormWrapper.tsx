@@ -81,7 +81,11 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
         mr="auto"
         mb={media.xl ? '$spacing16' : '$spacing32'}
       >
-        <Text variant="heading2">{t('toucan.createAuction.title')}</Text>
+        <Text variant="heading2">
+          {step === CreateAuctionStep.REVIEW_LAUNCH
+            ? t('toucan.createAuction.review.title')
+            : t('toucan.createAuction.title')}
+        </Text>
       </Flex>
       {media.xl && step !== CreateAuctionStep.REVIEW_LAUNCH && <PoolProgressIndicatorHeader steps={progressSteps} />}
       <Flex

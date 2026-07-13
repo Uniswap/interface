@@ -27,6 +27,10 @@ import {
   executeSwapReducer,
   executeSwapSaga,
   executeSwapSagaName,
+  executeUserOpSwapActions,
+  executeUserOpSwapReducer,
+  executeUserOpSwapSaga,
+  executeUserOpSwapSagaName,
   prepareAndSignSwapActions,
   prepareAndSignSwapReducer,
   prepareAndSignSwapSaga,
@@ -84,6 +88,12 @@ const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: executePlanSaga,
     reducer: executePlanReducer,
     actions: executePlanActions,
+  },
+  [executeUserOpSwapSagaName]: {
+    name: executeUserOpSwapSagaName,
+    wrappedSaga: executeUserOpSwapSaga,
+    reducer: executeUserOpSwapReducer,
+    actions: executeUserOpSwapActions,
   },
   [removeDelegationSagaName]: {
     name: removeDelegationSagaName,

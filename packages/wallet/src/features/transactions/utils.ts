@@ -129,17 +129,45 @@ export function getPercentageError(
   return diff !== undefined && estimated !== undefined && estimated !== 0 ? (diff / estimated) * 100 : undefined
 }
 
+export type RpcErrorCategory =
+  | 'gapped_nonce'
+  | 'nonce_too_low'
+  | 'nonce_too_high'
+  | 'nonce_other'
+  | 'reverted'
+  | 'gas_too_low'
+  | 'insufficient_funds'
+  | 'rate_limited'
+  | 'already_known'
+  | 'no_network'
+  | 'confirmation_timeout'
+  | 'timeout'
+  | 'invalid_data'
+  | 'tx_limit_reached_for_delegated_account'
+  | 'bad_gateway'
+  | 'unknown'
+
 /**
  * Parses the incoming error from an attempted RPC call and returns a
  * category. As more distinct patterns are found from the errors, we
  * should update this function to categorize them.
  */
-export function getRPCErrorCategory(error: Error): string {
+export function getRPCErrorCategory(error: Error): RpcErrorCategory {
   const message = error.message
+  const lowerMessage = message.toLowerCase()
   switch (true) {
-    case message.includes('nonce'):
-    case message.includes('future transaction tries to replace pending'):
-      return 'nonce_error'
+    // Nonce sub-categories (SWAP-2471). Specific checks first; `gapped-nonce` contains the
+    // substring "nonce" so it MUST precede the generic nonce bucket. "future transaction tries
+    // to replace pending" is geth's gapped/future-nonce rejection from a delegated account.
+    case lowerMessage.includes('gapped-nonce'):
+    case lowerMessage.includes('future transaction tries to replace pending'):
+      return 'gapped_nonce'
+    case lowerMessage.includes('nonce too low'):
+      return 'nonce_too_low'
+    case lowerMessage.includes('nonce too high'):
+      return 'nonce_too_high'
+    case lowerMessage.includes('nonce'):
+      return 'nonce_other'
     case message.includes('Failed in pending block with: Reverted'):
       return 'reverted'
     case message.includes('intrinsic gas too low'):

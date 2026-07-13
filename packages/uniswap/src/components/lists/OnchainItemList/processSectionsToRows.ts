@@ -11,7 +11,15 @@ export type ProcessedRow =
   | { type: ProcessedRowType.Header; data: SectionRowInfo }
   | { type: ProcessedRowType.Item; data: ItemRowInfo<OnchainItemListOption> }
 
-export function processSectionsToRows(sections: OnchainItemSection<OnchainItemListOption>[]): ProcessedRow[] {
+export function processSectionsToRows({
+  sections,
+  expandedItems,
+  keyExtractor,
+}: {
+  sections: OnchainItemSection<OnchainItemListOption>[]
+  expandedItems?: string[]
+  keyExtractor?: (item: OnchainItemListOption, index: number) => string
+}): ProcessedRow[] {
   const result: ProcessedRow[] = []
   let rowIndex = 0
 
@@ -24,6 +32,7 @@ export function processSectionsToRows(sections: OnchainItemSection<OnchainItemLi
       name: section.name,
       sectionHeader: section.sectionHeader,
       sectionHeaderHeight: section.sectionHeaderHeight,
+      icon: section.icon,
     }
 
     result.push({
@@ -39,15 +48,15 @@ export function processSectionsToRows(sections: OnchainItemSection<OnchainItemLi
     let itemIndex = 0
 
     for (const item of tokenData) {
+      const index = itemIndex++
       result.push({
         type: ProcessedRowType.Item,
         data: {
           item,
           section,
-          index: itemIndex++,
+          index,
           rowIndex: rowIndex++,
-          // expanded is not used in native :thinking:
-          expanded: false,
+          expanded: expandedItems?.includes(keyExtractor?.(item, index) ?? '') ?? false,
         },
       })
     }

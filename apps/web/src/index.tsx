@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { ComplianceClientProvider } from '@universe/compliance'
 import { isDevEnv, isTestEnv, localDevDatadogEnabled } from '@universe/environment'
 import type { StatsigUser } from '@universe/gating'
 import {
@@ -29,7 +30,7 @@ import {
 } from '@universe/sessions'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { StrictMode, useEffect, useMemo } from 'react'
+import { lazy, StrictMode, Suspense, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
@@ -41,15 +42,15 @@ import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { getLogger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- custom useAccount hook requires statsig
 import { useAccount } from 'wagmi'
-import { AssetActivityProvider } from '~/appGraphql/data/apollo/AssetActivityProvider'
+import { App } from '~/App'
+import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { apolloClient } from '~/appGraphql/data/apollo/client'
-import { TokenBalancesProvider } from '~/appGraphql/data/apollo/TokenBalancesProvider'
+import { TransactionWatcherProvider } from '~/appGraphql/data/apollo/TransactionWatcherProvider'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { getConfig, getPrivyConfig } from '~/config'
@@ -59,11 +60,10 @@ import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
+import { isPrivyConfigured } from '~/hooks/useMaybePrivy'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
 import { WebNotificationServiceManager } from '~/notification-service/WebNotificationService'
-import { App } from '~/pages/App'
-import { WebUniswapProvider } from '~/pages/App/WebUniswapContext'
 import { onHashcashSolveCompleted, onTurnstileSolveCompleted, sessionInitAnalytics } from '~/sessions/analytics'
 import store from '~/state'
 import { LivePricesProvider } from '~/state/livePrices/LivePricesProvider'
@@ -106,7 +106,11 @@ const provideSessionInitService = () => {
   if (getIsTurnstileSolverEnabled()) {
     solvers.set(
       ChallengeType.TURNSTILE,
-      createTurnstileSolver({ performanceTracker, getLogger, onSolveCompleted: onTurnstileSolveCompleted }),
+      createTurnstileSolver({
+        performanceTracker,
+        getLogger,
+        onSolveCompleted: onTurnstileSolveCompleted,
+      }),
     )
   } else {
     solvers.set(ChallengeType.TURNSTILE, createTurnstileMockSolver())
@@ -165,7 +169,7 @@ function Updaters() {
   return (
     <>
       <Helmet>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
+        <link rel="canonical" href={getCanonicalUrl(location.pathname, location.search)} />
       </Helmet>
       {ListsUpdater && <ListsUpdater />}
       {ApplicationUpdater && <ApplicationUpdater />}
@@ -183,14 +187,9 @@ function Updaters() {
 const Web3Provider = createWeb3Provider({ wagmiConfig })
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <ApolloProvider client={apolloClient}>
-      <AssetActivityProvider>
-        <TokenBalancesProvider>{children}</TokenBalancesProvider>
-      </AssetActivityProvider>
-    </ApolloProvider>
-  )
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
 }
+
 function StatsigProvider({ children }: PropsWithChildren) {
   const account = useAccount()
 
@@ -230,16 +229,20 @@ function StatsigProvider({ children }: PropsWithChildren) {
 }
 
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
-  const { appId, clientId } = getPrivyConfig(false)
-  if (!appId || !clientId) {
+  if (!isPrivyConfigured()) {
     return <>{children}</>
   }
+  const { appId, clientId } = getPrivyConfig(false)
   return (
     <PrivyProvider appId={appId} clientId={clientId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
       {children}
     </PrivyProvider>
   )
 }
+
+// Gated by `__DEV__` (Vite build-time constant) so Rollup DCE's the `import('agentation')`
+// call in production builds and no chunk is emitted.
+const AgentationLazy = __DEV__ ? lazy(() => import('agentation').then((m) => ({ default: m.Agentation }))) : null
 
 const container = document.getElementById('root') as HTMLElement
 
@@ -252,49 +255,56 @@ const RootApp = (): JSX.Element => {
         <ReactRouterUrlProvider>
           <Provider store={store}>
             <QueryClientPersistProvider>
-              <NuqsAdapter>
-                <Router>
-                  <MaybePrivyProvider>
-                    <I18nextProvider i18n={i18n}>
-                      <LanguageProvider>
-                        <Web3Provider>
-                          <StatsigProvider>
-                            <WalletCapabilitiesEffects />
-                            <ExternalWalletProvider>
-                              <ConnectWalletMutationProvider>
-                                <WebAccountsStoreProvider>
-                                  <WebUniswapProvider>
-                                    <TokenPriceProvider>
+              <ComplianceClientProvider>
+                <NuqsAdapter>
+                  <Router>
+                    <MaybePrivyProvider>
+                      <I18nextProvider i18n={i18n}>
+                        <LanguageProvider>
+                          <Web3Provider>
+                            <StatsigProvider>
+                              <WalletCapabilitiesEffects />
+                              <ExternalWalletProvider>
+                                <ConnectWalletMutationProvider>
+                                  <WebAccountsStoreProvider>
+                                    <WebUniswapProvider>
                                       <GraphqlProviders>
-                                        <LivePricesProvider>
-                                          <LocalizationContextProvider>
-                                            <BlockNumberProvider>
-                                              <Updaters />
-                                              <ThemeProvider>
-                                                <TamaguiProvider>
-                                                  <PortalProvider>
-                                                    <WebNotificationServiceManager />
-                                                    <ThemedGlobalStyle />
-                                                    <App />
-                                                  </PortalProvider>
-                                                </TamaguiProvider>
-                                              </ThemeProvider>
-                                            </BlockNumberProvider>
-                                          </LocalizationContextProvider>
-                                        </LivePricesProvider>
+                                        <TransactionWatcherProvider>
+                                          <LivePricesProvider>
+                                            <LocalizationContextProvider>
+                                              <BlockNumberProvider>
+                                                <Updaters />
+                                                <ThemeProvider>
+                                                  <TamaguiProvider>
+                                                    <PortalProvider>
+                                                      <WebNotificationServiceManager />
+                                                      <ThemedGlobalStyle />
+                                                      <App />
+                                                      {AgentationLazy && isDevEnv() && (
+                                                        <Suspense fallback={null}>
+                                                          <AgentationLazy />
+                                                        </Suspense>
+                                                      )}
+                                                    </PortalProvider>
+                                                  </TamaguiProvider>
+                                                </ThemeProvider>
+                                              </BlockNumberProvider>
+                                            </LocalizationContextProvider>
+                                          </LivePricesProvider>
+                                        </TransactionWatcherProvider>
                                       </GraphqlProviders>
-                                    </TokenPriceProvider>
-                                  </WebUniswapProvider>
-                                </WebAccountsStoreProvider>
-                              </ConnectWalletMutationProvider>
-                            </ExternalWalletProvider>
-                          </StatsigProvider>
-                        </Web3Provider>
-                      </LanguageProvider>
-                    </I18nextProvider>
-                  </MaybePrivyProvider>
-                </Router>
-              </NuqsAdapter>
+                                    </WebUniswapProvider>
+                                  </WebAccountsStoreProvider>
+                                </ConnectWalletMutationProvider>
+                              </ExternalWalletProvider>
+                            </StatsigProvider>
+                          </Web3Provider>
+                        </LanguageProvider>
+                      </I18nextProvider>
+                    </MaybePrivyProvider>
+                  </Router>
+                </NuqsAdapter>
+              </ComplianceClientProvider>
             </QueryClientPersistProvider>
           </Provider>
         </ReactRouterUrlProvider>

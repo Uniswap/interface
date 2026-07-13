@@ -1,36 +1,26 @@
-/* oxlint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
-import type { Currency, TradeType } from '@uniswap/sdk-core'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import type { FeeAmount } from '@uniswap/v3-sdk'
-import { Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
+import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { type ClassicQuoteResponse, type DiscriminatedQuoteResponse, TradingApi } from '@universe/api'
 import { DynamicConfigs, getDynamicConfigValue, SwapConfigKey } from '@universe/gating'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
-  BridgeTrade,
-  ChainedActionTrade,
-  ClassicTrade,
-  PriorityOrderTrade,
-  UniswapXV2Trade,
-  UniswapXV3Trade,
-  UnwrapTrade,
-  WrapTrade,
+  createBridgeTrade,
+  createChainedActionTrade,
+  createClassicTrade,
+  createPriorityOrderTrade,
+  createUniswapXV2Trade,
+  createUniswapXV3Trade,
+  createUnwrapTrade,
+  createWrapTrade,
+  type Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { DEFAULT_PROTOCOL_OPTIONS, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { DEFAULT_PROTOCOL_OPTIONS, useProtocols } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -57,23 +47,15 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
 
   switch (data?.routing) {
     case TradingApi.Routing.CLASSIC: {
-      const routes = computeRoutes({
-        tokenInIsNative: currencyIn.isNative,
-        tokenOutIsNative: currencyOut.isNative,
-        quoteResponse: data,
-      })
-
-      if (!routes || !deadline) {
+      if (!deadline) {
         return null
       }
 
-      return new ClassicTrade({
+      return createClassicTrade({
         quote: data,
+        currencyIn,
+        currencyOut,
         deadline,
-        v2Routes: routes.flatMap((r) => (r.routev2 ? { ...r, routev2: r.routev2 } : [])),
-        v3Routes: routes.flatMap((r) => (r.routev3 ? { ...r, routev3: r.routev3 } : [])),
-        v4Routes: routes.flatMap((r) => (r.routev4 ? { ...r, routev4: r.routev4 } : [])),
-        mixedRoutes: routes.flatMap((r) => (r.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])),
         tradeType,
       })
     }
@@ -98,259 +80,29 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
 
       const isPriority = data.routing === TradingApi.Routing.PRIORITY
       if (isPriority) {
-        return new PriorityOrderTrade({ quote: data, currencyIn, currencyOut, tradeType })
+        return createPriorityOrderTrade({ quote: data, currencyIn, currencyOut, tradeType })
       } else if (data.routing === TradingApi.Routing.DUTCH_V2) {
-        return new UniswapXV2Trade({ quote: data, currencyIn, currencyOut, tradeType })
+        return createUniswapXV2Trade({ quote: data, currencyIn, currencyOut, tradeType })
       } else {
-        return new UniswapXV3Trade({ quote: data, currencyIn, currencyOut, tradeType })
+        return createUniswapXV3Trade({ quote: data, currencyIn, currencyOut, tradeType })
       }
     }
     case TradingApi.Routing.BRIDGE: {
-      return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
+      return createBridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     case TradingApi.Routing.WRAP: {
-      return new WrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
+      return createWrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     case TradingApi.Routing.UNWRAP: {
-      return new UnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
+      return createUnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     case TradingApi.Routing.CHAINED: {
-      return new ChainedActionTrade({ quote: data, currencyIn, currencyOut })
+      return createChainedActionTrade({ quote: data, currencyIn, currencyOut })
     }
     default: {
       return null
     }
   }
-}
-
-/**
- * Transforms a trading API quote into an array of routes that can be used to
- * create a `Trade`.
- */
-function computeRoutes({
-  tokenInIsNative,
-  tokenOutIsNative,
-  quoteResponse,
-}: {
-  tokenInIsNative: boolean
-  tokenOutIsNative: boolean
-  quoteResponse?: ClassicQuoteResponse
-}):
-  | {
-      routev4: V4Route<Currency, Currency> | null
-      routev3: V3Route<Currency, Currency> | null
-      routev2: V2Route<Currency, Currency> | null
-      mixedRoute: MixedRouteSDK<Currency, Currency> | null
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
-  | undefined {
-  if (!quoteResponse) {
-    return undefined
-  }
-
-  const { quote } = quoteResponse
-
-  if (!quote.route || quote.route.length === 0) {
-    return undefined
-  }
-
-  const tokenIn = quote.route[0]?.[0]?.tokenIn
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-  const tokenOut = quote.route[0]?.[quote.route[0]?.length - 1]?.tokenOut
-
-  if (!tokenIn || !tokenOut) {
-    throw new Error('Expected both tokenIn and tokenOut to be present')
-  }
-  if (
-    !tokenIn.chainId ||
-    tokenOut.chainId === undefined ||
-    !tokenIn.address ||
-    !tokenOut.address ||
-    !tokenIn.decimals ||
-    !tokenOut.decimals
-  ) {
-    throw new Error('Expected all token properties to be present')
-  }
-
-  const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
-
-  const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
-
-  try {
-    return quote.route.map((route) => {
-      if (route.length === 0) {
-        throw new Error('Expected route to have at least one pair or pool')
-      }
-
-      const inputAmount = getCurrencyAmount({
-        value: route[0]?.amountIn,
-        valueType: ValueType.Raw,
-        currency: parsedCurrencyIn,
-      })
-      const outputAmount = getCurrencyAmount({
-        value: route[route.length - 1]?.amountOut,
-        valueType: ValueType.Raw,
-        currency: parsedCurrencyOut,
-      })
-
-      if (!inputAmount || !outputAmount) {
-        throw new Error('Expected both amountIn and amountOut to be present')
-      }
-
-      const isOnlyV2 = isV2OnlyRouteApi(route)
-      const isOnlyV3 = isV3OnlyRouteApi(route)
-      const isOnlyV4 = isV4OnlyRouteApi(route)
-
-      const v4Routes = route.filter((r): r is TradingApi.V4PoolInRoute => r.type === 'v4-pool')
-
-      return {
-        routev4: isOnlyV4 ? new V4Route(v4Routes.map(parseV4PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
-        mixedRoute:
-          !isOnlyV3 && !isOnlyV2 && !isOnlyV4
-            ? new MixedRouteSDK(route.map(parseMixedRouteApi), parsedCurrencyIn, parsedCurrencyOut)
-            : null,
-        inputAmount,
-        outputAmount,
-      }
-    })
-  } catch (e) {
-    logger.error(e, {
-      tags: { file: 'tradingApi.ts', function: 'computeRoutes' },
-      extra: {
-        input: currencyAddress(parsedCurrencyIn),
-        output: currencyAddress(parsedCurrencyOut),
-        inputChainId: parsedCurrencyIn.chainId,
-        outputChainId: parsedCurrencyOut.chainId,
-      },
-    })
-    return undefined
-  }
-}
-
-function parseTokenApi(token: TradingApi.TokenInRoute): Token {
-  const { address, chainId, decimals, symbol, buyFeeBps, sellFeeBps } = token
-  if (!chainId || !address || !decimals || !symbol) {
-    throw new Error('Expected token to have chainId, address, decimals, and symbol')
-  }
-
-  if (address === NATIVE_ADDRESS_FOR_TRADING_API) {
-    throw new Error('Cannot parse native currency as an erc20 Token')
-  }
-
-  return new Token(
-    chainId,
-    address,
-    parseInt(decimals.toString(), 10),
-    symbol,
-    /**name=*/ undefined,
-    false,
-    buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
-    sellFeeBps ? BigNumber.from(sellFeeBps) : undefined,
-  )
-}
-
-function parseV4PoolApi({
-  fee,
-  sqrtRatioX96,
-  liquidity,
-  tickCurrent,
-  tickSpacing,
-  hooks,
-  tokenIn,
-  tokenOut,
-}: TradingApi.V4PoolInRoute): V4Pool {
-  if (!tokenIn.address || !tokenOut.address || !tokenIn.chainId || !tokenOut.chainId) {
-    throw new Error('Expected V4 route to have defined addresses and chainIds')
-  }
-
-  const inputIsNative = tokenIn.address === NATIVE_ADDRESS_FOR_TRADING_API
-  const outputIsNative = tokenOut.address === NATIVE_ADDRESS_FOR_TRADING_API
-
-  // Unlike lower protocol versions, v4 routes can involve unwrapped native tokens.
-  const currencyIn = inputIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
-  const currencyOut = outputIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
-
-  return new V4Pool(
-    currencyIn,
-    currencyOut,
-    Number(fee),
-    Number(tickSpacing),
-    hooks,
-    sqrtRatioX96,
-    liquidity,
-    Number(tickCurrent),
-  )
-}
-
-function parseV3PoolApi({
-  fee,
-  sqrtRatioX96,
-  liquidity,
-  tickCurrent,
-  tokenIn,
-  tokenOut,
-}: TradingApi.V3PoolInRoute): V3Pool {
-  if (!tokenIn || !tokenOut || !fee || !sqrtRatioX96 || !liquidity || !tickCurrent) {
-    throw new Error('Expected pool values to be present')
-  }
-
-  return new V3Pool(
-    parseTokenApi(tokenIn),
-    parseTokenApi(tokenOut),
-    parseInt(fee, 10) as FeeAmount,
-    sqrtRatioX96,
-    liquidity,
-    parseInt(tickCurrent, 10),
-  )
-}
-
-function parseV2PairApi({ reserve0, reserve1 }: TradingApi.V2PoolInRoute): Pair {
-  if (!reserve0?.token || !reserve1?.token || !reserve0.quotient || !reserve1.quotient) {
-    throw new Error('Expected pool values to be present')
-  }
-  return new Pair(
-    CurrencyAmount.fromRawAmount(parseTokenApi(reserve0.token), reserve0.quotient),
-    CurrencyAmount.fromRawAmount(parseTokenApi(reserve1.token), reserve1.quotient),
-  )
-}
-
-type ClassicPoolInRoute = TradingApi.V2PoolInRoute | TradingApi.V3PoolInRoute | TradingApi.V4PoolInRoute
-function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool | V4Pool {
-  if (isV2Pool(pool)) {
-    return parseV2PairApi(pool)
-  } else if (isV3Pool(pool)) {
-    return parseV3PoolApi(pool)
-  } else if (isV4Pool(pool)) {
-    return parseV4PoolApi(pool)
-  }
-  throw new Error('Invalid pool type')
-}
-
-function isV2Pool(pool: ClassicPoolInRoute): pool is TradingApi.V2PoolInRoute {
-  return pool.type === 'v2-pool'
-}
-
-function isV3Pool(pool: ClassicPoolInRoute): pool is TradingApi.V3PoolInRoute {
-  return pool.type === 'v3-pool'
-}
-
-function isV4Pool(pool: ClassicPoolInRoute): pool is TradingApi.V4PoolInRoute {
-  return pool.type === 'v4-pool'
-}
-
-function isV2OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every(isV2Pool)
-}
-
-function isV3OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every(isV3Pool)
-}
-
-function isV4OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every(isV4Pool)
 }
 
 export function getTokenAddressFromChainForTradingApi(address: Address, chainId: UniverseChainId): string {
@@ -412,7 +164,7 @@ export function validateTrade({
   currencyOut: Maybe<Currency>
   exactAmount: Maybe<CurrencyAmount<Currency>>
   exactCurrencyField: CurrencyField
-}): Trade<Currency, Currency, TradeType> | null {
+}): Trade | null {
   // skip if no valid trade object
   if (!trade || !currencyIn || !currencyOut || !exactAmount) {
     return null
@@ -464,16 +216,13 @@ export type QuoteRoutingParamsResult = Pick<TradingApi.QuoteRequest, 'routingPre
 
 export function useQuoteRoutingParams({
   selectedProtocols,
-  tokenInChainId,
-  tokenOutChainId,
   isUSDQuote,
   isV4HookPoolsEnabled = true,
 }: UseQuoteRoutingParamsArgs): QuoteRoutingParamsResult {
-  const inputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
-  const outputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenOutChainId)
+  const protocols = useProtocols(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS)
 
   const getQuoteRoutingParams = createGetQuoteRoutingParams({
-    getProtocols: () => Array.from(new Set([...inputChainProtocols, ...outputChainProtocols])),
+    getProtocols: () => protocols,
     getIsV4HookPoolsEnabled: () => isV4HookPoolsEnabled,
   })
 
@@ -483,7 +232,7 @@ export function useQuoteRoutingParams({
 export type GetQuoteRoutingParams = (input: Pick<UseQuoteRoutingParamsArgs, 'isUSDQuote'>) => QuoteRoutingParamsResult
 
 export function createGetQuoteRoutingParams(ctx: {
-  getProtocols: () => ReturnType<typeof useProtocolsForChain>
+  getProtocols: () => TradingApi.ProtocolItems[]
   getIsV4HookPoolsEnabled: () => boolean
 }): GetQuoteRoutingParams {
   return (input) => {

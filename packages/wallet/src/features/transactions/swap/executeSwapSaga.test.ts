@@ -6,6 +6,8 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
@@ -45,6 +47,10 @@ import { DelegationType } from 'wallet/src/features/transactions/types/transacti
 jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
 jest.mock('wallet/src/features/transactions/swap/confirmation')
 jest.mock('wallet/src/features/transactions/swap/submitOrderSaga')
+jest.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: jest.fn(),
+  sendAppsFlyerEvent: jest.fn(),
+}))
 
 const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
@@ -83,6 +89,7 @@ describe('executeSwapSaga', () => {
         submitViaPrivateRpc: false,
         delegationType: DelegationType.Auto,
         request: mockSwapTxRequest,
+        includeUserOpServices: false,
       }),
       {
         transactionSigner: mockTransactionSigner,
@@ -716,6 +723,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -824,6 +832,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             Promise.reject(error),
           ],
@@ -836,6 +845,40 @@ describe('executeSwapSaga', () => {
           tags: { file: 'executeSwapSaga', function: 'executeSwap' },
           extra: { analytics: mockAnalytics },
         }),
+      )
+    })
+  })
+
+  describe('SwapExecutionWindow telemetry (SWAP-2471)', () => {
+    it('emits a start marker then an end marker for a successful swap', async () => {
+      const params = prepareExecuteSwapSagaParams()
+
+      await expectSaga(executeSwapSaga, params).provide(sharedProviders).run()
+
+      const windowCalls = jest
+        .mocked(sendAnalyticsEvent)
+        .mock.calls.filter(([name]) => name === WalletEventName.SwapExecutionWindow)
+      expect(windowCalls).toHaveLength(2)
+      expect(windowCalls[0]?.[1]).toEqual(
+        expect.objectContaining({ saga: 'executeSwap', phase: 'start', address: params.address }),
+      )
+      expect(windowCalls[1]?.[1]).toEqual(
+        expect.objectContaining({ saga: 'executeSwap', phase: 'end', address: params.address }),
+      )
+    })
+
+    it('still emits the end marker when the swap throws (finally block)', async () => {
+      const params = prepareExecuteSwapSagaParams()
+      mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
+        yield call(jest.fn())
+        throw new Error('Test error')
+      })
+
+      await expectSaga(executeSwapSaga, params).provide(sharedProviders).run()
+
+      expect(jest.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
+        WalletEventName.SwapExecutionWindow,
+        expect.objectContaining({ saga: 'executeSwap', phase: 'end' }),
       )
     })
   })
@@ -889,6 +932,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -947,6 +991,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: true,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -968,6 +1013,7 @@ describe('executeSwapSaga', () => {
           submitViaPrivateRpc: true,
           delegationType: DelegationType.Auto,
           request: mockSwapTxRequest,
+          includeUserOpServices: false,
         })
         .call(params.onSuccess)
         .run()
@@ -1018,6 +1064,7 @@ describe('Sync transaction submission', () => {
             submitViaPrivateRpc: false,
             delegationType: DelegationType.Auto,
             request: mockSwapTxRequest,
+            includeUserOpServices: false,
           }),
           {
             transactionSigner: mockTransactionSigner,

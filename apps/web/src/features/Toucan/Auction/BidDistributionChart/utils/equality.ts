@@ -22,7 +22,8 @@ const areHistogramDataEqual = (left: ToucanChartData[], right: ToucanChartData[]
       leftItem.time !== rightItem.time ||
       leftItem.value !== rightItem.value ||
       leftItem.tickValue !== rightItem.tickValue ||
-      leftItem.tickQ96 !== rightItem.tickQ96
+      leftItem.tickQ96 !== rightItem.tickQ96 ||
+      leftItem.fillRatio !== rightItem.fillRatio
     ) {
       return false
     }
@@ -96,15 +97,7 @@ const areSeriesOptionsPatchesEqual = (
   if (!left || !right) {
     return false
   }
-  if (left.chartMode !== right.chartMode) {
-    return false
-  }
-  const leftGradient = left.demandBackgroundGradient
-  const rightGradient = right.demandBackgroundGradient
-  if (!leftGradient || !rightGradient) {
-    return leftGradient === rightGradient
-  }
-  return leftGradient.startColor === rightGradient.startColor && leftGradient.endColor === rightGradient.endColor
+  return left.chartMode === right.chartMode
 }
 
 export const areUpdateParamsEqual = (

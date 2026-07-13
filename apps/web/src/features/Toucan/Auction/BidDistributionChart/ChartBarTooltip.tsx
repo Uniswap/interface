@@ -3,7 +3,7 @@ import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 import { TOOLTIP_CONFIG } from '~/features/Toucan/Auction/BidDistributionChart/constants'
 import {
   interpolateCurrencyRequiredQ96,

@@ -23,6 +23,9 @@
       "path": "../../packages/config"
     },
     {
+      "path": "../../packages/compliance"
+    },
+    {
       "path": "../../packages/api"
     },
     {

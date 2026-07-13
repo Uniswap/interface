@@ -5,11 +5,11 @@ import { Sign } from 'ui/src/components/icons/Sign'
 import { Swap } from 'ui/src/components/icons/Swap'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useColor } from '~/hooks/useColor'
-import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator/Step'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
+import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/ProgressIndicator/Step'
+import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { Divider } from '~/theme/components/Dividers'
 
 export type ProgressIndicatorStep = Extract<
@@ -76,7 +76,7 @@ export function BidProgressIndicator({
         actionRequiredTitle: t('common.wallet.approve'),
         inProgressTitle: t('common.approvePending'),
         learnMoreLinkText: t('common.whyApprove'),
-        learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
+        learnMoreLinkHref: UniswapHelpUrls.articles.approvalsExplainer,
       },
       [ConfirmModalState.PERMITTING]: {
         icon: (
@@ -89,7 +89,7 @@ export function BidProgressIndicator({
         actionRequiredTitle: t('common.wallet.approve'),
         inProgressTitle: t('common.approvePending'),
         learnMoreLinkText: t('common.whyApprove'),
-        learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
+        learnMoreLinkHref: UniswapHelpUrls.articles.approvalsExplainer,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
         icon: auctionTokenInfo ? <CurrencyLogo currencyInfo={auctionTokenInfo} size={ICON_SIZE} /> : <SwapIcon />,

@@ -17,6 +17,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchStepPrimitives'
 import { ReviewPostAuctionLiquidityExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewPostAuctionLiquidityExpandable'
 import { TokenDistributionBar } from '~/pages/Liquidity/CreateAuction/components/TokenDistributionBar'
+import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import {
   PostAuctionLiquidityAllocationType,
@@ -36,6 +37,8 @@ interface ReviewLaunchAuctionDetailsSectionProps {
   raiseCurrencyInfo: CurrencyInfo
   chainId: UniverseChainId
   tokenSymbol: string
+  /** New tokens show their (customizable) total supply; existing tokens omit it here. LP-960. */
+  isNewToken: boolean
   tokenColor: TokenAccentHex | undefined
   stableRaiseUsdPrice: number | null
   floorPriceNum: number | undefined
@@ -50,6 +53,7 @@ export function ReviewLaunchAuctionDetailsSection({
   raiseCurrencyInfo,
   chainId,
   tokenSymbol,
+  isNewToken,
   tokenColor,
   stableRaiseUsdPrice,
   floorPriceNum,
@@ -70,6 +74,17 @@ export function ReviewLaunchAuctionDetailsSection({
     value: committed.auctionSupplyAmount.toExact(),
     type: NumberType.TokenNonTx,
   })
+
+  const launchThreshold = getLaunchThreshold({
+    floorPrice: configureAuction.floorPrice,
+    raiseCurrency: configureAuction.raiseCurrency,
+    chainId,
+    auctionSupplyAmount: committed.auctionSupplyAmount,
+    postAuctionLiquidityAmount: committed.postAuctionLiquidityAmount,
+  })
+  const formattedLaunchThreshold = launchThreshold
+    ? formatNumberOrString({ value: launchThreshold.toExact(), type: NumberType.TokenQuantityStats })
+    : undefined
 
   const floorFiatAmount =
     stableRaiseUsdPrice !== null &&
@@ -97,6 +112,15 @@ export function ReviewLaunchAuctionDetailsSection({
       {configureAuction.endTime ? (
         <ReviewRow label={t('toucan.createAuction.step.configureAuction.duration.endDate')}>
           <ReviewAuctionDateTime date={configureAuction.endTime} />
+        </ReviewRow>
+      ) : null}
+
+      {isNewToken ? (
+        <ReviewRow label={t('toucan.auction.totalSupply')}>
+          <Text variant="body1" color="$neutral1">
+            {formatNumberOrString({ value: committed.totalSupply.toExact(), type: NumberType.TokenNonTx })}{' '}
+            {tokenSymbol}
+          </Text>
         </ReviewRow>
       ) : null}
 
@@ -208,6 +232,16 @@ export function ReviewLaunchAuctionDetailsSection({
             raiseCurrency={configureAuction.raiseCurrency}
             tokenColor={tokenColor}
           />
+          {formattedLaunchThreshold !== undefined ? (
+            <ReviewRow label={t('toucan.createAuction.step.configureAuction.launchThreshold')}>
+              <Flex row alignItems="center" gap="$spacing6">
+                <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
+                <Text variant="body1" color="$neutral1">
+                  {formattedLaunchThreshold} {configureAuction.raiseCurrency}
+                </Text>
+              </Flex>
+            </ReviewRow>
+          ) : null}
         </>
       ) : (
         <ReviewPostAuctionLiquidityExpandable

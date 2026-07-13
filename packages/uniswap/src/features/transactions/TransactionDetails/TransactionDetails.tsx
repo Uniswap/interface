@@ -64,6 +64,7 @@ interface TransactionDetailsProps {
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
+  sponsorshipInfo?: TradingApi.SponsorshipInfo
 }
 
 // oxlint-disable-next-line complexity
@@ -99,6 +100,7 @@ export function TransactionDetails({
   RateInfo,
   NetworkCostRowSlot,
   includesDelegation,
+  sponsorshipInfo,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
@@ -157,6 +159,7 @@ export function TransactionDetails({
               uniswapXGasBreakdown={uniswapXGasBreakdown}
               includesDelegation={includesDelegation}
               showNetworkLogo={showNetworkLogo}
+              sponsorshipInfo={sponsorshipInfo}
             />
           )}
           {!showChildren && CollapsedInfoRow}

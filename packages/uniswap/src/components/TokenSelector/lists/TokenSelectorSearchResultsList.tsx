@@ -13,6 +13,7 @@ function TokenSelectorSearchResultsListInner({
   onSelectCurrency: parentOnSelectCurrency,
   addresses,
   chainFilter,
+  chainIds,
   parsedChainFilter,
   searchFilter,
   debouncedSearchFilter,
@@ -24,6 +25,7 @@ function TokenSelectorSearchResultsListInner({
   onSelectCurrency: OnSelectCurrency
   addresses: AddressGroup
   chainFilter: UniverseChainId | null
+  chainIds: UniverseChainId[]
   parsedChainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
@@ -34,6 +36,8 @@ function TokenSelectorSearchResultsListInner({
 }): JSX.Element {
   const { t } = useTranslation()
   const { registerSearchTokenCurrencyInfo } = useAddToSearchHistory()
+  const effectiveParsedChainFilter =
+    parsedChainFilter && chainIds.includes(parsedChainFilter) ? parsedChainFilter : null
   const {
     data: sections,
     loading,
@@ -41,7 +45,8 @@ function TokenSelectorSearchResultsListInner({
     refetch,
   } = useTokenSectionsForSearchResults({
     addresses,
-    chainFilter: chainFilter ?? parsedChainFilter,
+    chainFilter: chainFilter ?? effectiveParsedChainFilter,
+    chainIds,
     searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
     input,

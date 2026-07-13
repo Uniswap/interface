@@ -174,6 +174,7 @@ export function WarningModalContent({
   sendReport,
   ...props
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
+  const colors = useSporeColors()
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
   const defaultButtonSize = isMobileApp ? 'medium' : 'small'
@@ -196,73 +197,92 @@ export function WarningModalContent({
     ...props,
   }
 
-  if (shouldShowReportUI) {
-    return (
-      <ReportWarningModalContent wrapperProps={wrapperProps} onBack={hideReportUI} onSendReport={onSendReport}>
-        {children}
-      </ReportWarningModalContent>
-    )
-  }
-
   return (
-    <Flex {...wrapperProps}>
-      {!closeHeaderComponent && (showCloseButton || sendReport) && (
-        <Flex row centered gap="$spacing4" position="absolute" right={0} top={0} zIndex={zIndexes.default}>
-          {sendReport && <ReportWarningContextMenu onPressReport={showReportUI} />}
-          {showCloseButton && onClose && (
-            <TouchableArea onPress={onClose}>
-              <X color="$neutral2" size="$icon.24" />
-            </TouchableArea>
-          )}
-        </Flex>
-      )}
+    <>
+      <Flex {...wrapperProps}>
+        {!closeHeaderComponent && (showCloseButton || sendReport) && (
+          <Flex
+            row
+            centered
+            gap="$spacing4"
+            position="absolute"
+            right={isWebPlatform ? '$none' : '$spacing24'}
+            top={0}
+            zIndex={zIndexes.default}
+          >
+            {sendReport && <ReportWarningContextMenu onPressReport={showReportUI} />}
+            {showCloseButton && onClose && (
+              <TouchableArea onPress={onClose}>
+                <X color="$neutral2" size="$icon.24" />
+              </TouchableArea>
+            )}
+          </Flex>
+        )}
 
-      {closeHeaderComponent}
+        {closeHeaderComponent}
 
-      <WarningModalIcon
-        hideIcon={hideIcon}
-        icon={icon}
-        backgroundIconColor={backgroundIconColor}
-        alertHeaderTextColor={alertHeaderTextColor}
-      />
-      {title && (
-        <Text textAlign="center" variant={isWebPlatform ? 'subheading2' : 'body1'}>
-          {title}
-        </Text>
+        <WarningModalIcon
+          hideIcon={hideIcon}
+          icon={icon}
+          backgroundIconColor={backgroundIconColor}
+          alertHeaderTextColor={alertHeaderTextColor}
+        />
+        {title && (
+          <Text textAlign="center" variant={isWebPlatform ? 'subheading2' : 'body1'}>
+            {title}
+          </Text>
+        )}
+        {titleComponent}
+        {caption && (
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {caption}
+          </Text>
+        )}
+        {captionComponent}
+        {children}
+        {(rejectText || acknowledgeText) && (
+          <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
+            {rejectText && (
+              <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
+                <Button size={buttonSize} emphasis="secondary" onPress={onReject ?? onClose}>
+                  {rejectText}
+                </Button>
+              </Trace>
+            )}
+            {acknowledgeText && (
+              <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
+                <Button
+                  size={buttonSize}
+                  variant={acknowledgeButtonVariant}
+                  emphasis={acknowledgeButtonEmphasis}
+                  testID={TestID.Confirm}
+                  onPress={onAcknowledge}
+                >
+                  {acknowledgeText}
+                </Button>
+              </Trace>
+            )}
+          </Flex>
+        )}
+      </Flex>
+
+      {sendReport && (
+        <Modal
+          isDismissible
+          backgroundColor={colors.surface1.val}
+          hideHandlebar={hideHandlebar}
+          isModalOpen={shouldShowReportUI}
+          maxWidth={maxWidth}
+          name={modalName}
+          stackBehavior="push"
+          onClose={hideReportUI}
+        >
+          <ReportWarningModalContent wrapperProps={wrapperProps} onBack={hideReportUI} onSendReport={onSendReport}>
+            {children}
+          </ReportWarningModalContent>
+        </Modal>
       )}
-      {titleComponent}
-      {caption && (
-        <Text color="$neutral2" textAlign="center" variant="body3">
-          {caption}
-        </Text>
-      )}
-      {captionComponent}
-      {children}
-      {(rejectText || acknowledgeText) && (
-        <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
-          {rejectText && (
-            <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
-              <Button size={buttonSize} emphasis="secondary" onPress={onReject ?? onClose}>
-                {rejectText}
-              </Button>
-            </Trace>
-          )}
-          {acknowledgeText && (
-            <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-              <Button
-                size={buttonSize}
-                variant={acknowledgeButtonVariant}
-                emphasis={acknowledgeButtonEmphasis}
-                testID={TestID.Confirm}
-                onPress={onAcknowledge}
-              >
-                {acknowledgeText}
-              </Button>
-            </Trace>
-          )}
-        </Flex>
-      )}
-    </Flex>
+    </>
   )
 }
 
@@ -283,14 +303,16 @@ function ReportWarningContextMenu({ onPressReport }: { onPressReport: () => void
     <ContextMenu
       menuItems={menuItems}
       contentOverride={
-        <MenuContent
-          trackItemClicks
-          items={menuItems}
-          handleCloseMenu={closeMenu}
-          elementName={ElementName.TokenWarningReportContextMenu}
-          sectionName={SectionName.DisputeTokenWarning}
-          containerStyles={shadowProps}
-        />
+        isWebPlatform ? (
+          <MenuContent
+            trackItemClicks
+            items={menuItems}
+            handleCloseMenu={closeMenu}
+            elementName={ElementName.TokenWarningReportContextMenu}
+            sectionName={SectionName.DisputeTokenWarning}
+            containerStyles={shadowProps}
+          />
+        ) : null
       }
       triggerMode={ContextMenuTriggerMode.Primary}
       isOpen={isOpen}

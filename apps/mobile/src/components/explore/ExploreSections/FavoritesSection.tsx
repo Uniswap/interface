@@ -1,5 +1,4 @@
 import type { ScrollView } from 'react-native'
-import type { FlatList } from 'react-native-gesture-handler'
 import type { AnimatedRef } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
@@ -9,7 +8,7 @@ import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'uniswap/src/fe
 
 type FavoritesSectionProps = {
   showLoading: boolean
-  listRef: AnimatedRef<FlatList> | AnimatedRef<ScrollView>
+  listRef: AnimatedRef<ScrollView>
 }
 
 export function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {

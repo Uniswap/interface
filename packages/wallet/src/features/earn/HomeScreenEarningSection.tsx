@@ -10,7 +10,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getListEarnPositionsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/earn'
 import { EARN_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { getEarnVaultInfo } from 'uniswap/src/features/earn/utils'
+import { getEarnPositionInfo, getEarnVaultInfo, hasEarnPosition } from 'uniswap/src/features/earn/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -49,23 +49,16 @@ export function HomeScreenEarningSection({
     if (positionsQuery.isPlaceholderData) {
       return acc
     }
-    positionsQuery.data?.positions.forEach((dataApiPosition) => {
-      if (!dataApiPosition.vault) {
+    positionsQuery.data?.positions.forEach((plainPosition) => {
+      if (!plainPosition.vault) {
         return
       }
-      const vault = getEarnVaultInfo(dataApiPosition.vault)
-      const depositedUsd = dataApiPosition.currentAssetsUsd ?? 0
-      if (!vault || depositedUsd <= 0) {
+      const vault = getEarnVaultInfo(plainPosition.vault)
+      const position = getEarnPositionInfo(plainPosition)
+      if (!vault || !position || !hasEarnPosition(position)) {
         return
       }
-      const position: EarnPositionInfo = {
-        vaultId: vault.id,
-        depositedUsd,
-        depositedRaw: dataApiPosition.currentAssetsRaw || '0',
-        apyPercent: vault.apyPercent,
-        sharesRaw: dataApiPosition.sharesRaw,
-      }
-      acc.push({ vault, position, depositedUsd, underlyingAmountRaw: dataApiPosition.currentAssetsRaw })
+      acc.push({ vault, position, depositedUsd: position.depositedUsd, underlyingAmountRaw: position.depositedRaw })
     })
     return acc
   }, [positionsQuery.data?.positions, positionsQuery.isPlaceholderData])
@@ -159,7 +152,7 @@ const EarningRow = memo(function EarningRow({
 }): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent, convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(entry.vault.currencyId)
+  const currencyInfo = useCurrencyInfo(entry.vault.displayCurrencyId)
   const currency = currencyInfo?.currency
 
   const tokenAmount = useMemo(

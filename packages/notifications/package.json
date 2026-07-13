@@ -25,8 +25,8 @@
     "check:deps:usage": "nx check:deps:usage notifications",
     "typecheck": "nx typecheck notifications",
     "test": "nx test notifications",
-    "format": "nx format notifications",
-    "format:check": "nx format:check notifications",
+    "format": "nx run notifications:format",
+    "format:check": "nx run notifications:format:check",
     "lint": "nx lint notifications",
     "lint:fix": "nx lint:fix notifications"
   },

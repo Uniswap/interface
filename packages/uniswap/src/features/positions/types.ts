@@ -48,6 +48,8 @@ interface BasePositionInfo {
   token1UncollectedFees?: string
   fee0Amount?: CurrencyAmount<Currency>
   fee1Amount?: CurrencyAmount<Currency>
+  uncollectedFeesUsd?: number
+  totalValueUsd?: number
   apr?: number
   isHidden?: boolean
 }
@@ -71,7 +73,7 @@ export type V3PositionInfo = BasePositionInfo & {
   owner: string
 }
 
-type V4PositionInfo = BasePositionInfo & {
+export type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
   poolOrPair?: V4Pool

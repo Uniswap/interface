@@ -6,14 +6,17 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { computeCurrentValuationFiatFormatted } from '~/features/Toucan/Auction/hooks/computeCurrentValuationFiat'
+import { StatsBannerData } from '~/features/Toucan/Auction/hooks/statsBannerData.types'
 import {
   computeHourlyChangePercent,
   formatAsBidToken,
   formatValuationAsBidToken,
 } from '~/features/Toucan/Auction/hooks/statsBannerFormatters'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
+import { useCommittedVolumeBreakdown } from '~/features/Toucan/Auction/hooks/useCommittedVolumeBreakdown'
 import { useCurrencyRaisedFormatted } from '~/features/Toucan/Auction/hooks/useCurrencyRaisedFormatted'
-import { AuctionProgressState, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
+import { useIsLowVolumeHighFdv } from '~/features/Toucan/Auction/hooks/useIsLowVolumeHighFdv'
+import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import {
@@ -49,72 +52,26 @@ function shouldFetchClearingPriceHistory({
   )
 }
 
-interface StatsBannerData {
-  // Current clearing price
-  clearingPriceDecimal: number // Raw decimal value for SubscriptZeroPrice component
-  clearingPriceFormatted: string // e.g., "1.25 ETH"
-  clearingPriceFiatFormatted: string // e.g., "$2,750" (in user's selected fiat currency)
-  clearingPriceFiatValue: number | null // Numeric fiat value for SubscriptZeroPrice (in user's currency)
-  changePercent: number | null // null if no change (clearing === floor)
-  isPositiveChange: boolean
-  changeLabel: 'aboveFloor' | 'pastHour' // which label to show next to the change %
-  bidTokenSymbol: string | null // e.g., "ETH"
-  bidTokenInfo: BidTokenInfo | undefined // Full bid token info for formatting
-
-  // Current valuation (totalSupply * clearingPrice)
-  currentValuationFormatted: string // e.g., "224.5k ETH"
-  currentValuationFiatFormatted: string // e.g., "$494.9M" (in user's selected fiat currency)
-
-  // Bids concentration (from concentration band)
-  concentrationStartDecimal: number | null // Raw decimal value for SubscriptZeroPrice
-  concentrationEndDecimal: number | null // Raw decimal value for SubscriptZeroPrice
-  concentrationFiatRangeFormatted: string | null // e.g., "$0.0463 – $0.0563" (fiat price range)
-  concentrationStartFiatValue: number | null // Numeric fiat value for SubscriptZeroPrice (in user's currency)
-  concentrationEndFiatValue: number | null // Numeric fiat value for SubscriptZeroPrice (in user's currency)
-
-  // Total committed volume (totalBidVolume from auction details)
-  totalBidVolumeFormatted: string | null // e.g., "12.4k ETH"
-  totalBidVolumeFiatFormatted: string | null // e.g., "$27.3M" (in user's selected fiat currency)
-
-  // Currency raised at clearing price (from checkpoint data) - for tooltip
-  currencyRaisedFormatted: string | null // e.g., "12.4k ETH"
-
-  // Required currency to graduate (requiredCurrencyRaised from auction details) - for tooltip
-  requiredCurrencyFormatted: string | null // e.g., "10k ETH"
-
-  // Loading state
-  isLoading: boolean
-  hasData: boolean
-
-  // Auction state
-  isAuctionEnded: boolean
-  isAuctionNotStarted: boolean
-}
-
-/**
- * Hook that computes all data needed for the AuctionStatsBanner.
- *
- * This hook:
- * - Gets clearing price, floor price, and total supply from auction store
- * - Calculates change % between clearing and floor price
- * - Computes current valuation (totalSupply * clearingPrice)
- * - Gets concentration band data
- * - Formats all values for display (both in bid tokens and fiat)
- *
- * Note: Fiat values show "--" when priceFiat is unavailable (e.g., testnets)
- */
+// Note: Fiat values show "--" when priceFiat is unavailable (e.g., testnets)
 export function useStatsBannerData(): StatsBannerData {
   const { convertFiatAmount, convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   // Get auction data from store
-  const { auctionDetails, concentrationBand, auctionProgressState, checkpointData, onchainCheckpoint } =
-    useAuctionStore((state) => ({
-      auctionDetails: state.auctionDetails,
-      concentrationBand: state.concentrationBand,
-      auctionProgressState: state.progress.state,
-      checkpointData: state.checkpointData,
-      onchainCheckpoint: state.onchainCheckpoint,
-    }))
+  const {
+    auctionDetails,
+    concentrationBand,
+    auctionProgressState,
+    checkpointData,
+    onchainCheckpoint,
+    bidDistributionData,
+  } = useAuctionStore((state) => ({
+    auctionDetails: state.auctionDetails,
+    concentrationBand: state.concentrationBand,
+    auctionProgressState: state.progress.state,
+    checkpointData: state.checkpointData,
+    onchainCheckpoint: state.onchainCheckpoint,
+    bidDistributionData: state.bidDistributionData,
+  }))
 
   // Get bid token info
   const { bidTokenInfo, loading: bidTokenLoading } = useBidTokenInfo({
@@ -441,6 +398,28 @@ export function useStatsBannerData(): StatsBannerData {
     return `${formatted} ${bidTokenInfo.symbol}`
   }, [auctionDetails?.requiredCurrencyRaised, bidTokenInfo])
 
+  const committedVolumeBreakdown = useCommittedVolumeBreakdown({
+    bidDistributionData,
+    clearingPriceQ96: clearingPrice,
+    checkpoint: effectiveCheckpoint,
+    auctionDetails,
+    bidTokenInfo,
+    bidTokenMarketPriceUsd,
+    convertFiatAmountFormatted,
+  })
+
+  const isLowVolumeHighFdv = useIsLowVolumeHighFdv({
+    auctionDetails,
+    effectiveCheckpoint,
+    totalSupply,
+    auctionProgressState,
+    auctionTokenDecimals,
+    clearingPriceQ96: clearingPrice,
+    bidTokenInfo,
+    auctionTokenMarketPriceUsd,
+    bidTokenMarketPriceUsd,
+  })
+
   // Determine loading state
   const isLoading = bidTokenLoading || !auctionDetails
   const hasData = !isLoading && bidTokenInfo !== undefined
@@ -468,6 +447,8 @@ export function useStatsBannerData(): StatsBannerData {
     totalBidVolumeFiatFormatted: totalBidVolume.fiatFormatted,
     currencyRaisedFormatted,
     requiredCurrencyFormatted,
+    committedVolumeBreakdown,
+    isLowVolumeHighFdv,
     isLoading,
     hasData,
     isAuctionEnded,

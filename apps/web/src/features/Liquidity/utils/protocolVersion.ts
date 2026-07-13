@@ -16,6 +16,19 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
   }
 }
 
+export function getProtocolVersionFromLabel(label: string | null | undefined): ProtocolVersion | undefined {
+  switch (label) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    case 'v4':
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
+}
+
 export function getProtocols(version: ProtocolVersion | undefined): Protocols | undefined {
   switch (version) {
     case ProtocolVersion.V2:
@@ -26,6 +39,21 @@ export function getProtocols(version: ProtocolVersion | undefined): Protocols | 
       return Protocols.V4
     default:
       return undefined
+  }
+}
+
+export function protocolsToProtocolVersion(version: Protocols | string | undefined): ProtocolVersion {
+  // Persisted ListPools data rehydrates protobuf enums as their name ("V2"/"V3"/"V4"); normalize to the numeric enum.
+  const normalized = typeof version === 'string' ? Protocols[version as keyof typeof Protocols] : version
+  switch (normalized) {
+    case Protocols.V2:
+      return ProtocolVersion.V2
+    case Protocols.V3:
+      return ProtocolVersion.V3
+    case Protocols.V4:
+      return ProtocolVersion.V4
+    default:
+      return ProtocolVersion.UNSPECIFIED
   }
 }
 

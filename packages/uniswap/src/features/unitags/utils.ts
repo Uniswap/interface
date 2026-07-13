@@ -37,3 +37,8 @@ export const getYourNameString = (yourname: string): string => {
   }
   return 'yourname'
 }
+
+/** Normalizes user input for unitag username fields. */
+export function normalizeUnitagUsernameInput(text: string): string {
+  return text.toLowerCase().trim()
+}

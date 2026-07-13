@@ -6,7 +6,14 @@ type TouchableAreaFrameProps = GetProps<typeof TouchableAreaFrame>
 
 type Variant = TouchableAreaFrameProps['variant']
 
-type TouchableAreaExtraProps = {
+export type ModifierPressProps = {
+  // Web only: Renders TouchableArea as an `<a>` allows modifier clicks.
+  modifierPressHref?: string
+  // Callback for modifier clicks when `modifierPressHref` is set.
+  onModifierPress?: (event: TouchableAreaEvent) => void
+}
+
+type TouchableAreaExtraProps = ModifierPressProps & {
   /**
    * If true, the touchable area will resize itself to fit minimum dimensions defined by accessibility guidelines
    *

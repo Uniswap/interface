@@ -49,9 +49,10 @@ export const BaseConfigValues = {
   jupiterProxyUrl: process.env.JUPITER_PROXY_URL ?? process.env.REACT_APP_JUPITER_PROXY_URL,
   quicknodeEndpointName: process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
+  quicknodeSolanaRpcUrl: process.env.QUICKNODE_SOLANA_RPC_URL ?? process.env.REACT_APP_QUICKNODE_SOLANA_RPC_URL,
 
   // Feature Flags
-  enableEntryGatewayProxy: process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.ENABLE_ENTRY_GATEWAY_PROXY,
+  enableEntryGatewayProxy: process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY,
   enableSessionService: process.env.ENABLE_SESSION_SERVICE,
   enableSessionUpgradeAuto:
     process.env.ENABLE_SESSION_UPGRADE_AUTO ?? process.env.REACT_APP_ENABLE_SESSION_UPGRADE_AUTO,
@@ -69,7 +70,7 @@ export const BaseConfigValues = {
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE,
   tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE ?? process.env.REACT_APP_TRADING_API_URL_OVERRIDE,
-  tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV,
+  tradingApiWebTestEnv: process.env.TRADING_API_TEST_ENV ?? process.env.REACT_APP_TRADING_API_TEST_ENV,
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
 }
 
@@ -108,6 +109,9 @@ export const BaseConfigSchema = z.object({
   jupiterProxyUrl: optionalString.describe('URL for Jupiter proxy'),
   quicknodeEndpointName: optionalString.describe('QuickNode endpoint name'),
   quicknodeEndpointToken: optionalString.describe('QuickNode endpoint token'),
+  quicknodeSolanaRpcUrl: optionalString.describe(
+    'Dedicated QuickNode RPC URL for Solana; overrides the built-in default until UniRPC routes Solana',
+  ),
 
   // Feature Flags
   enableEntryGatewayProxy: boolFromString.describe('Is the entry gateway proxy enabled'),

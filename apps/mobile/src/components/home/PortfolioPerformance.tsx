@@ -11,6 +11,7 @@ import {
   ProfitLossPeriod,
 } from 'uniswap/src/components/WalletProfitLoss/utils'
 import { WalletProfitLoss } from 'uniswap/src/components/WalletProfitLoss/WalletProfitLoss'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetWalletProfitLossQuery } from 'uniswap/src/data/rest/getWalletProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -41,6 +42,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
       since,
       modifier,
     },
+    refetchInterval: PollingInterval.Normal,
   })
 
   const profitLoss = data?.profitLoss
@@ -66,7 +68,12 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
         onPress: () => setSelectedPeriod(period),
         render: () => (
           <Flex row alignItems="center" py="$spacing8" px="$spacing4">
-            <Text variant="body2" color={period === selectedPeriod ? '$accent1' : '$neutral1'}>
+            <Text
+              allowFontScaling={false}
+              numberOfLines={1}
+              variant="body2"
+              color={period === selectedPeriod ? '$accent1' : '$neutral1'}
+            >
               {getProfitLossPeriodLabel({ period, t, verbose: true })}
             </Text>
           </Flex>
@@ -89,7 +96,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
           pr="$spacing8"
           py="$spacing6"
         >
-          <Text variant="buttonLabel4" color="$neutral1">
+          <Text allowFontScaling={false} numberOfLines={1} variant="buttonLabel4" color="$neutral1">
             {getProfitLossPeriodLabel({ period: selectedPeriod, t, verbose: true })}
           </Text>
           <RotatableChevron color="$neutral2" direction="down" size="$icon.16" />

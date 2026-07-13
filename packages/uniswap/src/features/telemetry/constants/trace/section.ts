@@ -8,6 +8,7 @@ export enum SectionName {
   HomeActivityTab = 'home-activity-tab',
   HomeExploreTab = 'home-explore-tab',
   HomeNFTsTab = 'home-nfts-tab',
+  HomePoolsTab = 'home-pools-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
   MigrateSelectTokensStep = 'migrate-select-tokens-step',
@@ -19,6 +20,8 @@ export enum SectionName {
   PortfolioOverviewTab = 'portfolio-overview-tab',
   PortfolioTokensTab = 'portfolio-tokens-tab',
   PortfolioPoolsTab = 'portfolio-pools-tab',
+  PortfolioPoolsFeesCard = 'portfolio-pools-fees-card',
+  PositionsList = 'positions-list',
   ProfileActivityTab = 'profile-activity-tab',
   ProfileNftsTab = 'profile-nfts-tab',
   ProfileTokensTab = 'profile-tokens-tab',
@@ -30,6 +33,7 @@ export enum SectionName {
   SwapReview = 'swap-review',
   TokenSelector = 'token-selector',
   TokenDetails = 'token-details',
+  TransactionDetails = 'transaction-details',
 
   // These name / values don't match because we refactored code to use "send", but wanted to preserve old names for dashboards
   SendForm = 'transfer-form',
@@ -39,5 +43,6 @@ export enum SectionName {
   CreatePositionDepositStep = 'create-position-deposit-step',
   CreatePositionPriceRangeStep = 'create-position-price-range-step',
   CreatePositionSelectTokensStep = 'create-position-select-tokens-step',
+  ExploreRecentTransactions = 'explore-recent-transactions',
   // alphabetize additional values.
 }

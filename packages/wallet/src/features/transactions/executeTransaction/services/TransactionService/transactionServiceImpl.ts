@@ -1,143 +1,57 @@
+/* oxlint-disable max-lines */
 import type { BaseProvider, Provider } from '@ethersproject/providers'
 import { utils } from 'ethers'
 import { type AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import type {
-  OnChainTransactionDetails,
-  TransactionDetails,
-  TransactionOptions,
-  TransactionTypeInfo,
+import {
+  TransactionStatus,
+  type OnChainTransactionDetails,
+  type TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isBridgeTypeInfo, isSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { entryPoint08Address } from 'viem/account-abstraction'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { type ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import type { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
+import {
+  handleTransactionError,
+  trackTransactionAnalytics,
+} from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionLifecycleHelpers'
 import type {
+  ExecuteUserOpParams,
   PrepareTransactionParams,
   SubmitTransactionParams,
   SubmitTransactionParamsWithTypeInfo,
   TransactionService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { CalculatedNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { createGetUpdatedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createGetUpdatedTransactionDetails'
 import { createUnsubmittedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createUnsubmittedTransactionDetails'
-import {
-  getRPCErrorCategory,
-  getRPCErrorCode,
-  getRPCProvider,
-  processTransactionReceipt,
-} from 'wallet/src/features/transactions/utils'
-
-/**
- * Handles transaction failure by finalizing the transaction as failed and logging the error
- */
-async function handleTransactionError(params: {
-  error: unknown
-  unsubmittedTransaction: OnChainTransactionDetails
-  chainId: UniverseChainId
-  typeInfo: TransactionTypeInfo
-  options: TransactionOptions
-  methodName: string
-  transactionRepository: TransactionRepository
-  logger: typeof loggerUtil
-}): Promise<never> {
-  const { error, unsubmittedTransaction, chainId, typeInfo, options, methodName, transactionRepository, logger } =
-    params
-
-  await transactionRepository.finalizeTransaction({
-    transaction: unsubmittedTransaction,
-    status: TransactionStatus.Failed,
-  })
-
-  if (error instanceof Error) {
-    const errorCategory = getRPCErrorCategory(error)
-    const rpcProvider = getRPCProvider(error)
-    const rpcErrorCode = getRPCErrorCode(error)
-
-    const logExtra = {
-      category: errorCategory,
-      rpcProvider,
-      rpcErrorCode,
-      chainId,
-      transactionType: typeInfo.type,
-      ...options,
-    }
-
-    // Log warning for alerting
-    logger.warn('TransactionService', methodName, 'RPC Failure', {
-      errorMessage: error.message,
-      ...logExtra,
-    })
-
-    // Log error for full error details
-    logger.error(error, {
-      tags: { file: 'TransactionService', function: methodName },
-      extra: logExtra,
-    })
-
-    throw new Error(`Failed to send transaction: ${errorCategory}`, {
-      cause: error,
-    })
-  }
-
-  throw error
-}
-
-/**
- * Handles analytics tracking for swap and bridge transactions
- */
-function trackTransactionAnalytics(params: {
-  analytics?: SwapTradeBaseProperties
-  transactionOriginType: TransactionOriginType
-  updatedTransaction: TransactionDetails
-  methodName: string
-  analyticsService: AnalyticsService
-  logger: typeof loggerUtil
-}): void {
-  const { analytics, transactionOriginType, updatedTransaction, methodName, analyticsService, logger } = params
-
-  // Track analytics for swaps and bridges
-  if (isBridgeTypeInfo(updatedTransaction.typeInfo) || isSwapTypeInfo(updatedTransaction.typeInfo)) {
-    if (analytics) {
-      analyticsService.trackSwapSubmitted(updatedTransaction, analytics)
-    } else if (transactionOriginType === TransactionOriginType.Internal) {
-      logger.error(new Error(`Missing \`analytics\` for swap when calling \`${methodName}\``), {
-        tags: { file: 'TransactionService', function: methodName },
-        extra: { transaction: updatedTransaction },
-      })
-    }
-  }
-}
+import { buildNonceCalculatedProperties } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
+import { getRPCErrorCategory, processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 
 /**
  * Result of transaction submission containing the information needed to update the transaction
  */
 interface TransactionSubmissionResult {
-  /** The updated transaction details */
-  updatedTransaction: OnChainTransactionDetails & { hash: string }
-  /** Whether to skip processing when updating the transaction in the repository */
+  updatedTransaction: OnChainTransactionDetails
   skipProcessing: boolean
 }
 
-/**
- * Function type for submitting a transaction with different methods
- */
-type TransactionSubmissionFunction = (params: {
-  request: SignedTransactionRequest
-  provider: Provider
+type TransactionSubmissionFunction<P extends SubmitTransactionParamsWithTypeInfo> = (params: {
+  submitParams: P
   unsubmittedTransaction: OnChainTransactionDetails
-  timestampBeforeSign: number
   timestampBeforeSend: number
 }) => Promise<TransactionSubmissionResult>
 
@@ -152,6 +66,8 @@ export function createTransactionService(ctx: {
   configService: TransactionConfigService
   logger: typeof loggerUtil
   getProvider: () => Promise<Provider>
+  // Required only for the 4337 userOp path (`executeUserOp`). EOA-only flows can omit it.
+  userOpSigner?: UserOpSigner
 }): TransactionService {
   const { transactionRepository, analyticsService, logger } = ctx
 
@@ -178,51 +94,69 @@ export function createTransactionService(ctx: {
     const usePrivate = ctx.configService.shouldUsePrivateRpc({ chainId, submitViaPrivateRpc })
 
     // Get the transaction count from the provider
-    const nonce = await provider.getTransactionCount(account.address, 'pending')
+    const onChainPendingNonce = await provider.getTransactionCount(account.address, 'pending')
+    const privateRpcSupported = isPrivateRpcSupportedOnChain(chainId)
 
-    // If using Flashbots with auth, it will already account for pending private transactions
-    // Otherwise, add the local pending private transactions
-    if (!usePrivate && isPrivateRpcSupportedOnChain(chainId)) {
-      const pendingPrivateTransactionCount = await transactionRepository.getPendingPrivateTransactionCount({
-        address: account.address,
-        chainId,
-      })
+    // If using Flashbots with auth, it already accounts for pending private transactions.
+    // Otherwise (non-private on a private-supported chain), add the local pending private count.
+    const shouldAddLocalPendingPrivateCount = !usePrivate && privateRpcSupported
+    const pendingPrivateTxCount = shouldAddLocalPendingPrivateCount
+      ? await transactionRepository.getPendingPrivateTransactionCount({ address: account.address, chainId })
+      : 0
+    // SWAP-2471: when the local count inflated the nonce, capture WHICH txs did it so the inflation
+    // reservoir can later be linked to a gapped-nonce rejection at a higher nonce.
+    const inflatingTxs =
+      pendingPrivateTxCount > 0
+        ? await transactionRepository.getPendingPrivateTransactionDetails({ address: account.address, chainId })
+        : []
 
-      return {
-        nonce: nonce + pendingPrivateTransactionCount,
-        pendingPrivateTxCount: pendingPrivateTransactionCount,
-      }
+    const nonceProperties = buildNonceCalculatedProperties({
+      chainId,
+      address: account.address,
+      submitViaPrivateRpc: Boolean(submitViaPrivateRpc),
+      onChainPendingNonce,
+      pendingPrivateTxCount,
+      privateRpcSupported,
+      inflatingTxs,
+      nowMs: Date.now(),
+    })
+    // Datadog (session-sampled) on every decision for the distribution; Amplitude (unsampled) only
+    // for inflation cases, to bound event volume.
+    logger.info('TransactionService', 'getNextNonce', WalletEventName.NonceCalculated, nonceProperties)
+    if (pendingPrivateTxCount > 0) {
+      analyticsService.trackTransactionEvent(WalletEventName.NonceCalculated, nonceProperties)
     }
 
-    return { nonce }
+    // Preserve the original return shape exactly: pendingPrivateTxCount is omitted when unused.
+    return shouldAddLocalPendingPrivateCount
+      ? { nonce: onChainPendingNonce + pendingPrivateTxCount, pendingPrivateTxCount }
+      : { nonce: onChainPendingNonce }
   }
 
   /**
-   * Factory function to create a transaction submission function with pre-configured context
+   * Factory function to create a transaction submission function with pre-configured context.
    */
-  function createSubmitTransaction(config: { submissionFunction: TransactionSubmissionFunction; methodName: string }) {
-    return async function submit(
-      submitParams: SubmitTransactionParamsWithTypeInfo,
-    ): Promise<TransactionDetails & { hash: string }> {
+  function createSubmitTransaction<P extends SubmitTransactionParamsWithTypeInfo>(config: {
+    submissionFunction: TransactionSubmissionFunction<P>
+    methodName: string
+  }) {
+    return async function submit(submitParams: P): Promise<OnChainTransactionDetails> {
       const { submissionFunction, methodName } = config
-      const { chainId, request, options, typeInfo, analytics } = submitParams
+      const { chainId, options, typeInfo, analytics } = submitParams
 
-      logger.debug('TransactionService', methodName, `Sending tx on ${getChainLabel(chainId)} to ${request.request.to}`)
+      logger.debug('TransactionService', methodName, `Submitting tx on ${getChainLabel(chainId)}`)
 
       // Register the tx in the store before it's submitted, so it exists in case of an error
       const unsubmittedTransaction = createUnsubmittedTransactionDetails(submitParams)
       await transactionRepository.addTransaction({ transaction: unsubmittedTransaction })
 
       try {
-        const provider = await ctx.getProvider()
         const timestampBeforeSend = Date.now()
 
         // Use the provided submission function to handle the core submission logic
         const submissionResult = await submissionFunction({
-          request,
-          provider,
+          submitParams,
           unsubmittedTransaction,
-          timestampBeforeSign: request.timestampBeforeSign,
           timestampBeforeSend,
         })
 
@@ -255,6 +189,7 @@ export function createTransactionService(ctx: {
           options,
           methodName,
           transactionRepository,
+          analyticsService,
           logger,
         })
         // This line is unreachable since handleTransactionError always throws
@@ -306,14 +241,17 @@ export function createTransactionService(ctx: {
    * Send a transaction to the blockchain
    */
   async function submitTransaction(params: SubmitTransactionParams): Promise<{ transactionHash: string }> {
-    const submissionFunction = async (submitParams: {
-      request: SignedTransactionRequest
-      provider: Provider
-      unsubmittedTransaction: OnChainTransactionDetails
-      timestampBeforeSign: number
-      timestampBeforeSend: number
+    const submissionFunction: TransactionSubmissionFunction<SubmitTransactionParamsWithTypeInfo> = async ({
+      submitParams,
+      unsubmittedTransaction,
+      timestampBeforeSend,
     }): Promise<TransactionSubmissionResult> => {
-      const { request, provider, unsubmittedTransaction, timestampBeforeSign, timestampBeforeSend } = submitParams
+      if (!submitParams.request) {
+        throw new Error('Missing tx request')
+      }
+      const { request } = submitParams
+      const timestampBeforeSign = request.timestampBeforeSign
+      const provider = await ctx.getProvider()
 
       // Sign and send the transaction
       const transactionHash = await ctx.transactionSigner.sendTransaction({ signedTx: request.signedRequest })
@@ -344,6 +282,9 @@ export function createTransactionService(ctx: {
       }
     }
 
+    if (!params.request) {
+      throw new Error('Missing tx request')
+    }
     // Calculate the transaction hash directly from the signed request
     const transactionHash = utils.keccak256(params.request.signedRequest)
 
@@ -372,54 +313,91 @@ export function createTransactionService(ctx: {
    * Submit a transaction synchronously and return the transaction with receipt details
    */
   async function submitTransactionSync(params: SubmitTransactionParamsWithTypeInfo): Promise<TransactionDetails> {
-    const submissionFunction = async (submitParams: {
-      request: SignedTransactionRequest
-      provider: Provider
-      unsubmittedTransaction: OnChainTransactionDetails
-      timestampBeforeSign: number
-      timestampBeforeSend: number
+    const submissionFunction: TransactionSubmissionFunction<SubmitTransactionParamsWithTypeInfo> = async ({
+      submitParams,
+      unsubmittedTransaction,
+      timestampBeforeSend,
     }): Promise<TransactionSubmissionResult> => {
-      const { request, provider, unsubmittedTransaction, timestampBeforeSign, timestampBeforeSend } = submitParams
+      const { request } = submitParams
+      if (!request) {
+        throw new Error('Missing tx request')
+      }
+      const timestampBeforeSign = request.timestampBeforeSign
+      const provider = await ctx.getProvider()
 
-      logger.debug('TransactionService', 'submitTransactionSync', 'Calling sendTransactionSync...')
-
-      // Send the transaction using the sync method via the transaction signer service
-      const ethersReceipt = await ctx.transactionSigner.sendTransactionSync({ signedTx: request.signedRequest })
-
-      logger.debug('TransactionService', 'submitTransactionSync', 'Sync tx completed with receipt:', {
-        transactionHash: ethersReceipt.transactionHash,
-        blockNumber: ethersReceipt.blockNumber,
-        gasUsed: ethersReceipt.gasUsed.toString(),
-        status: ethersReceipt.status,
-      })
-
-      // Get the current block number
       const baseProvider = provider as BaseProvider
-
       const getUpdatedTransactionDetails = createGetUpdatedTransactionDetails({
         // Fetches the blockNumber, but will reuse any result that is less than 1000ms old
         getBlockNumber: () => baseProvider._getInternalBlockNumber(ONE_SECOND_MS),
         isPrivateRpc: isPrivateRpc(provider),
       })
 
-      // Update the transaction with the hash and populated request
-      let updatedTransaction = await getUpdatedTransactionDetails({
-        transaction: unsubmittedTransaction,
-        hash: ethersReceipt.transactionHash,
-        timestampBeforeSign,
-        timestampBeforeSend,
-        populatedRequest: request.request,
-      })
+      logger.debug('TransactionService', 'submitTransactionSync', 'Calling sendTransactionSync...')
 
-      // Process the transaction receipt to get the final transaction details
-      updatedTransaction = processTransactionReceipt({
-        ethersReceipt,
-        transaction: updatedTransaction,
-      })
+      try {
+        // Send the transaction using the sync method via the transaction signer service
+        const ethersReceipt = await ctx.transactionSigner.sendTransactionSync({ signedTx: request.signedRequest })
 
-      return {
-        updatedTransaction,
-        skipProcessing: true,
+        logger.debug('TransactionService', 'submitTransactionSync', 'Sync tx completed with receipt:', {
+          transactionHash: ethersReceipt.transactionHash,
+          blockNumber: ethersReceipt.blockNumber,
+          gasUsed: ethersReceipt.gasUsed.toString(),
+          status: ethersReceipt.status,
+        })
+
+        // Update the transaction with the hash and populated request
+        let updatedTransaction = await getUpdatedTransactionDetails({
+          transaction: unsubmittedTransaction,
+          hash: ethersReceipt.transactionHash,
+          timestampBeforeSign,
+          timestampBeforeSend,
+          populatedRequest: request.request,
+        })
+
+        // Process the transaction receipt to get the final transaction details
+        updatedTransaction = processTransactionReceipt({
+          ethersReceipt,
+          transaction: updatedTransaction,
+        })
+
+        return {
+          updatedTransaction,
+          skipProcessing: true,
+        }
+      } catch (error) {
+        // eth_sendRawTransactionSync can land the tx on-chain yet still surface a "nonce too low" /
+        // "already known" error when an internal retry re-sends the raw tx and the node rejects the
+        // duplicate. The deterministic hash being known on-chain is the source of truth: recover as
+        // Pending and let the watcher resolve the real status. Otherwise our tx isn't on-chain (a
+        // different tx took the nonce, or it never landed) — rethrow to finalize Failed.
+        const hash = utils.keccak256(request.signedRequest)
+        const knownOnChainTx = await baseProvider.getTransaction(hash).catch(() => null)
+        if (!knownOnChainTx) {
+          throw error
+        }
+
+        logger.warn(
+          'TransactionService',
+          'submitTransactionSync',
+          'Sync submit errored but tx is known on-chain; treating as pending and deferring to watcher',
+          {
+            category: error instanceof Error ? getRPCErrorCategory(error) : 'unknown',
+            errorMessage: error instanceof Error ? error.message : String(error),
+          },
+        )
+
+        const submittedTransaction = await getUpdatedTransactionDetails({
+          transaction: unsubmittedTransaction,
+          hash,
+          timestampBeforeSign,
+          timestampBeforeSend,
+          populatedRequest: request.request,
+        })
+
+        return {
+          updatedTransaction: submittedTransaction,
+          skipProcessing: false,
+        }
       }
     }
 
@@ -471,11 +449,90 @@ export function createTransactionService(ctx: {
     }
   }
 
+  /**
+   * Execute a 4337 UserOperation by optionally sponsoring it, signing it, and submitting it to the bundler.
+   */
+  async function executeUserOp(params: ExecuteUserOpParams): Promise<{ userOpHash: string }> {
+    function createUserOpSubmissionFunction(
+      userOpSigner: UserOpSigner,
+    ): TransactionSubmissionFunction<SubmitTransactionParamsWithTypeInfo> {
+      return async ({ submitParams, unsubmittedTransaction }) => {
+        if (!submitParams.userOp) {
+          throw new Error('executeUserOp was not called with a user op')
+        }
+        const { userOp, chainId, requestUniswapGasSponsorship, paymasterServiceContext } = submitParams
+
+        // Step 1: If we need to request Uniswap gas sponsorship, fill paymaster fields here.
+        // Sponsorship is required when requested: if the paymaster call fails, the error propagates
+        // and the whole transaction fails rather than silently signing an unsponsored userOp.
+        let userOpReadyToSign = userOp
+        if (requestUniswapGasSponsorship && !userOp.paymaster) {
+          userOpReadyToSign = await userOpSigner.sponsorUniswapUserOp({
+            initialUserOp: userOp,
+            entryPoint: entryPoint08Address,
+            paymasterServiceContext,
+            chainId,
+          })
+
+          if (!userOpReadyToSign.paymaster) {
+            throw new GasSponsorshipNotAppliedError('sponsored userOp returned without paymaster fields')
+          }
+        }
+
+        // Step 2: Sign (EIP-712 + Calibur encoding). The 7702 auth is bundled into the 4337
+        // request and round-trips on the userOp, so the Step 1 paymaster call already ran against
+        // a delegated account; signUserOp throws if a delegation-needing userOp arrives without one
+        // (it's never attached post-paymaster).
+        const timestampBeforeSign = Date.now()
+        const signedUserOp = await userOpSigner.signUserOp(userOpReadyToSign)
+
+        // Step 3: Submit to bundler via UniRPC
+        // Bundler handoff is the userOp analog of RPC submission; the sponsorship stage above is excluded.
+        const timestampBeforeSend = Date.now()
+        const userOpHash = await userOpSigner.sendUserOp(signedUserOp)
+        const rpcSubmissionTimestampMs = Date.now()
+
+        const updatedTransaction: OnChainTransactionDetails = {
+          ...unsubmittedTransaction,
+          userOpHash,
+          status: TransactionStatus.Pending,
+          options: {
+            ...unsubmittedTransaction.options,
+            rpcSubmissionTimestampMs,
+            rpcSubmissionDelayMs: rpcSubmissionTimestampMs - timestampBeforeSend,
+            signTransactionDelayMs: timestampBeforeSend - timestampBeforeSign,
+          },
+        }
+
+        return { updatedTransaction, skipProcessing: false }
+      }
+    }
+
+    const { userOpSigner } = ctx
+    if (!userOpSigner) {
+      throw new Error('executeUserOp requires a userOpSigner — create the service with `includeUserOpServices`')
+    }
+
+    const submit = createSubmitTransaction({
+      submissionFunction: createUserOpSubmissionFunction(userOpSigner),
+      methodName: 'executeUserOp',
+    })
+    const updatedTransaction = await submit(params)
+
+    const userOpHash = updatedTransaction.userOpHash
+    if (!userOpHash) {
+      throw new Error('executeUserOp: submission did not produce a userOpHash')
+    }
+
+    return { userOpHash }
+  }
+
   return {
     prepareAndSignTransaction,
     submitTransaction,
     submitTransactionSync,
     executeTransaction,
+    executeUserOp,
     getNextNonce,
   }
 }

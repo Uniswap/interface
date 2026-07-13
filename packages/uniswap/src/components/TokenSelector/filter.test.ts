@@ -47,7 +47,9 @@ const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: UniverseChainId | null,
   searchFilter?: string,
-): Currency[] => filter({ tokenOptions: currencies, chainFilter, searchFilter }).map((cm) => cm.currencyInfo.currency)
+  chainIds?: UniverseChainId[],
+): Currency[] =>
+  filter({ tokenOptions: currencies, chainFilter, chainIds, searchFilter }).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {
@@ -57,6 +59,12 @@ describe(filter, () => {
 
   it('filters by single chain', () => {
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.Mainnet)).toEqual([DAI, ETH])
+  })
+
+  it('filters by multiple chains when no single-chain filter is selected', () => {
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, undefined, [UniverseChainId.ArbitrumOne])).toEqual([
+      DAI_ARBITRUM_ONE,
+    ])
   })
 
   it('filters by partial token symbol', () => {
@@ -93,5 +101,9 @@ describe(filter, () => {
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.ArbitrumOne, DAI_ARBITRUM_ONE.address)).toEqual([
       DAI_ARBITRUM_ONE,
     ])
+  })
+
+  it('filters by chainIds and searchFilter when no single-chain filter is selected', () => {
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'DAI', [UniverseChainId.Mainnet])).toEqual([DAI])
   })
 })

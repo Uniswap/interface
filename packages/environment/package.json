@@ -21,8 +21,8 @@
     "check:fast": "nx check:fast environment",
     "check:deps:usage": "nx check:deps:usage environment",
     "test": "nx test environment",
-    "format": "nx format environment",
-    "format:check": "nx format:check environment",
+    "format": "nx run environment:format",
+    "format:check": "nx run environment:format:check",
     "lint": "nx lint environment",
     "lint:fix": "nx lint:fix environment"
   },

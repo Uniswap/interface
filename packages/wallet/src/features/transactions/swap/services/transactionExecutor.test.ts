@@ -31,6 +31,7 @@ const mockTransactionService = {
   submitTransactionSync: jest.fn(),
   prepareAndSignTransaction: jest.fn(),
   executeTransaction: jest.fn(),
+  executeUserOp: jest.fn(),
   getNextNonce: jest.fn(),
 } as jest.Mocked<TransactionService>
 

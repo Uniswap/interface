@@ -1,7 +1,6 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { EM_DASH, Flex, Text } from 'ui/src'
+import { EM_DASH, Flex, Text, TouchableArea } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -20,6 +19,7 @@ interface TokenDisplayProps {
   isExpanded?: boolean
   displayName?: string
   displaySymbol?: string
+  onNameClick?: () => void
 }
 
 export const TokenDisplay = memo(function TokenDisplay({
@@ -28,10 +28,9 @@ export const TokenDisplay = memo(function TokenDisplay({
   isExpanded,
   displayName: multichainDisplayName,
   displaySymbol: multichainDisplaySymbol,
+  onNameClick,
 }: TokenDisplayProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   if (!currencyInfo) {
     return <EmptyTableCell />
   }
@@ -40,7 +39,7 @@ export const TokenDisplay = memo(function TokenDisplay({
   const displayName = multichainDisplayName ?? currency.name
   const displaySymbol = multichainDisplaySymbol ?? currency.symbol
   const symbolText = getSymbolDisplayText(displaySymbol) || EM_DASH
-  const showNetworksHover = multichainTokenUxEnabled && chainIds && chainIds.length > 1
+  const showNetworksHover = chainIds && chainIds.length > 1
 
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start" width="100%">
@@ -50,13 +49,29 @@ export const TokenDisplay = memo(function TokenDisplay({
         symbol={getSymbolDisplayText(displaySymbol) || undefined}
         size={32}
         url={currencyInfo.logoUrl}
-        alwaysShowNetworkLogo={multichainTokenUxEnabled && chainIds?.length === 1}
+        alwaysShowNetworkLogo={chainIds?.length === 1}
         networkCount={chainIds?.length}
       />
       <Flex width="100%">
-        <Text variant="body3" color="$neutral1" numberOfLines={1}>
-          {displayName || EM_DASH}
-        </Text>
+        {onNameClick ? (
+          <TouchableArea
+            hoverStyle={{ opacity: 0.7 }}
+            onPressIn={(e) => e.stopPropagation()}
+            onPressOut={(e) => e.stopPropagation()}
+            onPress={(e) => {
+              e.stopPropagation()
+              onNameClick()
+            }}
+          >
+            <Text variant="body3" color="$neutral1" numberOfLines={1}>
+              {displayName || EM_DASH}
+            </Text>
+          </TouchableArea>
+        ) : (
+          <Text variant="body3" color="$neutral1" numberOfLines={1}>
+            {displayName || EM_DASH}
+          </Text>
+        )}
         <GroupHoverTransition
           height={SYMBOL_SLOT_HEIGHT}
           showTransition={showNetworksHover}

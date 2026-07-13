@@ -1,10 +1,9 @@
-import { GasFeeResult } from '@universe/api'
-import { isMobileApp } from '@universe/environment'
+import { GasFeeResult, TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { SponsoredFee, UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -18,6 +17,8 @@ interface NetworkFeeFooterProps {
   isUniswapX?: boolean
   requestMethod?: string
   showSmartWalletActivation?: boolean
+  /** When set, the gas amount is replaced with the sponsor icon + "Free". */
+  sponsorMetadata?: TradingApi.SponsorMetadata
 }
 
 // Since EthSignMethod is a TypeScript type that doesn't exist at runtime,
@@ -56,9 +57,10 @@ export function NetworkFeeFooter({
   isUniswapX,
   requestMethod,
   showSmartWalletActivation,
+  sponsorMetadata,
 }: NetworkFeeFooterProps): JSX.Element | null {
   const { t } = useTranslation()
-  const variant = isMobileApp ? 'body3' : 'body4'
+  const variant = 'body3'
 
   const { gasFeeFormatted } = useGasFeeFormattedDisplayAmounts({
     gasFee,
@@ -88,16 +90,21 @@ export function NetworkFeeFooter({
             )}
           </Flex>
         }
-        variant={variant}
       >
         <Flex centered row gap="$spacing4">
-          {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
-          {isUniswapX ? (
-            <UniswapXFee gasFee={gasFeeFormatted} />
+          {sponsorMetadata ? (
+            <SponsoredFee sponsorMetadata={sponsorMetadata} preSavingsGasFee={gasFeeFormatted} />
           ) : (
-            <Text color="$neutral1" variant={variant}>
-              {gasFeeFormatted}
-            </Text>
+            <>
+              {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
+              {isUniswapX ? (
+                <UniswapXFee gasFee={gasFeeFormatted} />
+              ) : (
+                <Text color="$neutral1" variant={variant}>
+                  {gasFeeFormatted}
+                </Text>
+              )}
+            </>
           )}
         </Flex>
       </ContentRow>

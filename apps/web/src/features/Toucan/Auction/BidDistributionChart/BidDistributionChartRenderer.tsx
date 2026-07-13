@@ -1,8 +1,8 @@
 /* oxlint-disable max-lines */
 import type { IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Flex, useMedia, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -13,7 +13,6 @@ import {
   BID_LINE,
   CHART_DIMENSIONS,
   CLEARING_PRICE_LINE,
-  DEMAND_BACKGROUND_GAP_MAX_VISIBLE_TICKS,
   LABEL_CONFIG,
 } from '~/features/Toucan/Auction/BidDistributionChart/constants'
 import { useChartDimensions } from '~/features/Toucan/Auction/BidDistributionChart/hooks/useChartDimensions'
@@ -31,6 +30,7 @@ import {
   areUpdateParamsEqual,
   type BidDistributionChartRendererProps,
 } from '~/features/Toucan/Auction/BidDistributionChart/utils/equality'
+import { interpolateFillRatio } from '~/features/Toucan/Auction/BidDistributionChart/utils/interpolateCurrencyRequired'
 import { formatTokenVolume } from '~/features/Toucan/Auction/BidDistributionChart/utils/tokenFormatters'
 import { useAuctionValueFormatters } from '~/features/Toucan/Auction/hooks/useAuctionValueFormatters'
 import { AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
@@ -46,7 +46,6 @@ import type {
 import { calculatePriceScaleFactor } from '~/features/Toucan/ToucanChart/bidDistribution/utils/priceScaleFactor'
 import { calculateRangePaddingUnits } from '~/features/Toucan/ToucanChart/bidDistribution/utils/visibleRange'
 import type { ToucanChartData, ToucanChartSeriesOptions } from '~/features/Toucan/ToucanChart/renderer'
-import { createDemandBackgroundGradient } from '~/features/Toucan/ToucanChart/utils/colors'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 const ChartContainer = deprecatedStyled.div<{ height: number }>`
@@ -97,6 +96,7 @@ function BidDistributionChartRendererComponent({
   connectedWalletAddress,
   chartMode = 'distribution',
 }: BidDistributionChartRendererProps) {
+  const { t } = useTranslation()
   const colors = useSporeColors()
   const colorsForController = useMemo(() => colors, [colors])
   const media = useMedia()
@@ -155,6 +155,7 @@ function BidDistributionChartRendererComponent({
     activeBidFormTab,
     chartZoomCommand,
     customBidTick,
+    tickDetails,
   } = useAuctionStore((state) => ({
     chartZoomState: state.chartZoomStates[chartMode],
     chartHoverResetKey: state.chartHoverResetKey,
@@ -162,6 +163,7 @@ function BidDistributionChartRendererComponent({
     activeBidFormTab: state.activeBidFormTab,
     chartZoomCommand: state.chartZoomCommand,
     customBidTick: state.customBidTick.tickValue,
+    tickDetails: state.tickDetails,
   }))
   const chartHoverResetKeyRef = useRef<number>(chartHoverResetKey)
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
@@ -270,6 +272,8 @@ function BidDistributionChartRendererComponent({
     // on the canvas, so we need to trigger setData() to clear it when not placing a bid.
     const sourceBars = chartMode === 'distribution' && groupTicksEnabled && groupedBars ? groupedBars : chartData.bars
 
+    const useFillColoring = chartMode === 'demand' && tickDetails !== null && tickDetails.length > 0
+
     // Map bars to histogram data and merge volumes for duplicate time values.
     // Duplicate time values can occur when tick differences are smaller than 1/priceScaleFactor,
     // causing Math.round() to produce the same integer for different ticks.
@@ -282,18 +286,32 @@ function BidDistributionChartRendererComponent({
       if (existing) {
         existing.value += bar.amount
       } else {
+        const fillRatio =
+          useFillColoring && bar.tickQ96
+            ? (interpolateFillRatio({ ticks: tickDetails, tickQ96: bar.tickQ96 }) ?? undefined)
+            : undefined
         timeToData.set(time, {
           time: time as UTCTimestamp,
           value: bar.amount,
           tickValue: bar.tick,
           tickQ96: bar.tickQ96,
+          fillRatio,
         })
       }
     }
 
     return Array.from(timeToData.values())
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [chartData.bars, groupTicksEnabled, groupedBars, priceScaleFactor, chartHoverResetKey, isPlacingBid])
+  }, [
+    chartData.bars,
+    groupTicksEnabled,
+    groupedBars,
+    priceScaleFactor,
+    chartHoverResetKey,
+    isPlacingBid,
+    tickDetails,
+    chartMode,
+  ])
 
   const totalBidVolume = chartData.totalBidVolume
 
@@ -621,18 +639,6 @@ function BidDistributionChartRendererComponent({
 
     const seriesOptionsPatch: Partial<ToucanChartSeriesOptions> = {
       chartMode,
-      demandBackgroundGradient:
-        chartMode === 'demand'
-          ? createDemandBackgroundGradient(tokenColor || colorsForController.accent1.val)
-          : undefined,
-      demandBackgroundGapMaxTicks: chartMode === 'demand' ? DEMAND_BACKGROUND_GAP_MAX_VISIBLE_TICKS : undefined,
-      demandOutOfRangeBackgroundGradient:
-        chartMode === 'demand'
-          ? {
-              startColor: opacify(12, colorsForController.neutral1.val),
-              endColor: opacify(0, colorsForController.neutral1.val),
-            }
-          : undefined,
     }
 
     // Check if hover reset key changed - if so, we need to reset hover state
@@ -734,6 +740,11 @@ function BidDistributionChartRendererComponent({
     <Flex width="100%" height={height + LABEL_CONFIG.PADDING_BOTTOM}>
       <ChartWrapper height={height}>
         <ChartContainer ref={chartContainerRef} height={height} />
+        {chartMode === 'demand' && (
+          <Text variant="body4" color="$neutral3" position="absolute" top={2} left={4} pointerEvents="none">
+            {t('toucan.bidDistribution.yAxis.committedVolume')}
+          </Text>
+        )}
         <BidMarkerOverlay
           markerPositions={markerPositions}
           bidTokenInfo={bidTokenInfo}

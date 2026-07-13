@@ -1,19 +1,5 @@
 import { FlexProps } from 'ui/src'
-import { css } from '~/lib/deprecated-styled'
 
-/** @deprecated use tamagui and ClickableTamaguiStyle instead */
-export const ClickableStyle = css`
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-  :active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-`
 export const ClickableTamaguiStyle = {
   cursor: 'pointer',
   '$platform-web': {

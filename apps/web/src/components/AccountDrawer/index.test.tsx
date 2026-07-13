@@ -58,7 +58,6 @@ vi.mock('uniswap/src/components/AnimatedNumber/AnimatedNumber', () => {
     return <div>{value}</div>
   }
   return {
-    BALANCE_CHANGE_INDICATION_DURATION: 1000,
     default: mockAnimatedNumber,
     AnimatedNumber: mockAnimatedNumber,
   }

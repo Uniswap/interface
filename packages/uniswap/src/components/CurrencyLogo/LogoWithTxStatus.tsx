@@ -4,6 +4,7 @@ import { Flex, UniversalImage, UniversalImageResizeMode, useSporeColors } from '
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Approve } from 'ui/src/components/icons/Approve'
 import { ArrowDownInCircle } from 'ui/src/components/icons/ArrowDownInCircle'
+import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
 import { ArrowUpInCircle } from 'ui/src/components/icons/ArrowUpInCircle'
 import { QuestionInCircle } from 'ui/src/components/icons/QuestionInCircle'
 import { Walletconnect } from 'ui/src/components/icons/Walletconnect'
@@ -29,6 +30,7 @@ interface LogoWithTxStatusBaseProps {
   txStatus: TransactionStatus
   size: number
   chainId: UniverseChainId | null
+  isVaultTransaction?: boolean
 }
 
 interface DappLogoWithTxStatusProps {
@@ -90,6 +92,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     icon = <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
   } else {
     let Icon: React.NamedExoticComponent<IconProps> | undefined
+    let iconRotation: IconProps['rotate'] | undefined
     switch (txType) {
       case TransactionType.Approve:
       case TransactionType.NFTApprove:
@@ -99,6 +102,9 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
       case TransactionType.ToucanBid:
       case TransactionType.OffRampSale:
         Icon = ArrowUpInCircle
+        break
+      case TransactionType.Deposit:
+        Icon = ArrowDownToLine
         break
       case TransactionType.NFTTrade:
         if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
@@ -118,6 +124,14 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
       case TransactionType.ClaimUni:
         Icon = ArrowDownInCircle
         break
+      case TransactionType.Withdraw:
+        if (props.isVaultTransaction) {
+          Icon = ArrowDownToLine
+          iconRotation = '180deg'
+        } else {
+          Icon = ArrowDownInCircle
+        }
+        break
       case TransactionType.Unknown:
         Icon = QuestionInCircle
         break
@@ -132,7 +146,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
           overflow="hidden"
           width={statusSize}
         >
-          <Icon color={color.get()} fill={fill.val} size={statusSize} testID="status-icon" />
+          <Icon color={color.get()} fill={fill.val} rotate={iconRotation} size={statusSize} testID="status-icon" />
         </Flex>
       )
     }

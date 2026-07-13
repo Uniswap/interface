@@ -15,12 +15,13 @@ export const Container = styled(Flex, {
 
 export const PageLayout = styled(Flex, {
   width: '100%',
-  maxWidth: 1160,
+  maxWidth: 1200,
   mx: 'auto',
-  px: '$spacing40',
+  $xxl: {
+    px: '$spacing40',
+  },
   $xl: {
     px: '$spacing24',
-    maxWidth: '100%',
   },
   $sm: {
     px: '$spacing8',

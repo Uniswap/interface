@@ -80,6 +80,7 @@ exports[`TokenItem renders without error 1`] = `
       style={
         {
           "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
           "flexDirection": "row",
           "flexGrow": 1,
           "gap": 12,
@@ -179,6 +180,47 @@ exports[`TokenItem renders without error 1`] = `
             testID="img-token-image"
             width={40}
           />
+          <View
+            style={
+              {
+                "bottom": -2,
+                "flexDirection": "column",
+                "position": "absolute",
+                "right": -3,
+                "zIndex": 10,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "borderColor": "#FFFFFF",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 2,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "justifyContent": "center",
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo-1"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-ETHEREUM_LOGO.png"
+                style={
+                  {
+                    "height": 17,
+                    "width": 17,
+                  }
+                }
+              />
+            </View>
+          </View>
         </View>
       </View>
       <View
@@ -253,18 +295,52 @@ exports[`TokenItem renders without error 1`] = `
             }
           >
             <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              style={
+              allowFontScaling={false}
+              collapsable={false}
+              jestAnimatedProps={
                 {
-                  "color": "#131313",
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "400",
-                  "lineHeight": 24.7,
+                  "value": {},
                 }
               }
-              suppressHighlighting={true}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              jestInlineStyle={
+                [
+                  null,
+                  null,
+                  {
+                    "fontFamily": "Basel Grotesk",
+                    "fontSize": 19,
+                    "fontWeight": "400",
+                    "height": 24.7,
+                    "lineHeight": 24.7,
+                    "top": 1,
+                  },
+                  {
+                    "color": "#131313",
+                  },
+                ]
+              }
+              style={
+                [
+                  null,
+                  null,
+                  {
+                    "fontFamily": "Basel Grotesk",
+                    "fontSize": 19,
+                    "fontWeight": "400",
+                    "height": 24.7,
+                    "lineHeight": 24.7,
+                    "top": 1,
+                  },
+                  {
+                    "color": "#131313",
+                  },
+                ]
+              }
               testID="token-item/price"
             >
               -

@@ -87,7 +87,7 @@ export function SafeKeyboardOnboardingScreen({
         <LinearGradient
           // Note: must use pointerEvents="none" to prevent the gradient from blocking touch events as it's not styled in a way that respects what you may otherwise expect from the JSX hierarchy
           pointerEvents="none"
-          colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+          colors={[colors.surface1.get(), opacify(0, colors.surface1.val)]}
           locations={[0.6, 0.8]}
           style={[styles.gradient, { height: headerHeight * responsiveGradientPadding }]}
         />

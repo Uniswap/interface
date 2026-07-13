@@ -77,6 +77,7 @@ export function useFiatOnRampSupportedTokens(
     fiatCurrency: fiatCurrency.code,
     countryCode: countryCode ?? 'US',
     rampDirection: RampDirection.ON_RAMP,
+    isSolanaEnabled: true,
   })
   const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()
 

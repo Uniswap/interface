@@ -10,6 +10,7 @@ import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/s
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
+import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -32,6 +33,7 @@ export const useSwapFormButtonText = (): string => {
 
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const { insufficientBalanceWarning, blockingWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
+  const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
 
   const showGetStarted = useShowGetStarted()
 
@@ -45,8 +47,14 @@ export const useSwapFormButtonText = (): string => {
     return t('common.getStarted')
   }
 
-  if (isWebFORNudgeEnabled) {
-    return t('empty.swap.button.text')
+  // Geo acknowledgement overrides the blocked-token CTA: prompt the user to Review,
+  // which opens the attestation modal instead of showing a blocking message.
+  if (needsGeoAcknowledgment) {
+    return t('swap.button.review')
+  }
+
+  if (blockingWarning?.buttonText) {
+    return blockingWarning.buttonText
   }
 
   if (isIndicative) {
@@ -60,12 +68,12 @@ export const useSwapFormButtonText = (): string => {
     return isEmbeddedWalletEnabled ? t('common.connect.button') : t('common.connectWallet.button')
   }
 
-  if (isMissingPlatformWallet) {
-    return t('common.connectTo', { platform: isSVMChain(chainId) ? 'Solana' : 'Ethereum' })
+  if (isWebFORNudgeEnabled) {
+    return t('empty.swap.button.text')
   }
 
-  if (blockingWarning?.buttonText) {
-    return blockingWarning.buttonText
+  if (isMissingPlatformWallet) {
+    return t('common.connectTo', { platform: isSVMChain(chainId) ? 'Solana' : 'Ethereum' })
   }
 
   if (isTokenSelectionInvalid) {

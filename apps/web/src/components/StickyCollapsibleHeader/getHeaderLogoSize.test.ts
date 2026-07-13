@@ -7,10 +7,18 @@ import {
 } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 
 describe('getHeaderLogoSize', () => {
-  it('returns small size when sm breakpoint matches (before compact / md)', () => {
+  it('returns fixed small size when sm breakpoint matches and scaleMobileOnScroll is off', () => {
     expect(getHeaderLogoSize({ isCompact: false, media: { sm: true } })).toBe(HEADER_LOGO_SIZE.small)
-    // sm is checked first, so compact layout does not shrink the logo further on narrow viewports
     expect(getHeaderLogoSize({ isCompact: true, media: { sm: true } })).toBe(HEADER_LOGO_SIZE.small)
+  })
+
+  it('returns mobile size on sm with scaleMobileOnScroll, shrinking to mobileCompact on scroll', () => {
+    expect(getHeaderLogoSize({ isCompact: false, media: { sm: true }, scaleMobileOnScroll: true })).toBe(
+      HEADER_LOGO_SIZE.mobile,
+    )
+    expect(getHeaderLogoSize({ isCompact: true, media: { sm: true }, scaleMobileOnScroll: true })).toBe(
+      HEADER_LOGO_SIZE.mobileCompact,
+    )
   })
 
   it('returns compact size when isCompact is true', () => {
@@ -26,7 +34,7 @@ describe('getHeaderLogoSize', () => {
     expect(getHeaderLogoSize({ isCompact: false, media: { sm: false, md: false } })).toBe(HEADER_LOGO_SIZE.expanded)
   })
 
-  it('returns small size when sm and md both match (sm is checked first)', () => {
+  it('returns fixed small size when sm and md both match (sm is checked first)', () => {
     expect(getHeaderLogoSize({ isCompact: false, media: { sm: true, md: true } })).toBe(HEADER_LOGO_SIZE.small)
   })
 })

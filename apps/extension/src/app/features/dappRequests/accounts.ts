@@ -2,7 +2,7 @@ import { type JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { type DappInfo, dappStore } from 'src/app/features/dapp/store'
-import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
+import { getOrderedConnectedAddresses, isConnectedAccount } from 'src/app/features/dapp/utils'
 import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
   type AccountResponse,
@@ -108,15 +108,24 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
     return undefined
   }
 
-  yield* call(saveDappConnection, { dappUrl, account: activeAccount, iconUrl: favIconUrl })
-  // No dapp info means that this is a first time connection request
-  if (!dappInfo) {
-    yield* put(
-      pushNotification({
-        type: AppNotificationType.DappConnected,
-        dappIconUrl: favIconUrl,
-      }),
-    )
+  // Block an auto-confirmed account request from silently adding the active account to an origin that is already
+  // connected to a different account. New accounts must be connected through the user-driven flow.
+  const wouldExpandConnectionToUnapprovedAccount =
+    !!dappInfo &&
+    dappInfo.connectedAccounts.length > 0 &&
+    !isConnectedAccount(dappInfo.connectedAccounts, activeAccount.address)
+
+  if (!wouldExpandConnectionToUnapprovedAccount) {
+    yield* call(saveDappConnection, { dappUrl, account: activeAccount, iconUrl: favIconUrl })
+    // No dapp info means that this is a first time connection request
+    if (!dappInfo) {
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.DappConnected,
+          dappIconUrl: favIconUrl,
+        }),
+      )
+    }
   }
 
   const chainId = dappInfo?.lastChainId ?? defaultChainId
@@ -125,7 +134,6 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
 
   return {
     dappUrl,
-    activeAccount,
     connectedAddresses,
     chainId,
     providerUrl: provider.connection.url,
@@ -148,7 +156,7 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
 
     yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorResponse)
   } else {
-    const { dappUrl, activeAccount, connectedAddresses, chainId, providerUrl } = accountInfo
+    const { dappUrl, connectedAddresses, chainId, providerUrl } = accountInfo
 
     const accountResponse: AccountResponse = {
       type: DappResponseType.AccountResponse,
@@ -164,7 +172,7 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
     sendAnalyticsEvent(ExtensionEventName.DappConnect, {
       dappUrl,
       chainId,
-      activeConnectedAddress: activeAccount.address,
+      activeConnectedAddress: connectedAddresses[0],
       connectedAddresses,
     })
   }

@@ -1,3 +1,4 @@
+import { type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { QueryKey } from '@tanstack/react-query'
 import {
   GetAuctionActivityRequest,
@@ -27,15 +28,15 @@ import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 function getAuctionQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionRequest, GetAuctionResponse>,
-): QueryOptionsResult<GetAuctionResponse, Error, GetAuctionResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionRequest, PlainMessage<GetAuctionResponse>>,
+): QueryOptionsResult<PlainMessage<GetAuctionResponse>, Error, PlainMessage<GetAuctionResponse>, QueryKey> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getAuction', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getAuction(params)
+      return toPlainMessage(await client.getAuction(params))
     },
     staleTime: AuctionStaleTime.FAST,
     retry: AUCTION_DEFAULT_RETRY,
@@ -45,15 +46,20 @@ function getAuctionQueryOptions(
 
 function getAuctionActivityQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionActivityRequest, GetAuctionActivityResponse>,
-): QueryOptionsResult<GetAuctionActivityResponse, Error, GetAuctionActivityResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionActivityRequest, PlainMessage<GetAuctionActivityResponse>>,
+): QueryOptionsResult<
+  PlainMessage<GetAuctionActivityResponse>,
+  Error,
+  PlainMessage<GetAuctionActivityResponse>,
+  QueryKey
+> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getAuctionActivity', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getAuctionActivity(params)
+      return toPlainMessage(await client.getAuctionActivity(params))
     },
     staleTime: AuctionStaleTime.MODERATE,
     retry: AUCTION_DEFAULT_RETRY,
@@ -63,15 +69,15 @@ function getAuctionActivityQueryOptions(
 
 function getBidsQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsRequest, GetBidsResponse>,
-): QueryOptionsResult<GetBidsResponse, Error, GetBidsResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsRequest, PlainMessage<GetBidsResponse>>,
+): QueryOptionsResult<PlainMessage<GetBidsResponse>, Error, PlainMessage<GetBidsResponse>, QueryKey> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getBids', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getBids(params)
+      return toPlainMessage(await client.getBids(params))
     },
     staleTime: AuctionStaleTime.FAST,
     retry: AUCTION_DEFAULT_RETRY,
@@ -81,15 +87,15 @@ function getBidsQueryOptions(
 
 function getBidsByWalletQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, GetBidsByWalletResponse>,
-): QueryOptionsResult<GetBidsByWalletResponse, Error, GetBidsByWalletResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, PlainMessage<GetBidsByWalletResponse>>,
+): QueryOptionsResult<PlainMessage<GetBidsByWalletResponse>, Error, PlainMessage<GetBidsByWalletResponse>, QueryKey> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getBidsByWallet', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getBidsByWallet(params)
+      return toPlainMessage(await client.getBidsByWallet(params))
     },
     staleTime: AuctionStaleTime.MODERATE,
     retry: AUCTION_DEFAULT_RETRY,
@@ -99,15 +105,23 @@ function getBidsByWalletQueryOptions(
 
 function getClearingPriceHistoryQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetClearingPriceHistoryRequest, GetClearingPriceHistoryResponse>,
-): QueryOptionsResult<GetClearingPriceHistoryResponse, Error, GetClearingPriceHistoryResponse, QueryKey> {
+  {
+    params,
+    ...rest
+  }: UseQueryApiHelperHookArgs<GetClearingPriceHistoryRequest, PlainMessage<GetClearingPriceHistoryResponse>>,
+): QueryOptionsResult<
+  PlainMessage<GetClearingPriceHistoryResponse>,
+  Error,
+  PlainMessage<GetClearingPriceHistoryResponse>,
+  QueryKey
+> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getClearingPriceHistory', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getClearingPriceHistory(params)
+      return toPlainMessage(await client.getClearingPriceHistory(params))
     },
     staleTime: AuctionStaleTime.FAST,
     retry: AUCTION_DEFAULT_RETRY,
@@ -117,15 +131,20 @@ function getClearingPriceHistoryQueryOptions(
 
 function getLatestCheckpointQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, GetLatestCheckpointResponse>,
-): QueryOptionsResult<GetLatestCheckpointResponse, Error, GetLatestCheckpointResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, PlainMessage<GetLatestCheckpointResponse>>,
+): QueryOptionsResult<
+  PlainMessage<GetLatestCheckpointResponse>,
+  Error,
+  PlainMessage<GetLatestCheckpointResponse>,
+  QueryKey
+> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getLatestCheckpoint', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getLatestCheckpoint(params)
+      return toPlainMessage(await client.getLatestCheckpoint(params))
     },
     staleTime: AuctionStaleTime.REALTIME,
     retry: AUCTION_DEFAULT_RETRY,
@@ -135,15 +154,15 @@ function getLatestCheckpointQueryOptions(
 
 function getTickDetailsQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<GetTickDetailsRequest, GetTickDetailsResponse>,
-): QueryOptionsResult<GetTickDetailsResponse, Error, GetTickDetailsResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetTickDetailsRequest, PlainMessage<GetTickDetailsResponse>>,
+): QueryOptionsResult<PlainMessage<GetTickDetailsResponse>, Error, PlainMessage<GetTickDetailsResponse>, QueryKey> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getTickDetails', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.getTickDetails(params)
+      return toPlainMessage(await client.getTickDetails(params))
     },
     staleTime: AuctionStaleTime.FAST,
     retry: AUCTION_DEFAULT_RETRY,
@@ -153,15 +172,15 @@ function getTickDetailsQueryOptions(
 
 function getListTopAuctionsQueryOptions(
   client: AuctionServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, ListTopAuctionsResponse>,
-): QueryOptionsResult<ListTopAuctionsResponse, Error, ListTopAuctionsResponse, QueryKey> {
+  { params, ...rest }: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, PlainMessage<ListTopAuctionsResponse>>,
+): QueryOptionsResult<PlainMessage<ListTopAuctionsResponse>, Error, PlainMessage<ListTopAuctionsResponse>, QueryKey> {
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctions', params],
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')
       }
-      return client.listTopAuctions(params)
+      return toPlainMessage(await client.listTopAuctions(params))
     },
     ...rest,
   })
@@ -169,29 +188,44 @@ function getListTopAuctionsQueryOptions(
 
 function provideAuctionQueries(client: AuctionServiceClient): {
   getAuction: (
-    input: UseQueryApiHelperHookArgs<GetAuctionRequest, GetAuctionResponse>,
-  ) => QueryOptionsResult<GetAuctionResponse, Error, GetAuctionResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetAuctionRequest, PlainMessage<GetAuctionResponse>>,
+  ) => QueryOptionsResult<PlainMessage<GetAuctionResponse>, Error, PlainMessage<GetAuctionResponse>, QueryKey>
   getAuctionActivity: (
-    input: UseQueryApiHelperHookArgs<GetAuctionActivityRequest, GetAuctionActivityResponse>,
-  ) => QueryOptionsResult<GetAuctionActivityResponse, Error, GetAuctionActivityResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetAuctionActivityRequest, PlainMessage<GetAuctionActivityResponse>>,
+  ) => QueryOptionsResult<
+    PlainMessage<GetAuctionActivityResponse>,
+    Error,
+    PlainMessage<GetAuctionActivityResponse>,
+    QueryKey
+  >
   getBids: (
-    input: UseQueryApiHelperHookArgs<GetBidsRequest, GetBidsResponse>,
-  ) => QueryOptionsResult<GetBidsResponse, Error, GetBidsResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetBidsRequest, PlainMessage<GetBidsResponse>>,
+  ) => QueryOptionsResult<PlainMessage<GetBidsResponse>, Error, PlainMessage<GetBidsResponse>, QueryKey>
   getBidsByWallet: (
-    input: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, GetBidsByWalletResponse>,
-  ) => QueryOptionsResult<GetBidsByWalletResponse, Error, GetBidsByWalletResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, PlainMessage<GetBidsByWalletResponse>>,
+  ) => QueryOptionsResult<PlainMessage<GetBidsByWalletResponse>, Error, PlainMessage<GetBidsByWalletResponse>, QueryKey>
   getClearingPriceHistory: (
-    input: UseQueryApiHelperHookArgs<GetClearingPriceHistoryRequest, GetClearingPriceHistoryResponse>,
-  ) => QueryOptionsResult<GetClearingPriceHistoryResponse, Error, GetClearingPriceHistoryResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetClearingPriceHistoryRequest, PlainMessage<GetClearingPriceHistoryResponse>>,
+  ) => QueryOptionsResult<
+    PlainMessage<GetClearingPriceHistoryResponse>,
+    Error,
+    PlainMessage<GetClearingPriceHistoryResponse>,
+    QueryKey
+  >
   getLatestCheckpoint: (
-    input: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, GetLatestCheckpointResponse>,
-  ) => QueryOptionsResult<GetLatestCheckpointResponse, Error, GetLatestCheckpointResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, PlainMessage<GetLatestCheckpointResponse>>,
+  ) => QueryOptionsResult<
+    PlainMessage<GetLatestCheckpointResponse>,
+    Error,
+    PlainMessage<GetLatestCheckpointResponse>,
+    QueryKey
+  >
   getTickDetails: (
-    input: UseQueryApiHelperHookArgs<GetTickDetailsRequest, GetTickDetailsResponse>,
-  ) => QueryOptionsResult<GetTickDetailsResponse, Error, GetTickDetailsResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<GetTickDetailsRequest, PlainMessage<GetTickDetailsResponse>>,
+  ) => QueryOptionsResult<PlainMessage<GetTickDetailsResponse>, Error, PlainMessage<GetTickDetailsResponse>, QueryKey>
   listTopAuctions: (
-    input: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, ListTopAuctionsResponse>,
-  ) => QueryOptionsResult<ListTopAuctionsResponse, Error, ListTopAuctionsResponse, QueryKey>
+    input: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, PlainMessage<ListTopAuctionsResponse>>,
+  ) => QueryOptionsResult<PlainMessage<ListTopAuctionsResponse>, Error, PlainMessage<ListTopAuctionsResponse>, QueryKey>
 } {
   return {
     getAuction: (input) => getAuctionQueryOptions(client, input),

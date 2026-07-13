@@ -1,8 +1,12 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from 'ui/src'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { PortfolioConnectWalletBanner } from '~/pages/Portfolio/ConnectWalletBanner'
 import { ConnectWalletFixedBottomButton } from '~/pages/Portfolio/ConnectWalletFixedBottomButton'
 import { PortfolioHeader } from '~/pages/Portfolio/Header/Header'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { usePortfolioHeartbeatCoordinator } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioContent } from '~/pages/Portfolio/PortfolioContent'
 import { PortfolioOutageProvider } from '~/pages/Portfolio/PortfolioOutageContext'
@@ -14,6 +18,15 @@ interface PortfolioPageInnerProps {
 export function PortfolioPageInner({ mb }: PortfolioPageInnerProps): JSX.Element {
   const showDemoView = useShowDemoView()
   const isCompact = useScrollCompact({})
+  const { tab } = usePortfolioRoutes()
+  const portfolioAddresses = usePortfolioAddresses()
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+
+  usePortfolioHeartbeatCoordinator({
+    tab,
+    enabled: !showDemoView && !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
+    poolsEnabled: portfolioPoolsBalancesEnabled,
+  })
 
   return (
     <PortfolioOutageProvider>

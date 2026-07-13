@@ -5,6 +5,7 @@ import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { FormattedAmountWithMutedDecimals } from 'uniswap/src/components/text/FormattedAmountWithMutedDecimals'
+import { useEarnLifetimeEarningsUsd } from 'uniswap/src/features/earn/hooks/useEarnLifetimeEarningsUsd'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { hasEarnPosition } from 'uniswap/src/features/earn/utils'
@@ -16,7 +17,6 @@ import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
 
 const EARN_LOADING_ROWS = 3
-const LIFETIME_EARNINGS_USD_STUB = 0
 const LIFETIME_EARNINGS_DECIMAL_OPACITY = 0.5
 const VAULT_ROW_MIN_HEIGHT = 44
 
@@ -27,6 +27,16 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account
   const { isLoadingPositions, isLoadingVaults, positionsByVaultId, totalDepositedUsd, vaultsSortedByPosition } =
     useEarnVaults({ account })
 
+  // ListEarnPositions doesn't carry lifetime_pnl_usd; fan out GetEarnPosition per active position.
+  const vaultsWithActivePosition = useMemo(
+    () => vaultsSortedByPosition.filter((vault) => hasEarnPosition(positionsByVaultId.get(vault.id))),
+    [vaultsSortedByPosition, positionsByVaultId],
+  )
+  const { lifetimeEarningsUsd, isLoading: isLoadingLifetimeEarnings } = useEarnLifetimeEarningsUsd({
+    walletAddress: account,
+    vaults: vaultsWithActivePosition,
+  })
+
   const shouldShowLoadingRows = isLoadingVaults || isLoadingPositions
 
   if (!shouldShowLoadingRows && vaultsSortedByPosition.length === 0) {
@@ -34,8 +44,7 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account
   }
 
   const totalDeposited = convertFiatAmountFormatted(totalDepositedUsd, NumberType.PortfolioBalance)
-  // TODO(CONS-2146): Replace this stub once lifetime Earn earnings are available from data-api.
-  const lifetimeEarnings = convertFiatAmountFormatted(LIFETIME_EARNINGS_USD_STUB, NumberType.PortfolioBalance)
+  const lifetimeEarnings = convertFiatAmountFormatted(lifetimeEarningsUsd, NumberType.PortfolioBalance)
 
   return (
     <>
@@ -64,11 +73,10 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account
             <FormattedAmountWithMutedDecimals
               amount={lifetimeEarnings}
               variant="body3"
-              // $statusSuccess matches the color real lifetime earnings will use, so the value doesn't flip color once data-api lands.
               color="$statusSuccess"
               decimalOpacity={LIFETIME_EARNINGS_DECIMAL_OPACITY}
               justifyContent="flex-end"
-              loading={isLoadingPositions}
+              loading={isLoadingPositions || isLoadingLifetimeEarnings}
               testID={TestID.PortfolioOverviewEarnLifetimeEarnings}
             />
           </Flex>
@@ -113,7 +121,7 @@ function PortfolioEarnVaultRow({
 }) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatCurrencyAmount, formatPercent } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(vault.currencyId)
+  const currencyInfo = useCurrencyInfo(vault.displayCurrencyId)
   const currency = currencyInfo?.currency
   const hasPosition = hasEarnPosition(position)
   const depositedCurrencyAmount = useMemo(
@@ -122,7 +130,10 @@ function PortfolioEarnVaultRow({
   )
   const tokenAmount =
     depositedCurrencyAmount && currency
-      ? `${formatCurrencyAmount({ value: depositedCurrencyAmount, type: NumberType.TokenNonTx })} ${currency.symbol}`
+      ? `${formatCurrencyAmount({
+          value: depositedCurrencyAmount,
+          type: NumberType.TokenNonTx,
+        })} ${currency.symbol}`
       : undefined
 
   return (

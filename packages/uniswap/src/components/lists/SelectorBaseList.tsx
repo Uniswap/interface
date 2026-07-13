@@ -78,6 +78,7 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
         sectionKey={section.sectionKey}
         name={section.name}
         sectionHeader={section.sectionHeader}
+        icon={section.icon}
       />
     ),
     [],

@@ -10,9 +10,11 @@ import {
 export function EmptyPositionsView({
   newPositionHref,
   withBorder,
+  showNewPositionAction = true,
 }: {
   newPositionHref: string
   withBorder?: boolean
+  showNewPositionAction?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -40,22 +42,24 @@ export function EmptyPositionsView({
               {t('pools.explore')}
             </Button>
           </Trace>
-          <Trace logPress element={ElementName.PositionsEmptyStateNewPosition}>
-            <Button
-              $md={{
-                py: '$spacing16',
-              }}
-              variant="default"
-              size="small"
-              tag="a"
-              href={newPositionHref}
-              $platform-web={{
-                textDecoration: 'none',
-              }}
-            >
-              {t('position.new')}
-            </Button>
-          </Trace>
+          {showNewPositionAction && (
+            <Trace logPress element={ElementName.PositionsEmptyStateNewPosition}>
+              <Button
+                $md={{
+                  py: '$spacing16',
+                }}
+                variant="default"
+                size="small"
+                tag="a"
+                href={newPositionHref}
+                $platform-web={{
+                  textDecoration: 'none',
+                }}
+              >
+                {t('position.new')}
+              </Button>
+            </Trace>
+          )}
         </Flex>
       }
     />

@@ -1,7 +1,7 @@
 import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
 
 /**
@@ -20,7 +20,7 @@ export function getForApiHeaders(): Record<string, string> {
     ...(!getFeatureFlag(FeatureFlags.ForSessionsEnabled) ? { 'X-API-KEY': config.uniswapApiKey } : {}),
     'x-request-source': REQUEST_SOURCE,
     ...(isMobileApp ? { 'x-app-version': getVersionHeader() } : {}),
-    Origin: uniswapUrls.requestOriginUrl,
+    Origin: UniswapStaticUrls.requestOriginUrl,
   }
 }
 
@@ -33,7 +33,7 @@ export const FOR_API_HEADERS: Record<string, string> = {
   'X-API-KEY': config.uniswapApiKey,
   'x-request-source': REQUEST_SOURCE,
   ...(isMobileApp ? { 'x-app-version': getVersionHeader() } : {}),
-  Origin: uniswapUrls.requestOriginUrl,
+  Origin: UniswapStaticUrls.requestOriginUrl,
 }
 
 export const FOR_MODAL_SNAP_POINTS = ['70%', '100%']

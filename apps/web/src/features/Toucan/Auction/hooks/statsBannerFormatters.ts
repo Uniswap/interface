@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { ClearingPriceChange } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
@@ -59,7 +60,7 @@ export function computeHourlyChangePercent({
   auctionTokenDecimals,
 }: {
   clearingPriceDecimal: number
-  changes: ClearingPriceChange[] | undefined
+  changes: PlainMessage<ClearingPriceChange>[] | undefined
   bidTokenDecimals: number | undefined
   auctionTokenDecimals: number
 }): number | null {
@@ -68,7 +69,7 @@ export function computeHourlyChangePercent({
   }
   const oneHourAgo = Date.now() - ONE_HOUR_MS
   let bestTime = 0
-  let bestEntry: ClearingPriceChange | null = null
+  let bestEntry: PlainMessage<ClearingPriceChange> | null = null
   for (const entry of changes) {
     const entryTime = safeParseTimestampMs(entry.createdAt) ?? 0
     if (entryTime > 0 && entryTime <= oneHourAgo && entryTime > bestTime) {

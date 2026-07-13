@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ExploreStatsResponse, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -13,6 +13,39 @@ import { OrderDirection } from '~/appGraphql/data/util'
 import { giveExploreStatDefaultValue, useExploreStats } from '~/features/Explore/state'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { PoolStat } from '~/types/explore'
+
+const COMBINED_ETH_SYMBOLS = ['WETH', 'ETH']
+
+function convergeSymbol(symbol: string, convergeTo: string): string {
+  if (COMBINED_ETH_SYMBOLS.includes(symbol.toUpperCase())) {
+    return convergeTo
+  }
+  return symbol
+}
+
+function generatePoolNames(token0?: TokenStats, token1?: TokenStats) {
+  if (!token0?.symbol || !token1?.symbol) {
+    return []
+  }
+
+  const names = [
+    `${token0.symbol}/${token1.symbol}`.toLowerCase(), // name
+    `${token1.symbol}/${token0.symbol}`.toLowerCase(), // name reversed
+  ]
+
+  // Add cases for WETH and ETH if either token is WETH or ETH
+  if (
+    COMBINED_ETH_SYMBOLS.includes(token0.symbol.toUpperCase()) ||
+    COMBINED_ETH_SYMBOLS.includes(token1.symbol.toUpperCase())
+  ) {
+    names.push(`${convergeSymbol(token0.symbol, 'ETH')}/${convergeSymbol(token1.symbol, 'ETH')}`.toLowerCase())
+    names.push(`${convergeSymbol(token1.symbol, 'ETH')}/${convergeSymbol(token0.symbol, 'ETH')}`.toLowerCase())
+    names.push(`${convergeSymbol(token0.symbol, 'WETH')}/${convergeSymbol(token1.symbol, 'WETH')}`.toLowerCase())
+    names.push(`${convergeSymbol(token1.symbol, 'WETH')}/${convergeSymbol(token0.symbol, 'WETH')}`.toLowerCase())
+  }
+
+  return names
+}
 
 function useFilteredPools(pools?: PoolStat[], enabled = true) {
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
@@ -31,15 +64,17 @@ function useFilteredPools(pools?: PoolStat[], enabled = true) {
         pool.token0?.address && normalizeTokenAddressForCache(pool.token0.address).includes(lowercaseFilterString)
       const token1HashIncludesFilterString =
         pool.token1?.address && normalizeTokenAddressForCache(pool.token1.address).includes(lowercaseFilterString)
-      const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
-      const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
+
+      const poolNames = generatePoolNames(pool.token0, pool.token1)
+      const poolNamesIncludesFilterString = poolNames.some((name) => name.includes(lowercaseFilterString))
+
       return (
         token0IncludesFilterString ||
         token1IncludesFilterString ||
         addressIncludesFilterString ||
         token0HashIncludesFilterString ||
         token1HashIncludesFilterString ||
-        poolNameIncludesFilterString
+        poolNamesIncludesFilterString
       )
     })
   }, [enabled, lowercaseFilterString, pools])

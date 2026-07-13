@@ -36,7 +36,7 @@ import type {
 } from '~/features/accounts/store/types'
 import { normalizeWalletName } from '~/features/wallet/connection/connectors/multiplatform'
 import { useConnectWalletMutation } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
-import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
+import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'
 
 /**
  * Web package implementation of the unified accounts store architecture.
@@ -367,7 +367,8 @@ function buildAccountsState({
   return { wallets, connectors, accounts, activeConnectors, connectionQueryIsPending: isConnecting }
 }
 
-// Uniswap wallet connect connector conflicts with the normal WC connector, so we leave it out of our config and add it manually here.
+// Fallback entry for envs where WC connectors are excluded from wagmiConfig (e.g. unit tests).
+// Skipped when the real connector is already present so the wallet isn't duplicated.
 const UNISWAP_WALLET_CONNECTOR = {
   id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
   type: 'uniswapWalletConnect',
@@ -382,7 +383,12 @@ function useEVMWalletInfos(pendingConnection: ExternalWallet | undefined): Platf
   const fallbackChainId = useWagmiChainId()
 
   return useMemo(() => {
-    return [...connectors, UNISWAP_WALLET_CONNECTOR].map((connector) => {
+    const hasUniswapConnector = connectors.some(
+      (connector) => connector.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    )
+    const evmConnectors = hasUniswapConnector ? connectors : [...connectors, UNISWAP_WALLET_CONNECTOR]
+
+    return evmConnectors.map((connector) => {
       const currentConnectorIsActive =
         connector.id === wagmiAccount.connector?.id || pendingConnection?.id === connector.id
       const accountData = currentConnectorIsActive ? wagmiAccount : undefined

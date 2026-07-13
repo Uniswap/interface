@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { memo } from 'react'
-import { Flex, Text } from 'ui/src'
+import { Flex, type ModifierPressProps, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -15,7 +15,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
-interface PoolOptionItemProps {
+interface PoolOptionItemProps extends ModifierPressProps {
   token0CurrencyInfo: CurrencyInfo
   token1CurrencyInfo: CurrencyInfo
   poolId: string
@@ -39,6 +39,8 @@ function PoolOptionItemInner({
   feeTier,
   focusedRowControl,
   rightElement,
+  modifierPressHref,
+  onModifierPress,
 }: PoolOptionItemProps): JSX.Element {
   const poolName = `${token0CurrencyInfo.currency.symbol}/${token1CurrencyInfo.currency.symbol}`
 
@@ -77,7 +79,9 @@ function PoolOptionItemInner({
       }
       focusedRowControl={focusedRowControl}
       rightElement={rightElement}
+      modifierPressHref={modifierPressHref}
       onPress={onPress}
+      onModifierPress={onModifierPress}
     />
   )
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)

@@ -1,6 +1,6 @@
 import { CELO_LOGO } from 'ui/src/assets'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
@@ -30,7 +30,7 @@ export function getInitialLogoUrl({
   }
 
   if (checksummedAddress) {
-    return `${uniswapUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/assets/${checksummedAddress}/logo.png`
+    return `${UniswapStaticUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
     return backupImg ?? undefined
   }

@@ -41,10 +41,8 @@ export function canonicalizeFavorites(favoriteIds: string[], tokenRankingsData: 
  * `chainTokens` — cross-chain address grouping that handles different addresses across chains.
  */
 export function useCanonicalFavoritesMigration({
-  multichainTokenUxEnabled,
   tokenRankingsData,
 }: {
-  multichainTokenUxEnabled: boolean
   tokenRankingsData: TokenRankingsResponse | undefined
 }): void {
   const dispatch = useDispatch()
@@ -52,7 +50,7 @@ export function useCanonicalFavoritesMigration({
   const hasMigrated = useSelector(selectHasMigratedToMultichain)
 
   useEffect(() => {
-    if (!multichainTokenUxEnabled || hasMigrated || favoriteTokens.length === 0 || !tokenRankingsData) {
+    if (hasMigrated || favoriteTokens.length === 0 || !tokenRankingsData) {
       return
     }
 
@@ -66,5 +64,5 @@ export function useCanonicalFavoritesMigration({
     }
 
     dispatch(setHasMigratedToMultichain(true))
-  }, [multichainTokenUxEnabled, hasMigrated, favoriteTokens, tokenRankingsData, dispatch])
+  }, [hasMigrated, favoriteTokens, tokenRankingsData, dispatch])
 }

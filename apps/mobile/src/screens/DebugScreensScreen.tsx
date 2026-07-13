@@ -1,4 +1,4 @@
-import { LegendList } from '@legendapp/list'
+import { LegendList } from '@legendapp/list/react-native'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'

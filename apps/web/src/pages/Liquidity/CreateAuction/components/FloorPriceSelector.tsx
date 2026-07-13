@@ -8,16 +8,19 @@ import { fonts } from 'ui/src/theme'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import {
   commitDraftToFloorPrice,
   draftMirrorsPersisted,
   exceedsDecimalCap,
   getDisplayValueForMode,
-  isDraftFloorBelowMinimumRepresentable,
   maxDecimalsForDraftInput,
   pickDisplayValueForToggleTarget,
   previewFloorPriceForFdvUsdDraft,
+  resolveUnfocusedDraftSync,
+  shouldRejectDraftBelowMinimum,
   type FloorPriceDenomination,
   type InputCurrency,
 } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
@@ -169,41 +172,23 @@ export function FloorPriceSelector({
     if (inputCurrency === 'usd' && usdPriceNum === null) {
       return
     }
-    if (
-      floorPriceInput?.floorPrice === floorPrice &&
-      floorPriceInput.denomination === denomination &&
-      floorPriceInput.inputCurrency === inputCurrency
-    ) {
-      if (localValue !== floorPriceInput.rawValue) {
-        skipNextDraftCommitRef.current = true
-        setLocalValue(floorPriceInput.rawValue)
-      }
-      return
-    }
-    // If draft commits to the same canonical floor as the store, keep the user's string as entered.
-    if (localValue.trim() !== '') {
-      const committedFromDraft = commitDraftToFloorPrice({
-        localValue,
-        denomination,
-        inputCurrency,
-        usdPriceNum,
-        tokenTotalSupply,
-        raiseCurrency: raiseCurrencyObj,
-      })
-      if (committedFromDraft === floorPrice) {
-        return
-      }
-    }
-    const display = getDisplayValueForMode({
+    const sync = resolveUnfocusedDraftSync({
+      localValue,
       denomination,
       inputCurrency,
-      floorPrice,
-      hasValidFloorPrice,
+      usdPriceNum,
       tokenTotalSupply,
       raiseCurrency: raiseCurrencyObj,
-      usdPriceNum,
+      floorPrice,
+      floorPriceInput,
+      hasValidFloorPrice,
     })
-    setLocalValue(display)
+    if (sync.action === 'restoreSnapshot') {
+      skipNextDraftCommitRef.current = true
+      setLocalValue(sync.value)
+    } else if (sync.action === 'replace') {
+      setLocalValue(sync.value)
+    }
   }, [
     denomination,
     floorPrice,
@@ -231,7 +216,7 @@ export function FloorPriceSelector({
         }
         if (
           raiseCurrencyObj &&
-          isDraftFloorBelowMinimumRepresentable({
+          shouldRejectDraftBelowMinimum({
             localValue: raw,
             denomination,
             inputCurrency,
@@ -260,7 +245,7 @@ export function FloorPriceSelector({
       }
       if (
         raiseCurrencyObj &&
-        isDraftFloorBelowMinimumRepresentable({
+        shouldRejectDraftBelowMinimum({
           localValue: raw,
           denomination,
           inputCurrency,
@@ -433,29 +418,31 @@ export function FloorPriceSelector({
       <Flex gap="$spacing4" width="100%">
         <Flex row gap="$spacing4" alignItems="center" width="100%" minWidth={0}>
           {isFocused ? (
-            <Input
-              ref={inputRef}
-              autoFocus
-              unstyled
-              outlineStyle="none"
-              $platform-web={{
-                fieldSizing: 'content',
-                minWidth: '1ch',
-                maxWidth: '100%',
-              }}
-              value={focusedDisplayValue}
-              onChangeText={handleChange}
-              onBlur={handleBlur}
-              placeholder={`0${decimalSeparator}00`}
-              placeholderTextColor="$neutral3"
-              keyboardType="decimal-pad"
-              fontFamily="$heading"
-              fontSize={fonts.heading3.fontSize}
-              lineHeight={fonts.heading3.lineHeight}
-              fontWeight={fonts.heading3.fontWeight}
-              color="$neutral1"
-              backgroundColor="$transparent"
-            />
+            <Trace logFocus element={ElementName.AuctionFloorPrice}>
+              <Input
+                ref={inputRef}
+                autoFocus
+                unstyled
+                outlineStyle="none"
+                $platform-web={{
+                  fieldSizing: 'content',
+                  minWidth: '1ch',
+                  maxWidth: '100%',
+                }}
+                value={focusedDisplayValue}
+                onChangeText={handleChange}
+                onBlur={handleBlur}
+                placeholder={`0${decimalSeparator}00`}
+                placeholderTextColor="$neutral3"
+                keyboardType="decimal-pad"
+                fontFamily="$heading"
+                fontSize={fonts.heading3.fontSize}
+                lineHeight={fonts.heading3.lineHeight}
+                fontWeight={fonts.heading3.fontWeight}
+                color="$neutral1"
+                backgroundColor="$transparent"
+              />
+            </Trace>
           ) : unfocusedNumeric === null ? (
             <Text variant="heading3" color="$neutral3" cursor="text" onPress={handleFocus}>
               {`0${decimalSeparator}00`}

@@ -604,6 +604,7 @@ export default defineConfig({
       ],
       'universe-custom/no-redux-modals': 'error',
       'universe-custom/no-tolowercase-address-currencyid': 'warn',
+      'universe-custom/no-platform-gate-in-chain-flags': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
       '@jambit/typed-redux-saga/delegate-effects': 'error',
@@ -950,6 +951,7 @@ export default defineConfig({
                 { allowSameFolder: false, rootDir: 'src' },
               ],
               'universe-custom/import-boundary': 'error' as const,
+              'universe-custom/no-direct-viem-ethers-import': 'error' as const,
             },
           },
         ]
@@ -1028,10 +1030,6 @@ export default defineConfig({
                 message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
               },
               {
-                name: 'ethers',
-                message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
-              },
-              {
                 name: 'ui/src/components/icons',
                 message:
                   'Please import icons directly from their respective files to avoid importing the entire icons folder.',
@@ -1056,6 +1054,12 @@ export default defineConfig({
                   'useWatchBlockNumber',
                 ],
                 message: 'Import wrapped utilities from internal hooks instead.',
+              },
+              {
+                name: '@privy-io/react-auth',
+                importNames: ['usePrivy', 'useLoginWithOAuth', 'useLoginWithEmail', 'useAuthorizationSignature'],
+                message:
+                  'Use the gated `useMaybe*` hooks from `~/hooks/useMaybePrivy` instead. `MaybePrivyProvider` only mounts <PrivyProvider> when Privy is configured (PRIVY_APP_ID / PRIVY_CLIENT_ID); Privy hooks read provider-backed contexts at render and crash the page when it is not.',
               },
               {
                 name: 'i18next',
@@ -1234,7 +1238,7 @@ export default defineConfig({
 
     // ── @universe/* packages with standard pattern ────────────────────
     // (no-relative-import-paths + restrictedImportPatternsForUniversePackage)
-    ...(['api', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
+    ...(['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
       files: [`packages/${pkg}/**`],
       rules: {
         ...(!isFastLint && {
@@ -1295,6 +1299,7 @@ export default defineConfig({
           'universe-custom/no-unwrapped-t': 'off',
           'universe-custom/custom-map-sort': 'off',
           'universe-custom/no-hex-string-casting': 'off',
+          'universe-custom/no-direct-viem-ethers-import': 'off',
           'security/detect-non-literal-regexp': 'off',
           'eslint-js/no-restricted-syntax': 'off',
           '@jambit/typed-redux-saga/use-typed-effects': 'off',

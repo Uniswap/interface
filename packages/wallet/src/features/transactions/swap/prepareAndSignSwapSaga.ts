@@ -1,4 +1,3 @@
-import { FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { call, select } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
@@ -8,6 +7,7 @@ import {
   isChained,
   isClassic,
   isUniswapX,
+  isUserOpSwap,
   isWrap,
 } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
@@ -44,6 +44,22 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
     const { swapTxContext, account, onSuccess, onFailure } = params
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
+    // 4337 sponsored swaps cannot be pre-signed: paymaster fields are populated
+    // inside the execute saga (pm_sponsorUserOperation), and the UserOp signature
+    // commits to those fields. Resolve immediately with a stub so any speculative
+    // pre-sign machinery (useSwapSigning) stays quiet without burning a signer.
+    if (isUserOpSwap(swapTxContext)) {
+      const stubPreSigned: PreSignedSwapTransaction = {
+        signedSwapTx: {} as SignedTransactionRequest,
+        swapTxContext,
+        metadata: {} as BaseTransactionMetadata,
+        chainId,
+        account,
+      }
+      onSuccess?.(stubPreSigned)
+      return stubPreSigned
+    }
+
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     // We disable for bridge to avoid any potential issues with BE checking status.
     const submitViaPrivateRpc = isClassic(swapTxContext) && (yield* call(shouldSubmitViaPrivateRpc, chainId))
@@ -74,6 +90,22 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
         return undefined
       }
 
+      // SWAP-2471: record the nonce assigned to each pre-signed sibling (approval/permit/swap) so the
+      // back-to-back N / N+1 / N+2 sequence on delegated accounts is reconstructable from prod data.
+      const logSignedNonce = (kind: 'approve' | 'permit' | 'swap'): void => {
+        dependencies.logger.info('prepareAndSignSwapSaga', 'prepareAndSignSwapTransaction', 'Swap nonce assigned', {
+          kind,
+          chainId,
+          address: account.address,
+          assignedNonce: getCurrentNonce(),
+          baseNonce: calculatedNonce?.nonce,
+          nonceIncrement,
+          includesDelegation: swapTxContext.includesDelegation,
+          submitViaPrivateRpc,
+          timestampMs: Date.now(),
+        })
+      }
+
       let signedApproveTx: SignedTransactionRequest | undefined
       let signedPermitTx: SignedTransactionRequest | undefined
 
@@ -87,6 +119,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           submitViaPrivateRpc,
         })
         signedApproveTx = approvalResult.signedTransaction
+        logSignedNonce('approve')
         nonceIncrement = nonceIncrement + 1
       }
 
@@ -100,6 +133,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           submitViaPrivateRpc,
         })
         signedPermitTx = permitResult.signedTransaction
+        logSignedNonce('permit')
         nonceIncrement = nonceIncrement + 1
       }
 
@@ -146,6 +180,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           nonce: getCurrentNonce(),
           submitViaPrivateRpc,
         })
+        logSignedNonce('swap')
 
         preSignedSwapTx = {
           signedApproveTx,
@@ -192,7 +227,6 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
-  const privateRpcFeatureEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
-  const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
-  return Boolean(swapProtectionOn && privateRpcSupportedOnChain && privateRpcFeatureEnabled)
+  const privateRpcSupportedOnChain = chainId ? yield* call(isPrivateRpcSupportedOnChain, chainId) : false
+  return Boolean(swapProtectionOn && privateRpcSupportedOnChain)
 }

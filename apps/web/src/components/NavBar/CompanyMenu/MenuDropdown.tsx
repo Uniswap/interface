@@ -1,12 +1,13 @@
 import { isMobileWeb } from '@universe/environment'
-import { Fragment, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Anchor, Flex, Separator, styled, Text, TouchableArea } from 'ui/src'
+import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
 import { spacing, TextVariantTokens } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { HelpModal } from '~/components/HelpModal/HelpModal'
+import { MobileTouchableArea } from '~/components/MobileTouchableArea'
 import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
 import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from '~/components/NavBar/NavDropdown'
@@ -42,14 +43,6 @@ const LinkTextStyle = {
 
 // On mobile web, use the Link component to omit long-press styling
 const PlatformExternalLink = isMobileWeb ? Link : ExternalLink
-const MobileTouchableArea = isMobileWeb ? TouchableArea : Fragment
-
-const TouchableAreaProps = isMobileWeb
-  ? {
-      row: true,
-      gap: '$gap8',
-    }
-  : {}
 
 export function MenuLink({
   label,
@@ -62,7 +55,7 @@ export function MenuLink({
 }: MenuItem & { textVariant?: TextVariantTokens }) {
   const content = internal ? (
     <Link to={href} onClick={closeMenu} style={LinkStyle}>
-      <MobileTouchableArea {...TouchableAreaProps}>
+      <MobileTouchableArea row gap="$gap8">
         {icon}
         <Text variant={textVariant} {...LinkTextStyle}>
           {label}
@@ -71,7 +64,7 @@ export function MenuLink({
     </Link>
   ) : (
     <PlatformExternalLink to={href} href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
-      <MobileTouchableArea {...TouchableAreaProps}>
+      <MobileTouchableArea row gap="$gap8">
         {icon}
         <Text variant={textVariant} {...LinkTextStyle}>
           {label}

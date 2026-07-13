@@ -2,7 +2,7 @@ import { TradingApi } from '@universe/api'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getRouteAnalyticsData, logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
-import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: vi.fn(),
@@ -21,45 +21,9 @@ vi.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
   }
 })
 
-// Mock the @uniswap/v2-sdk package to provide Pair.getAddress
-vi.mock('@uniswap/v2-sdk', async (importOriginal) => {
-  const originalModule = await importOriginal<typeof import('@uniswap/v2-sdk')>()
-  originalModule.Pair.getAddress = (): string => {
-    return `0xv2PoolAddress`
-  }
-  return originalModule
-})
-
-vi.mock('@uniswap/v3-sdk', async (importOriginal) => {
-  const originalModule = await importOriginal<typeof import('@uniswap/v3-sdk')>()
-  originalModule.Pool.getAddress = (): string => {
-    return `0xv3PoolAddress`
-  }
-  return originalModule
-})
-
-// Create instances of the mock classes
-const mockV2Pool = {
-  token0: { address: 'token0Address' },
-  token1: { address: 'token1Address' },
-}
-const { Pair: V2Pool } = await vi.importActual<typeof import('@uniswap/v2-sdk')>('@uniswap/v2-sdk')
-Object.setPrototypeOf(mockV2Pool, V2Pool.prototype)
-
-const mockV3Pool = {
-  token0: { address: 'token0Address' },
-  token1: { address: 'token1Address' },
-  fee: 0,
-}
-const { Pool: V3Pool } = await vi.importActual<typeof import('@uniswap/v3-sdk')>('@uniswap/v3-sdk')
-Object.setPrototypeOf(mockV3Pool, V3Pool.prototype)
-//
-const mockV4Pool = { poolId: '0xpool1', v4: true }
-const { Pool: V4Pool } = await vi.importActual<typeof import('@uniswap/v4-sdk')>('@uniswap/v4-sdk')
-Object.setPrototypeOf(mockV4Pool, V4Pool.prototype)
-
-// Helper to cast isClassic as a Mock
-// const mockIsClassic = isClassic as unknown as Mock
+const mockV2Pool = { type: 'v2-pool', address: '0xv2PoolAddress' }
+const mockV3Pool = { type: 'v3-pool', address: '0xv3PoolAddress' }
+const mockV4Pool = { type: 'v4-pool', address: '0xpool1' }
 
 describe('analytics', () => {
   beforeEach(() => {
@@ -119,8 +83,8 @@ describe('analytics', () => {
     it('extracts route data from classic trade with V2 and V3 pools', () => {
       const mockClassicTrade = {
         routing: TradingApi.Routing.CLASSIC,
-        routes: [{ pools: [mockV2Pool] }, { pools: [mockV3Pool] }],
-      } as unknown as ClassicTrade
+        quote: { quote: { route: [[mockV2Pool], [mockV3Pool]] } },
+      } as unknown as Trade
 
       // We need to cast to Trade because the mock isn't a complete implementation
       const result = getRouteAnalyticsData(mockClassicTrade as unknown as Trade)
@@ -144,8 +108,8 @@ describe('analytics', () => {
       // We need to cast to Trade because the mock isn't a complete implementation
       const mockClassicTrade = {
         routing: TradingApi.Routing.CLASSIC,
-        routes: [{ pools: [mockV4Pool] }],
-      } as unknown as ClassicTrade
+        quote: { quote: { route: [[mockV4Pool]] } },
+      } as unknown as Trade
 
       const result = getRouteAnalyticsData(mockClassicTrade as unknown as Trade)
 
@@ -165,8 +129,8 @@ describe('analytics', () => {
       // Create a mock trade that will cause extraction to fail
       const mockBrokenTrade = {
         routing: TradingApi.Routing.CLASSIC,
-        routes: null, // This will cause an error during extraction
-      } as unknown as ClassicTrade
+        quote: { quote: { route: [[{ type: 'unknown-pool' }]] } },
+      } as unknown as Trade
 
       const result = getRouteAnalyticsData(mockBrokenTrade as unknown as Trade)
 

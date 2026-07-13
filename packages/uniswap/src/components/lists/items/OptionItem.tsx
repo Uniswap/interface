@@ -1,6 +1,6 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
-import { memo, useCallback } from 'react'
-import { Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
+import { memo, ReactNode, useCallback } from 'react'
+import { Flex, FlexProps, type ModifierPressProps, Text, TextProps, TouchableArea } from 'ui/src'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useIsKeyboardOpen } from 'utilities/src/device/keyboard/useIsKeyboardOpen'
@@ -15,11 +15,16 @@ export interface FocusedRowControl {
   setFocusedRowIndex: (index: number | undefined) => void
 }
 
-export interface OptionItemProps {
+export interface OptionItemProps extends ModifierPressProps {
   image: JSX.Element
   title: string | JSX.Element
   subtitle?: JSX.Element
   rightElement?: JSX.Element
+  /** Persistent category pill (e.g. "Stocks") rendered before `rightElement`, independent of hover. */
+  categoryTag?: ReactNode
+  /** Rendered immediately after the title on the same baseline (e.g. a dimmed RWA issuer label). When present,
+   *  the title shrinks/ellipsizes and the suffix holds its width. Absent → title renders exactly as before. */
+  titleSuffix?: ReactNode
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
@@ -39,6 +44,8 @@ function OptionItemInner({
   title,
   subtitle,
   rightElement,
+  categoryTag,
+  titleSuffix,
   badge,
   titleProps,
   onPress,
@@ -47,6 +54,8 @@ function OptionItemInner({
   testID,
   modalInfo,
   focusedRowControl,
+  modifierPressHref,
+  onModifierPress,
 }: OptionItemProps): JSX.Element {
   const isKeyboardOpen = useIsKeyboardOpen()
 
@@ -104,8 +113,10 @@ function OptionItemInner({
         opacity={disabled ? 0.5 : 1}
         width="100%"
         px="$spacing12"
+        modifierPressHref={modifierPressHref}
         onPress={onPressOption}
         onLongPress={onLongPress}
+        onModifierPress={onModifierPress}
       >
         <Flex
           row
@@ -124,7 +135,27 @@ function OptionItemInner({
             {image}
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
-                {typeof title === 'string' ? (
+                {titleSuffix ? (
+                  <Flex row shrink alignItems="baseline" gap="$spacing6" minWidth={0}>
+                    {typeof title === 'string' ? (
+                      <Text
+                        color="$neutral1"
+                        variant="body1"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        numberOfLines={1}
+                        flexShrink={1}
+                        {...titleProps}
+                      >
+                        {title}
+                      </Text>
+                    ) : (
+                      title
+                    )}
+                    {titleSuffix}
+                  </Flex>
+                ) : typeof title === 'string' ? (
                   <Text
                     color="$neutral1"
                     variant="body1"
@@ -145,8 +176,9 @@ function OptionItemInner({
             </Flex>
           </Flex>
 
-          {rightElement && (
-            <Flex grow alignItems="flex-end" justifyContent="center">
+          {(categoryTag || rightElement) && (
+            <Flex row grow alignItems="center" justifyContent="flex-end" gap="$spacing8">
+              {categoryTag}
               {rightElement}
             </Flex>
           )}

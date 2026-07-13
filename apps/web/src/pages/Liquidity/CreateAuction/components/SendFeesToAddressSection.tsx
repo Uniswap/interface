@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme/fonts'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from '~/chains'
 
 export function SendFeesToAddressSection({
@@ -62,21 +64,23 @@ export function SendFeesToAddressSection({
             <Text variant="body4" color="$neutral2" pb="$spacing2">
               {t('common.address')}
             </Text>
-            <Input
-              value={value}
-              onChangeText={onValueChange}
-              onBlur={() => setTouched(true)}
-              placeholder={poolOwnerAddress ?? ''}
-              placeholderTextColor="$neutral3"
-              accessibilityLabel={t('toucan.createAuction.step.customizePool.feeClaim.recipientAddress')}
-              height={fonts.body4.lineHeight}
-              fontSize={fonts.body4.fontSize}
-              lineHeight={fonts.body4.lineHeight}
-              fontWeight={fonts.body4.fontWeight}
-              color="$neutral1"
-              px="$none"
-              backgroundColor="$transparent"
-            />
+            <Trace logFocus element={ElementName.AuctionFeeForwardAddress}>
+              <Input
+                value={value}
+                onChangeText={onValueChange}
+                onBlur={() => setTouched(true)}
+                placeholder={poolOwnerAddress ?? ''}
+                placeholderTextColor="$neutral3"
+                accessibilityLabel={t('toucan.createAuction.step.customizePool.feeClaim.recipientAddress')}
+                height={fonts.body4.lineHeight}
+                fontSize={fonts.body4.fontSize}
+                lineHeight={fonts.body4.lineHeight}
+                fontWeight={fonts.body4.fontWeight}
+                color="$neutral1"
+                px="$none"
+                backgroundColor="$transparent"
+              />
+            </Trace>
           </Flex>
           {hasError && (
             <Text variant="body4" color="$statusCritical" textAlign="center">

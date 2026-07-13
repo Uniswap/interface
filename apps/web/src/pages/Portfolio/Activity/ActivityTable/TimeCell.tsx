@@ -41,9 +41,16 @@ function TimeCellInner({ timestamp, showFullDateOnHover = false, textAlign = 'le
         </Flex>
       }
       hoverContent={
-        <Flex height={CELL_HEIGHT} justifyContent="center" alignItems="center">
+        <Flex
+          height={CELL_HEIGHT}
+          justifyContent="center"
+          alignItems={textAlign === 'right' ? 'flex-end' : 'flex-start'}
+        >
           <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
-            {dateLine} {timeLine}
+            {dateLine}
+          </Text>
+          <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+            {timeLine}
           </Text>
         </Flex>
       }

@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,13 +6,19 @@ import { Flex, Input, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import {
   expandCompactNumberInput,
+  inputExceedsCurrencyPrecision,
   isAllowedCompactNumberInput,
   percentOfAmount,
+  truncateSymbol,
 } from '~/pages/Liquidity/CreateAuction/utils'
 import {
   formatLocalizedNumber,
@@ -34,7 +41,17 @@ function parseSuffixedAmount(input: string, currency: Currency): CurrencyAmount<
 interface AuctionSupplySelectorProps {
   auctionSupplyAmount: CurrencyAmount<Currency>
   tokenTotalSupply: CurrencyAmount<Currency>
+  /**
+   * Ceiling the deposit is clamped to. For a new token this is the full minted supply; for an
+   * existing token it is the connected wallet's held balance (what the auction can actually pull).
+   * The "Max" preset and percent presets are computed against this, not the total supply.
+   */
+  maxAuctionSupplyAmount: CurrencyAmount<Currency>
+  /** Smallest deposit whose sold/LP split keeps both legs at >= 1 base unit; clamped to on blur. */
+  minAuctionSupplyAmount: CurrencyAmount<Currency>
   tokenSymbol: string
+  /** Show the "Total supply: X" subtitle. Hidden for new tokens — a dedicated Total supply input sits above. LP-960. */
+  showTotalSupply?: boolean
   onSelectPercent: (percent: number) => void
   onAmountChange: (amount: CurrencyAmount<Currency>) => void
 }
@@ -42,7 +59,10 @@ interface AuctionSupplySelectorProps {
 export function AuctionSupplySelector({
   auctionSupplyAmount,
   tokenTotalSupply,
+  maxAuctionSupplyAmount,
+  minAuctionSupplyAmount,
   tokenSymbol,
+  showTotalSupply = true,
   onSelectPercent,
   onAmountChange,
 }: AuctionSupplySelectorProps) {
@@ -76,16 +96,19 @@ export function AuctionSupplySelector({
       if (!isAllowedCompactNumberInput(raw)) {
         return
       }
+      if (inputExceedsCurrencyPrecision(raw, currency.decimals)) {
+        return
+      }
       setRawInput(raw)
       const parsed = parseSuffixedAmount(raw, currency)
       if (!parsed) {
         return
       }
-      // Live-update with exact amount; cap to total supply so the store stays valid
-      const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
+      // Live-update with exact amount; cap to the deposit ceiling so the store stays valid
+      const capped = parsed.greaterThan(maxAuctionSupplyAmount) ? maxAuctionSupplyAmount : parsed
       onAmountChange(capped)
     },
-    [currency, tokenTotalSupply, onAmountChange],
+    [currency, maxAuctionSupplyAmount, onAmountChange],
   )
 
   const {
@@ -103,7 +126,7 @@ export function AuctionSupplySelector({
     () => (isFocused ? parseSuffixedAmount(rawInput, currency) : null),
     [isFocused, rawInput, currency],
   )
-  const exceedsTotalSupply = parsedAmount !== null && parsedAmount.greaterThan(tokenTotalSupply)
+  const exceedsMax = parsedAmount !== null && parsedAmount.greaterThan(maxAuctionSupplyAmount)
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -120,18 +143,27 @@ export function AuctionSupplySelector({
       return
     }
 
-    // Cap to total supply on blur
-    const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
-    onAmountChange(capped)
-  }, [rawInput, currency, tokenTotalSupply, onAmountChange])
+    // Clamp into [min, max] on blur: the lower bound keeps the sold/LP split from rounding a leg to
+    // zero base units (a degenerate auction that divides by zero in the percent math); the upper
+    // bound is the deposit ceiling (full supply for a new token, wallet balance for an existing one).
+    // Raise to the min first, then cap at the ceiling, so the ceiling always wins — in the
+    // pathological case where min > max (a token with fewer base units than the minimum two-leg
+    // deposit, or a wallet holding too little) the result never exceeds the ceiling, and the step's
+    // own validation disables Continue since the deposit stays below the minimum.
+    const raised = parsed.lessThan(minAuctionSupplyAmount) ? minAuctionSupplyAmount : parsed
+    const clamped = raised.greaterThan(maxAuctionSupplyAmount) ? maxAuctionSupplyAmount : raised
+    onAmountChange(clamped)
+  }, [rawInput, currency, maxAuctionSupplyAmount, minAuctionSupplyAmount, onAmountChange])
 
+  const trace = useTrace()
   const handleSelectPercent = useCallback(
     (percent: number) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AuctionSupplyPreset })
       setIsFocused(false)
       setRawInput('')
       onSelectPercent(percent)
     },
-    [onSelectPercent],
+    [onSelectPercent, trace],
   )
 
   const media = useMedia()
@@ -151,52 +183,50 @@ export function AuctionSupplySelector({
         {t('toucan.createAuction.step.configureAuction.depositAmount')}
       </Text>
 
-      {/* Amount input — always takes the full row */}
-      <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
-        {isFocused ? (
-          <Input
-            ref={inputRef}
-            autoFocus
-            unstyled
-            outlineStyle="none"
-            $platform-web={{
-              fieldSizing: 'content',
-              minWidth: '1ch',
-              maxWidth: '100%',
-            }}
-            value={focusedDisplay}
-            onChangeText={handleChange}
-            onBlur={handleBlur}
-            placeholder="0"
-            placeholderTextColor="$neutral3"
-            fontFamily="$heading"
-            fontSize={fonts.heading3.fontSize}
-            lineHeight={fonts.heading3.lineHeight}
-            fontWeight={fonts.heading3.fontWeight}
-            color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
-            backgroundColor="$transparent"
-          />
-        ) : (
-          <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
-            {displayUnfocused}
-          </Text>
-        )}
-        <Text flexShrink={0} variant="heading3" color="$neutral3">
-          {tokenSymbol}
-        </Text>
-      </Flex>
-
-      {/* Total supply + preset pills: same row when wide, stacked when narrow */}
+      {/* Input Row: amount (left) + preset pills (right), vertically centered — stacks when narrow */}
       <Flex
         row={!stackPresetPills}
         alignItems={stackPresetPills ? 'stretch' : 'center'}
-        justifyContent={stackPresetPills ? 'flex-start' : 'space-between'}
+        justifyContent="space-between"
         gap="$spacing8"
         width="100%"
       >
-        <Text variant="body4" color="$neutral2">
-          {t('toucan.auction.totalSupply')}: {totalSupplyFormatted} {tokenSymbol}
-        </Text>
+        <Flex row alignItems="center" gap="$spacing4" flex={1} minWidth={0} overflow="hidden">
+          {isFocused ? (
+            <Trace logFocus element={ElementName.AuctionSupplyAmount}>
+              <Input
+                ref={inputRef}
+                autoFocus
+                unstyled
+                outlineStyle="none"
+                minWidth={0}
+                flexShrink={1}
+                $platform-web={{
+                  fieldSizing: 'content',
+                  maxWidth: '100%',
+                }}
+                value={focusedDisplay}
+                onChangeText={handleChange}
+                onBlur={handleBlur}
+                placeholder="0"
+                placeholderTextColor="$neutral3"
+                fontFamily="$heading"
+                fontSize={fonts.heading3.fontSize}
+                lineHeight={fonts.heading3.lineHeight}
+                fontWeight={fonts.heading3.fontWeight}
+                color={exceedsMax ? '$statusCritical' : '$neutral1'}
+                backgroundColor="$transparent"
+              />
+            </Trace>
+          ) : (
+            <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
+              {displayUnfocused}
+            </Text>
+          )}
+          <Text flexShrink={0} variant="heading3" color="$neutral3">
+            {truncateSymbol(tokenSymbol)}
+          </Text>
+        </Flex>
 
         <Flex
           gap="$spacing2"
@@ -214,17 +244,24 @@ export function AuctionSupplySelector({
             <PercentButton
               key={pillPercent}
               label={`${pillPercent}%`}
-              isActive={auctionSupplyAmount.equalTo(percentOfAmount(tokenTotalSupply, pillPercent))}
+              isActive={auctionSupplyAmount.equalTo(percentOfAmount(maxAuctionSupplyAmount, pillPercent))}
               onPress={handleSelectPercent.bind(null, pillPercent)}
             />
           ))}
           <PercentButton
             label={t('common.max')}
-            isActive={auctionSupplyAmount.equalTo(tokenTotalSupply)}
+            isActive={auctionSupplyAmount.equalTo(maxAuctionSupplyAmount)}
             onPress={handleSelectPercent.bind(null, 100)}
           />
         </Flex>
       </Flex>
+
+      {/* Total supply reference line — existing tokens only; new tokens have a dedicated input above */}
+      {showTotalSupply ? (
+        <Text variant="body4" color="$neutral2">
+          {t('toucan.auction.totalSupply')}: {totalSupplyFormatted} {tokenSymbol}
+        </Text>
+      ) : null}
     </Flex>
   )
 }

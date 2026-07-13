@@ -358,4 +358,7 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
   }
 }
 
-export const ActivityAmountCell = memo(ActivityAmountCellInner)
+export const ActivityAmountCell = memo(ActivityAmountCellInner, (prev, next) => {
+  return prev.transaction.typeInfo === next.transaction.typeInfo && prev.transaction.status === next.transaction.status
+})
+ActivityAmountCell.displayName = 'ActivityAmountCell'

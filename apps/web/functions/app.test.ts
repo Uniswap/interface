@@ -32,7 +32,9 @@ describe('frame protection headers', () => {
     const app = buildApp()
     const res = await app.request('/')
 
-    expect(res.headers.get('Content-Security-Policy')).toBe("frame-ancestors 'self' https://app.safe.global")
+    expect(res.headers.get('Content-Security-Policy')).toBe(
+      "frame-ancestors 'self' https://app.safe.global https://dexscreener.com https://*.dexscreener.com",
+    )
   })
 
   it('sets X-Frame-Options header on SPA routes', async () => {
@@ -46,7 +48,9 @@ describe('frame protection headers', () => {
     const app = buildApp()
     const res = await app.request('/swap')
 
-    expect(res.headers.get('Content-Security-Policy')).toBe("frame-ancestors 'self' https://app.safe.global")
+    expect(res.headers.get('Content-Security-Policy')).toBe(
+      "frame-ancestors 'self' https://app.safe.global https://dexscreener.com https://*.dexscreener.com",
+    )
     expect(res.headers.get('X-Frame-Options')).toBe('SAMEORIGIN')
   })
 

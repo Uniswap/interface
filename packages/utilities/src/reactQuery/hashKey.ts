@@ -51,6 +51,11 @@ export function normalizeArrays<T>(value: T): T {
     return normalized as T
   }
 
+  // Handle BigInt - convert to string for serialization
+  if (typeof value === 'bigint') {
+    return String(value) as T
+  }
+
   // Handle primitives (string, number, boolean)
   return value
 }

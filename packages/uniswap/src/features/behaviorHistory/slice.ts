@@ -37,6 +37,7 @@ export interface UniswapBehaviorHistoryState {
    * so they see it once until they dismiss.
    */
   hasDismissedPoolsBalanceCoachmark?: boolean
+  hasDismissedPoolsOutageBanner?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -60,6 +61,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasDismissedUniswapWrapped2025Banner: false,
   hasDismissedCrosschainSwapsPromoBanner: false,
   hasDismissedPoolsBalanceCoachmark: true,
+  hasDismissedPoolsOutageBanner: false,
 }
 
 const slice = createSlice({
@@ -132,8 +134,12 @@ const slice = createSlice({
     setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
-    setPoolsBalanceCoachmarkDismissed: (state) => {
-      state.hasDismissedPoolsBalanceCoachmark = true
+    // Payload defaults to `true` (dismiss). Pass `false` to re-show the coachmark, e.g. from a dev tool.
+    setPoolsBalanceCoachmarkDismissed: (state, action: PayloadAction<boolean | undefined>) => {
+      state.hasDismissedPoolsBalanceCoachmark = action.payload ?? true
+    },
+    setHasDismissedPoolsOutageBanner: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedPoolsOutageBanner = action.payload
     },
   },
 })
@@ -159,6 +165,7 @@ export const {
   setHasDismissedUniswapWrapped2025Banner,
   setHasDismissedCrosschainSwapsPromoBanner,
   setPoolsBalanceCoachmarkDismissed,
+  setHasDismissedPoolsOutageBanner,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

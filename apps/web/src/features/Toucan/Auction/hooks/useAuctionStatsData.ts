@@ -9,6 +9,7 @@ import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBann
 import { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { mergeAuctionTokenMetadata } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { AuctionMetadataOverride, getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 
@@ -205,14 +206,20 @@ export function useAuctionStatsData(): AuctionStatsData {
     return { start: startFormatted, end: endFormatted }
   }, [concentrationStartDecimal, concentrationEndDecimal, bidTokenInfo, isAuctionEnded, clearingPriceDecimal])
 
-  // Get project metadata from config overrides
+  // Get project metadata from config overrides, filled in with the launched-token
+  // metadata returned by the auction API (description / X handle). Overrides win.
   const metadata = useMemo(() => {
     if (!auctionDetails) {
       return undefined
     }
-    return getAuctionMetadata({
+    const override = getAuctionMetadata({
       chainId: auctionDetails.chainId,
       tokenAddress: auctionDetails.tokenAddress,
+    })
+    return mergeAuctionTokenMetadata({
+      override,
+      tokenDescription: auctionDetails.tokenDescription,
+      xHandle: auctionDetails.xHandle,
     })
   }, [auctionDetails])
 

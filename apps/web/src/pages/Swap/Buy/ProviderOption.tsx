@@ -16,6 +16,7 @@ import {
 import { createOnRampTransactionId } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
 import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
@@ -47,9 +48,10 @@ export function ProviderOption({
   hidden = false,
 }: ProviderOptionProps) {
   const addFiatOnRampTransaction = useAddFiatOnRampTransaction()
+  const { externalTransactionIdSuffix } = useBuyFormContext()
   const externalSessionId = useMemo(
-    () => createOnRampTransactionId(quote.serviceProviderDetails?.serviceProvider),
-    [quote.serviceProviderDetails?.serviceProvider],
+    () => createOnRampTransactionId(quote.serviceProviderDetails?.serviceProvider, externalTransactionIdSuffix),
+    [externalTransactionIdSuffix, quote.serviceProviderDetails?.serviceProvider],
   )
 
   const widgetOnRampQueryParams = useMemo(() => {

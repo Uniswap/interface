@@ -25,10 +25,6 @@ export const TAB_STYLES = StyleSheet.create({
     height: 0,
     position: 'absolute',
   },
-  container: {
-    flex: 1,
-    overflow: 'hidden',
-  },
   header: {
     marginBottom: 0,
     paddingBottom: 0,

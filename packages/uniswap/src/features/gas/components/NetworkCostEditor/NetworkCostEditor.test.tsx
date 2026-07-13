@@ -7,8 +7,9 @@ import { renderWithProviders } from 'uniswap/src/test/render'
 
 // Use vi.hoisted to create mutable mock state for isMobileApp so individual
 // tests can flip the platform polarity without vi.resetModules.
-const { mockIsMobileApp } = vi.hoisted(() => ({
+const { mockIsMobileApp, mockMaxCostUsd } = vi.hoisted(() => ({
   mockIsMobileApp: { value: false },
+  mockMaxCostUsd: { value: '1.23' as string | undefined },
 }))
 
 vi.mock('@universe/environment', async (importOriginal) => {
@@ -50,7 +51,7 @@ vi.mock('uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGas
 vi.mock('uniswap/src/features/gas/hooks', () => ({
   useUSDValueOfGasFee: (): { isLoading: boolean; value: string | undefined } => ({
     isLoading: false,
-    value: '1.23',
+    value: mockMaxCostUsd.value,
   }),
 }))
 
@@ -102,6 +103,7 @@ const populatedTx = (): providers.TransactionRequest =>
 describe('NetworkCostEditor', () => {
   beforeEach(() => {
     vi.mocked(sendAnalyticsEvent).mockClear()
+    mockMaxCostUsd.value = '1.23'
   })
 
   it('pre-fills inputs with the recommended values when the tx has no gas fields', () => {
@@ -261,6 +263,38 @@ describe('NetworkCostEditor', () => {
     expect(await findByText(/ETH/)).toBeTruthy()
     // USD value still renders ($ sign present)
     expect(await findByText(/\$/)).toBeTruthy()
+  })
+
+  it('caps the Max cost fiat value at two decimals', async () => {
+    // A full-precision USD value must render as "$X.XX", not the raw string.
+    mockMaxCostUsd.value = '18.448'
+    const { findByText, queryByText } = renderWithProviders(
+      <NetworkCostEditor
+        tx={fakeTx()}
+        chainId={1}
+        onSave={vi.fn()}
+        onCancel={vi.fn()}
+        onReset={vi.fn()}
+        surface="swap_form"
+      />,
+    )
+    expect(await findByText('$18.45')).toBeTruthy()
+    expect(queryByText('$18.448')).toBeNull()
+  })
+
+  it('renders the Max cost fiat value as "<$0.01" when below a cent', async () => {
+    mockMaxCostUsd.value = '0.004'
+    const { findByText } = renderWithProviders(
+      <NetworkCostEditor
+        tx={fakeTx()}
+        chainId={1}
+        onSave={vi.fn()}
+        onCancel={vi.fn()}
+        onReset={vi.fn()}
+        surface="swap_form"
+      />,
+    )
+    expect(await findByText('<$0.01')).toBeTruthy()
   })
 
   // ---------------------------------------------------------------------------

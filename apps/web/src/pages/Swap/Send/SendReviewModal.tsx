@@ -16,7 +16,7 @@ import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useG
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -24,8 +24,8 @@ import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
-import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
+import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 
 const ReviewContentContainer = styled(Flex, {
   width: '100%',

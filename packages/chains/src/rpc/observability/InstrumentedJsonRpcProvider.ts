@@ -1,4 +1,5 @@
 import { Networkish, StaticJsonRpcProvider } from '@ethersproject/providers'
+import { extractRpcErrorMeta } from './extractRpcErrorMeta'
 import { normalizeRpcError } from './normalizeRpcError'
 import { generateRequestId, type RpcObserver } from './rpcObserver'
 
@@ -76,9 +77,16 @@ export class InstrumentedJsonRpcProvider extends StaticJsonRpcProvider {
       // Normalize before handing to the observer — ethers wraps RPC errors in
       // a verbose envelope that embeds per-request fields (id, body, url) into
       // the message string, defeating the rate limiter's bucket-by-message
-      // strategy. Throw the original error so call sites still see ethers'
-      // shape (some downstream code keys on `.code`, `.serverError`, etc.).
-      this.observer.onError({ ...ctx, durationMs: performance.now() - start, error: normalizeRpcError(error) })
+      // strategy. Extract status/code from the RAW error first: normalizeRpcError
+      // collapses to ethers' `reason` and drops `.status`. Throw the original
+      // error so call sites still see ethers' shape (some downstream code keys
+      // on `.code`, `.serverError`, etc.).
+      this.observer.onError({
+        ...ctx,
+        durationMs: performance.now() - start,
+        error: normalizeRpcError(error),
+        ...extractRpcErrorMeta(error),
+      })
       throw error
     }
   }

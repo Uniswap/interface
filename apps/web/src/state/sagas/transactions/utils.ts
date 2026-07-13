@@ -27,7 +27,10 @@ import {
   interfaceUpdateTransactionInfo,
   type TransactionsState,
 } from 'uniswap/src/features/transactions/slice'
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import {
+  TokenApprovalTransactionStep,
+  TokenApprovalWalletCallStep,
+} from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import type {
@@ -55,12 +58,14 @@ import type {
   InterfaceTransactionDetails,
   Permit2ApproveTransactionInfo,
   PlanSwapTransactionInfoFields,
+  RwaSwapAnalytics,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
@@ -77,7 +82,7 @@ import { clientToProvider } from '~/hooks/useEthersProvider'
 import { getRoutingForTransaction } from '~/state/activity/utils'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
-import type { TransactionDetails, TransactionInfo, VitalTxFields } from '~/state/transactions/types'
+import type { TransactionDetails, VitalTxFields } from '~/state/transactions/types'
 import { isPendingTx } from '~/state/transactions/utils'
 import { signTypedData } from '~/utils/signing'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
@@ -385,11 +390,16 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
   })
 }
 
-function getApprovalTransactionInfo(
-  approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
+export function getApprovalTransactionInfo(
+  approvalStep:
+    | TokenApprovalTransactionStep
+    | TokenApprovalWalletCallStep
+    | TokenRevocationTransactionStep
+    | Permit2TransactionStep,
 ): ApproveTransactionInfo {
   const pair = 'pair' in approvalStep ? approvalStep.pair : undefined
-  const tokenSymbol = pair ? `${pair[0].symbol}-${pair[1].symbol}` : undefined
+  const explicitTokenSymbol = 'tokenSymbol' in approvalStep ? approvalStep.tokenSymbol : undefined
+  const tokenSymbol = explicitTokenSymbol ?? (pair ? `${pair[0].symbol}-${pair[1].symbol}` : undefined)
 
   return {
     type: TransactionType.Approve,
@@ -434,7 +444,7 @@ function* findDuplicativeTx({
   chainId,
   allowDuplicativeTx,
 }: {
-  info: TransactionInfo
+  info: TransactionTypeInfo
   address: Address
   chainId: number
   allowDuplicativeTx?: boolean
@@ -529,6 +539,20 @@ export function* waitForBatch(batchId: string, step: TransactionStep): SagaGener
   return finalized?.hash
 }
 
+// waitForBatch that also races a flow interrupt.
+export function* waitForBatchInterruptible(batchId: string, step: TransactionStep): SagaGenerator<string | undefined> {
+  const { interrupt, batchResult } = yield* race({
+    batchResult: call(waitForBatch, batchId, step),
+    interrupt: take(interruptTransactionFlow.type),
+  })
+
+  if (interrupt) {
+    throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+  }
+
+  return batchResult
+}
+
 async function getProvider(): Promise<Web3Provider> {
   const client = await getConnectorClient(wagmiConfig)
   const provider = clientToProvider(client)
@@ -550,29 +574,39 @@ export function getSwapTransactionInfo(params: {
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(params: {
   trade: UniswapXTrade
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo & { isUniswapXOrder: true }
 export function getSwapTransactionInfo({
   trade,
   swapStartTimestamp,
   planAnalytics,
   transactedUSDValue,
+  rwaAnalytics,
 }: {
   trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
+  rwaAnalytics?: RwaSwapAnalytics
 }): SwapInfo | BridgeTransactionInfo {
+  const isSponsored = 'sponsorshipInfo' in trade.quote ? trade.quote.sponsorshipInfo?.sponsored : undefined
+  const sponsorshipCampaignId =
+    'sponsorshipInfo' in trade.quote ? trade.quote.sponsorshipInfo?.campaign?.name : undefined
   const commonAttributes = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
     outputCurrencyId: currencyId(trade.outputAmount.currency),
     swapStartTimestamp,
     transactedUSDValue,
+    isSponsored,
+    sponsorshipCampaignId,
+    ...rwaAnalytics,
     ...planAnalytics,
   }
 

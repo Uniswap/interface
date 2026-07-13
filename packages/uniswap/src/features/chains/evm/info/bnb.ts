@@ -1,8 +1,13 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { BNB_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
-import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import {
+  DEFAULT_NATIVE_ADDRESS_LEGACY,
+  getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
+} from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
@@ -29,6 +34,7 @@ export const BNB_CHAIN_INFO = {
   ...bsc,
   id: UniverseChainId.Bnb,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'smartchain',
   backendChain: {
     chain: GraphQLApi.Chain.Bnb as GqlChainId,
@@ -60,7 +66,7 @@ export const BNB_CHAIN_INFO = {
   blockTimeMs: 3000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Bnb)] },
     [RPCType.Default]: { http: ['https://bsc-dataseed1.bnbchain.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
   },

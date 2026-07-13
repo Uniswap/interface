@@ -9,7 +9,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 

@@ -11,7 +11,6 @@ type TableSideScrollButtonsProps<T extends RowData> = {
   scrollButtonTop: number
   onScrollButtonPress: (direction: 'left' | 'right') => () => void
   table: TanstackTable<T>
-  v2: boolean
   isSticky: boolean
 }
 
@@ -22,7 +21,6 @@ export function TableSideScrollButtons<T extends RowData>({
   scrollButtonTop,
   onScrollButtonPress,
   table,
-  v2,
   isSticky,
 }: TableSideScrollButtonsProps<T>): JSX.Element {
   return (
@@ -59,12 +57,12 @@ export function TableSideScrollButtons<T extends RowData>({
           </Flex>
         )}
       </AnimatePresence>
-      {(!v2 || showRightFadeOverlay) && (
+      {showRightFadeOverlay && (
         <TableScrollMask
           top={isSticky ? '$spacing12' : 0}
           zIndex={zIndexes.dropdown - 1}
-          right={v2 ? 0 : 1}
-          borderTopRightRadius={v2 ? '$rounded12' : '$rounded20'}
+          right={0}
+          borderTopRightRadius="$rounded12"
         />
       )}
     </>

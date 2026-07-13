@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useNativeTokenPercentageBufferExperiment } from '~/features/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
 import {
   getDependentAmountFromV2Pair,

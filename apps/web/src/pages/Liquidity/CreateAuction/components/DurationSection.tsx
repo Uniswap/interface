@@ -20,11 +20,13 @@ export type DurationSectionHandle = {
 type DurationSectionProps = {
   startTime: Date | undefined
   endTime: Date | undefined
+  /** Inline error when the chosen window can't produce a valid emission schedule (mirrors backend). */
+  scheduleError?: string
   onChange: (next: { startTime: Date | undefined; endTime: Date | undefined }) => void
 }
 
 export const DurationSection = forwardRef<DurationSectionHandle, DurationSectionProps>(function DurationSection(
-  { startTime, endTime, onChange },
+  { startTime, endTime, scheduleError, onChange },
   ref,
 ) {
   const { t } = useTranslation()
@@ -83,6 +85,11 @@ export const DurationSection = forwardRef<DurationSectionHandle, DurationSection
       {!isStartTimeInvalid && isRangeInvalid && (
         <Text variant="body4" color="$statusCritical" textAlign="center">
           {t('toucan.createAuction.step.configureAuction.duration.range.error')}
+        </Text>
+      )}
+      {!isStartTimeInvalid && !isRangeInvalid && scheduleError && (
+        <Text variant="body4" color="$statusCritical" textAlign="center">
+          {scheduleError}
         </Text>
       )}
     </Flex>

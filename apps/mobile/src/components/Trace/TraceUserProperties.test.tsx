@@ -32,6 +32,7 @@ jest.mock('@universe/api', () => ({
   provideUniswapIdentifierService: {},
 }))
 jest.mock('@universe/sessions', () => ({
+  ...jest.requireActual('@universe/sessions'),
   uniswapIdentifierQuery: jest.fn().mockReturnValue({}),
 }))
 jest.mock('react-native/Libraries/Utilities/useColorScheme')

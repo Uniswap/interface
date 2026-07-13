@@ -1,5 +1,5 @@
 import { transparentize } from 'polished'
-import { Fragment, memo, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
+import { Fragment, memo, MouseEventHandler, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Flex, Text } from 'ui/src'
 import { noop } from 'utilities/src/react/noop'
 import { Popover, PopoverProps } from '~/components/Popover'
@@ -54,12 +54,13 @@ type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
     timeout?: number
     placement?: PopoverProps['placement']
     onOpen?: () => void
+    onClick?: MouseEventHandler<HTMLDivElement>
     forceShow?: boolean
     padding?: number
   }>
 
 export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverTooltipProps) {
-  const { text, disabled, children, onOpen, forceShow, timeout, padding, ...rest } = props
+  const { text, disabled, children, onOpen, onClick, forceShow, timeout, padding, ...rest } = props
   const [show, setShow] = useState(false)
   const open = () => {
     setShow(true)
@@ -93,6 +94,7 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
             size={props.size ?? TooltipSize.Small}
             onMouseEnter={open}
             onMouseLeave={close}
+            onClick={onClick}
           >
             {text}
           </TooltipContainer>

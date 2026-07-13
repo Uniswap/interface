@@ -6,7 +6,7 @@ import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SlippageInfoCaption } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfoCaption'
 import type { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
@@ -36,7 +36,7 @@ export function SlippageInfo({
   return (
     <WarningInfo
       infoButton={
-        isMobileApp ? <LearnMoreLink textColor="$neutral1" url={uniswapUrls.helpArticleUrls.swapSlippage} /> : null
+        isMobileApp ? <LearnMoreLink textColor="$neutral1" url={UniswapHelpUrls.articles.swapSlippage} /> : null
       }
       modalProps={{
         backgroundIconColor: colors.surface2.get(),

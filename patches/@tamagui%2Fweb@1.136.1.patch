@@ -1,0 +1,26 @@
+diff --git a/dist/cjs/createComponent.js b/dist/cjs/createComponent.js
+index add7b041f7d248f2ec93dbce5122d4b76160ee49..010406fec629e4777e93bf9aa0a85210262430dd 100644
+--- a/dist/cjs/createComponent.js
++++ b/dist/cjs/createComponent.js
+@@ -86,6 +86,8 @@ import_constants.isWeb && typeof document < "u" && (document.addEventListener("k
+   lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
+ }), document.addEventListener("mousemove", () => {
+   lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
++}), window.addEventListener("blur", () => {
++  lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
+ }));
+ function createComponent(staticConfig) {
+   const { componentName } = staticConfig;
+diff --git a/dist/esm/createComponent.mjs b/dist/esm/createComponent.mjs
+index df0ad9a329c060c994e1338070057cc77da35057..1c4b5dc6348e55598352f56dd1f363e1859bf0e6 100644
+--- a/dist/esm/createComponent.mjs
++++ b/dist/esm/createComponent.mjs
+@@ -82,6 +82,8 @@ isWeb && typeof document < "u" && (document.addEventListener("keydown", () => {
+   lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
+ }), document.addEventListener("mousemove", () => {
+   lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
++}), window.addEventListener("blur", () => {
++  lastInteractionWasKeyboard.value && (lastInteractionWasKeyboard.value = !1);
+ }));
+ function createComponent(staticConfig) {
+   const {

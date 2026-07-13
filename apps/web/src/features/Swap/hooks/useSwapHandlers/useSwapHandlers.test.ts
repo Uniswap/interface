@@ -2,6 +2,7 @@ import { FeeType, TradingApi } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ExecuteSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import {
   ValidatedClassicSwapTxAndGasInfo,
@@ -37,6 +38,7 @@ vi.mock('~/state/sagas/transactions/wrapSaga', () => ({
 
 vi.mock('uniswap/src/features/transactions/swap/utils/routing', () => ({
   isWrap: vi.fn(),
+  getEVMTxRequest: vi.fn((swapTxContext) => swapTxContext.txRequests?.[0]),
 }))
 
 describe('validateWrapParams', () => {
@@ -77,9 +79,9 @@ describe('validateWrapParams', () => {
       },
     },
     includesDelegation: false,
-    unsigned: false,
+    hasUnsignedPermit: false,
     permit: undefined,
-    trade: {} as any,
+    trade: { quote: {} } as any,
     approveTxRequest: undefined,
     revocationTxRequest: undefined,
     gasFee: {
@@ -208,9 +210,9 @@ describe('useSwapHandlers', () => {
       },
     },
     includesDelegation: false,
-    unsigned: false,
+    hasUnsignedPermit: false,
     permit: undefined,
-    trade: {} as any,
+    trade: { quote: {} } as any,
     approveTxRequest: undefined,
     revocationTxRequest: undefined,
     gasFee: {
@@ -279,7 +281,11 @@ describe('useSwapHandlers', () => {
         expect(mockWrapCallbackFn).toHaveBeenCalledWith({
           address: mockAccount.address,
           inputCurrencyAmount: mockInputCurrencyAmount,
-          txRequest: mockSwapTxContext.txRequests![0],
+          step: {
+            type: TransactionStepType.WrapTransaction,
+            txRequest: mockSwapTxContext.txRequests![0],
+            amount: mockInputCurrencyAmount,
+          },
           txId: 'test-tx-id',
           wrapType: WrapType.Wrap,
           gasEstimate: mockSwapTxContext.gasFeeEstimation.wrapEstimate,
@@ -287,6 +293,44 @@ describe('useSwapHandlers', () => {
           onFailure: mockOnFailure,
         })
         expect(mockSwapCallbackFn).not.toHaveBeenCalled()
+      })
+
+      it('should emit a wallet-call step when the wrap is sponsored', async () => {
+        const mockInputCurrencyAmount = {
+          currency: { symbol: 'ETH' },
+          quotient: BigInt(1000000000000000000),
+        } as any
+
+        const paymasterService = {
+          url: 'https://paymaster.example',
+          context: { sponsorship: 'test-policy' },
+        }
+        const sponsoredTxContext = {
+          ...mockSwapTxContext,
+          trade: { quote: { sponsorshipInfo: { sponsored: true } } } as any,
+          paymasterService,
+        } as unknown as ValidatedSwapTxContext
+
+        const params: ExecuteSwapParams = {
+          ...baseExecuteParams,
+          swapTxContext: sponsoredTxContext,
+          wrapType: WrapType.Wrap,
+          inputCurrencyAmount: mockInputCurrencyAmount,
+        }
+
+        const { result } = renderHook(() => useSwapHandlers())
+        await result.current.execute(params)
+
+        expect(mockWrapCallbackFn).toHaveBeenCalledWith(
+          expect.objectContaining({
+            step: {
+              type: TransactionStepType.WrapTransactionWalletCall,
+              walletCallTxRequests: mockSwapTxContext.txRequests,
+              amount: mockInputCurrencyAmount,
+              paymasterService,
+            },
+          }),
+        )
       })
 
       it('should call onFailure when inputCurrencyAmount is missing', async () => {

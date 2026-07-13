@@ -8,8 +8,8 @@
     "check:deps:usage": "nx check:deps:usage sessions",
     "test": "nx test sessions",
     "test:integration:backend": "nx test:integration:backend sessions",
-    "format": "nx format sessions",
-    "format:check": "nx format:check sessions",
+    "format": "nx run sessions:format",
+    "format:check": "nx run sessions:format:check",
     "lint": "nx lint sessions",
     "lint:fix": "nx lint:fix sessions"
   },

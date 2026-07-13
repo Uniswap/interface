@@ -1,5 +1,4 @@
-import type { LegendListRef } from '@legendapp/list'
-import { LegendList } from '@legendapp/list'
+import { LegendList, type LegendListRef } from '@legendapp/list/react-native'
 import { useScrollToTop } from '@react-navigation/native'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { RefreshControl } from 'react-native'
@@ -21,7 +20,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 const ESTIMATED_ITEM_SIZE = 92
-const AMOUNT_TO_DRAW = 18
+const AMOUNT_TO_DRAW = 30
 const ON_END_REACHED_THRESHOLD = 0.1 // trigger onEndReached at 10% of visible length
 
 type ActivityContentProps = TabProps & {

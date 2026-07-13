@@ -31,6 +31,8 @@ export enum PoolDataReportOption {
 }
 
 export enum PortfolioDataReportOption {
+  Tokens = 'tokens',
+  Pools = 'pools',
   Performance = 'performance',
   Other = 'other',
 }
@@ -227,6 +229,10 @@ export function submitPortfolioDataReport({
   sendAnalyticsEvent(UniswapEventName.DataReportSubmitted, {
     type: 'portfolio',
     wallet_address: walletAddress,
+    tokens: reportOptions.includes(PortfolioDataReportOption.Tokens),
+    tokens_text: reportTexts.get(PortfolioDataReportOption.Tokens),
+    pools: reportOptions.includes(PortfolioDataReportOption.Pools),
+    pools_text: reportTexts.get(PortfolioDataReportOption.Pools),
     performance: reportOptions.includes(PortfolioDataReportOption.Performance),
     performance_text: reportTexts.get(PortfolioDataReportOption.Performance),
     something_else: reportOptions.includes(PortfolioDataReportOption.Other),

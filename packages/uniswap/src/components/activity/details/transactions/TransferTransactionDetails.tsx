@@ -1,16 +1,13 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Loader, Text, TouchableArea } from 'ui/src'
+import { Flex, Loader, Text, useMedia } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NftTransactionDetails } from 'uniswap/src/components/activity/details/transactions/NftTransactionDetails'
+import { TransactionTokenContextMenu } from 'uniswap/src/components/activity/details/transactions/TransactionTokenContextMenu'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ReceiveTokenTransactionInfo,
@@ -19,6 +16,8 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+
+const OFFSET = 100
 
 export function TransferTransactionDetails({
   transactionDetails,
@@ -73,28 +72,16 @@ export function CurrencyTransferContent({
   showValueAsHeading?: boolean
   isLoading?: boolean
 }): JSX.Element {
-  const { navigateToTokenDetails } = useUniswapContext()
-
-  const onPressToken = (): void => {
-    if (currencyInfo) {
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.TokenItem,
-        modal: ModalName.TransactionDetails,
-      })
-
-      navigateToTokenDetails(currencyInfo.currencyId)
-      if (!isWebPlatform) {
-        onClose()
-      }
-    }
-  }
+  const media = useMedia()
 
   const headingText = showValueAsHeading ? value : tokenAmountWithSymbol
   const subtitleText = showValueAsHeading ? tokenAmountWithSymbol : value
 
+  const offsetX = isWebPlatform && media.sm ? OFFSET / 2 : OFFSET
+
   return (
-    <TouchableArea onPress={onPressToken}>
-      <Flex centered gap="$spacing8" p="$spacing32">
+    <Flex centered gap="$spacing8" p="$spacing32">
+      <TransactionTokenContextMenu currencyInfo={currencyInfo} offsetX={offsetX} onClose={onClose}>
         {isLoading ? (
           <Loader.Box height={fonts.heading2.lineHeight} width={iconSizes.icon100} />
         ) : (
@@ -112,7 +99,7 @@ export function CurrencyTransferContent({
             </Text>
           )}
         </Flex>
-      </Flex>
-    </TouchableArea>
+      </TransactionTokenContextMenu>
+    </Flex>
   )
 }

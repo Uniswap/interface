@@ -1,5 +1,4 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useUpdateAtom } from 'jotai/utils'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -7,6 +6,7 @@ import {
   Button,
   Flex,
   Portal,
+  TamaguiElement,
   Text,
   TouchableArea,
   useMedia,
@@ -18,17 +18,18 @@ import { zIndexes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent, useOnClickOutside } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { StatusIcon } from '~/components/StatusIcon'
-import { passkeySignInPendingAtom, showEmbeddedLoginViewAtom } from '~/components/WalletModal/EmbeddedWalletModal'
 import { useRecentConnectorId } from '~/connection/constants'
+import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
-import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface RecentlyConnectedModalUIProps {
@@ -69,12 +70,22 @@ function RecentlyConnectedModalUI({
   const { t } = useTranslation()
   const shadowProps = useShadowPropsShort()
   const modalRef = useRef<HTMLDivElement>(null)
+  const loginButtonRef = useRef<TamaguiElement>(null)
   useOnClickOutside({
     node: modalRef,
     handler: onClose,
   })
   const isMobile = useIsMobile()
   const media = useMedia()
+
+  // The popover's focus scope auto-focuses the first tabbable element on open, which is the X
+  // close button. Redirect initial focus to the primary Log in action instead.
+  const handleOpenAutoFocus = useEvent((event: Event) => {
+    event.preventDefault()
+    if (loginButtonRef.current instanceof HTMLElement) {
+      loginButtonRef.current.focus()
+    }
+  })
 
   // Belt-and-suspenders: stop mousedown bubble inside the card so useOnClickOutside's document
   // listener cannot fire before Button.onPress runs.
@@ -169,7 +180,12 @@ function RecentlyConnectedModalUI({
   }
 
   return (
-    <AdaptiveWebPopoverContent isOpen={isOpen} id="recently-connected-modal" backgroundColor="transparent">
+    <AdaptiveWebPopoverContent
+      isOpen={isOpen}
+      id="recently-connected-modal"
+      backgroundColor="transparent"
+      onOpenAutoFocus={handleOpenAutoFocus}
+    >
       <Flex
         ref={modalRef}
         backgroundColor="$surface1"
@@ -199,7 +215,7 @@ function RecentlyConnectedModalUI({
       >
         <Flex row gap="$spacing12" overflow="hidden">
           <StatusIcon address={walletAddress} size={isMobile ? 40 : 48} />
-          <Flex gap="$spacing4" width="75%" justifyContent="center">
+          <Flex gap="$spacing4" flex={1} minWidth={0} justifyContent="center">
             <Flex row gap="$spacing4" alignItems="center">
               <Text variant="body1" numberOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
                 {displayName}
@@ -209,9 +225,6 @@ function RecentlyConnectedModalUI({
                   <Unitag size={22} />
                 </Flex>
               )}
-              <TouchableArea onPress={onClose} ml="auto" flexShrink={0}>
-                <X size={20} color="$neutral3" />
-              </TouchableArea>
             </Flex>
             {showShortAddress && (
               <Text variant="body3" color="$neutral2">
@@ -219,9 +232,12 @@ function RecentlyConnectedModalUI({
               </Text>
             )}
           </Flex>
+          <TouchableArea onPress={onClose} alignSelf="flex-start" flexShrink={0}>
+            <X size={20} color="$neutral3" />
+          </TouchableArea>
         </Flex>
         <Flex row alignSelf="stretch">
-          <Button variant="default" py="$spacing8" emphasis="primary" onPress={onSignIn}>
+          <Button ref={loginButtonRef} variant="default" py="$spacing8" emphasis="primary" onPress={onSignIn}>
             <Text variant="buttonLabel3" color="$surface1" lineHeight="20px">
               {t('nav.logIn.button')}
             </Text>
@@ -239,20 +255,20 @@ const isOAuthReturn =
 
 function shouldShowModal({
   walletAddress,
-  account,
+  connectionStatus,
   isEmbeddedWalletEnabled,
   isOpenRef,
   recentConnectorId,
 }: {
   walletAddress?: string
-  account: ReturnType<typeof useAccount>
+  connectionStatus: ReturnType<typeof useConnectionStatus>
   isEmbeddedWalletEnabled: boolean
   isOpenRef: MutableRefObject<boolean>
   recentConnectorId?: string
 }) {
   return (
     !!walletAddress &&
-    !(account.isConnected || account.isConnecting) &&
+    !(connectionStatus.isConnected || connectionStatus.isConnecting) &&
     isEmbeddedWalletEnabled &&
     !isOpenRef.current &&
     recentConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID &&
@@ -261,7 +277,7 @@ function shouldShowModal({
 }
 
 export function RecentlyConnectedModal() {
-  const account = useAccount()
+  const connectionStatus = useConnectionStatus(Platform.EVM)
   const { walletAddress: walletAddressFromState } = useEmbeddedWalletState()
   const walletAddress = walletAddressFromState ?? undefined
   const { isOpen, closeModal, openModal } = useModalState(ModalName.RecentlyConnectedModal)
@@ -269,8 +285,8 @@ export function RecentlyConnectedModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const recentConnectorId = useRecentConnectorId()
   const accountDrawer = useAccountDrawer()
-  const setShowLoginView = useUpdateAtom(showEmbeddedLoginViewAtom)
-  const setPasskeySignInPending = useUpdateAtom(passkeySignInPendingAtom)
+  const setShowLoginView = useEmbeddedWalletLoginViewStore((s) => s.setShowLoginView)
+  const setPasskeySignInPending = useEmbeddedWalletLoginViewStore((s) => s.setPasskeySignInPending)
   const { signInWithPasskeyAsync } = useSignInWithPasskey({
     onSuccess: () => {
       setPasskeySignInPending(false)
@@ -294,7 +310,7 @@ export function RecentlyConnectedModal() {
     if (
       shouldShowModal({
         walletAddress,
-        account,
+        connectionStatus,
         isEmbeddedWalletEnabled,
         isOpenRef,
         recentConnectorId,
@@ -303,13 +319,13 @@ export function RecentlyConnectedModal() {
       openModal()
       isOpenRef.current = true
     }
-  }, [walletAddress, account, isEmbeddedWalletEnabled, openModal, recentConnectorId])
+  }, [walletAddress, connectionStatus, isEmbeddedWalletEnabled, openModal, recentConnectorId])
 
   useEffect(() => {
-    if (account.isConnected && isOpen) {
+    if (connectionStatus.isConnected && isOpen) {
       closeModal()
     }
-  }, [account.isConnected, account.isConnecting, isOpen, closeModal])
+  }, [connectionStatus.isConnected, connectionStatus.isConnecting, isOpen, closeModal])
 
   return (
     <RecentlyConnectedModalUI

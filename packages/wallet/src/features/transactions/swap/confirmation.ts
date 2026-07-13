@@ -6,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { logger } from 'utilities/src/logger/logger'
 
 /** Returns success condition after the transactions corresponding to the given hash finalizes. */
 export function* waitForTransactionConfirmation(params: { hash: string }): SagaGenerator<{ success: boolean }> {
@@ -19,6 +20,22 @@ export function* waitForTransactionConfirmation(params: { hash: string }): SagaG
         return { success: false }
       }
       return { success: true }
+    }
+  }
+}
+
+/**
+ * Like waitForTransactionConfirmation but keyed on userOpHash. A submitted UserOp's on-chain hash is unknown until the
+ * watcher resolves it, so sponsored 4337 approvals are waited on by userOpHash instead.
+ */
+export function* waitForUserOpConfirmation(params: { userOpHash: string }): SagaGenerator<{ success: boolean }> {
+  const { userOpHash } = params
+
+  while (true) {
+    const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
+
+    if (payload.userOpHash === userOpHash) {
+      return { success: payload.status === TransactionStatus.Success }
     }
   }
 }
@@ -45,12 +62,30 @@ export async function getShouldWaitBetweenTransactions(params: {
 
   // Private RPC clients are expected to accept simultaneous pending transactions
   if (!transactionSpacingEnabled || privateRpcAvailable) {
+    // SWAP-2471: log whether spacing engaged so we can see, in prod, how often the back-to-back
+    // submission window stays open (spacing is gated off for private RPC / flag-off / non-delegated).
+    logger.info('confirmation', 'getShouldWaitBetweenTransactions', 'Transaction spacing decision', {
+      swapper,
+      chainId,
+      transactionSpacingEnabled,
+      privateRpcAvailable,
+      isDelegated: 'not_checked',
+      shouldWait: false,
+    })
     return false
   }
 
   const delegationService = getDelegationService()
   const { isDelegated } = await delegationService.getIsAddressDelegated({ address: swapper, chainId })
 
+  logger.info('confirmation', 'getShouldWaitBetweenTransactions', 'Transaction spacing decision', {
+    swapper,
+    chainId,
+    transactionSpacingEnabled,
+    privateRpcAvailable,
+    isDelegated,
+    shouldWait: isDelegated,
+  })
   return isDelegated
 }
 

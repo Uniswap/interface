@@ -1,8 +1,16 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from '~/test-utils/constants'
-import { render } from '~/test-utils/render'
+import { fireEvent, render } from '~/test-utils/render'
+
+const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }))
+
+vi.mock('react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('react-router')>()),
+  useNavigate: () => mockNavigate,
+}))
 
 vi.mock('~/features/Liquidity/utils')
 
@@ -53,5 +61,28 @@ describe('LiquidityPositionInfo', () => {
     }
     const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Closed')).toBeInTheDocument()
+  })
+
+  it('navigates to a chain-qualified /migrate/v2 URL when migrating a V2 position', () => {
+    mockNavigate.mockClear()
+    const positionInfo = {
+      chainId: TEST_TOKEN_1.chainId,
+      currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
+      currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
+      status: PositionStatus.IN_RANGE,
+      version: ProtocolVersion.V2,
+      poolId: '1',
+      tokenId: '1',
+      v4hook: undefined,
+      owner: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
+      liquidityToken: { isToken: true, address: '0xpair' },
+    } as unknown as PositionInfo
+
+    const { getByText, queryByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} showMigrateButton />)
+
+    const migrateBadge = queryByText('Migrate to v3') ?? getByText('Migrate')
+    fireEvent.click(migrateBadge)
+
+    expect(mockNavigate).toHaveBeenCalledWith(`/migrate/v2/${getChainInfo(TEST_TOKEN_1.chainId).urlParam}/0xpair`)
   })
 })

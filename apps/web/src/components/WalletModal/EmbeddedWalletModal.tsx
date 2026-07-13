@@ -1,6 +1,3 @@
-import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
-import { atom, useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -13,7 +10,7 @@ import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -24,22 +21,19 @@ import { OptionRow } from '~/components/Passkey/BackupLoginComponents'
 import { RECOVER_OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
 import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
+import { useMaybeLoginWithOAuth, useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { setOpenModal } from '~/state/application/reducer'
-
-// TODO: [INFRA-1559] Replace Jotai atoms with Zustand store
-/** Shared atom so RecentlyConnectedModal can trigger the login view in the account drawer */
-export const showEmbeddedLoginViewAtom = atom(false)
-/** Shared atom so the login view shows a loading state when passkey sign-in is triggered externally */
-export const passkeySignInPendingAtom = atom(false)
+import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
 
 export function EmbeddedWalletConnectionsModal(): JSX.Element {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
-  const [showLoginView, setShowLoginView] = useAtom(showEmbeddedLoginViewAtom)
+  const showLoginView = useEmbeddedWalletLoginViewStore((s) => s.showLoginView)
+  const setShowLoginView = useEmbeddedWalletLoginViewStore((s) => s.setShowLoginView)
 
   const handleCreateAccount = useEvent(() => {
     accountDrawer.close()
@@ -47,7 +41,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
   })
 
   const { signInWithPasskeyAsync, isPending: isPasskeyPending } = useSignInWithPasskey()
-  const isExternalPasskeyPending = useAtomValue(passkeySignInPendingAtom)
+  const isExternalPasskeyPending = useEmbeddedWalletLoginViewStore((s) => s.passkeySignInPending)
   const isPasskeyLoading = isPasskeyPending || isExternalPasskeyPending
 
   const handlePasskeyLogin = useEvent(() => signInWithPasskeyAsync())
@@ -59,10 +53,10 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
 
   const handleBackToConnect = useEvent(() => setShowLoginView(false))
 
-  const { ready: privyReady, user, logout } = usePrivy()
+  const { ready: privyReady, user, logout } = useMaybePrivy()
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
 
-  const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
+  const { initOAuth, loading: oauthLoading } = useMaybeLoginWithOAuth({
     onError: (oauthError) => {
       logger.error(oauthError, {
         tags: { file: 'EmbeddedWalletModal', function: 'handleInitOAuth' },
@@ -111,7 +105,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             </TouchableArea>
             <TouchableArea
               variant="unstyled"
-              onPress={() => window.open(uniswapUrls.helpArticleUrls.passkeysInfo, '_blank')}
+              onPress={() => window.open(UniswapHelpUrls.articles.passkeysInfo, '_blank')}
             >
               <Flex
                 row

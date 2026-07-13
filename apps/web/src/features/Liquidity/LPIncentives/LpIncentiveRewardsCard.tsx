@@ -23,7 +23,7 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
@@ -226,7 +226,7 @@ export function LpIncentiveRewardsCard({
                       </Text>
                       {!rewardsError && (
                         <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-                          <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
+                          <LearnMoreLink textVariant="buttonLabel4" url={UniswapHelpUrls.articles.lpIncentiveInfo} />
                         </Trace>
                       )}
                     </Flex>
