@@ -265,7 +265,7 @@ const getSwapAction = ({
   if (isWebApp && (hasPermitTx || hasApproveTx)) {
     return SwapAction.ApproveAndSwap
   }
-  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
+  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.hasUnsignedPermit) {
     return SwapAction.SignAndSwap
   }
   if (hasActivePlan) {

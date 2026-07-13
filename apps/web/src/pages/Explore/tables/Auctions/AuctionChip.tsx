@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes, opacifyRaw } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
-import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
 import { useSrcColor } from '~/hooks/useColor'
+import { createDottedBackgroundStyles } from '~/utils/createDottedBackgroundStyles'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const DOT_OPACITY = 10
@@ -33,14 +33,16 @@ export function AuctionChip({
 
   const chainId = auction.auction?.chainId
   const tokenAddress = auction.auction?.tokenAddress
-  const tokenName = auction.auction?.tokenName
   const tokenSymbol = auction.auction?.tokenSymbol
+  const tokenName = auction.auction?.tokenName ?? tokenSymbol ?? tokenAddress
 
   const projectedFdv = computeProjectedFdvTableValue({ auction, auctionTokenUsdPrice })
+  const committedVolumeUsd =
+    auction.auction?.totalBidVolumeUsd !== undefined ? Number(auction.auction.totalBidVolumeUsd) : undefined
 
   const address = auction.auction?.address
-  const logoOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress })?.logoUrl : undefined
-  const logoUrl = logoOverride ?? auction.logoUrl
+  // logoUrl already resolves API image -> config override -> indexed logo (see useTopAuctions)
+  const logoUrl = auction.logoUrl
 
   // Color extraction logic
   const { tokenColor, tokenColorLoading } = useSrcColor({
@@ -149,11 +151,15 @@ export function AuctionChip({
           <Text variant="body4" color="$neutral2">
             {t('stats.fdv')}
           </Text>
-          <Text variant="body3" color="$neutral1" numberOfLines={1}>
-            {projectedFdv.usd !== undefined
-              ? convertFiatAmountFormatted(projectedFdv.usd, NumberType.FiatTokenStats)
-              : projectedFdv.formattedBidToken}
-          </Text>
+          <AnimatedNumber
+            numericValue={projectedFdv.usd}
+            textVariant="$body3"
+            value={
+              projectedFdv.usd !== undefined
+                ? convertFiatAmountFormatted(projectedFdv.usd, NumberType.FiatTokenStats)
+                : projectedFdv.formattedBidToken
+            }
+          />
         </Flex>
 
         <Flex width={1} backgroundColor="$surface3" />
@@ -162,16 +168,20 @@ export function AuctionChip({
           <Text variant="body4" color="$neutral2">
             {t('toucan.auction.committedVolume')}
           </Text>
-          <Text variant="body3" color="$neutral1" numberOfLines={1}>
-            {auction.auction.totalBidVolumeUsd !== undefined
-              ? convertFiatAmountFormatted(auction.auction.totalBidVolumeUsd, NumberType.FiatTokenStats)
-              : auction.auction.totalBidVolume && auction.auction.currencyTokenDecimals
-                ? formatCompactFromRaw({
-                    raw: BigInt(auction.auction.totalBidVolume),
-                    decimals: auction.auction.currencyTokenDecimals,
-                  })
-                : undefined}
-          </Text>
+          <AnimatedNumber
+            numericValue={committedVolumeUsd}
+            textVariant="$body3"
+            value={
+              committedVolumeUsd !== undefined
+                ? convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats)
+                : auction.auction.totalBidVolume && auction.auction.currencyTokenDecimals
+                  ? formatCompactFromRaw({
+                      raw: BigInt(auction.auction.totalBidVolume),
+                      decimals: auction.auction.currencyTokenDecimals,
+                    })
+                  : '-'
+            }
+          />
         </Flex>
       </Flex>
 

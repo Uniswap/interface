@@ -4,12 +4,7 @@ import type { ComponentProps } from 'react'
 import { useEffect } from 'react'
 import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
-import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
-import {
-  filterSettingsByPlatformAndTradeRouting,
-  getShouldSettingApplyToRouting,
-} from 'uniswap/src/features/transactions/components/settings/utils'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
@@ -23,11 +18,8 @@ import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
-import { useResetGasOverridesOnInputChainChange } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useResetGasOverridesOnInputChainChange'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useResetGasOverridesOnTokenChange } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useResetGasOverridesOnTokenChange'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapFlowTimer } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimerContext'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
@@ -38,6 +30,7 @@ interface SwapFormScreenProps {
   settings: TransactionSettingConfig[]
   tokenColor?: string
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
+  onCurrencyPanelsLayout?: (height: number) => void
 }
 
 const EXIT_STYLE: FlexProps['exitStyle'] = { opacity: 0 }
@@ -51,6 +44,7 @@ export function SwapFormScreen({
   settings = [Slippage, TradeRoutingPreference],
   tokenColor,
   focusHook,
+  onCurrencyPanelsLayout,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const tracker = useSwapFlowTimer()
@@ -59,31 +53,21 @@ export function SwapFormScreen({
     tracker?.mark(DDRumManualTiming.SwapFormScreenMount)
   }, [tracker])
 
-  const { selectingCurrencyField, hideSettings } = useSwapFormStore((s) => ({
-    selectingCurrencyField: s.selectingCurrencyField,
-    hideSettings: s.hideSettings,
-  }))
+  const selectingCurrencyField = useSwapFormStore((s) => s.selectingCurrencyField)
 
-  const { trade, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({ trade: s.trade, chainId: s.chainId }))
-  useResetGasOverridesOnInputChainChange()
-  const tradeRouting = trade.trade?.routing
-
-  const filteredSettings = filterSettingsByPlatformAndTradeRouting(settings, {
-    platform: chainIdToPlatform(chainId),
-    tradeRouting,
-  })
-  const isZeroSlippage = !getShouldSettingApplyToRouting(Slippage, tradeRouting)
+  useResetGasOverridesOnTokenChange()
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isWebApp && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings settings={filteredSettings} isZeroSlippage={isZeroSlippage} />}
+      {/* On web the settings gear lives in the page header row alongside the tabs */}
+      {!isWebApp && <SwapFormSettings settings={settings} />}
 
       {!hideContent && (
         <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>
-          <SwapFormContent />
+          <SwapFormContent onCurrencyPanelsLayout={onCurrencyPanelsLayout} />
         </SwapFormScreenStoreContextProvider>
       )}
 
@@ -92,13 +76,17 @@ export function SwapFormScreen({
   )
 }
 
-function SwapFormContent(): JSX.Element {
+function SwapFormContent({
+  onCurrencyPanelsLayout,
+}: {
+  onCurrencyPanelsLayout?: (height: number) => void
+}): JSX.Element {
   usePerformanceLogger(DDRumManualTiming.SwapFormContentRender, [])
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtensionApp}>
-        <Flex gap="$spacing2">
+        <Flex gap="$spacing2" onLayout={(e) => onCurrencyPanelsLayout?.(e.nativeEvent.layout.height)}>
           <SwapFormCurrencyInputPanel />
           <SwitchCurrenciesButton />
           <SwapFormCurrencyOutputPanel />

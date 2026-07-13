@@ -10,11 +10,13 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { getTokenWarningSeverity, useTokenWarningCardText } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from '~/components/BreadcrumbNav'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
@@ -59,6 +61,7 @@ const AuctionTokenInfo = ({
 }) => {
   const media = useMedia()
   const severity = token ? getTokenWarningSeverity(token) : WarningSeverity.None
+  const { heading: warningHeading, description: warningDescription } = useTokenWarningCardText(token)
   const logoSize = getHeaderLogoSize({ isCompact, media })
   const titleVariant = getHeaderTitleVariant({ isCompact, media })
 
@@ -77,7 +80,29 @@ const AuctionTokenInfo = ({
           <Text variant={titleVariant} minWidth={40} transition={HEADER_TRANSITION} {...EllipsisTamaguiStyle}>
             {name}
           </Text>
-          {severity > WarningSeverity.Low && <WarningIcon size="$icon.16" severity={severity} />}
+          {severity > WarningSeverity.Low && (
+            <MouseoverTooltip
+              placement="top"
+              size={TooltipSize.Small}
+              disabled={!warningHeading && !warningDescription}
+              text={
+                <Flex gap="$gap4">
+                  {warningHeading && (
+                    <Text variant="body4" color="$neutral1">
+                      {warningHeading}
+                    </Text>
+                  )}
+                  {warningDescription && (
+                    <Text variant="body4" color="$neutral2" lineHeight={16}>
+                      {warningDescription}
+                    </Text>
+                  )}
+                </Flex>
+              }
+            >
+              <WarningIcon size="$icon.16" severity={severity} />
+            </MouseoverTooltip>
+          )}
           {verified && <CheckmarkCircle size="$icon.16" color="$accent1" />}
         </Flex>
         {!isCompact && (
@@ -102,6 +127,9 @@ const AuctionTokenInfo = ({
 
 export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) => {
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
+  // For redeemable virtual-token auctions, link the token name/logo to the real token — consistent
+  // with the token-launched banner (both resolve through useAuctionRedemption).
+  const { isRedeemable, realTokenAddress } = useAuctionRedemption()
 
   const verifiedAuctionIds: string[] = useDynamicConfigValue({
     config: DynamicConfigs.VerifiedAuctions,
@@ -123,10 +151,10 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
     }
     const chainInfo = getChainInfo(auctionDetails.chainId)
     return getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: isRedeemable && realTokenAddress ? realTokenAddress : auctionDetails.tokenAddress,
       chainUrlParam: chainInfo.urlParam,
     })
-  }, [auctionDetails])
+  }, [auctionDetails, isRedeemable, realTokenAddress])
 
   if (!auctionDetails) {
     return null
@@ -134,7 +162,10 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
 
   const tokenSymbol = auctionDetails.token?.currency.symbol ?? auctionDetails.tokenSymbol
   const tokenName = auctionDetails.token?.currency.name ?? ''
-  const logoUrl = auctionDetails.token?.logoUrl ?? ''
+  // token.logoUrl already falls back to the API-provided token image (see
+  // useLoadAuctionDetails); reading tokenImageUrl here too covers the case where
+  // token info couldn't be constructed at all.
+  const logoUrl = auctionDetails.token?.logoUrl ?? auctionDetails.tokenImageUrl ?? ''
 
   return (
     <Flex gap="$gap8">

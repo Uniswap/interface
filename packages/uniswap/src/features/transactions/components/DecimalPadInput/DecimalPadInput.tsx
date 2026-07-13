@@ -45,6 +45,7 @@ export enum DecimalPadCalculatedSpaceId {
   Swap = 0,
   Send = 1,
   FiatOnRamp = 2,
+  EarnDeposit = 3,
 }
 
 const precalculatedSpace: Partial<Record<DecimalPadCalculatedSpaceId, number | undefined>> = {}

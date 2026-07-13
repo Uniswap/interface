@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import type { AuctionDetails } from '~/features/Toucan/Auction/store/types'
 
@@ -13,7 +14,10 @@ import type { AuctionDetails } from '~/features/Toucan/Auction/store/types'
  * @param auctionDetails - Static auction details from GetAuction endpoint
  * @returns Clearing price in Q96 format, or '0' if no data available
  */
-export function getClearingPrice(checkpointData: Checkpoint | null, auctionDetails: AuctionDetails | null): string {
+export function getClearingPrice(
+  checkpointData: PlainMessage<Checkpoint> | null,
+  auctionDetails: AuctionDetails | null,
+): string {
   // First priority: checkpoint clearing price (most up-to-date)
   if (checkpointData?.clearingPrice && checkpointData.clearingPrice !== '0') {
     return checkpointData.clearingPrice

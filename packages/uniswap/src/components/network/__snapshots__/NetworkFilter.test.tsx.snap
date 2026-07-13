@@ -43,7 +43,7 @@ exports[`NetworkFilter > renders a NetworkFilter 1`] = `
           <div
             fill="none"
             stroke-width="8"
-            style="width: 20px; height: 20px; color: rgba(255, 255, 255, 0.65);"
+            style="width: 20px; height: 20px;"
             viewbox="0 0 24 24"
           >
             <div

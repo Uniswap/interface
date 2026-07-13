@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import {
   DynamicConfigs,
   EmbeddedWalletBetaPassphrasesKey,
@@ -51,7 +52,7 @@ export function BetaPasscodeModal(): JSX.Element {
       name={ModalName.EmbeddedWalletBeta}
       isModalOpen={true}
       onClose={() => {}}
-      isDismissible={false}
+      isDismissible={isMobileWeb}
       overlayOpacity={0.8}
       maxWidth={420}
     >

@@ -12,7 +12,7 @@ export function useAccountListData({
   addresses: Address[]
   fetchPolicy?: WatchQueryFetchPolicy
   notifyOnNetworkStatusChange?: boolean | undefined
-}): GqlResult<GraphQLApi.AccountListQuery> & {
+}): GqlResult<GraphQLApi.PortfoliosTotalValueQuery> & {
   startPolling: (pollInterval: number) => void
   stopPolling: () => void
   networkStatus: NetworkStatus
@@ -21,8 +21,8 @@ export function useAccountListData({
   const { gqlChains } = useEnabledChains()
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
-  const { data, loading, networkStatus, refetch, startPolling, stopPolling } = GraphQLApi.useAccountListQuery({
-    variables: { addresses, valueModifiers, chains: gqlChains },
+  const { data, loading, networkStatus, refetch, startPolling, stopPolling } = GraphQLApi.usePortfoliosTotalValueQuery({
+    variables: { ownerAddresses: addresses, valueModifiers, chains: gqlChains },
     notifyOnNetworkStatusChange,
     fetchPolicy,
   })

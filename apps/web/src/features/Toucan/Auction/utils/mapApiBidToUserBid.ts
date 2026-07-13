@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Bid as ApiBid } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { AuctionBidStatus, UserBid } from '~/features/Toucan/Auction/store/types'
 
@@ -14,7 +15,7 @@ function normalizeBidStatus(status?: string): AuctionBidStatus {
   }
 }
 
-export function mapApiBidToUserBid(bid: ApiBid): UserBid {
+export function mapApiBidToUserBid(bid: PlainMessage<ApiBid>): UserBid {
   return {
     bidId: bid.bidId,
     auctionId: bid.auctionId,

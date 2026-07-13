@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 import { Fragment, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import { NativeSyntheticEvent, View } from 'react-native'
-import { Flex, Portal, Separator, TouchableArea, useWindowDimensions } from 'ui/src'
+import { Flex, Portal, Separator, TouchableArea, useIsDarkMode, useWindowDimensions } from 'ui/src'
 import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/DropdownMenuSheetItem'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
@@ -46,6 +46,7 @@ export function ContextMenu({
   elementName,
   sectionName,
   trackItemClicks = false,
+  dimBackground = false,
 }: PropsWithChildren<ContextMenuProps>): JSX.Element {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
   const maxUsableWidth = screenWidth - MIN_MENU_PADDING
@@ -58,6 +59,7 @@ export function ContextMenu({
 
   const { hapticFeedback } = useHapticFeedback()
   const trace = useTrace()
+  const isDarkMode = useIsDarkMode()
 
   // Menu measurement and visibility states
   const [measuredMenuDimensions, setMeasuredMenuDimensions] = useState<{ width: number; height: number } | null>(null)
@@ -164,6 +166,7 @@ export function ContextMenu({
           closeDelay,
           destructive,
           height,
+          trailingIcon,
           ...otherProps
         },
         index,
@@ -175,6 +178,7 @@ export function ContextMenu({
             variant="medium"
             label={label}
             icon={Icon && <Icon size="$icon.24" color={iconColor ?? (destructive ? '$statusCritical' : '$neutral2')} />}
+            rightElement={trailingIcon}
             height={height ?? spacing.spacing40}
             disabled={itemDisabled}
             destructive={destructive}
@@ -260,10 +264,19 @@ export function ContextMenu({
             width="100%"
             top={0}
             left={0}
-            backgroundColor="transparent"
             zIndex={zIndexes.overlay}
             onPress={handleMenuClose}
           >
+            {dimBackground && isOpen && (
+              <Flex
+                position="absolute"
+                inset={0}
+                backgroundColor="$black"
+                opacity={isDarkMode ? 0.4 : 0.2}
+                animation="200ms"
+                enterStyle={{ opacity: 0 }}
+              />
+            )}
             {/* Hidden pre-render for measurement */}
             {!measuredMenuDimensions && (
               <Flex

@@ -118,6 +118,10 @@ describe('useRecoveryFlow', () => {
     })
     await waitFor(() => expect(result.current.step).toBe(RecoveryStep.EnterPin))
     expect(result.current.recoveryWalletAddress).toBe('0xabc')
+    expect(EmbeddedWalletApiClient.fetchGetRecoveryConfig).toHaveBeenCalledWith(
+      expect.objectContaining({ authMethodId: expect.any(String) }),
+      'access-token',
+    )
   })
 
   it('successful PIN decrypt fires onPinDecryptSuccess and moves to Recovering', async () => {
@@ -247,6 +251,31 @@ describe('useRecoveryFlow', () => {
 
     await waitFor(() => expect(result.current.step).toBe(RecoveryStep.EnterPin))
     expect(result.current.recoveryWalletAddress).toBe('0xabc')
+    expect(EmbeddedWalletApiClient.fetchGetRecoveryConfig).toHaveBeenCalledWith(
+      expect.objectContaining({ authMethodId: expect.any(String) }),
+      'access-token',
+    )
+  })
+
+  it('OAuth path with no recovery config advances to NoWalletFound', async () => {
+    vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({} as never)
+
+    const { result, rerender } = renderHook(
+      ({ privy }: { privy: RecoveryPrivyAuth }) =>
+        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
+    )
+
+    await act(async () => {
+      await result.current.initOAuth('google')
+    })
+    rerender({
+      privy: buildPrivy({
+        oauthReturn: { pending: false, provider: 'google', providerEmail: 'user@example.com' },
+      }),
+    })
+
+    await waitFor(() => expect(result.current.step).toBe(RecoveryStep.NoWalletFound))
   })
 
   it('OAuth path: surfaces fetchEncryptedBlob failure via setOauthError and stays out of EnterPin', async () => {

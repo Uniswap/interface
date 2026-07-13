@@ -26,7 +26,7 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
     transformIndexHtml(html) {
       // oxlint-disable-next-line typescript/no-unnecessary-condition
       const env = mode ?? process.env.NODE_ENV ?? 'development'
-      const skip = process.env.VITE_SKIP_CSP === 'true'
+      const skip = process.env.SKIP_CSP === 'true'
 
       if (skip) {
         return html
@@ -49,7 +49,8 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
         }
       }
 
-      const tradingApiUrlOverride = getLocalEnvUrl('REACT_APP_TRADING_API_URL_OVERRIDE')
+      const tradingApiUrlOverride =
+        getLocalEnvUrl('TRADING_API_URL_OVERRIDE') ?? getLocalEnvUrl('REACT_APP_TRADING_API_URL_OVERRIDE')
       if (tradingApiUrlOverride) {
         if (!baseCSP.connectSrc.includes(tradingApiUrlOverride)) {
           baseCSP.connectSrc.push(tradingApiUrlOverride)

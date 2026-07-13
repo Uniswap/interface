@@ -20,6 +20,7 @@ import {
   privyEmbeddedWalletEndpointMonitors,
   privyEmbeddedWalletSecurityMonitors,
   privyEmbeddedWalletBusinessMonitors,
+  privyEmbeddedWalletDepsMonitors,
 } from './monitors'
 import { MonitorDefinition } from './types'
 
@@ -58,6 +59,7 @@ const teamMonitors: Record<string, { monitors: MonitorDefinition[]; category: st
     { monitors: privyEmbeddedWalletEndpointMonitors, category: 'endpoints' },
     { monitors: privyEmbeddedWalletSecurityMonitors, category: 'security' },
     { monitors: privyEmbeddedWalletBusinessMonitors, category: 'business' },
+    { monitors: privyEmbeddedWalletDepsMonitors, category: 'deps' },
   ],
   'liquidity-fe': [{ monitors: liquidityFeErrorTrackingMonitors, category: 'error-tracking' }],
 }

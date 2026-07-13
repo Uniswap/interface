@@ -31,3 +31,6 @@ export const selectHasDismissedCrosschainSwapsPromoBanner = (state: UniswapState
 
 export const selectHasDismissedPoolsBalanceCoachmark = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedPoolsBalanceCoachmark === true
+
+export const selectHasDismissedPoolsOutageBanner = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasDismissedPoolsOutageBanner === true

@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -28,13 +27,12 @@ interface UseTDPStatsMarketSourceResult {
 }
 
 function getTDPFilteredDeploymentMarket(ctx: {
-  multichainTokenUxEnabled: boolean
   isMultiChainAsset: boolean
   selectedMultichainChainId: UniverseChainId | undefined
   tokens: NonNullable<TokenQuery['project']>['tokens'] | undefined
 }): TDPFilteredDeploymentMarket | undefined {
-  const { multichainTokenUxEnabled, isMultiChainAsset, selectedMultichainChainId, tokens } = ctx
-  if (!multichainTokenUxEnabled || !isMultiChainAsset || selectedMultichainChainId === undefined || !tokens) {
+  const { isMultiChainAsset, selectedMultichainChainId, tokens } = ctx
+  if (!isMultiChainAsset || selectedMultichainChainId === undefined || !tokens) {
     return undefined
   }
   const gqlChain = getChainInfo(selectedMultichainChainId).backendChain.chain
@@ -60,7 +58,6 @@ function getTDPMarketStatsInput(ctx: {
 
 /** Resolves TokenWeb-backed market stats input vs chain filter, plus copy helpers for the stats UI. */
 export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefined): UseTDPStatsMarketSourceResult {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multiChainMap = useTDPStore((s) => s.multiChainMap)
   const selectedMultichainChainId = useTDPStore((s) => s.selectedMultichainChainId)
 
@@ -78,11 +75,10 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
       }
     }
 
-    const showAggregated = !multichainTokenUxEnabled || !isMultiChainAsset || selectedMultichainChainId === undefined
+    const showAggregated = !isMultiChainAsset || selectedMultichainChainId === undefined
 
     // oxlint-disable-next-line no-shadow
     const filteredDeploymentMarket = getTDPFilteredDeploymentMarket({
-      multichainTokenUxEnabled,
       isMultiChainAsset,
       selectedMultichainChainId,
       tokens: tokenQueryData.project?.tokens,
@@ -99,7 +95,7 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
       filteredDeploymentMarket,
       marketStatsInput,
     }
-  }, [multichainTokenUxEnabled, isMultiChainAsset, selectedMultichainChainId, tokenQueryData])
+  }, [isMultiChainAsset, selectedMultichainChainId, tokenQueryData])
 
   return {
     showAggregatedStats,

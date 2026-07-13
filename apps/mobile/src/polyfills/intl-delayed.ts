@@ -1,15 +1,42 @@
 import { getWalletDeviceLocale } from 'uniswap/src/i18n/utils'
+import { clearNumberFormatCache } from 'utilities/src/format/localeBasedFormats'
+
+// Tracks the locale whose Intl data is currently loaded so we only reload (and
+// invalidate the number format cache) when the locale actually changes.
+let loadedLocale: string | undefined
 
 export function initDynamicIntlPolyfills(): void {
   const locale = getWalletDeviceLocale()
-  loadDynamicIntlPolyfills(locale)
+  loadIntlPolyfillsForLocale(locale)
 }
 
 /**
- * Synchronously load the locale polyfills for the given language code.
- * We need to load them synchronously because the polyfills are needed for other code to run.
- * Polyfills affect the app startup time, so we need to load them selectively.
+ * Synchronously load the Intl locale data for the given locale.
+ *
+ * Locale data is loaded selectively (rather than bundling every locale) to keep
+ * app startup time down. Because of this, the data must be (re)loaded whenever the
+ * in-app language changes — otherwise `Intl.NumberFormat` falls back to English for
+ * any locale whose data was never loaded, which e.g. renders decimal separators as
+ * "." instead of "," even though the selected language uses a comma.
+ *
+ * We load synchronously because the data is needed before any subsequent formatting runs.
  */
+export function loadIntlPolyfillsForLocale(locale: string): void {
+  if (loadedLocale === locale) {
+    return
+  }
+
+  const previousLocale = loadedLocale
+  loadDynamicIntlPolyfills(locale)
+  loadedLocale = locale
+
+  // Invalidate formatters cached against the previously-loaded locale data so they
+  // are rebuilt with the newly loaded data.
+  if (previousLocale !== undefined) {
+    clearNumberFormatCache()
+  }
+}
+
 function loadDynamicIntlPolyfills(locale: string): void {
   const baseCode = locale.split('-')[0]
 

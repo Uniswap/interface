@@ -10,8 +10,9 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading/loaders'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { borderRadii, fonts, imageSizes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -25,7 +26,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
 
 const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
 
@@ -49,13 +49,11 @@ function FavoriteTokenCard({
   showLoading,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const dispatch = useDispatch()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { defaultChainId } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
   const { data, loading, networkStatus, startPolling, stopPolling } = GraphQLApi.useFavoriteTokenCardQuery({
@@ -133,23 +131,27 @@ function FavoriteTokenCard({
     >
       <AnimatedTouchableArea
         activeOpacity={isEditing ? 1 : undefined}
-        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-        borderColor={isDarkMode ? '$transparent' : colors.surface3.val}
         borderRadius="$rounded16"
         overflow={isIOS ? 'hidden' : 'visible'}
-        borderWidth={isDarkMode ? '$none' : '$spacing1'}
         testID={`${TestID.FavoriteTokenCardPrefix}${token?.symbol}`}
-        onLongPress={noop}
         onPress={onPress}
         {...shadowProps}
       >
-        <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
+        <Flex
+          alignItems="flex-start"
+          gap="$spacing8"
+          p="$spacing12"
+          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+          borderColor={isDarkMode ? '$transparent' : '$surface3'}
+          borderWidth="$spacing1"
+          borderRadius="$rounded16"
+        >
           <Flex row gap="$spacing4" justifyContent="space-between">
             <Flex grow row alignItems="center" gap="$spacing8">
               <TokenLogo
                 loading={loading}
                 chainId={chainId}
-                hideNetworkLogo={multichainTokenUxEnabled && (networkCount ?? 0) > 1}
+                hideNetworkLogo={(networkCount ?? 0) > 1}
                 name={token?.name ?? undefined}
                 size={imageSizes.image20}
                 symbol={token?.symbol ?? undefined}
@@ -167,9 +169,12 @@ function FavoriteTokenCard({
                 testID="loader/favorite/price"
               />
             ) : (
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {priceFormatted}
-              </Text>
+              <AnimatedNumber
+                numericValue={price}
+                value={priceFormatted}
+                textVariant="$heading3"
+                disableAnimations={!isDataLivelinessEnabled}
+              />
             )}
             {priceLoading ? (
               <Loader.Box

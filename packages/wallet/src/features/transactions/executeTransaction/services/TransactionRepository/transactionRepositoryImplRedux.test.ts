@@ -273,6 +273,66 @@ describe('TransactionRepositoryImplRedux', () => {
     })
   })
 
+  describe('getPendingPrivateTransactionDetails', () => {
+    it('returns id/hash/nonce/addedTime/status for pending private txs only', async () => {
+      const privateA: ClassicTransactionDetails = {
+        ...mockTransaction,
+        id: 'A',
+        hash: '0xaaa',
+        status: TransactionStatus.Pending,
+        options: { request: { ...mockTransactionRequest, nonce: 5 }, submitViaPrivateRpc: true },
+      }
+      const privateB: ClassicTransactionDetails = {
+        ...mockTransaction,
+        id: 'B',
+        hash: '0xbbb',
+        status: TransactionStatus.Pending,
+        options: { request: { ...mockTransactionRequest, nonce: 6 }, submitViaPrivateRpc: true },
+      }
+      const publicPending: ClassicTransactionDetails = {
+        ...mockTransaction,
+        id: 'C',
+        hash: '0xccc',
+        status: TransactionStatus.Pending,
+        options: { request: mockTransactionRequest, submitViaPrivateRpc: false },
+      }
+      const privateNoHash: ClassicTransactionDetails = {
+        ...mockTransaction,
+        id: 'D',
+        hash: undefined,
+        status: TransactionStatus.Pending,
+        options: { request: mockTransactionRequest, submitViaPrivateRpc: true },
+      }
+      const privateSuccess: ClassicTransactionDetails = {
+        ...mockTransaction,
+        id: 'E',
+        hash: '0xeee',
+        status: TransactionStatus.Success,
+        options: { request: mockTransactionRequest, submitViaPrivateRpc: true },
+      }
+      store.dispatch(transactionActions.addTransaction(privateA))
+      store.dispatch(transactionActions.addTransaction(privateB))
+      store.dispatch(transactionActions.addTransaction(publicPending))
+      store.dispatch(transactionActions.addTransaction(privateNoHash))
+      store.dispatch(transactionActions.addTransaction(privateSuccess))
+
+      const details = await repository.getPendingPrivateTransactionDetails({
+        address: mockAddress,
+        chainId: mockChainId,
+      })
+
+      // Only the two pending private txs with a hash project; public / no-hash / success excluded.
+      expect(details.map((d) => d.id).sort()).toEqual(['A', 'B'])
+      expect(details.find((d) => d.id === 'A')).toEqual({
+        id: 'A',
+        hash: '0xaaa',
+        nonce: 5, // BigNumber-coerced to number
+        addedTime: privateA.addedTime,
+        status: TransactionStatus.Pending,
+      })
+    })
+  })
+
   describe('getTransactionsByAddress', () => {
     it('should return transactions for an address', async () => {
       // Add some test transactions

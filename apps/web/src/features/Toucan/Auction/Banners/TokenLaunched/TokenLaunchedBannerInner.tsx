@@ -19,6 +19,11 @@ interface TokenLaunchedBannerInnerProps {
   }
   bannerGradient: { backgroundImage: string; backgroundSize: string }
   accentColor: string
+  isTradeAvailable: boolean
+  tradeAvailabilityDurationRemaining: string | undefined
+  // See TokenLaunchedBannerContent — set for redeemable virtual tokens to present the real token.
+  fdvUsdOverride?: number | null
+  tokenDetailsAddress?: string
 }
 
 export function TokenLaunchedBannerInner({
@@ -28,6 +33,10 @@ export function TokenLaunchedBannerInner({
   priceData,
   bannerGradient,
   accentColor,
+  isTradeAvailable,
+  tradeAvailabilityDurationRemaining,
+  fdvUsdOverride,
+  tokenDetailsAddress,
 }: TokenLaunchedBannerInnerProps) {
   const navigate = useNavigate()
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
@@ -37,23 +46,27 @@ export function TokenLaunchedBannerInner({
       return
     }
     const tokenDetailsURL = getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
       chain: toGraphQLChain(auctionDetails.chainId),
     })
     navigate(tokenDetailsURL)
-  }, [auctionDetails, navigate])
+  }, [auctionDetails, navigate, tokenDetailsAddress])
 
-  const isDisabled = !auctionDetails
+  const canPress = Boolean(auctionDetails && isTradeAvailable)
 
   return (
     <TokenLaunchedBannerWrapper bannerGradient={bannerGradient}>
-      <TouchableArea onPress={onBannerPress} disabled={isDisabled} cursor={isDisabled ? 'default' : 'pointer'}>
+      <TouchableArea onPress={canPress ? onBannerPress : undefined} cursor={canPress ? 'pointer' : 'default'}>
         <TokenLaunchedBannerContent
           tokenName={tokenName}
           totalSupply={totalSupply}
           auctionTokenDecimals={auctionTokenDecimals}
           accentColor={accentColor}
           currentTickValue={priceData?.currentTickValue}
+          isTradeAvailable={isTradeAvailable}
+          tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
+          fdvUsdOverride={fdvUsdOverride}
+          tokenDetailsAddress={tokenDetailsAddress}
         />
       </TouchableArea>
     </TokenLaunchedBannerWrapper>

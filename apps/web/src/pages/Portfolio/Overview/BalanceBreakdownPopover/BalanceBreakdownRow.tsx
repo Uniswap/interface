@@ -6,7 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { DEFAULT_DELTA_COLOR, DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const PERCENT_CHANGE_COLUMN_WIDTH = 64
@@ -21,7 +21,7 @@ type BalanceBreakdownRowKind = 'tokens' | 'pools'
 export interface BalanceBreakdownRowData {
   kind: BalanceBreakdownRowKind
   valueUSD: number
-  percentChange1d: number | undefined
+  percentChange: number | undefined
 }
 
 const ROW_TEST_ID_BY_KIND: Record<BalanceBreakdownRowKind, string> = {
@@ -29,7 +29,13 @@ const ROW_TEST_ID_BY_KIND: Record<BalanceBreakdownRowKind, string> = {
   pools: TestID.BalanceBreakdownRowPools,
 }
 
-export function BalanceBreakdownRow({ kind, valueUSD, percentChange1d }: BalanceBreakdownRowData): JSX.Element {
+export function BalanceBreakdownRow({
+  kind,
+  valueUSD,
+  percentChange,
+  // When true, color the percent text green/red by sign (used for chart scrubbing legibility).
+  semanticPercentColor = false,
+}: BalanceBreakdownRowData & { semanticPercentColor?: boolean }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
 
@@ -37,7 +43,8 @@ export function BalanceBreakdownRow({ kind, valueUSD, percentChange1d }: Balance
   const label =
     kind === 'tokens' ? t('portfolio.balanceBreakdown.tokenBalance') : t('portfolio.balanceBreakdown.poolsBalance')
   const formattedValue = convertFiatAmountFormatted(valueUSD, NumberType.PortfolioBalance)
-  const formattedPercent = percentChange1d !== undefined ? formatPercent(Math.abs(percentChange1d)) : '-'
+  const formattedPercent = percentChange !== undefined ? formatPercent(Math.abs(percentChange)) : '-'
+  const percentColor = semanticPercentColor ? getDeltaTextColor(percentChange) : DEFAULT_DELTA_COLOR
 
   return (
     <Flex row alignItems="center" gap="$spacing8" width="100%" aria-label={label} testID={ROW_TEST_ID_BY_KIND[kind]}>
@@ -59,12 +66,12 @@ export function BalanceBreakdownRow({ kind, valueUSD, percentChange1d }: Balance
         gap="$spacing4"
         justifyContent="flex-end"
         pl="$spacing8"
-        width={PERCENT_CHANGE_COLUMN_WIDTH}
+        minWidth={PERCENT_CHANGE_COLUMN_WIDTH}
       >
-        {percentChange1d !== undefined && (
-          <DeltaArrow delta={percentChange1d} formattedDelta={formattedPercent} size={12} />
+        {percentChange !== undefined && (
+          <DeltaArrow delta={percentChange} formattedDelta={formattedPercent} size={12} />
         )}
-        <Text variant="body3" color="$neutral2" style={MONOSPACE_NUMERIC_STYLE}>
+        <Text variant="body3" color={percentColor} style={MONOSPACE_NUMERIC_STYLE}>
           {formattedPercent}
         </Text>
       </Flex>

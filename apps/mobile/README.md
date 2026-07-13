@@ -218,18 +218,6 @@ If it fails, quit the terminal and run it directly from Android Studio. Once you
 
 Once all the setup steps above are completed, you're ready to try running the app locally!
 
-### Environment variables
-
-Note: The app will likely have limited functionality when running it locally with the default environment variables.
-
-Use the environment variables defined in the `.env.defaults.local` file to run the app locally.
-
-You can use the command `bun mobile env:local:download` if you have the 1password CLI to copy that file to your root folder.
-
-### Compile contract ABI types
-
-This is done in bootstrap but good to know about. Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `bun g:prepare` at the top level. Re-run this if the ABIs are ever changed.
-
 ### Run the app
 
 In the root directory, run `bun install` to install all the necessary npm packages.
@@ -321,18 +309,9 @@ Context: <https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?t
 
 If something isn’t working the way it should or you’re getting a weird error when trying to run the app, try the following:
 
-1. Quit the terminal
-2. Quit Metro terminal
-3. Open Finder and navigate to the `mobile` directory
-4. Delete the `node_modules` folder
-5. Navigate into the `ios` folder
-6. Delete the `Pods` folder
-7. Open XCode
-8. Go to Product → Clean Build Folder
-9. Open your terminal again
-10. Navigate to the `mobile` directory in the terminal
-11. Run `bun install && bun pod` again
-12. Run `bun ios`
+1. Quit Metro terminal
+2. Run `bun clean`. Start with a quick clean but enable more options if that doesn't work.
+3. Run `bun mobile ios`
 
 ### Shell profile setup
 

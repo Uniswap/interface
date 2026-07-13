@@ -75,9 +75,8 @@
     "check:deps:usage": "nx check:deps:usage ui",
     "test": "nx test ui",
     "typecheck": "nx typecheck ui",
-    "watch": "nx watch ui",
-    "format": "nx format ui",
-    "format:check": "nx format:check ui",
+    "format": "nx run ui:format",
+    "format:check": "nx run ui:format:check",
     "lint": "nx lint ui",
     "lint:fix": "nx lint:fix ui"
   },

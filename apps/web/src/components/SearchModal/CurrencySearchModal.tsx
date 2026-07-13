@@ -19,6 +19,12 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
+  /**
+   * Parent-controlled initial network filter. Pass a chain to pin the selector's default network,
+   * `null` to default to All Networks, or omit (`undefined`) to fall back to the default
+   * account/multichain resolution.
+   */
+  chainId?: UniverseChainId | null
   chainIds?: UniverseChainId[]
   variation?: TokenSelectorVariation
   flow?: TokenSelectorFlow
@@ -31,6 +37,7 @@ export const CurrencySearchModal = memo(function CurrencySearchModal({
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
   switchNetworkAction,
+  chainId,
   chainIds,
   variation,
   flow,
@@ -52,6 +59,7 @@ export const CurrencySearchModal = memo(function CurrencySearchModal({
         onCurrencySelect={onCurrencySelect}
         switchNetworkAction={switchNetworkAction}
         onDismiss={onDismiss}
+        chainId={chainId}
         chainIds={chainIds}
         variation={variation}
         flow={flow}

@@ -1,5 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { CellContainer, FlashList } from '@shopify/flash-list'
+import { memo, useCallback, useEffect, useMemo, useRef, type PropsWithChildren } from 'react'
+import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import Animated, { LinearTransition } from 'react-native-reanimated'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemListProps } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
@@ -8,10 +10,44 @@ import {
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
+import { getSectionHeaderRowKey, getSectionItemRowKey } from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
+import { EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const TOKEN_ITEM_SIZE = 64
 const AMOUNT_TO_DRAW = 18
+
+const EXPANDABLE_ROW_LAYOUT_TRANSITION = LinearTransition.duration(EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS)
+const AnimatedCellContainer = Animated.createAnimatedComponent(CellContainer)
+
+// Only multi-issuer (grouped ticker) rows are expandable / dynamic-height.
+function isExpandableRow(row: ProcessedRow): boolean {
+  return (
+    row.type === ProcessedRowType.Item &&
+    !Array.isArray(row.data.item) &&
+    row.data.item.rowLayout?.dynamicHeight === true
+  )
+}
+
+// Reanimated tweens the cell view between its collapsed and expanded layouts so an expanding/collapsing row grows
+// smoothly and the rows below slide rather than snap. `overflow: hidden` clips the fully-rendered issuer panel to
+// the animating height so it reveals progressively.
+function AnimatedCellRenderer({
+  style,
+  ...props
+}: PropsWithChildren<{
+  style?: StyleProp<ViewStyle>
+  onLayout?: (event: LayoutChangeEvent) => void
+  index: number
+}>): JSX.Element {
+  return (
+    <AnimatedCellContainer
+      {...props}
+      layout={EXPANDABLE_ROW_LAYOUT_TRANSITION}
+      style={[style, { overflow: 'hidden' }]}
+    />
+  )
+}
 
 export const OnchainItemList = memo(function OnchainItemListInner({
   sectionListRef,
@@ -20,6 +56,7 @@ export const OnchainItemList = memo(function OnchainItemListInner({
   renderItem,
   renderSectionHeader,
   sections,
+  expandedItems,
   renderedInModal,
   contentContainerStyle,
 }: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
@@ -37,8 +74,12 @@ export const OnchainItemList = memo(function OnchainItemListInner({
   }, [sectionListRef])
 
   const data = useMemo(() => {
-    return processSectionsToRows(sections)
-  }, [sections])
+    return processSectionsToRows({ sections, expandedItems, keyExtractor })
+  }, [sections, expandedItems, keyExtractor])
+
+  // Only animate cell layout when the list contains expandable rows, so plain token/wallet lists keep their instant
+  // layout and don't animate on every search keystroke.
+  const hasExpandableRows = useMemo(() => data.some(isExpandableRow), [data])
 
   // TODO(WALL-5889): fix sticky header indices (prevent duplicates)
   // const stickyHeaderIndices: number[] = useMemo(() => {
@@ -61,18 +102,33 @@ export const OnchainItemList = memo(function OnchainItemListInner({
     [renderItem, renderSectionHeader],
   )
 
-  const getItemType = useCallback((item: ProcessedRow): string => item.type, [])
+  const getItemType = useCallback((row: ProcessedRow): string => {
+    // Typing fixed-height single-issuer rows as dynamic fragments the recycle pool and breaks RecyclerListView's
+    // type-based height reuse for neighboring rows.
+    return isExpandableRow(row) ? 'item-dynamic-height' : row.type
+  }, [])
+
+  const overrideItemLayout = useCallback((layout: { size?: number }, row: ProcessedRow): void => {
+    if (row.type !== ProcessedRowType.Item || Array.isArray(row.data.item) || !row.data.item.rowLayout) {
+      return
+    }
+    const { rowLayout } = row.data.item
+    layout.size = row.data.expanded ? rowLayout.expandedHeightPx : rowLayout.collapsedHeightPx
+  }, [])
 
   const makeKey = useCallback(
-    (item: ProcessedRow, index: number): string => {
-      if (!keyExtractor) {
-        return String(index)
-      }
+    // Section-scoped, position-independent keys (mirrors web). A `-${index}` suffix would re-key every row below
+    // an added/removed Recents section, forcing a relayout that under-estimates content height (SWAP-2787).
+    (item: ProcessedRow): string => {
       switch (item.type) {
         case ProcessedRowType.Header:
-          return `${item.data.section.sectionKey}-header-${index}`
+          return getSectionHeaderRowKey(item.data.section.sectionKey)
         case ProcessedRowType.Item:
-          return `${keyExtractor(item.data.item, index)}-${index}`
+          return getSectionItemRowKey({
+            sectionKey: item.data.section.sectionKey,
+            itemKey: keyExtractor?.(item.data.item, item.data.index),
+            index: item.data.index,
+          })
         default:
           return ''
       }
@@ -93,6 +149,9 @@ export const OnchainItemList = memo(function OnchainItemListInner({
       keyboardDismissMode="on-drag"
       renderItem={renderFlashListItem}
       getItemType={getItemType}
+      overrideItemLayout={overrideItemLayout}
+      CellRendererComponent={hasExpandableRows ? AnimatedCellRenderer : undefined}
+      extraData={expandedItems}
       showsVerticalScrollIndicator={false}
       drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
       // TODO(WALL-5889): fix sticky header indices (prevent duplicates)

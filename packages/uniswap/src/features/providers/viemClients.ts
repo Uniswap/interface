@@ -1,3 +1,4 @@
+import { tryProvideSession } from '@universe/api'
 import { ViemClientManager } from '@universe/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -8,6 +9,7 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 const createClient = createViemClientFactory({
   resolveRpcConfig: defaultResolveRpcConfig,
   getChainInfo,
+  getSessionGate: tryProvideSession,
   areAddressesEqual: (a, b) =>
     areAddressesEqual({
       addressInput1: { address: a, platform: Platform.EVM },

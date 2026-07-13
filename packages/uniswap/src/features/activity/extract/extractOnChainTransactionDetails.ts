@@ -4,23 +4,24 @@ import {
   OnChainTransactionStatus,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { TradingApi } from '@universe/api'
-import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
-import { parseRestAuctionTransaction } from 'uniswap/src/features/activity/parse/parseAuctionTransaction'
-import { parseRestBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
+import { parseApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
+import { parseAuctionTransaction } from 'uniswap/src/features/activity/parse/parseAuctionTransaction'
+import { parseBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
 import {
   buildExecuteTransactionDetails,
-  parseRestExecuteTransaction,
+  parseExecuteTransaction,
 } from 'uniswap/src/features/activity/parse/parseExecuteTransaction'
-import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
-import { parseRestNFTMintTransaction } from 'uniswap/src/features/activity/parse/parseMintTransaction'
-import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
-import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
+import { parseLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
+import { parseNFTMintTransaction } from 'uniswap/src/features/activity/parse/parseMintTransaction'
+import { parseReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
+import { parseSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
-  parseRestSwapTransaction,
-  parseRestWithdrawTransaction,
-  parseRestWrapTransaction,
+  parseDepositTransaction,
+  parseSwapTransaction,
+  parseWithdrawTransaction,
+  parseWrapTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
-import { parseRestUnknownTransaction } from 'uniswap/src/features/activity/parse/parseUnknownTransaction'
+import { parseUnknownTransaction } from 'uniswap/src/features/activity/parse/parseUnknownTransaction'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   TransactionDetails,
@@ -45,72 +46,76 @@ function mapRestStatusToLocal(status: OnChainTransactionStatus, isCancel: boolea
   }
 }
 
-/**
- * Extract transaction details from an onChain transaction in the REST format
- * Returns an array to support batched transactions (e.g., EXECUTE label with swap + approve)
- */
-export default function extractRestOnChainTransactionDetails(transaction: OnChainTransaction): TransactionDetails[] {
-  const { chainId, transactionHash, timestampMillis, from, label, status, fee } = transaction
-
-  const isCancel = label === OnChainTransactionLabel.CANCEL
-  let typeInfo: TransactionTypeInfo | undefined
+function parseRestOnChainTransactionTypeInfo(transaction: OnChainTransaction): TransactionTypeInfo | undefined {
+  const { label } = transaction
 
   switch (label) {
-    case OnChainTransactionLabel.EXECUTE: {
-      // Handle EXECUTE label separately, this represents batched transactions like swap + approve
-      const parsed = parseRestExecuteTransaction(transaction)
-      if (parsed) {
-        return buildExecuteTransactionDetails({ transaction, parsed, mapStatusFn: mapRestStatusToLocal })
-      }
-      // If can't parse EXECUTE, this will be parsed as unknown transaction
-      break
-    }
+    case OnChainTransactionLabel.VAULT_DEPOSIT:
+      return parseDepositTransaction(transaction, { isVault: true })
+    case OnChainTransactionLabel.WITHDRAW:
+    case OnChainTransactionLabel.VAULT_WITHDRAW:
+      return parseWithdrawTransaction(transaction, {
+        isVault: label === OnChainTransactionLabel.VAULT_WITHDRAW,
+      })
     case OnChainTransactionLabel.SEND:
-      typeInfo = parseRestSendTransaction(transaction)
-      break
+    case OnChainTransactionLabel.VAULT_TRANSFER_OUT:
+      return parseSendTransaction(transaction)
     case OnChainTransactionLabel.RECEIVE:
-      typeInfo = parseRestReceiveTransaction(transaction)
-      break
+    case OnChainTransactionLabel.VAULT_TRANSFER_IN:
+      return parseReceiveTransaction(transaction)
     case OnChainTransactionLabel.SWAP:
     case OnChainTransactionLabel.UNISWAP_X:
-      typeInfo = parseRestSwapTransaction(transaction)
-      break
+      return parseSwapTransaction(transaction)
     case OnChainTransactionLabel.WRAP:
     case OnChainTransactionLabel.UNWRAP:
     case OnChainTransactionLabel.LEND:
-      typeInfo = parseRestWrapTransaction(transaction)
-      break
-    case OnChainTransactionLabel.WITHDRAW:
-      typeInfo = parseRestWithdrawTransaction(transaction)
-      break
+      return parseWrapTransaction(transaction)
     case OnChainTransactionLabel.APPROVE:
-      typeInfo = parseRestApproveTransaction(transaction)
-      break
+      return parseApproveTransaction(transaction)
     case OnChainTransactionLabel.BRIDGE:
-      typeInfo = parseRestBridgeTransaction(transaction)
-      break
+      return parseBridgeTransaction(transaction)
     case OnChainTransactionLabel.MINT:
-      typeInfo = parseRestNFTMintTransaction(transaction)
-      break
+      return parseNFTMintTransaction(transaction)
     case OnChainTransactionLabel.CLAIM:
     case OnChainTransactionLabel.CREATE_PAIR:
     case OnChainTransactionLabel.CREATE_POOL:
     case OnChainTransactionLabel.INCREASE_LIQUIDITY:
     case OnChainTransactionLabel.DECREASE_LIQUIDITY:
-      typeInfo = parseRestLiquidityTransaction(transaction)
-      break
+      return parseLiquidityTransaction(transaction)
     case OnChainTransactionLabel.AUCTION_SUBMIT_BID:
     case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS:
     case OnChainTransactionLabel.AUCTION_EXIT_BID:
     case OnChainTransactionLabel.AUCTION_EXIT_PARTIALLY_FILLED_BID:
     case OnChainTransactionLabel.AUCTION_CLAIM_TOKENS_BATCHED:
-      typeInfo = parseRestAuctionTransaction(transaction)
-      break
+      return parseAuctionTransaction(transaction)
+    default:
+      return undefined
+  }
+}
+
+/**
+ * Extract transaction details from an onChain transaction in the REST format
+ * Returns an array to support batched transactions (e.g., EXECUTE label with swap + approve)
+ */
+export default function extractRestOnChainTransactionDetails(transaction: OnChainTransaction): TransactionDetails[] {
+  const { chainId, transactionHash, timestampMillis, from, label, status, fee, paymaster, sponsorship } = transaction
+
+  const isCancel = label === OnChainTransactionLabel.CANCEL
+
+  if (label === OnChainTransactionLabel.EXECUTE) {
+    // Handle EXECUTE label separately, this represents batched transactions like swap + approve
+    const parsed = parseExecuteTransaction(transaction)
+    if (parsed) {
+      return buildExecuteTransactionDetails({
+        transaction,
+        parsed,
+        mapStatusFn: mapRestStatusToLocal,
+      })
+    }
+    // If can't parse EXECUTE, this will be parsed as unknown transaction
   }
 
-  if (!typeInfo) {
-    typeInfo = parseRestUnknownTransaction(transaction)
-  }
+  const typeInfo = parseRestOnChainTransactionTypeInfo(transaction) ?? parseUnknownTransaction(transaction)
 
   const networkFee = fee
     ? {
@@ -124,6 +129,10 @@ export default function extractRestOnChainTransactionDetails(transaction: OnChai
 
   const routing = label === OnChainTransactionLabel.UNISWAP_X ? TradingApi.Routing.DUTCH_V2 : TradingApi.Routing.CLASSIC
 
+  const sponsorInfo: TradingApi.SponsorMetadata | undefined = sponsorship
+    ? { name: sponsorship.name, icon: sponsorship.logoUrl }
+    : undefined
+
   return [
     {
       routing,
@@ -136,6 +145,8 @@ export default function extractRestOnChainTransactionDetails(transaction: OnChai
       typeInfo,
       options: { request: {} },
       networkFee,
+      paymaster: paymaster?.address,
+      sponsorInfo,
       transactionOriginType: TransactionOriginType.Internal,
     },
   ]

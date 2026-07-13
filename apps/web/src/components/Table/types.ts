@@ -1,6 +1,16 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, Row, RowData, Table as TanstackTable } from '@tanstack/react-table'
 
+export type RenderUnifiedExpandableRow<T extends RowData> = (
+  row: Row<T>,
+  ctx: {
+    renderTableRow: () => JSX.Element
+    /** Full-width table rows for each expanded sub-row (e.g. per-issuer metrics). */
+    renderSubTableRows: () => JSX.Element
+    isExpanded: boolean
+  },
+) => JSX.Element
+
 /** Optional metadata on column definitions (read in TableRow, sizing helpers, etc.). */
 export interface TableColumnMeta {
   flexGrow?: number
@@ -12,14 +22,19 @@ export type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean
   error?: ApolloError | boolean
-  v2: boolean
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  topLevelRowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  subRowsWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  renderUnifiedExpandableRow?: RenderUnifiedExpandableRow<T>
   loadingRowsCount?: number
   rowHeight?: number
   compactRowHeight?: number
   subRowHeight?: number
   hasPinnedColumns?: boolean
   dimmed?: boolean
+  /** Draw one pinned-column guide from the header instead of per-row borders (mWeb). */
+  extendedPinnedColumnDivider?: boolean
+  /** Flat row window virtualizer (`useWindowVirtualizer`), e.g. Portfolio Activity. */
   virtualized?: boolean
 }
 
@@ -33,13 +48,15 @@ export type TableProps<T extends RowData = unknown> = {
   maxHeight?: number
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
-  v2?: boolean
   hideHeader?: boolean
   externalScrollSync?: boolean
   scrollGroup?: string
   // oxlint-disable-next-line max-params -- matches @tanstack/react-table getRowId signature
   getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  topLevelRowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  subRowsWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  renderUnifiedExpandableRow?: RenderUnifiedExpandableRow<T>
   loadingRowsCount?: number
   rowHeight?: number
   compactRowHeight?: number

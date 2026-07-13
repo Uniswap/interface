@@ -1,14 +1,14 @@
-import { type Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { useCallback, useMemo, useState } from 'react'
+import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
+import { Flex, Text } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { NumberType } from 'utilities/src/format/types'
+import { ExpandableHelpLink } from '~/pages/Liquidity/CreateAuction/components/ExpandableHelpLink'
 import { PostAuctionLiquiditySelector } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquiditySelector'
+import { quoteRaiseAtFloor } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import { type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import {
   type PostAuctionLiquidityAllocation,
@@ -16,7 +16,6 @@ import {
   type PostAuctionLiquidityTier,
   type RaiseCurrency,
 } from '~/pages/Liquidity/CreateAuction/types'
-import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 interface PostAuctionLiquiditySectionProps {
   allocation: PostAuctionLiquidityAllocation
@@ -56,9 +55,6 @@ export function PostAuctionLiquiditySection({
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
   const { code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
-  const [helpExpanded, setHelpExpanded] = useState(false)
-
-  const toggleHelp = useCallback(() => setHelpExpanded((prev) => !prev), [])
 
   // When the editor is in USD mode, pass the (snapshotted) USD price down so the first tier
   // defaults to 100k USD (converted to raise) instead of 100k raise tokens. Subsequent tiers
@@ -77,36 +73,20 @@ export function PostAuctionLiquiditySection({
       showSubtitleTooltip: false as const,
     }
 
-    const raiseSdk = getRaiseCurrencyAsCurrency(raiseCurrency, chainId)
-    const trimmedFloor = floorPrice.trim()
-    if (!raiseSdk || !trimmedFloor || auctionSupplyAmount.equalTo(0)) {
+    if (auctionSupplyAmount.equalTo(0)) {
       return zero
     }
 
-    const quotePerToken = getCurrencyAmount({
-      value: trimmedFloor,
-      valueType: ValueType.Exact,
-      currency: raiseSdk,
+    const notional = quoteRaiseAtFloor({
+      floorPrice,
+      raiseCurrency,
+      chainId,
+      tokensAmount: postAuctionLiquidityAmount,
     })
-    if (!quotePerToken || quotePerToken.equalTo(0) || postAuctionLiquidityAmount.equalTo(0)) {
+    if (!notional) {
       return zero
     }
 
-    const auctionToken = auctionSupplyAmount.currency
-    const oneTokenRaw = 10n ** BigInt(auctionToken.decimals)
-    const oneAuctionToken = CurrencyAmount.fromRawAmount(auctionToken, oneTokenRaw.toString())
-
-    let floorPriceAsPrice: Price<Currency, Currency>
-    try {
-      floorPriceAsPrice = new Price({
-        baseAmount: oneAuctionToken,
-        quoteAmount: quotePerToken,
-      })
-    } catch {
-      return zero
-    }
-
-    const notional = floorPriceAsPrice.quote(postAuctionLiquidityAmount)
     const formatted = formatNumberOrString({
       value: notional.toExact(),
       type: NumberType.TokenQuantityStats,
@@ -151,31 +131,13 @@ export function PostAuctionLiquiditySection({
         onRemoveTier={onRemoveTier}
       />
 
-      <Flex gap="$spacing4">
-        <TouchableArea onPress={toggleHelp}>
-          <Flex row gap="$spacing4" alignItems="center">
-            <QuestionInCircleFilled size="$icon.16" color="$neutral2" />
-            <Text
-              variant="body3"
-              color={helpExpanded ? '$neutral1' : '$neutral2'}
-              textDecorationLine="underline"
-              textDecorationStyle="dashed"
-            >
-              {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpLink')}
-            </Text>
-          </Flex>
-        </TouchableArea>
-        {helpExpanded && (
-          <Flex pl="$spacing20">
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpDescription', {
-                raiseCurrency,
-                tokenSymbol,
-              })}
-            </Text>
-          </Flex>
-        )}
-      </Flex>
+      <ExpandableHelpLink
+        label={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpLink')}
+        description={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpDescription', {
+          raiseCurrency,
+          tokenSymbol,
+        })}
+      />
     </Flex>
   )
 }

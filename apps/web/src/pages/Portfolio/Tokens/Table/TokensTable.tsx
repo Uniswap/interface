@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollSync } from 'react-scroll-sync'
@@ -11,7 +10,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { TokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
 import {
   PortfolioTokenTableSortStoreContextProvider,
   usePortfolioTokenTableSortStore,
@@ -36,7 +34,6 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
   const [isOpen, setIsOpen] = useState(false)
   const tableLoading = loading && !refetching
   const trace = useTrace()
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
 
   const { sortMethod, sortAscending } = usePortfolioTokenTableSortStore((s) => ({
     sortMethod: s.sortMethod,
@@ -58,13 +55,6 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
     () => sortPortfolioTokenData(visible, { sortMethod, sortAscending }),
     [visible, sortMethod, sortAscending],
   )
-
-  const hiddenColumns = useMemo(() => {
-    if (isProfitLossEnabled) {
-      return undefined
-    }
-    return [TokenColumns.AvgCost, TokenColumns.UnrealizedPnl]
-  }, [isProfitLossEnabled])
 
   const flattenedHiddenTokens = useMemo(() => flattenTokenDataToSingleChainRows(hidden), [hidden])
 
@@ -95,7 +85,6 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
           tokenData={sortedVisible}
           loading={tableLoading}
           error={error}
-          hiddenColumns={hiddenColumns}
           maxHeight={TOKENS_TABLE_MAX_HEIGHT}
           showUnrealizedPnlPercent
         />
@@ -114,7 +103,6 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
                 hideHeader
                 loading={tableLoading}
                 error={error}
-                hiddenColumns={hiddenColumns}
                 maxHeight={TOKENS_TABLE_MAX_HEIGHT}
                 showUnrealizedPnlPercent
               />

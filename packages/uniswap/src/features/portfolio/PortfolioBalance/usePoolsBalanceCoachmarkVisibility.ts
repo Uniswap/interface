@@ -1,9 +1,12 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useDispatch, useSelector } from 'react-redux'
 import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { selectHasDismissedPoolsBalanceCoachmark } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setPoolsBalanceCoachmarkDismissed } from 'uniswap/src/features/behaviorHistory/slice'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface UsePoolsBalanceCoachmarkVisibilityParams {
@@ -24,7 +27,8 @@ export function usePoolsBalanceCoachmarkVisibility({
   evmAddress,
   svmAddress,
 }: UsePoolsBalanceCoachmarkVisibilityParams): UsePoolsBalanceCoachmarkVisibilityResult {
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
+  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
   const walletAddress = evmAddress ?? svmAddress
 
   const hasDismissed = useSelector(selectHasDismissedPoolsBalanceCoachmark)
@@ -33,7 +37,7 @@ export function usePoolsBalanceCoachmarkVisibility({
     part: PortfolioBalancePart.Pools,
     evmAddress,
     svmAddress,
-    enabled: false,
+    cacheOnly: true,
   })
 
   const hasPoolsBalance = (poolsSlice?.balanceUSD ?? 0) > 0
@@ -42,6 +46,7 @@ export function usePoolsBalanceCoachmarkVisibility({
 
   const dispatch = useDispatch()
   const dismiss = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.PoolsBalanceCoachmark })
     dispatch(setPoolsBalanceCoachmarkDismissed())
   })
 

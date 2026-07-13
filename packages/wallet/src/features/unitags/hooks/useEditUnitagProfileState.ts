@@ -113,14 +113,12 @@ export function useEditUnitagProfileState({
   }
 
   const updateProfileMetadata = async (uploadedNewAvatar: boolean): Promise<void> => {
-    // If new avatar was uploaded, update metadata.avatar to be the S3 file location
-    const metadata = uploadedNewAvatar
-      ? {
-          ...updatedMetadata,
-          // Add Date.now() to the end to ensure the resulting URL is not cached by devices
-          avatar: avatarUploadUrlResponse?.avatarUrl ? `${avatarUploadUrlResponse.avatarUrl}?${Date.now()}` : undefined,
-        }
-      : updatedMetadata
+    // If new avatar was uploaded, update metadata.avatar to be the S3 file location.
+    // Add Date.now() to the end to ensure the resulting URL is not cached by devices.
+    const newAvatarUrl = avatarUploadUrlResponse?.avatarUrl
+      ? `${avatarUploadUrlResponse.avatarUrl}?${Date.now()}`
+      : undefined
+    const metadata = uploadedNewAvatar ? { ...updatedMetadata, avatar: newAvatarUrl } : updatedMetadata
 
     const updateResponse = await unitagsApiClient.updateUnitagMetadata({
       data: {
@@ -152,7 +150,8 @@ export function useEditUnitagProfileState({
     invalidateUnitagsQueries()
 
     if (uploadedNewAvatar) {
-      setAvatarImageUri(avatarUploadUrlResponse?.avatarUrl)
+      // Match the suffixed URL stored in metadata so the dirty-check doesn't keep the Save button enabled
+      setAvatarImageUri(newAvatarUrl)
     }
 
     // If entered from claim flow confirmation screen, navigate back to home on update success

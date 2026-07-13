@@ -1,7 +1,9 @@
 import { getSdkError, INTERNAL_ERRORS } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+// gesture-handler FlatList so the list scrolls inside the bottom sheet modal (WALL-7189)
+import { FlatList } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'

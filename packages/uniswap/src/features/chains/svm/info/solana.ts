@@ -1,5 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { SOLANA_LOGO } from 'ui/src/assets'
+import { WEB_ONLY_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
@@ -25,6 +26,7 @@ const tokens = buildChainTokens({
 export const SOLANA_CHAIN_INFO = {
   id: UniverseChainId.Solana,
   platform: Platform.SVM,
+  supportedApps: WEB_ONLY_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'solana',
   blockPerMainnetEpochForChainId: 1,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Solana],

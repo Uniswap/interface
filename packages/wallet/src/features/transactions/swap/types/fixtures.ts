@@ -10,7 +10,12 @@ import {
   ValidatedSwapTxContext,
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { BridgeTrade, ClassicTrade, UniswapXTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type {
+  BridgeTrade,
+  ClassicTrade,
+  UniswapXTrade,
+  WrapTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
@@ -39,6 +44,7 @@ export const mockTransactionService: jest.Mocked<TransactionService> = {
   submitTransaction: jest.fn(),
   submitTransactionSync: jest.fn(),
   executeTransaction: jest.fn(),
+  executeUserOp: jest.fn(),
 }
 
 export const mockTransactionSigner: jest.Mocked<TransactionSigner> = {
@@ -97,7 +103,6 @@ export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDepende
   createBundledDelegationTransactionSignerService: jest.fn(),
   createBundledDelegationUserOpSignerService: jest.fn(),
   createTransactionService: jest.fn(),
-  createUserOpService: jest.fn(),
   createAnalyticsService: jest.fn(),
   createTransactionRepository: jest.fn(),
   createFeatureFlagService: jest.fn(),
@@ -207,7 +212,7 @@ export const prepareSwapTxContext = createFixture<ValidatedSwapTxContext>()(() =
   swapRequestArgs: { quote: mockClassicTrade.quote.quote },
   revocationTxRequest: undefined,
   includesDelegation: false,
-  unsigned: false,
+  hasUnsignedPermit: false,
 }))
 
 export const prepareUniswapXSwapTxContext = createFixture<ValidatedUniswapXSwapTxAndGasInfo>()(() => ({

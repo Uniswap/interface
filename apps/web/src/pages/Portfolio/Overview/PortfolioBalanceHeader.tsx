@@ -3,10 +3,12 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Coachmark, Flex, Text, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
+import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
 import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -18,6 +20,7 @@ import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 import { BalanceBreakdownPopover } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/BalanceBreakdownPopover'
 import { chartPeriodToHistoryDuration } from '~/pages/Portfolio/Overview/chartPeriodToHistoryDuration'
+import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 
 type ChartPercentChange = ReturnType<typeof getPortfolioChartPercentChange>
 
@@ -27,7 +30,11 @@ interface PortfolioBalanceHeaderProps {
   poolsValue?: PortfolioTotalValue
   series: PriceChartData[]
   chartPercentChange: ChartPercentChange
+  /** Period percent change per category, shown on the breakdown popover rows at rest. */
+  tokensPercentChange: number | undefined
+  poolsPercentChange: number | undefined
   selectedPeriod: ChartPeriod
+  selectedCategory: PortfolioChartCategory
   isPortfolioZero: boolean
   isLoading: boolean
   hoveredData?: PriceChartData
@@ -39,7 +46,10 @@ export function PortfolioBalanceHeader({
   poolsValue,
   series,
   chartPercentChange,
+  tokensPercentChange,
+  poolsPercentChange,
   selectedPeriod,
+  selectedCategory,
   isPortfolioZero,
   isLoading,
   hoveredData,
@@ -61,7 +71,22 @@ export function PortfolioBalanceHeader({
   const latestChartData = series.length ? series[series.length - 1] : undefined
   const displayedChartData = hoveredData ?? latestChartData
   const zeroPortfolioBalance = isPortfolioZero ? 0 : undefined
-  const balance = hoveredData?.value ?? portfolioTotalBalanceUSD ?? latestChartData?.close ?? zeroPortfolioBalance
+  const isTotalCategory = selectedCategory === PortfolioChartCategory.Total
+  // `undefined` means server omitted the field (unavailable); `0` is a valid zero.
+  const poolsUnavailable = !!poolsValue && poolsValue.balanceUSD === undefined
+  const fallbackBalanceUSD = poolsUnavailable ? tokensValue?.balanceUSD : undefined
+  const categoryBalanceUSD = useMemo(() => {
+    switch (selectedCategory) {
+      case PortfolioChartCategory.Tokens:
+        return tokensValue?.balanceUSD
+      case PortfolioChartCategory.Pools:
+        return poolsValue?.balanceUSD
+      case PortfolioChartCategory.Total:
+      default:
+        return fallbackBalanceUSD ?? portfolioTotalBalanceUSD
+    }
+  }, [selectedCategory, tokensValue, poolsValue, fallbackBalanceUSD, portfolioTotalBalanceUSD])
+  const balance = hoveredData?.value ?? categoryBalanceUSD ?? latestChartData?.close ?? zeroPortfolioBalance
   const isHovering = !!hoveredData
   const showDelta = !isLoading && !isPortfolioZero && series.length >= 2 && !!displayedChartData
   const shouldTreatAsStablecoin = useMemo(() => {
@@ -71,22 +96,36 @@ export function PortfolioBalanceHeader({
 
   return (
     <Flex gap="$gap8" pb="$spacing4" testID={TestID.PortfolioBalanceHeader}>
-      <BalanceBreakdownPopover tokens={tokensValue} pools={poolsValue}>
-        <Coachmark
-          open={shouldShowCoachmark}
-          onDismiss={dismissCoachmark}
-          placement={coachmarkPlacement}
-          offset={coachmarkOffset}
-          // Intentionally low so the pill scrolls behind the sticky page header.
-          zIndex={zIndexes.default}
-          text={t('portfolio.poolsBalance.coachmark.body')}
-          testID={TestID.PoolsBalanceCoachmark}
+      <Flex row alignItems="center" gap="$spacing8">
+        <BalanceBreakdownPopover
+          tokens={tokensValue}
+          pools={poolsValue}
+          tokensPercentChange={tokensPercentChange}
+          poolsPercentChange={poolsPercentChange}
+          disabled={!isTotalCategory}
         >
-          <Text variant="heading2" color={isPortfolioZero ? '$neutral3' : '$neutral1'}>
-            {convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
-          </Text>
-        </Coachmark>
-      </BalanceBreakdownPopover>
+          <Coachmark
+            open={shouldShowCoachmark}
+            onDismiss={dismissCoachmark}
+            placement={coachmarkPlacement}
+            offset={coachmarkOffset}
+            // Intentionally low so the pill scrolls behind the sticky page header.
+            zIndex={zIndexes.default}
+            text={t('portfolio.poolsBalance.coachmark.body')}
+            testID={TestID.PoolsBalanceCoachmark}
+          >
+            <AnimatedNumber
+              value={convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
+              numericValue={balance}
+              loading={isLoading}
+              textVariant="$heading2"
+              color={isPortfolioZero ? '$neutral3' : '$neutral1'}
+              disableAnimations={isHovering}
+            />
+          </Coachmark>
+        </BalanceBreakdownPopover>
+        {isTotalCategory && poolsUnavailable && <PoolsUnavailableIndicator />}
+      </Flex>
       {showDelta && (
         <Flex row gap="$gap8" alignItems="center">
           <PriceChartDelta
@@ -96,6 +135,7 @@ export function PortfolioBalanceHeader({
             shouldTreatAsStablecoin={shouldTreatAsStablecoin}
             pricePercentChange={chartPercentChange?.percentChange}
             isHovering={isHovering}
+            colorText={isHovering}
             hidePercent={selectedPeriod === ChartPeriod.MAX}
           />
           {isHovering ? (

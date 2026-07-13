@@ -54,6 +54,13 @@ describe(uriToHttpUrls, () => {
   it('returns empty array for file:// URI without allowLocalUri', () => {
     expect(uriToHttpUrls('file:///path/to/file.png')).toEqual([])
   })
+  it('returns empty array for blob: URI without allowLocalUri', () => {
+    expect(uriToHttpUrls('blob:http://localhost:3000/00000000-0000-0000-0000-000000000000')).toEqual([])
+  })
+  it('returns blob: URI when allowLocalUri is true', () => {
+    const blobUri = 'blob:http://localhost:3000/00000000-0000-0000-0000-000000000000'
+    expect(uriToHttpUrls(blobUri, { allowLocalUri: true })).toEqual([blobUri])
+  })
 })
 
 describe(isSVGUri, () => {

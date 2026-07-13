@@ -1,21 +1,41 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, FlexProps, Text } from 'ui/src'
+import { Flex, FlexProps, styled, Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { TokenQueryData } from '~/appGraphql/data/Token'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
+import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 
 const STATS_GAP = '$gap20'
+
+function getVolumeDescription({
+  t,
+  isProjectVolume,
+  chainId,
+}: {
+  t: TFunction
+  isProjectVolume: boolean
+  chainId: UniverseChainId
+}): string {
+  if (isProjectVolume) {
+    return t('stats.volume.1d.description.coingecko')
+  }
+  if (chainId === UniverseChainId.Tempo) {
+    return t('stats.volume.1d.description.tempo')
+  }
+  return t('stats.volume.1d.description')
+}
 
 export const StatWrapper = ({
   tableRow = false,
@@ -47,6 +67,42 @@ const TokenStatsSection = ({ children }: { children: ReactNode }) => (
   </Flex>
 )
 
+const StatsLoadingContainer = styled(Flex, {
+  row: true,
+  flexWrap: 'wrap',
+  rowGap: '$spacing24',
+  width: '100%',
+})
+
+function LoadingStatTile() {
+  return (
+    <StatWrapper>
+      <LoadingBubble height={16} width={80} containerProps={{ mb: '$spacing4' }} />
+      <LoadingBubble height={32} width={116} skeletonProps={{ borderRadius: '$rounded8' }} />
+    </StatWrapper>
+  )
+}
+
+// Loading state for the stats section, reused by the full-page TDP skeleton so the placeholder is
+// identical in both. It lives here next to StatWrapper/StatsWrapper (which it reuses for dimensional
+// parity) and is built on the cycle-safe LoadingBubble primitive, so the section owns its own loading
+// UI without a Skeleton <-> StatsSection import cycle.
+export function LoadingStats() {
+  return (
+    <StatsWrapper data-testid="token-details-stats-loading">
+      <LoadingBubble height={32} width={120} skeletonProps={{ borderRadius: '$rounded8' }} />
+      <StatsLoadingContainer>
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+        <LoadingStatTile />
+      </StatsLoadingContainer>
+    </StatsWrapper>
+  )
+}
+
 type NumericStat = number | undefined | null
 
 function Stat({
@@ -63,53 +119,54 @@ function Stat({
   numberType?: FiatNumberType
 }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const formattedValue = convertFiatAmountFormatted(value, numberType)
 
   return (
     <StatWrapper tableRow data-cy={`${testID}`} data-testid={`${testID}`}>
       <Text variant="body3" color="$neutral2" tag="td">
         <MouseoverTooltip disabled={!description} text={description}>
-          {title}
+          {/* Wrap in a colored Text: MouseoverTooltip re-wraps string children in its own uncolored Text, which would otherwise default the label to $neutral1. */}
+          <Text variant="body3" color="$neutral2">
+            {title}
+          </Text>
         </MouseoverTooltip>
       </Text>
-      <Text
-        tag="td"
-        mt="$spacing8"
-        fontSize={28}
-        color="$neutral1"
-        fontWeight="$book"
-        $platform-web={{
-          overflowWrap: 'break-word',
-        }}
-      >
-        {convertFiatAmountFormatted(value, numberType)}
-      </Text>
+      <Flex tag="td" mt="$spacing8" data-testid={`${testID}-value`} $platform-web={{ overflowWrap: 'break-word' }}>
+        <AnimatedNumber numericValue={value ?? undefined} textVariant="$heading3" value={formattedValue} />
+      </Flex>
     </StatWrapper>
   )
 }
 
 type StatsSectionProps = {
   tokenQueryData: TokenQueryData | undefined
+  /** The heavy market query is still in flight. Renders the loading skeleton instead of the empty state. */
+  isLoading?: boolean
 }
 
-export function StatsSection({ tokenQueryData }: StatsSectionProps) {
+export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const effectiveCurrency = useTDPEffectiveCurrency()
 
   const { showAggregatedStats, filteredDeploymentMarket, networkFilterName, marketStatsInput } =
     useTDPStatsMarketSource(tokenQueryData)
 
   const currencyIdValue = useMemo(() => currencyId(effectiveCurrency), [effectiveCurrency])
-  const spotPrice = useTokenSpotPrice(currencyIdValue)
+  const preferProjectMarketData = useTDPPreferProjectMarketData()
+  const spotPrice = useTokenSpotPrice(currencyIdValue, { preferProjectMarketData })
 
   const stats = useTokenMarketStats(currencyIdValue, {
     aggregatedData: marketStatsInput,
     currentPriceOverride: spotPrice,
+    preferProjectMarketData,
   })
 
-  const volume =
-    (showAggregatedStats ? tokenQueryData?.market?.volume24H?.value : filteredDeploymentMarket?.volume24H?.value) ??
-    stats.volume
+  const tokenMarketVolume = showAggregatedStats
+    ? tokenQueryData?.market?.volume24H?.value
+    : filteredDeploymentMarket?.volume24H?.value
+  const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
+  // Guard against the second fallback below: `volume` can drop to the Uniswap value even when `stats.volumeSource` is 'project'.
+  const isProjectVolume = stats.volumeSource === 'project' && volume === stats.volume
   const tvl = showAggregatedStats
     ? tokenQueryData?.market?.totalValueLocked?.value
     : filteredDeploymentMarket?.totalValueLocked?.value
@@ -126,7 +183,7 @@ export function StatsSection({ tokenQueryData }: StatsSectionProps) {
             testID={TestID.TokenDetailsStatsTvl}
             value={tvl}
             description={
-              multichainTokenUxEnabled && networkFilterName
+              networkFilterName
                 ? t('stats.tvl.description.network', {
                     symbol: effectiveCurrency.symbol,
                     network: networkFilterName,
@@ -150,11 +207,11 @@ export function StatsSection({ tokenQueryData }: StatsSectionProps) {
           <Stat
             testID={TestID.TokenDetailsStatsVolume24h}
             value={volume}
-            description={
-              effectiveCurrency.chainId === UniverseChainId.Tempo
-                ? t('stats.volume.1d.description.tempo')
-                : t('stats.volume.1d.description')
-            }
+            description={getVolumeDescription({
+              t,
+              isProjectVolume,
+              chainId: effectiveCurrency.chainId,
+            })}
             title={t('stats.volume.1d')}
           />
           <Stat
@@ -172,6 +229,9 @@ export function StatsSection({ tokenQueryData }: StatsSectionProps) {
         </TokenStatsSection>
       </StatsWrapper>
     )
+  }
+  if (isLoading) {
+    return <LoadingStats />
   }
   return (
     <Text color="$neutral3" pt="$spacing40" data-cy="token-details-no-stats-data">

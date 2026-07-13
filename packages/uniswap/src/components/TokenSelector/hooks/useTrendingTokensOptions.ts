@@ -8,9 +8,11 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function useTrendingTokensOptions({
   chainFilter,
+  chainIds,
   portfolioData,
 }: {
   chainFilter: Maybe<UniverseChainId>
+  chainIds?: UniverseChainId[]
   portfolioData: PortfolioBalancesResult
 }): GqlResult<TokenOption[] | undefined> {
   const {
@@ -25,7 +27,7 @@ export function useTrendingTokensOptions({
     error: tokensError,
     refetch: refetchTokens,
     loading: loadingTokens,
-  } = useTrendingTokensCurrencyInfos(chainFilter)
+  } = useTrendingTokensCurrencyInfos(chainFilter, { chainIds })
 
   const tokenOptions = useCurrencyInfosToTokenOptions({ currencyInfos: tokens, portfolioBalancesById })
 

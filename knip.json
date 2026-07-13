@@ -55,12 +55,16 @@
       ]
     },
     "apps/extension": {
+      "entry": [
+        "src/entrypoints/**/*.{ts,tsx}"
+      ],
       "ignoreDependencies": [
         "@svgr/webpack",
         "@testing-library/dom",
         "@wxt-dev/module-react",
         "concurrently",
         "css-loader",
+        "dotenv",
         "esbuild-loader",
         "jest-environment-jsdom",
         "react-native-web",
@@ -123,7 +127,12 @@
         "react-native-restart",
         "sp-react-native-in-app-updates",
         "ts-jest",
-        "ts-node"
+        "ts-node",
+        "@ethersproject/shims",
+        "@formatjs/intl-getcanonicallocales",
+        "@formatjs/intl-locale",
+        "react-native-quick-base64",
+        "react-native-quick-crypto"
       ]
     },
     "apps/web": {
@@ -166,6 +175,7 @@
         "@walletconnect/ethereum-provider",
         "@web3-react/eip1193",
         "@web3-react/empty",
+        "agentation-mcp",
         "ajv-formats",
         "babel-plugin-react-compiler",
         "browser-cache-mock",
@@ -244,6 +254,13 @@
     "packages/api": {
       "ignoreDependencies": [
         "expo-secure-store",
+        "@vitest/coverage-v8"
+      ]
+    },
+    "packages/compliance": {
+      "ignoreDependencies": [
+        "@universe/api",
+        "@universe/environment",
         "@vitest/coverage-v8"
       ]
     },

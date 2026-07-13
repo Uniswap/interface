@@ -68,4 +68,23 @@ describe('PositionsHeader', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith('/positions/add?entryPoint=%2Fportfolio%2Fpools%3Fchain%3Dbase')
   })
+
+  it('should hide the revamp create button when showCreateButton is false', () => {
+    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AddLiquidityRevamp)
+
+    render(<PositionsHeader {...defaultProps} showCreateButton={false} />)
+
+    expect(screen.queryByRole('button', { name: 'New position' })).not.toBeInTheDocument()
+    // Filters still render so watchers can scope what they see.
+    expect(screen.getByText('Status')).toBeInTheDocument()
+    expect(screen.getByText('Protocol')).toBeInTheDocument()
+  })
+
+  it('should hide the legacy create button when showCreateButton is false', () => {
+    render(<PositionsHeader {...defaultProps} showCreateButton={false} />)
+
+    expect(screen.queryByText('New')).not.toBeInTheDocument()
+    expect(screen.getByText('Status')).toBeInTheDocument()
+    expect(screen.getByText('Protocol')).toBeInTheDocument()
+  })
 })

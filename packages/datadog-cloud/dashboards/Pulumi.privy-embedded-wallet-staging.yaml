@@ -1,0 +1,11 @@
+# Staging dashboards stack for privy-embedded-wallet
+#
+# Stack: privy-embedded-wallet-staging
+# ESC: datadog-dashboards-universe/shared
+
+environment:
+  - datadog-dashboards-universe/shared
+config:
+  datadog-dashboards-universe:environment: staging
+  datadog-dashboards-universe:tagFilter: "(unienv:dev OR unienv:staging OR env:dev OR env:staging)"
+  datadog-dashboards-universe:defaultTeam: privy-embedded-wallet

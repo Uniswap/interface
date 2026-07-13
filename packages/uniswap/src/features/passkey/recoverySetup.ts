@@ -1,6 +1,6 @@
 import { generateRandomBytes } from '@universe/cryptography'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
+import { deriveArgon2 } from 'uniswap/src/features/passkey/deriveArgon2'
 import {
   blindPin,
   combineAndDeriveKey,
@@ -69,11 +69,9 @@ export async function encryptAndStoreRecovery({
     }
     oprfOutput = await finalizeOprf(blindState, oprfResponse.evaluatedElement)
 
-    // 4. Key derivation: Argon2id (in worker) + HKDF
-    // Uses deriveArgon2InWorker (off-main-thread) instead of deriveEncryptionKey (main-thread argon2id).
-    // HKDF step is shared via combineAndDeriveKey from pinCrypto.ts.
+    // 4. Key derivation: Argon2id + HKDF
     onProgress?.('deriving')
-    pinKey = await deriveArgon2InWorker(pin, salt1)
+    pinKey = await deriveArgon2(pin, salt1)
     finalKey = combineAndDeriveKey({ oprfOutput, pinKey, salt2 })
 
     // 5. Encrypt auth private key

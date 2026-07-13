@@ -1,7 +1,7 @@
 /* oxlint-disable max-lines */
 import { Code, ConnectError } from '@connectrpc/connect'
-import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { isMobileWeb } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -32,9 +32,14 @@ import {
 import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { getPrivyConfig } from '~/config'
+import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
+import { useMaybeLoginWithEmail, useMaybeLoginWithOAuth, useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 enum Step {
   METHOD_SELECT = 0,
@@ -58,6 +63,9 @@ const PASSCODE_LENGTH = 4
 export function AddBackupLoginModal() {
   const { t } = useTranslation()
   const { isOpen, onClose } = useModalState(ModalName.AddBackupLogin)
+  // Keep this fixed bottom sheet on-screen when the Android soft keyboard opens (email/OTP/passcode
+  // steps). No-op on iOS/desktop. See hook for the full explanation.
+  useAndroidKeyboardViewportFix(isOpen)
   const queryClient = useQueryClient()
   const { walletId } = useEmbeddedWalletState()
   const [step, setStep] = useState<Step>(Step.METHOD_SELECT)
@@ -73,7 +81,7 @@ export function AddBackupLoginModal() {
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
 
-  const { ready: privyReady, getAccessToken, user, logout } = usePrivy()
+  const { ready: privyReady, getAccessToken, user, logout } = useMaybePrivy()
 
   const oauthReturn = useOAuthResult(OAUTH_PENDING_KEY)
 
@@ -116,12 +124,12 @@ export function AddBackupLoginModal() {
     }
   }, [oauthReturn.provider, oauthReturn.pending, oauthReturn.providerEmail, advanceAfterVerification])
 
-  const { sendCode, loginWithCode } = useLoginWithEmail()
+  const { sendCode, loginWithCode } = useMaybeLoginWithEmail()
 
   const handleSendCodeError = (e: Error, fn: string) =>
     logger.error(e, { tags: { file: 'AddBackupLoginModal', function: fn } })
 
-  const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
+  const { initOAuth, loading: oauthLoading } = useMaybeLoginWithOAuth({
     onError: (oauthError) => {
       logger.error(oauthError, { tags: { file: 'AddBackupLoginModal', function: 'handleOAuthLogin' } })
       sessionStorage.removeItem(OAUTH_PENDING_KEY)
@@ -297,6 +305,11 @@ export function AddBackupLoginModal() {
         old ? { ...old, recoveryMethods: [...old.recoveryMethods, newRecoveryMethod] } : old,
       )
 
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.backupLogin.added') },
+        'backup-login-added-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
       setStep(Step.SUCCESS)
     } catch (signInError) {
       logger.error(signInError, { tags: { file: 'AddBackupLoginModal', function: 'handleSignInWithPasskey' } })
@@ -412,7 +425,7 @@ export function AddBackupLoginModal() {
       name={ModalName.AddBackupLogin}
       isModalOpen={isOpen}
       onClose={handleClose}
-      isDismissible={false}
+      isDismissible={isMobileWeb}
       maxWidth={420}
     >
       <Flex gap="$gap24" alignItems="center" width="100%">

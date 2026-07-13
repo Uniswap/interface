@@ -57,9 +57,9 @@ const TransferInstitution = memo(function TransferInstitutionIcon({
   )
 })
 
-function Box(props: FlexLoaderProps): JSX.Element {
+function Box({ disableShimmer, ...props }: FlexLoaderProps & { disableShimmer?: boolean }): JSX.Element {
   return (
-    <Skeleton>
+    <Skeleton disabled={disableShimmer}>
       <FlexLoader {...props} />
     </Skeleton>
   )

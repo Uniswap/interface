@@ -1,16 +1,16 @@
 // oxlint-disable-next-line no-restricted-imports -- Used outside React component context where useTranslation is not available
 import { TFunction, t } from 'i18next'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, Tooltip, TouchableArea, useMedia } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { Globe } from 'ui/src/components/icons/Globe'
 import { XTwitter } from 'ui/src/components/icons/XTwitter'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionStatsData'
 import { formatTimestampToDate } from '~/features/Toucan/Auction/utils/formatting'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
@@ -302,8 +302,31 @@ export const AuctionInfo = () => {
   const { t } = useTranslation()
   const media = useMedia()
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const descriptionRef = useRef<HTMLDivElement | null>(null)
+  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(false)
 
   const { tokenAddress, launchedOnTimestamp, isAuctionInFuture, metadata } = useAuctionStatsData()
+
+  // Only surface the "Show more" toggle when the clamped description actually
+  // overflows its 2-line box. Measured while collapsed (expanded text is
+  // unclamped and would always report as non-overflowing) and re-checked on
+  // resize, since width changes affect wrapping.
+  useEffect(() => {
+    const element = descriptionRef.current
+    if (!element) {
+      return undefined
+    }
+    const measureTruncation = (): void => {
+      if (isDescriptionExpanded) {
+        return
+      }
+      setIsDescriptionTruncated(element.scrollHeight > element.clientHeight + 1)
+    }
+    measureTruncation()
+    const resizeObserver = new ResizeObserver(measureTruncation)
+    resizeObserver.observe(element)
+    return () => resizeObserver.disconnect()
+  }, [metadata?.description, isDescriptionExpanded])
 
   const launchedOnLabel = isAuctionInFuture ? t('toucan.auction.launchesOn') : t('toucan.auction.launchedOn')
   const launchedOnValue = launchedOnTimestamp ? formatTimestampToDate(launchedOnTimestamp) : '--'
@@ -374,6 +397,7 @@ export const AuctionInfo = () => {
               {t('toucan.auction.description')}
             </Text>
             <Text
+              ref={descriptionRef}
               variant="body2"
               color="$neutral1"
               numberOfLines={isDescriptionExpanded ? undefined : 2}
@@ -381,15 +405,17 @@ export const AuctionInfo = () => {
             >
               {metadata.description}
             </Text>
-            <Text
-              variant="buttonLabel3"
-              color="$neutral2"
-              onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              cursor="pointer"
-              hoverStyle={{ color: '$neutral1' }}
-            >
-              {isDescriptionExpanded ? t('toucan.auction.showLess') : t('toucan.auction.showMore')}
-            </Text>
+            {isDescriptionTruncated && (
+              <Text
+                variant="buttonLabel3"
+                color="$neutral2"
+                onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                cursor="pointer"
+                hoverStyle={{ color: '$neutral1' }}
+              >
+                {isDescriptionExpanded ? t('toucan.auction.showLess') : t('toucan.auction.showMore')}
+              </Text>
+            )}
           </Flex>
         )}
 

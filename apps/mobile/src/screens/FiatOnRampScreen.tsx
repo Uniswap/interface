@@ -1,5 +1,4 @@
-/* oxlint-disable max-lines */
-/* oxlint-disable complexity */
+/* oxlint-disable max-lines complexity */
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { isIOS, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'

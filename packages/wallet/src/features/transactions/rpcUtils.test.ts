@@ -3,7 +3,11 @@ import { rpcUtilsFixtures } from 'wallet/src/test/rpcUtilsFixtures'
 
 describe('getRPCErrorCategory', () => {
   it.each([
-    { error: rpcUtilsFixtures.nonceError, expected: 'nonce_error' },
+    { error: rpcUtilsFixtures.nonceError, expected: 'gapped_nonce' },
+    { error: rpcUtilsFixtures.nonceTooLow, expected: 'nonce_too_low' },
+    { error: rpcUtilsFixtures.nonceTooHigh, expected: 'nonce_too_high' },
+    { error: rpcUtilsFixtures.futureReplacePending, expected: 'gapped_nonce' },
+    { error: rpcUtilsFixtures.nonceOther, expected: 'nonce_other' },
     { error: rpcUtilsFixtures.reverted, expected: 'reverted' },
     {
       error: rpcUtilsFixtures.txLimitReachedForDelegatedAccount,

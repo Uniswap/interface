@@ -2,7 +2,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -18,6 +17,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { getConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
+import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
 import { usePendingUniswapXOrders } from '~/state/transactions/hooks'
 import { OrderQueryResponse, UniswapXBackendOrder } from '~/types/uniswapx'
 
@@ -66,7 +66,7 @@ export async function fetchOpenLimitOrders(params: {
   account?: string
   orderHashes?: string[]
 }): Promise<UniswapXBackendOrder[]> {
-  let url = `${UNISWAP_GATEWAY_DNS_URL}${uniswapUrls.limitOrderStatusesPath}`
+  let url = `${UNISWAP_GATEWAY_DNS_URL}/limit-orders`
   const queryParams: string[] = []
 
   if (params.account) {
@@ -164,6 +164,7 @@ function updateOrders({
         txHash: txHash ?? '',
         transactionType: pendingOrder.typeInfo.type,
         routing: tradeRoutingToFillType({ routing: pendingOrder.routing, indicative: false }),
+        ...getRwaSwapAnalyticsFromTypeInfo(pendingOrder.typeInfo),
       })
     }
 

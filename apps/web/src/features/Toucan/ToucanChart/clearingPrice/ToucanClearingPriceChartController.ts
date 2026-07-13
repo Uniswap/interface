@@ -1,4 +1,5 @@
 /* oxlint-disable max-lines */
+/* oxlint-disable typescript/no-unnecessary-condition -- fallback chains for optional range params */
 import type { IChartApi, ISeriesApi, MouseEventParams, Time, UTCTimestamp } from 'lightweight-charts'
 import { logger } from 'utilities/src/logger/logger'
 import { formatTickMarks } from '~/components/Charts/utils'
@@ -160,14 +161,12 @@ export class ToucanClearingPriceChartController {
     this.useLogicalRangePositioning = useLogicalRangePositioning ?? false
     this.isZoomEnabled = isZoomEnabled
 
-    /* oxlint-disable typescript/no-unnecessary-condition -- fallback chains for optional range params */
     const resolvedStart = fullRangeStart ?? visibleRangeStart ?? data[0]?.time ?? null
     const resolvedEnd = fullRangeEnd ?? visibleRangeEnd ?? data[data.length - 1]?.time ?? null
     this.initialRangeStart = initialRangeStart ?? visibleRangeStart ?? resolvedStart
     this.initialRangeEnd = initialRangeEnd ?? visibleRangeEnd ?? resolvedEnd
     this.fullRangeStart = this.initialRangeStart ?? resolvedStart
     this.fullRangeEnd = this.initialRangeEnd ?? resolvedEnd
-    /* oxlint-enable typescript/no-unnecessary-condition */
 
     const interactionOptions = buildInteractionOptions({ isZoomEnabled, disableMouseWheelInteractions })
 

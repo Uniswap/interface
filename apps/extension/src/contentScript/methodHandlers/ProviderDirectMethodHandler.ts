@@ -1,20 +1,23 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
+import {
+  contentScriptToBackgroundMessageChannel,
+  dappResponseMessageChannel,
+} from 'src/background/messagePassing/messageChannels'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
-import { ProviderDirectMethods } from 'src/contentScript/methodHandlers/requestMethods'
+import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
+import { getPendingResponseInfo } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
 import { logContentScriptError } from 'src/contentScript/utils'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
 /**
- * Handles all provider direct requests
- * Maps Ethereum JSON-RPC methods to their corresponding ethers.js provider method calls.
+ * Handles read-only JSON-RPC requests (eth_call, eth_blockNumber, …) by relaying them to the
+ * background service worker. The fetch runs there in an extension-privileged context, so it is
+ * not bound by the dapp page's CORS — fixing reads on origins outside the gateway's allowlist
+ * and keeping the wallet's authenticated RPC out of untrusted page context.
  */
-
 export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
-  private methodHandlers: {
-    // oxlint-disable-next-line typescript/no-explicit-any -- Provider method handlers accept varied parameter types from JSON-RPC calls
-    [key: string]: (provider: JsonRpcProvider, params: any[]) => Promise<any>
-  }
+  private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
 
   constructor({
     getChainId,
@@ -40,90 +43,53 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
       setConnectedAddressesAndMaybeEmit,
     )
 
-    this.methodHandlers = {
-      [ProviderDirectMethods.eth_getBalance]: (provider, params) => provider.getBalance(params[0]),
-      [ProviderDirectMethods.eth_getCode]: (provider, params) => provider.getCode(params[0]),
-      [ProviderDirectMethods.eth_getStorageAt]: (provider, params) => provider.getStorageAt(params[0], params[1]),
-      [ProviderDirectMethods.eth_getTransactionCount]: (provider, params) => provider.getTransactionCount(params[0]),
-      [ProviderDirectMethods.eth_blockNumber]: (provider, _params) => provider.getBlockNumber(),
-      [ProviderDirectMethods.eth_getBlockByNumber]: (provider, params) => provider.getBlock(params[0]),
-      [ProviderDirectMethods.eth_call]: (provider, params) => provider.call(params[0]),
-      [ProviderDirectMethods.eth_gasPrice]: (provider, _params) => provider.getGasPrice(),
-      [ProviderDirectMethods.eth_estimateGas]: (provider, params) => provider.estimateGas(params[0]),
-      [ProviderDirectMethods.eth_getTransactionByHash]: (provider, params) => provider.getTransaction(params[0]),
-      [ProviderDirectMethods.eth_getTransactionReceipt]: (provider, params) =>
-        provider.getTransactionReceipt(params[0]),
-      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-      [ProviderDirectMethods.net_version]: async (provider, params) => provider.send('net_version', params),
-      [ProviderDirectMethods.web3_clientVersion]: async (provider, params) =>
-        // oxlint-disable-next-line typescript/no-unsafe-return
-        provider.send('web3_clientVersion', params),
-    }
+    dappResponseMessageChannel.addMessageListener(DappResponseType.ProviderDirectResponse, (message) => {
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.ProviderDirectResponse,
+      })?.source
+
+      if (message.error) {
+        source?.postMessage({ requestId: message.requestId, error: message.error })
+      } else {
+        source?.postMessage({ requestId: message.requestId, result: message.result })
+      }
+    })
   }
 
   handleRequest(request: WindowEthereumRequest, source: MessageEventSource | null): void {
-    const handler = this.methodHandlers[request.method]
-    if (handler) {
-      const provider = this.getProvider()
-      if (!provider) {
-        // TODO: Handle error for disconnection
-        return
-      }
-      const response = handler(provider, request.params)
-      this.handleResponse({ response, source, requestId: request.requestId })
-    } else {
-      // We shouldn't end up here because injected.ts checks that the method is supported before calling this function
-      // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
-      logContentScriptError({
-        errorMessage: 'Unexpected method requested',
-        fileName: 'ProviderDirectMethodHandler.ts',
-        functionName: 'handleRequest',
-        extra: {
-          method: request.method,
-          dapp: window.origin,
-        },
+    const chainId = this.getChainId()
+    if (!chainId) {
+      // No active chain yet — surface a JSON-RPC-shaped error rather than hanging the dapp.
+      source?.postMessage({
+        requestId: request.requestId,
+        error: { code: 4900, message: 'Provider is disconnected from all chains' },
       })
+      return
     }
-  }
 
-  private handleResponse({
-    response,
-    source,
-    requestId,
-  }: {
-    // oxlint-disable-next-line typescript/no-explicit-any -- JSON-RPC response can contain arbitrary data structures
-    response: Promise<any>
-    source: MessageEventSource | null
-    requestId: string
-  }): void {
-    response
-      .then((result) => {
-        source?.postMessage({
-          requestId,
-          result: JSON.parse(
-            JSON.stringify(result, (_key, value) => {
-              if (!value) {
-                // oxlint-disable-next-line typescript/no-unsafe-return
-                return value
-              } else if (BigNumber.isBigNumber(value)) {
-                return value.toHexString()
-              } else if (value.type === 'BigNumber' && value.hex) {
-                // Unsure of why but sometimes the provider has converted the BigNumber with BigNumber.toJSON() e.g. eth_getBlockByNumber
-                // which is a format not currently accepted by some dapps e.g. Morpho
-                // oxlint-disable-next-line typescript/no-unsafe-return
-                return value.hex
-              }
-              // oxlint-disable-next-line typescript/no-unsafe-return
-              return value
-            }),
-          ),
-        })
+    this.requestIdToSourceMap.set(request.requestId, {
+      type: DappResponseType.ProviderDirectResponse,
+      source,
+    })
+
+    contentScriptToBackgroundMessageChannel
+      .sendMessage({
+        type: DappRequestType.ProviderDirect,
+        requestId: request.requestId,
+        chainId,
+        method: request.method,
+        params: Array.isArray(request.params) ? request.params : [],
       })
       .catch((error) => {
-        source?.postMessage({
-          requestId,
-          error,
-        })
+        this.requestIdToSourceMap.delete(request.requestId)
+        logContentScriptError({
+          errorMessage: error instanceof Error ? error.message : 'Failed to relay provider request',
+          fileName: 'ProviderDirectMethodHandler.ts',
+          functionName: 'handleRequest',
+          extra: { method: request.method, dapp: window.origin },
+        }).catch(() => {})
       })
   }
 }

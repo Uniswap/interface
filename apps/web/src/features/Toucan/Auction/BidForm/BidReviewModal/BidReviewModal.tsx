@@ -36,8 +36,8 @@ import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { useAccount } from '~/hooks/useAccount'
 import { AllowanceState } from '~/hooks/usePermit2Allowance'
-import { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
+import { PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { swapErrorToUserReadableMessage } from '~/utils/swapErrorToUserReadableMessage'
 
 interface BidReviewModalProps {
@@ -350,6 +350,10 @@ export function BidReviewModal({
     if (!submitState.error) {
       return undefined
     }
+    // Shouldn't happen, but can surface due to predicate test policy.
+    if (submitState.error.message.includes('Address "" is invalid')) {
+      return t('toucan.bidReview.processingError')
+    }
     return swapErrorToUserReadableMessage(t, submitState.error)
   }, [submitState.error, t])
 
@@ -479,7 +483,7 @@ export function BidReviewModal({
             </Text>
           </Flex>
 
-          {preparationError ? (
+          {preparationError && !showFlowError ? (
             <Flex
               row
               gap="$spacing12"

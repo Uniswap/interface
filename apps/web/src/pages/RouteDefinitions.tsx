@@ -1,8 +1,6 @@
-/* oxlint-disable max-lines */
-import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
-import { SpinningLoader } from 'ui/src'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
@@ -21,7 +19,6 @@ import { SwapPage } from '~/pages/Swap'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
 const AddLiquidity = lazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
-const AddLiquidityPool = lazy(() => import('~/pages/AddLiquidity/AddLiquidityPool'))
 const CreatePosition = lazy(() => import('~/pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('~/pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('~/pages/AddLiquidityV2/redirects'))
@@ -100,29 +97,8 @@ const StaticTitlesAndDescriptions = {
   MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
   AddLiquidityDescription: i18n.t('title.earnFees'),
   PasskeyManagementTitle: i18n.t('title.managePasskeys'),
-  // TODO(LP-295): Update after launch
-  ToucanPlaceholderDescription: 'Placeholder description for Toucan page',
-}
-
-/**
- * Registers /liquidity/launch-auction even while Statsig is still loading so direct
- * navigation does not fall through to 404. After gates are ready, shows the page or not-found.
- */
-function CreateAuctionRouteGate(): JSX.Element {
-  const isToucanLaunchAuctionEnabled = useFeatureFlag(FeatureFlags.ToucanLaunchAuction)
-  const { isStatsigReady } = useStatsigClientStatus()
-
-  if (!isStatsigReady) {
-    return <SpinningLoader color="$accent1" />
-  }
-  if (!isToucanLaunchAuctionEnabled) {
-    return <Navigate to="/not-found" replace />
-  }
-  return (
-    <Suspense fallback={null}>
-      <CreateAuction />
-    </Suspense>
-  )
+  ToucanAuctionDescription: i18n.t('title.bidOnTokensInAuctions'),
+  ToucanLaunchAuctionDescription: i18n.t('title.launchTokenAuction'),
 }
 
 export interface RouteDefinition {
@@ -212,7 +188,7 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore/auctions/:chainName/:auctionAddress',
     getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanAuctionDescription,
     getElement: () => (
       <Suspense fallback={null}>
         <ToucanToken />
@@ -222,13 +198,17 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/liquidity/launch-auction',
     getTitle: () => i18n.t('toucan.createAuction.title'),
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
-    getElement: () => <CreateAuctionRouteGate />,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanLaunchAuctionDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <CreateAuction />
+      </Suspense>
+    ),
   }),
   createRouteDefinition({
     path: '/liquidity/launch-auction/x/callback',
     getTitle: () => 'X Verification',
-    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanLaunchAuctionDescription,
     getElement: () => (
       <Suspense fallback={null}>
         <XOAuthCallbackPage />
@@ -304,14 +284,10 @@ export const routes: RouteDefinition[] = [
     enabled: (args) => Boolean(args.isAddLiquidityRevampEnabled),
   }),
   createRouteDefinition({
-    path: '/positions/add/:chainName/:poolAddress',
-    getElement: () => <AddLiquidityPool />,
-    getTitle: getPositionPageTitle,
-    getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
-    enabled: (args) => Boolean(args.isAddLiquidityRevampEnabled),
-  }),
-  createRouteDefinition({
     path: '/positions/add',
+    // Nested path is optional: bare `/positions/add` browses pools; AddLiquidity reads the
+    // optional `:chainName/:poolAddress` segments from `useParams`, so one definition covers both.
+    nestedPaths: [':chainName/:poolAddress'],
     getElement: () => <AddLiquidity />,
     getTitle: getPositionPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,

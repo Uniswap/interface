@@ -6,10 +6,11 @@ import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
 import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
 import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
@@ -19,7 +20,7 @@ import { HpkeHandshakeStatus } from '~/pages/ExtensionPasskeyAuthPopUp/useExtens
 
 export function GetHelpButton({ t }: { t: ReturnType<typeof useTranslation>['t'] }): JSX.Element {
   return (
-    <Anchor target="_blank" rel="noreferrer" href={uniswapUrls.helpArticleUrls.passkeysInfo} textDecorationLine="none">
+    <Anchor target="_blank" rel="noreferrer" href={UniswapHelpUrls.articles.passkeysInfo} textDecorationLine="none">
       <Button icon={<EnvelopeHeart size="$icon.16" color="$neutral2" />} size="xxsmall" emphasis="secondary">
         {t('common.getHelp.button')}
       </Button>
@@ -139,6 +140,7 @@ export function LoginView({
               />
             )}
             {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+            {flow.step === RecoveryStep.NoWalletFound && <NoWalletFoundStep t={t} handleClose={() => window.close()} />}
           </Flex>
         </Flex>
       </Flex>

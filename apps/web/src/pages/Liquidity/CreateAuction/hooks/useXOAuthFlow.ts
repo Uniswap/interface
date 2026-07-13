@@ -10,7 +10,11 @@ type XOAuthMessage =
   | { type: 'x_oauth_success'; xHandle: string; xVerificationToken: string }
   | { type: 'x_oauth_error'; message: string }
 
-export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; error: string | null } {
+export function useXOAuthFlow({ onVerified }: { onVerified?: () => void } = {}): {
+  connectX: () => void
+  isLoading: boolean
+  error: string | null
+} {
   const { t } = useTranslation()
   const address = useActiveAddress(Platform.EVM)
   const { setXVerification } = useCreateAuctionStoreActions()
@@ -18,17 +22,18 @@ export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; err
   const [error, setError] = useState<string | null>(null)
   const popupRef = useRef<Window | null>(null)
 
-  // Poll for popup closed without a message (user dismissed), and manage the BroadcastChannel lifetime.
+  // Listen for the OAuth result on a channel that outlives the popup. The callback posts its result and
+  // then immediately closes the popup; under COOP `same-origin-allow-popups` (e.g. app.corn-staging.com)
+  // the popup is in a separate browsing-context group and its message is delivered *after* the popup-closed
+  // poller below fires. So this listener must NOT be torn down on popup close / loading end, or the late
+  // cross-group message is dropped and the verification silently never lands.
   useEffect(() => {
-    if (!isLoading) {
-      return undefined
-    }
-
     const channel = new BroadcastChannel('x_oauth')
 
     const handler = (event: MessageEvent<XOAuthMessage>) => {
       if (event.data.type === 'x_oauth_success') {
         setXVerification({ xHandle: event.data.xHandle, xVerificationToken: event.data.xVerificationToken })
+        onVerified?.()
       } else {
         setError(event.data.message)
       }
@@ -37,18 +42,27 @@ export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; err
 
     channel.addEventListener('message', handler)
 
+    return () => {
+      channel.removeEventListener('message', handler)
+      channel.close()
+    }
+  }, [setXVerification, onVerified])
+
+  // Reset loading if the user dismisses the popup without completing the flow. Deliberately does not touch
+  // the channel above — a late success/error message can still arrive after the popup window closes.
+  useEffect(() => {
+    if (!isLoading) {
+      return undefined
+    }
+
     const interval = setInterval(() => {
       if (popupRef.current?.closed) {
         setIsLoading(false)
       }
     }, 500)
 
-    return () => {
-      clearInterval(interval)
-      channel.removeEventListener('message', handler)
-      channel.close()
-    }
-  }, [isLoading, setXVerification])
+    return () => clearInterval(interval)
+  }, [isLoading])
 
   const connectX = useCallback(() => {
     if (!address) {
@@ -60,7 +74,11 @@ export function useXOAuthFlow(): { connectX: () => void; isLoading: boolean; err
 
     XVerificationClient.getXAuthUrl(new GetXAuthUrlRequest({ walletAddress: address }))
       .then(({ authUrl, state }) => {
-        sessionStorage.setItem('x_oauth_state', state)
+        // Use localStorage, not sessionStorage: the OAuth popup opens cross-origin (x.com), and under
+        // COOP `same-origin-allow-popups` (set on some deploys, e.g. app.corn-staging.com) it lands in a
+        // separate browsing-context group with a fresh, unshared sessionStorage. localStorage is shared
+        // across that boundary, so the callback can read the state back. Cleared on read in the callback.
+        localStorage.setItem('x_oauth_state', state)
 
         const popup = window.open(authUrl, 'x_oauth', 'width=600,height=700')
         popupRef.current = popup

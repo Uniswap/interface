@@ -1,10 +1,9 @@
-import { isMobileWeb } from '@universe/environment'
-import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, FlexProps, Separator, styled, Text, TouchableArea } from 'ui/src'
+import { Anchor, Flex, FlexProps, Separator, styled, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Wiggle } from '~/components/animations/Wiggle'
+import { MobileTouchableArea } from '~/components/MobileTouchableArea'
 import { MenuItem, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
 import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuDropdown'
 import { useModalState } from '~/hooks/useModalState'
@@ -25,8 +24,6 @@ const PolicyLink = styled(Text, {
   // Tamagui bug. Animation property breaks theme value transition, needs to use style instead
   style: { transition: '100ms' },
 })
-
-const MobileTouchableArea = isMobileWeb ? TouchableArea : Fragment
 
 export function Socials({ iconSize, gap }: { iconSize?: string; gap?: FlexProps['gap'] }) {
   return (

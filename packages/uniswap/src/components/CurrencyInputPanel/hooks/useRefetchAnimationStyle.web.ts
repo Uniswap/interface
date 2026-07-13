@@ -1,27 +1,15 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { CurrencyInputPanelProps } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
-// CSS keyframes for pulse animation - injected once into the document
 const PULSE_KEYFRAMES_NAME = 'uniswap-refetch-pulse-animation'
-
-function injectPulseKeyframes(): void {
-  if (typeof document === 'undefined') {
-    return
-  }
-  if (document.getElementById(PULSE_KEYFRAMES_NAME)) {
-    return
-  }
-  const style = document.createElement('style')
-  style.id = PULSE_KEYFRAMES_NAME
-  style.textContent = `
+const PULSE_KEYFRAMES_CSS = `
     @keyframes ${PULSE_KEYFRAMES_NAME} {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
   `
-  document.head.appendChild(style)
-}
 
 /**
  * Web-specific hook that returns a CSS-based opacity animation style.
@@ -38,15 +26,7 @@ export function useRefetchAnimationStyle({
   opacity?: number
   animation?: string
 } {
-  const hasInjectedRef = useRef(false)
-
-  // Inject keyframes on first use
-  useEffect(() => {
-    if (!hasInjectedRef.current) {
-      injectPulseKeyframes()
-      hasInjectedRef.current = true
-    }
-  }, [])
+  useInjectSingleStylesheet({ id: PULSE_KEYFRAMES_NAME, css: PULSE_KEYFRAMES_CSS })
 
   const previousAmount = usePrevious(currencyAmount)
 

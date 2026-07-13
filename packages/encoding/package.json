@@ -14,8 +14,8 @@
     "check": "nx check encoding",
     "check:fast": "nx check:fast encoding",
     "check:deps:usage": "nx check:deps:usage encoding",
-    "format": "nx format encoding",
-    "format:check": "nx format:check encoding",
+    "format": "nx run encoding:format",
+    "format:check": "nx run encoding:format:check",
     "lint": "nx lint encoding",
     "lint:fix": "nx lint:fix encoding"
   },

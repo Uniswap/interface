@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
@@ -15,8 +14,6 @@ import { useActiveAddresses } from 'wallet/src/features/accounts/store/hooks'
 
 export const TokenPerformance = memo(function TokenPerformance(): JSX.Element | null {
   const { t } = useTranslation()
-  const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { address, chainId } = useTokenDetailsContext()
   const { evmAddress, svmAddress } = useActiveAddresses()
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
@@ -31,9 +28,9 @@ export const TokenPerformance = memo(function TokenPerformance(): JSX.Element | 
       chainId,
       tokenAddress,
       modifier,
-      multichain: multichainTokenUxEnabled || undefined,
+      multichain: true,
     },
-    enabled: isProfitLossEnabled && !isStablecoin,
+    enabled: !isStablecoin,
   })
 
   const profitLoss = data?.profitLoss
@@ -54,7 +51,7 @@ export const TokenPerformance = memo(function TokenPerformance(): JSX.Element | 
     })
   }, [profitLoss, tokenAddress, chainId])
 
-  if (!isProfitLossEnabled || !profitLoss || isStablecoin || isError) {
+  if (!profitLoss || isStablecoin || isError) {
     return null
   }
 

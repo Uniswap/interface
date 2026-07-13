@@ -1,10 +1,23 @@
-import { GraphQLApi } from '@universe/api'
+import { ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import {
+  Direction,
+  OnChainTransaction,
+  OnChainTransactionLabel,
+  OnChainTransactionStatus,
+  SpamCode as RestSpamCode,
+  TokenType,
+  Transaction,
+} from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { DAI } from 'uniswap/src/constants/tokens'
+import { getListTransactionsQuery, useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfolio } from 'uniswap/src/test/fixtures'
-import { queryResolvers } from 'uniswap/src/test/utils'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
   getReceiveNotificationFromData,
@@ -15,13 +28,14 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { readOnlyAccount, receiveCurrencyTxNotification, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { faker, render } from 'wallet/src/test/test-utils'
 
-const mockedRefetchQueries = jest.fn()
+jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  // UniverseChainId.Mainnet — literal for Jest mock factory scope rules
+  useEnabledChains: jest.fn(() => ({ chains: [1] })),
+}))
 
-jest.mock('@apollo/client', () => ({
-  ...jest.requireActual('@apollo/client'),
-  useApolloClient: jest.fn((): { refetchQueries: jest.Mock } => ({
-    refetchQueries: mockedRefetchQueries,
-  })),
+jest.mock('uniswap/src/data/rest/listTransactions', () => ({
+  useListTransactionsQuery: jest.fn(),
+  getListTransactionsQuery: jest.fn(),
 }))
 
 const now = Date.now()
@@ -53,58 +67,127 @@ const walletSlice = {
   androidCloudBackupEmail: null,
 }
 
-const assetActivities = [
-  {
-    id: faker.datatype.uuid(),
-    timestamp: past.unix(),
-  },
-  {
-    id: faker.datatype.uuid(),
-    timestamp: past.add(1, 'day').unix(),
-  },
-] as GraphQLApi.AssetActivity[]
+const SENDER = SAMPLE_SEED_ADDRESS_1
+const OTHER = SAMPLE_SEED_ADDRESS_2
 
-const assetActivities2 = [
-  {
-    id: faker.datatype.uuid(),
-    timestamp: past.unix(),
-  },
-  {
-    id: faker.datatype.uuid(),
-    timestamp: past.add(1, 'day').unix(),
-  },
-  {
-    id: faker.datatype.uuid(),
-    timestamp: past.add(2, 'day').unix(),
-  },
-] as GraphQLApi.AssetActivity[]
+const erc20TokenRest = {
+  address: DAI.address,
+  symbol: 'DAI',
+  decimals: 18,
+  type: TokenType.ERC20,
+  chainId: UniverseChainId.Mainnet,
+  metadata: { spamCode: RestSpamCode.NOT_SPAM },
+}
 
-const portfolios = [
-  portfolio({ ownerAddress: account1.address, assetActivities }),
-  portfolio({ ownerAddress: account2.address, assetActivities: assetActivities2 }),
-]
+function wrapOnChain(onChain: OnChainTransaction): Transaction {
+  return new Transaction({
+    transaction: { case: 'onChain', value: onChain },
+  })
+}
 
-const receiveAssetActivity = erc20RecentReceiveAssetActivity()
-const portfolioWithReceive = portfolio({
-  ownerAddress: account1.address,
-  assetActivities: [receiveAssetActivity],
+function makeSendOnChain(params: { transactionHash: string; timestampMillis: bigint }): OnChainTransaction {
+  return {
+    chainId: UniverseChainId.Mainnet,
+    blockNumber: 1,
+    transactionHash: params.transactionHash,
+    timestampMillis: params.timestampMillis,
+    from: SENDER,
+    to: OTHER,
+    label: OnChainTransactionLabel.SEND,
+    status: OnChainTransactionStatus.CONFIRMED,
+    transfers: [
+      {
+        direction: Direction.SEND,
+        asset: { case: 'token', value: erc20TokenRest },
+        amount: { amount: 1, raw: '1' },
+        to: OTHER,
+      },
+    ],
+    approvals: [],
+  } as unknown as OnChainTransaction
+}
+
+function makeReceiveOnChain(params: {
+  transactionHash: string
+  timestampMillis: bigint
+  recipient: Address
+}): OnChainTransaction {
+  return {
+    chainId: UniverseChainId.Mainnet,
+    blockNumber: 1,
+    transactionHash: params.transactionHash,
+    timestampMillis: params.timestampMillis,
+    from: SENDER,
+    to: params.recipient,
+    label: OnChainTransactionLabel.RECEIVE,
+    status: OnChainTransactionStatus.CONFIRMED,
+    transfers: [
+      {
+        direction: Direction.RECEIVE,
+        asset: { case: 'token', value: erc20TokenRest },
+        amount: { amount: 1, raw: '1000000000000000000' },
+        to: params.recipient,
+        from: SENDER,
+      },
+    ],
+    approvals: [],
+  } as unknown as OnChainTransaction
+}
+
+function listResponseFromOnChain(onChains: OnChainTransaction[]): ListTransactionsResponse {
+  return new ListTransactionsResponse({
+    transactions: onChains.map((oc) => wrapOnChain(oc)),
+  })
+}
+
+const sendTxAfterLastPollA = makeSendOnChain({
+  transactionHash: `0x${faker.datatype.hexadecimal({ length: 64 })}`,
+  timestampMillis: BigInt(past.add(10, 'day').valueOf()),
 })
-const portfolioWithStaleReceive = portfolio({
-  ownerAddress: account1.address,
-  assetActivities: [erc20StaleReceiveAssetActivity()],
-})
-const portfolioWithNoReceive = portfolio({
-  ownerAddress: account1.address,
-  assetActivities: [],
+const sendTxAfterLastPollB = makeSendOnChain({
+  transactionHash: `0x${faker.datatype.hexadecimal({ length: 64 })}`,
+  timestampMillis: BigInt(past.add(11, 'day').valueOf()),
 })
 
-const { resolvers } = queryResolvers({
-  portfolios: (_, { ownerAddresses }) => portfolios.filter((p) => ownerAddresses.includes(p.ownerAddress)),
+const pollPageWithNewTxns = listResponseFromOnChain([sendTxAfterLastPollA, sendTxAfterLastPollB])
+
+const RECEIVE_TX_HASH = `0x${faker.datatype.hexadecimal({ length: 64 })}`
+
+const receiveOnChainStale = makeReceiveOnChain({
+  transactionHash: RECEIVE_TX_HASH,
+  timestampMillis: BigInt(Date.now() - STALE_TRANSACTION_TIME_MS * 2),
+  recipient: account1.address,
 })
+
+let fetchQueryListResponse: ListTransactionsResponse = new ListTransactionsResponse({ transactions: [] })
+
+function setDefaultRestMocks(): void {
+  ;(useListTransactionsQuery as jest.Mock).mockReturnValue({
+    data: { pages: [pollPageWithNewTxns], pageParams: [undefined] },
+    isLoading: false,
+    isFetching: false,
+    error: undefined,
+    refetch: jest.fn(),
+    status: 'success',
+    fetchNextPage: jest.fn(),
+    hasNextPage: false,
+    isFetchingNextPage: false,
+    dataUpdatedAt: Date.now(),
+  })
+
+  ;(getListTransactionsQuery as jest.Mock).mockImplementation(() => ({
+    queryKey: [ReactQueryCacheKey.ListTransactions, 'test'],
+    queryFn: async (): Promise<ListTransactionsResponse> => fetchQueryListResponse,
+  }))
+}
 
 describe(TransactionHistoryUpdater, () => {
   beforeEach(() => {
     MockDate.reset()
+    jest.clearAllMocks()
+    ;(useEnabledChains as jest.Mock).mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    fetchQueryListResponse = new ListTransactionsResponse({ transactions: [] })
+    setDefaultRestMocks()
   })
 
   it('skips rendering when no accounts available', () => {
@@ -139,7 +222,6 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      resolvers,
       preloadedState: reduxState,
     })
 
@@ -148,13 +230,14 @@ describe(TransactionHistoryUpdater, () => {
 
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account1.address]).toBeTruthy()
-    expect(notificationStatusState[account2.address]).toBeTruthy()
-    expect(mockedRefetchQueries).toHaveBeenCalled()
   })
 
   it('does not update notification status when there are no new transactions', async () => {
     const reduxState = {
-      wallet: walletSlice,
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
       notifications: {
         notificationQueue: [],
         notificationStatus: {},
@@ -166,7 +249,6 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      resolvers,
       preloadedState: reduxState,
     })
 
@@ -175,15 +257,16 @@ describe(TransactionHistoryUpdater, () => {
 
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account1.address]).toBeFalsy()
-    expect(notificationStatusState[account2.address]).toBeFalsy()
-    expect(mockedRefetchQueries).not.toHaveBeenCalled()
   })
 
   it('does not update notification status if it is the first time fetching transactions', async () => {
     MockDate.set(present.valueOf())
 
     const reduxState = {
-      wallet: walletSlice,
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
       notifications: {
         notificationQueue: [],
         notificationStatus: {},
@@ -192,7 +275,6 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      resolvers,
       preloadedState: reduxState,
     })
 
@@ -207,44 +289,47 @@ describe(TransactionHistoryUpdater, () => {
 
 describe(getReceiveNotificationFromData, () => {
   it('returns app notification object with new receive', () => {
-    const txnData = { portfolios: [portfolioWithReceive] }
+    const receiveTx = wrapOnChain(
+      makeReceiveOnChain({
+        transactionHash: RECEIVE_TX_HASH,
+        timestampMillis: BigInt(Math.floor(Date.now() - ONE_MINUTE_MS * 5)),
+        recipient: account1.address,
+      }),
+    )
 
-    // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
     const notification = getReceiveNotificationFromData({
-      data: txnData,
+      transactions: [receiveTx],
       address: account1.address,
       lastTxNotificationUpdateTimestamp: newTimestamp,
     })
-
-    const assetChange = receiveAssetActivity.details.assetChanges[0]!
 
     expect(notification).toEqual(
       receiveCurrencyTxNotification({
         address: account1.address,
         txStatus: TransactionStatus.Success,
-        txId: receiveAssetActivity.details.hash,
-        sender: assetChange.sender,
-        tokenAddress: assetChange.asset.address,
-        chainId: fromGraphQLChain(assetChange.asset.chain)!,
-        // This is calculated based on a few different fields and we don't
-        // have to check if the calculation is correct in this test.
-        // It's better to test the calculation in a separate test.
+        txId: RECEIVE_TX_HASH,
+        sender: SENDER,
+        tokenAddress: DAI.address,
+        chainId: UniverseChainId.Mainnet,
         currencyAmountRaw: expect.any(String),
       }),
     )
   })
 
   it('returns undefined if no receive txns found', () => {
-    // No receive type txn in this mock
-    const txnDataWithoutReceiveTxns = { portfolios: [portfolioWithNoReceive] }
+    const sendOnly = wrapOnChain(
+      makeSendOnChain({
+        transactionHash: `0x${faker.datatype.hexadecimal({ length: 64 })}`,
+        timestampMillis: BigInt(Date.now()),
+      }),
+    )
 
-    // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
     const notification = getReceiveNotificationFromData({
-      data: txnDataWithoutReceiveTxns,
+      transactions: [sendOnly],
       address: account1.address,
       lastTxNotificationUpdateTimestamp: newTimestamp,
     })
@@ -254,14 +339,18 @@ describe(getReceiveNotificationFromData, () => {
 
   it('returns undefined if receive is older than latest status update timestamp', () => {
     MockDate.set(now)
-    const txnData = { portfolios: [portfolioWithReceive] }
+    const receiveTx = wrapOnChain(
+      makeReceiveOnChain({
+        transactionHash: RECEIVE_TX_HASH,
+        timestampMillis: BigInt(Date.now() - ONE_MINUTE_MS * 5),
+        recipient: account1.address,
+      }),
+    )
 
-    // Ensure all transactions will be "old" compared to this
-    // mocked receive is made to be 5 minutes ago
     const oldTimestamp = Date.now() - ONE_MINUTE_MS
 
     const notification = getReceiveNotificationFromData({
-      data: txnData,
+      transactions: [receiveTx],
       address: account1.address,
       lastTxNotificationUpdateTimestamp: oldTimestamp,
     })
@@ -271,14 +360,12 @@ describe(getReceiveNotificationFromData, () => {
 
   it('returns undefined if receive is too stale to notify', () => {
     MockDate.set(now)
-    const txnData = { portfolios: [portfolioWithStaleReceive] }
+    const receiveTx = wrapOnChain(receiveOnChainStale)
 
-    // Ensure all transactions will be "old" compared to this
-    // mocked receive is made to be 5 minutes ago
     const newTimestamp = 1
 
     const notification = getReceiveNotificationFromData({
-      data: txnData,
+      transactions: [receiveTx],
       address: account1.address,
       lastTxNotificationUpdateTimestamp: newTimestamp,
     })

@@ -30,6 +30,19 @@ export interface UseWalletPositionsParams {
    */
   autoFetchAllPages?: boolean
   pageSize?: number
+  /**
+   * When true, this observer is disabled and won't drive a fetch (forwarded to the query's
+   * `enabled`). Callers compose this from whatever precondition should gate the query. Note:
+   * if another mounted observer shares the same query key and is enabled, the underlying query
+   * can still fetch. Defaults to false.
+   */
+  disabled?: boolean
+  /**
+   * Optional polling interval (ms). When set, the query refetches on this interval; a refetch
+   * re-fetches all currently-loaded pages. Polling only runs while the query is enabled and the
+   * document is foreground. Defaults to undefined (no polling) — preserving existing web behavior.
+   */
+  pollInterval?: number
 }
 
 type ForwardedQueryState = Pick<
@@ -55,6 +68,8 @@ export interface UseWalletPositionsResult extends ForwardedQueryState {
   hiddenPositions: PositionInfo[]
   /** All parsed positions (visible + hidden), useful for total counts. */
   allPositions: PositionInfo[]
+  /** Number of pages fetched so far (grows as `fetchNextPage` drains pagination). */
+  pagesLoaded: number
   /**
    * True once the first page response has been received (success or empty).
    * Useful for distinguishing "still loading" from "errored before any data arrived".
@@ -75,11 +90,13 @@ export function useWalletPositions({
   includeHidden = false,
   autoFetchAllPages = true,
   pageSize = DEFAULT_PAGE_SIZE,
+  disabled = false,
+  pollInterval,
 }: UseWalletPositionsParams): UseWalletPositionsResult {
   const { chains: defaultChains } = useEnabledChains()
   const isPositionVisible = usePositionVisibilityCheck()
 
-  const skipQuery = !account
+  const skipQuery = !account || disabled
 
   const {
     data,
@@ -101,7 +118,7 @@ export function useWalletPositions({
       pageToken: '',
       includeHidden,
     },
-    skipQuery,
+    { disabled: skipQuery, refetchInterval: pollInterval },
   )
 
   // Auto-drain pages: keep firing fetchNextPage until hasNextPage flips false.
@@ -154,6 +171,7 @@ export function useWalletPositions({
     positions,
     hiddenPositions,
     allPositions,
+    pagesLoaded: data?.pages.length ?? 0,
     isLoading,
     isFetching,
     isFetchingNextPage,

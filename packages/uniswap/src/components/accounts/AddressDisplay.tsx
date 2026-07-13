@@ -1,25 +1,17 @@
-import { SharedEventName } from '@uniswap/analytics-events'
-import { isWebApp } from '@universe/environment'
-import { PropsWithChildren, useMemo } from 'react'
+import { useMemo } from 'react'
 import type { FlexAlignType } from 'react-native'
-import { useDispatch } from 'react-redux'
-import { AnimatableCopyIcon, ColorTokens, Flex, SpaceTokens, Text, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useTimeout } from 'utilities/src/time/timing'
 
 type AddressDisplayProps = {
   address: string
@@ -49,23 +41,6 @@ type AddressDisplayProps = {
   showViewOnlyBadge?: boolean
   addressNumVisibleCharacters?: 4 | 6 | 8
   grow?: boolean
-}
-
-type CopyButtonWrapperProps = {
-  onPress?: () => void
-  backgroundColor?: string
-}
-
-function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
-  if (onPress) {
-    return (
-      <TouchableArea hitSlop={16} testID={TestID.Copy} onPress={onPress}>
-        {children}
-      </TouchableArea>
-    )
-  }
-
-  return <>{children}</>
 }
 
 /** Helper component to display AccountIcon and formatted address */
@@ -99,36 +74,11 @@ export function AddressDisplay({
   alignItems = 'center',
   grow,
 }: AddressDisplayProps): JSX.Element {
-  const dispatch = useDispatch()
   const { useWalletDisplayName } = useUniswapContext()
   const displayName = useWalletDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
-  // TODO (CONS-431): Make a general/shared CopyHelper component
-  const { value: isCopied, setTrue: setIsCopied, setFalse: setIsNotCopied } = useBooleanState(false)
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
 
-  const onPressCopyAddress = async (): Promise<void> => {
-    if (!address) {
-      return
-    }
-
-    await setClipboard(address)
-    setIsCopied()
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Copied,
-        copyType: CopyNotificationType.Address,
-      }),
-    )
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.CopyAddress,
-    })
-  }
-
-  // Auto-reset copied state after 1 second
-  useTimeout(setIsNotCopied, isCopied ? ONE_SECOND_MS : -1)
-
-  // Extract sizes so copy icon can match font variants
   const mainSize = fonts[variant].fontSize
   const captionSize = fonts[captionVariant].fontSize
 
@@ -152,8 +102,39 @@ export function AddressDisplay({
         </Flex>
       )}
       <Flex shrink gap={gapBetweenLines}>
-        <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
-          <Flex row gap="$spacing12" mx={showCopy && !showAddressAsSubtitle ? mainSize : undefined}>
+        <Flex row gap="$spacing12">
+          {showCopy && !showAddressAsSubtitle ? (
+            <CopyHelper
+              toCopy={address}
+              iconSize={mainSize}
+              iconColor="$neutral1"
+              testID={TestID.Copy}
+              copyNotificationType={CopyNotificationType.Address}
+              analyticsElement={ElementName.CopyAddress}
+            >
+              <DisplayNameText
+                displayName={displayName}
+                gap="$spacing4"
+                includeUnitagSuffix={includeUnitagSuffix}
+                textProps={{
+                  adjustsFontSizeToFit: true,
+                  allowFontScaling,
+                  color: textColor,
+                  hoverStyle: textHoverColor ? { color: textHoverColor } : undefined,
+                  ellipsizeMode: 'tail',
+                  fontFamily: '$heading',
+                  fontSize: mainSize,
+                  lineHeight: lineHeight ?? fonts[variant].lineHeight,
+                  numberOfLines: 1,
+                  testID: `address-display/name/${displayName?.name}`,
+                  textAlign: centered ? 'center' : undefined,
+                }}
+                unitagIconSize={mainSize}
+                flexShrink={1}
+                centered={centered}
+              />
+            </CopyHelper>
+          ) : (
             <DisplayNameText
               displayName={displayName}
               gap="$spacing4"
@@ -175,11 +156,8 @@ export function AddressDisplay({
               flexShrink={1}
               centered={centered}
             />
-            {showCopy && !showAddressAsSubtitle && (
-              <AnimatableCopyIcon isAnimated={isWebApp} isCopied={isCopied} size={mainSize} textColor="$neutral1" />
-            )}
-          </Flex>
-        </CopyButtonWrapper>
+          )}
+        </Flex>
 
         <Flex centered={centered}>
           {showAddressAsSubtitle && (
@@ -192,8 +170,6 @@ export function AddressDisplay({
               showCopy={showCopy}
               showCopyWrapperButton={showCopyWrapperButton}
               addressNumVisibleCharacters={addressNumVisibleCharacters}
-              isCopied={isCopied}
-              onPressCopyAddress={onPressCopyAddress}
             />
           )}
         </Flex>
@@ -204,8 +180,6 @@ export function AddressDisplay({
 
 type AddressSubtitleProps = {
   captionSize: number
-  isCopied: boolean
-  onPressCopyAddress: () => Promise<void>
 } & Pick<
   AddressDisplayProps,
   | 'address'
@@ -225,28 +199,36 @@ const AddressSubtitle = ({
   centered,
   showCopy,
   showCopyWrapperButton,
-  onPressCopyAddress,
   addressNumVisibleCharacters = 6,
-  isCopied,
 }: AddressSubtitleProps): JSX.Element => (
-  <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
-    <Flex
-      row
-      centered={centered}
-      alignItems="center"
-      backgroundColor={showCopyWrapperButton ? '$surface2' : '$transparent'}
-      borderRadius="$roundedFull"
-      gap="$spacing4"
-      mt={showCopyWrapperButton ? '$spacing8' : '$none'}
-      px={showCopyWrapperButton ? '$spacing8' : '$none'}
-      py={showCopyWrapperButton ? '$spacing4' : '$none'}
-    >
+  <Flex
+    row
+    centered={centered}
+    alignItems="center"
+    backgroundColor={showCopyWrapperButton ? '$surface2' : '$transparent'}
+    borderRadius="$roundedFull"
+    mt={showCopyWrapperButton ? '$spacing8' : '$none'}
+    px={showCopyWrapperButton ? '$spacing8' : '$none'}
+    py={showCopyWrapperButton ? '$spacing4' : '$none'}
+  >
+    {showCopy ? (
+      <CopyHelper
+        toCopy={address}
+        iconSize={captionSize}
+        iconPosition="right"
+        iconColor={captionTextColor}
+        testID={TestID.Copy}
+        copyNotificationType={CopyNotificationType.Address}
+        analyticsElement={ElementName.CopyAddress}
+      >
+        <Text color={captionTextColor} variant={captionVariant}>
+          {sanitizeAddressText(shortenAddress({ address, chars: addressNumVisibleCharacters }))}
+        </Text>
+      </CopyHelper>
+    ) : (
       <Text color={captionTextColor} variant={captionVariant}>
         {sanitizeAddressText(shortenAddress({ address, chars: addressNumVisibleCharacters }))}
       </Text>
-      {showCopy && (
-        <AnimatableCopyIcon isAnimated={isWebApp} isCopied={isCopied} size={captionSize} textColor={captionTextColor} />
-      )}
-    </Flex>
-  </CopyButtonWrapper>
+    )}
+  </Flex>
 )

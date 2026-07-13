@@ -1,12 +1,14 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { OKB_LOGO, XLAYER_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
@@ -34,6 +36,7 @@ export const XLAYER_CHAIN_INFO = {
   ...xLayer,
   id: UniverseChainId.XLayer,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'xlayer',
   backendChain: {
     chain: GraphQLApi.Chain.Xlayer as GqlChainId,
@@ -64,8 +67,9 @@ export const XLAYER_CHAIN_INFO = {
   blockTimeMs: 3000,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
-    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.XLayer)] },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
+    [RPCType.Default]: { http: ['https://xlayer.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.XLayer)] },
   },
   tokens,

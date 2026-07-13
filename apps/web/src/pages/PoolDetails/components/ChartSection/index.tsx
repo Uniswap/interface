@@ -7,11 +7,12 @@ import { createParser, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
+import { getLowVarianceAxisDecimals } from 'uniswap/src/components/charts/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 import { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
@@ -20,17 +21,13 @@ import { Chart, refitChartContentAtom } from '~/components/Charts/ChartModel'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
+import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { ChartQueryResult, ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
 import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
-import {
-  DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
-  DISPLAYS,
-  getTimePeriodFromDisplay,
-  TimePeriodDisplay,
-} from '~/features/Explore/constants'
+import { getPillTimeSelectorOptions, ORDERED_TIMES } from '~/features/Explore/timeLabels'
 import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
@@ -42,6 +39,7 @@ import {
 import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import { usePDPVolumeChartData } from '~/pages/PoolDetails/components/ChartSection/hooks'
 import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY, ChartType.DEPTH] as const
@@ -226,20 +224,22 @@ export function ChartSection(props: ChartSectionProps) {
   // BE does not support hourly price data for pools
   const filteredTimeOptions = useMemo(() => {
     if (activeQuery.chartType === ChartType.PRICE) {
-      const filtered = DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
       if (timePeriod === TimePeriod.HOUR) {
         setTimePeriod(TimePeriod.DAY)
       }
       return {
-        options: filtered,
-        selected: DISPLAYS[timePeriod],
+        options: getPillTimeSelectorOptions(
+          t,
+          ORDERED_TIMES.filter((period) => period !== TimePeriod.HOUR),
+        ),
+        selected: timePeriod,
       }
     }
     return {
-      options: DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
-      selected: DISPLAYS[timePeriod],
+      options: getPillTimeSelectorOptions(t),
+      selected: timePeriod,
     }
-  }, [activeQuery.chartType, timePeriod, setTimePeriod])
+  }, [activeQuery.chartType, timePeriod, setTimePeriod, t])
 
   const isV2Pool = props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2
 
@@ -258,47 +258,49 @@ export function ChartSection(props: ChartSectionProps) {
 
   return (
     <Flex data-testid="pdp-chart-container">
+      <Flex height="$spacing48" justifyContent="center" mb="$spacing24">
+        <ChartTypeToggle
+          variant="text"
+          availableOptions={availableChartOptions}
+          currentChartType={displayChartType}
+          onChartTypeChange={(c: ChartType) => {
+            if (c !== ChartType.LIQUIDITY) {
+              setZoomActions(null)
+            }
+            setChartType(c as PoolsDetailsChartType)
+          }}
+          disabledOption={disabledChartOption}
+        />
+      </Flex>
       {ChartBody}
-      <ChartActionsContainer>
-        <Flex $md={{ width: '100%' }}>
-          <ChartTypeToggle
-            availableOptions={availableChartOptions}
-            currentChartType={displayChartType}
-            onChartTypeChange={(c: ChartType) => {
-              if (c !== ChartType.LIQUIDITY) {
-                setZoomActions(null)
-              }
-              setChartType(c as PoolsDetailsChartType)
-            }}
-            disabledOption={disabledChartOption}
-          />
-        </Flex>
-        {activeQuery.chartType === ChartType.LIQUIDITY ? (
-          zoomActions ? (
+      {activeQuery.chartType === ChartType.LIQUIDITY ? (
+        zoomActions ? (
+          <ChartActionsContainer>
             <ZoomButtons
               onZoomIn={zoomActions.zoomIn}
               onZoomOut={zoomActions.zoomOut}
               onReset={zoomActions.resetView}
             />
-          ) : null
-        ) : (
+          </ChartActionsContainer>
+        ) : null
+      ) : (
+        <ChartActionsContainer>
           <Flex $md={{ width: '100%' }}>
             <SegmentedControl
               fullWidth={media.md}
               options={filteredTimeOptions.options}
               selectedOption={filteredTimeOptions.selected}
-              onSelectOption={(option) => {
-                const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
-                if (time === timePeriod) {
+              onSelectOption={(option: TimePeriod) => {
+                if (option === timePeriod) {
                   refitChartContent?.()
                 } else {
-                  setTimePeriod(time)
+                  setTimePeriod(option)
                 }
               }}
             />
           </Flex>
-        )}
-      </ChartActionsContainer>
+        </ChartActionsContainer>
+      )}
     </Flex>
   )
 }
@@ -321,10 +323,20 @@ function PriceChart({
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const locale = useCurrentLocale()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
+  const baseSymbol = unwrappedToken(baseCurrency).symbol ?? baseCurrency.symbol
+  const quoteSymbol = unwrappedToken(quoteCurrency).symbol ?? quoteCurrency.symbol
+
+  // Stablecoin pools sit in a price range too tight for the magnitude-based formatter to resolve,
+  // so derive the precision from the visible range to keep gridlines (and the header) distinct.
+  const axisFractionDigits = useMemo(() => {
+    const { min, max } = getCandlestickPriceBounds(data)
+    return getLowVarianceAxisDecimals(min, max)
+  }, [data])
 
   const yAxisFormatter = useMemo(
-    () => (price: number) => formatPriceWithSubscript({ price, locale, formatNumberOrString }),
-    [locale, formatNumberOrString],
+    () => (price: number) =>
+      formatPriceWithSubscript({ price, locale, formatNumberOrString, fractionDigits: axisFractionDigits }),
+    [locale, formatNumberOrString, axisFractionDigits],
   )
 
   const params = useMemo(
@@ -351,11 +363,12 @@ function PriceChart({
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
-              {`1 ${baseCurrency.symbol} = ${formatPriceWithSubscript({
+              {`1 ${baseSymbol} = ${formatPriceWithSubscript({
                 price: displayValue.close,
                 locale,
                 formatNumberOrString,
-              })} ${quoteCurrency.symbol}`}
+                fractionDigits: axisFractionDigits,
+              })} ${quoteSymbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">
               {/* the usd price is only calculated for the most recent data point so hide it when selecting a crosshair */}
@@ -363,15 +376,11 @@ function PriceChart({
                 ? '(' + convertFiatAmountFormatted(price.toSignificant(), NumberType.FiatTokenPrice) + ')'
                 : ''}
             </ChartPriceText>
+            <PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />
           </PriceDisplayContainer>
         )
         return (
-          <ChartHeader
-            value={priceDisplay}
-            additionalFields={<PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />}
-            valueFormatterType={NumberType.FiatTokenPrice}
-            time={crosshairData?.time}
-          />
+          <ChartHeader value={priceDisplay} valueFormatterType={NumberType.FiatTokenPrice} time={crosshairData?.time} />
         )
       }}
     </Chart>

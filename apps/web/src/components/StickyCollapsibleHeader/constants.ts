@@ -6,10 +6,12 @@ export const HEADER_TRANSITION =
   'padding-top 0.2s ease, padding-bottom 0.2s ease, font-size 0.2s ease, line-height 0.2s ease'
 
 export const HEADER_LOGO_SIZE = {
-  small: iconSizes.icon28,
-  compact: iconSizes.icon40,
-  medium: iconSizes.icon48,
-  expanded: iconSizes.icon56,
+  small: iconSizes.icon28, // mweb default (pool/auction), fixed
+  mobile: iconSizes.icon48, // TDP mweb, resting
+  mobileCompact: iconSizes.icon32, // TDP mweb, scrolled
+  compact: iconSizes.icon40, // desktop, scrolled
+  medium: iconSizes.icon48, // md, resting
+  expanded: iconSizes.icon56, // large, resting
 }
 
 /** Size for header action button placeholders (e.g. TDP skeleton, Pool Details header). */

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -29,7 +29,7 @@ export function AutoGasTooltipModal({ isOpen, onClose }: AutoGasTooltipModalProp
   const { t } = useTranslation()
   const isGasFeeOverridesEnabled = useFeatureFlag(FeatureFlags.GasFeeOverrides)
 
-  const learnMoreUrl = uniswapUrls.helpArticleUrls.networkFeeInfo
+  const learnMoreUrl = UniswapHelpUrls.articles.networkFeeInfo
 
   const onPressLearnMore = useCallback(async (): Promise<void> => {
     try {

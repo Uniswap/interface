@@ -20,6 +20,7 @@ export function formatPriceWithSubscript({
   subscriptThreshold = DEFAULT_SUBSCRIPT_THRESHOLD,
   maxSigDigits,
   minSigDigits,
+  fractionDigits,
 }: {
   price: number
   locale: string
@@ -30,8 +31,20 @@ export function formatPriceWithSubscript({
   maxSigDigits?: number
   /** Override the underlying helper's default of 2. */
   minSigDigits?: number
+  /**
+   * Force a fixed number of decimal places for values at/above the subscript threshold, bypassing the
+   * magnitude-based `numberType` formatter. Used to keep low-variance (stablecoin) axes legible, where
+   * the default formatter would collapse every gridline to the same "1.00" label.
+   */
+  fractionDigits?: number
 }): string {
   if (price === 0 || Math.abs(price) >= subscriptThreshold) {
+    if (fractionDigits !== undefined) {
+      return new Intl.NumberFormat(locale, {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
+      }).format(price)
+    }
     return formatNumberOrString({ value: price, type: numberType })
   }
   return formatNumberWithSubscript({ value: price, locale, maxSigDigits, minSigDigits })

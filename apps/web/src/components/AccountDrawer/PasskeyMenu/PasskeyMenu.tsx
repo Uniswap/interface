@@ -10,7 +10,7 @@ import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -123,7 +123,7 @@ const AuthenticatorRow = ({
   })
 
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+    <Flex row gap="$gap12" alignItems="center">
       <Flex
         height={40}
         width={40}
@@ -151,7 +151,7 @@ const AuthenticatorRow = ({
 
 function LoadingPasskeyRow() {
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16" testID={TestID.PasskeyLoadingRow}>
+    <Flex row gap="$gap12" alignItems="center" testID={TestID.PasskeyLoadingRow}>
       <Loader.Box borderRadius="$roundedFull" height={40} width={40} opacity={0.5} />
       <Flex gap="$gap8">
         <Loader.Box borderRadius="$rounded12" height={14} width={72} opacity={0.5} />
@@ -185,7 +185,7 @@ export function getRecoveryMethodLabel(type: string): string {
 
 const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRemove: () => void }) => {
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+    <Flex row gap="$gap12" alignItems="center">
       <Flex
         height={40}
         width={40}
@@ -279,6 +279,9 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
     }
   }, [])
 
+  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
+  const isRecoveryDisabled = true
+
   return (
     <Trace logImpression modal={ModalName.PasskeyManagement}>
       <SlideOutMenu
@@ -289,7 +292,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
             <Anchor
               target="_blank"
               rel="noreferrer"
-              href={uniswapUrls.helpArticleUrls.passkeysInfo}
+              href={UniswapHelpUrls.articles.passkeysInfo}
               height="$padding20"
               {...ClickableTamaguiStyle}
             >
@@ -298,39 +301,43 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
           </Trace>
         }
       >
-        <MenuColumn gap="12px">
-          <Text variant="subheading2" color="$neutral1">
-            {t('common.passkeys')}
-          </Text>
-          {isLoading ? (
-            Array.from({ length: 3 }).map((_, index) => <LoadingPasskeyRow key={index} />)
-          ) : authenticators.length ? (
-            <>
-              {authenticators.map((authenticator) => (
-                <AuthenticatorRow
-                  key={authenticator.credentialId}
-                  authenticator={authenticator}
-                  handleDeletePasskey={handleDeletePasskey}
-                  isOnlyPasskey={authenticators.length === 1}
-                />
-              ))}
-              <Flex row alignSelf="stretch">
-                <Trace logPress element={ElementName.AddPasskey}>
-                  <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddPasskey}>
-                    <Text variant="buttonLabel2">{t('common.passkeys.add')}</Text>
-                  </Button>
-                </Trace>
-              </Flex>
-            </>
-          ) : null}
+        <MenuColumn px="$padding8" gap="$spacing24">
+          <Flex gap="$spacing16">
+            <Text variant="subheading2" color="$neutral1">
+              {t('common.passkeys')}
+            </Text>
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => <LoadingPasskeyRow key={index} />)
+            ) : authenticators.length ? (
+              <>
+                {authenticators.map((authenticator) => (
+                  <AuthenticatorRow
+                    key={authenticator.credentialId}
+                    authenticator={authenticator}
+                    handleDeletePasskey={handleDeletePasskey}
+                    isOnlyPasskey={authenticators.length === 1}
+                  />
+                ))}
+                <Flex row alignSelf="stretch" mt="$spacing4">
+                  <Trace logPress element={ElementName.AddPasskey}>
+                    <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddPasskey}>
+                      <Text variant="buttonLabel2">{t('common.passkeys.add')}</Text>
+                    </Button>
+                  </Trace>
+                </Flex>
+              </>
+            ) : null}
+          </Flex>
 
           {getPrivyAppId() ? (
-            <>
-              <Flex row alignItems="center" gap="$gap4" pt="$padding8">
-                <Text variant="subheading2" color="$neutral1">
-                  {t('account.passkey.sections.backupLogin')}
-                </Text>
-              </Flex>
+            <Flex
+              gap="$spacing16"
+              // oxlint-disable-next-line typescript/no-unnecessary-condition
+              display={isRecoveryDisabled && recoveryMethods.length === 0 ? 'none' : 'flex'}
+            >
+              <Text variant="subheading2" color="$neutral1">
+                {t('account.passkey.sections.backupLogin')}
+              </Text>
               {recoveryMethods.length > 0 ? (
                 recoveryMethods.map((method, index) => (
                   <RecoveryMethodRow
@@ -340,7 +347,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   />
                 ))
               ) : (
-                <Flex row alignSelf="stretch">
+                <Flex row alignSelf="stretch" mt="$spacing4">
                   <Trace logPress element={ElementName.AddBackupLogin}>
                     <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddBackupLogin}>
                       <Text variant="buttonLabel2">{t('account.passkey.backupLogin.addButton')}</Text>
@@ -348,7 +355,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   </Trace>
                 </Flex>
               )}
-            </>
+            </Flex>
           ) : null}
         </MenuColumn>
       </SlideOutMenu>

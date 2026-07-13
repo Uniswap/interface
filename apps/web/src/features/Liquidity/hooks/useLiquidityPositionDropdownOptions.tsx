@@ -11,11 +11,15 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Minus } from 'ui/src/components/icons/Minus'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { usePoolPositionCacheUpdater } from 'uniswap/src/features/dataApi/balances/poolPositionCacheUpdater'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { logCollectFeesClick } from '~/features/Liquidity/analytics'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
 import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
@@ -27,35 +31,55 @@ export function useLiquidityPositionDropdownOptions({
   liquidityPosition,
   showVisibilityOption,
   isVisible,
+  readOnly = false,
 }: {
   liquidityPosition: PositionInfo
   showVisibilityOption?: boolean
   isVisible: boolean
+  readOnly?: boolean
 }): MenuOptionItem[] {
   const { t } = useTranslation()
+  const trace = useTrace()
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const account = useAccount()
   const selectChain = useSelectChain()
+  const activeAddresses = useActiveAddresses()
+  const updatePoolBalancesCache = usePoolPositionCacheUpdater(activeAddresses.evmAddress, activeAddresses.svmAddress)
   const reportPositionHandler = useReportPositionHandler({ position: liquidityPosition, isVisible })
 
   return useMemo(() => {
     const chainInfo = getChainInfo(liquidityPosition.chainId)
-
-    const options: MenuOptionItem[] = []
-
     const isV2Position = liquidityPosition.version === ProtocolVersion.V2
     const isV3Position = liquidityPosition.version === ProtocolVersion.V3
     const showMigrateV3Option =
       isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
-
     const hasFees = liquidityPosition.fee0Amount?.greaterThan(0) || liquidityPosition.fee1Amount?.greaterThan(0)
+
+    const viewPoolInfoOption: MenuOptionItem = {
+      onPress: () => {
+        if (!liquidityPosition.poolId) {
+          return
+        }
+        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
+      },
+      label: t('pool.info'),
+      Icon: InfoCircleFilled,
+    }
+
+    // Read-only callers (e.g. watched wallets) can only view the pool — every other action would mutate the owner's positions.
+    if (readOnly) {
+      return [viewPoolInfoOption]
+    }
+
+    const options: MenuOptionItem[] = []
 
     if (!isV2Position && isOpenLiquidityPosition && hasFees) {
       options.push({
         onPress: () => {
+          logCollectFeesClick(liquidityPosition, trace)
           dispatch(
             setOpenModal({
               name: ModalName.ClaimFee,
@@ -98,7 +122,7 @@ export function useLiquidityPositionDropdownOptions({
           if (liquidityPosition.chainId !== account.chainId) {
             await selectChain(liquidityPosition.chainId)
           }
-          navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
+          navigate(`/migrate/v2/${chainInfo.urlParam}/${liquidityPosition.liquidityToken.address}`)
         },
         label: t('pool.migrateLiquidity'),
         Icon: ArrowRight,
@@ -115,21 +139,17 @@ export function useLiquidityPositionDropdownOptions({
       })
     }
 
-    options.push({
-      onPress: () => {
-        if (!liquidityPosition.poolId) {
-          return
-        }
-
-        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
-      },
-      label: t('pool.info'),
-      Icon: InfoCircleFilled,
-    })
+    options.push(viewPoolInfoOption)
 
     if (showVisibilityOption) {
       options.push({
         onPress: () => {
+          // Optimistic header update: modifier is excluded from the GetWalletBalances cache key,
+          // so the state change below would not naturally refetch — the cache writer bridges
+          // the visual gap until the next poll reconciles with the new modifier.
+          // Note: current `isVisible` becomes the post-toggle `hidden` value (the user is
+          // transitioning from "visible=true" to "hidden=true", so they match).
+          updatePoolBalancesCache(isVisible, liquidityPosition)
           dispatch(
             setPositionVisibility({
               poolId: liquidityPosition.poolId,
@@ -139,7 +159,7 @@ export function useLiquidityPositionDropdownOptions({
             }),
           )
         },
-        label: isVisible ? t('common.hide.button') : t('common.unhide'),
+        label: isVisible ? t('position.hide') : t('position.unhide'),
         Icon: isVisible ? EyeOff : Eye,
         showDivider: true,
       })
@@ -158,6 +178,7 @@ export function useLiquidityPositionDropdownOptions({
   }, [
     account.chainId,
     dispatch,
+    readOnly,
     isOpenLiquidityPosition,
     reportPositionHandler,
     isVisible,
@@ -165,6 +186,8 @@ export function useLiquidityPositionDropdownOptions({
     navigate,
     showVisibilityOption,
     selectChain,
+    updatePoolBalancesCache,
     t,
+    trace,
   ])
 }

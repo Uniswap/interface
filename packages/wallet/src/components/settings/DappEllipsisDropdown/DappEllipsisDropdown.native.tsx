@@ -1,3 +1,4 @@
+import { isIOS } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { type DappEllipsisDropdownProps } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
@@ -12,21 +13,23 @@ export function DappEllipsisDropdown({
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
 
+  const menuActions = [
+    {
+      title: t('settings.setting.connections.disconnectAll'),
+      destructive: true,
+      ...(isIOS ? { systemIcon: 'trash' } : { icon: 'uniswap_icon_trash' }),
+    },
+    {
+      title: t('common.edit.button'),
+      selected: isEditing,
+      ...(isIOS ? { systemIcon: 'square.and.pencil' } : { icon: 'uniswap_icon_edit' }),
+    },
+  ]
+
   return (
     <ContextMenu
       dropdownMenuMode
-      actions={[
-        {
-          title: t('settings.setting.connections.disconnectAll'),
-          destructive: true,
-          systemIcon: 'trash',
-        },
-        {
-          title: t('common.edit.button'),
-          selected: isEditing,
-          systemIcon: 'square.and.pencil',
-        },
-      ]}
+      actions={menuActions}
       onPress={async (e): Promise<void> => {
         const { index } = e.nativeEvent
 

@@ -1,5 +1,10 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CreateNewTokenForm } from '~/pages/Liquidity/CreateAuction/components/CreateNewTokenForm'
 import { ExistingTokenForm } from '~/pages/Liquidity/CreateAuction/components/ExistingTokenForm'
 import { HookTile } from '~/pages/Liquidity/CreateAuction/components/HookTile'
@@ -13,9 +18,26 @@ export function AddTokenInfoStep() {
   const { t } = useTranslation()
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const { setTokenMode } = useCreateAuctionStoreActions()
+  const trace = useTrace()
 
-  const switchToCreateNew = () => setTokenMode(TokenMode.CREATE_NEW)
-  const switchToExisting = () => setTokenMode(TokenMode.EXISTING)
+  // HookTile is a custom component that doesn't forward an injected onPress, so the source-toggle
+  // ELEMENT_CLICKED is fired here rather than via a <Trace logPress> wrapper.
+  const switchToCreateNew = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.AuctionTokenSourceToggle,
+      token_source: 'new',
+    })
+    setTokenMode(TokenMode.CREATE_NEW)
+  })
+  const switchToExisting = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.AuctionTokenSourceToggle,
+      token_source: 'existing',
+    })
+    setTokenMode(TokenMode.EXISTING)
+  })
 
   return (
     <Flex gap="$spacing16">

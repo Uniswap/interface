@@ -1,6 +1,7 @@
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 export function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
@@ -48,8 +49,11 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
   }
 }
 
-export function getCanonicalUrl(locationPathName: string): string {
+export function getCanonicalUrl(locationPathName: string, locationSearch: string = ''): string {
   const baseUrl = `${window.location.origin}${locationPathName}`
   const modifiedBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
-  return modifiedBaseUrl
+  const searchParams = new URLSearchParams(locationSearch)
+  return searchParams.get(CHAIN_SEARCH_PARAM) === TDP_MULTICHAIN_CHAIN_QUERY_VALUE
+    ? `${modifiedBaseUrl}?${CHAIN_SEARCH_PARAM}=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`
+    : modifiedBaseUrl
 }

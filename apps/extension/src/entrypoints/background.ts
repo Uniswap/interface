@@ -18,7 +18,7 @@ import {
   readDeviceAccessTimeoutMinutesFromStorage,
   readIsOnboardedFromStorage,
 } from 'src/background/utils/persistedStateUtils'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -54,7 +54,7 @@ async function initApp(): Promise<void> {
   })
 
   // Sets uninstall URL
-  chrome.runtime.setUninstallURL(uniswapUrls.chromeExtensionUninstallUrl)
+  chrome.runtime.setUninstallURL(UniswapStaticUrls.chromeExtensionUninstallUrl)
 
   await backgroundStore.init()
 }

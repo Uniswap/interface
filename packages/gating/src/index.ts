@@ -7,11 +7,14 @@ export type {
   GasStrategies,
   GasStrategyType,
   GasStrategyWithConditions,
+  RWAIssuerLogo,
+  RWAIssuerLogosMap,
   UwULinkAllowlist,
   UwULinkAllowlistItem,
 } from '@universe/gating/src/configs'
 export {
   AllowedV4WethHookAddressesConfigKey,
+  AuctionFdvWarningConfigKey,
   BlockedAsyncSubmissionChainIdsConfigKey,
   ChainsConfigKey,
   CreateAuctionConfigKey,
@@ -31,6 +34,7 @@ export {
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
   OutageBannerChainIdConfigKey,
+  RWAIssuerLogosConfigKey,
   SwapConfigKey,
   SyncTransactionSubmissionChainIdsConfigKey,
   UwuLinkConfigKey,
@@ -41,11 +45,9 @@ export type { ExperimentProperties } from '@universe/gating/src/experiments'
 export {
   EthAsErc20UniswapXProperties,
   Experiments,
-  ExploreBackendSortingProperties,
   LayerProperties,
   Layers,
   NativeTokenPercentageBufferProperties,
-  PrivateRpcProperties,
 } from '@universe/gating/src/experiments'
 export {
   FeatureFlagClient,

@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sd
 import { JupiterOrderResponse, TradingApi } from '@universe/api'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { BlockingTradeError } from 'uniswap/src/features/transactions/swap/types/BlockingTradeError'
-import { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export interface SolanaTrade {

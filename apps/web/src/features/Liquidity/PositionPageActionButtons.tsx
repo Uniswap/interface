@@ -8,8 +8,10 @@ import { zIndexes } from 'ui/src/theme'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { logCollectFeesClick } from '~/features/Liquidity/analytics'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
@@ -28,6 +30,7 @@ export function PositionPageActionButtons({
 }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const trace = useTrace()
   const media = useMedia()
   const { direction: scrollDirection } = useScroll()
   const isTouchDevice = useIsTouchDevice()
@@ -85,6 +88,10 @@ export function PositionPageActionButtons({
         ? {
             label: t('pool.collectFees'),
             onPress: () => {
+              if (!positionInfo) {
+                return
+              }
+              logCollectFeesClick(positionInfo, trace)
               dispatch(
                 setOpenModal({
                   name: ModalName.ClaimFee,
@@ -101,7 +108,7 @@ export function PositionPageActionButtons({
       addLiquidityOption,
       collectFeesOption,
     }
-  }, [dispatch, hasFees, positionInfo, status, t, onMigrate])
+  }, [dispatch, hasFees, positionInfo, status, t, onMigrate, trace])
 
   if (!isOwner) {
     return null

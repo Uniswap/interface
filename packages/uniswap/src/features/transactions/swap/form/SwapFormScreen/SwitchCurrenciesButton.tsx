@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -21,7 +22,7 @@ const SWAP_DIRECTION_BUTTON_SIZE = {
   },
 } as const
 
-export function SwitchCurrenciesButton(): JSX.Element {
+export const SwitchCurrenciesButton = memo(function SwitchCurrenciesButton(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
   const onSwitchCurrencies = useSwapFormScreenStore((state) => state.onSwitchCurrencies)
@@ -60,4 +61,4 @@ export function SwitchCurrenciesButton(): JSX.Element {
       </Flex>
     </Flex>
   )
-}
+})

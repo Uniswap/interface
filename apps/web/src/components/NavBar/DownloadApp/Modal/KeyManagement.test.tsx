@@ -24,9 +24,9 @@ describe('KeyManagementModal', () => {
     expect(getByText('Your wallet. Your crypto.')).toBeVisible()
   })
 
-  it('renders Secured by text', () => {
+  it('renders Protected by text', () => {
     const { getByText } = render(<KeyManagementModal setPage={mockSetPage} goBack={mockGoBack} onClose={mockOnClose} />)
-    expect(getByText('Secured by')).toBeVisible()
+    expect(getByText('Protected by')).toBeVisible()
   })
 
   it('Continue button calls setPage(Page.PasskeyGeneration)', () => {

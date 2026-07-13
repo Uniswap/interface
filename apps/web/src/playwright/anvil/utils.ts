@@ -1,6 +1,6 @@
 import { HexString, isValidHexString } from '@universe/encoding'
-import { Address } from 'viem'
 import { concat, keccak256, pad, toHex } from 'viem/utils'
+import type { Address } from '~/chains'
 import type { AnvilClient } from '~/playwright/anvil/anvil-manager'
 export const ONE_MILLION_USDT = 1_000_000_000_000n
 

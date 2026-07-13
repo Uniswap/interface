@@ -2,9 +2,10 @@ import type { Percent } from '@uniswap/sdk-core'
 import type { ReactNode } from 'react'
 import { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, HeightAnimator, styled, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, HeightAnimator, styled, Text, Tooltip, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { NumberType } from 'utilities/src/format/types'
@@ -18,6 +19,10 @@ interface FeeTierOption {
   selectionPercent?: Percent
   tvl: string | undefined
   boostedApr?: number
+  // When set, the tier is non-selectable, dimmed, and shows this text in a hover tooltip
+  disabledReason?: string
+  // Optional "Learn more" link appended to the disabled tooltip
+  disabledReasonLearnMoreUrl?: string
 }
 
 interface FeeTierSelectorProps {
@@ -34,6 +39,8 @@ interface FeeTierSelectorProps {
   footerContent?: ReactNode
   // Content rendered inside the HeightAnimator after the fee tier grid (e.g. search button)
   expandedFooterContent?: ReactNode
+  // Replaces the expand/collapse button in the header (e.g. a "Create fee tier" CTA when all tiers exist)
+  headerAction?: ReactNode
   // Dynamic fee tiers require a hook — excluded by default
   allowDynamicFee?: boolean
   // Optional controlled expand state; uncontrolled (internal state) if omitted
@@ -67,12 +74,16 @@ function FeeTier({
 }) {
   const { t } = useTranslation()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
+  const disabled = Boolean(feeTier.disabledReason)
 
-  return (
+  const tier = (
     <FeeTierContainer
-      onPress={onSelect.bind(null, feeTier.value)}
+      onPress={disabled ? undefined : onSelect.bind(null, feeTier.value)}
       background={selected ? '$surface3' : '$surface1'}
       justifyContent="space-between"
+      opacity={disabled ? 0.54 : 1}
+      cursor={disabled ? 'default' : 'pointer'}
+      hoverable={!disabled}
     >
       <Flex gap="$spacing8">
         <Flex row gap={10} justifyContent="space-between">
@@ -109,6 +120,30 @@ function FeeTier({
       </Flex>
     </FeeTierContainer>
   )
+
+  if (disabled && feeTier.disabledReason) {
+    return (
+      <Tooltip placement="top">
+        <Tooltip.Trigger flex={1} width="100%" alignSelf="stretch">
+          {tier}
+        </Tooltip.Trigger>
+        {/* pointerEvents="auto" lets the Learn more link receive clicks (see DisconnectButton) */}
+        <Tooltip.Content maxWidth={280} pointerEvents="auto">
+          <Tooltip.Arrow />
+          <Flex gap="$spacing4">
+            <Text variant="body4" color="$neutral1">
+              {feeTier.disabledReason}
+            </Text>
+            {feeTier.disabledReasonLearnMoreUrl && (
+              <LearnMoreLink url={feeTier.disabledReasonLearnMoreUrl} textVariant="buttonLabel4" textColor="$accent1" />
+            )}
+          </Flex>
+        </Tooltip.Content>
+      </Tooltip>
+    )
+  }
+
+  return tier
 }
 
 export function FeeTierSelector({
@@ -123,6 +158,7 @@ export function FeeTierSelector({
   headerSubContent,
   footerContent,
   expandedFooterContent,
+  headerAction,
   isExpanded: controlledExpanded,
   onToggleExpand,
 }: FeeTierSelectorProps) {
@@ -159,18 +195,20 @@ export function FeeTierSelector({
             </Text>
             {headerSubContent}
           </Flex>
-          <Button
-            fill={false}
-            size="xsmall"
-            maxWidth="fit-content"
-            emphasis="secondary"
-            onPress={toggleShowMore}
-            $md={{ width: 32 }}
-            icon={<RotatableChevron direction={isShowMore ? 'up' : 'down'} size="$icon.20" />}
-            iconPosition="after"
-          >
-            {isShowMore ? t('common.less') : t('common.more')}
-          </Button>
+          {headerAction ?? (
+            <Button
+              fill={false}
+              size="xsmall"
+              maxWidth="fit-content"
+              emphasis="secondary"
+              onPress={toggleShowMore}
+              $md={{ width: 32 }}
+              icon={<RotatableChevron direction={isShowMore ? 'up' : 'down'} size="$icon.20" />}
+              iconPosition="after"
+            >
+              {isShowMore ? t('common.less') : t('common.more')}
+            </Button>
+          )}
         </Flex>
         {footerContent}
       </Flex>

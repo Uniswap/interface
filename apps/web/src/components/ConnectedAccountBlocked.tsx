@@ -1,11 +1,11 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Blocked } from 'ui/src/components/icons/Blocked'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { ModalState } from '~/hooks/useModalState'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 
 export function ConnectedAccountBlocked({ isOpen, closeModal }: ModalState) {

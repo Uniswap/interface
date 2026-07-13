@@ -15,7 +15,7 @@ export function ErrorCallout({
 }: {
   action?: string
   errorMessage: boolean | string
-  description?: string
+  description?: React.ReactNode
   title?: string
   isWarning?: boolean
   pressIcon?: React.ReactNode

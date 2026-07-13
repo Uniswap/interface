@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi } from '@universe/api'
+import { AppId } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -35,6 +36,7 @@ describe(fromGraphQLChain, () => {
 
   it('handles supported chain', () => {
     expect(fromGraphQLChain(GraphQLApi.Chain.Arbitrum)).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromGraphQLChain(GraphQLApi.Chain.Megaeth)).toEqual(UniverseChainId.MegaETH)
   })
 
   it('handles unsupported chain', () => {
@@ -58,6 +60,7 @@ describe(fromUniswapWebAppLink, () => {
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
     expect(fromUniswapWebAppLink(GraphQLApi.Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
+    expect(fromUniswapWebAppLink(GraphQLApi.Chain.Megaeth.toLowerCase())).toEqual(UniverseChainId.MegaETH)
     // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
@@ -72,6 +75,7 @@ describe(toUniswapWebAppLink, () => {
     expect(toUniswapWebAppLink(UniverseChainId.ArbitrumOne)).toEqual(GraphQLApi.Chain.Arbitrum.toLowerCase())
     expect(toUniswapWebAppLink(UniverseChainId.Optimism)).toEqual(GraphQLApi.Chain.Optimism.toLowerCase())
     expect(toUniswapWebAppLink(UniverseChainId.Polygon)).toEqual(GraphQLApi.Chain.Polygon.toLowerCase())
+    expect(toUniswapWebAppLink(UniverseChainId.MegaETH)).toEqual(GraphQLApi.Chain.Megaeth.toLowerCase())
     // TODO: add Base test once GraphQLApi.Chain includes Base (GQL reliant)
   })
 
@@ -117,7 +121,9 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS })).toEqual({
+    expect(
+      getEnabledChains({ appId: AppId.Web, isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS }),
+    ).toEqual({
       chains: [
         UniverseChainId.Mainnet,
         UniverseChainId.Unichain,
@@ -133,6 +139,9 @@ describe('getEnabledChains', () => {
         UniverseChainId.Celo,
         UniverseChainId.WorldChain,
         UniverseChainId.Linea,
+        UniverseChainId.MegaETH,
+        UniverseChainId.Robinhood,
+        UniverseChainId.Arc,
         UniverseChainId.Soneium,
         UniverseChainId.Tempo,
         UniverseChainId.XLayer,
@@ -154,6 +163,9 @@ describe('getEnabledChains', () => {
         GraphQLApi.Chain.Celo,
         GraphQLApi.Chain.Worldchain,
         GraphQLApi.Chain.Linea,
+        GraphQLApi.Chain.Megaeth,
+        GraphQLApi.Chain.Robinhood,
+        GraphQLApi.Chain.Arc,
         GraphQLApi.Chain.Soneium,
         GraphQLApi.Chain.Tempo,
         GraphQLApi.Chain.Xlayer,
@@ -168,6 +180,7 @@ describe('getEnabledChains', () => {
   it('returns feature flagged chains', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         isTestnetModeEnabled: false,
         featureFlaggedChainIds: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
       }),
@@ -182,6 +195,7 @@ describe('getEnabledChains', () => {
   it('returns testnet chains', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         isTestnetModeEnabled: true,
         featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
@@ -196,6 +210,7 @@ describe('getEnabledChains', () => {
   it('returns both mainnet and testnet chains when includeTestnets is true', () => {
     expect(
       getEnabledChains({
+        appId: AppId.Web,
         includeTestnets: true,
         isTestnetModeEnabled: false,
         featureFlaggedChainIds: [

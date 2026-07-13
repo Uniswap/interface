@@ -1,4 +1,4 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { ConnectError, createPromiseClient } from '@connectrpc/connect'
 import {
   InfiniteData,
@@ -23,45 +23,58 @@ import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import {
-  persistableInfiniteQueryOptions,
-  persistableQueryOptions,
-} from 'utilities/src/reactQuery/persistableQueryOptions'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
 const positionsClient = createPromiseClient(DataApiService, uniswapPostTransport)
 
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,
   disabled?: boolean,
-): UseQueryResult<ListPositionsResponse, ConnectError> {
+): UseQueryResult<PlainMessage<ListPositionsResponse>, ConnectError> {
   return useQuery(
     persistableQueryOptions({
       queryKey: [ReactQueryCacheKey.ListPositions, input] as const,
-      queryFn: () => positionsClient.listPositions(input ?? {}),
+      // toPlainMessage strips the Message prototype so the value survives disk persistence
+      // (a raw Message serializes to protobuf JSON wire format and restores unparseable).
+      queryFn: async () => toPlainMessage(await positionsClient.listPositions(input ?? {})),
       enabled: !!input && !disabled,
       placeholderData: keepPreviousData,
     }),
   )
 }
 
+interface InfinitePositionsQueryOptions {
+  disabled?: boolean
+  /**
+   * When set, the query refetches on this interval (ms). Defaults to undefined (no polling).
+   * A useInfiniteQuery refetch re-fetches all currently-loaded pages, and polling only runs
+   * while the query is enabled and the document is foreground (refetchIntervalInBackground
+   * defaults to false), so callers should gate `disabled` to the surface that needs it.
+   */
+  refetchInterval?: number
+}
+
 export function useGetPositionsInfiniteQuery(
   input: PartialMessage<ListPositionsRequest>,
-  disabled?: boolean,
+  options?: InfinitePositionsQueryOptions,
 ): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
-  return useInfiniteQuery(
-    persistableInfiniteQueryOptions({
-      queryKey: [ReactQueryCacheKey.ListPositions, 'infinite', input] as const,
-      queryFn: ({ pageParam }: { pageParam?: string }) =>
-        positionsClient.listPositions({
-          ...input,
-          pageToken: pageParam,
-        }),
-      initialPageParam: undefined,
-      getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
-      enabled: !disabled,
-      placeholderData: keepPreviousData,
-    }),
-  )
+  const { disabled, refetchInterval } = options ?? {}
+  // NOTE: this infinite query is intentionally NOT persisted (stopgap from #33346).
+  // The durable protobuf-persistence fix in this change makes re-persisting safe via
+  // toPlainMessage, but re-enabling it is left as a deliberate follow-up.
+  return useInfiniteQuery({
+    queryKey: [ReactQueryCacheKey.ListPositions, 'infinite', input] as const,
+    queryFn: ({ pageParam }: { pageParam?: string }) =>
+      positionsClient.listPositions({
+        ...input,
+        pageToken: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+    enabled: !disabled,
+    refetchInterval,
+    placeholderData: keepPreviousData,
+  })
 }
 
 export function useGetPositionsForPairs(
@@ -71,7 +84,7 @@ export function useGetPositionsForPairs(
     }
   },
   account?: Address,
-): UseQueryResult<GetPositionResponse, ConnectError>[] {
+): UseQueryResult<PlainMessage<GetPositionResponse>, ConnectError>[] {
   const positionsQueryOptions = useMemo(() => {
     return Object.keys(serializedPairs)
       .flatMap((chainId) => {
@@ -97,7 +110,7 @@ export function useGetPositionsForPairs(
 
           return persistableQueryOptions({
             queryKey: [ReactQueryCacheKey.GetPosition, requestInput] as const,
-            queryFn: () => positionsClient.getPosition(requestInput ?? {}),
+            queryFn: async () => toPlainMessage(await positionsClient.getPosition(requestInput ?? {})),
             enabled: !!requestInput,
           })
         })

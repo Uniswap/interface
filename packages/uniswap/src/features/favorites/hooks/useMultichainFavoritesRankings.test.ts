@@ -5,19 +5,10 @@ import {
   TokenRankingsStat,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import { buildLookupKey } from 'uniswap/src/features/favorites/canonicalFavoritesLookup'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { renderHook } from 'uniswap/src/test/test-utils'
-
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-  return {
-    ...actual,
-    useFeatureFlag: vi.fn(() => false),
-  }
-})
 
 vi.mock('uniswap/src/data/rest/tokenRankings', () => ({
   useTokenRankingsQuery: vi.fn(() => ({ data: undefined })),
@@ -45,29 +36,16 @@ function setQueryData(data: TokenRankingsResponse | undefined): void {
 
 describe(useMultichainFavoritesRankings, () => {
   beforeEach(() => {
-    vi.mocked(useFeatureFlag).mockReturnValue(false)
     setQueryData(undefined)
   })
 
-  it('disables the query and returns empty maps when MultichainTokenUx is off', () => {
-    const { result } = renderHook(() => useMultichainFavoritesRankings())
-
-    expect(useTokenRankingsQuery).toHaveBeenCalledWith({ chainId: ALL_NETWORKS_ARG, multichain: true }, false)
-    expect(result.current.canonicalByKey.size).toBe(0)
-    expect(result.current.networkCountByKey.size).toBe(0)
-    expect(result.current.tokenRankingsData).toBeUndefined()
-  })
-
-  it('enables the query with ALL_NETWORKS_ARG + multichain: true when the flag is on', () => {
-    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
-
+  it('always enables the query with ALL_NETWORKS_ARG + multichain: true', () => {
     renderHook(() => useMultichainFavoritesRankings())
 
-    expect(useTokenRankingsQuery).toHaveBeenCalledWith({ chainId: ALL_NETWORKS_ARG, multichain: true }, true)
+    expect(useTokenRankingsQuery).toHaveBeenCalledWith({ chainId: ALL_NETWORKS_ARG, multichain: true })
   })
 
   it('returns empty maps but forwards undefined data while the query is pending', () => {
-    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
     setQueryData(undefined)
 
     const { result } = renderHook(() => useMultichainFavoritesRankings())
@@ -78,7 +56,6 @@ describe(useMultichainFavoritesRankings, () => {
   })
 
   it('builds the canonical lookup and forwards data when the query resolves', () => {
-    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
     const data = makeResponse([
       makeStat('ETHEREUM', '0xAAA', [makeChainToken(1, '0xAAA'), makeChainToken(42161, '0xAAA')]),
     ])

@@ -58,20 +58,23 @@ const getNameSearchPattern = (
     : null
 
 /**
- * Returns a flat list of `TokenOption`s filtered by chainFilter and searchFilter
+ * Returns a flat list of `TokenOption`s filtered by chainFilter/chainIds and searchFilter
  * @param tokenOptions list of `TokenOption`s to filter
  * @param chainFilter chain id to keep
+ * @param chainIds chain ids to keep when there is no single chain filter
  * @param searchFilter filter to apply to currency adddress, name, and symbol
  * @param hideWSOL whether to filter out WSOL tokens
  */
 export function filter({
   tokenOptions,
   chainFilter,
+  chainIds,
   searchFilter,
   hideWSOL = false,
 }: {
   tokenOptions: TokenOption[] | null
   chainFilter: UniverseChainId | null
+  chainIds?: UniverseChainId[]
   searchFilter?: string
   hideWSOL?: boolean
 }): TokenOption[] {
@@ -84,13 +87,19 @@ export function filter({
     ? tokenOptions.filter((option) => !isWSOL(option.currencyInfo.currency))
     : tokenOptions
 
+  const chainFilteredTokens = chainFilter
+    ? filteredTokens.filter((token) => token.currencyInfo.currency.chainId === chainFilter)
+    : chainIds
+      ? filteredTokens.filter((token) => chainIds.includes(token.currencyInfo.currency.chainId))
+      : filteredTokens
+
   if (!chainFilter && !searchFilter) {
-    return filteredTokens
+    return chainFilteredTokens
   }
 
   // Fast path: when only filtering by chain (no text search), avoid expensive Fuse.js initialization
   if (chainFilter && !searchFilter) {
-    return filteredTokens.filter((token) => token.currencyInfo.currency.chainId === chainFilter)
+    return chainFilteredTokens
   }
 
   const andPatterns: Fuse.Expression[] = []
@@ -129,7 +138,7 @@ export function filter({
     ],
   }
 
-  const fuse = new Fuse(filteredTokens, searchOptions)
+  const fuse = new Fuse(chainFilteredTokens, searchOptions)
 
   const r = fuse.search(searchPattern)
   return r.map((result) => result.item)

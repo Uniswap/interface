@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +13,7 @@ import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenExploreURL } from '~/appGraphql/data/util'
+import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
 import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
@@ -21,7 +23,13 @@ import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/stat
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { AuctionVerificationFilter as AuctionVerificationFilterComponent } from '~/pages/Explore/AuctionVerificationFilter'
+import {
+  EXPLORE_STICKY_SCROLL_OFFSET_PX,
+  EXPLORE_TOKEN_SECTION_ID,
+} from '~/pages/Explore/categories/useExploreCategory'
+import { ExploreAssetShelfSection, ExploreCategoryTablesOrPage } from '~/pages/Explore/ExploreAssetsIntegration'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
+import { useExploreHeartbeatCoordinator } from '~/pages/Explore/hooks/useExploreHeartbeatCoordinator'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { ProtocolFilter } from '~/pages/Explore/ProtocolFilter'
 import { useExploreParams } from '~/pages/Explore/redirects'
@@ -113,6 +121,9 @@ const HeaderTab = styled(Text, {
   },
 })
 
+/** Vertical gap between explore hero sections on mWeb only (carousel ↔ tabs, tabs ↔ category table). */
+const EXPLORE_SECTION_MWEB_GAP = '$spacing20'
+
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
   const media = useMedia()
@@ -132,11 +143,16 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     return key
   }, [initialTab, Pages])
 
+  const isExploreTableEnabled = useFeatureFlag(FeatureFlags.RWAUXExplore)
+  // Featured RWA carousel renders unless the caller's region blocks RWA.
+  const isExploreCarouselEnabled = !useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA)
+
   // scroll to tab navbar on initial page mount only
+  // skip when the asset shelf is shown — the shelf is the hero content and shouldn't be scrolled past
   useEffect(() => {
-    if (tabNavRef.current && initialTab) {
+    if (tabNavRef.current && initialTab && !(isExploreCarouselEnabled && initialTab === ExploreTab.Tokens)) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
+      window.scrollTo({ top: offsetTop - EXPLORE_STICKY_SCROLL_OFFSET_PX, behavior: 'smooth' })
     }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [])
@@ -163,6 +179,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const [currentTab, setCurrentTab] = useState(initialKey)
   const { component: Page, key: currentKey } = Pages[currentTab] || {}
 
+  useExploreHeartbeatCoordinator({ tab: currentKey, enabled: true })
+
   // to allow backward navigation between tabs
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
@@ -176,6 +194,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { isTestnetModeEnabled } = useEnabledChains()
   const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
   const showEarnSection = isEarnEnabled && !isTestnetModeEnabled
+  const showAssetShelf = isExploreCarouselEnabled
+  const showExploreCategoryTables = isExploreTableEnabled && currentKey === ExploreTab.Tokens
 
   useEffect(() => {
     // We only support the Tokens tab on Solana; redirect if the current tab is not the Tokens tab on Solana.
@@ -198,6 +218,15 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     useManualChainOutageStore.getState().reset()
   }, [tab, Pages])
 
+  const filteredChainIds = useFilteredChainIds()
+  const tabSupportedNetworks = useMemo(() => {
+    // No SVM support for transactions or pools
+    if (currentKey === ExploreTab.Pools || currentKey === ExploreTab.Transactions) {
+      return filteredChainIds.filter((chainId) => !isSVMChain(chainId))
+    }
+    return filteredChainIds
+  }, [filteredChainIds, currentKey])
+
   return (
     <Trace
       logImpression
@@ -216,13 +245,18 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 <EarnVaultsSection />
               </Flex>
             )}
+            {showAssetShelf && <ExploreAssetShelfSection />}
             <Flex
               ref={tabNavRef}
+              id={EXPLORE_TOKEN_SECTION_ID}
               row
               maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-              mt={isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
+              mt={showAssetShelf ? '$none' : isSolanaChain ? 36 : showEarnSection ? '$spacing40' : 80}
               mx="auto"
               mb="$spacing4"
+              $md={{
+                mb: EXPLORE_SECTION_MWEB_GAP,
+              }}
               alignItems="center"
               justifyContent="space-between"
               width="100%"
@@ -280,27 +314,29 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   )
                 })}
               </Flex>
-              <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
-                {currentKey === ExploreTab.Pools && (
-                  <Flex row>
-                    <Button
-                      size="small"
-                      icon={<Plus />}
-                      onPress={() =>
-                        navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
-                          state: { entryPoint: '/explore/pools' },
-                        })
-                      }
-                    >
-                      {media.sm ? t('common.new') : t('pool.newPosition.title')}
-                    </Button>
-                  </Flex>
-                )}
-                {currentKey !== ExploreTab.Toucan && <TableNetworkFilter />}
-                {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
-                {currentKey === ExploreTab.Pools && <ProtocolFilter />}
-                {currentKey !== ExploreTab.Toucan && <SearchBar tab={currentKey} />}
-              </Flex>
+              {!showExploreCategoryTables && (
+                <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+                  {currentKey === ExploreTab.Pools && (
+                    <Flex row>
+                      <Button
+                        size="small"
+                        icon={<Plus />}
+                        onPress={() =>
+                          navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
+                            state: { entryPoint: '/explore/pools' },
+                          })
+                        }
+                      >
+                        {media.sm ? t('common.new') : t('pool.newPosition.title')}
+                      </Button>
+                    </Flex>
+                  )}
+                  {currentKey !== ExploreTab.Toucan && <TableNetworkFilter networks={tabSupportedNetworks} />}
+                  {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
+                  {currentKey === ExploreTab.Pools && <ProtocolFilter />}
+                  {currentKey !== ExploreTab.Toucan && <SearchBar tab={currentKey} />}
+                </Flex>
+              )}
             </Flex>
             {currentKey === ExploreTab.Toucan && <TopVerifiedAuctionsSection />}
             {currentKey === ExploreTab.Toucan && (
@@ -324,6 +360,14 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   {t('toucan.auctions')}
                 </Text>
                 <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+                  <Button
+                    size="small"
+                    icon={<Plus />}
+                    fill={false}
+                    onPress={() => navigate('/liquidity/launch-auction')}
+                  >
+                    {t('toucan.createAuction.launchAuction')}
+                  </Button>
                   <TableNetworkFilter networks={TOUCAN_AUCTION_SUPPORTED_CHAINS} />
                   <AuctionVerificationFilterComponent />
                   <AuctionStatusFilterComponent />
@@ -331,7 +375,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 </Flex>
               </Flex>
             )}
-            <Page />
+            <ExploreCategoryTablesOrPage showExploreCategoryTables={showExploreCategoryTables} page={<Page />} />
           </Flex>
         </ExploreTablesFilterStoreContextProvider>
       </ExploreContextProvider>

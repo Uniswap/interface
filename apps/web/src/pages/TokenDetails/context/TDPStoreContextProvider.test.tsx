@@ -20,18 +20,21 @@ function createDerivedState(overrides: {
   balanceError?: Error
 }) {
   return {
-    currencyChain: GraphQLApi.Chain.Ethereum,
-    currencyChainId: UniverseChainId.Mainnet,
-    address: overrides.address,
-    tokenQuery: overrides.tokenQuery ?? {
-      loading: false,
-      data: validTokenProjectResponse.data,
+    state: {
+      currencyChain: GraphQLApi.Chain.Ethereum,
+      currencyChainId: UniverseChainId.Mainnet,
+      address: overrides.address,
+      tokenQuery: overrides.tokenQuery ?? {
+        loading: false,
+        data: validTokenProjectResponse.data,
+      },
+      multiChainMap: {},
+      balanceError: overrides.balanceError,
+      selectedMultichainChainId: undefined,
+      tokenColor: overrides.tokenColor,
+      currency: undefined,
     },
-    multiChainMap: {},
-    balanceError: overrides.balanceError,
-    selectedMultichainChainId: undefined,
-    tokenColor: overrides.tokenColor,
-    currency: undefined,
+    balancesRefetch: vi.fn(),
   }
 }
 

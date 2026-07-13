@@ -78,9 +78,16 @@ export {
 export * as TradingApi from '@universe/api/src/clients/trading/__generated__'
 export {
   createTradingApiClient,
+  TRADING_API_PATHS,
+  type TradingApiPaths,
   type TradingApiClient,
   type TradingClientContext,
+  V1_TRADING_API_PATHS,
 } from '@universe/api/src/clients/trading/createTradingApiClient'
+export {
+  createTradingApiFetchClient,
+  type TradingApiFetchClientContext,
+} from '@universe/api/src/clients/trading/createTradingApiFetchClient'
 export {
   type BridgeQuoteResponse,
   type ChainedQuoteResponse,
@@ -337,7 +344,15 @@ export { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 export { useIsSessionInitialized } from '@universe/api/src/hooks/useIsSessionInitialized'
 
 // Session Transport (pure factory, no platform detection)
-export { createSessionTransport, type CreateSessionTransportOptions } from '@universe/api/src/session'
+export {
+  bootstrapSession,
+  createSessionTransport,
+  type CreateSessionTransportOptions,
+  provideSession,
+  tryProvideSession,
+  useSession,
+  useSessionReady,
+} from '@universe/api/src/session'
 export { createWithSessionRetry } from '@universe/api/src/session/createWithSessionRetry'
 
 export type {

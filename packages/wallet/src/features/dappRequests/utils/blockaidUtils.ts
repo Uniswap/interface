@@ -211,6 +211,64 @@ export function getRiskLevelFromClassification(classification?: string): Transac
   return TransactionRiskLevel.None
 }
 
+// Rank levels numerically so multiple Blockaid signals can be combined by taking the highest.
+const RISK_SEVERITY: Record<TransactionRiskLevel, number> = {
+  [TransactionRiskLevel.None]: 0,
+  [TransactionRiskLevel.Warning]: 1,
+  [TransactionRiskLevel.Critical]: 2,
+}
+
+function maxRiskLevel(levels: TransactionRiskLevel[]): TransactionRiskLevel {
+  return levels.reduce(
+    (highest, level) => (RISK_SEVERITY[level] > RISK_SEVERITY[highest] ? level : highest),
+    TransactionRiskLevel.None,
+  )
+}
+
+// `result_type` is Blockaid's authoritative verdict, matched case-insensitively. Benign/Spam/unknown -> None.
+function getRiskLevelFromResultType(resultType?: string): TransactionRiskLevel {
+  switch (resultType?.toLowerCase()) {
+    case 'malicious':
+      return TransactionRiskLevel.Critical
+    case 'warning':
+      return TransactionRiskLevel.Warning
+    default:
+      return TransactionRiskLevel.None
+  }
+}
+
+// Defense-in-depth: a Malicious feature (e.g. HIGH_RISK_SPENDER) -> Critical, a Warning feature -> Warning.
+// `type` is a validated enum (unlike result_type), so exact match is intentional — a casing drift fails Zod upstream.
+function getRiskLevelFromFeatures(features?: { type: string }[]): TransactionRiskLevel {
+  if (!features?.length) {
+    return TransactionRiskLevel.None
+  }
+  if (features.some((feature) => feature.type === 'Malicious')) {
+    return TransactionRiskLevel.Critical
+  }
+  if (features.some((feature) => feature.type === 'Warning')) {
+    return TransactionRiskLevel.Warning
+  }
+  return TransactionRiskLevel.None
+}
+
+/**
+ * Risk level from a Blockaid validation result: the highest severity across `result_type`
+ * (authoritative verdict), `features[].type` (defense-in-depth), and a `classification` substring match.
+ */
+export function getRiskLevelFromValidation(
+  validation?: BlockaidScanTransactionResponse['validation'],
+): TransactionRiskLevel {
+  if (!validation) {
+    return TransactionRiskLevel.None
+  }
+  return maxRiskLevel([
+    getRiskLevelFromResultType(validation.result_type),
+    getRiskLevelFromFeatures(validation.features),
+    getRiskLevelFromClassification(validation.classification),
+  ])
+}
+
 /**
  * Type alias for asset diffs array from successful simulation
  */
@@ -361,9 +419,8 @@ export function parseTransactionSections(
   scanResult: BlockaidScanTransactionResponse | null,
   chainId: UniverseChainId,
 ): ParsedTransactionData {
-  // Always check validation classification first (critical for signature requests that lack simulation)
-  const classification = scanResult?.validation?.classification
-  const riskLevel = getRiskLevelFromClassification(classification)
+  // Derive risk from validation signals; works even without a simulation (signature requests).
+  const riskLevel = getRiskLevelFromValidation(scanResult?.validation)
 
   if (!scanResult?.simulation || scanResult.simulation.status !== 'Success') {
     return {

@@ -9,8 +9,8 @@ function getScale(stackIndex: number): number {
   return 1 - stackIndex * SCALE_FACTOR
 }
 
-// Bottom-anchored Y offset calculation
-// Positions behind cards so their bottom edges peek below the front card
+// Bottom-anchored: places each behind card's bottom edge stackIndex*8 below the active card's bottom.
+// Scale is anchored at the bottom (transformOrigin in BaseCard), so the bottom edge is scale-invariant — no compensation needed, and the peek is identical across platforms.
 function getYOffset({
   stackIndex,
   activeCardHeight,
@@ -22,17 +22,9 @@ function getYOffset({
 }): number {
   if (stackIndex === 0) {
     return 0
-  } // Top card at y=0
+  }
 
-  // Base offset to position bottom edge (stackIndex * 8) below active card's bottom
-  const baseOffset = activeCardHeight - thisCardHeight + stackIndex * SWIPEABLE_CARD_Y_OFFSET
-
-  // Compensate for scale transformation shrinking the card from its center
-  // Scale shifts the bottom edge up by: thisCardHeight * (1 - scale) / 2
-  // Since scale = 1 - stackIndex * SCALE_FACTOR, we get: thisCardHeight * stackIndex * SCALE_FACTOR / 2
-  const scaleCompensation = (thisCardHeight * stackIndex * SCALE_FACTOR) / 2
-
-  return baseOffset + scaleCompensation
+  return activeCardHeight - thisCardHeight + stackIndex * SWIPEABLE_CARD_Y_OFFSET
 }
 
 type BaseCardProps = PropsWithChildren<{
@@ -80,6 +72,8 @@ export function BaseCard({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: panOffset?.value ?? 0 }, { translateY: yOffset.value }, { scale: scale.value }],
+      // Anchor scale at the bottom edge so it stays put while the card shrinks — keeps the peek deterministic across platforms.
+      transformOrigin: 'center bottom',
     }
   }, [panOffset, scale, yOffset])
 

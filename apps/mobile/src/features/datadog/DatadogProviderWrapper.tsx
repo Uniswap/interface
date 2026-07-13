@@ -1,8 +1,9 @@
 import {
+  type AutoInstrumentationConfiguration,
   BatchSize,
   DatadogProvider,
-  DatadogProviderConfiguration,
   DdRum,
+  type PartialInitializationConfiguration,
   SdkVerbosity,
   TrackingConsent,
   UploadFrequency,
@@ -32,23 +33,14 @@ export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 // Note: Can buffer up to 100 RUM events before SDK initialization
 // https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
 const isEnabled = isDatadogEnabled()
-const datadogAutoInstrumentation = {
-  trackErrors: isEnabled,
-  trackInteractions: isEnabled,
-  trackResources: isEnabled,
-}
 
-async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
-  const datadogConfig: DatadogProviderConfiguration = {
-    clientToken: getConfig().datadogClientToken,
-    env: getDatadogEnvironment(),
-    applicationId: getConfig().datadogProjectId,
-    // @ts-expect-error - Favored getting types from DatadogProviderConfiguration over fixing ths type
-    trackingConsent: undefined,
-    site: 'US1',
-    longTaskThresholdMs: 100,
-    nativeCrashReportEnabled: true,
-    verbosity: SdkVerbosity.INFO,
+// Event mappers and feature toggles must be supplied to the DatadogProvider component (not initialize)
+// so auto-instrumentation buffers correctly before the deferred native initialization runs.
+const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
+  rumConfiguration: {
+    trackErrors: isEnabled,
+    trackInteractions: isEnabled,
+    trackResources: isEnabled,
     errorEventMapper: (event: ReturnType<ErrorEventMapper>): ReturnType<ErrorEventMapper> | null => {
       const ignoredErrors = getDynamicConfigValue<
         DynamicConfigs.DatadogIgnoredErrors,
@@ -67,32 +59,35 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
 
       return event
     },
-    sessionSamplingRate,
-  }
+  },
+  logsConfiguration: {},
+}
 
+async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
+  const isE2ETest = getConfig().isE2ETest
   // oxlint-disable-next-line typescript/no-unnecessary-condition
-  if (localDevDatadogEnabled) {
-    Object.assign(datadogConfig, {
-      sessionSamplingRate: 100,
-      uploadFrequency: UploadFrequency.FREQUENT,
-      batchSize: BatchSize.SMALL,
-      verbosity: SdkVerbosity.DEBUG,
-      trackingConsent: TrackingConsent.GRANTED,
-    })
-  }
+  const useDebugConfig = localDevDatadogEnabled || isE2ETest
 
-  if (getConfig().isE2ETest) {
-    Object.assign(datadogConfig, {
-      sessionSamplingRate: 100,
-      trackingConsent: TrackingConsent.GRANTED,
-      verbosity: SdkVerbosity.DEBUG,
-    })
+  const datadogConfig: PartialInitializationConfiguration = {
+    clientToken: getConfig().datadogClientToken,
+    env: getDatadogEnvironment(),
+    site: 'US1',
+    trackingConsent: useDebugConfig ? TrackingConsent.GRANTED : undefined,
+    verbosity: useDebugConfig ? SdkVerbosity.DEBUG : SdkVerbosity.INFO,
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
+    ...(localDevDatadogEnabled ? { uploadFrequency: UploadFrequency.FREQUENT, batchSize: BatchSize.SMALL } : {}),
+    rumConfiguration: {
+      applicationId: getConfig().datadogProjectId,
+      sessionSampleRate: useDebugConfig ? 100 : sessionSamplingRate,
+      longTaskThresholdMs: 100,
+      nativeCrashReportEnabled: true,
+    },
   }
 
   await DatadogProvider.initialize(datadogConfig)
 
   setAttributesToDatadog({
-    isE2ETest: getConfig().isE2ETest,
+    isE2ETest,
   }).catch(() => undefined)
 }
 

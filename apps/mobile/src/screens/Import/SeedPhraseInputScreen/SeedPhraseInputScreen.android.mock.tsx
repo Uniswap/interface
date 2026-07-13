@@ -10,7 +10,7 @@ import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -114,7 +114,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   }
 
   const onPressRecoveryHelpButton = (): Promise<void> =>
-    openUri({ uri: uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport })
+    openUri({ uri: UniswapHelpUrls.articles.recoveryPhraseHowToImport })
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)

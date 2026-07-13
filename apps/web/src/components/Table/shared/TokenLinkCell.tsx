@@ -9,8 +9,8 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId as toCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { EllipsisText } from '~/components/Table/shared/TableText'
+import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const StyledInternalLink = styled(Link, {
   ...ClickableTamaguiStyle,
@@ -34,25 +34,26 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hi
   const currencyInfo = useCurrencyInfo(currency ? toCurrencyId(currency) : undefined)
 
   return (
-    <StyledInternalLink
-      to={getTokenDetailsURL({
-        address: unwrappedToken.address,
-        chain: token.chain,
-        chainQueryParam: getChainUrlParam(chainId),
-      })}
-    >
-      <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
-        <EllipsisText>{unwrappedToken.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
-        {!hideLogo && (
-          <TokenLogo
-            chainId={chainId}
-            size={22}
-            url={currencyInfo?.logoUrl ?? token.project?.logo?.url}
-            symbol={currencyInfo?.currency.symbol ?? token.symbol}
-            name={currencyInfo?.currency.name}
-          />
-        )}
-      </Flex>
-    </StyledInternalLink>
+    <TokenHoverCard token={token}>
+      <StyledInternalLink
+        to={getTokenDetailsURL({
+          address: unwrappedToken.address,
+          chain: token.chain,
+        })}
+      >
+        <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
+          <EllipsisText>{unwrappedToken.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
+          {!hideLogo && (
+            <TokenLogo
+              chainId={chainId}
+              size={22}
+              url={currencyInfo?.logoUrl ?? token.project?.logo?.url}
+              symbol={currencyInfo?.currency.symbol ?? token.symbol}
+              name={currencyInfo?.currency.name}
+            />
+          )}
+        </Flex>
+      </StyledInternalLink>
+    </TokenHoverCard>
   )
 }

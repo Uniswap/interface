@@ -2,7 +2,7 @@ import { hkdf } from '@noble/hashes/hkdf.js'
 import { sha256 } from '@noble/hashes/sha2.js'
 import { base64urlToBase64 } from '@universe/encoding'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
+import { deriveArgon2 } from 'uniswap/src/features/passkey/deriveArgon2'
 import {
   AES_KEY_LENGTH,
   blindPin,
@@ -63,8 +63,9 @@ export async function attemptPinDecryption({
     try {
       const { salt1, salt2, iv, ciphertextWithTag } = parseBlob(encryptedBlob)
 
-      // Argon2id in worker + HKDF (errors here should propagate, not be treated as wrong PIN)
-      pinKey = await deriveArgon2InWorker(pin, salt1)
+      // Argon2id + HKDF (errors here should
+      // propagate, not be treated as wrong PIN)
+      pinKey = await deriveArgon2(pin, salt1)
       ikm = new Uint8Array(oprfOutput.length + pinKey.length)
       ikm.set(oprfOutput, 0)
       ikm.set(pinKey, oprfOutput.length)
@@ -76,10 +77,13 @@ export async function attemptPinDecryption({
         authPrivateKey = decryptAuthKey({ finalKey, iv, ciphertextWithTag })
       } catch {
         // GCM tag mismatch — wrong PIN
-        const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult({
-          success: false,
-          authMethodId,
-        })
+        const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult(
+          {
+            success: false,
+            authMethodId,
+          },
+          accessToken,
+        )
 
         return {
           success: false,
@@ -119,23 +123,28 @@ function decodeSigningPayload(payload: string): { payloadBytes: Uint8Array; payl
 export async function executeRecovery({
   authPrivateKey,
   authMethodId,
+  accessToken,
   newPasskeyCredential,
   newPasskeyPublicKey,
   generateAuthorizationSignature,
 }: {
   authPrivateKey: Uint8Array
   authMethodId: string
+  accessToken: string
   newPasskeyCredential: string
   newPasskeyPublicKey: string
   generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
 }): Promise<{ walletAddress: string; credentialId: string; walletId: string }> {
   try {
     // 1. Report successful decryption with new passkey public key → get signing payload
-    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult({
-      success: true,
-      authMethodId,
-      newPasskeyPublicKey,
-    })
+    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult(
+      {
+        success: true,
+        authMethodId,
+        newPasskeyPublicKey,
+      },
+      accessToken,
+    )
 
     if (!reportResponse.signingPayload) {
       throw new Error('Server did not return a signing payload')
@@ -183,19 +192,24 @@ export async function executeRecoveryExport({
   authPrivateKey,
   authMethodId,
   encryptionKey,
+  accessToken,
   generateAuthorizationSignature,
 }: {
   authPrivateKey: Uint8Array
   authMethodId: string
   encryptionKey: string
+  accessToken: string
   generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
 }): Promise<{ ciphertext: string; encapsulatedKey: string }> {
   try {
-    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult({
-      success: true,
-      authMethodId,
-      encryptionKey,
-    })
+    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult(
+      {
+        success: true,
+        authMethodId,
+        encryptionKey,
+      },
+      accessToken,
+    )
 
     const { exportSigningPayload } = reportResponse
 

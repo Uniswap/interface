@@ -122,6 +122,12 @@ const slice = createSlice({
       if (networkFee) {
         tx.networkFee = networkFee
       }
+      if (transaction.sponsorInfo) {
+        tx.sponsorInfo = transaction.sponsorInfo
+      }
+      if (transaction.paymaster) {
+        tx.paymaster = transaction.paymaster
+      }
 
       // Update hash for successful UniswapX or userOp orders
       if ((isUniswapX(transaction) || transaction.userOpHash) && status === TransactionStatus.Success) {

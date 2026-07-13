@@ -3,7 +3,8 @@
  *
  * Data source preference:
  * - CoinGecko (TokenProjectMarket) first for: price, marketCap, FDV, 52w high/low, 24hr price change
- * - Subgraph (TokenMarket) fallback and exclusive for: volume
+ * - CoinGecko (TokenProjectMarket) first for volume when preferProjectMarketData is true
+ * - Subgraph (TokenMarket) fallback/default for volume
  */
 
 import { useMemo } from 'react'
@@ -28,17 +29,30 @@ export type { TokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails
  * the per-chain price, NOT the aggregated project price. This ensures each chain's
  * token page shows the correct price for that specific chain.
  *
- * Prefers per-chain subgraph data, falls back to aggregated CoinGecko data
+ * Prefers per-chain subgraph data by default, falls back to aggregated CoinGecko data.
+ * Callers can prefer project market data when the aggregated quote is the intended display value.
  */
-export function useTokenSpotPrice(currencyId: CurrencyId | undefined): number | undefined {
+export interface UseTokenSpotPriceOptions {
+  preferProjectMarketData?: boolean
+}
+
+export function useTokenSpotPrice(
+  currencyId: CurrencyId | undefined,
+  options?: UseTokenSpotPriceOptions,
+): number | undefined {
   const id = currencyId ?? ''
   const tokenMarket = useTokenMarketPartsFragment({ currencyId: id }).data.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId: id }).data.project?.markets
+  const preferProjectMarketData = options?.preferProjectMarketData ?? false
 
   return useMemo(() => {
+    if (preferProjectMarketData) {
+      return projectMarkets?.[0]?.price?.value ?? tokenMarket?.price?.value
+    }
+
     return tokenMarket?.price?.value ?? projectMarkets?.[0]?.price?.value
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [tokenMarket?.price?.value, projectMarkets?.[0]?.price?.value])
+  }, [preferProjectMarketData, tokenMarket?.price?.value, projectMarkets?.[0]?.price?.value])
 }
 
 /**
@@ -62,10 +76,11 @@ export interface TokenMarketStatsAggregatedInput {
 export interface UseTokenMarketStatsParams {
   currentPriceOverride?: number
   aggregatedData?: TokenMarketStatsAggregatedInput | null
+  preferProjectMarketData?: boolean
 }
 
 export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMarketStatsParams): TokenMarketStats {
-  const { currentPriceOverride, aggregatedData } = params ?? {}
+  const { currentPriceOverride, aggregatedData, preferProjectMarketData } = params ?? {}
   const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
 
@@ -80,12 +95,14 @@ export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMar
         market: aggregatedData.market,
         projectMarket: aggregatedData.project?.markets?.[0],
         currentPrice: currentPriceOverride,
+        preferProjectMarketData,
       })
     }
     return computeTokenMarketStats({
       market: tokenMarket,
       projectMarket: projectMarkets?.[0],
       currentPrice: currentPriceOverride,
+      preferProjectMarketData,
     })
-  }, [aggregatedData, currentPriceOverride, projectMarkets, tokenMarket])
+  }, [aggregatedData, currentPriceOverride, preferProjectMarketData, projectMarkets, tokenMarket])
 }

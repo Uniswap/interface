@@ -1,4 +1,3 @@
-import { FeatureFlags } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -53,5 +52,4 @@ export const SwapProtection: TransactionSettingConfig = {
     )
   },
   InfoModal: SwapProtectionInfoModal,
-  featureFlag: FeatureFlags.PrivateRpc,
 }

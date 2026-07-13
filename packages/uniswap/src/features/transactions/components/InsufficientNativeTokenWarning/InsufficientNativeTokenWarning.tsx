@@ -8,7 +8,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
@@ -136,7 +136,7 @@ function InsufficientNativeTokenWarningContent({
             <LearnMoreLink
               textColor="$accent3"
               textVariant="buttonLabel3"
-              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+              url={UniswapHelpUrls.articles.networkFeeInfo}
             />
           </Flex>
 

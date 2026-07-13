@@ -48,7 +48,13 @@ export enum InterfaceEventName {
    * to improve analytics hygiene and align with mobile/extension which use separate events per type.
    */
   SwapConfirmedOnClient = 'Swap Confirmed on Client',
+  SlideoutChartCardTimePeriodSelected = 'Slideout Chart Card Time Period Selected',
+  SlideoutChartCardToggled = 'Slideout Chart Card Toggled',
+  SlideoutChartCardTokenToggled = 'Slideout Chart Card Token Toggled',
+  SlideoutChartCardTokenSelected = 'Slideout Chart Card Token Selected',
   SwapTabClicked = 'Swap Tab Clicked',
+  TokenHoverCardDataLoaded = 'Token Hover Card Data Loaded',
+  TokenHoverCardOpened = 'Token Hover Card Opened',
   TokenImported = 'Token Imported',
   TokenSelected = 'Token Selected',
   TokenSelectorOpened = 'Token Selector Opened',
@@ -63,7 +69,6 @@ export enum InterfaceEventName {
   UniswapXSignatureRequested = 'UniswapX Signature Requested',
   WalletCapabilitiesDetected = 'Wallet Capabilities Detected',
   WalletConnected = 'Wallet Connected',
-  WalletProviderUsed = 'Wallet Provider Used',
   WalletSelected = 'Wallet Selected',
   WrapTokenTxnInvalidated = 'Wrap Token Transaction Invalidated',
   WrapTokenTxnSubmitted = 'Wrap Token Transaction Submitted',

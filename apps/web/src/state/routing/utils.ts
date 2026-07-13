@@ -168,7 +168,7 @@ function toUnsignedV3DutchOrderInfo(orderInfoJSON: UnsignedV3DutchOrderInfoJSON)
       adjustmentPerGweiBaseFee: BigNumber.from(input.adjustmentPerGweiBaseFee),
       curve: {
         relativeBlocks: input.curve.relativeBlocks,
-        relativeAmounts: input.curve.relativeAmounts.map((amount) => BigNumber.from(amount).toBigInt()),
+        relativeAmounts: input.curve.relativeAmounts.map((amount) => BigInt(amount)),
       },
     },
     outputs: outputs.map((output: V3DutchOutputJSON) => ({
@@ -178,7 +178,7 @@ function toUnsignedV3DutchOrderInfo(orderInfoJSON: UnsignedV3DutchOrderInfoJSON)
       adjustmentPerGweiBaseFee: BigNumber.from(output.adjustmentPerGweiBaseFee),
       curve: {
         relativeBlocks: output.curve.relativeBlocks,
-        relativeAmounts: output.curve.relativeAmounts.map((amount) => BigNumber.from(amount).toBigInt()),
+        relativeAmounts: output.curve.relativeAmounts.map((amount) => BigInt(amount)),
       },
     })),
   }

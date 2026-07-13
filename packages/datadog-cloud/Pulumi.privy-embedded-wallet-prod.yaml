@@ -1,15 +1,16 @@
 # Production stack for privy-embedded-wallet monitors.
 # ESC key `privy-embedded-wallet` exists in shared-infra/incident with EP + Slack channel.
 #
-# Note: disablePaging/disableSlack are set in both the ESC environment
-# (esc/privy-embedded-wallet.yaml) and here. The ESC value applies by default;
-# the stack value here is a per-environment override. Re-enable in both places
-# once thresholds have been validated against real prod traffic.
+# Paging is ENABLED for prod: the incident.io webhook (@webhook-Incident-io) and
+# the `ep:` escalation tag both fire (both are gated by disablePaging in config.ts).
+# Slack notifications remain disabled (disableSlack) until validated against real
+# prod traffic. The ESC environment (esc/privy-embedded-wallet.yaml) still sets
+# disablePaging: true by default; this stack-level value overrides it for prod.
 environment:
   - datadog-cloud-universe/privy-embedded-wallet
 config:
   datadog-cloud-universe:environment: prod
   datadog-cloud-universe:tagFilter: "(unienv:prod OR env:prod)"
   datadog-cloud-universe:incidentWebhook: "@webhook-Incident-io"
-  datadog-cloud-universe:disablePaging: "true"
+  datadog-cloud-universe:disablePaging: "false"
   datadog-cloud-universe:disableSlack: "true"

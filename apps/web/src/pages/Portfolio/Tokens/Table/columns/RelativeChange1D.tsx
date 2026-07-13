@@ -9,6 +9,7 @@ export const RelativeChange1D = memo(function RelativeChange1D({ value }: { valu
 
   return (
     <RelativeChange
+      shouldAnimate
       change={value}
       arrowSize="$icon.16"
       negativeChangeColor="$statusCritical"

@@ -32,12 +32,6 @@ vi.mock('~/pages/Portfolio/hooks/usePortfolioAddresses', () => ({
   usePortfolioAddresses: vi.fn(),
 }))
 
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal()),
-  useFeatureFlag: vi.fn().mockReturnValue(false),
-  FeatureFlags: { MultichainTokenUx: 'multichain_token_ux' },
-}))
-
 vi.mock('uniswap/src/features/portfolio/balances/hooks', async (importOriginal) => {
   const actual = await importOriginal<typeof import('uniswap/src/features/portfolio/balances/hooks')>()
   return {

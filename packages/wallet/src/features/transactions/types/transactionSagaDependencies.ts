@@ -18,7 +18,7 @@ import type { TransactionConfigService } from 'wallet/src/features/transactions/
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
+import type { PaymasterClient } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/paymasterClient'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import type { TransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
@@ -46,10 +46,7 @@ export enum DelegationType {
 export interface TransactionSagaDependencies {
   // Core service factories
   createProviderService: (params: { getSignerManager: () => SignerManager }) => ProviderService
-  createTransactionConfigService: (params: {
-    featureFlagService: FeatureFlagService
-    logger: Logger
-  }) => TransactionConfigService
+  createTransactionConfigService: () => TransactionConfigService
   createTransactionSignerService: (params: {
     getAccount: () => SignerMnemonicAccountMeta
     getProvider: () => Promise<Provider>
@@ -68,6 +65,7 @@ export interface TransactionSagaDependencies {
     getProvider: () => Promise<Provider>
     getViemClient: () => Promise<PublicClient>
     getSignerManager: () => SignerManager
+    getPaymasterClient: () => PaymasterClient
   }) => UserOpSigner
   createTransactionService: (params: {
     transactionRepository: TransactionRepository
@@ -76,8 +74,8 @@ export interface TransactionSagaDependencies {
     analyticsService: AnalyticsService
     logger: Logger
     getProvider: () => Promise<Provider>
+    userOpSigner?: UserOpSigner
   }) => TransactionService
-  createUserOpService: (params: { userOpSigner: UserOpSigner; logger: Logger }) => UserOpService
   createAnalyticsService: (params: {
     sendAnalyticsEvent: typeof sendAnalyticsEvent
     logger: Logger

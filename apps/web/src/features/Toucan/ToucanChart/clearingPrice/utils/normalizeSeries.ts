@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { ClearingPriceChange } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
@@ -95,7 +96,7 @@ interface NormalizeSeriesParams {
   bidTokenDecimals?: number
   auctionTokenDecimals?: number
   currentBlockNumber?: number
-  clearingHistory: ClearingPriceChange[] | undefined
+  clearingHistory: PlainMessage<ClearingPriceChange>[] | undefined
   latestClearingPriceQ96?: string
   auctionStartBlockTimestamp?: bigint
   auctionEndBlockTimestamp?: bigint

@@ -17,7 +17,10 @@ import type { LoadedTDPContext, MultiChainMap, PendingTDPContext } from '~/pages
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
-export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
+export function useCreateTDPContext(): {
+  state: PendingTDPContext | LoadedTDPContext
+  balancesRefetch: () => void
+} {
   const { tokenAddress } = useParams<{ tokenAddress: string; chainName: string }>()
   if (!tokenAddress) {
     throw new Error('Invalid token details route: token address URL param is undefined')
@@ -28,13 +31,26 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
   const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChainInfo.backendChain.chain) : tokenAddress
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const rwaCoinGeckoDataEnabled = useFeatureFlag(FeatureFlags.RWACoinGeckoData)
+
+  // Split query: this lightweight metadata query (no market fields, so no ClickHouse/Aurora) gates
+  // the page and powers the header; the heavier market `useTokenWebQuery` below stays non-blocking.
+  const tokenProjectQuery = GraphQLApi.useTokenProjectWebQuery({
+    variables: {
+      address: tokenDBAddress,
+      chain: currencyChainInfo.backendChain.chain,
+    },
+    errorPolicy: 'all',
+  })
 
   const tokenQuery = GraphQLApi.useTokenWebQuery({
     variables: {
       address: tokenDBAddress,
       chain: currencyChainInfo.backendChain.chain,
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
+      // Fetch project market fields whenever the data flag is on so RWA consumers can opt in
+      // after matching without a second token query waterfall.
+      preferProjectMarketData: rwaCoinGeckoDataEnabled,
     },
     errorPolicy: 'all',
   })
@@ -47,19 +63,19 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       }
       return nativeOnChain(currencyChainInfo.id)
     }
-    if (tokenQuery.data?.token) {
-      return gqlToCurrency(tokenQuery.data.token)
+    if (tokenProjectQuery.data?.token) {
+      return gqlToCurrency(tokenProjectQuery.data.token)
     }
     return undefined
-  }, [tokenQuery.data?.token, isNative, currencyChainInfo.id])
+  }, [tokenProjectQuery.data?.token, isNative, currencyChainInfo.id])
 
-  const { multiChainMap, balanceError } = useMultiChainMap(tokenQuery)
+  const { multiChainMap, balanceError, balancesRefetch } = useMultiChainMap(tokenProjectQuery)
 
   // Extract color for page usage
   const colors = useSporeColors()
   // oxlint-disable-next-line typescript/no-unnecessary-condition
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
-  const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
+  const extractedColorSrc = tokenProjectQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
   const tokenColor =
     useSrcColor({
       src: extractedColorSrc,
@@ -67,7 +83,7 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       backgroundColor: colors.surface2.val,
     }).tokenColor ?? undefined
 
-  return useMemo(() => {
+  const state = useMemo(() => {
     return {
       currency,
       currencyChain: currencyChainInfo.backendChain.chain,
@@ -75,6 +91,7 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       // `currency.address` is checksummed, whereas the `tokenAddress` url param may not be
       address: (currency?.isNative ? NATIVE_CHAIN_ID : currency?.address) ?? tokenAddress,
       tokenQuery,
+      tokenProjectQuery,
       multiChainMap,
       balanceError,
       selectedMultichainChainId: undefined,
@@ -86,29 +103,37 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     currencyChainInfo.id,
     tokenAddress,
     tokenQuery,
+    tokenProjectQuery,
     multiChainMap,
     balanceError,
     tokenColor,
   ])
+
+  return { state, balancesRefetch }
 }
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
-function useMultiChainMap(tokenQuery: ReturnType<typeof GraphQLApi.useTokenWebQuery>): {
+function useMultiChainMap(tokenProjectQuery: ReturnType<typeof GraphQLApi.useTokenProjectWebQuery>): {
   multiChainMap: MultiChainMap
   balanceError?: Error
+  balancesRefetch: () => void
 } {
   const activeAddresses = useActiveAddresses()
   const evmAddress = activeAddresses.evmAddress
   const svmAddress = activeAddresses.svmAddress
 
-  const { data: balancesById, error: balanceError } = usePortfolioBalances({
+  const {
+    data: balancesById,
+    error: balanceError,
+    refetch: balancesRefetch,
+  } = usePortfolioBalances({
     evmAddress,
     svmAddress,
     skip: !evmAddress && !svmAddress,
   })
 
   const multiChainMap = useMemo(() => {
-    const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
+    const tokensAcrossChains = tokenProjectQuery.data?.token?.project?.tokens
     if (!tokensAcrossChains) {
       return {}
     }
@@ -138,7 +163,7 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof GraphQLApi.useTokenWebQu
       map[current.chain] = update
       return map
     }, {})
-  }, [balancesById, tokenQuery.data?.token?.project?.tokens])
+  }, [balancesById, tokenProjectQuery.data?.token?.project?.tokens])
 
-  return { multiChainMap, balanceError }
+  return { multiChainMap, balanceError, balancesRefetch }
 }

@@ -15,14 +15,18 @@ import {
   registerNewAuthenticator,
   startAddAuthenticatorSession,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import { useAccount } from '~/hooks/useAccount'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 type AddPasskeyStep = 'verify' | 'choose'
 
@@ -31,11 +35,11 @@ export function AddPasskeyModal() {
   const queryClient = useQueryClient()
   const { isOpen, onClose } = useModalState(ModalName.AddPasskey)
   const { walletId } = useEmbeddedWalletState()
-  const account = useAccount()
+  const evmAddress = useActiveAddress(Platform.EVM)
   const [step, setStep] = useState<AddPasskeyStep>('verify')
 
   const { data: unitag, isLoading: unitagLoading } = useUnitagsAddressQuery({
-    params: account.address ? { address: account.address } : undefined,
+    params: evmAddress ? { address: evmAddress } : undefined,
   })
 
   const { data: listAuthenticatorsData } = useListAuthenticatorsQuery()
@@ -59,8 +63,7 @@ export function AddPasskeyModal() {
     mutationFn: async (authenticatorAttachment: AuthenticatorAttachment) => {
       const existingCount = listAuthenticatorsData?.authenticators.length ?? 0
       const displayName =
-        unitag?.username ??
-        (account.address ? `${account.address.slice(0, 6)}...${account.address.slice(-4)}` : undefined)
+        unitag?.username ?? (evmAddress ? `${evmAddress.slice(0, 6)}...${evmAddress.slice(-4)}` : undefined)
       const newPasskeyUsername = displayName ? `${displayName} (${existingCount + 1})` : undefined
       return await registerNewAuthenticator({
         authenticatorAttachment,
@@ -68,8 +71,20 @@ export function AddPasskeyModal() {
         walletId: walletId ?? undefined,
       })
     },
+    onSuccess: () => {
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.passkey.added') },
+        'passkey-added-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
+    },
     onError: (error) => {
       logger.error(error, { tags: { file: 'AddPasskeyModal', function: 'registerAuthenticator' } })
+      popupRegistry.addPopup(
+        { type: PopupType.Error, error: t('notification.passkey.add.failed') },
+        'passkey-add-error',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
     },
     onSettled: () => {
       resetListAuthenticators(queryClient, walletId)

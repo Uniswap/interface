@@ -8,7 +8,12 @@ import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
 
 const ERROR_WIDTH = 320
 
-function ChartErrorView({ children }: PropsWithChildren) {
+function ChartErrorView({
+  title,
+  backgroundColor = '$surface1',
+  borderColor = '$surface3',
+  children,
+}: PropsWithChildren<{ title?: ReactNode; backgroundColor?: string; borderColor?: string }>) {
   const { t } = useTranslation()
   return (
     <Flex
@@ -24,8 +29,8 @@ function ChartErrorView({ children }: PropsWithChildren) {
       transform="translate(-50%, -50%)"
       borderRadius="$rounded20"
       borderWidth={1.3}
-      borderColor="$surface3"
-      backgroundColor="$surface1"
+      borderColor={borderColor}
+      backgroundColor={backgroundColor}
       p="$spacing12"
       pr="$spacing20"
       gap="$gap12"
@@ -37,7 +42,7 @@ function ChartErrorView({ children }: PropsWithChildren) {
       <ChartBarCrossedWithBackground />
       <Flex shrink gap="$gap4">
         <Text variant="subheading2" color="$neutral1">
-          {t('chart.missingData')}
+          {title ?? t('chart.missingData')}
         </Text>
         <Text variant="body3" color="$neutral2">
           {children}
@@ -52,25 +57,29 @@ function ChartSkeletonAxes({
   fillColor,
   tickColor,
   hideYAxis,
+  hideXAxis,
   hidePriceIndicators,
 }: {
   height: number
   fillColor: string
   tickColor: string
   hideYAxis?: boolean
+  hideXAxis?: boolean
   hidePriceIndicators?: boolean
 }) {
   return (
     <g>
       {!hidePriceIndicators && <rect width="180" height="32" rx="4" y="0" fill={fillColor} />}
       {!hidePriceIndicators && <rect width="80" height="13" rx="4" y="48" fill={fillColor} />}
-      <g transform={`translate(0, ${height - 14})`}>
-        <rect width="7%" height="6" rx="3" x="10%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="28.25%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="46.5%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="64.75%" fill={tickColor} />
-        <rect width="7%" height="6" rx="3" x="83%" fill={tickColor} />
-      </g>
+      {!hideXAxis && (
+        <g transform={`translate(0, ${height - 14})`}>
+          <rect width="7%" height="6" rx="3" x="10%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="28.25%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="46.5%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="64.75%" fill={tickColor} />
+          <rect width="7%" height="6" rx="3" x="83%" fill={tickColor} />
+        </g>
+      )}
       {!hideYAxis && (
         <g transform="translate(0, 10)">
           <rect width="24" height="6" rx="3" y={(0 * height) / 5} x="96%" fill={tickColor} />
@@ -166,37 +175,49 @@ function ChartLoadingStateMask({
 
 export function ChartSkeleton({
   errorText,
+  errorTitle,
+  errorColor,
+  errorBackgroundColor,
+  errorBorderColor,
   height,
   type,
   dim,
   chartTransform,
   hideYAxis,
+  hideXAxis,
   hidePriceIndicators,
 }: {
   height: number
   errorText?: ReactNode
+  errorTitle?: ReactNode
+  errorColor?: string
+  errorBackgroundColor?: string
+  errorBorderColor?: string
   type: ChartType
   dim?: boolean
   chartTransform?: string
   hideYAxis?: boolean
+  hideXAxis?: boolean
   hidePriceIndicators?: boolean
 }) {
   const colors = useSporeColors()
-  const neutral3Opacified = colors.neutral3.val
+  const neutral3 = colors.neutral3.val
 
-  const fillColor = errorText || dim ? neutral3Opacified : colors.neutral3.val
-  const tickColor = errorText ? opacify(12.5, colors.neutral3.val) : neutral3Opacified
+  const defaultFillColor = errorText || dim ? neutral3 : colors.neutral3.val
+  const fillColor = errorText && errorColor ? errorColor : defaultFillColor
+  const tickColor = errorText ? (errorColor ?? opacify(12.5, colors.neutral3.val)) : neutral3
 
   const maskId = `mask-${type}-${height}`
 
   return (
     <Flex row width="100%" alignItems="center" position="relative">
-      <svg width="100%" height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+      <svg width="100%" height={height} viewBox={`0 0 726 ${height}`} xmlns="http://www.w3.org/2000/svg" fill="none">
         <ChartSkeletonAxes
           height={height}
           fillColor={fillColor}
           tickColor={tickColor}
           hideYAxis={hideYAxis}
+          hideXAxis={hideXAxis}
           hidePriceIndicators={hidePriceIndicators}
         />
         <ChartLoadingStateMask id={maskId} type={type} height={height} chartTransform={chartTransform} />
@@ -204,7 +225,11 @@ export function ChartSkeleton({
           <rect width="94%" height={height} rx="4" fill={errorText ? fillColor : `url(#${maskId}-gradient)`} />
         </g>
       </svg>
-      {errorText && <ChartErrorView>{errorText}</ChartErrorView>}
+      {errorText && (
+        <ChartErrorView title={errorTitle} backgroundColor={errorBackgroundColor} borderColor={errorBorderColor}>
+          {errorText}
+        </ChartErrorView>
+      )}
     </Flex>
   )
 }

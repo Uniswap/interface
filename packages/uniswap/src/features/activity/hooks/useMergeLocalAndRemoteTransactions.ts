@@ -244,7 +244,10 @@ export function useMergeLocalAndRemoteTransactions({
 
       // If the local tx is not finalized and remote is, then finalize local state so confirmation toast is sent
       // TODO(MOB-1573): This should be done further upstream when parsing data not in a display hook
-      if (!isFinalizedTx(localTx)) {
+
+      // Exclude UniswapX orders: the feed can briefly mark a still-live order terminal, and finalizing here
+      // would permanently hide a still-cancellable order; the order poller reconciles their status instead.
+      if (!isFinalizedTx(localTx) && !isUniswapX(localTx)) {
         const mergedTx = { ...localTx, status: remoteTx.status, networkFee: remoteTx.networkFee }
         if (isFinalizedTx(mergedTx)) {
           dispatch(finalizeTransaction(mergedTx))

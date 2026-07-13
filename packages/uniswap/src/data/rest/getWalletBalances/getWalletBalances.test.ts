@@ -1,3 +1,4 @@
+import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type {
   BalanceComponent,
   GetWalletBalancesResponse,
@@ -5,6 +6,9 @@ import type {
 } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import {
   doesGetWalletBalancesQueryMatchAddress,
+  getUnavailableCategories,
+  isEmptyWalletBalance,
+  type PortfolioBalanceBreakdown,
   PortfolioBalancePart,
   selectorForPart,
   selectPortfolioBalanceBreakdown,
@@ -12,6 +16,7 @@ import {
   selectPortfolioTokens,
   selectPortfolioTotal,
 } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -38,6 +43,7 @@ const fullResponse = makeResponse({
   total: totalComponent,
   tokens: tokensComponent,
   pools: poolsComponent,
+  failedChainIds: [],
 })
 
 describe('selectPortfolioTotal', () => {
@@ -127,7 +133,99 @@ describe('selectPortfolioBalanceBreakdown', () => {
       total: { balanceUSD: 1000, percentChange: 2.5, absoluteChangeUSD: 25 },
       tokens: { balanceUSD: 600, percentChange: 2.6, absoluteChangeUSD: 15 },
       pools: { balanceUSD: 400, percentChange: 2.4, absoluteChangeUSD: 10 },
+      failedChainIds: [],
     })
+  })
+
+  it('surfaces failed chain IDs from the response', () => {
+    const response = makeResponse({ ...fullResponse.balance, failedChainIds: [196, 42161] })
+    expect(selectPortfolioBalanceBreakdown(response)?.failedChainIds).toEqual([196, 42161])
+  })
+})
+
+describe('getUnavailableCategories', () => {
+  const slice = (balanceUSD: number | undefined): PortfolioTotalValue => ({
+    balanceUSD,
+    percentChange: undefined,
+    absoluteChangeUSD: undefined,
+  })
+  const breakdown = (poolsBalanceUSD: number | undefined): PortfolioBalanceBreakdown => ({
+    total: slice(poolsBalanceUSD === undefined ? undefined : 1000),
+    tokens: slice(600),
+    pools: slice(poolsBalanceUSD),
+    failedChainIds: [],
+  })
+
+  it('returns [] when the breakdown is undefined', () => {
+    expect(
+      getUnavailableCategories({ breakdown: undefined, requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([])
+  })
+
+  it('returns [] when a requested category slice has a value', () => {
+    expect(
+      getUnavailableCategories({ breakdown: breakdown(400), requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([])
+  })
+
+  it('reports a requested category whose slice the backend omitted', () => {
+    expect(
+      getUnavailableCategories({ breakdown: breakdown(undefined), requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([WalletBalanceCategory.POOLS])
+  })
+
+  it('ignores categories that were not requested even when their slice is missing', () => {
+    expect(getUnavailableCategories({ breakdown: breakdown(undefined), requestedCategories: [] })).toEqual([])
+  })
+
+  it('treats a 0 balance as available, not missing', () => {
+    expect(
+      getUnavailableCategories({ breakdown: breakdown(0), requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([])
+  })
+
+  it('reports a pools outage on a token-empty wallet (an omitted total is not an empty wallet)', () => {
+    // Token balance is 0 and the pools leg failed, so the backend omits both pools and the
+    // aggregate total. This must surface as unavailable, not be hidden as an empty wallet.
+    const outageBreakdown: PortfolioBalanceBreakdown = {
+      total: slice(undefined),
+      tokens: slice(0),
+      pools: slice(undefined),
+      failedChainIds: [],
+    }
+    expect(
+      getUnavailableCategories({ breakdown: outageBreakdown, requestedCategories: [WalletBalanceCategory.POOLS] }),
+    ).toEqual([WalletBalanceCategory.POOLS])
+  })
+})
+
+describe('isEmptyWalletBalance', () => {
+  const slice = (balanceUSD: number | undefined): PortfolioTotalValue => ({
+    balanceUSD,
+    percentChange: undefined,
+    absoluteChangeUSD: undefined,
+  })
+  const withTotal = (total: number | undefined): PortfolioBalanceBreakdown => ({
+    total: slice(total),
+    tokens: slice(0),
+    pools: slice(0),
+    failedChainIds: [],
+  })
+
+  it('returns false when the breakdown is undefined', () => {
+    expect(isEmptyWalletBalance(undefined)).toBe(false)
+  })
+
+  it('returns true when the total is a defined zero', () => {
+    expect(isEmptyWalletBalance(withTotal(0))).toBe(true)
+  })
+
+  it('returns false when the total is omitted (a failed leg, not an empty wallet)', () => {
+    expect(isEmptyWalletBalance(withTotal(undefined))).toBe(false)
+  })
+
+  it('returns false when the total holds a balance', () => {
+    expect(isEmptyWalletBalance(withTotal(400))).toBe(false)
   })
 })
 

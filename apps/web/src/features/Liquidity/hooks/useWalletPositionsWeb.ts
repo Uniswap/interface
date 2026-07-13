@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getPositionKey } from 'uniswap/src/features/positions/utils'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from '~/state/user/hooks'
@@ -24,7 +25,7 @@ export interface UseWalletPositionsWebParams {
 
 type ForwardedFromWalletPositions = Pick<
   UseWalletPositionsResult,
-  'isFetching' | 'isPlaceholderData' | 'hasNextPage' | 'refetch'
+  'isFetching' | 'isPlaceholderData' | 'hasNextPage' | 'refetch' | 'pagesLoaded'
 >
 
 export interface UseWalletPositionsWebResult extends ForwardedFromWalletPositions {
@@ -54,6 +55,7 @@ export function useWalletPositionsWeb({
     error,
     refetch,
     fetchNextPage,
+    pagesLoaded,
   } = useWalletPositions({
     account: address ?? '',
     chainIds: chainFilter ? [chainFilter] : defaultChains,
@@ -84,7 +86,7 @@ export function useWalletPositionsWeb({
 
     const dedupedById = new Map<string, PositionInfo>()
     for (const position of [...allBEPositions, ...parsedSaved]) {
-      const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
+      const positionId = getPositionKey(position)
       if (!dedupedById.has(positionId)) {
         dedupedById.set(positionId, position)
       }
@@ -127,5 +129,6 @@ export function useWalletPositionsWeb({
     hasErrorWithoutData,
     refetch,
     loadMorePositions,
+    pagesLoaded,
   }
 }

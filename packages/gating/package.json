@@ -23,8 +23,8 @@
     "check:fast": "nx check:fast gating",
     "check:deps:usage": "nx check:deps:usage gating",
     "test": "nx test gating",
-    "format": "nx format gating",
-    "format:check": "nx format:check gating",
+    "format": "nx run gating:format",
+    "format:check": "nx run gating:format:check",
     "lint": "nx lint gating",
     "lint:fix": "nx lint:fix gating"
   },

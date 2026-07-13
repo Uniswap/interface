@@ -247,18 +247,24 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
             >
               By connecting a wallet, you agree to Uniswap Labs’ 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/terms-of-service"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Terms of Service
               </a>
                and consent to its 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/privacy-policy"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Privacy Policy
@@ -416,18 +422,24 @@ exports[`OtherWalletsModal > renders correctly with EW disabled 1`] = `
             >
               By connecting a wallet, you agree to Uniswap Labs’ 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/terms-of-service"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Terms of Service
               </a>
                and consent to its 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/privacy-policy"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Privacy Policy
@@ -585,18 +597,24 @@ exports[`OtherWalletsModal > renders correctly with EW enabled 1`] = `
             >
               By connecting a wallet, you agree to Uniswap Labs’ 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/terms-of-service"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Terms of Service
               </a>
                and consent to its 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/privacy-policy"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Privacy Policy
@@ -880,18 +898,24 @@ exports[`StandardWalletModal > renders correctly 1`] = `
             >
               By connecting a wallet, you agree to Uniswap Labs’ 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/terms-of-service"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Terms of Service
               </a>
                and consent to its 
               <a
-                class="sc-gLaqbQ kFikEI sc-ipUnzB jpTNr"
+                class="is_Anchor font_body  is_Anchor "
+                data-disable-theme="true"
                 href="https://uniswap.org/privacy-policy"
                 rel="noopener noreferrer"
+                role="link"
+                style="display: inline; box-sizing: border-box; word-wrap: break-word; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); font-weight: var(--f-weight-medium); line-height: var(--f-lineHeight-micro); cursor: pointer; text-decoration-line: none; text-decoration: none; transition-property: opacity; transition-duration: 125ms; opacity: 1; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                 target="_blank"
               >
                 Privacy Policy

@@ -14,8 +14,8 @@
     "check": "nx check cryptography",
     "check:fast": "nx check:fast cryptography",
     "check:deps:usage": "nx check:deps:usage cryptography",
-    "format": "nx format cryptography",
-    "format:check": "nx format:check cryptography",
+    "format": "nx run cryptography:format",
+    "format:check": "nx run cryptography:format:check",
     "lint": "nx lint cryptography",
     "lint:fix": "nx lint:fix cryptography"
   },

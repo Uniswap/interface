@@ -506,6 +506,7 @@ exports[`AccountHeader renders correctly 1`] = `
           dd-action-name="Scan"
           focusVisibleStyle={{}}
           forwardedRef={[Function]}
+          hitSlop={5}
           jestAnimatedProps={
             {
               "value": {},
