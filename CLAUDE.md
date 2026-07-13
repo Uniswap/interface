@@ -38,7 +38,7 @@ arbitrum, arc, avalanche, base, blast, bnb, celo, linea, mainnet, megaeth, monad
 ## LOCKED DECISIONS (2026-07-03, from Reggie)
 - **v4:** EXCLUDE. Ship v2 + v3 only, `supportsV4: false`. No hooks for now (branding aspirational until v4 added).
 - **HyperEVM:** real chain. Mainnet id **999** (0x3E7), RPC `https://rpc.hyperliquid.xyz/evm`, native HYPE(18), explorer hyperevmscan.io, WHYPE `0x5555555555555555555555555555555555555555`. Testnet id **998** (0x3E6), RPC `https://rpc.hyperliquid-testnet.xyz/evm`.
-- **Robinhood:** real chain (already in repo). Mainnet id **4663** (0x1237), public RPC `https://rpc.mainnet.chain.robinhood.com`, native ETH, explorer robinhoodchain.blockscout.com. Testnet id **46630** (0xB5E6), RPC `https://rpc.testnet.chain.robinhood.com`, explorer explorer.testnet.chain.robinhood.com.
+- **Robinhood:** real chain (already in repo). Mainnet id **4663** (0x1237), public RPC `https://rpc.mainnet.chain.robinhood.com`, native ETH, explorer **robinscan.io** (updated 2026-07-12 from robinhoodchain.blockscout.com — that blockscout domain is now used ONLY as the eth-rpc RPC fallback `.../api/eth-rpc`, not as the user-facing explorer; robinscan.io has no eth-rpc proxy). Testnet id **46630** (0xB5E6), RPC `https://rpc.testnet.chain.robinhood.com`, explorer explorer.testnet.chain.robinhood.com.
 - **Sepolia:** already exists in SDK/enum — enable for testing.
 - **Reskin:** apply Atlas brand to the EXISTING swap UI (not the 27-route Atlas OS).
 - **Routing:** self-host routing-api + indexer (see [FORK-LIST.md](FORK-LIST.md)). Hosted Uniswap API won't serve custom chains.

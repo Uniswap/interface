@@ -33,7 +33,7 @@
     "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
     "nativeSymbol": "ETH",
     "nativeLabel": "ETH",
-    "explorer": "https://explorer.mainnet.chain.robinhood.com",
+    "explorer": "https://robinscan.io",
     "skipDeploy": false,
     "deployNeeded": ["weth9", "v2Factory", "v2Router", "v3 (via @uniswap/deploy-v3)", "universalRouter"],
     "note": "Permit2 already exists. Deploy WETH9 + v2 + v3 + UniversalRouter. Costs real ETH."

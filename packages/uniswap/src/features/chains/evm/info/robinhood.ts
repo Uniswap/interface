@@ -46,8 +46,8 @@ export const ROBINHOOD_CHAIN_INFO = {
   docs: 'https://docs.robinhood.com/chain/',
   elementName: ElementName.ChainRobinhood,
   explorer: {
-    name: 'Robinhood Explorer',
-    url: 'https://robinhoodchain.blockscout.com/',
+    name: 'Robinscan',
+    url: 'https://robinscan.io/',
   },
   interfaceName: 'robinhood',
   label: 'Robinhood Chain',

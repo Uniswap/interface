@@ -7,7 +7,7 @@ the in-app chain configs and the deployment records (`contracts/deployments/*.js
 |---|---|---|---|---|---|---|
 | **HyperEVM** | 999 (`0x3E7`) | HYPE | WHYPE `0x5555…5555` | L1 | https://hyperevmscan.io/ | `https://rpc.hyperliquid.xyz/evm` |
 | **MegaETH** | 4326 | ETH | WETH `0x4200…0006` | L2 | https://megaeth.blockscout.com/ | `https://mainnet.megaeth.com/rpc` |
-| **Robinhood Chain** | 4663 (`0x1237`) | ETH | WETH `0x0Bd7…AD73` | L2 | https://robinhoodchain.blockscout.com/ | `https://rpc.mainnet.chain.robinhood.com` |
+| **Robinhood Chain** | 4663 (`0x1237`) | ETH | WETH `0x0Bd7…AD73` | L2 | https://robinscan.io/ | `https://rpc.mainnet.chain.robinhood.com` |
 | **Ink** | 57073 | ETH | WETH `0x4200…0006` | L2 | https://explorer.inkonchain.com/ | `https://rpc-gel.inkonchain.com` |
 | **X Layer** | 196 | OKB | WOKB `0xe538…9b2b` | L2 | https://web3.okx.com/explorer/x-layer/ | `https://xlayer.drpc.org` |
 | **Tempo** | 4217 | USD (pathUSD)¹ | WETH9 arg only¹ | L1 | https://explore.tempo.xyz/ | `https://rpc.tempo.xyz` |
