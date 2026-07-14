@@ -109,6 +109,9 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
           // Landing hero + Analytics. USD figures auto-populate once the WETH/USDG anchor pool is ingested.
           'exploreStats.protocolStats',
           'exploreStats.exploreStats',
+          // ExploreStatsService.TokenRankings — the swap token-picker's "Trending tokens" section
+          // (identity-only: chain/address/name/symbol/decimals from the real on-chain token set; no USD).
+          'exploreStats.tokenRankings',
         ],
         // listTokens/listTopPools return live on-chain pools/tokens plus real NATIVE-denominated metrics
         // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,

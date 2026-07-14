@@ -29,7 +29,12 @@
  *     pool_meta → no USD metric is sourceable for them; v4 is excluded from HookSwap entirely.
  *   - ExplorerStats.{topTokens,poolStats,tokenStats,transactionStats,...} — those are served by
  *     DataApiService.listTokens / listTopPools; the flag-gated ExploreStats path only needs TVL/volume.
- *   - TokenRankings — auto-stubbed empty (honest "no rankings"), like createDataApiImpl's stubs.
+ *
+ * ALSO REAL (identity-only, USD-free — see handleTokenRankings): `TokenRankings` powers the swap
+ * token-picker's "Trending tokens" section (useTrendingTokensCurrencyInfos). Its consumer reads ONLY the
+ * token IDENTITY fields (chain/address/name/symbol/decimals) and NEVER price/volume/tvl/change — so we
+ * fill identity from the SAME real on-chain token set listTokens/searchTokens build and leave every
+ * price/USD/logo/safety field UNSET. Nothing fabricated.
  *
  * Error-safe: a missing indexer DB or any RPC/DB failure yields an empty-but-valid response — never a
  * thrown error and never a fabricated stat. Chains outside the supported set return empty-but-valid.
@@ -46,10 +51,15 @@ import {
   ProtocolStatsRequest,
   ProtocolStatsResponse,
   TimestampedAmount,
+  TokenRankingsList,
+  TokenRankingsRequest,
+  TokenRankingsResponse,
+  TokenRankingsStat,
   VolumeSplit,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { isSupportedChain, supportedChainIds } from './chains'
 import { getV2PairsCached } from './handlers'
+import { collectChainTokens } from './searchHandlers'
 import { getDb } from './indexer/schema'
 import { getPoolTvlUsd, getPoolVolumeUsd24h } from './indexer/metrics'
 
@@ -217,10 +227,102 @@ async function handleExploreStats(req: ExploreStatsRequest): Promise<ExploreStat
   })
 }
 
+// ---------- REAL: tokenRankings (swap token-picker "Trending tokens", identity-only / USD-free) ----------
+
 /**
- * Build the full ServiceImpl: real ProtocolStats + ExploreStats, plus an honest empty-response stub for
- * every other ExploreStatsService method (TokenRankings) — same pattern as createDataApiImpl: the
- * interface treats an empty response as "no data" and renders honest empty states rather than crashing.
+ * Map a supported numeric chain id → the GraphQL `Chain` enum STRING the interface's `fromGraphQLChain`
+ * resolves back to a UniverseChainId. `TokenRankingsStat.chain` is a plain proto string; the consumer
+ * (`tokenRankingsStatToCurrencyInfo`, packages/uniswap/src/data/rest/tokenRankings.ts:38) calls
+ * `fromGraphQLChain(chain)` and DROPS the row if it resolves to null. So this is the single most
+ * important correctness detail: the string MUST be the exact enum value. Verified values:
+ *   - 4663 → 'ROBINHOOD'        (packages/api/src/clients/graphql/__generated__/schema-types.ts:157;
+ *                                fromGraphQLChain case GraphQLApi.Chain.Robinhood, utils.ts:102)
+ *   - 4326 → 'MEGAETH'          (schema-types.ts:152; utils.ts:94)
+ *   - 196  → 'XLAYER'           (schema-types.ts:164; utils.ts:112)
+ *   - 11155111 → 'ETHEREUM_SEPOLIA' (schema-types.ts:150; utils.ts:104)
+ * Ink (57073) + HyperEvm (999) are NOT in the vendored GraphQL Chain enum / fromGraphQLChain, so no
+ * valid string exists → we skip them (the consumer would drop them anyway). Robinhood is the focus chain.
+ */
+const GRAPHQL_CHAIN_BY_ID: Record<number, string> = {
+  4663: 'ROBINHOOD',
+  4326: 'MEGAETH',
+  196: 'XLAYER',
+  11155111: 'ETHEREUM_SEPOLIA',
+}
+
+/**
+ * REAL "Trending tokens" for the swap token-picker (useTrendingTokensCurrencyInfos →
+ * useTokenRankingsQuery). The consumer reads ONLY identity fields — chain, address, name, symbol,
+ * decimals (+ feeData/protectionInfo/safetyLevel, which we honestly leave unset) — and NEVER
+ * price/volume/tvl/change (`tokenRankingsStatToCurrencyInfo`, tokenRankings.ts:32-61). So this needs
+ * NO USD and NO oracle: we fill identity from the SAME real, on-chain-derived token set searchTokens
+ * builds (native + wrapped-native + seeded ERC-20s + tokens discovered in live v2/v3 pools, metadata
+ * read on-chain — collectChainTokens) and leave every value field UNSET. Nothing is fabricated.
+ *
+ * The response is a `token_rankings` map keyed by ranking type; the consumer reads exactly
+ * `data.tokenRankings['TRENDING']` (CustomRankingType.Trending, @universe/api content/types.ts:21), so
+ * we key the single list under the literal 'TRENDING'. Each `TokenRankingsStat.chain` is the GraphQL
+ * enum string (GRAPHQL_CHAIN_BY_ID) so the consumer's fromGraphQLChain keeps the row.
+ *
+ * Chain scope: honors the request's `chainId` filter (a specific supported chain, or ALL_NETWORKS →
+ * every supported chain), Robinhood (4663) first. Chains with no GraphQL-enum mapping (Ink/HyperEvm)
+ * are skipped. Ordering is cosmetic (the consumer ignores metrics) — natural collection order (native,
+ * wrapped, seeded, discovered) is stable. Rows whose symbol/name came back empty from a non-conforming
+ * contract are dropped by the consumer (honest), never fabricated.
+ *
+ * Error-safe: any RPC/DB failure yields an empty-but-valid TokenRankingsResponse (empty map) — never
+ * throws, never fabricates. An unsupported/unknown requested chain → empty map.
+ */
+async function handleTokenRankings(req: TokenRankingsRequest): Promise<TokenRankingsResponse> {
+  try {
+    // Resolve targeted chains, then keep only those we can emit a valid GraphQL chain string for, with
+    // Robinhood (the focus chain) first so it leads the trending list.
+    const chainIds = resolveRequestChainIds(req.chainId)
+      .filter((id) => id in GRAPHQL_CHAIN_BY_ID)
+      .sort((a, b) => (a === 4663 ? -1 : b === 4663 ? 1 : 0))
+    if (chainIds.length === 0) {
+      return new TokenRankingsResponse() // empty-but-valid for an unsupported/unknown chain
+    }
+
+    const perChain = await Promise.all(
+      chainIds.map(async (chainId) => {
+        const graphqlChain = GRAPHQL_CHAIN_BY_ID[chainId]
+        // collectChainTokens is the SAME real token collection searchTokens/listTokens use; it never
+        // throws (an RPC failure on a chain just yields that chain's static tokens).
+        const candidates = await collectChainTokens(chainId)
+        return candidates.map(
+          (c) =>
+            new TokenRankingsStat({
+              // chain: GraphQL enum string — REQUIRED or the consumer drops the row (fromGraphQLChain).
+              chain: graphqlChain,
+              // address: '' for the native asset (the consumer's buildCurrency maps empty → nativeOnChain).
+              address: c.address,
+              name: c.name,
+              symbol: c.symbol,
+              decimals: c.decimals,
+              // price / fullyDilutedValuation / pricePercentChange1Day / volume1Day / totalValueLocked /
+              // logo / feeData / protectionInfo / safetyLevel intentionally UNSET — the consumer never
+              // reads them and there is no truthful source on these chains. Honest omission, not $0.
+            }),
+        )
+      }),
+    )
+
+    const tokens = perChain.flat()
+    return new TokenRankingsResponse({
+      // Single 'TRENDING' list — the exact key useTrendingTokensCurrencyInfos reads.
+      tokenRankings: { TRENDING: new TokenRankingsList({ tokens }) },
+    })
+  } catch {
+    // Any unexpected failure → empty-but-valid response, never a thrown error, never fabricated rows.
+    return new TokenRankingsResponse()
+  }
+}
+
+/**
+ * Build the full ServiceImpl: real ProtocolStats + ExploreStats + TokenRankings, plus an honest
+ * empty-response stub for every other ExploreStatsService method — same pattern as createDataApiImpl:
+ * the interface treats an empty response as "no data" and renders honest empty states rather than crashing.
  */
 export function createExploreStatsImpl(): ServiceImpl<typeof ExploreStatsService> {
   const impl: Record<string, (...args: unknown[]) => unknown> = {}
@@ -233,6 +335,7 @@ export function createExploreStatsImpl(): ServiceImpl<typeof ExploreStatsService
   // Real implementations override the stubs.
   impl.protocolStats = (req: unknown) => handleProtocolStats(req as ProtocolStatsRequest)
   impl.exploreStats = (req: unknown) => handleExploreStats(req as ExploreStatsRequest)
+  impl.tokenRankings = (req: unknown) => handleTokenRankings(req as TokenRankingsRequest)
 
   return impl as unknown as ServiceImpl<typeof ExploreStatsService>
 }

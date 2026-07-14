@@ -9,7 +9,12 @@ import {
   TokenRankingsStat,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { parseProtectionInfo, parseSafetyLevel } from '@universe/api'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+// Repointed from uniswapGetTransport → dataApiGetTransport (HookSwap's self-hosted data-api at
+// data.hookswap.org) so the swap token-picker's "Trending tokens" come from a backend that indexes the
+// custom chains (Robinhood 4663) — Uniswap's hosted ExploreStats does not. Mirrors the
+// protocolStats/exploreStats repoint. The data-api serves ExploreStatsService.TokenRankings (identity-only)
+// and returns empty-but-valid for unsupported chains, so this is a transport swap, not a regression.
+import { dataApiGetTransport } from 'uniswap/src/data/rest/base'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
@@ -26,7 +31,7 @@ export function useTokenRankingsQuery(
   input?: PartialMessage<TokenRankingsRequest>,
   enabled = true,
 ): UseQueryResult<TokenRankingsResponse, ConnectError> {
-  return useQuery(tokenRankings, input, { transport: uniswapGetTransport, enabled })
+  return useQuery(tokenRankings, input, { transport: dataApiGetTransport, enabled })
 }
 
 export function tokenRankingsStatToCurrencyInfo(tokenRankingsStat: TokenRankingsStat): CurrencyInfo | null {

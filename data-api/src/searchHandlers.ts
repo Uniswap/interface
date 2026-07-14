@@ -51,8 +51,11 @@ function resolveChainIds(requested: number[]): number[] {
  * native asset (empty address) is always included once. Same sources as listTokens (handlers.ts),
  * reusing its cached pool getters so search doesn't re-hit the RPC. Never throws (RPC failure on a
  * chain → just its static tokens).
+ *
+ * Exported so ExploreStatsService.TokenRankings (exploreStatsHandlers.ts) can reuse the EXACT same
+ * real, on-chain-derived token set as searchTokens/listTokens (identity-only — no price/USD needed).
  */
-async function collectChainTokens(chainId: number): Promise<TokenCandidate[]> {
+export async function collectChainTokens(chainId: number): Promise<TokenCandidate[]> {
   const chain = getChain(chainId)
   if (!chain) {
     return []
