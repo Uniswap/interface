@@ -17,22 +17,29 @@ import type { ConnectRouter } from '@connectrpc/connect'
 import { connectNodeAdapter } from '@connectrpc/connect-node'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { SearchService } from '@uniswap/client-data-api/dist/data/v1/search_connect'
+import { ExploreStatsService } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_connect'
 import { createDataApiImpl } from './handlers'
 import { createSearchApiImpl } from './searchHandlers'
+import { createExploreStatsImpl } from './exploreStatsHandlers'
 import { supportedChainIds } from './chains'
 import { startIngestLoop } from './indexer/ingest'
 
-// --- Connect router: register the DataApiService + SearchService with our handlers ---
+// --- Connect router: register DataApiService + SearchService + ExploreStatsService with our handlers ---
 const routes = (router: ConnectRouter): void => {
   router.service(DataApiService, createDataApiImpl())
   router.service(SearchService, createSearchApiImpl())
+  // ExploreStatsService (package `uniswap.explore.v1.`) — protocol TVL/volume stats for the Terminal's
+  // Landing hero + Analytics screen. Different package prefix than data.v1., so path routing below is
+  // generic (matches any Connect service path), not hardcoded to data.v1.
+  router.service(ExploreStatsService, createExploreStatsImpl())
 }
 const rpcHandler = connectNodeAdapter({ routes })
 
-// Every Connect service path under this package looks like `/data.v1.<Service>/<Method>`. We slice the
-// request URL from this marker so any upstream prefix (`/v2`, `/`, an nginx sub-path, ...) is tolerated
-// without extra config, for BOTH DataApiService and SearchService.
-const SERVICE_PATH_MARKER = '/data.v1.'
+// A Connect service path looks like `/<package>.vN.<Service>/<Method>` (e.g. `/data.v1.DataApiService/…`
+// or `/uniswap.explore.v1.ExploreStatsService/…`). We slice the request URL from the START of that path
+// so any upstream prefix (`/v2`, `/`, an nginx sub-path, ...) is tolerated without extra config, for ANY
+// registered service regardless of its package. GENERIC — not tied to a single package like data.v1.
+const CONNECT_SERVICE_PATH_RE = /\/[\w.]+\.v\d+\.\w+\//
 
 // --- CORS (browser calls this with credentials: 'include') ---
 // Identical policy to trading-api-adapter/src/server.ts: strict exact-origin allowlist from
@@ -87,7 +94,19 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         service: 'hookswap-data-api',
         mode: 'onchain-current-state + event-indexer',
         indexer: process.env.INDEXER_ENABLED === 'true' ? 'enabled' : 'disabled',
-        implemented: ['listTokens', 'listTopPools', 'searchTokens', 'getPortfolio', 'listTransactions', 'getTransaction', 'listPositions'],
+        implemented: [
+          'listTokens',
+          'listTopPools',
+          'searchTokens',
+          'getPortfolio',
+          'listTransactions',
+          'getTransaction',
+          'listPositions',
+          // ExploreStatsService (uniswap.explore.v1) — protocol TVL/volume aggregates for the Terminal
+          // Landing hero + Analytics. USD figures auto-populate once the WETH/USDG anchor pool is ingested.
+          'exploreStats.protocolStats',
+          'exploreStats.exploreStats',
+        ],
         // listTokens/listTopPools return live on-chain pools/tokens plus real NATIVE-denominated metrics
         // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,
         // volume, apr) populate only once a stablecoin (USDG) anchor pool exists — otherwise left unset.
@@ -99,10 +118,11 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
     return
   }
 
-  // Normalize any upstream prefix down to the bare Connect service path before delegating.
-  const markerIdx = url.indexOf(SERVICE_PATH_MARKER)
-  if (markerIdx > 0) {
-    req.url = url.slice(markerIdx)
+  // Normalize any upstream prefix down to the bare Connect service path before delegating. Works for
+  // any package (data.v1., uniswap.explore.v1., ...); slices from the start of the matched service path.
+  const match = CONNECT_SERVICE_PATH_RE.exec(url)
+  if (match && match.index > 0) {
+    req.url = url.slice(match.index)
   }
 
   rpcHandler(req, res)
