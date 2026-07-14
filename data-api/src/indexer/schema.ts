@@ -185,14 +185,17 @@ export function getDb(): SqliteDatabase {
   const db = new Database(resolveDbPath())
   db.pragma('journal_mode = WAL')
   db.pragma('synchronous = NORMAL')
-  db.exec(DDL)
-  // Idempotent migration for DBs created before `origin` existed: ALTER adds the column when absent;
-  // SQLite throws "duplicate column name" when it already exists (fresh DB from DDL above) — swallow.
+  // Idempotent `origin` migration — MUST run BEFORE `db.exec(DDL)`: on an existing pre-`origin` DB the
+  // DDL's `CREATE TABLE IF NOT EXISTS swap_events` is a no-op (so the table still lacks `origin`), and the
+  // DDL also builds `idx_swap_origin` which references `origin` — that index would fail unless the column
+  // is added first. ALTER throws "no such table" on a brand-new DB (table not created yet → DDL below makes
+  // it WITH origin) and "duplicate column name" once origin already exists — both are harmless, swallow.
   try {
     db.exec(`ALTER TABLE swap_events ADD COLUMN origin TEXT NOT NULL DEFAULT ''`)
   } catch {
-    // column already present — nothing to do.
+    // fresh DB (DDL below creates swap_events with origin) or column already present — nothing to do.
   }
+  db.exec(DDL)
   dbSingleton = db
   return db
 }
