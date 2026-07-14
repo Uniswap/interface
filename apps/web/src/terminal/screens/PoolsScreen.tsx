@@ -1,48 +1,53 @@
 /**
- * HookSwap Terminal — B4 Pools / Create position (dense).
+ * HookSwap Terminal — B4 Pools / Create v2 pool + seed liquidity (INLINE, client-side).
  *
- * Adapted from design handoff screen B4 (column 1b) — see
- * `design_handoff_hookswap_terminal/screenshots/B04-create-position.png` and the B4
- * markup in `design/HookSwap Redesign.dc.html`: a left config column (01 Pair /
- * 02 Fee tier), a center liquidity-range panel with Min/Max price fields, and a right
- * deposit column (03 Deposit) with a summary + Create button. The design's "03 Hook"
- * step has been REMOVED entirely: HookSwap ships v2 + v3 only (locked decision
- * 2026-07-04 — hooks are a v4-only feature and are not part of this product), so there
- * is no hook step, hook selector, or "Hook" summary row anywhere in this screen.
+ * Robinhood-only launch scope. Creating a pool here is a self-contained CLIENT-SIDE
+ * flow against the deployed own UniswapV2 stack — NO backend, NO contracts to deploy
+ * (v2 factory / Router02 / WETH already live on Robinhood), NO Permit2 (the v2 Router
+ * pulls tokens via a plain ERC-20 allowance). See `~/terminal/pools/useCreateV2Pool`.
+ *
+ * This REPLACES the old v3 hand-off (which navigated to the backend `/positions/create/v3`
+ * flow that this fork can't serve). HookSwap ships v2 + v3, but in-app creation is v2 —
+ * full-range, fixed 0.30% fee — so the v3-only range-band + fee-tier selectors are gone.
  *
  * DATA POLICY (no mock data — handoff hard rule):
- *   • Token pickers — LIVE from the app's real per-chain token list: the active chain's
- *     static common-bases (`COMMON_BASES[chainId]` from routing.ts — the same source the
- *     Swap screen uses), which always covers HookSwap's own chains (e.g. Robinhood → ETH,
- *     USDG, WETH, tHOOK). Merged with `useListTokens` (the hosted feed the Markets screen
- *     uses) for live prices/logos + extra symbols on chains the backend indexes.
- *   • Fee tiers — real protocol fee tiers (0.01 / 0.05 / 0.30 / 1.00%).
- *   • Current price + the range band — derived from the two selected tokens' real USD
- *     prices; Min/Max are real user inputs; the band + handles reflect them.
- *   • Deposit USD summary — computed from real token prices × the user's entered amounts.
- *     Est fees / projected APR need pool state HookSwap does not yet index, so they
- *     render an honest "—" (never fabricated).
- *   • Create — a real CTA: disconnected → opens the wallet drawer; connected → continues
- *     into the app's real position-manager flow. No fake position numbers are shown.
+ *   • Base picker — LIVE from the active chain's static common-bases (`COMMON_BASES`,
+ *     the same source Swap uses), enriched with the hosted `useListTokens` feed where a
+ *     backend indexes the chain. Always covers Robinhood (ETH / WETH / USDG / tHOOK).
+ *   • Project token — resolved by REAL on-chain reads (symbol / decimals / balance) of
+ *     the pasted address; never fabricated.
+ *   • First-LP detection + opening price — REAL: `factory.getPair` + the deposit ratio.
+ *     No fake pool stats. The new pool auto-appears in Markets via the data-api factory
+ *     enumeration once seeded (no extra wiring here).
+ *   • Approve → Create — REAL writes (wagmi), gated behind the required ERC-20 allowance.
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
+import { useReadContract, useReadContracts } from 'wagmi'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { erc20Abi, formatUnits, isAddress } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useAccount } from '~/hooks/useAccount'
+import { getPoolAddresses } from '~/terminal/pools/addresses'
+import { useCreateV2Pool } from '~/terminal/pools/useCreateV2Pool'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
-import { getChainUrlParam } from '~/utils/params/chainParams'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const MONO = terminalFonts.mono
 const DISPLAY = terminalFonts.display
 const SANS = terminalFonts.sans
+
+/** v2 pools are a single fixed fee tier. */
+const V2_FEE_LABEL = '0.30%'
 
 /* ------------------------------------------------------------------ data model */
 
@@ -50,31 +55,12 @@ interface TokenOption {
   symbol: string
   logoUrl?: string
   price?: number
-  // Real on-chain identity, resolved from the token registry (never fabricated):
-  //   • `address` — the token's on-chain address for `chainId`, or the NATIVE sentinel
-  //     (`NATIVE_CHAIN_ID`) for the native currency (ETH on Robinhood). Undefined when
-  //     the option came from a source that carries no address for the active chain.
-  //   • `chainId` — the chain the address belongs to (the active chain).
-  // These let the Create hand-off preselect the pair in the position manager
-  // (`?currencyA=&currencyB=&chain=`); an option without an address falls back to
-  // forwarding just the fee tier.
+  // Real on-chain identity from the token registry (never fabricated): `address` is the
+  // token's on-chain address, or the NATIVE sentinel (`NATIVE_CHAIN_ID`) for native ETH.
   address?: string
   chainId?: UniverseChainId
+  decimals?: number
 }
-
-interface FeeTier {
-  label: string
-  bps: number
-}
-
-const FEE_TIERS: readonly FeeTier[] = [
-  { label: '0.01%', bps: 0.01 },
-  { label: '0.05%', bps: 0.05 },
-  { label: '0.30%', bps: 0.3 },
-  { label: '1.00%', bps: 1.0 },
-]
-
-type RangeMode = 'full' | 'custom'
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -87,7 +73,6 @@ function sanitizeNumberInput(raw: string): string {
   return cleaned.slice(0, first + 1) + cleaned.slice(first + 1).replace(/\./g, '')
 }
 
-/** Parse a sanitized amount to a finite number (a lone "." → 0, never NaN). */
 function toNum(raw: string): number {
   const n = Number(raw)
   return Number.isFinite(n) ? n : 0
@@ -96,17 +81,17 @@ function toNum(raw: string): number {
 function fmtPrice(value: number): string {
   return value.toLocaleString('en-US', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: value >= 1 ? 2 : 6,
+    maximumFractionDigits: value >= 1 ? 4 : 8,
   })
+}
+
+function shortAddr(a?: string): string {
+  return a ? `${a.slice(0, 6)}…${a.slice(-4)}` : '—'
 }
 
 /* ------------------------------------------------------------------ token select */
 
 function TokenCircle({ token, size = 22 }: { token?: TokenOption; size?: number }): JSX.Element {
-  // Track the URL that failed to load so a raw <img> 404 (e.g. Robinhood tokens with no
-  // logo in the Uniswap assets repo, like USDG) falls back to the symbol monogram below
-  // instead of the browser's broken-image glyph. Keyed by URL (not a boolean) so a newly
-  // selected token with a valid logo isn't suppressed by a previous token's failure.
   const [erroredUrl, setErroredUrl] = useState<string | undefined>(undefined)
   const logoUrl = token?.logoUrl
   if (logoUrl && logoUrl !== erroredUrl) {
@@ -182,10 +167,7 @@ function TokenSelect({
       </button>
       {open ? (
         <>
-          <div
-            onClick={() => setOpen(false)}
-            style={{ position: 'fixed', inset: 0, zIndex: 10 }}
-          />
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 10 }} />
           <div
             style={{
               position: 'absolute',
@@ -227,9 +209,7 @@ function TokenSelect({
                   {token.symbol}
                 </span>
                 {token.price !== undefined ? (
-                  <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink3Alt }}>
-                    ${fmtPrice(token.price)}
-                  </span>
+                  <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink3Alt }}>${fmtPrice(token.price)}</span>
                 ) : null}
               </button>
             ))}
@@ -248,9 +228,7 @@ function StepLabel({ index, label, note }: { index: string; label: string; note?
       <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.06em', color: terminalColors.ink3Alt }}>
         {index} · {label.toUpperCase()}
       </span>
-      {note ? (
-        <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt }}>{note}</span>
-      ) : null}
+      {note ? <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt }}>{note}</span> : null}
     </div>
   )
 }
@@ -259,9 +237,7 @@ function SummaryRow({ label, value, valueColor }: { label: string; value: string
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0' }}>
       <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>{label}</span>
-      <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 500, color: valueColor ?? terminalColors.ink }}>
-        {value}
-      </span>
+      <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 500, color: valueColor ?? terminalColors.ink }}>{value}</span>
     </div>
   )
 }
@@ -282,536 +258,48 @@ function Panel({ children, padding = 18 }: { children: React.ReactNode; padding?
   )
 }
 
-/* ------------------------------------------------------------------ range band */
-
-function RangeBand({
-  min,
-  max,
-  current,
-}: {
-  min: number | undefined
-  max: number | undefined
-  current: number | undefined
-}): JSX.Element {
-  // Axis spans a little beyond the [min,max] range so the band sits inset. All real
-  // (user min/max + price-derived current); no fabricated liquidity distribution.
-  const haveRange = min !== undefined && max !== undefined && max > min
-  const axisMin = haveRange ? min - (max - min) * 0.35 : 0
-  const axisMax = haveRange ? max + (max - min) * 0.35 : 1
-  const span = axisMax - axisMin || 1
-  const pct = (v: number): number => Math.max(0, Math.min(100, ((v - axisMin) / span) * 100))
-
-  const leftPct = haveRange ? pct(min) : 30
-  const rightPct = haveRange ? pct(max) : 70
-  const currentPct = current !== undefined && haveRange ? pct(current) : undefined
-
-  return (
-    <div style={{ marginTop: 6 }}>
-      <div
-        style={{
-          position: 'relative',
-          height: 150,
-          borderRadius: 10,
-          background: terminalColors.panel,
-          border: `1px solid ${terminalColors.line2}`,
-          overflow: 'hidden',
-        }}
-      >
-        {/* In-range shaded band */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: `${leftPct}%`,
-            width: `${Math.max(0, rightPct - leftPct)}%`,
-            background: 'rgba(47,224,126,0.14)',
-            borderLeft: `2px solid ${terminalColors.brandGreen}`,
-            borderRight: `2px solid ${terminalColors.brandGreen}`,
-          }}
-        />
-        {/* Current price marker */}
-        {currentPct !== undefined ? (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: `${currentPct}%`,
-              width: 0,
-              borderLeft: `1px dashed ${terminalColors.ink3}`,
-            }}
-          />
-        ) : null}
-      </div>
-      {/* Axis ticks */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>
-          {haveRange ? fmtPrice(axisMin) : '—'}
-        </span>
-        <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink }}>
-          {current !== undefined ? fmtPrice(current) : '—'}
-        </span>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>
-          {haveRange ? fmtPrice(axisMax) : '—'}
-        </span>
-      </div>
-    </div>
-  )
+function FieldLabel({ children }: { children: React.ReactNode }): JSX.Element {
+  return <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginBottom: 5 }}>{children}</div>
 }
 
-/* ------------------------------------------------------------------ price field */
-
-function PriceField({
-  label,
-  value,
-  onChange,
-  disabled,
-}: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  disabled: boolean
-}): JSX.Element {
+/** A soft informational callout (first-LP / opening-price / Phase-2 notices). */
+function Notice({ tone = 'neutral', children }: { tone?: 'neutral' | 'green' | 'muted'; children: React.ReactNode }): JSX.Element {
+  const border =
+    tone === 'green' ? terminalColors.greenBorder : tone === 'muted' ? terminalColors.line : terminalColors.line
+  const bg = tone === 'green' ? terminalColors.greenBg : terminalColors.panel
+  const color = tone === 'green' ? terminalColors.greenDeep : terminalColors.ink2
   return (
     <div
       style={{
-        flex: 1,
-        border: `1px solid ${terminalColors.line}`,
+        fontFamily: SANS,
+        fontSize: 12,
+        lineHeight: 1.5,
+        color,
+        background: bg,
+        border: `1px ${tone === 'muted' ? 'dashed' : 'solid'} ${border}`,
         borderRadius: 11,
-        background: disabled ? terminalColors.panel : terminalColors.bg,
         padding: '10px 12px',
-        boxSizing: 'border-box',
       }}
     >
-      <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginBottom: 4 }}>{label}</div>
-      <input
-        value={value}
-        disabled={disabled}
-        onChange={(e) => onChange(sanitizeNumberInput(e.target.value))}
-        placeholder="0.00"
-        inputMode="decimal"
-        style={{
-          width: '100%',
-          border: 'none',
-          outline: 'none',
-          background: 'transparent',
-          fontFamily: MONO,
-          fontSize: 16,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          padding: 0,
-        }}
-      />
+      {children}
     </div>
   )
 }
 
-/* ------------------------------------------------------------------ the screen */
-
-function PoolsScreenBody(): JSX.Element {
-  const account = useAccount()
-  const accountDrawer = useAccountDrawer()
-  const navigate = useNavigate()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  const { topTokens, isLoading: tokensLoading } = useListTokens(undefined)
-
-  // The active chain — the connected wallet's chain, defaulting to Robinhood (the
-  // Terminal's live chain) when disconnected, mirroring SwapScreen. Determines which
-  // static common-bases list seeds the token pickers.
-  const chainId = account.chainId ?? UniverseChainId.Robinhood
-
-  // Real token options (dedup by symbol, keep price + logo).
-  //
-  // PRIMARY source: the active chain's static common-bases list
-  // (`COMMON_BASES[chainId]` from routing.ts). This is the app's own per-chain token
-  // list and is ALWAYS populated for HookSwap's own chains (e.g. Robinhood → ETH,
-  // USDG, WETH, tHOOK). The hosted token backend behind `useListTokens` does NOT index
-  // HookSwap chains, so on those chains `topTokens` is empty — using it alone left the
-  // pickers with nothing selectable.
-  //
-  // SECONDARY source: `topTokens` (the hosted token list) is merged in for chains the
-  // backend DOES serve — it enriches the static entries with live USD prices/logos and
-  // appends extra symbols. It never removes a static base.
-  const options: TokenOption[] = useMemo(() => {
-    const bySymbol = new Map<string, TokenOption>()
-
-    for (const info of COMMON_BASES[chainId] ?? []) {
-      const { currency } = info
-      const symbol = currency.symbol
-      if (!symbol || bySymbol.has(symbol)) {
-        continue
-      }
-      bySymbol.set(symbol, {
-        symbol,
-        logoUrl: info.logoUrl ?? undefined,
-        // Real address from the app's own per-chain registry: the NATIVE sentinel for
-        // the native currency, else the token's on-chain address. Carried so the Create
-        // hand-off can preselect this token.
-        address: currency.isNative ? NATIVE_CHAIN_ID : currency.address,
-        chainId: currency.chainId as UniverseChainId,
-      })
-    }
-
-    for (const token of topTokens) {
-      if (!token.symbol) {
-        continue
-      }
-      // The hosted feed lists a token across chains; take the entry for the active chain
-      // (if any) for its real on-chain address.
-      const chainToken = token.chainTokens.find((ct) => ct.chainId === chainId)
-      const existing = bySymbol.get(token.symbol)
-      if (existing) {
-        // Enrich the static base with live data where it's missing.
-        if (existing.price === undefined && token.stats?.price !== undefined) {
-          existing.price = token.stats.price
-        }
-        if (!existing.logoUrl && token.logoUrl) {
-          existing.logoUrl = token.logoUrl
-        }
-        if (!existing.address && chainToken?.address) {
-          existing.address = chainToken.address
-          existing.chainId = chainToken.chainId as UniverseChainId
-        }
-        continue
-      }
-      bySymbol.set(token.symbol, {
-        symbol: token.symbol,
-        logoUrl: token.logoUrl || undefined,
-        price: token.stats?.price,
-        address: chainToken?.address,
-        chainId: chainToken ? (chainToken.chainId as UniverseChainId) : undefined,
-      })
-    }
-
-    return Array.from(bySymbol.values()).slice(0, 50)
-  }, [topTokens, chainId])
-
-  const [token0, setToken0] = useState<TokenOption | undefined>()
-  const [token1, setToken1] = useState<TokenOption | undefined>()
-  const [feeIndex, setFeeIndex] = useState(1) // default 0.05%
-
-  // Preselect the pair when arriving from a Market-Detail "Add liquidity" deep-link
-  // (`?token0=SYM&token1=SYM`). Symbols are matched against the live token list; a
-  // symbol not in the list is left unset (falls back to the ETH/USDC defaults). Runs
-  // once, after options load, so it never clobbers the user's later manual picks.
-  const [searchParams] = useSearchParams()
-  const didSeedFromParams = useRef(false)
-  useEffect(() => {
-    if (didSeedFromParams.current || options.length === 0) {
-      return
-    }
-    const sym0 = searchParams.get('token0')
-    const sym1 = searchParams.get('token1')
-    if (sym0 || sym1) {
-      const find = (sym: string | null): TokenOption | undefined =>
-        sym ? options.find((o) => o.symbol.toUpperCase() === sym.toUpperCase()) : undefined
-      const t0 = find(sym0)
-      const t1 = find(sym1)
-      if (t0) {
-        setToken0(t0)
-      }
-      if (t1) {
-        setToken1(t1)
-      }
-    }
-    didSeedFromParams.current = true
-  }, [options, searchParams])
-  const [rangeMode, setRangeMode] = useState<RangeMode>('custom')
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
-  const [amount0, setAmount0] = useState('')
-  const [amount1, setAmount1] = useState('')
-
-  // Seed defaults once tokens load (ETH/USDC when available). When those symbols are
-  // absent for the active chain (e.g. Robinhood has no USDC), fall back to the first
-  // available options so the form is never empty and the two picks always differ.
-  const resolvedToken0 = token0 ?? options.find((o) => o.symbol === 'ETH' || o.symbol === 'WETH') ?? options[0]
-  const resolvedToken1 =
-    token1 ?? options.find((o) => o.symbol === 'USDC') ?? options.find((o) => o.symbol !== resolvedToken0?.symbol)
-
-  // Current price of token0 in token1 (real, from USD prices).
-  const currentPrice =
-    resolvedToken0?.price && resolvedToken1?.price && resolvedToken1.price > 0
-      ? resolvedToken0.price / resolvedToken1.price
-      : undefined
-
-  const min = rangeMode === 'full' ? undefined : minPrice ? Number(minPrice) : undefined
-  const max = rangeMode === 'full' ? undefined : maxPrice ? Number(maxPrice) : undefined
-
-  // Effective band for the visualization: user inputs, else ±15% of current price.
-  const bandMin = min ?? (currentPrice ? currentPrice * 0.85 : undefined)
-  const bandMax = max ?? (currentPrice ? currentPrice * 1.15 : undefined)
-
-  const depositUsd = useMemo(() => {
-    const v0 = resolvedToken0?.price ? toNum(amount0) * resolvedToken0.price : 0
-    const v1 = resolvedToken1?.price ? toNum(amount1) * resolvedToken1.price : 0
-    return v0 + v1
-  }, [amount0, amount1, resolvedToken0?.price, resolvedToken1?.price])
-
-  // Per-field USD (real: entered amount × the token's live price). Undefined when there
-  // is no price or no positive amount → the field shows nothing (never a fabricated value).
-  const fmtFieldUsd = (amount: string, price?: number): string | undefined => {
-    const n = toNum(amount)
-    if (!price || n <= 0) {
-      return undefined
-    }
-    return convertFiatAmountFormatted(n * price, NumberType.PortfolioBalance)
-  }
-
-  const isConnected = Boolean(account.address)
-  const canContinue = Boolean(resolvedToken0 && resolvedToken1)
-
-  const onCreate = (): void => {
-    if (!isConnected) {
-      accountDrawer.open()
-      return
-    }
-    // Continue into the app's real position-manager flow (v2/v3 add-liquidity),
-    // forwarding the selected fee tier via the route's `feeTier` param (a fee amount
-    // in hundredths of a bip: 0.05% → 500). The create route's URL migration expands
-    // it into the full fee object.
-    //
-    // The token PAIR is carried too, so the manager lands preselected on the pair the
-    // user configured here (not the route's ETH default). The create route
-    // (`useLiquidityUrlState` → `replaceStateParser`) parses:
-    //   • `currencyA` / `currencyB` — a validated on-chain address, or the NATIVE
-    //     sentinel for native ETH (see `parseCurrencyFromURLParameter`); this is exactly
-    //     the address `TokenOption.address` now carries, resolved from the token registry.
-    //   • `chain` — a chain URL-param SLUG (e.g. `robinhood`), NOT the numeric id — the
-    //     route parses it via `getChainIdFromChainUrlParam`, so we serialize with
-    //     `getChainUrlParam` (mirrors how the route itself serializes `chain`).
-    // Both tokens must resolve to a real address; if either is unresolved we forward
-    // feeTier ONLY (never fabricate an address) — the manager then falls back to its
-    // own defaults, matching the prior behavior.
-    //
-    // Still NOT forwarded: the price range / deposit amounts — the route reads
-    // tick-based `priceRangeState` (minTick/maxTick) + a `depositState` keyed by
-    // PositionField, not the raw min/max prices + amounts this form holds. Forwarding
-    // those would require fabricating ticks, so range/amounts are re-entered downstream.
-    //
-    // Explicit `/v3` path segment: the Terminal is Robinhood-only, which is v2/v3-only
-    // (no v4 — locked decision). Without this, the create route's own default falls
-    // back to v4 for chains it can't otherwise infer a version for, which 404s into
-    // "This chain is not supported for v4 pools." These fee tiers (0.01/0.05/0.30/1.00%)
-    // are v3-style tiers, so v3 is also the semantically correct destination.
-    const feeAmount = Math.round(FEE_TIERS[feeIndex].bps * 10000)
-    const params = new URLSearchParams({ feeTier: String(feeAmount) })
-
-    const addressA = resolvedToken0?.address
-    const addressB = resolvedToken1?.address
-    const pairChainId = resolvedToken0?.chainId
-    if (addressA && addressB && pairChainId !== undefined) {
-      params.set('currencyA', addressA)
-      params.set('currencyB', addressB)
-      params.set('chain', getChainUrlParam(pairChainId))
-    }
-
-    navigate(`/positions/create/v3?${params.toString()}`)
-  }
-
-  return (
-    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 18 }}>
-        <h1
-          style={{
-            fontFamily: DISPLAY,
-            fontSize: 24,
-            fontWeight: 600,
-            letterSpacing: '-0.02em',
-            color: terminalColors.ink,
-            margin: 0,
-          }}
-        >
-          New position
-        </h1>
-        <span
-          style={{
-            fontFamily: MONO,
-            fontSize: 11,
-            fontWeight: 600,
-            color: terminalColors.greenDeep,
-            background: terminalColors.greenBg,
-            border: `1px solid ${terminalColors.greenBorder}`,
-            padding: '3px 8px',
-            borderRadius: 999,
-          }}
-        >
-          v2 · v3
-        </span>
-      </div>
-
-      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        {/* Left config column */}
-        <div style={{ flex: '1 1 280px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <Panel>
-            <StepLabel index="01" label="Pair" />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <TokenSelect value={resolvedToken0} options={options} onChange={setToken0} loading={tokensLoading} />
-              <TokenSelect value={resolvedToken1} options={options} onChange={setToken1} loading={tokensLoading} />
-            </div>
-          </Panel>
-
-          <Panel>
-            <StepLabel index="02" label="Fee tier" />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {FEE_TIERS.map((tier, i) => {
-                const active = feeIndex === i
-                return (
-                  <button
-                    key={tier.label}
-                    type="button"
-                    onClick={() => setFeeIndex(i)}
-                    style={{
-                      padding: '9px 0',
-                      borderRadius: 10,
-                      cursor: 'pointer',
-                      fontFamily: MONO,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: active ? terminalColors.greenDeep : terminalColors.ink2,
-                      background: active ? terminalColors.greenBg : terminalColors.bg,
-                      border: `1px solid ${active ? terminalColors.greenBorder : terminalColors.line}`,
-                    }}
-                  >
-                    {tier.label}
-                  </button>
-                )
-              })}
-            </div>
-          </Panel>
-        </div>
-
-        {/* Center liquidity range */}
-        <div style={{ flex: '1 1 360px', minWidth: 0 }}>
-          <Panel>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: terminalColors.ink }}>
-                Liquidity range
-              </span>
-              <div style={{ display: 'flex', gap: 3, background: terminalColors.panel2, padding: 3, borderRadius: 9 }}>
-                {(['full', 'custom'] as const).map((mode) => {
-                  const active = rangeMode === mode
-                  return (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setRangeMode(mode)}
-                      style={{
-                        padding: '5px 14px',
-                        borderRadius: 7,
-                        border: 'none',
-                        cursor: 'pointer',
-                        fontFamily: SANS,
-                        fontSize: 12.5,
-                        fontWeight: 600,
-                        textTransform: 'capitalize',
-                        color: active ? terminalColors.ink : terminalColors.ink2,
-                        background: active ? terminalColors.bg : 'transparent',
-                        boxShadow: active ? '0 1px 2px rgba(11,15,20,.06)' : undefined,
-                      }}
-                    >
-                      {mode}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            <RangeBand min={bandMin} max={bandMax} current={currentPrice} />
-
-            {/* Min / Max price fields */}
-            <div style={{ display: 'flex', gap: 12, marginTop: 14 }}>
-              <PriceField
-                label={`Min price${resolvedToken1 ? ` (${resolvedToken1.symbol})` : ''}`}
-                value={rangeMode === 'full' ? '0' : minPrice}
-                onChange={setMinPrice}
-                disabled={rangeMode === 'full'}
-              />
-              <PriceField
-                label={`Max price${resolvedToken1 ? ` (${resolvedToken1.symbol})` : ''}`}
-                value={rangeMode === 'full' ? '∞' : maxPrice}
-                onChange={setMaxPrice}
-                disabled={rangeMode === 'full'}
-              />
-            </div>
-
-            <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 12, lineHeight: 1.5 }}>
-              Current price derived from live token prices. Full liquidity-distribution histogram builds as pools gain
-              liquidity.
-            </div>
-          </Panel>
-        </div>
-
-        {/* Right deposit column */}
-        <div style={{ flex: '1 1 280px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <Panel>
-            <StepLabel index="03" label="Deposit" />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <DepositField
-                token={resolvedToken0}
-                amount={amount0}
-                onChange={setAmount0}
-                usd={fmtFieldUsd(amount0, resolvedToken0?.price)}
-              />
-              <DepositField
-                token={resolvedToken1}
-                amount={amount1}
-                onChange={setAmount1}
-                usd={fmtFieldUsd(amount1, resolvedToken1?.price)}
-              />
-            </div>
-          </Panel>
-
-          <Panel>
-            <SummaryRow
-              label="Deposit"
-              value={depositUsd > 0 ? convertFiatAmountFormatted(depositUsd, NumberType.PortfolioBalance) : '$0.00'}
-            />
-            <SummaryRow label="Fee tier" value={FEE_TIERS[feeIndex].label} />
-            {/* Requires pool state we do not yet index — honest "—". */}
-            <SummaryRow label="Est fees 24h" value="—" valueColor={terminalColors.faint} />
-            <SummaryRow label="Projected APR" value="—" valueColor={terminalColors.faint} />
-
-            <button
-              type="button"
-              onClick={onCreate}
-              disabled={!canContinue}
-              style={{
-                marginTop: 12,
-                width: '100%',
-                fontFamily: SANS,
-                fontSize: 14,
-                fontWeight: 600,
-                color: terminalColors.btnInk,
-                background: canContinue ? terminalColors.brandGreen : terminalColors.line,
-                border: 'none',
-                padding: '12px 0',
-                borderRadius: 12,
-                cursor: canContinue ? 'pointer' : 'default',
-              }}
-            >
-              {isConnected ? 'Continue in position manager' : 'Connect wallet to add liquidity'}
-            </button>
-          </Panel>
-        </div>
-      </div>
-    </div>
-  )
-}
+/* ------------------------------------------------------------------ deposit field */
 
 function DepositField({
   token,
   amount,
   onChange,
   usd,
+  balanceLabel,
 }: {
   token?: TokenOption
   amount: string
   onChange: (v: string) => void
   usd?: string
+  balanceLabel?: string
 }): JSX.Element {
   return (
     <div
@@ -826,10 +314,11 @@ function DepositField({
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <TokenCircle token={token} size={20} />
-          <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>
-            {token?.symbol ?? '—'}
-          </span>
+          <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>{token?.symbol ?? '—'}</span>
         </span>
+        {balanceLabel ? (
+          <span style={{ fontFamily: MONO, fontSize: 10.5, color: terminalColors.faint }}>{balanceLabel}</span>
+        ) : null}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         <input
@@ -850,17 +339,450 @@ function DepositField({
             padding: 0,
           }}
         />
-        {usd ? (
-          <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.ink3Alt, flexShrink: 0 }}>{usd}</span>
-        ) : null}
+        {usd ? <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.ink3Alt, flexShrink: 0 }}>{usd}</span> : null}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ the screen */
+
+function PoolsScreenBody(): JSX.Element {
+  const account = useAccount()
+  const accountDrawer = useAccountDrawer()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+
+  const { topTokens, isLoading: tokensLoading } = useListTokens(undefined)
+
+  // Active chain — connected wallet's chain, defaulting to Robinhood (the Terminal's live
+  // chain) when disconnected, mirroring SwapScreen.
+  const chainId = account.chainId ?? UniverseChainId.Robinhood
+  const connected = Boolean(account.address)
+  const owner = assume0xAddress(account.address)
+
+  const poolAddrs = getPoolAddresses(chainId)
+  const chainReady = Boolean(poolAddrs)
+  const wrappedNative = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
+
+  // Base token options (dedup by symbol). PRIMARY: the active chain's static common-bases
+  // (always populated for HookSwap chains). SECONDARY: the hosted `topTokens` feed enriches
+  // with live prices/logos on chains a backend indexes.
+  const options: TokenOption[] = useMemo(() => {
+    const bySymbol = new Map<string, TokenOption>()
+    for (const info of COMMON_BASES[chainId] ?? []) {
+      const { currency } = info
+      const symbol = currency.symbol
+      if (!symbol || bySymbol.has(symbol)) {
+        continue
+      }
+      bySymbol.set(symbol, {
+        symbol,
+        logoUrl: info.logoUrl ?? undefined,
+        address: currency.isNative ? NATIVE_CHAIN_ID : currency.address,
+        chainId: currency.chainId as UniverseChainId,
+        decimals: currency.decimals,
+      })
+    }
+    for (const token of topTokens) {
+      if (!token.symbol) {
+        continue
+      }
+      const chainToken = token.chainTokens.find((ct) => ct.chainId === chainId)
+      const existing = bySymbol.get(token.symbol)
+      if (existing) {
+        if (existing.price === undefined && token.stats?.price !== undefined) {
+          existing.price = token.stats.price
+        }
+        if (!existing.logoUrl && token.logoUrl) {
+          existing.logoUrl = token.logoUrl
+        }
+        continue
+      }
+      bySymbol.set(token.symbol, {
+        symbol: token.symbol,
+        logoUrl: token.logoUrl || undefined,
+        price: token.stats?.price,
+        address: chainToken?.address,
+        chainId: chainToken ? (chainToken.chainId as UniverseChainId) : undefined,
+        decimals: chainToken?.decimals,
+      })
+    }
+    // Only bases we can actually pair against (native, or a known on-chain address + decimals).
+    return Array.from(bySymbol.values())
+      .filter((o) => o.address === NATIVE_CHAIN_ID || (Boolean(o.address) && o.decimals !== undefined))
+      .slice(0, 50)
+  }, [topTokens, chainId])
+
+  const [base, setBase] = useState<TokenOption | undefined>()
+  // Default base to native ETH / WETH once options load.
+  const resolvedBase =
+    base ?? options.find((o) => o.address === NATIVE_CHAIN_ID) ?? options.find((o) => o.symbol === 'WETH') ?? options[0]
+
+  // Preselect the base from a Market-Detail "Add liquidity" deep-link (?token0=SYM). Runs
+  // once after options load; never clobbers a later manual pick.
+  const [searchParams] = useSearchParams()
+  const didSeed = useRef(false)
+  useEffect(() => {
+    if (didSeed.current || options.length === 0) {
+      return
+    }
+    const sym = searchParams.get('token0') ?? searchParams.get('token1')
+    if (sym) {
+      const found = options.find((o) => o.symbol.toUpperCase() === sym.toUpperCase())
+      if (found) {
+        setBase(found)
+      }
+    }
+    didSeed.current = true
+  }, [options, searchParams])
+
+  // Project token — resolved from a pasted address by REAL on-chain reads.
+  const [projectAddr, setProjectAddr] = useState('')
+  const projValid = isAddress(projectAddr)
+  const projectAddr0x = assume0xAddress(projValid ? projectAddr : undefined)
+
+  const projectMeta = useReadContracts({
+    contracts: [
+      { address: projectAddr0x, chainId, abi: erc20Abi, functionName: 'symbol' as const },
+      { address: projectAddr0x, chainId, abi: erc20Abi, functionName: 'decimals' as const },
+    ],
+    query: { enabled: projValid },
+  })
+  const symbolEntry = projectMeta.data?.[0]
+  const decimalsEntry = projectMeta.data?.[1]
+  const projectSymbol = symbolEntry?.status === 'success' ? (symbolEntry.result as string) : undefined
+  const projectDecimals = decimalsEntry?.status === 'success' ? Number(decimalsEntry.result) : undefined
+  const projectResolveError = projValid && projectMeta.isError
+  const projectResolved = projValid && projectSymbol !== undefined && projectDecimals !== undefined
+
+  const projectBalanceRead = useReadContract({
+    address: projectAddr0x,
+    chainId,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: owner ? [owner] : undefined,
+    query: { enabled: projValid && Boolean(owner) },
+  })
+  const projectBalance = projectBalanceRead.data as bigint | undefined
+
+  const [baseAmount, setBaseAmount] = useState('')
+  const [projectAmount, setProjectAmount] = useState('')
+
+  const baseIsNative = resolvedBase?.address === NATIVE_CHAIN_ID
+
+  const create = useCreateV2Pool({
+    chainId,
+    owner,
+    base: { address: resolvedBase?.address, decimals: resolvedBase?.decimals, symbol: resolvedBase?.symbol },
+    project: { address: projValid ? projectAddr : undefined, decimals: projectDecimals, symbol: projectSymbol },
+    baseAmount,
+    projectAmount,
+  })
+
+  // Opening price = deposit ratio (only shown on the first-LP path, where it's meaningful).
+  const bAmt = toNum(baseAmount)
+  const pAmt = toNum(projectAmount)
+  const projPerBase = bAmt > 0 && pAmt > 0 ? pAmt / bAmt : undefined
+  const basePerProj = bAmt > 0 && pAmt > 0 ? bAmt / pAmt : undefined
+
+  const baseUsd =
+    resolvedBase?.price && bAmt > 0 ? convertFiatAmountFormatted(bAmt * resolvedBase.price, NumberType.PortfolioBalance) : undefined
+  const depositUsd = resolvedBase?.price ? bAmt * resolvedBase.price : 0
+
+  const projectOption: TokenOption | undefined = projValid
+    ? { symbol: projectSymbol ?? shortAddr(projectAddr), address: projectAddr, decimals: projectDecimals }
+    : undefined
+
+  const projectBalanceLabel =
+    projectBalance !== undefined && projectDecimals !== undefined
+      ? `Bal ${Number(formatUnits(projectBalance, projectDecimals)).toLocaleString('en-US', { maximumFractionDigits: 4 })}`
+      : undefined
+
+  /* --------------------------------------------------------------- primary action */
+
+  const busy = create.isWritePending || create.baseApproving || create.projectApproving || create.isConfirming
+
+  const onPrimary = (): void => {
+    if (!connected) {
+      accountDrawer.open()
+      return
+    }
+    if (create.isDone) {
+      // Start another pool.
+      create.reset()
+      setBaseAmount('')
+      setProjectAmount('')
+      setProjectAddr('')
+      return
+    }
+    if (create.needsProjectApproval) {
+      void create.approveProject()
+      return
+    }
+    if (create.needsBaseApproval) {
+      void create.approveBase()
+      return
+    }
+    void create.create()
+  }
+
+  const primaryLabel = ((): string => {
+    if (!chainReady) {
+      return 'Not available on this network'
+    }
+    if (!connected) {
+      return 'Connect wallet to create a pool'
+    }
+    if (create.isDone) {
+      return 'Create another pool'
+    }
+    if (create.existingLiquidity) {
+      return 'Pool already exists'
+    }
+    if (!create.inputsValid) {
+      return 'Enter token & amounts'
+    }
+    if (create.projectApproving || create.baseApproving) {
+      return 'Approving…'
+    }
+    if (create.isWritePending) {
+      return 'Confirm in wallet…'
+    }
+    if (create.isConfirming) {
+      return 'Creating pool…'
+    }
+    if (create.needsProjectApproval) {
+      return `Approve ${projectSymbol ?? 'token'}`
+    }
+    if (create.needsBaseApproval) {
+      return `Approve ${resolvedBase?.symbol ?? 'token'}`
+    }
+    return 'Create pool & add liquidity'
+  })()
+
+  const primaryDisabled = ((): boolean => {
+    if (!chainReady) {
+      return true
+    }
+    if (!connected) {
+      return false
+    }
+    if (create.isDone) {
+      return false
+    }
+    if (create.existingLiquidity || busy) {
+      return true
+    }
+    if (create.needsProjectApproval || create.needsBaseApproval) {
+      return false
+    }
+    return !create.canCreate
+  })()
+
+  return (
+    <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
+        <h1
+          style={{
+            fontFamily: DISPLAY,
+            fontSize: 24,
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            color: terminalColors.ink,
+            margin: 0,
+          }}
+        >
+          New pool
+        </h1>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: 11,
+            fontWeight: 600,
+            color: terminalColors.greenDeep,
+            background: terminalColors.greenBg,
+            border: `1px solid ${terminalColors.greenBorder}`,
+            padding: '3px 8px',
+            borderRadius: 999,
+          }}
+        >
+          v2 · full range · {V2_FEE_LABEL}
+        </span>
+      </div>
+      <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink2, marginBottom: 18, maxWidth: 560, lineHeight: 1.5 }}>
+        Create a v2 pool for your token and seed it with the first liquidity — right here, no
+        deploy needed. Your deposit ratio sets the opening price.
+      </div>
+
+      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+        {/* Left: pair */}
+        <div style={{ flex: '1 1 320px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <Panel>
+            <StepLabel index="01" label="Pair" note={chainReady ? undefined : 'not available'} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div>
+                <FieldLabel>Base token</FieldLabel>
+                <TokenSelect value={resolvedBase} options={options} onChange={setBase} loading={tokensLoading} />
+                {baseIsNative && wrappedNative ? (
+                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 5 }}>
+                    Native {resolvedBase?.symbol} is wrapped to {wrappedNative.symbol} for the pool.
+                  </div>
+                ) : null}
+              </div>
+              <div>
+                <FieldLabel>Project token address</FieldLabel>
+                <input
+                  value={projectAddr}
+                  onChange={(e) => setProjectAddr(e.target.value.trim())}
+                  placeholder="0x…"
+                  spellCheck={false}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    border: `1px solid ${terminalColors.line}`,
+                    borderRadius: 11,
+                    background: terminalColors.bg,
+                    padding: '10px 12px',
+                    fontFamily: MONO,
+                    fontSize: 13.5,
+                    fontWeight: 500,
+                    color: terminalColors.ink,
+                    outline: 'none',
+                  }}
+                />
+                {projectAddr !== '' && !projValid ? (
+                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.redDown, marginTop: 5 }}>
+                    Enter a valid contract address.
+                  </div>
+                ) : projValid && projectMeta.isLoading ? (
+                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginTop: 5 }}>
+                    Resolving token…
+                  </div>
+                ) : projectResolveError ? (
+                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.redDown, marginTop: 5 }}>
+                    Not an ERC-20 on this network.
+                  </div>
+                ) : projectResolved ? (
+                  <div style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.greenDeep, marginTop: 5 }}>
+                    {projectSymbol} · {projectDecimals} decimals
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </Panel>
+
+          {/* First-LP / existing-pool / opening-price notices */}
+          {chainReady && projectResolved ? (
+            <Panel>
+              {create.existingLiquidity ? (
+                <Notice tone="muted">
+                  This pair already has a live pool. Adding to an existing pool (price-matched, with
+                  slippage) is coming soon — for now, trade it on Swap.
+                </Notice>
+              ) : create.isFirstLp ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <Notice tone="green">
+                    You&apos;ll be the first liquidity provider. You set the starting price — the deposit
+                    ratio below IS the opening price.
+                  </Notice>
+                  {projPerBase !== undefined && basePerProj !== undefined ? (
+                    <div>
+                      <SummaryRow
+                        label={`1 ${resolvedBase?.symbol ?? 'base'} =`}
+                        value={`${fmtPrice(projPerBase)} ${projectSymbol ?? ''}`.trim()}
+                      />
+                      <SummaryRow
+                        label={`1 ${projectSymbol ?? 'token'} =`}
+                        value={`${fmtPrice(basePerProj)} ${resolvedBase?.symbol ?? ''}`.trim()}
+                      />
+                    </div>
+                  ) : (
+                    <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.faint }}>
+                      Enter both amounts to preview the opening price.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.ink3Alt }}>Checking pool…</div>
+              )}
+            </Panel>
+          ) : null}
+        </div>
+
+        {/* Right: deposit + create */}
+        <div style={{ flex: '1 1 320px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <Panel>
+            <StepLabel index="02" label="Deposit" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <DepositField token={resolvedBase} amount={baseAmount} onChange={setBaseAmount} usd={baseUsd} />
+              <DepositField
+                token={projectOption}
+                amount={projectAmount}
+                onChange={setProjectAmount}
+                balanceLabel={projectBalanceLabel}
+              />
+            </div>
+          </Panel>
+
+          <Panel>
+            <SummaryRow
+              label="Deposit value"
+              value={depositUsd > 0 ? convertFiatAmountFormatted(depositUsd, NumberType.PortfolioBalance) : '—'}
+              valueColor={depositUsd > 0 ? terminalColors.ink : terminalColors.faint}
+            />
+            <SummaryRow label="Fee tier" value={`${V2_FEE_LABEL} (v2)`} />
+            <SummaryRow label="Range" value="Full range" />
+            <SummaryRow label="Network" value={chainReady && chainId ? getChainLabel(chainId) : 'Not available'} />
+
+            <button
+              type="button"
+              onClick={onPrimary}
+              disabled={primaryDisabled}
+              style={{
+                marginTop: 12,
+                width: '100%',
+                fontFamily: SANS,
+                fontSize: 14,
+                fontWeight: 600,
+                color: terminalColors.btnInk,
+                background: primaryDisabled ? terminalColors.line : terminalColors.brandGreen,
+                border: 'none',
+                padding: '12px 0',
+                borderRadius: 12,
+                cursor: primaryDisabled ? 'default' : 'pointer',
+              }}
+            >
+              {primaryLabel}
+            </button>
+
+            {create.isDone ? (
+              <div style={{ marginTop: 10 }}>
+                <Notice tone="green">
+                  Pool created and seeded. It becomes swappable and appears in Markets once indexed.
+                </Notice>
+              </div>
+            ) : create.error ? (
+              <div style={{ fontFamily: SANS, fontSize: 11.5, color: terminalColors.redDown, marginTop: 10, lineHeight: 1.5 }}>
+                {create.error}
+              </div>
+            ) : chainReady ? (
+              <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
+                {baseIsNative
+                  ? 'Approve your project token once, then create — native is wrapped automatically. No Permit2.'
+                  : 'Approve each token once, then create. Tokens are pulled by the v2 router (no Permit2).'}
+              </div>
+            ) : null}
+          </Panel>
+        </div>
       </div>
     </div>
   )
 }
 
 /**
- * B4 Pools / Create position. Wrapped in the same Explore providers the Markets screen
- * uses so the real token-list query (`useListTokens`) resolves.
+ * B4 Pools / Create v2 pool. Wrapped in the same Explore providers the Markets screen uses
+ * so the token-list query (`useListTokens`) resolves.
  */
 export function PoolsScreen(): JSX.Element {
   return (
