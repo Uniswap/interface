@@ -167,6 +167,14 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M7.3 11l9.7-5.4M7.5 12h9.5M7.3 13l9.7 5.4" />
         </svg>
       )
+    case 'token':
+      // Create token — a coin with a "+" (mint a new fixed-supply ERC-20).
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <circle cx={12} cy={12} r={9} />
+          <path d="M12 8v8M8 12h8" />
+        </svg>
+      )
     case 'widget':
       // Embeddable widget builder — a frame with an inset panel.
       return (

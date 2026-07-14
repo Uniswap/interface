@@ -18,6 +18,7 @@ export type TerminalScreenId =
   | 'create-position' // B4
   | 'locker' // Tools — lock LP/tokens + v3 positions
   | 'multisender' // Tools — batch-send a token / native to many addresses (Disperse)
+  | 'create-token' // Tools — launch a fixed-supply ERC-20 (HookSwapTokenFactory)
   | 'referrals' // Account — referral codes + earnings (deployed referral router)
   | 'portfolio' // B5
   | 'market-detail' // B6
@@ -38,6 +39,7 @@ export type TerminalNavIcon =
   | 'positions'
   | 'locker'
   | 'multisender'
+  | 'token'
   | 'referral'
   | 'buy'
   | 'portfolio'
@@ -100,6 +102,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
   },
   locker: { id: 'locker', code: 'LK', title: 'Locker', path: `${TERMINAL_BASE}/locker`, kind: 'page' },
   multisender: { id: 'multisender', code: 'MS', title: 'Multisender', path: `${TERMINAL_BASE}/multisender`, kind: 'page' },
+  'create-token': { id: 'create-token', code: 'CT', title: 'Create token', path: `${TERMINAL_BASE}/token/new`, kind: 'page' },
   referrals: { id: 'referrals', code: 'RF', title: 'Referrals', path: `${TERMINAL_BASE}/referrals`, kind: 'page' },
   portfolio: { id: 'portfolio', code: 'B5', title: 'Portfolio', path: `${TERMINAL_BASE}/portfolio`, kind: 'page' },
   'market-detail': {
@@ -178,6 +181,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'locker', label: 'Locker', icon: 'locker', path: '/locker' },
   // Batch-send a token / native to many addresses in one tx (HookSwap Disperse contract).
   { id: 'multisender', label: 'Multisender', icon: 'multisender', path: '/multisender' },
+  // Launch a fixed-supply ERC-20 (HookSwapTokenFactory), then hand off to pool creation.
+  { id: 'create-token', label: 'Create token', icon: 'token', path: '/token/new' },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
   // Trading leaderboard — trader ranking from the swap indexer (native volume / trades / tokens).
   { id: 'leaderboard', label: 'Leaderboard', icon: 'leaderboard', path: '/leaderboard' },

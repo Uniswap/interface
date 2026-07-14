@@ -31,6 +31,7 @@ const TerminalPoolsPage = lazy(() => import('~/terminal/TerminalPoolsPage'))
 const TerminalPositionsPage = lazy(() => import('~/terminal/TerminalPositionsPage'))
 const TerminalLockerPage = lazy(() => import('~/terminal/TerminalLockerPage'))
 const TerminalMultisenderPage = lazy(() => import('~/terminal/TerminalMultisenderPage'))
+const TerminalCreateTokenPage = lazy(() => import('~/terminal/TerminalCreateTokenPage'))
 const TerminalPortfolioPage = lazy(() => import('~/terminal/TerminalPortfolioPage'))
 const TerminalActivityPage = lazy(() => import('~/terminal/TerminalActivityPage'))
 const TerminalAnalyticsPage = lazy(() => import('~/terminal/TerminalAnalyticsPage'))
@@ -365,6 +366,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <TerminalMultisenderPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/token/new',
+    getTitle: () => 'HookSwap Create Token',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalCreateTokenPage />
       </Suspense>
     ),
   }),

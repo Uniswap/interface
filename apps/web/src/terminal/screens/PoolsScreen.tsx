@@ -418,8 +418,12 @@ function PoolsScreenBody(): JSX.Element {
   const resolvedBase =
     base ?? options.find((o) => o.address === NATIVE_CHAIN_ID) ?? options.find((o) => o.symbol === 'WETH') ?? options[0]
 
-  // Preselect the base from a Market-Detail "Add liquidity" deep-link (?token0=SYM). Runs
-  // once after options load; never clobbers a later manual pick.
+  // Project token — resolved from a pasted address by REAL on-chain reads.
+  const [projectAddr, setProjectAddr] = useState('')
+
+  // Preselect the base from a Market-Detail "Add liquidity" deep-link (?token0=SYM), and
+  // prefill the project token from a Create-Token hand-off (?project=0x…). Runs once after
+  // options load; never clobbers a later manual pick.
   const [searchParams] = useSearchParams()
   const didSeed = useRef(false)
   useEffect(() => {
@@ -433,11 +437,14 @@ function PoolsScreenBody(): JSX.Element {
         setBase(found)
       }
     }
+    // Create-Token → Pools hand-off: prefill the project token from a valid ?project= address.
+    const project = searchParams.get('project')
+    if (project && isAddress(project)) {
+      setProjectAddr(project)
+    }
     didSeed.current = true
   }, [options, searchParams])
 
-  // Project token — resolved from a pasted address by REAL on-chain reads.
-  const [projectAddr, setProjectAddr] = useState('')
   const projValid = isAddress(projectAddr)
   const projectAddr0x = assume0xAddress(projValid ? projectAddr : undefined)
 
