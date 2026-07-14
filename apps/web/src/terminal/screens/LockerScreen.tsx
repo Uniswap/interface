@@ -39,6 +39,7 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { useAccount } from '~/hooks/useAccount'
 import { StatCard } from '~/terminal/components/StatCard'
 import {
+  nftPositionManagerAbi,
   tokenLockerAbi,
   tokenLockerManagerAbi,
   v3PositionLockerAbi,
@@ -148,6 +149,60 @@ function TextField({
         outline: 'none',
       }}
     />
+  )
+}
+
+/** Styled native <select> matching the terminal TextField look. */
+function SelectField({
+  value,
+  onChange,
+  children,
+}: {
+  value: string
+  onChange: (v: string) => void
+  children: React.ReactNode
+}): JSX.Element {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      style={{
+        width: '100%',
+        boxSizing: 'border-box',
+        border: `1px solid ${terminalColors.line}`,
+        borderRadius: 11,
+        background: terminalColors.bg,
+        padding: '10px 12px',
+        fontFamily: MONO,
+        fontSize: 13.5,
+        fontWeight: 500,
+        color: terminalColors.ink,
+        outline: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      {children}
+    </select>
+  )
+}
+
+/** Honest inline hint used by the v3 position selector (loading / empty / gated). */
+function FieldHint({ children }: { children: React.ReactNode }): JSX.Element {
+  return (
+    <div
+      style={{
+        fontFamily: SANS,
+        fontSize: 12.5,
+        color: terminalColors.ink3Alt,
+        lineHeight: 1.5,
+        border: `1px dashed ${terminalColors.line}`,
+        borderRadius: 11,
+        background: terminalColors.panel,
+        padding: '10px 12px',
+      }}
+    >
+      {children}
+    </div>
   )
 }
 
@@ -784,6 +839,83 @@ function V3Tab({
   // live approval and require it before enabling the Lock write (else the tx reverts).
   const nftManagerAddr = assume0xAddress(validNftManager ? effectiveNftManager : undefined)
   const tokenIdBig = validTokenId ? BigInt(tokenId) : undefined
+
+  // ── Auto-enumerate the connected wallet's owned v3 positions ─────────────────
+  // The NonfungiblePositionManager is ERC721Enumerable, so the wallet's positions
+  // are read directly on-chain: balanceOf(owner) → tokenOfOwnerByIndex(owner, i)
+  // for the tokenIds → positions(tokenId) for a readable token0/token1/fee label.
+  // Real reads only — honest loading / "none found" states (v3 liquidity is sparse
+  // on Robinhood). Selecting a position sets the same `tokenId` state the lock/
+  // approval logic already keys off, so nothing downstream changes.
+  const MAX_ENUM_POSITIONS = 50
+  const enumEnabled = deployed && validNftManager && Boolean(owner)
+  const balanceRead = useReadContract({
+    address: nftManagerAddr,
+    chainId,
+    abi: erc721Abi,
+    functionName: 'balanceOf',
+    args: owner ? [owner] : undefined,
+    query: { enabled: enumEnabled },
+  })
+  const ownedCount =
+    balanceRead.data !== undefined ? Math.min(Number(balanceRead.data as bigint), MAX_ENUM_POSITIONS) : 0
+  const tokenIdsRead = useReadContracts({
+    contracts: Array.from({ length: ownedCount }, (_, i) => ({
+      address: nftManagerAddr,
+      chainId,
+      abi: nftPositionManagerAbi,
+      functionName: 'tokenOfOwnerByIndex' as const,
+      args: [owner as Address, BigInt(i)] as const,
+    })),
+    query: { enabled: enumEnabled && ownedCount > 0 },
+  })
+  const ownedTokenIds = useMemo(() => {
+    if (ownedCount === 0 && balanceRead.data !== undefined) {
+      return [] as bigint[]
+    }
+    if (!tokenIdsRead.data) {
+      return undefined
+    }
+    const out: bigint[] = []
+    for (const entry of tokenIdsRead.data) {
+      if (entry.status === 'success' && entry.result !== undefined) {
+        out.push(entry.result as bigint)
+      }
+    }
+    return out
+  }, [ownedCount, balanceRead.data, tokenIdsRead.data])
+  const positionsRead = useReadContracts({
+    contracts: (ownedTokenIds ?? []).map((id) => ({
+      address: nftManagerAddr,
+      chainId,
+      abi: nftPositionManagerAbi,
+      functionName: 'positions' as const,
+      args: [id] as const,
+    })),
+    query: { enabled: enumEnabled && Boolean(ownedTokenIds && ownedTokenIds.length > 0) },
+  })
+  const ownedPositions = useMemo<{ tokenId: bigint; label: string }[] | undefined>(() => {
+    if (!ownedTokenIds) {
+      return undefined
+    }
+    const posData = positionsRead.data
+    return ownedTokenIds.map((id, i) => {
+      const entry = posData?.[i]
+      let label = `Position #${id.toString()}`
+      if (entry && entry.status === 'success' && entry.result) {
+        const r = entry.result as readonly [
+          bigint, Address, Address, Address, number, number, number, bigint, bigint, bigint, bigint, bigint,
+        ]
+        label = `#${id.toString()} · ${shortAddr(r[2])}/${shortAddr(r[3])} · ${(Number(r[4]) / 10000).toString()}%`
+      }
+      return { tokenId: id, label }
+    })
+  }, [ownedTokenIds, positionsRead.data])
+  const positionsLoading =
+    enumEnabled && (balanceRead.isLoading || (ownedCount > 0 && ownedTokenIds === undefined))
+
+  const [advanced, setAdvanced] = useState(false)
+
   const getApprovedRead = useReadContract({
     address: nftManagerAddr,
     chainId,
@@ -877,25 +1009,74 @@ function V3Tab({
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <FieldLabel>Position manager (NFT)</FieldLabel>
-                <TextField
-                  value={nftManager || defaultNftManager || ''}
-                  onChange={setNftManager}
-                  placeholder="0x…"
-                />
-                {defaultNftManager && !nftManager ? (
-                  <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginTop: 5 }}>
-                    Default: chain NonfungiblePositionManager
-                  </div>
-                ) : null}
-              </div>
-              <div>
-                <FieldLabel>Position token ID</FieldLabel>
-                <TextField value={tokenId} onChange={setTokenId} placeholder="e.g. 12345" />
+                <FieldLabel>Your v3 position</FieldLabel>
+                {!connected ? (
+                  <FieldHint>Connect your wallet to load your Uniswap-v3 positions.</FieldHint>
+                ) : !defaultNftManager && !nftManager ? (
+                  <FieldHint>
+                    No NonfungiblePositionManager is configured for {chainLabel}. Enter one under Advanced to load
+                    positions.
+                  </FieldHint>
+                ) : positionsLoading ? (
+                  <FieldHint>Loading your positions…</FieldHint>
+                ) : ownedPositions && ownedPositions.length > 0 ? (
+                  <SelectField value={tokenId} onChange={setTokenId}>
+                    <option value="">Select a position…</option>
+                    {ownedPositions.map((p) => (
+                      <option key={p.tokenId.toString()} value={p.tokenId.toString()}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </SelectField>
+                ) : (
+                  <FieldHint>No v3 positions found in this wallet.</FieldHint>
+                )}
               </div>
               <div>
                 <FieldLabel>Unlock date &amp; time</FieldLabel>
                 <TextField value={unlock} onChange={setUnlock} type="datetime-local" mono={false} />
+              </div>
+
+              {/* Advanced — override the NFT manager / enter a token ID by hand. */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setAdvanced((v) => !v)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                    color: terminalColors.ink3Alt,
+                  }}
+                >
+                  {advanced ? '− ADVANCED' : '+ ADVANCED'}
+                </button>
+                {advanced ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 10 }}>
+                    <div>
+                      <FieldLabel>Position manager (NFT)</FieldLabel>
+                      <TextField
+                        value={nftManager || defaultNftManager || ''}
+                        onChange={setNftManager}
+                        placeholder="0x…"
+                      />
+                      {defaultNftManager && !nftManager ? (
+                        <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt, marginTop: 5 }}>
+                          Default: chain NonfungiblePositionManager
+                        </div>
+                      ) : null}
+                    </div>
+                    <div>
+                      <FieldLabel>Position token ID (manual)</FieldLabel>
+                      <TextField value={tokenId} onChange={setTokenId} placeholder="e.g. 12345" />
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           )}

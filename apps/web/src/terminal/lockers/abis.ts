@@ -199,3 +199,47 @@ export const v3PositionLockerAbi = [
     outputs: [],
   },
 ] as const
+
+/* ------------------------------------------------ 4. Uniswap-v3 NFT position manager */
+
+/**
+ * nftPositionManagerAbi — minimal read fragments of the canonical Uniswap-v3
+ * NonfungiblePositionManager (ERC721Enumerable). Used to auto-enumerate the
+ * connected wallet's owned v3 position NFTs for the locker's position selector:
+ *   • tokenOfOwnerByIndex(owner, i) — the i-th owned tokenId (0..balanceOf-1).
+ *   • positions(tokenId)            — token0/token1/fee for a readable label.
+ * `balanceOf` / `approve` / `getApproved` / `isApprovedForAll` come from viem's
+ * `erc721Abi` (already imported in the screen). Real on-chain reads only.
+ */
+export const nftPositionManagerAbi = [
+  {
+    type: 'function',
+    name: 'tokenOfOwnerByIndex',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'index', type: 'uint256' },
+    ],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    type: 'function',
+    name: 'positions',
+    stateMutability: 'view',
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
+    outputs: [
+      { name: 'nonce', type: 'uint96' },
+      { name: 'operator', type: 'address' },
+      { name: 'token0', type: 'address' },
+      { name: 'token1', type: 'address' },
+      { name: 'fee', type: 'uint24' },
+      { name: 'tickLower', type: 'int24' },
+      { name: 'tickUpper', type: 'int24' },
+      { name: 'liquidity', type: 'uint128' },
+      { name: 'feeGrowthInside0LastX128', type: 'uint256' },
+      { name: 'feeGrowthInside1LastX128', type: 'uint256' },
+      { name: 'tokensOwed0', type: 'uint128' },
+      { name: 'tokensOwed1', type: 'uint128' },
+    ],
+  },
+] as const
