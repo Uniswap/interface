@@ -193,6 +193,15 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M12 14c0-3.5 3-6 8-6 0 3.5-3 6-8 6z" />
         </svg>
       )
+    case 'airdrop':
+      // Airdrop — a parachute dropping tokens to many recipients.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 0 1 18 0" />
+          <path d="M3 12l4.5 4M21 12l-4.5 4M12 12l-2 4M12 12l2 4" />
+          <path d="M10 16h4v3a2 2 0 0 1-4 0z" />
+        </svg>
+      )
     case 'widget':
       // Embeddable widget builder — a frame with an inset panel.
       return (
