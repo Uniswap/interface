@@ -32,6 +32,7 @@ const TerminalPositionsPage = lazy(() => import('~/terminal/TerminalPositionsPag
 const TerminalLockerPage = lazy(() => import('~/terminal/TerminalLockerPage'))
 const TerminalMultisenderPage = lazy(() => import('~/terminal/TerminalMultisenderPage'))
 const TerminalCreateTokenPage = lazy(() => import('~/terminal/TerminalCreateTokenPage'))
+const TerminalVestingPage = lazy(() => import('~/terminal/TerminalVestingPage'))
 const TerminalPortfolioPage = lazy(() => import('~/terminal/TerminalPortfolioPage'))
 const TerminalActivityPage = lazy(() => import('~/terminal/TerminalActivityPage'))
 const TerminalAnalyticsPage = lazy(() => import('~/terminal/TerminalAnalyticsPage'))
@@ -376,6 +377,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <TerminalCreateTokenPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/vesting',
+    getTitle: () => 'HookSwap Vesting',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalVestingPage />
       </Suspense>
     ),
   }),

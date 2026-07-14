@@ -37,6 +37,7 @@ export const paths = [
   '/locker',
   '/multisender',
   '/token/new',
+  '/vesting',
   '/activity',
   '/analytics',
   '/leaderboard',

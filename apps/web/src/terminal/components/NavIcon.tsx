@@ -175,6 +175,15 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M12 8v8M8 12h8" />
         </svg>
       )
+    case 'vesting':
+      // Vesting — an hourglass: tokens unlocking over time on a cliff + linear curve.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 3h12M6 21h12" />
+          <path d="M7.5 3v3.2c0 1.1.5 2.1 1.4 2.8L12 12l-3.1 3c-.9.7-1.4 1.7-1.4 2.8V21" />
+          <path d="M16.5 3v3.2c0 1.1-.5 2.1-1.4 2.8L12 12l3.1 3c.9.7 1.4 1.7 1.4 2.8V21" />
+        </svg>
+      )
     case 'widget':
       // Embeddable widget builder — a frame with an inset panel.
       return (

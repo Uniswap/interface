@@ -71,6 +71,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   if (pathname === '/token/new') {
     return 'create-token'
   }
+  if (pathname === '/vesting') {
+    return 'vesting'
+  }
   if (pathname === '/activity') {
     return 'notifications'
   }
@@ -123,6 +126,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/token')) {
     return 'create-token'
+  }
+  if (rest.startsWith('/vesting')) {
+    return 'vesting'
   }
   if (rest.startsWith('/portfolio')) {
     return 'portfolio'
@@ -430,6 +436,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="locker" element={<Navigate to="/locker" replace />} />
         <Route path="multisender" element={<Navigate to="/multisender" replace />} />
         <Route path="token/new" element={<Navigate to="/token/new" replace />} />
+        <Route path="vesting" element={<Navigate to="/vesting" replace />} />
         <Route path="portfolio" element={<Navigate to="/portfolio" replace />} />
         <Route path="activity" element={<Navigate to="/activity" replace />} />
         <Route path="notifications" element={<Navigate to="/activity" replace />} />
