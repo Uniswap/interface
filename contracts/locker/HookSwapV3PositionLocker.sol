@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
-// Derived from OnlyMoons (github.com/onlymoons-io/onlymoons), GPL-3.0.
+// ORIGINAL HookSwap code — the v3 position-locking logic below is NOT derived from
+// OnlyMoons (OnlyMoons only locks fungible ERC-20 / v2-LP tokens, never v3 NFTs).
+// It is licensed GPL-3.0 because it ships inside the OnlyMoons-derived locker kit and
+// reuses the GPL-3.0 `Ownable` helper — copyleft therefore applies to the whole kit.
 //
 // HookSwap V3 Position Locker — locks Uniswap-V3 concentrated-liquidity
 // positions (ERC-721 NFTs from the NonfungiblePositionManager).
