@@ -296,8 +296,20 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
         padding: '11px 13px',
       }}
     >
-      Lockers aren&apos;t deployed on {chainLabel} yet. This panel activates automatically once the HookSwap locker
-      contracts are live on this chain.
+      <div
+        style={{
+          fontFamily: MONO,
+          fontSize: 10.5,
+          fontWeight: 600,
+          letterSpacing: '0.06em',
+          color: terminalColors.greenDeep,
+          marginBottom: 6,
+        }}
+      >
+        COMING SOON
+      </div>
+      Locking isn&apos;t live on {chainLabel} yet — this panel activates automatically once the HookSwap locker contracts
+      are deployed.
     </div>
   )
 }

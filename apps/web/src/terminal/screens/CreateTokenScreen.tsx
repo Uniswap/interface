@@ -194,8 +194,20 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
         padding: '11px 13px',
       }}
     >
-      The token factory isn&apos;t deployed on {chainLabel} yet. This screen activates automatically once the HookSwap
-      token factory contract is live on this chain.
+      <div
+        style={{
+          fontFamily: MONO,
+          fontSize: 10.5,
+          fontWeight: 600,
+          letterSpacing: '0.06em',
+          color: terminalColors.greenDeep,
+          marginBottom: 6,
+        }}
+      >
+        COMING SOON
+      </div>
+      Token creation isn&apos;t live on {chainLabel} yet — this screen activates automatically once the HookSwap token
+      factory is deployed.
     </div>
   )
 }

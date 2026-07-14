@@ -218,8 +218,20 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
         padding: '11px 13px',
       }}
     >
-      The multisender isn&apos;t deployed on {chainLabel} yet. This screen activates automatically once the HookSwap
-      Disperse contract is live on this chain.
+      <div
+        style={{
+          fontFamily: MONO,
+          fontSize: 10.5,
+          fontWeight: 600,
+          letterSpacing: '0.06em',
+          color: terminalColors.greenDeep,
+          marginBottom: 6,
+        }}
+      >
+        COMING SOON
+      </div>
+      Batch sending isn&apos;t live on {chainLabel} yet — this screen activates automatically once the HookSwap Disperse
+      contract is deployed.
     </div>
   )
 }
