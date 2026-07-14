@@ -35,6 +35,7 @@ export const paths = [
   '/markets',
   '/markets/:poolId',
   '/locker',
+  '/multisender',
   '/activity',
   '/analytics',
   '/leaderboard',

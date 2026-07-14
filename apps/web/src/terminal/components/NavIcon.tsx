@@ -156,6 +156,17 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           />
         </svg>
       )
+    case 'multisender':
+      // Multisender — one source fanning out to many recipients.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <circle cx={5} cy={12} r={2.5} />
+          <circle cx={19} cy={5} r={2} />
+          <circle cx={19} cy={12} r={2} />
+          <circle cx={19} cy={19} r={2} />
+          <path d="M7.3 11l9.7-5.4M7.5 12h9.5M7.3 13l9.7 5.4" />
+        </svg>
+      )
     case 'widget':
       // Embeddable widget builder — a frame with an inset panel.
       return (
