@@ -203,7 +203,7 @@ function buildProtocolSeries(agg: V2UsdAggregate): {
   return { dailyProtocolTvl, historicalProtocolVolume }
 }
 
-async function handleProtocolStats(req: ProtocolStatsRequest): Promise<ProtocolStatsResponse> {
+export async function handleProtocolStats(req: ProtocolStatsRequest): Promise<ProtocolStatsResponse> {
   const chainIds = resolveRequestChainIds(req.chainId)
   if (chainIds.length === 0) {
     return new ProtocolStatsResponse() // empty-but-valid for an unsupported/unknown chain

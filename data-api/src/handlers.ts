@@ -404,7 +404,7 @@ function buildPoolStats(db: SqliteDatabase, chainId: number, poolAddress: string
 
 // ---------- REAL: listTokens ----------
 
-async function handleListTokens(req: ListTokensRequest): Promise<ListTokensResponse> {
+export async function handleListTokens(req: ListTokensRequest): Promise<ListTokensResponse> {
   const chainIds = resolveChainIds(req.chainIds)
   const tokens: Token[] = []
   // Reuse the v2 pairs discovered below to locate each token's representative wrapped-native pool
@@ -521,7 +521,7 @@ async function handleListTokens(req: ListTokensRequest): Promise<ListTokensRespo
 
 // ---------- REAL: listTopPools ----------
 
-async function handleListTopPools(req: ListTopPoolsRequest): Promise<ListTopPoolsResponse> {
+export async function handleListTopPools(req: ListTopPoolsRequest): Promise<ListTopPoolsResponse> {
   const chainIds = resolveChainIds(req.chainIds)
   const pools: Pool[] = []
 

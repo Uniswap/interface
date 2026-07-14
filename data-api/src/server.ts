@@ -22,6 +22,7 @@ import { createDataApiImpl } from './handlers'
 import { createSearchApiImpl } from './searchHandlers'
 import { createExploreStatsImpl } from './exploreStatsHandlers'
 import { supportedChainIds } from './chains'
+import { handleRestRequest, isRestReadPath } from './rest'
 import { startIngestLoop } from './indexer/ingest'
 
 // --- Connect router: register DataApiService + SearchService + ExploreStatsService with our handlers ---
@@ -54,15 +55,42 @@ const CORS_ALLOWLIST = new Set(
 )
 const CORS_WILDCARD = CORS_ALLOWLIST.has('*')
 
+/** True for `/health` (prefix-tolerant), matching the plain-HTTP health branch below. */
+function isHealthPath(path: string): boolean {
+  return path === '/health' || path.endsWith('/health')
+}
+
+/**
+ * A public read path = a GET (or its OPTIONS preflight) to `/health` or one of the read-only `/v1/*`
+ * REST routes (isRestReadPath, rest.ts). These are cookie-free and read-only, so they get a PUBLIC,
+ * NON-credentialed wildcard CORS policy. Everything else (the Connect/wallet surface) keeps the strict
+ * credentialed exact-origin allowlist unchanged.
+ */
+function isPublicReadPath(req: IncomingMessage, path: string): boolean {
+  if (req.method !== 'GET' && req.method !== 'OPTIONS') {
+    return false
+  }
+  return isHealthPath(path) || isRestReadPath(path)
+}
+
 function applyCorsHeaders(req: IncomingMessage, res: ServerResponse): void {
-  const requestOrigin = req.headers.origin
   // Always Vary on Origin so a cache/proxy can't serve one origin's ACAO to another.
   res.setHeader('Vary', 'Origin')
-  if (requestOrigin && CORS_ALLOWLIST.has(requestOrigin)) {
-    res.setHeader('Access-Control-Allow-Origin', requestOrigin)
-    res.setHeader('Access-Control-Allow-Credentials', 'true')
-  } else if (CORS_WILDCARD) {
+  const path = (req.url || '/').split('?')[0]
+  if (isPublicReadPath(req, path)) {
+    // Read-only, no cookies → safe public wildcard. Deliberately NO Access-Control-Allow-Credentials
+    // (credentials + "*" is invalid per spec, and these routes never read cookies/auth).
     res.setHeader('Access-Control-Allow-Origin', '*')
+  } else {
+    // Strict credentialed policy for the Connect/wallet surface: echo the Origin + ACAC:true ONLY on an
+    // exact allowlist match (never reflect an arbitrary origin with credentials).
+    const requestOrigin = req.headers.origin
+    if (requestOrigin && CORS_ALLOWLIST.has(requestOrigin)) {
+      res.setHeader('Access-Control-Allow-Origin', requestOrigin)
+      res.setHeader('Access-Control-Allow-Credentials', 'true')
+    } else if (CORS_WILDCARD) {
+      res.setHeader('Access-Control-Allow-Origin', '*')
+    }
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
   res.setHeader(
@@ -74,7 +102,7 @@ function applyCorsHeaders(req: IncomingMessage, res: ServerResponse): void {
   res.setHeader('Access-Control-Expose-Headers', 'connect-protocol-version')
 }
 
-const server = createServer((req: IncomingMessage, res: ServerResponse) => {
+const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
   applyCorsHeaders(req, res)
 
   if (req.method === 'OPTIONS') {
@@ -85,7 +113,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 
   const url = req.url || '/'
 
-  if (url === '/health' || url.endsWith('/health')) {
+  if (isHealthPath(url.split('?')[0])) {
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.end(
@@ -121,6 +149,14 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         supportedChainIds: supportedChainIds(),
       }),
     )
+    return
+  }
+
+  // Public REST/JSON facade (read-only pools/tokens/search/stats) — an early branch mirroring /health,
+  // BEFORE the Connect path-slice/delegation. Returns true only when it handled (matched + wrote) the
+  // request; otherwise we fall through to Connect. Its `/v1/*` paths have no `.vN.` dotted segment, so
+  // they are never caught by CONNECT_SERVICE_PATH_RE below.
+  if (await handleRestRequest(req, res, url)) {
     return
   }
 

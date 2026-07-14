@@ -148,7 +148,7 @@ function matchesQuery(c: TokenCandidate, q: string): boolean {
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
 
-async function handleSearchTokens(req: SearchTokensRequest): Promise<SearchTokensResponse> {
+export async function handleSearchTokens(req: SearchTokensRequest): Promise<SearchTokensResponse> {
   const chainIds = resolveChainIds(req.chainIds)
   const query = (req.searchQuery ?? '').trim()
   const size = req.size && req.size > 0 ? req.size : DEFAULT_SIZE

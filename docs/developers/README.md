@@ -9,6 +9,7 @@ Reference for launchpads, SDK consumers, and anyone integrating with HookSwap.
 | [Launchpad integration](./launchpad-integration.md) | Create + seed a pool so a token becomes routable (v2 + v3 flows) |
 | [SDK](./sdk.md) | The HookSwap SDK — chain IDs + per-chain HookSwap addresses |
 | [Routing](./routing.md) | The HookSwap Trading API; how quoting works |
+| [Data API](./data-api.md) | Public read-only REST/JSON for pools, tokens, search & protocol stats (`data.hookswap.org`) |
 
 ## Key facts
 
