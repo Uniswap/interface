@@ -184,6 +184,15 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M16.5 3v3.2c0 1.1-.5 2.1-1.4 2.8L12 12l3.1 3c.9.7 1.4 1.7 1.4 2.8V21" />
         </svg>
       )
+    case 'farms':
+      // Farms (staking) — a growing sprout: stake seeds, harvest rewards over time.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 21v-9" />
+          <path d="M12 12C12 8 9 5 4 5c0 4 3 7 8 7z" />
+          <path d="M12 14c0-3.5 3-6 8-6 0 3.5-3 6-8 6z" />
+        </svg>
+      )
     case 'widget':
       // Embeddable widget builder — a frame with an inset panel.
       return (

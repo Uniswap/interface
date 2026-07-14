@@ -38,6 +38,7 @@ export const paths = [
   '/multisender',
   '/token/new',
   '/vesting',
+  '/farms',
   '/activity',
   '/analytics',
   '/leaderboard',

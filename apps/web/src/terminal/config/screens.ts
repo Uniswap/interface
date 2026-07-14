@@ -20,6 +20,7 @@ export type TerminalScreenId =
   | 'multisender' // Tools — batch-send a token / native to many addresses (Disperse)
   | 'create-token' // Tools — launch a fixed-supply ERC-20 (HookSwapTokenFactory)
   | 'vesting' // Tools — self-service token vesting (HookSwapVestingManager)
+  | 'farms' // Tools — self-service staking farms (StakingRewardsFactory)
   | 'referrals' // Account — referral codes + earnings (deployed referral router)
   | 'portfolio' // B5
   | 'market-detail' // B6
@@ -42,6 +43,7 @@ export type TerminalNavIcon =
   | 'multisender'
   | 'token'
   | 'vesting'
+  | 'farms'
   | 'referral'
   | 'buy'
   | 'portfolio'
@@ -106,6 +108,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
   multisender: { id: 'multisender', code: 'MS', title: 'Multisender', path: `${TERMINAL_BASE}/multisender`, kind: 'page' },
   'create-token': { id: 'create-token', code: 'CT', title: 'Create token', path: `${TERMINAL_BASE}/token/new`, kind: 'page' },
   vesting: { id: 'vesting', code: 'VS', title: 'Vesting', path: `${TERMINAL_BASE}/vesting`, kind: 'page' },
+  farms: { id: 'farms', code: 'FM', title: 'Farms', path: `${TERMINAL_BASE}/farms`, kind: 'page' },
   referrals: { id: 'referrals', code: 'RF', title: 'Referrals', path: `${TERMINAL_BASE}/referrals`, kind: 'page' },
   portfolio: { id: 'portfolio', code: 'B5', title: 'Portfolio', path: `${TERMINAL_BASE}/portfolio`, kind: 'page' },
   'market-detail': {
@@ -188,6 +191,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'create-token', label: 'Create token', icon: 'token', path: '/token/new' },
   // Self-service token vesting — create cliff + linear schedules; beneficiaries claim (HookSwapVestingManager).
   { id: 'vesting', label: 'Vesting', icon: 'vesting', path: '/vesting' },
+  // Self-service staking farms — create a funded reward stream; stake/claim/unstake (StakingRewardsFactory).
+  { id: 'farms', label: 'Farms', icon: 'farms', path: '/farms' },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
   // Trading leaderboard — trader ranking from the swap indexer (native volume / trades / tokens).
   { id: 'leaderboard', label: 'Leaderboard', icon: 'leaderboard', path: '/leaderboard' },

@@ -47,6 +47,7 @@ function isTerminalLayoutPath(pathname: string): boolean {
     pathname === '/multisender' ||
     pathname === '/token/new' ||
     pathname === '/vesting' ||
+    pathname === '/farms' ||
     pathname.startsWith('/portfolio') ||
     pathname === '/activity' ||
     pathname === '/analytics' ||
