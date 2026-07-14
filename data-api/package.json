@@ -20,10 +20,11 @@
     "@connectrpc/connect-node": "^1.5.0",
     "@bufbuild/protobuf": "^1.10.0",
     "@uniswap/client-data-api": "0.0.113",
+    "@uniswap/client-explore": "0.0.18",
     "better-sqlite3": "^12.10.0",
     "ethers": "^5.7.2"
   },
-  "//deps": "Versions pinned to what the root HookSwap monorepo already resolves: @connectrpc/connect 1.5.0 and @bufbuild/protobuf 1.10.0 (see root node_modules), @uniswap/client-data-api 0.0.113 (the SAME proto package the interface imports, so request/response Message classes are guaranteed to match). @connectrpc/connect-node is the Node server adapter (NOT installed in the root repo — added here). ethers v5 matches the trading-api-adapter for on-chain reads. better-sqlite3 12.10.0 matches the root node_modules copy (Phase-2 event indexer store; @types/better-sqlite3 is the one accepted TS2307 until installed — schema.ts documents this).",
+  "//deps": "Versions pinned to what the root HookSwap monorepo already resolves: @connectrpc/connect 1.5.0 and @bufbuild/protobuf 1.10.0 (see root node_modules), @uniswap/client-data-api 0.0.113 (the SAME proto package the interface imports, so request/response Message classes are guaranteed to match), @uniswap/client-explore 0.0.18 (ExploreStatsService protos — same package/version the interface resolves). @connectrpc/connect-node is the Node server adapter (NOT installed in the root repo — added here). ethers v5 matches the trading-api-adapter for on-chain reads. better-sqlite3 12.10.0 matches the root node_modules copy (Phase-2 event indexer store; @types/better-sqlite3 is the one accepted TS2307 until installed — schema.ts documents this).",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^20.11.0",
