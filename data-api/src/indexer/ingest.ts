@@ -107,6 +107,33 @@ async function loadBlockTimestamps(
 }
 
 /**
+ * Resolve the tx-origin EOA (`tx.from`) for a set of transaction hashes — the REAL trader wallet, which
+ * the v2 Swap event does NOT carry (Swap.sender = router, Swap.to = next-hop recipient; see schema.ts).
+ * One `getTransaction` per unique hash (multi-hop swaps share a tx → deduped by the Set), cached across
+ * chunks/pools. Failed lookups are simply left out of the cache (the caller leaves origin='' rather than
+ * fabricating an address). Never throws.
+ */
+async function loadTxOrigins(
+  provider: ethers.providers.JsonRpcProvider,
+  txHashes: string[],
+  cache: Map<string, string>,
+): Promise<void> {
+  const missing = Array.from(new Set(txHashes)).filter((h) => !cache.has(h))
+  await Promise.all(
+    missing.map(async (h) => {
+      try {
+        const tx = await provider.getTransaction(h)
+        if (tx && typeof tx.from === 'string' && tx.from) {
+          cache.set(h, tx.from.toLowerCase())
+        }
+      } catch {
+        // RPC hiccup — leave uncached; the row's origin stays '' (never a fabricated address).
+      }
+    }),
+  )
+}
+
+/**
  * Scan one pool's Swap+Sync logs from `startBlock`..`latest`, chunked + resumable. Returns the count
  * of rows newly inserted. Never throws (caller-safe); on a chunk error it logs and stops this pool's
  * pass at the last good cursor (resumes next pass).
@@ -118,6 +145,7 @@ async function ingestPool(
   startBlock: number,
   latest: number,
   tsCache: Map<number, number>,
+  originCache: Map<string, string>,
 ): Promise<{ swaps: number; syncs: number }> {
   const db = getDb()
   let swaps = 0
@@ -143,6 +171,12 @@ async function ingestPool(
 
     // Batch-resolve timestamps for every block appearing in this chunk (cached across chunks/pools).
     await loadBlockTimestamps(provider, logs.map((l) => l.blockNumber), tsCache)
+    // Batch-resolve tx.from (trader EOA) for the SWAP logs in this chunk (cached across chunks/pools).
+    await loadTxOrigins(
+      provider,
+      logs.filter((l) => l.topics[0] === SWAP_TOPIC).map((l) => l.transactionHash),
+      originCache,
+    )
 
     const swapRows: SwapEventRow[] = []
     const syncRows: SyncEventRow[] = []
@@ -155,7 +189,9 @@ async function ingestPool(
       if (log.topics[0] === SWAP_TOPIC) {
         const p = parseSwapLog(log)
         if (p) {
-          swapRows.push({ chainId, pool, blockNumber: log.blockNumber, timestamp: ts, ...p })
+          // tx.from (lowercased) is the real trader EOA; '' when the RPC lookup failed (never faked).
+          const origin = originCache.get(log.transactionHash) ?? ''
+          swapRows.push({ chainId, pool, blockNumber: log.blockNumber, timestamp: ts, origin, ...p })
         }
       } else if (log.topics[0] === SYNC_TOPIC) {
         const p = parseSyncLog(log)
@@ -191,6 +227,8 @@ export async function runIngestOnce(): Promise<IngestPoolResult[]> {
   for (const chainId of chainIds) {
     // Per-chain block-timestamp cache (block numbers are unique within a chain).
     const tsCache = new Map<number, number>()
+    // Per-chain tx-origin cache (txHash → tx.from), so multi-hop swaps sharing a tx resolve once.
+    const originCache = new Map<string, string>()
     try {
       const provider = getProvider(chainId)
       const latest = await provider.getBlockNumber()
@@ -227,7 +265,7 @@ export async function runIngestOnce(): Promise<IngestPoolResult[]> {
             continue
           }
 
-          const { swaps, syncs } = await ingestPool(provider, chainId, pool, start, latest, tsCache)
+          const { swaps, syncs } = await ingestPool(provider, chainId, pool, start, latest, tsCache, originCache)
           results.push({ chainId, pool, swaps, syncs })
         } catch (err) {
           // eslint-disable-next-line no-console

@@ -33,6 +33,7 @@ const TerminalLockerPage = lazy(() => import('~/terminal/TerminalLockerPage'))
 const TerminalPortfolioPage = lazy(() => import('~/terminal/TerminalPortfolioPage'))
 const TerminalActivityPage = lazy(() => import('~/terminal/TerminalActivityPage'))
 const TerminalAnalyticsPage = lazy(() => import('~/terminal/TerminalAnalyticsPage'))
+const TerminalLeaderboardPage = lazy(() => import('~/terminal/TerminalLeaderboardPage'))
 const TerminalReferralsPage = lazy(() => import('~/terminal/TerminalReferralsPage'))
 const TerminalSettingsPage = lazy(() => import('~/terminal/TerminalSettingsPage'))
 const TerminalWidgetPage = lazy(() => import('~/terminal/TerminalWidgetPage'))
@@ -373,6 +374,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <TerminalAnalyticsPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/leaderboard',
+    getTitle: () => 'HookSwap Leaderboard',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalLeaderboardPage />
       </Suspense>
     ),
   }),

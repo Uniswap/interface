@@ -25,6 +25,15 @@ import { handleListTokens, handleListTopPools } from './handlers'
 import { handleSearchTokens } from './searchHandlers'
 import { handleProtocolStats } from './exploreStatsHandlers'
 import { isSupportedChain } from './chains'
+import { getDb } from './indexer/schema'
+import {
+  getLeaderboard,
+  isUsdAnchored,
+  LEADERBOARD_METRICS,
+  LEADERBOARD_WINDOWS,
+  LeaderboardMetric,
+  LeaderboardWindow,
+} from './indexer/leaderboard'
 
 /**
  * The public GET routes, as path SUFFIXES. We match on suffix (path === suffix || path.endsWith(suffix))
@@ -32,7 +41,7 @@ import { isSupportedChain } from './chains'
  * `/health` branch in server.ts. None of these contains a `.vN.` dotted segment, so they are NEVER caught
  * by server.ts's `CONNECT_SERVICE_PATH_RE = /\/[\w.]+\.v\d+\.\w+\//` (which requires `<word>.v<digit>.<word>`).
  */
-const REST_ROUTE_SUFFIXES = ['/v1/pools', '/v1/tokens', '/v1/search', '/v1/stats'] as const
+const REST_ROUTE_SUFFIXES = ['/v1/pools', '/v1/tokens', '/v1/search', '/v1/stats', '/v1/leaderboard'] as const
 
 /** Default page size for /v1/pools when `limit` is omitted (bounds the JSON payload). */
 const DEFAULT_POOLS_LIMIT = 100
@@ -164,6 +173,40 @@ export async function handleRestRequest(req: IncomingMessage, res: ServerRespons
         // (resolveRequestChainIds treats '' as all supported → we pass '' when chainId is omitted).
         const resp = await handleProtocolStats(new ProtocolStatsRequest({ chainId: chainId ? String(chainId) : '' }))
         sendJson(res, 200, resp.toJson())
+        return true
+      }
+      case '/v1/leaderboard': {
+        // A leaderboard is per-chain → REQUIRE chainId here (400 if absent or invalid).
+        const { chainId, error } = parseChainId(params)
+        if (error) {
+          sendJson(res, 400, { error })
+          return true
+        }
+        if (chainId === undefined) {
+          sendJson(res, 400, { error: 'missing required query param "chainId"' })
+          return true
+        }
+        // window (default 7d) + metric (default volume) — validated against the allowed sets.
+        const windowRaw = (params.get('window') ?? '7d').trim() as LeaderboardWindow
+        if (!LEADERBOARD_WINDOWS.includes(windowRaw)) {
+          sendJson(res, 400, { error: `invalid window "${windowRaw}" (allowed: ${LEADERBOARD_WINDOWS.join(', ')})` })
+          return true
+        }
+        const metricRaw = (params.get('metric') ?? 'volume').trim() as LeaderboardMetric
+        if (!LEADERBOARD_METRICS.includes(metricRaw)) {
+          sendJson(res, 400, { error: `invalid metric "${metricRaw}" (allowed: ${LEADERBOARD_METRICS.join(', ')})` })
+          return true
+        }
+        const limit = parsePositiveInt(params, 'limit')
+        const db = getDb()
+        const rows = getLeaderboard(db, { chainId, window: windowRaw, metric: metricRaw, limit })
+        sendJson(res, 200, {
+          chainId,
+          window: windowRaw,
+          metric: metricRaw,
+          usdAnchored: isUsdAnchored(db, chainId),
+          rows,
+        })
         return true
       }
       default:

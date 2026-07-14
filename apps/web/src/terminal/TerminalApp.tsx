@@ -71,6 +71,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   if (pathname === '/analytics') {
     return 'analytics'
   }
+  if (pathname === '/leaderboard') {
+    return 'leaderboard'
+  }
   if (pathname === '/referrals') {
     return 'referrals'
   }
@@ -117,6 +120,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/analytics')) {
     return 'analytics'
+  }
+  if (rest.startsWith('/leaderboard')) {
+    return 'leaderboard'
   }
   if (rest.startsWith('/referrals')) {
     return 'referrals'
@@ -414,6 +420,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="activity" element={<Navigate to="/activity" replace />} />
         <Route path="notifications" element={<Navigate to="/activity" replace />} />
         <Route path="analytics" element={<Navigate to="/analytics" replace />} />
+        <Route path="leaderboard" element={<Navigate to="/leaderboard" replace />} />
         <Route path="referrals" element={<Navigate to="/referrals" replace />} />
         <Route path="settings" element={<Navigate to="/settings" replace />} />
         <Route path="widget" element={<Navigate to="/widget" replace />} />

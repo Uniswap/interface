@@ -59,6 +59,12 @@ export interface SwapEventRow {
   txHash: string
   sender: string
   recipient: string
+  /**
+   * tx-origin EOA (`tx.from`), lowercased — the real trader wallet. Captured per-tx by the ingest
+   * loop (see ingest.ts). Empty string when unresolved (RPC gap, or a row indexed before origin
+   * capture existed). NEVER fabricated; the leaderboard falls back to `recipient` when this is ''.
+   */
+  origin: string
   /** uint256 token amounts, decimal strings. */
   amount0In: string
   amount1In: string
@@ -109,6 +115,7 @@ CREATE TABLE IF NOT EXISTS swap_events (
   txHash       TEXT    NOT NULL,
   sender       TEXT    NOT NULL DEFAULT '',
   recipient    TEXT    NOT NULL DEFAULT '',
+  origin       TEXT    NOT NULL DEFAULT '',
   amount0In    TEXT    NOT NULL,
   amount1In    TEXT    NOT NULL,
   amount0Out   TEXT    NOT NULL,
@@ -122,6 +129,8 @@ CREATE INDEX IF NOT EXISTS idx_swap_pool_ts    ON swap_events (chainId, pool, ti
 -- (Swap.to = recipient, Swap.sender = the caller/router). These indexes make that lookup cheap.
 CREATE INDEX IF NOT EXISTS idx_swap_recipient  ON swap_events (chainId, recipient);
 CREATE INDEX IF NOT EXISTS idx_swap_sender     ON swap_events (chainId, sender);
+-- Trading-leaderboard attribution: aggregate swaps per trader EOA (tx.from) within a time window.
+CREATE INDEX IF NOT EXISTS idx_swap_origin      ON swap_events (chainId, origin, timestamp);
 
 CREATE TABLE IF NOT EXISTS sync_events (
   chainId      INTEGER NOT NULL,
@@ -177,6 +186,13 @@ export function getDb(): SqliteDatabase {
   db.pragma('journal_mode = WAL')
   db.pragma('synchronous = NORMAL')
   db.exec(DDL)
+  // Idempotent migration for DBs created before `origin` existed: ALTER adds the column when absent;
+  // SQLite throws "duplicate column name" when it already exists (fresh DB from DDL above) — swallow.
+  try {
+    db.exec(`ALTER TABLE swap_events ADD COLUMN origin TEXT NOT NULL DEFAULT ''`)
+  } catch {
+    // column already present — nothing to do.
+  }
   dbSingleton = db
   return db
 }
@@ -198,14 +214,14 @@ export function insertSwapEvents(db: SqliteDatabase, rows: SwapEventRow[]): numb
   }
   const stmt = db.prepare(
     `INSERT OR IGNORE INTO swap_events
-       (chainId, pool, blockNumber, logIndex, txHash, sender, recipient, amount0In, amount1In, amount0Out, amount1Out, timestamp)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+       (chainId, pool, blockNumber, logIndex, txHash, sender, recipient, origin, amount0In, amount1In, amount0Out, amount1Out, timestamp)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
   )
   const insertAll = db.transaction((batch: SwapEventRow[]) => {
     let inserted = 0
     for (const r of batch) {
       const res = stmt.run(
-        r.chainId, r.pool, r.blockNumber, r.logIndex, r.txHash, r.sender, r.recipient,
+        r.chainId, r.pool, r.blockNumber, r.logIndex, r.txHash, r.sender, r.recipient, r.origin,
         r.amount0In, r.amount1In, r.amount0Out, r.amount1Out, r.timestamp,
       )
       inserted += res.changes
@@ -274,7 +290,7 @@ export function setCursor(db: SqliteDatabase, chainId: number, pool: string, las
 
 // ---------- transaction/activity reads (ListTransactions / GetTransaction) ----------
 
-const SWAP_EVENT_COLUMNS = `chainId, pool, blockNumber, logIndex, txHash, sender, recipient,
+const SWAP_EVENT_COLUMNS = `chainId, pool, blockNumber, logIndex, txHash, sender, recipient, origin,
        amount0In, amount1In, amount0Out, amount1Out, timestamp`
 
 /**

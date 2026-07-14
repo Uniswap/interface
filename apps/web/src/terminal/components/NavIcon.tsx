@@ -93,6 +93,14 @@ export function NavIcon({ name, stroke, size = 18 }: NavIconProps): JSX.Element 
           <path d="M7 15l4-5 3 3 5-7" />
         </svg>
       )
+    case 'leaderboard':
+      // Trading leaderboard — a trophy.
+      return (
+        <svg {...common} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z" />
+          <path d="M17 5h3v2a3 3 0 01-3 3M7 5H4v2a3 3 0 003 3" />
+        </svg>
+      )
     case 'settings':
       return (
         <svg {...common} strokeLinecap="round" strokeLinejoin="round">

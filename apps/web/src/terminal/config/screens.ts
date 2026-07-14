@@ -23,6 +23,7 @@ export type TerminalScreenId =
   | 'confirm-swap' // B8 (modal)
   | 'connect-wallet' // B9 (modal)
   | 'analytics' // B10
+  | 'leaderboard' // LB — trading leaderboard (indexer-attributed trader ranking)
   | 'command-palette' // B11 (modal)
   | 'settings' // B12
   | 'notifications' // B13
@@ -40,6 +41,7 @@ export type TerminalNavIcon =
   | 'portfolio'
   | 'activity'
   | 'analytics'
+  | 'leaderboard'
   | 'settings'
   | 'docs'
   | 'launchpad'
@@ -119,6 +121,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
     kind: 'modal',
   },
   analytics: { id: 'analytics', code: 'B10', title: 'Analytics', path: `${TERMINAL_BASE}/analytics`, kind: 'page' },
+  leaderboard: { id: 'leaderboard', code: 'LB', title: 'Leaderboard', path: `${TERMINAL_BASE}/leaderboard`, kind: 'page' },
   'command-palette': {
     id: 'command-palette',
     code: 'B11',
@@ -171,6 +174,8 @@ export const terminalTradeNav: TerminalNavItem[] = [
   // Lock LP/tokens + v3 positions (HookSwap locker contracts).
   { id: 'locker', label: 'Locker', icon: 'locker', path: '/locker' },
   { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
+  // Trading leaderboard — trader ranking from the swap indexer (native volume / trades / tokens).
+  { id: 'leaderboard', label: 'Leaderboard', icon: 'leaderboard', path: '/leaderboard' },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */

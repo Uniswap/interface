@@ -37,6 +37,7 @@ export const paths = [
   '/locker',
   '/activity',
   '/analytics',
+  '/leaderboard',
   '/referrals',
   '/settings',
   '/widget',

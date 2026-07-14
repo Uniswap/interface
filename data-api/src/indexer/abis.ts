@@ -31,8 +31,11 @@ export const SWAP_TOPIC = v2PairIface.getEventTopic('Swap')
 /** topic0 for the Sync event. */
 export const SYNC_TOPIC = v2PairIface.getEventTopic('Sync')
 
-/** Swap fields derivable from the log alone — ingest adds chainId/pool/blockNumber/timestamp. */
-export type ParsedSwap = Omit<SwapEventRow, 'chainId' | 'pool' | 'blockNumber' | 'timestamp'>
+/**
+ * Swap fields derivable from the log alone — ingest adds chainId/pool/blockNumber/timestamp AND
+ * `origin` (tx.from, resolved per-tx from the transaction, not present on the Swap log itself).
+ */
+export type ParsedSwap = Omit<SwapEventRow, 'chainId' | 'pool' | 'blockNumber' | 'timestamp' | 'origin'>
 /** Sync fields derivable from the log alone — ingest adds chainId/pool/blockNumber/timestamp. */
 export type ParsedSync = Omit<SyncEventRow, 'chainId' | 'pool' | 'blockNumber' | 'timestamp'>
 
