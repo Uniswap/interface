@@ -102,6 +102,9 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
           'listTransactions',
           'getTransaction',
           'listPositions',
+          // getWalletBalances → Terminal Portfolio Net worth + 24h KPIs (aggregate-only). Real held-token
+          // count always; USD aggregate auto-populates once the WETH/USDG anchor pool is ingested.
+          'getWalletBalances',
           // ExploreStatsService (uniswap.explore.v1) — protocol TVL/volume aggregates for the Terminal
           // Landing hero + Analytics. USD figures auto-populate once the WETH/USDG anchor pool is ingested.
           'exploreStats.protocolStats',
@@ -111,7 +114,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,
         // volume, apr) populate only once a stablecoin (USDG) anchor pool exists — otherwise left unset.
         stubbed:
-          'remaining DataApiService methods (walletBalances, positions, charts, protocol stats, ...) — need higher-level time-series / protocol-stats endpoints, not the event indexer (which is live)',
+          'remaining DataApiService methods (charts, rewards, protocol stats, token prices, ...) — need higher-level time-series / protocol-stats endpoints, not the event indexer (which is live)',
         supportedChainIds: supportedChainIds(),
       }),
     )

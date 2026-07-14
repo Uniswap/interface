@@ -12,7 +12,7 @@ import type {
 import { createDataApiServiceClient, getGetWalletBalancesQueryOptions, type WithoutWalletAccount } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
+import { dataApiPostTransport } from 'uniswap/src/data/rest/base'
 import { type PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -96,8 +96,15 @@ export type GetWalletBalancesInput<TSelectData = PlainMessage<GetWalletBalancesR
   select?: (data: PlainMessage<GetWalletBalancesResponse> | undefined) => TSelectData
 }
 
+// Repointed from `entryGatewayPostTransport` (sessions/cookie-authed entry-gateway — does NOT index
+// HookSwap's custom chains, e.g. Robinhood) to the self-hosted HookSwap data-api (`dataApiPostTransport`
+// → data.hookswap.org/v2), whose GetWalletBalances handler serves the Terminal Portfolio Net worth / 24h
+// KPIs from real on-chain holdings (USD aggregate anchor-gated, honest "—" until a WETH/USDG pool exists).
+// Mirrors the same transport swap already done for getPositions / listTokens / listTransactions. The
+// data-api needs no auth, so the plain (non-credentialed) transport is correct; unsupported chains get an
+// honest empty-but-valid response.
 const dataApiClient = createDataApiServiceClient({
-  rpcClient: createPromiseClient(DataApiService, entryGatewayPostTransport),
+  rpcClient: createPromiseClient(DataApiService, dataApiPostTransport),
 })
 
 /** Wrapper around `DataApiService/GetWalletBalances`. The response is aggregate-only (no per-token entries). */

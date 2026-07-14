@@ -23,18 +23,24 @@
  *                    each of the chain's live v2 pairs, the owner's LP `balanceOf` + pair `totalSupply` give
  *                    the proportional underlying-reserve share (real raw + human quantities). USD value/fees
  *                    are left unset (no oracle). v2 only — v3 NFT positions deferred (see handleListPositions).
+ *   - getWalletBalances → the Terminal Portfolio header's Net worth + 24h KPIs (an aggregate-only response —
+ *                    per-category BalanceComponents, not per-token entries). Reuses the getPortfolio balance
+ *                    path so it sees the SAME holdings; the aggregate USD = Σ(held amount × anchor-priced USD)
+ *                    over the tokens that priced, so it stays UNSET (header "—") until a WETH/USDG anchor pool
+ *                    exists. `count` (held-token count) is always real; the 24h-change fields are left unset
+ *                    (no historical USD net-worth series). See handleGetWalletBalances.
  *
  * The event indexer EXISTS and is deployed (gated on INDEXER_ENABLED): it tails Swap/Sync events into
  * SQLite and feeds the TokenStats/PoolStats + transaction history above. What the stats power NOW is
  * native metrics; USD-denominated fields stay unset until a stablecoin (USDG) anchor pool exists.
  *
  * STUBS (valid empty proto responses, NOT errors — so the interface degrades gracefully):
- *   - everything else (wallet balances, positions, charts, rewards, protocol stats, token
- *     prices, RWAs, token-factory, reports, ...). These need higher-level time-series / protocol-stats
- *     endpoints (NOT the event indexer, which is live) and/or a USD price oracle. Returning an
- *     empty-but-valid Message keeps the frontend from crashing (it renders honest empty/"—" states).
- *     NOTE: net worth / 24h PnL on the Terminal Portfolio come from GetWalletBalances (still stubbed,
- *     USD-aggregate-only), NOT GetPortfolio — they stay "—" until a USD anchor pool exists.
+ *   - everything else (charts, rewards, protocol stats, token prices, RWAs, token-factory, reports, ...).
+ *     These need higher-level time-series / protocol-stats endpoints (NOT the event indexer, which is live)
+ *     and/or a USD price oracle. Returning an empty-but-valid Message keeps the frontend from crashing (it
+ *     renders honest empty/"—" states).
+ *     NOTE: net worth / 24h PnL on the Terminal Portfolio come from GetWalletBalances (now REAL,
+ *     USD-aggregate-only — see above), NOT GetPortfolio; both stay "—" until a USD anchor pool exists.
  *
  * NO FABRICATED DATA: value/USD/volume fields we can't source truthfully are left unset (proto
  * default / undefined), never invented. See the pricing note in onchain.ts.
@@ -44,10 +50,13 @@ import type { ServiceImpl } from '@connectrpc/connect'
 import { BigNumber, ethers } from 'ethers'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import {
+  BalanceComponent,
   GetPortfolioRequest,
   GetPortfolioResponse,
   GetTransactionRequest,
   GetTransactionResponse,
+  GetWalletBalancesRequest,
+  GetWalletBalancesResponse,
   ListPositionsRequest,
   ListPositionsResponse,
   ListTokensRequest,
@@ -57,6 +66,7 @@ import {
   ListTransactionsRequest,
   ListTransactionsResponse,
   Platform,
+  WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import {
   Amount,
@@ -858,6 +868,144 @@ async function handleGetPortfolio(req: GetPortfolioRequest): Promise<GetPortfoli
   return new GetPortfolioResponse({ portfolio })
 }
 
+// ---------- REAL: getWalletBalances (Terminal Portfolio net-worth / 24h KPI header, USD-anchor-gated) ----------
+
+/** One held (non-zero) token from the aggregate sweep: its human amount + its USD price (undefined = unpriceable). */
+interface HeldTokenValue {
+  human: number
+  priceUsd: number | undefined
+}
+
+/**
+ * REAL wallet-balances aggregate: powers the Terminal Portfolio header's Net worth + 24h KPIs, read via
+ * `usePortfolioTotalValue` → `selectPortfolioTotal` → `balance.total.{valueUsd, absoluteChange1d,
+ * percentChange1d, count}` (see getWalletBalances.ts:mapBalanceComponent). The response is aggregate-only —
+ * the proto (data.v1.WalletBalance) carries per-category BalanceComponents, NOT per-token entries.
+ *
+ * It reuses the EXACT getPortfolio balance path (collectPortfolioTokens + on-chain eth_getBalance/balanceOf
+ * + priceUsdForEntry) so this aggregate and GetPortfolio's per-token list see the SAME holdings, priced the
+ * same way. The wallet's aggregate USD = sum(human amount × tokenPriceUsd) over ONLY the tokens that priced.
+ *
+ * NATIVE QUANTITIES ARE ALWAYS TRUTHFUL; THE USD AGGREGATE IS ANCHOR-GATED (nothing is ever fabricated):
+ *   - `total.valueUsd` / `tokens.valueUsd` are set ONLY when at least one held token priced — i.e. the
+ *     chain has an ingested wrapped-native/stablecoin (WETH/USDG) anchor pool so `getUsdPerNative` (via
+ *     priceUsdForEntry) is defined. With NO anchor (Robinhood today) nothing prices → `valueUsd` stays
+ *     UNSET (proto default) → the header renders "—", unchanged from today. It lights up automatically once
+ *     the anchor is seeded + indexed. (This mirrors handleGetPortfolio's anchor gating on the same helpers.)
+ *   - `count` (a UNITLESS token count, never behind a `$`) is always the real number of held tokens — a
+ *     truthful on-chain quantity valid with or without the anchor.
+ *   - `absoluteChange1d` / `percentChange1d` (the 24h PnL) are ALWAYS left UNSET: an honest 24h delta needs
+ *     a historical time-series of the wallet's USD net worth, which we do NOT store. A single current value
+ *     → the UI shows no 24h change (0%), never a fabricated delta.
+ *   - `pools` / `earn` components are left unset — LP-position/earn USD valuations are not sourced here
+ *     (listPositions returns USD-unset positions). A requested POOLS category is honestly reported
+ *     "unavailable" by the frontend (getUnavailableCategories), not zero-filled.
+ *
+ * Error-safe: no EVM address, unsupported/empty chains, or any RPC/DB failure → an empty-but-valid response
+ * (a `balance` with the echoed walletAccount + a real `count`, USD unset). Never throws, never fabricates.
+ */
+async function handleGetWalletBalances(req: GetWalletBalancesRequest): Promise<GetWalletBalancesResponse> {
+  const walletAccount = req.walletAccount
+  // Aggregate-only proto: build a WalletBalance whose components are gated below. Echo back the request's
+  // walletAccount (the proto models WalletBalance.walletAccount) so the response is self-describing.
+  const buildResponse = (total: BalanceComponent, tokens: BalanceComponent): GetWalletBalancesResponse =>
+    new GetWalletBalancesResponse({
+      balance: new WalletBalance({ ...(walletAccount ? { walletAccount } : {}), total, tokens }),
+    })
+
+  const chainIds = resolveChainIds(req.chainIds)
+  // Same wallet extraction as handleGetPortfolio: the interface sends the wallet as
+  // walletAccount.platformAddresses (see @universe/api transformInput). EVM only — all HookSwap chains are EVM.
+  const evmAddresses = (req.walletAccount?.platformAddresses ?? [])
+    .filter((p) => p.platform === Platform.EVM && !!p.address)
+    .map((p) => p.address)
+  if (evmAddresses.length === 0 || chainIds.length === 0) {
+    // No EVM address / no supported chain → honest empty aggregate (count 0, USD unset), valid not an error.
+    return buildResponse(new BalanceComponent({ count: 0 }), new BalanceComponent({ count: 0 }))
+  }
+
+  // Indexer DB handle for the USD anchor. Unavailable (e.g. better-sqlite3 not installed) → quantities are
+  // still swept, just unpriceable → USD stays unset. Never throw, never fabricate.
+  let db: SqliteDatabase | undefined
+  try {
+    db = getDb()
+  } catch {
+    db = undefined
+  }
+
+  // Per-chain: collect the SAME token set as getPortfolio, read non-zero on-chain balances, price each.
+  const perChain = await Promise.all(
+    chainIds.map(async (chainId): Promise<HeldTokenValue[]> => {
+      const entries = await collectPortfolioTokens(chainId)
+      // v2 pairs (cached) for per-token USD pricing vs the wrapped-native; empty on RPC failure.
+      let pairs: V2PairData[] = []
+      try {
+        pairs = await getV2PairsCached(chainId)
+      } catch {
+        pairs = []
+      }
+      let usdPerNative: number | undefined
+      if (db) {
+        try {
+          usdPerNative = getUsdPerNative(db, chainId)
+        } catch {
+          usdPerNative = undefined
+        }
+      }
+
+      const held = await Promise.all(
+        entries.map(async (entry): Promise<HeldTokenValue | undefined> => {
+          // Sum the raw balance across every provided EVM address (the interface sends one).
+          let total = BigNumber.from(0)
+          for (const owner of evmAddresses) {
+            try {
+              const bal = entry.isNative
+                ? await getNativeBalance(chainId, owner)
+                : await getErc20Balance(chainId, entry.address, owner)
+              total = total.add(bal)
+            } catch {
+              // RPC hiccup / non-conforming contract for this owner+token — skip it, never fabricate.
+            }
+          }
+          if (total.isZero()) {
+            return undefined
+          }
+          const human = Number(ethers.utils.formatUnits(total, entry.decimals))
+          // Anchor-gated USD price (undefined when there's no anchor or no wrapped-native pool). Same
+          // helper (and orientation) handleGetPortfolio uses, so both methods price holdings identically.
+          const priceUsd = priceUsdForEntry(db, chainId, entry, usdPerNative, pairs)
+          return { human, priceUsd }
+        }),
+      )
+      return held.filter((h): h is HeldTokenValue => h !== undefined)
+    }),
+  )
+
+  const held = perChain.flat()
+  const tokenCount = held.length
+
+  // Aggregate USD over ONLY the tokens that priced (anchor-gated). None priced (no anchor) → leave unset.
+  let sumUsd = 0
+  let pricedCount = 0
+  for (const h of held) {
+    if (h.priceUsd !== undefined && Number.isFinite(h.priceUsd) && h.priceUsd > 0) {
+      sumUsd += h.human * h.priceUsd
+      pricedCount += 1
+    }
+  }
+
+  // count = real held-token count (always truthful). valueUsd set ONLY when the anchor priced ≥1 holding.
+  // absoluteChange1d / percentChange1d intentionally unset (no historical USD net-worth series → no honest delta).
+  const total = new BalanceComponent({ count: tokenCount })
+  const tokens = new BalanceComponent({ count: tokenCount })
+  if (pricedCount > 0 && Number.isFinite(sumUsd)) {
+    total.valueUsd = sumUsd
+    tokens.valueUsd = sumUsd
+  }
+
+  return buildResponse(total, tokens)
+}
+
 // ---------- REAL: listTransactions / getTransaction (wallet swap history from the indexer) ----------
 
 /**
@@ -1345,8 +1493,8 @@ async function handleListPositions(req: ListPositionsRequest): Promise<ListPosit
 
 /**
  * Every DataApiService method must be implemented for the Connect router. We implement listTokens,
- * listTopPools, getPortfolio, listTransactions, getTransaction and listPositions for real, and auto-generate
- * an empty-response stub for every other method by instantiating that method's response Message class
+ * listTopPools, getPortfolio, listTransactions, getTransaction, listPositions and getWalletBalances for real,
+ * and auto-generate an empty-response stub for every other method by instantiating that method's response Message class
  * (`methodInfo.O`) with no args — always a valid, empty proto response. This is intentionally NOT an
  * error/unimplemented: the interface treats an empty response as "no data" and shows honest empty
  * states rather than crashing.
@@ -1366,6 +1514,7 @@ export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   impl.listTransactions = (req: unknown) => handleListTransactions(req as ListTransactionsRequest)
   impl.getTransaction = (req: unknown) => handleGetTransaction(req as GetTransactionRequest)
   impl.listPositions = (req: unknown) => handleListPositions(req as ListPositionsRequest)
+  impl.getWalletBalances = (req: unknown) => handleGetWalletBalances(req as GetWalletBalancesRequest)
 
   return impl as unknown as ServiceImpl<typeof DataApiService>
 }
