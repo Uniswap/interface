@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import { IERC20 } from "../library/IERC20.sol";
+import { SafeERC20 } from "../library/SafeERC20.sol";
 import { ReentrancyGuard } from "../library/ReentrancyGuard.sol";
 
 /**
@@ -22,6 +23,8 @@ import { ReentrancyGuard } from "../library/ReentrancyGuard.sol";
  * at construction. Only the beneficiary can pull vested tokens via `release()`.
  */
 contract HookSwapVesting is ReentrancyGuard {
+  using SafeERC20 for IERC20;
+
   event Released(uint256 amount);
 
   uint256 private _id;
@@ -99,7 +102,7 @@ contract HookSwapVesting is ReentrancyGuard {
     uint256 amount = releasable();
     _released += amount;
     if (amount > 0) {
-      _token.transfer(_beneficiary, amount);
+      _token.safeTransfer(_beneficiary, amount);
     }
     emit Released(amount);
   }

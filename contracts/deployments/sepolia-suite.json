@@ -1,0 +1,63 @@
+{
+  "_note": "SEPOLIA TESTNET (chainId 11155111) TEST DEPLOYMENTS of the HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. NOT production/mainnet addresses. UPDATED 2026-07-14: multisender/vesting/farms REDEPLOYED with security fixes (multisender B-1 disperseEther reentrancy -> nonReentrant + computed-leftover refund; vesting H-1 SafeERC20 + M-2 amount>0; farms H-1 reward-token recover block + M-1 staking==reward guard). Fixes re-tested on-chain -- see securityFixRetests. tokenFactory + merkleDistributorFactory were NOT in scope and keep their original addresses.",
+  "chainId": 11155111,
+  "network": "sepolia",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0xd9d4795f2a12305a12c36455adad011f2d6143ab",
+    "tokenFactory": "0xf248c369c125094cdb95e8abee095c11758c8f14",
+    "merkleDistributorFactory": "0xa87a98a930d90fb8e68d497afe3ade02b949fc10",
+    "stakingRewardsFactory": "0x144331bb4c3026d135896cafec3ae3d667f4f376",
+    "vestingManager": "0x250c3448278f7b71e3e9b641f2efeb6074820e25"
+  },
+  "supersededPreFix": {
+    "_note": "PRE-FIX (vulnerable) addresses replaced by the 2026-07-14 security-fix redeploy above. Kept for provenance; do NOT use.",
+    "multisender_Disperse": "0xa24cd888adaf42011a49d8eaedb2fe751c54e7e2",
+    "stakingRewardsFactory": "0xb9df9afbcf909a16218285889912820c3f2c6313",
+    "vestingManager": "0xb92598fa464b96fec394a17a269ad18060ec60b2"
+  },
+  "deployTx": {
+    "_note": "Unchanged factories keep their original deploy tx hashes.",
+    "tokenFactory": "0xc0afb47dbee25dc568cecc60672dd7a3d8cbf16d6cb48ccce83c0711a3388960",
+    "merkleDistributorFactory": "0x379f1cab1bbc17766d17f612d88efa37b4ef7e77daf0bcd24f1e88adb621a0a6"
+  },
+  "fixDeployTx": {
+    "_note": "Deploy tx hashes for the 2026-07-14 security-fix redeploys.",
+    "multisender_Disperse": "0x6e2f242932a9d71d1c3aa83e7f33960bf1b3058599908924fef56538f51eb692",
+    "vestingManager": "0x9ecccda11ebcf4c15aed0ba779f1b8b5c97c967c924c7461a7d66c7add62f448",
+    "stakingRewardsFactory": "0x2d3aa101287e424cf321830883b2a27cb1d6a5964ecfc34c6de668cc0c6f6ea5"
+  },
+  "securityFixRetests": {
+    "_note": "On-chain proof (Sepolia) that each High/Medium is closed on the fixed contracts.",
+    "multisender_B1_disperseEther_reentrancy": {
+      "test": "disperseEther to 2 recipients (0.001 + 0.002 ETH) with 0.005 ETH over-send",
+      "tx": "0x8de3941ec6156d9cf7d9835f7a488e3ca9803e5cfcfc7281519247d5517f1f6f",
+      "result": "recipients got exact 0.001/0.002 ETH; refund == msg.value - sum = exactly 0.002 ETH (computed leftover, not address(this).balance); contract balance 0 after",
+      "disperseTokenSanityTx": "0x38703c948024c9e5dab1be7d6f716d2b5fa6e44d820ce6fb07e57c5e4d24a72f"
+    },
+    "vesting_H1_safeERC20_and_M2_amountZero": {
+      "createVestingTx": "0x45dcaa964b7d52d704a7bd3632e6a8a15f2535177daa393d01c1595b0e8d0082",
+      "releaseTx": "0x638b0cc65a4b17aa2d59d90848b72dd22cf4c3d84735164c8d392df4f83bac8a",
+      "m2_amountZero_revert": "createVesting(...,amount=0,...) reverts 'Vesting amount must be greater than zero' (eth_call)",
+      "result": "funding via safeTransferFrom + release via safeTransfer both succeed (SafeERC20 path); amount=0 rejected"
+    },
+    "farms_H1_rewardRecover_and_M1_sameToken": {
+      "createAndFundTx": "0x55039f25bec1f213c30bcc6b6663f41cb9bdc9c6697ef7f0a6cf67691b3b857f",
+      "h1_recoverRewardToken_revert": "recoverERC20(rewardsToken) reverts 'StakingRewards: cannot withdraw reward token' (eth_call)",
+      "m1_sameToken_revert": "createAndFund(sameToken,sameToken,...) reverts 'StakingRewardsFactory: staking==reward' (eth_call)",
+      "result": "distinct stake/reward farm funds correctly (10 TST, rewardRate 2.777e15/s); reward-token rug + same-token both blocked"
+    }
+  },
+  "testArtifacts": {
+    "_note": "Objects created during 2026-07-14 fix re-testing (not part of the deployable suite).",
+    "testToken_TST": "0x5c9465de0c47a664ff637101d3592b461ff3ed0e",
+    "testToken_STK": "0x78a1fb15b1c6fbb40656263a5d78ae5239519351",
+    "testFarm_STK_TST": "0xeF53C2e9D00D5A85433AC24c6CAF1C9E2B611708",
+    "testVestingChild": "0x4E49F1EEE1Bf95f1914Bbe4f6287496333f067D0",
+    "preFixArtifacts": {
+      "testMerkleDistributor": "0xcb3fd125424529605b92e022570497baa7c29753",
+      "testFarm": "0xc86d03df8e10315431091564ce0de9b31467d08c",
+      "testVestingChild": "0x4e6B656Bbda10B67F18342B4d9e939c08264D09D"
+    }
+  }
+}

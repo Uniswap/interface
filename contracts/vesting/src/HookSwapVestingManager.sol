@@ -15,10 +15,12 @@ pragma solidity ^0.8.0;
 
 import { Ownable } from "../library/Ownable.sol";
 import { IERC20 } from "../library/IERC20.sol";
+import { SafeERC20 } from "../library/SafeERC20.sol";
 import { ReentrancyGuard } from "../library/ReentrancyGuard.sol";
 import { HookSwapVesting } from "./HookSwapVesting.sol";
 
 contract HookSwapVestingManager is Ownable, ReentrancyGuard {
+  using SafeERC20 for IERC20;
   event VestingCreated(
     uint256 indexed id,
     address indexed child,
@@ -123,6 +125,7 @@ contract HookSwapVestingManager is Ownable, ReentrancyGuard {
     uint64 cliffDuration,
     uint64 duration
   ) external payable allowCreation nonReentrant {
+    require(amount > 0, "Vesting amount must be greater than zero");
     _collectFee();
 
     uint256 id = _vestingCount++;
@@ -139,8 +142,11 @@ contract HookSwapVestingManager is Ownable, ReentrancyGuard {
     _vestings[id] = child;
     address childAddress = address(child);
 
-    // fund the child schedule from the caller
-    IERC20(token).transferFrom(_msgSender(), childAddress, amount);
+    // fund the child schedule from the caller.
+    // NOTE: fee-on-transfer tokens are NOT supported — the child is created with
+    // `amount` as its total, but a fee-on-transfer token would deliver less than
+    // `amount` to the child, over-stating the vested total (M-1, out of scope).
+    IERC20(token).safeTransferFrom(_msgSender(), childAddress, amount);
 
     // index under beneficiary + creator (dedupe when they are the same address)
     _schedulesForAddress[beneficiary].push(id);

@@ -158,6 +158,10 @@ contract StakingRewards is Ownable, ReentrancyGuard {
   // ---------------------------------------------------------------------------
 
   /// @notice Stake `amount` of the staking token.
+  /// NOTE: fee-on-transfer / rebasing staking tokens are NOT supported — `_balances`
+  /// and `_totalSupply` are credited with the requested `amount`, but a fee-on-transfer
+  /// token would deliver less than `amount` to the contract, over-crediting the staker
+  /// (M-2, documented limitation; stake accounting is intentionally not reworked).
   function stake(uint256 amount) external nonReentrant updateReward(msg.sender) {
     require(amount > 0, "StakingRewards: cannot stake 0");
     _totalSupply += amount;
@@ -247,6 +251,7 @@ contract StakingRewards is Ownable, ReentrancyGuard {
    */
   function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
     require(tokenAddress != address(stakingToken), "StakingRewards: cannot withdraw staking token");
+    require(tokenAddress != address(rewardsToken), "StakingRewards: cannot withdraw reward token");
     IERC20(tokenAddress).safeTransfer(_owner(), tokenAmount);
     emit Recovered(tokenAddress, tokenAmount);
   }

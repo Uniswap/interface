@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 
 import { IERC20 } from "../library/IERC20.sol";
 import { SafeERC20 } from "../library/SafeERC20.sol";
+import { ReentrancyGuard } from "../library/ReentrancyGuard.sol";
 
 /**
  * @title Disperse
@@ -27,7 +28,7 @@ import { SafeERC20 } from "../library/SafeERC20.sol";
  * NOT audited. Vendors a minimal `IERC20` + `SafeERC20` (no OpenZeppelin import), matching
  * the sibling `contracts/referral` / `contracts/locker` kits.
  */
-contract Disperse {
+contract Disperse is ReentrancyGuard {
   using SafeERC20 for IERC20;
 
   /// @dev `recipients` and `amounts` must be the same length.
@@ -36,6 +37,8 @@ contract Disperse {
   error EmptyRecipients();
   /// @dev A native-currency transfer to `recipient` failed (recipient reverted / OOG).
   error EtherTransferFailed(address recipient);
+  /// @dev `msg.value` sent with {disperseEther} is less than the sum of `amounts`.
+  error InsufficientValue(uint256 required, uint256 provided);
 
   /**
    * @notice Batch-send an ERC-20 to many recipients, pulling PER RECIPIENT from the caller.
@@ -51,7 +54,7 @@ contract Disperse {
     IERC20 token,
     address[] calldata recipients,
     uint256[] calldata amounts
-  ) external {
+  ) external nonReentrant {
     uint256 len = recipients.length;
     if (len != amounts.length) {
       revert LengthMismatch();
@@ -75,7 +78,11 @@ contract Disperse {
    * @param recipients Destination addresses.
    * @param amounts    Amount (in wei) for each corresponding recipient.
    */
-  function disperseEther(address[] calldata recipients, uint256[] calldata amounts) external payable {
+  function disperseEther(address[] calldata recipients, uint256[] calldata amounts)
+    external
+    payable
+    nonReentrant
+  {
     uint256 len = recipients.length;
     if (len != amounts.length) {
       revert LengthMismatch();
@@ -83,6 +90,21 @@ contract Disperse {
     if (len == 0) {
       revert EmptyRecipients();
     }
+
+    // Sum the requested amounts up front (checked add) and require the caller sent
+    // AT LEAST that much. This makes the refund a computed constant below, so a
+    // malicious recipient can NOT re-enter and drain `address(this).balance`.
+    uint256 total = 0;
+    for (uint256 i = 0; i < len; ) {
+      total += amounts[i];
+      unchecked {
+        ++i;
+      }
+    }
+    if (total > msg.value) {
+      revert InsufficientValue(total, msg.value);
+    }
+
     for (uint256 i = 0; i < len; ) {
       (bool ok, ) = recipients[i].call{ value: amounts[i] }("");
       if (!ok) {
@@ -92,10 +114,13 @@ contract Disperse {
         ++i;
       }
     }
-    // Refund any dust (over-sent value) so the contract never custodies native funds.
-    uint256 remaining = address(this).balance;
-    if (remaining > 0) {
-      (bool refunded, ) = msg.sender.call{ value: remaining }("");
+
+    // Refund EXACTLY the over-sent leftover (a computed constant, NOT
+    // address(this).balance) so re-entrancy can never sweep more than the caller's
+    // own dust. Skip entirely when the caller sent exactly `total`.
+    uint256 refund = msg.value - total;
+    if (refund > 0) {
+      (bool refunded, ) = msg.sender.call{ value: refund }("");
       if (!refunded) {
         revert EtherTransferFailed(msg.sender);
       }

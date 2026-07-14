@@ -56,6 +56,7 @@ contract StakingRewardsFactory {
   ) external returns (address farm) {
     require(stakingToken != address(0), "Factory: stakingToken zero");
     require(rewardToken != address(0), "Factory: rewardToken zero");
+    require(stakingToken != rewardToken, "StakingRewardsFactory: staking==reward");
     require(rewardAmount > 0, "Factory: rewardAmount zero");
     require(duration > 0, "Factory: duration zero");
 
