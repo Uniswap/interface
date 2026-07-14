@@ -1,0 +1,17 @@
+{
+  "_readme": "Robinhood (4663) WETH/USDG STABLECOIN ANCHOR — a 1-pool SLICE of robinhood-3pools.json, for seeding (or re-seeding after a partial-failure) JUST the anchor once real USDG is in hand. USDG (Global Dollar 0x5fc5360D..) is REAL + non-mintable — deployer must hold >= amountB USDG before broadcast. The Phase-2 indexer reads this pool's reserves to compute usdPerNative -> USD prices/TVL/volume app-wide, so the initial ratio amountB/amountA MUST equal the LIVE USDG-per-WETH rate. Run: SEED_POOLS=config/robinhood-usdg-anchor.json ./scripts/seed.sh robinhood            (DRY-RUN) then --broadcast. Claude cannot broadcast.",
+
+  "_refresh": "ETH/USD = 1782.93 on 2026-07-13. UPDATE priceAperB + amountB to the live rate at broadcast so amountB/amountA (== USDG per WETH) tracks the market. amountA 0.008413 WETH == $15 at 1782.93; keep both legs ~equal value.",
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / USDG v2 — STABLECOIN ANCHOR ($15/side). REFRESH price to live before broadcast.",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168", "symbol": "USDG", "decimals": 6 },
+      "priceAperB": 1782.93,
+      "amountA": 0.008413,
+      "amountB": 15.0
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "_readme": "Robinhood (4663) 3-POOL seed — the 'Mixed' set, ~$15/side per pool (Reggie's choice, 2026-07-13). Creates/deepens THREE v2 pools so the Markets/Pools/Portfolio surfaces show real, tradeable liquidity: (1) DEEPEN the existing WETH/tHOOK dust pool; (2) a WETH/tROBIN pool (fresh mintable test token, adds a second market); (3) a WETH/USDG STABLECOIN ANCHOR — the pool the Phase-2 indexer reads to compute usdPerNative, which unlocks USD prices/TVL/volume across the whole app. Run: SEED_POOLS=config/robinhood-3pools.json ./scripts/seed.sh robinhood            (DRY-RUN first) then add --broadcast. Claude cannot broadcast — Reggie runs it with the funded deployer key. See RUNBOOK-robinhood-3pools.md for exact fund/acquire/broadcast/verify steps.",
+
+  "_sizing": "ETH/USD = 1782.93 on 2026-07-13 (CoinDesk) -> $15 = 0.008413 WETH per pool (3 pools = 0.025239 WETH total, auto-wrapped from native ETH by SeedPools._prepare). Deployer 0xc14C897c holds ~0.0598 native ETH on RH (verified via eth_getBalance 2026-07-13) — enough for all three WETH legs + gas. tHOOK: deployer holds ~999.9B (verified) — no funding needed. tROBIN: minted fresh (1e12) by the seeder. USDG: deployer holds 0 (verified) — MUST ACQUIRE 15 real USDG before broadcast (non-mintable). REFRESH the WETH/USDG price at broadcast time: set pool 3 priceAperB AND amountB so amountB/amountA == the LIVE USDG-per-WETH rate, else the anchor mis-prices the whole app.",
+
+  "_existing_pool_verified": "The WETH/tHOOK pair 0xbf54dFaC1fB1820fBeb5Be6fF09c4dc990DC0dC6 reserves were read on-chain 2026-07-13 = EXACTLY 0.0002 WETH / 0.2 tHOOK (token0=WETH 0x0Bd7D308.., token1=tHOOK 0x3b5a01Ef..) = ratio 1 WETH : 1000 tHOOK. Pool 1's amountA:amountB = 0.008413:8.413 is exactly 1:1000, so the v2 router consumes BOTH sides fully at the current price with no leftover and no price move (a pure depth add). The earlier $5 deepen was NOT broadcast — this pool is still original dust.",
+
+  "_price_impact_caveat": "At ~$15/side (~$30 TVL) each pool is still thin. Constant-product means small swaps move price a lot: on a ~$30-TVL pool a ~$1 swap is ~6-7% impact, a ~$3 swap ~18%. This makes all three pools quote + route for demo swaps at reasonable slippage; deepen further for real trading. The WETH/USDG anchor only needs to EXIST at the right price to unlock app-wide USD — its depth doesn't have to be large.",
+
+  "_ordering": "USDG (the only pool with an external-acquisition dependency) is LAST. seed.sh runs pools in array order and stops on the first failure ('Nothing after this pool ran'). So if USDG hasn't been acquired, pools 1+2 still seed and only the anchor fails — which can then be re-run alone (config/robinhood-usdg-anchor.json, a 1-pool slice) once USDG is in hand. Re-running pools 1 or 2 would ADD liquidity again (not idempotent), so do NOT blindly re-run the whole file after a partial success — re-run only the anchor.",
+
+  "4663": [
+    {
+      "protocol": "v2",
+      "label": "WETH / tHOOK v2 — $15 deepen of the existing pair (+0.008413 WETH / +8.413 tHOOK at the verified 1:1000 pool ratio)",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x3b5a01Efc59f3465b8Eb04697f97CFE0BA700D9D", "symbol": "tHOOK", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.008413,
+      "amountB": 8.413
+    },
+    {
+      "protocol": "v2",
+      "label": "WETH / tROBIN v2 — NEW market, fresh mintable test token (1 WETH : 1000 tROBIN, ~$1.78/tROBIN). Adds a second tradeable pool.",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "MINT", "name": "Test Robin Token", "symbol": "tROBIN", "decimals": 18 },
+      "priceAperB": 1000,
+      "amountA": 0.008413,
+      "amountB": 8.413
+    },
+    {
+      "protocol": "v2",
+      "label": "WETH / USDG v2 — STABLECOIN ANCHOR (unlocks USD across the app). USDG is REAL + non-mintable — deployer MUST hold 15 USDG first. REFRESH priceAperB + amountB to the LIVE USDG-per-WETH rate at broadcast.",
+      "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
+      "tokenB": { "kind": "ADDRESS", "address": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168", "symbol": "USDG", "decimals": 6 },
+      "priceAperB": 1782.93,
+      "amountA": 0.008413,
+      "amountB": 15.0
+    }
+  ]
+}
