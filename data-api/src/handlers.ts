@@ -19,6 +19,10 @@
  *                    a real SEND (input token) + RECEIVE (output token) Transfer, tx hash, block, and
  *                    timestamp. USD-valued transfer fields are left unset (no oracle — honest). Indexed
  *                    v2 swaps only (v3 Swap ingestion isn't wired yet — see buildPoolStats note).
+ *   - listPositions → a connected wallet's live on-chain v2 LP positions (Terminal Positions screen): for
+ *                    each of the chain's live v2 pairs, the owner's LP `balanceOf` + pair `totalSupply` give
+ *                    the proportional underlying-reserve share (real raw + human quantities). USD value/fees
+ *                    are left unset (no oracle). v2 only — v3 NFT positions deferred (see handleListPositions).
  *
  * The event indexer EXISTS and is deployed (gated on INDEXER_ENABLED): it tails Swap/Sync events into
  * SQLite and feeds the TokenStats/PoolStats + transaction history above. What the stats power NOW is
@@ -44,6 +48,8 @@ import {
   GetPortfolioResponse,
   GetTransactionRequest,
   GetTransactionResponse,
+  ListPositionsRequest,
+  ListPositionsResponse,
   ListTokensRequest,
   ListTokensResponse,
   ListTopPoolsRequest,
@@ -73,11 +79,18 @@ import {
   TransactionTypeFilter,
   Transfer,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import {
+  PairPosition,
+  Position,
+  PositionStatus,
+  ProtocolVersion,
+} from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
 import {
   getErc20Balance,
+  getErc20TotalSupply,
   getNativeBalance,
+  getTokenMeta,
   getV2Pairs,
   getV3Pools,
   TokenMeta,
@@ -1188,12 +1201,152 @@ async function handleGetTransaction(req: GetTransactionRequest): Promise<GetTran
   })
 }
 
+// ---------- REAL: listPositions (a wallet's live on-chain v2 LP positions) ----------
+
+/**
+ * REAL positions: a connected wallet's live on-chain Uniswap-v2 LP positions on each requested supported
+ * chain. NATIVE-ONLY / USD-UNSET, same honesty rule as every other handler here.
+ *
+ * For the request's `address` on each chain: enumerate the chain's live v2 pairs (getV2PairsCached — the
+ * authoritative factory + seeded-combo discovery already used by listTopPools), then for each pair read the
+ * owner's LP-token `balanceOf` (the pair contract IS an ERC-20) and the pair `totalSupply()`. A zero LP
+ * balance means no position → skip. Otherwise the owner's underlying share of each reserve is
+ *   underlyingN = reserveN × lpBalance ÷ totalSupply   (integer BigNumber math, base units).
+ * Each position is emitted as a pools.v1.Position{ v2Pair: PairPosition } carrying REAL on-chain quantities:
+ *   - token0 / token1        — the pair's tokens (metadata already loaded by pool discovery).
+ *   - liquidityToken         — the LP token = the pair contract itself (its address is the parser's poolId).
+ *   - reserve0 / reserve1    — live pool reserves (raw).
+ *   - liquidity              — the owner's LP-token balance (raw).
+ *   - liquidity0 / liquidity1 — the owner's underlying token0/token1 amounts (raw).
+ *   - totalSupply            — the pool's total LP supply (raw).
+ * protocolVersion = V2; status = IN_RANGE (a v2 LP has no ticks — it is always active across the full range).
+ *
+ * DELIBERATELY UNSET (never fabricated): Position.valueUsd / uncollectedFeesUsd and PairPosition.apr — all
+ * USD/fee-yield derived, and no USD oracle exists on these chains yet (same invariant as getPortfolio /
+ * buildPoolStats). The interface renders honest "—" for those. `timestamp` is left 0 (no position-open
+ * timestamp is sourced on-chain here).
+ *
+ * SCOPE — v2 ONLY (v3 NFT positions intentionally deferred): the v3 Position path (parseRestPosition.ts:289)
+ * requires per-position amount0/amount1 + uncollected-fee reconstruction (LiquidityAmounts + fee-growth
+ * math off the NPM `positions(tokenId)` + pool slot0/tick reads). That is complex and easy to get subtly
+ * wrong, and NO v3 liquidity is seeded on any HookSwap chain yet (all seed scripts are v2 — see onchain.ts
+ * v3-scan note), so there are zero real v3 positions to return today. Returning them half-built would
+ * fabricate amounts, so v3 is a clean follow-up rather than a half-implementation.
+ *
+ * Error-safe: an RPC failure on a chain (or a single pair) is caught and that chain/pair contributes
+ * nothing — never throws a fabricated result. No matching address / no LP anywhere → an empty-but-valid
+ * ListPositionsResponse. Pagination is a single page (nextPageToken unset): the position set per wallet on
+ * these chains is small, and the frontend's infinite query treats a falsy nextPageToken as "done".
+ */
+async function handleListPositions(req: ListPositionsRequest): Promise<ListPositionsResponse> {
+  const owner = req.address
+  if (!owner) {
+    // No owner address → honest empty positions (valid, not an error).
+    return new ListPositionsResponse({ positions: [], nextPageToken: '' })
+  }
+  const chainIds = resolveChainIds(req.chainIds)
+  // Respect the protocol-version filter when present; we only produce V2. If the caller explicitly asked
+  // for versions that don't include V2, there is nothing for us to return.
+  const wantsV2 = req.protocolVersions.length === 0 || req.protocolVersions.includes(ProtocolVersion.V2)
+  if (!wantsV2) {
+    return new ListPositionsResponse({ positions: [], nextPageToken: '' })
+  }
+
+  // Optional request filters (used e.g. by the pool-details page, which asks for one pool). Honoring them
+  // narrows the pairs we read (fewer RPC calls) AND keeps single-pool callers from seeing other pools.
+  const poolIdFilter = req.poolId?.toLowerCase()
+  const token0Filter = req.token0?.toLowerCase()
+  const token1Filter = req.token1?.toLowerCase()
+
+  const perChain = await Promise.all(
+    chainIds.map(async (chainId): Promise<Position[]> => {
+      let pairs: V2PairData[]
+      try {
+        pairs = await getV2PairsCached(chainId)
+      } catch {
+        // A chain's RPC being down must not fail the whole response — serve the chains that answer.
+        return []
+      }
+
+      const filteredPairs = pairs.filter((pair) => {
+        // poolId (v2) is the pair/LP-token address (the parser's poolId).
+        if (poolIdFilter && pair.pairAddress.toLowerCase() !== poolIdFilter) {
+          return false
+        }
+        // token0/token1 are an unordered token pair filter; match against either orientation.
+        if (token0Filter || token1Filter) {
+          const a0 = pair.token0.address.toLowerCase()
+          const a1 = pair.token1.address.toLowerCase()
+          const set = new Set([a0, a1])
+          if (token0Filter && !set.has(token0Filter)) {
+            return false
+          }
+          if (token1Filter && !set.has(token1Filter)) {
+            return false
+          }
+        }
+        return true
+      })
+
+      const positions = await Promise.all(
+        filteredPairs.map(async (pair): Promise<Position | undefined> => {
+          try {
+            // The pair contract is itself an ERC-20: balanceOf(owner) = LP tokens held; totalSupply() = all LP.
+            const [lpBalance, totalSupply] = await Promise.all([
+              getErc20Balance(chainId, pair.pairAddress, owner),
+              getErc20TotalSupply(chainId, pair.pairAddress),
+            ])
+            // No LP balance → no position here. Zero supply → nothing to proportion against; skip honestly.
+            if (lpBalance.isZero() || totalSupply.isZero()) {
+              return undefined
+            }
+            // Owner's underlying share of each reserve (integer base units): reserveN × lpBalance ÷ totalSupply.
+            const underlying0 = pair.reserve0.mul(lpBalance).div(totalSupply)
+            const underlying1 = pair.reserve1.mul(lpBalance).div(totalSupply)
+            // LP-token metadata read live on-chain (canonical UniswapV2 ERC-20: symbol/name/decimals). Its
+            // address is the pair address, which the parser uses as the position's poolId.
+            const lpMeta = await getTokenMeta(chainId, pair.pairAddress)
+
+            const pairPosition = new PairPosition({
+              token0: toProtoErc20Token(pair.token0),
+              token1: toProtoErc20Token(pair.token1),
+              liquidityToken: toProtoErc20Token(lpMeta),
+              reserve0: pair.reserve0.toString(),
+              reserve1: pair.reserve1.toString(),
+              liquidity: lpBalance.toString(),
+              liquidity0: underlying0.toString(),
+              liquidity1: underlying1.toString(),
+              totalSupply: totalSupply.toString(),
+              // apr left unset (0) — fee-yield/USD derived, no source on these chains yet.
+            })
+
+            return new Position({
+              chainId,
+              protocolVersion: ProtocolVersion.V2,
+              position: { case: 'v2Pair', value: pairPosition },
+              // v2 has no tick range → the position is always active/in-range (honest, not fabricated).
+              status: PositionStatus.IN_RANGE,
+              // timestamp/isHidden/valueUsd/uncollectedFeesUsd intentionally unset (no truthful source).
+            })
+          } catch {
+            // RPC hiccup / non-conforming contract for this pair — skip it, never fabricate a position.
+            return undefined
+          }
+        }),
+      )
+      return positions.filter((p): p is Position => p !== undefined)
+    }),
+  )
+
+  return new ListPositionsResponse({ positions: perChain.flat(), nextPageToken: '' })
+}
+
 // ---------- Build the full ServiceImpl: real handlers + honest empty stubs for the rest ----------
 
 /**
  * Every DataApiService method must be implemented for the Connect router. We implement listTokens,
- * listTopPools, getPortfolio, listTransactions and getTransaction for real, and auto-generate an
- * empty-response stub for every other method by instantiating that method's response Message class
+ * listTopPools, getPortfolio, listTransactions, getTransaction and listPositions for real, and auto-generate
+ * an empty-response stub for every other method by instantiating that method's response Message class
  * (`methodInfo.O`) with no args — always a valid, empty proto response. This is intentionally NOT an
  * error/unimplemented: the interface treats an empty response as "no data" and shows honest empty
  * states rather than crashing.
@@ -1212,6 +1365,7 @@ export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   impl.getPortfolio = (req: unknown) => handleGetPortfolio(req as GetPortfolioRequest)
   impl.listTransactions = (req: unknown) => handleListTransactions(req as ListTransactionsRequest)
   impl.getTransaction = (req: unknown) => handleGetTransaction(req as GetTransactionRequest)
+  impl.listPositions = (req: unknown) => handleListPositions(req as ListPositionsRequest)
 
   return impl as unknown as ServiceImpl<typeof DataApiService>
 }

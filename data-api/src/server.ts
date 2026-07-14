@@ -87,7 +87,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
         service: 'hookswap-data-api',
         mode: 'onchain-current-state + event-indexer',
         indexer: process.env.INDEXER_ENABLED === 'true' ? 'enabled' : 'disabled',
-        implemented: ['listTokens', 'listTopPools', 'searchTokens', 'getPortfolio', 'listTransactions', 'getTransaction'],
+        implemented: ['listTokens', 'listTopPools', 'searchTokens', 'getPortfolio', 'listTransactions', 'getTransaction', 'listPositions'],
         // listTokens/listTopPools return live on-chain pools/tokens plus real NATIVE-denominated metrics
         // (priceChange1d, priceHistory1d) from the event indexer. USD-denominated fields (price, tvl,
         // volume, apr) populate only once a stablecoin (USDG) anchor pool exists — otherwise left unset.

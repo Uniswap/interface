@@ -11,7 +11,7 @@ import {
   transformInput,
   type WithoutWalletAccount,
 } from '@universe/api'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { dataApiGetTransport } from 'uniswap/src/data/rest/base'
 import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import {
   cleanupCaughtUpOverrides,
@@ -58,7 +58,7 @@ export interface TokenBalanceMainParts {
 }
 
 const dataApiClient = createDataApiServiceClient({
-  rpcClient: createPromiseClient(DataApiService, uniswapGetTransport),
+  rpcClient: createPromiseClient(DataApiService, dataApiGetTransport),
 })
 
 /**

@@ -19,13 +19,18 @@ import {
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
+import { dataApiPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
-const positionsClient = createPromiseClient(DataApiService, uniswapPostTransport)
+// Repointed from `uniswapPostTransport` (beta.gateway.uniswap.org — does NOT index HookSwap's custom
+// chains) to the self-hosted HookSwap data-api (`dataApiPostTransport` → data.hookswap.org/v2), whose
+// ListPositions handler serves live on-chain v2 LP positions for the supported chains (e.g. Robinhood).
+// Mirrors the same transport swap already done for listTokens / listTransactions. Unsupported chains get
+// an honest empty-but-valid response from the data-api (no crash, no fabricated data).
+const positionsClient = createPromiseClient(DataApiService, dataApiPostTransport)
 
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,

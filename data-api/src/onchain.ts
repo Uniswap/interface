@@ -25,6 +25,7 @@ const ERC20_ABI = [
   'function name() view returns (string)',
   'function decimals() view returns (uint8)',
   'function balanceOf(address) view returns (uint256)',
+  'function totalSupply() view returns (uint256)',
 ]
 const PAIR_ABI = [
   'function getReserves() view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)',
@@ -127,6 +128,17 @@ export async function getErc20Balance(chainId: number, token: string, owner: str
 /** Live native-coin balance (`eth_getBalance`) for an address on a chain — raw wei (BigNumber). */
 export async function getNativeBalance(chainId: number, owner: string): Promise<BigNumber> {
   return getProvider(chainId).getBalance(owner)
+}
+
+/**
+ * Live ERC-20 `totalSupply()` for one token on a chain — the raw on-chain supply (BigNumber, base units).
+ * Used for v2 LP positions: the pair contract is itself an ERC-20 whose totalSupply is the pool's total LP
+ * tokens, needed to compute an owner's proportional underlying-reserve share. Throws on RPC/contract error
+ * so callers can degrade (the positions handler catches per-pair and skips, never fabricating a supply).
+ */
+export async function getErc20TotalSupply(chainId: number, token: string): Promise<BigNumber> {
+  const c = new ethers.Contract(token, ERC20_ABI, getProvider(chainId))
+  return (await c.totalSupply()) as BigNumber
 }
 
 /** CREATE2 v2 pair address for (tokenA, tokenB) under the given factory. Order-independent. */
