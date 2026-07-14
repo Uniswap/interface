@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 import { Ownable } from "./Ownable.sol";
 import { IUniswapV2Pair } from "./library/Dex.sol";
 import { IERC20 } from "./library/IERC20.sol";
+import { SafeERC20 } from "./library/SafeERC20.sol";
 import { Util } from "./Util.sol";
 
 /**
@@ -32,6 +33,8 @@ interface IHookSwapLockerManager {
  * only the contract name and the manager callback interface were rebranded.
  */
 contract HookSwapTokenLocker is Ownable {
+  using SafeERC20 for IERC20;
+
   event Extended(uint40 newUnlockTime);
   event Deposited(uint256 amount);
   event Withdrew();
@@ -153,7 +156,7 @@ contract HookSwapTokenLocker is Ownable {
 
     if (amount_ != 0) {
       uint256 oldBalance = _balance();
-      _token.transferFrom(_msgSender(), address(this), amount_);
+      _token.safeTransferFrom(_msgSender(), address(this), amount_);
       emit Deposited(_balance() - oldBalance);
     }
   }
@@ -164,7 +167,7 @@ contract HookSwapTokenLocker is Ownable {
   function withdraw() external onlyOwner transferLocked {
     require(uint40(block.timestamp) >= _unlockTime, "Wait until unlockTime to withdraw");
 
-    _token.transfer(_owner(), _balance());
+    _token.safeTransfer(_owner(), _balance());
 
     emit Withdrew();
   }

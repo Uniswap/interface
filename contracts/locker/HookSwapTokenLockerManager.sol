@@ -18,6 +18,7 @@ pragma solidity ^0.8.0;
 
 import { Ownable } from "./Ownable.sol";
 import { IERC20 } from "./library/IERC20.sol";
+import { SafeERC20 } from "./library/SafeERC20.sol";
 import { HookSwapTokenLocker } from "./HookSwapTokenLocker.sol";
 
 // Not `is ITokenLockerManagerV1`: that interface declares createTokenLocker as
@@ -25,6 +26,8 @@ import { HookSwapTokenLocker } from "./HookSwapTokenLocker.sol";
 // the same functions (so ABIs/frontends match) and satisfies the only call the
 // child makes back into it — notifyLockerOwnerChange.
 contract HookSwapTokenLockerManager is Ownable {
+  using SafeERC20 for IERC20;
+
   event TokenLockerCreated(
     uint40 id,
     address indexed token,
@@ -127,7 +130,7 @@ contract HookSwapTokenLockerManager is Ownable {
     address lockerAddress = address(_tokenLockers[id]);
 
     IERC20 token = IERC20(tokenAddress_);
-    token.transferFrom(_msgSender(), lockerAddress, amount_);
+    token.safeTransferFrom(_msgSender(), lockerAddress, amount_);
 
     _tokenLockersForAddress[_msgSender()].push(id);
     _tokenLockersForAddress[tokenAddress_].push(id);

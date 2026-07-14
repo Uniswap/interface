@@ -36,6 +36,10 @@ contract MerkleDistributor {
   event Claimed(uint256 index, address account, uint256 amount);
 
   constructor(address token_, bytes32 merkleRoot_) {
+    // L-1 (audit): fail fast on misconfiguration rather than deploying a bricked distributor —
+    // a zero token makes every claim revert, and a zero root has no valid proofs.
+    require(token_ != address(0), "MerkleDistributor: token is the zero address");
+    require(merkleRoot_ != bytes32(0), "MerkleDistributor: merkle root is zero");
     token = token_;
     merkleRoot = merkleRoot_;
   }

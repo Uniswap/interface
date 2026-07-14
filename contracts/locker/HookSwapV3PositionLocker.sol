@@ -105,6 +105,14 @@ contract HookSwapV3PositionLocker is Ownable, ReentrancyGuard, IERC721Receiver {
   /** @dev owner search index (same convention as the v2 manager) */
   mapping(address => uint256[]) private _locksForAddress;
 
+  /**
+   * @dev Set true only for the duration of the safeTransferFrom inside `lock()`.
+   * onERC721Received requires it, so an NFT can only enter this contract as part
+   * of an in-progress lock — a direct safeTransferFrom (not via lock) reverts,
+   * preventing NFTs from getting permanently stuck with no way out.
+   */
+  bool private _lockInProgress;
+
   modifier onlyLockOwner(uint256 lockId_) {
     require(_locks[lockId_].owner == _msgSender(), "Only the lock owner can execute this function");
     _;
@@ -181,20 +189,27 @@ contract HookSwapV3PositionLocker is Ownable, ReentrancyGuard, IERC721Receiver {
     _locksForAddress[_msgSender()].push(id);
 
     // pull the NFT in. this triggers onERC721Received on this contract.
+    // gate the receiver hook to this window so stray direct transfers revert.
+    _lockInProgress = true;
     INonfungiblePositionManager(nftManager_).safeTransferFrom(_msgSender(), address(this), tokenId_);
+    _lockInProgress = false;
 
     emit PositionLocked(id, nftManager_, tokenId_, _msgSender(), unlockTime_);
   }
 
   /**
    * @dev ERC-721 receiver hook — required to accept safe transfers.
+   * Only accepts NFTs that arrive as part of an in-progress `lock()` (guarded by
+   * `_lockInProgress`); a direct safeTransferFrom outside `lock()` reverts, so
+   * NFTs can't be sent here and left permanently stuck.
    */
   function onERC721Received(
     address /* operator */,
     address /* from */,
     uint256 /* tokenId */,
     bytes calldata /* data */
-  ) external pure override returns (bytes4) {
+  ) external override returns (bytes4) {
+    require(_lockInProgress, "Only accepts NFTs via lock()");
     return IERC721Receiver.onERC721Received.selector;
   }
 

@@ -139,17 +139,18 @@ contract HookSwapReferralRouter is Ownable, ReentrancyGuard {
   // ---------------------------------------------------------------------------
 
   /**
-   * @notice Register a referral code (first-come, first-served).
+   * @notice Register a referral code (first-come, first-served), caller-bound.
+   * @dev The claim wallet is set to `msg.sender` — a registrant can only claim to
+   * their own wallet, not point someone else's intended code at an attacker
+   * wallet. Use {setClaimWallet} afterwards to redirect to a different wallet.
    * @param code Non-zero code identifier (e.g. keccak256 of a human string).
-   * @param claimWallet Wallet that will receive fees claimed for this code.
    */
-  function registerCode(bytes32 code, address claimWallet) external {
+  function registerCode(bytes32 code) external {
     require(code != bytes32(0), "Referral: zero code");
-    require(claimWallet != address(0), "Referral: zero wallet");
     require(claimWalletOf[code] == address(0), "Referral: code taken");
 
-    claimWalletOf[code] = claimWallet;
-    emit CodeRegistered(code, claimWallet);
+    claimWalletOf[code] = _msgSender();
+    emit CodeRegistered(code, _msgSender());
   }
 
   /**
@@ -192,6 +193,12 @@ contract HookSwapReferralRouter is Ownable, ReentrancyGuard {
    * @param recipient    Receiver of the swap output.
    * @param refCode      Referral code (bytes32(0) => no referral, no fee).
    * @return amountOut   Output amount returned by SwapRouter02.
+   *
+   * NOTE: fee-on-transfer / rebasing input tokens are UNSUPPORTED. Fee accrual and
+   * the swap amount are computed off the nominal `amountIn`, but such tokens
+   * deliver a different balance than requested — so the swap reverts (or the
+   * downstream router pull fails) rather than mis-accruing referral fees. Only
+   * standard fixed-supply ERC-20s should be routed through this function.
    */
   function swapExactInput(
     address tokenIn,
