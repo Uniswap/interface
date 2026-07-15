@@ -95,6 +95,7 @@ import {
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
   PairPosition,
+  Pool as PoolsV1Pool,
   Position,
   PositionStatus,
   ProtocolVersion,
@@ -1523,7 +1524,9 @@ async function handleListPools(req: ListPoolsRequest): Promise<ListPoolsResponse
     db = undefined
   }
 
-  const pools: Pool[] = []
+  // ListPoolsResponse uses pools.v1.Pool (token0/token1 = address strings, fee = uint32),
+  // NOT data.v1.Pool (which has Token objects). Different proto namespace.
+  const pools: PoolsV1Pool[] = []
 
   // v2 pools
   if (wantsV2) {
@@ -1539,22 +1542,14 @@ async function handleListPools(req: ListPoolsRequest): Promise<ListPoolsResponse
         if (token1Filter && !tokenSet.has(token1Filter)) {
           continue
         }
-        const pool = new Pool({
-          chainId: p.chainId,
+        pools.push(new PoolsV1Pool({
           poolId: p.pairAddress,
-          token0: toProtoErc20Token(p.token0),
-          token1: toProtoErc20Token(p.token1),
+          token0: p.token0.address,
+          token1: p.token1.address,
+          fee: V2_FEE_TIER_PIPS,
           protocolVersion: ProtocolVersion.V2,
-          feeTier: V2_FEE_TIER_PIPS,
-          isDynamicFee: false,
-        })
-        if (db) {
-          const stats = buildPoolStats(db, p.chainId, p.pairAddress)
-          if (stats) {
-            pool.stats = stats
-          }
-        }
-        pools.push(pool)
+          chainId,
+        }))
       }
     } catch {
       // RPC failure — serve what we can.
@@ -1578,22 +1573,14 @@ async function handleListPools(req: ListPoolsRequest): Promise<ListPoolsResponse
         if (req.fee && p.fee !== req.fee) {
           continue
         }
-        const pool = new Pool({
-          chainId: p.chainId,
+        pools.push(new PoolsV1Pool({
           poolId: p.poolAddress,
-          token0: toProtoErc20Token(p.token0),
-          token1: toProtoErc20Token(p.token1),
+          token0: p.token0.address,
+          token1: p.token1.address,
+          fee: p.fee,
           protocolVersion: ProtocolVersion.V3,
-          feeTier: p.fee,
-          isDynamicFee: false,
-        })
-        if (db) {
-          const stats = buildPoolStats(db, p.chainId, p.poolAddress)
-          if (stats) {
-            pool.stats = stats
-          }
-        }
-        pools.push(pool)
+          chainId,
+        }))
       }
     } catch {
       // RPC failure — serve what we can.
@@ -1620,7 +1607,7 @@ async function handleGetPosition(req: GetPositionRequest): Promise<GetPositionRe
   }
 
   // We only serve V2 positions. If caller asks for V3/V4 specifically, return empty.
-  if (req.protocolVersion && req.protocolVersion !== ProtocolVersion.V2 && req.protocolVersion !== ProtocolVersion.UNSPECIFIED) {
+  if (req.protocolVersion && req.protocolVersion !== ProtocolVersion.V2) {
     return new GetPositionResponse()
   }
 
