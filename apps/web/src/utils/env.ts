@@ -2,7 +2,7 @@ import { isBetaEnv, isProdEnv } from '@universe/environment'
 import { getConfig } from '~/config'
 
 function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.uniswap.org'
+  return hostname === 'app.uniswap.org' || hostname === 'hookswap.org'
 }
 
 function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {

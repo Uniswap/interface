@@ -124,33 +124,33 @@ export const UniswapHelpUrls = {
 }
 
 export const UniswapStaticUrls = {
-  downloadWalletUrl: 'https://wallet.uniswap.org/',
-  tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  downloadWalletUrl: 'https://hookswap.org',
+  tradingApiDocsUrl: 'https://docs.hookswap.org',
   unichainUrl: 'https://www.unichain.org/',
-  uniswapXUrl: 'https://x.uniswap.org/',
-  helpCenterUrl: 'https://help.uniswap.org/',
-  blogUrl: 'https://blog.uniswap.org/',
-  docsUrl: 'https://docs.uniswap.org/',
-  voteUrl: 'https://vote.uniswapfoundation.org',
-  governanceUrl: 'https://uniswap.org/governance',
-  developersUrl: 'https://uniswap.org/developers',
-  aboutUrl: 'https://about.uniswap.org/',
-  careersUrl: 'https://careers.uniswap.org/',
+  uniswapXUrl: 'https://hookswap.org',
+  helpCenterUrl: 'https://docs.hookswap.org',
+  blogUrl: 'https://docs.hookswap.org',
+  docsUrl: 'https://docs.hookswap.org',
+  voteUrl: 'https://hookswap.org',
+  governanceUrl: 'https://hookswap.org',
+  developersUrl: 'https://github.com/HooksOS',
+  aboutUrl: 'https://hookswap.org',
+  careersUrl: 'https://hookswap.org',
   social: {
-    x: 'https://x.com/Uniswap',
-    farcaster: 'https://farcaster.xyz/Uniswap',
-    linkedin: 'https://www.linkedin.com/company/uniswaporg',
-    tiktok: 'https://www.tiktok.com/@uniswap',
+    x: 'https://x.com/hookosfun',
+    farcaster: 'https://hookswap.org',
+    linkedin: 'https://hookswap.org',
+    tiktok: 'https://hookswap.org',
   },
-  bugBountyUrl: 'https://cantina.xyz/bounties/f9df94db-c7b1-434b-bb06-d1360abdd1be',
-  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  chromeExtension: 'http://uniswap.org/ext',
+  bugBountyUrl: 'https://hookswap.org',
+  termsOfServiceUrl: 'https://docs.hookswap.org',
+  privacyPolicyUrl: 'https://docs.hookswap.org',
+  chromeExtension: 'https://hookswap.org',
   chromeExtensionUninstallUrl: `${UNISWAP_WEB_URL}${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
 
-  // Download links
-  appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
-  playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share',
+  // Download links (HookSwap is web-only; point at main site)
+  appStoreDownloadUrl: 'https://hookswap.org',
+  playStoreDownloadUrl: 'https://hookswap.org',
 
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
@@ -169,8 +169,8 @@ export const UniswapStaticUrls = {
   wormholeUrl: 'https://portalbridge.com/',
 
   // App and Redirect URL's
-  appBaseUrl: 'https://uniswap.org/app',
-  redirectUrlBase: 'https://uniswap.org/mobile-redirect',
+  appBaseUrl: 'https://hookswap.org/app',
+  redirectUrlBase: 'https://hookswap.org/mobile-redirect',
   requestOriginUrl: UNISWAP_WEB_URL,
 
   // Web Interface Urls

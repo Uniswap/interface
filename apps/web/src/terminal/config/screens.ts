@@ -22,6 +22,7 @@ export type TerminalScreenId =
   | 'vesting' // Tools — self-service token vesting (HookSwapVestingManager)
   | 'farms' // Tools — self-service staking farms (StakingRewardsFactory)
   | 'airdrop' // Tools — self-service merkle airdrops (MerkleDistributorFactory)
+  | 'launchpad' // Tools — instant token launch + v3 pool (InstantPoolLauncherV2)
   | 'referrals' // Account — referral codes + earnings (deployed referral router)
   | 'portfolio' // B5
   | 'market-detail' // B6
@@ -112,6 +113,7 @@ export const terminalScreens: Record<TerminalScreenId, TerminalScreen> = {
   vesting: { id: 'vesting', code: 'VS', title: 'Vesting', path: `${TERMINAL_BASE}/vesting`, kind: 'page' },
   farms: { id: 'farms', code: 'FM', title: 'Farms', path: `${TERMINAL_BASE}/farms`, kind: 'page' },
   airdrop: { id: 'airdrop', code: 'AD', title: 'Airdrop', path: `${TERMINAL_BASE}/airdrop`, kind: 'page' },
+  launchpad: { id: 'launchpad', code: 'LP', title: 'LaunchPad', path: `${TERMINAL_BASE}/launch`, kind: 'page' },
   referrals: { id: 'referrals', code: 'RF', title: 'Referrals', path: `${TERMINAL_BASE}/referrals`, kind: 'page' },
   portfolio: { id: 'portfolio', code: 'B5', title: 'Portfolio', path: `${TERMINAL_BASE}/portfolio`, kind: 'page' },
   'market-detail': {
@@ -180,27 +182,33 @@ export interface TerminalNavItem {
  */
 export const terminalTradeNav: TerminalNavItem[] = [
   { id: 'swap', label: 'Swap', icon: 'swap', path: '/swap' },
-  // Limit is NOT a separate rail item — it's a tab inside the Swap ticket
-  // (Market / Limit) that routes to /terminal/limit. The route still exists.
   { id: 'markets', label: 'Markets', icon: 'markets', path: '/markets' },
   { id: 'create-position', label: 'Pools', icon: 'pools', path: '/pools/new' },
-  // View existing liquidity positions — Terminal-native screen (v2/v3 only).
   { id: 'positions', label: 'Positions', icon: 'positions', path: '/positions' },
+  { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
+  { id: 'leaderboard', label: 'Leaderboard', icon: 'leaderboard', path: '/leaderboard' },
+]
+
+/**
+ * TOOLS section — self-service suite (LaunchPad, token factory, locker, etc.).
+ * Separated from TRADE to keep the core trading nav clean and give the tools
+ * their own prominent section in the rail.
+ */
+export const terminalToolsNav: TerminalNavItem[] = [
+  // Direct-to-v3 fair launch (HookOSV3Launcher) — the flagship tool.
+  { id: 'launchpad', label: 'LaunchPad', icon: 'launchpad', path: '/launch' },
+  // Launch a fixed-supply ERC-20 (HookSwapTokenFactory), then hand off to pool creation.
+  { id: 'create-token', label: 'Create token', icon: 'token', path: '/token/new' },
   // Lock LP/tokens + v3 positions (HookSwap locker contracts).
   { id: 'locker', label: 'Locker', icon: 'locker', path: '/locker' },
   // Batch-send a token / native to many addresses in one tx (HookSwap Disperse contract).
   { id: 'multisender', label: 'Multisender', icon: 'multisender', path: '/multisender' },
-  // Launch a fixed-supply ERC-20 (HookSwapTokenFactory), then hand off to pool creation.
-  { id: 'create-token', label: 'Create token', icon: 'token', path: '/token/new' },
-  // Self-service token vesting — create cliff + linear schedules; beneficiaries claim (HookSwapVestingManager).
+  // Self-service token vesting (HookSwapVestingManager).
   { id: 'vesting', label: 'Vesting', icon: 'vesting', path: '/vesting' },
-  // Self-service staking farms — create a funded reward stream; stake/claim/unstake (StakingRewardsFactory).
+  // Self-service staking farms (StakingRewardsFactory).
   { id: 'farms', label: 'Farms', icon: 'farms', path: '/farms' },
-  // Self-service merkle airdrops — create a distributor from a CSV; recipients claim with a proof (MerkleDistributorFactory).
+  // Self-service merkle airdrops (MerkleDistributorFactory).
   { id: 'airdrop', label: 'Airdrop', icon: 'airdrop', path: '/airdrop' },
-  { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/analytics' },
-  // Trading leaderboard — trader ranking from the swap indexer (native volume / trades / tokens).
-  { id: 'leaderboard', label: 'Leaderboard', icon: 'leaderboard', path: '/leaderboard' },
 ]
 
 /** ACCOUNT section — surfaced in the rail, in order. */
@@ -212,14 +220,14 @@ export const terminalAccountNav: TerminalNavItem[] = [
 ]
 
 /**
- * MORE section — surfaced in the rail below ACCOUNT. Settings is an in-app route;
- * Docs + Launchpad are external links (open in a new tab).
+ * MORE section — surfaced in the rail below ACCOUNT. Settings and Widget are
+ * in-app routes; Docs is an external link (opens in a new tab).
  */
 export const terminalResourcesNav: TerminalNavItem[] = [
   { id: 'settings', label: 'Settings', icon: 'settings', path: '/settings' },
   { id: 'widget-builder', label: 'Widget', icon: 'widget', path: '/widget' },
   { id: 'docs', label: 'Docs', icon: 'docs', path: HOOKSWAP_LINKS.docs, externalHref: HOOKSWAP_LINKS.docs },
-  { id: 'docs', label: 'Launchpad', icon: 'launchpad', path: HOOKSWAP_LINKS.launchpad, externalHref: HOOKSWAP_LINKS.launchpad },
+  // External launchpad (hookos.fun/atlas) removed — now an in-app screen at /launch.
 ]
 
 /**

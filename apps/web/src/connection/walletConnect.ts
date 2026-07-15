@@ -57,7 +57,7 @@ export function uniswapWalletConnect(): CreateConnectorFn {
       config.emitter.on('message', ({ type, data }) => {
         if (type === 'display_uri') {
           // Emits custom wallet connect code, parseable by the Uniswap Wallet
-          const uniswapWalletUri = `https://uniswap.org/app/wc?uri=${data}`
+          const uniswapWalletUri = `https://hookswap.org/app/wc?uri=${data}`
 
           // Emits custom event to display the Uniswap Wallet URI
           window.dispatchEvent(new MessageEvent('display_uniswap_uri', { data: uniswapWalletUri }))
@@ -76,7 +76,7 @@ export function uniswapWalletConnect(): CreateConnectorFn {
         id: 'uniswapWalletConnect',
         type: 'uniswapWalletConnect',
         name: 'Uniswap Wallet',
-        icon: 'https://app.uniswap.org/favicon.png',
+        icon: 'https://hookswap.org/favicon.svg',
       }
     }),
   )

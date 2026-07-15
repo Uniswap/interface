@@ -5,6 +5,7 @@ import {
   terminalAccountNav,
   terminalCommunityNav,
   terminalResourcesNav,
+  terminalToolsNav,
   terminalTradeNav,
   TerminalNavId,
   TerminalNavItem,
@@ -255,6 +256,9 @@ export function LeftRail({
 
       {collapsed ? null : <div style={{ ...SECTION_LABEL, padding: '0 10px 8px' }}>TRADE</div>}
       {renderNav(terminalTradeNav)}
+
+      {sectionLabel('TOOLS')}
+      {renderNav(terminalToolsNav)}
 
       {sectionLabel('ACCOUNT')}
       {renderNav(terminalAccountNav)}

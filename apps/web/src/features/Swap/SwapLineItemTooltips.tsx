@@ -17,7 +17,7 @@ function BaseTooltipContent({ children, url }: { children: ReactNode; url: strin
 export function FOTTooltipContent() {
   const { t } = useTranslation()
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+    <BaseTooltipContent url="https://docs.hookswap.org">
       {t('swap.tokenOwnFees')}
     </BaseTooltipContent>
   )
@@ -26,7 +26,7 @@ export function FOTTooltipContent() {
 export function SlippageTooltipContent() {
   const { t } = useTranslation()
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+    <BaseTooltipContent url="https://docs.hookswap.org">
       {t('swap.slippage.tooltip')}
     </BaseTooltipContent>
   )
@@ -36,7 +36,7 @@ export function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const { t } = useTranslation()
   const message = hasFee ? t('swap.fees.experience') : t('swap.fees.noFee')
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+    <BaseTooltipContent url="https://docs.hookswap.org">
       {message}
     </BaseTooltipContent>
   )

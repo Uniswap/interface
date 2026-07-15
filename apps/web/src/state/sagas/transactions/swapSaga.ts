@@ -37,6 +37,7 @@ import {
 import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from '~/constants/misc'
+import { canUseReferralRouter, buildReferralSwapTx } from '~/terminal/referral/referralSwap'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
@@ -72,7 +73,49 @@ export function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGe
       tokenOutStocks: analytics.token_out_stocks,
     },
   })
-  const txRequest = yield* call(getSwapTxRequest, step, signature)
+  let txRequest = yield* call(getSwapTxRequest, step, signature)
+
+  // Referral routing override: if a stored referral code exists and the swap is a
+  // single-hop v3 ERC-20→ERC-20 on a chain with a deployed ReferralRouter, replace
+  // the Universal Router txRequest with a ReferralRouter.swapExactInput call. The RR
+  // skims a fee (0.3%) from the input token for the referrer. Best-effort — if
+  // conditions aren't met, the normal UR swap proceeds unchanged.
+  try {
+    const chainId = trade.inputAmount.currency.chainId
+    const isNativeIn = trade.inputAmount.currency.isNative
+    if (canUseReferralRouter(chainId, isNativeIn)) {
+      // Extract route from the ClassicTrade's quote (TradingApi response).
+      const route = (trade as ClassicTrade).quote?.quote?.route
+      if (route && route.length === 1 && route[0].length === 1) {
+        const pool = route[0][0] as { type?: string; fee?: number }
+        if (pool.type === 'v3-pool' && pool.fee !== undefined) {
+          const tokenIn = trade.inputAmount.currency.address as `0x${string}`
+          const tokenOut = trade.outputAmount.currency.address as `0x${string}`
+          const amountIn = BigInt(trade.inputAmount.quotient.toString())
+          // Compute minAmountOut accounting for slippage + the 0.3% referral fee.
+          // The RR deducts fee from amountIn, so slippage on the output is sufficient.
+          const slippageBps = Math.round(((trade as ClassicTrade).slippageTolerance ?? 0.5) * 100)
+          const outputBi = BigInt(trade.outputAmount.quotient.toString())
+          const safeMinOut = outputBi - (outputBi * BigInt(slippageBps)) / 10000n
+          const recipient = (txRequest as { to?: string }).to as `0x${string}` | undefined
+          if (recipient) {
+            const referralTx = buildReferralSwapTx({
+              chainId,
+              tokenIn,
+              tokenOut,
+              feeTier: pool.fee,
+              amountIn,
+              amountOutMin: safeMinOut,
+              recipient,
+            })
+            txRequest = { ...txRequest, to: referralTx.to, data: referralTx.data, value: referralTx.value }
+          }
+        }
+      }
+    }
+  } catch {
+    // Referral override is best-effort — if anything fails, proceed with the normal UR swap.
+  }
 
   const onModification = ({ hash, data }: VitalTxFields) => {
     sendAnalyticsEvent(SwapEventName.SwapModifiedInWallet, {

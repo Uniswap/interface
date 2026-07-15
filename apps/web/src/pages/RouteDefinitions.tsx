@@ -35,6 +35,7 @@ const TerminalCreateTokenPage = lazy(() => import('~/terminal/TerminalCreateToke
 const TerminalVestingPage = lazy(() => import('~/terminal/TerminalVestingPage'))
 const TerminalFarmsPage = lazy(() => import('~/terminal/TerminalFarmsPage'))
 const TerminalAirdropPage = lazy(() => import('~/terminal/TerminalAirdropPage'))
+const TerminalLaunchPage = lazy(() => import('~/terminal/TerminalLaunchPage'))
 const TerminalPortfolioPage = lazy(() => import('~/terminal/TerminalPortfolioPage'))
 const TerminalActivityPage = lazy(() => import('~/terminal/TerminalActivityPage'))
 const TerminalAnalyticsPage = lazy(() => import('~/terminal/TerminalAnalyticsPage'))
@@ -409,6 +410,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <TerminalAirdropPage />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/launch',
+    getTitle: () => 'HookSwap LaunchPad',
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TerminalLaunchPage />
       </Suspense>
     ),
   }),

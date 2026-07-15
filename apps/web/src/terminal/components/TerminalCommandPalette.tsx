@@ -39,7 +39,7 @@ import {
 } from '~/terminal/components/CommandPalette'
 import { NavIcon } from '~/terminal/components/NavIcon'
 import type { TrendDirection } from '~/terminal/components/SparklineCell'
-import { terminalAccountNav, terminalTradeNav, type TerminalNavIcon } from '~/terminal/config/screens'
+import { terminalAccountNav, terminalToolsNav, terminalTradeNav, type TerminalNavIcon } from '~/terminal/config/screens'
 import { terminalColors } from '~/terminal/theme/tokens'
 
 /* ------------------------------------------------------------------ config */
@@ -56,7 +56,7 @@ const PALETTE_TABS: ReadonlyArray<CommandPaletteTab & { id: PaletteTabId }> = [
 ]
 
 /** Quick-action nav targets, in rail order (TRADE then ACCOUNT). */
-const NAV_ACTIONS = [...terminalTradeNav, ...terminalAccountNav]
+const NAV_ACTIONS = [...terminalTradeNav, ...terminalToolsNav, ...terminalAccountNav]
 
 /** Visual mnemonic chips (discoverability only; the parent wires any real keys).
  *  Partial — only the primary nav targets have a mnemonic; the rest render none. */

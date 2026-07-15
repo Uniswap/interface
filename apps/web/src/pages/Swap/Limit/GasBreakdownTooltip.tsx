@@ -89,7 +89,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
   return (
     <Text variant="body4" color="$neutral2">
       {t('swap.networkCost.paidIn', { sym: native.symbol, chainName })}{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
+      <ExternalLink href="https://docs.hookswap.org">
         {t('common.button.learn')}
       </ExternalLink>
     </Text>

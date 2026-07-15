@@ -1,40 +1,38 @@
 /**
- * HookSwap Terminal — Launchpad (InstantPoolLauncherV2) contract addresses.
+ * HookSwap Terminal — Launchpad contract addresses.
  *
- * FACTS-ONLY: `InstantPoolLauncherV2` is the one-shot pool launcher (factory) — a single
- * `launch(cfg)` deploys a fresh token, opens a v3 pool, and (optionally) does the creator's
- * dev-buy in the same tx. The verified Robinhood-mainnet deploy is at
- * `0xCCaA39560A7B305d179beA4255BAD0460decA3Bd`.
+ * HookOSV3Launcher (proxy) — direct-to-v3 fair launch: mints token + seeds
+ * single-sided pool + registers the position in the fee vault.
  *
- * DESIGN-ONLY: the Robinhood entry is intentionally left UNSET (commented out) so this
- * feature ships as a ready-to-flip-live deliverable — `getLaunchpadAddress()` returns
- * `undefined`, and the screen renders the honest "not deployed" state instead of driving a
- * live contract. Flip it live by UNCOMMENTING the Robinhood line below (no other change to
- * this file needed). Mirrors `~/terminal/tokenfactory/addresses.ts`.
+ * HookOSV3FeeVault (proxy) — holds each launch's LP position NFT forever
+ * (principal locked), splits LP fees per-dex creator share, carves buyback slice.
  */
 
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { Address } from '~/chains'
 
-/**
- * Per-chain deployed `InstantPoolLauncherV2` addresses. Robinhood-only launch scope;
- * structured so other HookSwap chains can be added from their deploy output.
- */
+/** Per-chain deployed `HookOSV3Launcher` proxy addresses. */
 export const LAUNCHPAD_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
-  // Robinhood (4663) — InstantPoolLauncherV2 verified on-chain at
-  //   0xCCaA39560A7B305d179beA4255BAD0460decA3Bd
-  // design-only — flip live by uncommenting the line below.
-  // [UniverseChainId.Robinhood]: '0xCCaA39560A7B305d179beA4255BAD0460decA3Bd',
+  [UniverseChainId.Robinhood]: '0x9B8d992704ddf38729535A641502bcc55734e0B8',
 }
 
-/**
- * Deployed `InstantPoolLauncherV2` address for a chain, or `undefined` when it isn't
- * wired here yet (which — being design-only — it currently is for every chain). Callers
- * treat a missing address as an honest "not deployed" state.
- */
+/** Per-chain deployed `HookOSV3FeeVault` proxy addresses. */
+export const FEEVAULT_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
+  [UniverseChainId.Robinhood]: '0x2974cE6341067398A5C1E6c0C14F99ED1C3122EF',
+}
+
+/** Deployed `HookOSV3Launcher` address for a chain, or `undefined` when not deployed. */
 export function getLaunchpadAddress(chainId?: number): Address | undefined {
   if (chainId === undefined) {
     return undefined
   }
   return LAUNCHPAD_ADDRESSES[chainId as UniverseChainId]
+}
+
+/** Deployed `HookOSV3FeeVault` address for a chain, or `undefined` when not deployed. */
+export function getFeeVaultAddress(chainId?: number): Address | undefined {
+  if (chainId === undefined) {
+    return undefined
+  }
+  return FEEVAULT_ADDRESSES[chainId as UniverseChainId]
 }

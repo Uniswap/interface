@@ -1,22 +1,16 @@
 /**
- * HookSwap Terminal — Launchpad (InstantPoolLauncherV2): instant token launch + v3 pool seed.
+ * HookSwap Terminal — LaunchPad (HookOSV3Launcher): direct-to-v3 fair launch.
  *
- * DESIGN-ONLY (not routed / address unset). Built against the REAL deployed
- * `InstantPoolLauncherV2` ABI (see `~/terminal/launchpad/abis`). One payable
- * `launch(cfg)` deploys the token, opens a Uniswap-v3 pool, and (optionally) does a
- * developer buy — all in a single transaction. Flip it live by filling the Robinhood
- * entry in `~/terminal/launchpad/addresses` and adding the nav/route lines documented there.
+ * Mints a token + seeds a single-sided v3 pool + registers the position in the
+ * HookOSV3FeeVault — all in one tx. Creator picks DEX (Uniswap V3 / HookSwap),
+ * pair token (WETH / HOOK when available), and whether to lock LP on HookSwap.
+ * Fee collection (LP trading fees) goes through the vault, which splits per-dex
+ * (50/50 Uniswap, 70/30 HookSwap).
  *
- * DATA POLICY (no mock data — hard rule):
- *   • Launch fee — REAL on-chain read of `launchFeeWei()`; `msg.value` = fee + developerBuyWei.
- *   • Creator-share bounds — REAL reads of DEFAULT/MAX_CREATOR_SHARE_BPS.
- *   • Result (token / pool / tokenId) — read back from the contract after the tx, never invented.
- *   • My launches + pending fees — REAL reads (`getLaunch`, `pendingEth`); honest empty states.
- *   • When the launcher isn't deployed on the chain, an honest "not deployed" state renders —
- *     never a fake success.
- *
- * v3 PRICE/RANGE: `sqrtPriceX96` / `tickLower` / `tickUpper` are exposed as RAW fields
- * (power-user surface, by design) — no derived price helper is shown, so nothing is guessed.
+ * DATA POLICY (no mock data):
+ *   • Fees — REAL on-chain reads (effectiveLaunchFee, quoteLaunchCost).
+ *   • Result — read back from getLaunch after the tx.
+ *   • My launches + pending fees — from the FeeVault; honest empty states.
  */
 import { useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -30,6 +24,8 @@ import {
   randomSalt,
   useLaunch,
   useMyLaunches,
+  V3Dex,
+  PairToken,
   ZERO_SALT,
   type LaunchConfigInput,
 } from '~/terminal/launchpad/useLaunch'
@@ -46,16 +42,24 @@ function shortAddr(a?: string): string {
   return a ? `${a.slice(0, 6)}…${a.slice(-4)}` : '—'
 }
 
-/** Raw-integer input sanitizer (uint fields). */
 function onlyDigits(v: string): string {
   return v.replace(/[^0-9]/g, '')
 }
 
-/** int24 fields may be negative — allow a single leading '-'. */
 function onlySignedDigits(v: string): string {
   const neg = v.trim().startsWith('-')
   const digits = v.replace(/[^0-9]/g, '')
   return (neg ? '-' : '') + digits
+}
+
+function fmtWei(wei: bigint | undefined): string {
+  if (wei === undefined) {
+    return '—'
+  }
+  if (wei === 0n) {
+    return '0'
+  }
+  return Number(formatUnits(wei, 18)).toLocaleString('en-US', { maximumFractionDigits: 6 })
 }
 
 /* ------------------------------------------------------------------ primitives */
@@ -208,7 +212,6 @@ function PrimaryButton({
   )
 }
 
-/** Honest "contract not deployed on this chain" note. */
 function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
   return (
     <div
@@ -235,8 +238,47 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
       >
         COMING SOON
       </div>
-      Launching isn&apos;t live on {chainLabel} yet — this screen activates automatically once the InstantPoolLauncherV2
-      address is set for this chain.
+      Launching isn&apos;t live on {chainLabel} yet — this screen activates automatically once the launcher is deployed.
+    </div>
+  )
+}
+
+/** Toggle button group for DEX / pair / lockOnHookSwap selectors. */
+function ToggleRow({
+  options,
+  value,
+  onChange,
+}: {
+  options: { label: string; value: string }[]
+  value: string
+  onChange: (v: string) => void
+}): JSX.Element {
+  return (
+    <div style={{ display: 'flex', gap: 6 }}>
+      {options.map((opt) => {
+        const active = opt.value === value
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            style={{
+              flex: 1,
+              fontFamily: MONO,
+              fontSize: 12,
+              fontWeight: 600,
+              color: active ? terminalColors.btnInk : terminalColors.ink3Alt,
+              background: active ? terminalColors.brandGreen : terminalColors.panel,
+              border: `1px solid ${active ? terminalColors.greenBorder : terminalColors.line}`,
+              borderRadius: 9,
+              padding: '8px 0',
+              cursor: 'pointer',
+            }}
+          >
+            {opt.label}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -246,31 +288,24 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
 const EMPTY_INPUT: LaunchConfigInput = {
   name: '',
   symbol: '',
-  metadataUri: '',
-  tokenSupply: '',
+  metadataURI: '',
+  totalSupply: '',
   salt: ZERO_SALT,
   sqrtPriceX96: '',
   tickLower: '',
   tickUpper: '',
-  creatorShareBps: '',
-  teamBps: '0',
-  teamRecipient: '',
-  feeRecipient: '',
-  dex: '0',
-  developerBuyWei: '0',
-  developerBuyMinOut: '0',
-  developerBuyDeadline: '0',
+  dex: String(V3Dex.HookSwap),
+  pair: String(PairToken.WETH),
+  lockOnHookSwap: true,
+  initialBuyEth: '0',
+  initialBuyMinOut: '0',
+  initialBuyDeadline: '0',
 }
 
 /* ------------------------------------------------------------------ my launches */
 
 function MyLaunchesPanel({ chainId, owner }: { chainId?: number; owner?: `0x${string}` }): JSX.Element {
   const my = useMyLaunches({ chainId, owner })
-
-  const pendingLabel =
-    my.totalPending > 0n
-      ? `${Number(formatUnits(my.totalPending, 18)).toLocaleString('en-US', { maximumFractionDigits: 6 })} native`
-      : '0'
 
   return (
     <Panel>
@@ -285,10 +320,7 @@ function MyLaunchesPanel({ chainId, owner }: { chainId?: number; owner?: `0x${st
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {my.launches.map((l) => {
-            const pending =
-              l.pendingEth !== undefined && l.pendingEth > 0n
-                ? `${Number(formatUnits(l.pendingEth, 18)).toLocaleString('en-US', { maximumFractionDigits: 6 })}`
-                : '0'
+            const dexLabel = l.dex === V3Dex.HookSwap ? 'HookSwap' : 'Uniswap V3'
             return (
               <div
                 key={String(l.id)}
@@ -303,28 +335,43 @@ function MyLaunchesPanel({ chainId, owner }: { chainId?: number; owner?: `0x${st
               >
                 <SummaryRow label="Token" value={shortAddr(l.token)} />
                 <SummaryRow label="Pool" value={shortAddr(l.pool)} />
+                <SummaryRow label="DEX" value={dexLabel} />
                 <SummaryRow label="Position #" value={String(l.tokenId)} />
                 <SummaryRow
-                  label="Pending fees"
-                  value={pending}
-                  valueColor={l.pendingEth && l.pendingEth > 0n ? terminalColors.greenDeep : terminalColors.faint}
+                  label="Pending WETH"
+                  value={fmtWei(l.pendingWeth)}
+                  valueColor={l.pendingWeth && l.pendingWeth > 0n ? terminalColors.greenDeep : terminalColors.faint}
+                />
+                <SummaryRow
+                  label="Pending token"
+                  value={fmtWei(l.pendingToken)}
+                  valueColor={l.pendingToken && l.pendingToken > 0n ? terminalColors.greenDeep : terminalColors.faint}
                 />
                 <PrimaryButton
                   label={my.claimingToken === l.token && my.isClaiming ? 'Collecting…' : 'Collect fees'}
                   onClick={() => void my.collect(l.token)}
-                  disabled={my.isClaiming || !(l.pendingEth && l.pendingEth > 0n)}
+                  disabled={my.isClaiming || !((l.pendingWeth && l.pendingWeth > 0n) || (l.pendingToken && l.pendingToken > 0n))}
                   variant="outline"
                 />
               </div>
             )
           })}
 
-          <SummaryRow label="Total pending" value={pendingLabel} />
-          <PrimaryButton
-            label={my.isClaiming ? 'Withdrawing…' : 'Withdraw all pending'}
-            onClick={() => void my.withdrawPending()}
-            disabled={my.isClaiming || my.totalPending === 0n}
-          />
+          <SummaryRow label="Total pending WETH" value={fmtWei(my.totalPendingWeth)} />
+          {my.deferredEth > 0n ? (
+            <>
+              <SummaryRow
+                label="Deferred ETH"
+                value={fmtWei(my.deferredEth)}
+                valueColor={terminalColors.greenDeep}
+              />
+              <PrimaryButton
+                label={my.isClaiming ? 'Withdrawing…' : 'Withdraw deferred ETH'}
+                onClick={() => void my.withdrawPending()}
+                disabled={my.isClaiming}
+              />
+            </>
+          ) : null}
         </div>
       )}
 
@@ -333,6 +380,10 @@ function MyLaunchesPanel({ chainId, owner }: { chainId?: number; owner?: `0x${st
           {my.claimError}
         </div>
       ) : null}
+
+      <div style={{ fontFamily: SANS, fontSize: 10.5, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
+        LP is permanently locked in the fee vault. Trading fees are split per-dex (50/50 Uniswap V3, 70/30 HookSwap).
+      </div>
     </Panel>
   )
 }
@@ -360,17 +411,8 @@ export function LaunchScreen(): JSX.Element {
 
   const launchState = useLaunch({ chainId, owner, input })
 
-  const feeLabel =
-    launchState.launchFeeWei !== undefined
-      ? launchState.launchFeeWei === 0n
-        ? 'Free'
-        : `${Number(formatUnits(launchState.launchFeeWei, 18)).toLocaleString('en-US', { maximumFractionDigits: 6 })} native`
-      : '—'
-
-  const totalValueLabel =
-    launchState.totalValue !== undefined
-      ? `${Number(formatUnits(launchState.totalValue, 18)).toLocaleString('en-US', { maximumFractionDigits: 6 })} native`
-      : '—'
+  const feeLabel = launchState.baseFeeWei !== undefined ? `${fmtWei(launchState.baseFeeWei)} ETH` : '—'
+  const totalValueLabel = launchState.totalValue !== undefined ? `${fmtWei(launchState.totalValue)} ETH` : '—'
 
   const busy = launchState.isWritePending || launchState.isConfirming
 
@@ -426,7 +468,8 @@ export function LaunchScreen(): JSX.Element {
   })()
 
   const symbolValue = input.symbol.trim() !== '' ? input.symbol.trim().toUpperCase() : '—'
-  const supplyValue = input.tokenSupply.trim() !== '' ? input.tokenSupply.trim() : '—'
+  const supplyValue = input.totalSupply.trim() !== '' ? input.totalSupply.trim() : '—'
+  const dexLabel = input.dex === String(V3Dex.HookSwap) ? 'HookSwap' : 'Uniswap V3'
 
   return (
     <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
@@ -456,20 +499,20 @@ export function LaunchScreen(): JSX.Element {
             borderRadius: 999,
           }}
         >
-          instant pool · v3
+          fair launch · v3
         </span>
       </div>
       <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.ink2, marginBottom: 18, maxWidth: 620, lineHeight: 1.5 }}>
-        Deploy a token, open its Uniswap-v3 pool, and (optionally) make a developer buy — in a single transaction.
-        Price and range are set with raw v3 parameters.
+        Deploy a token, seed its v3 pool, and lock the LP — in a single transaction. Pick your DEX, pair token, and
+        optionally make an initial buy.
       </div>
 
-      {/* Stat tiles — honest "—" when disconnected / not wired. */}
+      {/* Stat tiles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 16 }}>
         <StatCard size="lg" label="Symbol" value={symbolValue} />
         <StatCard size="lg" label="Supply (raw)" value={supplyValue} />
         <StatCard size="lg" label="Launch fee" value={deployed ? feeLabel : '—'} />
-        <StatCard size="lg" label="Network" value={deployed ? chainLabel : 'Not live'} valueColor={deployed ? 'up' : 'ink'} />
+        <StatCard size="lg" label="DEX" value={deployed ? dexLabel : '—'} />
       </div>
 
       <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
@@ -498,8 +541,8 @@ export function LaunchScreen(): JSX.Element {
                 <div>
                   <FieldLabel>Metadata URI</FieldLabel>
                   <TextField
-                    value={input.metadataUri}
-                    onChange={(v) => set('metadataUri', v)}
+                    value={input.metadataURI}
+                    onChange={(v) => set('metadataURI', v)}
                     placeholder="ipfs://… or https://…"
                     mono
                   />
@@ -507,8 +550,8 @@ export function LaunchScreen(): JSX.Element {
                 <div>
                   <FieldLabel>Token supply (raw base units)</FieldLabel>
                   <TextField
-                    value={input.tokenSupply}
-                    onChange={(v) => set('tokenSupply', onlyDigits(v))}
+                    value={input.totalSupply}
+                    onChange={(v) => set('totalSupply', onlyDigits(v))}
                     placeholder="1000000000000000000000000"
                     mono
                     inputMode="numeric"
@@ -520,8 +563,42 @@ export function LaunchScreen(): JSX.Element {
 
           {deployed ? (
             <Panel>
-              <StepLabel index="02" label="Pool (raw v3)" />
+              <StepLabel index="02" label="Pool configuration" />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div>
+                  <FieldLabel>DEX</FieldLabel>
+                  <ToggleRow
+                    options={[
+                      { label: 'HookSwap', value: String(V3Dex.HookSwap) },
+                      { label: 'Uniswap V3', value: String(V3Dex.UniswapV3) },
+                    ]}
+                    value={input.dex}
+                    onChange={(v) => set('dex', v)}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Pair token</FieldLabel>
+                  <ToggleRow
+                    options={[
+                      { label: 'WETH', value: String(PairToken.WETH) },
+                      ...(launchState.hookPairEnabled ? [{ label: 'HOOK', value: String(PairToken.HOOK) }] : []),
+                    ]}
+                    value={input.pair}
+                    onChange={(v) => set('pair', v)}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Lock LP on HookSwap</FieldLabel>
+                  <ToggleRow
+                    options={[
+                      { label: 'Yes', value: 'true' },
+                      { label: 'No', value: 'false' },
+                    ]}
+                    value={String(input.lockOnHookSwap)}
+                    onChange={(v) => set('lockOnHookSwap', v === 'true')}
+                  />
+                </div>
+
                 <div>
                   <FieldLabel>sqrtPriceX96 (uint160)</FieldLabel>
                   <TextField
@@ -552,37 +629,16 @@ export function LaunchScreen(): JSX.Element {
                     />
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <FieldLabel>dex (uint8)</FieldLabel>
-                    <TextField value={input.dex} onChange={(v) => set('dex', onlyDigits(v))} placeholder="0" mono inputMode="numeric" />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <FieldLabel>
-                      creatorShareBps
-                      {launchState.maxCreatorShareBps !== undefined ? ` (max ${launchState.maxCreatorShareBps})` : ''}
-                    </FieldLabel>
-                    <TextField
-                      value={input.creatorShareBps}
-                      onChange={(v) => set('creatorShareBps', onlyDigits(v))}
-                      placeholder={
-                        launchState.defaultCreatorShareBps !== undefined ? String(launchState.defaultCreatorShareBps) : '0'
-                      }
-                      mono
-                      inputMode="numeric"
-                    />
-                  </div>
-                </div>
               </div>
 
               <Notice tone="muted">
-                Raw v3 parameters — `sqrtPriceX96` sets the opening price and the tick range sets the LP band. Nothing is
-                derived for you here, so double-check them against your intended price.
+                sqrtPriceX96 sets the opening price; tick range sets the LP band. The pool is single-sided (100% your
+                token), paired against {input.pair === String(PairToken.HOOK) ? 'HOOK' : 'WETH'}.
               </Notice>
             </Panel>
           ) : null}
 
-          {/* Advanced: salt, team split, fee recipient, developer buy */}
+          {/* Advanced: salt, initial buy */}
           {deployed ? (
             <Panel>
               <div
@@ -606,32 +662,13 @@ export function LaunchScreen(): JSX.Element {
                     <TextField value={input.salt} onChange={(v) => set('salt', v)} placeholder={ZERO_SALT} mono />
                     <PrimaryButton label="Randomize salt" onClick={() => set('salt', randomSalt())} variant="outline" />
                   </div>
-                  <div>
-                    <FieldLabel>feeRecipient (address)</FieldLabel>
-                    <TextField value={input.feeRecipient} onChange={(v) => set('feeRecipient', v)} placeholder="0x…" mono />
-                  </div>
-                  <div style={{ display: 'flex', gap: 12 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <FieldLabel>teamBps (uint16)</FieldLabel>
-                      <TextField value={input.teamBps} onChange={(v) => set('teamBps', onlyDigits(v))} placeholder="0" mono />
-                    </div>
-                    <div style={{ flex: 2, minWidth: 0 }}>
-                      <FieldLabel>teamRecipient (address)</FieldLabel>
-                      <TextField
-                        value={input.teamRecipient}
-                        onChange={(v) => set('teamRecipient', v)}
-                        placeholder="0x…"
-                        mono
-                      />
-                    </div>
-                  </div>
 
-                  <StepLabel index="03" label="Developer buy (optional)" />
+                  <StepLabel index="03" label="Initial buy (optional)" />
                   <div>
-                    <FieldLabel>developerBuyWei (raw)</FieldLabel>
+                    <FieldLabel>initialBuyEth (raw wei)</FieldLabel>
                     <TextField
-                      value={input.developerBuyWei}
-                      onChange={(v) => set('developerBuyWei', onlyDigits(v))}
+                      value={input.initialBuyEth}
+                      onChange={(v) => set('initialBuyEth', onlyDigits(v))}
                       placeholder="0"
                       mono
                       inputMode="numeric"
@@ -639,20 +676,20 @@ export function LaunchScreen(): JSX.Element {
                   </div>
                   <div style={{ display: 'flex', gap: 12 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <FieldLabel>developerBuyMinOut</FieldLabel>
+                      <FieldLabel>initialBuyMinOut</FieldLabel>
                       <TextField
-                        value={input.developerBuyMinOut}
-                        onChange={(v) => set('developerBuyMinOut', onlyDigits(v))}
+                        value={input.initialBuyMinOut}
+                        onChange={(v) => set('initialBuyMinOut', onlyDigits(v))}
                         placeholder="0"
                         mono
                         inputMode="numeric"
                       />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <FieldLabel>developerBuyDeadline</FieldLabel>
+                      <FieldLabel>initialBuyDeadline</FieldLabel>
                       <TextField
-                        value={input.developerBuyDeadline}
-                        onChange={(v) => set('developerBuyDeadline', onlyDigits(v))}
+                        value={input.initialBuyDeadline}
+                        onChange={(v) => set('initialBuyDeadline', onlyDigits(v))}
                         placeholder="0"
                         mono
                         inputMode="numeric"
@@ -660,8 +697,7 @@ export function LaunchScreen(): JSX.Element {
                     </div>
                   </div>
                   <Notice tone="muted">
-                    The developer buy is executed inside the same transaction — its wei amount is added to `msg.value` on
-                    top of the launch fee.
+                    The initial buy is executed inside the same transaction — its ETH is added to the total cost.
                   </Notice>
                 </div>
               ) : null}
@@ -675,9 +711,10 @@ export function LaunchScreen(): JSX.Element {
             <SummaryRow label="Name" value={input.name.trim() !== '' ? input.name.trim() : '—'} />
             <SummaryRow label="Symbol" value={symbolValue} />
             <SummaryRow label="Supply (raw)" value={supplyValue} />
+            <SummaryRow label="DEX" value={deployed ? dexLabel : '—'} />
             <SummaryRow label="Launch fee" value={deployed ? feeLabel : '—'} />
             <SummaryRow
-              label="Total msg.value"
+              label="Total cost"
               value={deployed ? totalValueLabel : '—'}
               valueColor={deployed ? terminalColors.ink : terminalColors.faint}
             />
@@ -688,7 +725,7 @@ export function LaunchScreen(): JSX.Element {
 
             {launchState.isDone ? (
               <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <Notice tone="green">Launched — token deployed and its v3 pool is live.</Notice>
+                <Notice tone="green">Launched — token deployed, pool seeded, LP locked in the fee vault.</Notice>
                 <SummaryRow label="Token" value={shortAddr(launchState.createdToken)} />
                 <SummaryRow label="Pool" value={shortAddr(launchState.createdPool)} />
                 <SummaryRow
@@ -702,8 +739,8 @@ export function LaunchScreen(): JSX.Element {
               </div>
             ) : deployed ? (
               <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
-                One transaction: deploys the token, opens the v3 pool, and runs any developer buy. The resulting token,
-                pool and position are read back from the contract.
+                One transaction: deploys the token, seeds the v3 pool, and registers the LP position in the fee vault.
+                Principal is locked forever; trading fees are claimable below.
               </div>
             ) : null}
           </Panel>

@@ -13,7 +13,7 @@ export const apolloClient = new ApolloClient({
   link: from([datadogLink, retryLink, httpLink]),
   headers: {
     'Content-Type': 'application/json',
-    Origin: 'https://app.uniswap.org',
+    Origin: 'https://hookswap.org',
   },
   cache: setupSharedApolloCache(),
   defaultOptions: {

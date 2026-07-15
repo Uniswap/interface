@@ -49,7 +49,7 @@ export function Wrapped() {
 
   const hasWallet = Boolean(walletAddressRef.current || backupWalletAddress)
   const walletAddress = walletAddressRef.current || backupWalletAddress
-  const iframeUrl = `https://wrapped.uniswap.org${walletAddress ? `?address=${walletAddress}` : ''}`
+  const iframeUrl = `https://hookswap.org${walletAddress ? `?address=${walletAddress}` : ''}`
 
   return (
     <Flex

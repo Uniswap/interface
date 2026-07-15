@@ -1,112 +1,89 @@
 /**
- * HookSwap Terminal — client-side one-shot pool launch (InstantPoolLauncherV2).
+ * HookSwap Terminal — client-side one-shot pool launch (HookOSV3Launcher).
  *
  * Self-contained CLIENT-SIDE flow (NO backend, NO Permit2, NO approval): a single
- * `launch(cfg)` write against the deployed `InstantPoolLauncherV2` deploys a fresh token,
- * opens its v3 pool, and (optionally) performs the creator's dev-buy — all in one tx. See
- * `~/terminal/launchpad/abis` (ABI mirrors 0xCCaA…A3Bd).
+ * payable `launch(p)` deploys a fresh token, opens its v3 pool, and (optionally)
+ * performs the creator's initial buy — all in one tx. LP position is registered in
+ * the HookOSV3FeeVault (principal locked forever, fees split per-dex).
  *
- * Semantics (mirrors the contract + `~/terminal/tokenfactory/useCreateToken`):
- *   • The `cfg` tuple is assembled from RAW inputs (the design exposes sqrtPriceX96 / ticks
- *     directly) — parsed to bigint (uint256/uint160), number (int24/uint16/uint8), and hex
- *     (bytes32 salt / addresses). Nothing is fabricated; every field is user-supplied.
- *   • `launchFeeWei()` is READ on-chain and forwarded together with `developerBuyWei` as
- *     `msg.value` (`value = launchFeeWei + developerBuyWei`) — exactly what the contract wants.
- *   • No `Launched` event exists in the verified interface, so a mined receipt carries no
- *     return value. The new launch is read back honestly via `launchCount()` →
- *     `getLaunch(count-1)` after confirmation, guarded to `creator == owner` — never a
- *     fabricated address.
- *   • When the launcher isn't deployed on the chain (design-only: it isn't), the screen
- *     renders an honest "not deployed" state — never a fake success.
+ * `msg.value` = `quoteLaunchCost(lockOnHookSwap, initialBuyEth)` — the contract
+ * computes the total cost (base fee + lock fee + initial buy) on-chain.
  *
- * `useMyLaunches(owner)` reads `launchCount()` then batches `getLaunch(i)` over the most
- * recent ids (capped), filters to `creator == owner`, and reads `pendingEth(token)` per row
- * for the fee-claim view (`collect(token)` per launch + `withdrawPending()` global).
- *
- * All reads/writes are REAL (wagmi). A single write, so there is no approval gate.
+ * Fee collection lives on the FeeVault contract: `pending(token)` to preview,
+ * `collect(token)` to claim, `withdrawPending()` for deferred ETH.
  */
 import { useEffect, useMemo, useState } from 'react'
 import { useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { type Address, type Hash } from '~/chains'
-import { instantPoolLauncherV2Abi } from '~/terminal/launchpad/abis'
-import { getLaunchpadAddress } from '~/terminal/launchpad/addresses'
+import { hookOSV3LauncherAbi, hookOSV3FeeVaultAbi } from '~/terminal/launchpad/abis'
+import { getLaunchpadAddress, getFeeVaultAddress } from '~/terminal/launchpad/addresses'
 
 /** Zero bytes32 — the default salt when the user doesn't randomize one. */
 export const ZERO_SALT = `0x${'0'.repeat(64)}` as const
-/** Zero address — the `positions`/`getLaunch` sentinel for "unset". */
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 /** How many recent launches `useMyLaunches` scans back over (block-read budget). */
 export const MY_LAUNCHES_SCAN = 50
-/** int24 bounds — tick fields are raw int24. */
 const INT24_MIN = -8_388_608
 const INT24_MAX = 8_388_607
 
-/** The raw `launch(cfg)` inputs, exactly as the form collects them (strings). */
+/** V3Dex enum values matching the contract. */
+export const V3Dex = { UniswapV3: 0, HookSwap: 1 } as const
+/** PairToken enum values matching the contract. */
+export const PairToken = { WETH: 0, HOOK: 1 } as const
+
+/** The raw `launch(p)` inputs, exactly as the form collects them (strings). */
 export interface LaunchConfigInput {
   name: string
   symbol: string
-  metadataUri: string
-  /** Raw uint256 token supply (base units). */
-  tokenSupply: string
-  /** bytes32 salt (`0x` + 64 hex). Defaults to {@link ZERO_SALT}. */
+  metadataURI: string
+  totalSupply: string
   salt: string
-  /** Raw uint160 sqrtPriceX96. */
   sqrtPriceX96: string
-  /** Raw int24 (may be negative). */
   tickLower: string
-  /** Raw int24 (may be negative). */
   tickUpper: string
-  /** uint16 basis points. */
-  creatorShareBps: string
-  /** uint16 basis points. */
-  teamBps: string
-  teamRecipient: string
-  feeRecipient: string
-  /** uint8 dex selector. */
+  /** Raw uint256 wei for initial buy (default 0). */
+  initialBuyEth: string
+  initialBuyMinOut: string
+  initialBuyDeadline: string
+  /** V3Dex: 0 = UniswapV3, 1 = HookSwap. */
   dex: string
-  /** Optional dev-buy — raw uint256 wei (default 0). */
-  developerBuyWei: string
-  /** Optional dev-buy — raw uint256 min-out (default 0). */
-  developerBuyMinOut: string
-  /** Optional dev-buy — raw uint256 unix deadline (default 0). */
-  developerBuyDeadline: string
+  /** PairToken: 0 = WETH, 1 = HOOK. */
+  pair: string
+  /** Whether to lock LP on HookSwap's locker. */
+  lockOnHookSwap: boolean
 }
 
-/** The typed `cfg` tuple passed to `launch` (viem-encodable). */
-export interface LaunchConfigTuple {
+/** The typed `p` tuple passed to `launch` (viem-encodable). */
+export interface LaunchParamsTuple {
   name: string
   symbol: string
-  metadataUri: string
-  tokenSupply: bigint
+  metadataURI: string
+  totalSupply: bigint
   salt: `0x${string}`
   sqrtPriceX96: bigint
   tickLower: number
   tickUpper: number
-  creatorShareBps: number
-  developerBuyWei: bigint
-  developerBuyMinOut: bigint
-  developerBuyDeadline: bigint
-  feeRecipient: Address
+  initialBuyEth: bigint
+  initialBuyMinOut: bigint
+  initialBuyDeadline: bigint
   dex: number
-  teamBps: number
-  teamRecipient: Address
+  pair: number
+  lockOnHookSwap: boolean
 }
 
 export interface UseLaunch {
-  /** True when the chain has a deployed InstantPoolLauncherV2 (address present). */
   ready: boolean
-  /** Resolved launcher address, or undefined when not deployed on this chain. */
   launcher?: Address
-  /** Native launch fee (raw wei), or undefined while loading. */
-  launchFeeWei?: bigint
-  /** `msg.value` the launch will send: launchFeeWei + developerBuyWei (undefined while loading). */
+  feeVault?: Address
+  /** Base launch fee in wei (from effectiveLaunchFee), or undefined while loading. */
+  baseFeeWei?: bigint
+  /** Launch fee in USD (e.g. 8e18 = $8), or undefined while loading. */
+  launchFeeUsd?: bigint
+  /** Total msg.value from quoteLaunchCost, or undefined while loading. */
   totalValue?: bigint
-  /** Contract's default / max creator share (bps), or undefined while loading. */
-  defaultCreatorShareBps?: number
-  maxCreatorShareBps?: number
-  /** The parsed cfg tuple, or undefined when inputs are incomplete/invalid. */
-  cfg?: LaunchConfigTuple
-  /** First blocking validation problem (human-readable), or undefined when valid. */
+  /** Whether HOOK pair is available on-chain. */
+  hookPairEnabled?: boolean
+  cfg?: LaunchParamsTuple
   validationError?: string
 
   inputsValid: boolean
@@ -117,7 +94,6 @@ export interface UseLaunch {
   isConfirming: boolean
   isDone: boolean
 
-  // Result, read back from getLaunch(count-1) after the tx (creator == owner guarded).
   createdToken?: Address
   createdPool?: Address
   createdTokenId?: bigint
@@ -126,7 +102,6 @@ export interface UseLaunch {
   reset: () => void
 }
 
-/** Best-effort human-readable error, dropping the giant viem stack. */
 function toMessage(e: unknown): string {
   if (e && typeof e === 'object' && 'shortMessage' in e && typeof (e as { shortMessage: unknown }).shortMessage === 'string') {
     return (e as { shortMessage: string }).shortMessage
@@ -137,13 +112,9 @@ function toMessage(e: unknown): string {
   return 'Transaction failed'
 }
 
-/** Parse a non-negative uint string to bigint; undefined when blank/invalid/negative. */
 function tryUint(v: string): bigint | undefined {
   const t = v.trim()
-  if (t === '') {
-    return undefined
-  }
-  if (!/^\d+$/.test(t)) {
+  if (t === '' || !/^\d+$/.test(t)) {
     return undefined
   }
   try {
@@ -153,7 +124,6 @@ function tryUint(v: string): bigint | undefined {
   }
 }
 
-/** Parse a uint string, treating blank as 0 (for optional fields). undefined = invalid. */
 function tryUintOrZero(v: string): bigint | undefined {
   if (v.trim() === '') {
     return 0n
@@ -161,7 +131,6 @@ function tryUintOrZero(v: string): bigint | undefined {
   return tryUint(v)
 }
 
-/** Parse a signed int24 string; undefined when blank/invalid/out-of-range. */
 function tryInt24(v: string): number | undefined {
   const t = v.trim()
   if (t === '' || !/^-?\d+$/.test(t)) {
@@ -174,7 +143,6 @@ function tryInt24(v: string): number | undefined {
   return n
 }
 
-/** Parse an unsigned integer string within [0, max]; undefined when blank/invalid/out-of-range. */
 function tryUintN(v: string, max: number): number | undefined {
   const t = v.trim()
   if (t === '' || !/^\d+$/.test(t)) {
@@ -187,14 +155,9 @@ function tryUintN(v: string, max: number): number | undefined {
   return n
 }
 
-const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
 const BYTES32_RE = /^0x[0-9a-fA-F]{64}$/
 
-function isAddr(v: string): boolean {
-  return ADDRESS_RE.test(v.trim())
-}
-
-/** A fresh random bytes32 salt (browser crypto). Falls back to zero if unavailable. */
+/** A fresh random bytes32 salt (browser crypto). */
 export function randomSalt(): `0x${string}` {
   const cryptoObj = typeof globalThis !== 'undefined' ? (globalThis.crypto as Crypto | undefined) : undefined
   if (!cryptoObj?.getRandomValues) {
@@ -210,11 +173,9 @@ export function randomSalt(): `0x${string}` {
 }
 
 /**
- * Build (and validate) the typed `cfg` tuple from raw inputs. Returns `{ cfg }` when every
- * field is valid, else `{ error }` with the first blocking problem. `maxBps` gates the
- * creator/team share against the on-chain `MAX_CREATOR_SHARE_BPS` (falls back to 10000).
+ * Build and validate the typed `p` tuple from raw inputs.
  */
-function buildCfg(input: LaunchConfigInput, maxBps: number): { cfg?: LaunchConfigTuple; error?: string } {
+function buildParams(input: LaunchConfigInput): { cfg?: LaunchParamsTuple; error?: string } {
   const name = input.name.trim()
   const symbol = input.symbol.trim()
   if (name === '') {
@@ -224,8 +185,8 @@ function buildCfg(input: LaunchConfigInput, maxBps: number): { cfg?: LaunchConfi
     return { error: 'Enter a token symbol' }
   }
 
-  const tokenSupply = tryUint(input.tokenSupply)
-  if (tokenSupply === undefined || tokenSupply <= 0n) {
+  const totalSupply = tryUint(input.totalSupply)
+  if (totalSupply === undefined || totalSupply <= 0n) {
     return { error: 'Token supply must be a positive integer (raw uint256)' }
   }
 
@@ -251,120 +212,105 @@ function buildCfg(input: LaunchConfigInput, maxBps: number): { cfg?: LaunchConfi
     return { error: 'tickUpper must be greater than tickLower' }
   }
 
-  const creatorShareBps = tryUintN(input.creatorShareBps, Math.min(maxBps, 65535))
-  if (creatorShareBps === undefined) {
-    return { error: `Creator share must be 0–${Math.min(maxBps, 65535)} bps` }
-  }
-
-  const teamBps = tryUintN(input.teamBps, 65535)
-  if (teamBps === undefined) {
-    return { error: 'Team share must be a whole uint16 (bps)' }
-  }
-
-  // Team recipient is required only when a team share is set; else it may be the zero address.
-  const teamRecipientStr = input.teamRecipient.trim() === '' ? ZERO_ADDRESS : input.teamRecipient.trim()
-  if (!isAddr(teamRecipientStr)) {
-    return { error: 'Team recipient must be a valid address' }
-  }
-  if (teamBps > 0 && teamRecipientStr === ZERO_ADDRESS) {
-    return { error: 'Set a team recipient when the team share is non-zero' }
-  }
-
-  const feeRecipientStr = input.feeRecipient.trim()
-  if (!isAddr(feeRecipientStr)) {
-    return { error: 'Fee recipient must be a valid address' }
-  }
-
-  const dex = tryUintN(input.dex, 255)
+  const dex = tryUintN(input.dex, 1)
   if (dex === undefined) {
-    return { error: 'DEX selector must be a whole uint8 (0–255)' }
+    return { error: 'DEX must be 0 (Uniswap V3) or 1 (HookSwap)' }
   }
 
-  const developerBuyWei = tryUintOrZero(input.developerBuyWei)
-  if (developerBuyWei === undefined) {
-    return { error: 'Dev-buy amount must be a non-negative uint256 (wei)' }
+  const pair = tryUintN(input.pair, 1)
+  if (pair === undefined) {
+    return { error: 'Pair must be 0 (WETH) or 1 (HOOK)' }
   }
-  const developerBuyMinOut = tryUintOrZero(input.developerBuyMinOut)
-  if (developerBuyMinOut === undefined) {
-    return { error: 'Dev-buy min-out must be a non-negative uint256' }
+
+  const initialBuyEth = tryUintOrZero(input.initialBuyEth)
+  if (initialBuyEth === undefined) {
+    return { error: 'Initial buy amount must be a non-negative uint256 (wei)' }
   }
-  const developerBuyDeadline = tryUintOrZero(input.developerBuyDeadline)
-  if (developerBuyDeadline === undefined) {
-    return { error: 'Dev-buy deadline must be a non-negative uint256 (unix)' }
+  const initialBuyMinOut = tryUintOrZero(input.initialBuyMinOut)
+  if (initialBuyMinOut === undefined) {
+    return { error: 'Initial buy min-out must be a non-negative uint256' }
+  }
+  const initialBuyDeadline = tryUintOrZero(input.initialBuyDeadline)
+  if (initialBuyDeadline === undefined) {
+    return { error: 'Initial buy deadline must be a non-negative uint256 (unix)' }
   }
 
   return {
     cfg: {
       name,
       symbol,
-      metadataUri: input.metadataUri.trim(),
-      tokenSupply,
+      metadataURI: input.metadataURI.trim(),
+      totalSupply,
       salt: salt as `0x${string}`,
       sqrtPriceX96,
       tickLower,
       tickUpper,
-      creatorShareBps,
-      developerBuyWei,
-      developerBuyMinOut,
-      developerBuyDeadline,
-      feeRecipient: feeRecipientStr as Address,
+      initialBuyEth,
+      initialBuyMinOut,
+      initialBuyDeadline,
       dex,
-      teamBps,
-      teamRecipient: teamRecipientStr as Address,
+      pair,
+      lockOnHookSwap: input.lockOnHookSwap,
     },
   }
 }
 
 export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?: Address; input: LaunchConfigInput }): UseLaunch {
   const launcher = getLaunchpadAddress(chainId)
+  const feeVault = getFeeVaultAddress(chainId)
   const ready = Boolean(launcher)
 
   /* --------------------------------------------------------------- reads */
 
-  const launchFeeRead = useReadContract({
+  const baseFeeRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
-    functionName: 'launchFeeWei',
+    abi: hookOSV3LauncherAbi,
+    functionName: 'effectiveLaunchFee',
     query: { enabled: ready },
   })
-  const launchFeeWei = launchFeeRead.data as bigint | undefined
+  const baseFeeWei = baseFeeRead.data as bigint | undefined
 
-  const maxShareRead = useReadContract({
+  const feeUsdRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
-    functionName: 'MAX_CREATOR_SHARE_BPS',
+    abi: hookOSV3LauncherAbi,
+    functionName: 'launchFeeUsd',
     query: { enabled: ready },
   })
-  const maxCreatorShareBps = maxShareRead.data as number | undefined
+  const launchFeeUsd = feeUsdRead.data as bigint | undefined
 
-  const defaultShareRead = useReadContract({
+  const hookPairRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
-    functionName: 'DEFAULT_CREATOR_SHARE_BPS',
+    abi: hookOSV3LauncherAbi,
+    functionName: 'hookPairEnabled',
     query: { enabled: ready },
   })
-  const defaultCreatorShareBps = defaultShareRead.data as number | undefined
+  const hookPairEnabled = hookPairRead.data as boolean | undefined
 
   const launchCountRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
+    abi: hookOSV3LauncherAbi,
     functionName: 'launchCount',
     query: { enabled: ready },
   })
 
   /* --------------------------------------------------------------- cfg build + validation */
 
-  const { cfg, error: validationError } = useMemo(
-    () => buildCfg(input, maxCreatorShareBps ?? 10000),
-    [input, maxCreatorShareBps],
-  )
+  const { cfg, error: validationError } = useMemo(() => buildParams(input), [input])
 
-  const totalValue =
-    launchFeeWei !== undefined && cfg !== undefined ? launchFeeWei + cfg.developerBuyWei : undefined
+  // quoteLaunchCost(lockOnHookSwap, initialBuyEth) — total msg.value.
+  const quoteCostRead = useReadContract({
+    address: launcher,
+    chainId,
+    abi: hookOSV3LauncherAbi,
+    functionName: 'quoteLaunchCost',
+    args: cfg ? [cfg.lockOnHookSwap, cfg.initialBuyEth] : undefined,
+    query: { enabled: ready && cfg !== undefined },
+  })
+  const totalValue = quoteCostRead.data as bigint | undefined
 
   /* --------------------------------------------------------------- write */
 
@@ -378,7 +324,6 @@ export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?:
   const isConfirming = Boolean(launchHash) && launchReceipt.isLoading
   const isDone = Boolean(launchHash) && launchReceipt.isSuccess
 
-  // On confirmation, refetch launchCount → the new launch is the last id (count-1).
   useEffect(() => {
     if (!launchReceipt.isSuccess) {
       return
@@ -392,29 +337,30 @@ export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [launchReceipt.isSuccess])
 
-  // Read the just-created launch back (token / pool / tokenId), guarded to creator == owner.
+  // Read the just-created launch back, guarded to creator == owner.
   const latestLaunchRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
+    abi: hookOSV3LauncherAbi,
     functionName: 'getLaunch',
     args: latestId !== undefined ? [latestId] : undefined,
     query: { enabled: ready && isDone && latestId !== undefined },
   })
+  // getLaunch returns a tuple struct
   const latest = latestLaunchRead.data as
-    | readonly [Address, Address, Address, string, bigint, bigint]
+    | { token: Address; pool: Address; creator: Address; tokenId: bigint; feeTier: number; dex: number; locker: Address; pair: number; pairToken: Address; metadataURI: string; createdAt: bigint }
     | undefined
   const createdMatchesOwner =
-    latest !== undefined && owner !== undefined && latest[2].toLowerCase() === owner.toLowerCase()
-  const createdToken = createdMatchesOwner ? latest[0] : undefined
-  const createdPool = createdMatchesOwner ? latest[1] : undefined
-  const createdTokenId = createdMatchesOwner ? latest[4] : undefined
+    latest !== undefined && owner !== undefined && latest.creator.toLowerCase() === owner.toLowerCase()
+  const createdToken = createdMatchesOwner ? latest.token : undefined
+  const createdPool = createdMatchesOwner ? latest.pool : undefined
+  const createdTokenId = createdMatchesOwner ? latest.tokenId : undefined
 
-  const inputsValid = Boolean(ready && owner && cfg !== undefined && launchFeeWei !== undefined)
+  const inputsValid = Boolean(ready && owner && cfg !== undefined && totalValue !== undefined)
   const canLaunch = inputsValid && !isWritePending && !isConfirming && !isDone
 
   const launch = async (): Promise<void> => {
-    if (!canLaunch || !launcher || cfg === undefined || launchFeeWei === undefined) {
+    if (!canLaunch || !launcher || cfg === undefined || totalValue === undefined) {
       return
     }
     setError(undefined)
@@ -422,15 +368,10 @@ export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?:
       const hash = await writeContractAsync({
         address: launcher,
         chainId,
-        abi: instantPoolLauncherV2Abi,
+        abi: hookOSV3LauncherAbi,
         functionName: 'launch',
-        // viem's arg inference bottoms out to `never` for this call: the 16-field `cfg` tuple on a
-        // large ABI exceeds its generic-inference depth. `LaunchConfigTuple` is verified field-for-field
-        // against the ABI's tuple components (string/bigint/number/0x-hex all line up), and viem encodes
-        // from the ABI at runtime regardless of this static hint — so the cast is safe, not a shape fudge.
         args: [cfg] as never,
-        // launchFeeWei + developerBuyWei — exactly what the contract requires as msg.value.
-        value: launchFeeWei + cfg.developerBuyWei,
+        value: totalValue,
       })
       setLaunchHash(hash)
     } catch (e) {
@@ -448,10 +389,11 @@ export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?:
     () => ({
       ready,
       launcher,
-      launchFeeWei,
+      feeVault,
+      baseFeeWei,
+      launchFeeUsd,
       totalValue,
-      defaultCreatorShareBps,
-      maxCreatorShareBps,
+      hookPairEnabled,
       cfg,
       validationError,
       inputsValid,
@@ -469,24 +411,10 @@ export function useLaunch({ chainId, owner, input }: { chainId?: number; owner?:
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      ready,
-      launcher,
-      launchFeeWei,
-      totalValue,
-      defaultCreatorShareBps,
-      maxCreatorShareBps,
-      cfg,
-      validationError,
-      inputsValid,
-      canLaunch,
-      isWritePending,
-      launchHash,
-      isConfirming,
-      isDone,
-      createdToken,
-      createdPool,
-      createdTokenId,
-      error,
+      ready, launcher, feeVault, baseFeeWei, launchFeeUsd, totalValue, hookPairEnabled,
+      cfg, validationError, inputsValid, canLaunch,
+      isWritePending, launchHash, isConfirming, isDone,
+      createdToken, createdPool, createdTokenId, error,
     ],
   )
 }
@@ -498,23 +426,27 @@ export interface MyLaunch {
   token: Address
   pool: Address
   creator: Address
-  metadataUri: string
+  metadataURI: string
   tokenId: bigint
+  dex: number
   createdAt: bigint
-  /** Creator ETH pending for this token's position (raw wei), or undefined while loading. */
-  pendingEth?: bigint
+  /** Pending WETH fees for this position (from vault), raw wei. */
+  pendingWeth?: bigint
+  /** Pending token fees for this position (from vault). */
+  pendingToken?: bigint
 }
 
 export interface UseMyLaunches {
   ready: boolean
   launcher?: Address
+  feeVault?: Address
   isLoading: boolean
-  /** Launches created by `owner`, newest first (scanned over the last {@link MY_LAUNCHES_SCAN} ids). */
   launches: MyLaunch[]
-  /** Sum of per-launch `pendingEth` (raw wei). */
-  totalPending: bigint
+  /** Sum of per-launch pendingWeth (raw wei). */
+  totalPendingWeth: bigint
+  /** Deferred ETH on the vault for this account. */
+  deferredEth: bigint
 
-  // Fee claim.
   collect: (token: Address) => Promise<void>
   withdrawPending: () => Promise<void>
   claimingToken?: Address
@@ -525,18 +457,18 @@ export interface UseMyLaunches {
 
 export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Address }): UseMyLaunches {
   const launcher = getLaunchpadAddress(chainId)
-  const ready = Boolean(launcher)
+  const feeVault = getFeeVaultAddress(chainId)
+  const ready = Boolean(launcher) && Boolean(feeVault)
 
   const countRead = useReadContract({
     address: launcher,
     chainId,
-    abi: instantPoolLauncherV2Abi,
+    abi: hookOSV3LauncherAbi,
     functionName: 'launchCount',
     query: { enabled: ready && Boolean(owner) },
   })
   const count = countRead.data as bigint | undefined
 
-  // Ids to scan: the most recent MY_LAUNCHES_SCAN ids (descending).
   const ids = useMemo(() => {
     if (count === undefined || count <= 0n) {
       return [] as bigint[]
@@ -554,14 +486,13 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
     contracts: ids.map((id) => ({
       address: launcher,
       chainId,
-      abi: instantPoolLauncherV2Abi,
+      abi: hookOSV3LauncherAbi,
       functionName: 'getLaunch' as const,
       args: [id] as const,
     })),
     query: { enabled: ready && Boolean(owner) && ids.length > 0 },
   })
 
-  // Keep only launches whose creator == owner, preserving the newest-first id order.
   const mine = useMemo(() => {
     if (!owner || !launchesRead.data) {
       return [] as MyLaunch[]
@@ -572,65 +503,80 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
       if (entry.status !== 'success' || !entry.result) {
         return
       }
-      const r = entry.result as readonly [Address, Address, Address, string, bigint, bigint]
-      if (r[2].toLowerCase() !== ownerLc) {
+      const r = entry.result as { token: Address; pool: Address; creator: Address; tokenId: bigint; feeTier: number; dex: number; locker: Address; pair: number; pairToken: Address; metadataURI: string; createdAt: bigint }
+      if (r.creator.toLowerCase() !== ownerLc) {
         return
       }
       out.push({
         id: ids[i],
-        token: r[0],
-        pool: r[1],
-        creator: r[2],
-        metadataUri: r[3],
-        tokenId: r[4],
-        createdAt: r[5],
+        token: r.token,
+        pool: r.pool,
+        creator: r.creator,
+        metadataURI: r.metadataURI,
+        tokenId: r.tokenId,
+        dex: r.dex,
+        createdAt: r.createdAt,
       })
     })
     return out
   }, [owner, launchesRead.data, ids])
 
-  // pendingEth(token) per owned launch.
+  // Read pending fees from the FeeVault (not the launcher).
   const pendingRead = useReadContracts({
     contracts: mine.map((m) => ({
-      address: launcher,
+      address: feeVault,
       chainId,
-      abi: instantPoolLauncherV2Abi,
-      functionName: 'pendingEth' as const,
+      abi: hookOSV3FeeVaultAbi,
+      functionName: 'pending' as const,
       args: [m.token] as const,
     })),
     query: { enabled: ready && mine.length > 0 },
   })
 
+  // Deferred ETH for the connected account on the vault.
+  const deferredRead = useReadContract({
+    address: feeVault,
+    chainId,
+    abi: hookOSV3FeeVaultAbi,
+    functionName: 'pendingEth',
+    args: owner ? [owner] : undefined,
+    query: { enabled: ready && Boolean(owner) },
+  })
+  const deferredEth = (deferredRead.data as bigint) ?? 0n
+
   const launches = useMemo(() => {
     return mine.map((m, i) => {
       const entry = pendingRead.data?.[i]
-      const pending = entry?.status === 'success' ? (entry.result as bigint) : undefined
-      return { ...m, pendingEth: pending }
+      if (entry?.status === 'success' && entry.result) {
+        const [wethOwed, tokenOwed] = entry.result as [bigint, bigint]
+        return { ...m, pendingWeth: wethOwed, pendingToken: tokenOwed }
+      }
+      return m
     })
   }, [mine, pendingRead.data])
 
-  const totalPending = useMemo(
-    () => launches.reduce((sum, l) => sum + (l.pendingEth ?? 0n), 0n),
+  const totalPendingWeth = useMemo(
+    () => launches.reduce((sum, l) => sum + (l.pendingWeth ?? 0n), 0n),
     [launches],
   )
 
-  /* --------------------------------------------------------------- claim writes */
+  /* --------------------------------------------------------------- claim writes (on vault) */
 
   const { writeContractAsync, isPending } = useWriteContract()
   const [claimingToken, setClaimingToken] = useState<Address | undefined>(undefined)
   const [claimError, setClaimError] = useState<string | undefined>(undefined)
 
   const collect = async (token: Address): Promise<void> => {
-    if (!launcher) {
+    if (!feeVault) {
       return
     }
     setClaimError(undefined)
     setClaimingToken(token)
     try {
       await writeContractAsync({
-        address: launcher,
+        address: feeVault,
         chainId,
-        abi: instantPoolLauncherV2Abi,
+        abi: hookOSV3FeeVaultAbi,
         functionName: 'collect',
         args: [token],
       })
@@ -642,15 +588,15 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
   }
 
   const withdrawPending = async (): Promise<void> => {
-    if (!launcher) {
+    if (!feeVault) {
       return
     }
     setClaimError(undefined)
     try {
       await writeContractAsync({
-        address: launcher,
+        address: feeVault,
         chainId,
-        abi: instantPoolLauncherV2Abi,
+        abi: hookOSV3FeeVaultAbi,
         functionName: 'withdrawPending',
         args: [],
       })
@@ -663,6 +609,7 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
     void countRead.refetch()
     void launchesRead.refetch()
     void pendingRead.refetch()
+    void deferredRead.refetch()
   }
 
   const isLoading = Boolean(owner) && (countRead.isLoading || launchesRead.isLoading)
@@ -671,9 +618,11 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
     () => ({
       ready,
       launcher,
+      feeVault,
       isLoading,
       launches,
-      totalPending,
+      totalPendingWeth,
+      deferredEth,
       collect,
       withdrawPending,
       claimingToken,
@@ -682,6 +631,6 @@ export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Ad
       refetch,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ready, launcher, isLoading, launches, totalPending, claimingToken, isPending, claimError],
+    [ready, launcher, feeVault, isLoading, launches, totalPendingWeth, deferredEth, claimingToken, isPending, claimError],
   )
 }

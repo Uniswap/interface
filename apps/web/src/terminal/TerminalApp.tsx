@@ -80,6 +80,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   if (pathname === '/airdrop') {
     return 'airdrop'
   }
+  if (pathname === '/launch') {
+    return 'launchpad'
+  }
   if (pathname === '/activity') {
     return 'notifications'
   }
@@ -141,6 +144,9 @@ function activeScreenIdFromPath(pathname: string): TerminalNavId | undefined {
   }
   if (rest.startsWith('/airdrop')) {
     return 'airdrop'
+  }
+  if (rest.startsWith('/launch')) {
+    return 'launchpad'
   }
   if (rest.startsWith('/portfolio')) {
     return 'portfolio'
@@ -451,6 +457,7 @@ export default function TerminalApp(): JSX.Element {
         <Route path="vesting" element={<Navigate to="/vesting" replace />} />
         <Route path="farms" element={<Navigate to="/farms" replace />} />
         <Route path="airdrop" element={<Navigate to="/airdrop" replace />} />
+        <Route path="launch" element={<Navigate to="/launch" replace />} />
         <Route path="portfolio" element={<Navigate to="/portfolio" replace />} />
         <Route path="activity" element={<Navigate to="/activity" replace />} />
         <Route path="notifications" element={<Navigate to="/activity" replace />} />

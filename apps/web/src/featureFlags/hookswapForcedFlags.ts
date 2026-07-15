@@ -10,17 +10,21 @@ import { FeatureFlags, getFeatureFlagName, getOverrideAdapter } from '@universe/
  *
  * Our Statsig project is unreachable in production (the proxy 405s), so these
  * gates default OFF and the interface falls back to the legacy GraphQL path,
- * which shows honest "arrives with the HookSwap indexer" empty states. We force
- * exactly these two gates ON via the local override adapter so the wired data-api
- * endpoints are actually used. We deliberately do NOT force the other V2Endpoints*
- * gates (Portfolio/Positions/Search/Transactions) — the data-api only implements
- * listTokens + listTopPools; the rest are stubs, so leaving them on the legacy
- * path is no worse and avoids routing those surfaces at an unimplemented backend.
+ * which shows honest empty states. We force all six V2Endpoints gates ON via
+ * the local override adapter so the data-api endpoints are actually used —
+ * the data-api now implements all of these handlers with real on-chain reads.
  *
  * Must be called AFTER the Statsig client has initialized (the override adapter
  * refreshes the client on each override so the new value applies without reload).
  */
-const HOOKSWAP_FORCED_ON: FeatureFlags[] = [FeatureFlags.V2EndpointsPools, FeatureFlags.V2EndpointsTokens]
+const HOOKSWAP_FORCED_ON: FeatureFlags[] = [
+  FeatureFlags.V2EndpointsPools,
+  FeatureFlags.V2EndpointsTokens,
+  FeatureFlags.V2EndpointsPortfolio,
+  FeatureFlags.V2EndpointsPositions,
+  FeatureFlags.V2EndpointsSearch,
+  FeatureFlags.V2EndpointsTransactions,
+]
 
 export function applyHookSwapForcedFlags(): void {
   const adapter = getOverrideAdapter()

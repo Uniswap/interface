@@ -82,7 +82,7 @@ function PrivacyPolicy() {
         description: (
           <>
             {t('privacy.trm')}{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
+            <ExternalLink href="https://docs.hookswap.org">
               {t('common.button.learn')}
             </ExternalLink>
           </>
@@ -134,7 +134,7 @@ function PrivacyPolicy() {
           ))}
           <Flex row width="100%" justifyContent="center" mb="$spacing16">
             <ExternalLink
-              href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq"
+              href="https://docs.hookswap.org"
               style={{ fontSize: 12 }}
             >
               {t('common.button.learn')}

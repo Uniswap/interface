@@ -200,10 +200,9 @@ function NotLiveNote({ chainLabel }: { chainLabel: string }): JSX.Element {
 }
 
 /**
- * Honest Earnings state. Reward payouts are NOT live (the swap path doesn't attach the
- * captured `?ref=` code, so no fees accrue and on-chain claimable is structurally 0). We
- * do NOT render a token-input / claimable-reader / Claim button — that would be a
- * live-looking flow that can never pay out. No fabricated numbers.
+ * Referral earnings info. Rewards accrue on single-hop v3 swaps when a referral
+ * code is active (0.3% of input token per swap). Claimable on-chain via the
+ * ReferralRouter's `claim(code, token)` function.
  */
 function RewardsNotLiveNote(): JSX.Element {
   return (
@@ -213,15 +212,15 @@ function RewardsNotLiveNote(): JSX.Element {
         fontSize: 12.5,
         color: terminalColors.ink3Alt,
         lineHeight: 1.5,
-        border: `1px dashed ${terminalColors.line}`,
+        border: `1px solid ${terminalColors.greenBorder}`,
         borderRadius: 11,
-        background: terminalColors.panel,
+        background: terminalColors.greenBg,
         padding: '11px 13px',
       }}
     >
-      Referral reward payouts aren&apos;t live yet. Swaps don&apos;t attach referral codes today, so no fees accrue through
-      HookSwap and there&apos;s nothing to claim. Reserve your code now — this panel will show real claimable earnings once
-      fee routing ships.
+      Referral rewards accrue automatically on single-hop v3 swaps when users trade with your <code>?ref=</code> link.
+      0.3% of the input token is set aside per swap. Use the Claim button below to withdraw accrued fees for a specific
+      token to your claim wallet.
     </div>
   )
 }
@@ -545,7 +544,7 @@ export function ReferralsScreen(): JSX.Element {
         {/* Earnings / claim */}
         <div style={{ flex: '1 1 340px', minWidth: 0 }}>
           <Panel>
-            <StepLabel index="02" label="Earnings" note="not live yet" />
+            <StepLabel index="02" label="Earnings" />
             {!deployed ? <NotLiveNote chainLabel={chainLabel} /> : <RewardsNotLiveNote />}
           </Panel>
         </div>

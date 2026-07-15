@@ -15,7 +15,7 @@ export function LimitDisclaimer(props: FlexProps) {
       <DisclaimerText>{t('pool.limitFluctuation.warning')}</DisclaimerText>
       <DisclaimerText>{t('pool.limitFluctuation.cancelNetworkCost')}</DisclaimerText>
       <DisclaimerText>
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+        <ExternalLink href="https://docs.hookswap.org">
           {t('common.button.learn')}
         </ExternalLink>
       </DisclaimerText>
