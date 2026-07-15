@@ -94,6 +94,8 @@ const HOOKSWAP_TOKEN_LOGOS: Partial<Record<UniverseChainId, Record<string, Image
   [UniverseChainId.Robinhood]: {
     '0x0bd7d308f8e1639fab988df18a8011f41eacad73': ETH_LOGO as ImageSourcePropType, // WETH → ETH glyph
     '0x3b5a01efc59f3465b8eb04697f97cfe0ba700d9d': '/brand/glyph-mark.png', // tHOOK
+    '0x5fc5360d0400a0fd4f2af552add042d716f1d168':
+      'https://coin-images.coingecko.com/coins/images/41172/large/USDG_Logo.png', // USDG (Global Dollar)
   },
   [UniverseChainId.XLayer]: {
     '0x144331bb4c3026d135896cafec3ae3d667f4f376': '/brand/glyph-mark.png', // HKT (seeded test token)

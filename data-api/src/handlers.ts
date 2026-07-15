@@ -53,10 +53,14 @@ import {
   BalanceComponent,
   GetPortfolioRequest,
   GetPortfolioResponse,
+  GetPositionRequest,
+  GetPositionResponse,
   GetTransactionRequest,
   GetTransactionResponse,
   GetWalletBalancesRequest,
   GetWalletBalancesResponse,
+  ListPoolsRequest,
+  ListPoolsResponse,
   ListPositionsRequest,
   ListPositionsResponse,
   ListTokensRequest,
@@ -1489,11 +1493,188 @@ async function handleListPositions(req: ListPositionsRequest): Promise<ListPosit
   return new ListPositionsResponse({ positions: perChain.flat(), nextPageToken: '' })
 }
 
+// ---------- REAL: listPools (token-filtered pool lookup, used by pool picker / pool details) ----------
+
+/**
+ * ListPools returns pools filtered by token address(es). Unlike listTopPools (which returns ALL
+ * discovered pools), this filters by token0/token1, protocolVersions, and a single chainId.
+ * The response shape (`pools: Pool[]` + `nextPageToken`) is the same proto type as listTopPools.
+ */
+async function handleListPools(req: ListPoolsRequest): Promise<ListPoolsResponse> {
+  const chainId = req.chainId
+  if (!chainId || !isSupportedChain(chainId)) {
+    return new ListPoolsResponse({ pools: [], nextPageToken: '' })
+  }
+
+  const token0Filter = req.token0?.toLowerCase()
+  // token0 is required by the proto spec — if missing, return empty (valid, no crash).
+  if (!token0Filter) {
+    return new ListPoolsResponse({ pools: [], nextPageToken: '' })
+  }
+  const token1Filter = req.token1?.toLowerCase()
+
+  const wantsV2 = req.protocolVersions.length === 0 || req.protocolVersions.includes(ProtocolVersion.V2)
+  const wantsV3 = req.protocolVersions.length === 0 || req.protocolVersions.includes(ProtocolVersion.V3)
+
+  let db: SqliteDatabase | undefined
+  try {
+    db = getDb()
+  } catch {
+    db = undefined
+  }
+
+  const pools: Pool[] = []
+
+  // v2 pools
+  if (wantsV2) {
+    try {
+      const pairs = await getV2PairsCached(chainId)
+      for (const p of pairs) {
+        const a0 = p.token0.address.toLowerCase()
+        const a1 = p.token1.address.toLowerCase()
+        const tokenSet = new Set([a0, a1])
+        if (!tokenSet.has(token0Filter)) {
+          continue
+        }
+        if (token1Filter && !tokenSet.has(token1Filter)) {
+          continue
+        }
+        const pool = new Pool({
+          chainId: p.chainId,
+          poolId: p.pairAddress,
+          token0: toProtoErc20Token(p.token0),
+          token1: toProtoErc20Token(p.token1),
+          protocolVersion: ProtocolVersion.V2,
+          feeTier: V2_FEE_TIER_PIPS,
+          isDynamicFee: false,
+        })
+        if (db) {
+          const stats = buildPoolStats(db, p.chainId, p.pairAddress)
+          if (stats) {
+            pool.stats = stats
+          }
+        }
+        pools.push(pool)
+      }
+    } catch {
+      // RPC failure — serve what we can.
+    }
+  }
+
+  // v3 pools
+  if (wantsV3) {
+    try {
+      const v3Pools = await getV3PoolsCached(chainId)
+      for (const p of v3Pools) {
+        const a0 = p.token0.address.toLowerCase()
+        const a1 = p.token1.address.toLowerCase()
+        const tokenSet = new Set([a0, a1])
+        if (!tokenSet.has(token0Filter)) {
+          continue
+        }
+        if (token1Filter && !tokenSet.has(token1Filter)) {
+          continue
+        }
+        if (req.fee && p.fee !== req.fee) {
+          continue
+        }
+        const pool = new Pool({
+          chainId: p.chainId,
+          poolId: p.poolAddress,
+          token0: toProtoErc20Token(p.token0),
+          token1: toProtoErc20Token(p.token1),
+          protocolVersion: ProtocolVersion.V3,
+          feeTier: p.fee,
+          isDynamicFee: false,
+        })
+        if (db) {
+          const stats = buildPoolStats(db, p.chainId, p.poolAddress)
+          if (stats) {
+            pool.stats = stats
+          }
+        }
+        pools.push(pool)
+      }
+    } catch {
+      // RPC failure — serve what we can.
+    }
+  }
+
+  return new ListPoolsResponse({ pools, nextPageToken: '' })
+}
+
+// ---------- REAL: getPosition (single v2 position by pair address + owner) ----------
+
+/**
+ * GetPosition returns a single LP position for a given pair address and owner. This is a
+ * single-pair specialization of listPositions — used by the pool-details page for v2 positions.
+ */
+async function handleGetPosition(req: GetPositionRequest): Promise<GetPositionResponse> {
+  const chainId = req.chainId
+  const owner = req.owner
+  const pairAddress = req.pairAddress?.toLowerCase()
+
+  // Must have chain + owner + pairAddress for a v2 lookup.
+  if (!chainId || !isSupportedChain(chainId) || !owner || !pairAddress) {
+    return new GetPositionResponse()
+  }
+
+  // We only serve V2 positions. If caller asks for V3/V4 specifically, return empty.
+  if (req.protocolVersion && req.protocolVersion !== ProtocolVersion.V2 && req.protocolVersion !== ProtocolVersion.UNSPECIFIED) {
+    return new GetPositionResponse()
+  }
+
+  try {
+    const pairs = await getV2PairsCached(chainId)
+    const pair = pairs.find((p) => p.pairAddress.toLowerCase() === pairAddress)
+    if (!pair) {
+      return new GetPositionResponse()
+    }
+
+    const [lpBalance, totalSupply] = await Promise.all([
+      getErc20Balance(chainId, pair.pairAddress, owner),
+      getErc20TotalSupply(chainId, pair.pairAddress),
+    ])
+
+    if (lpBalance.isZero() || totalSupply.isZero()) {
+      return new GetPositionResponse()
+    }
+
+    const underlying0 = pair.reserve0.mul(lpBalance).div(totalSupply)
+    const underlying1 = pair.reserve1.mul(lpBalance).div(totalSupply)
+    const lpMeta = await getTokenMeta(chainId, pair.pairAddress)
+
+    const pairPosition = new PairPosition({
+      token0: toProtoErc20Token(pair.token0),
+      token1: toProtoErc20Token(pair.token1),
+      liquidityToken: toProtoErc20Token(lpMeta),
+      reserve0: pair.reserve0.toString(),
+      reserve1: pair.reserve1.toString(),
+      liquidity: lpBalance.toString(),
+      liquidity0: underlying0.toString(),
+      liquidity1: underlying1.toString(),
+      totalSupply: totalSupply.toString(),
+    })
+
+    const position = new Position({
+      chainId,
+      protocolVersion: ProtocolVersion.V2,
+      position: { case: 'v2Pair', value: pairPosition },
+      status: PositionStatus.IN_RANGE,
+    })
+
+    return new GetPositionResponse({ position })
+  } catch {
+    return new GetPositionResponse()
+  }
+}
+
 // ---------- Build the full ServiceImpl: real handlers + honest empty stubs for the rest ----------
 
 /**
  * Every DataApiService method must be implemented for the Connect router. We implement listTokens,
- * listTopPools, getPortfolio, listTransactions, getTransaction, listPositions and getWalletBalances for real,
+ * listTopPools, listPools, getPortfolio, listTransactions, getTransaction, listPositions, getPosition
+ * and getWalletBalances for real,
  * and auto-generate an empty-response stub for every other method by instantiating that method's response Message class
  * (`methodInfo.O`) with no args — always a valid, empty proto response. This is intentionally NOT an
  * error/unimplemented: the interface treats an empty response as "no data" and shows honest empty
@@ -1514,6 +1695,8 @@ export function createDataApiImpl(): ServiceImpl<typeof DataApiService> {
   impl.listTransactions = (req: unknown) => handleListTransactions(req as ListTransactionsRequest)
   impl.getTransaction = (req: unknown) => handleGetTransaction(req as GetTransactionRequest)
   impl.listPositions = (req: unknown) => handleListPositions(req as ListPositionsRequest)
+  impl.listPools = (req: unknown) => handleListPools(req as ListPoolsRequest)
+  impl.getPosition = (req: unknown) => handleGetPosition(req as GetPositionRequest)
   impl.getWalletBalances = (req: unknown) => handleGetWalletBalances(req as GetWalletBalancesRequest)
 
   return impl as unknown as ServiceImpl<typeof DataApiService>
