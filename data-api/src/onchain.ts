@@ -47,6 +47,19 @@ const v3FactoryIface = new ethers.utils.Interface(V3_FACTORY_EVENT_ABI)
 
 const providerCache = new Map<number, ethers.providers.JsonRpcProvider>()
 
+/**
+ * Per-request RPC timeout (ms). ethers v5 defaults ConnectionInfo.timeout to 120_000ms, which is
+ * LONGER than nginx's default 60s `proxy_read_timeout` in front of this service. When an RPC degrades
+ * (e.g. the Robinhood RPC's backend intermittently returning "no route to host"), a handler's on-chain
+ * reads would hang up to 120s; nginx 504s the request at 60s while the handler is still waiting, the app
+ * auto-retries, and the retries pile more slow calls onto the already-degraded RPC → the whole service
+ * wedges and every ListTokens/ListTopPools 504s (observed 2026-07-15). Capping each RPC call at 8s (a) keeps
+ * total handler time under nginx's window and (b) lets the existing graceful fallbacks fire: getV2Pairs /
+ * getV3Pools swallow the timeout and return [], so handleListTokens still returns its static tokens
+ * (native + wrapped-native + seeded) instead of 504ing. Healthy calls observed at ~1.5s, so 8s is ~5x headroom.
+ */
+const RPC_TIMEOUT_MS = 8_000
+
 export function getProvider(chainId: number): ethers.providers.JsonRpcProvider {
   const cached = providerCache.get(chainId)
   if (cached) {
@@ -57,7 +70,11 @@ export function getProvider(chainId: number): ethers.providers.JsonRpcProvider {
     throw new Error(`unsupported chainId ${chainId}`)
   }
   // `chainId` passed to the provider avoids an extra eth_chainId round-trip on every call.
-  const provider = new ethers.providers.JsonRpcProvider(resolveRpcUrl(chain), chainId)
+  // `timeout` bounds every RPC call so a slow/dead RPC fails fast instead of hanging (see RPC_TIMEOUT_MS).
+  const provider = new ethers.providers.JsonRpcProvider(
+    { url: resolveRpcUrl(chain), timeout: RPC_TIMEOUT_MS },
+    chainId,
+  )
   providerCache.set(chainId, provider)
   return provider
 }
