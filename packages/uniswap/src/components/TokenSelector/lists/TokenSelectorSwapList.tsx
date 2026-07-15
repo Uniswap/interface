@@ -76,11 +76,12 @@ export function useTokenSectionsForSwap({
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
+  // Only treat as a fatal error if BOTH trending AND common tokens fail — portfolio and bridging
+  // errors on HookSwap custom chains (which hit Uniswap's hosted backend that doesn't index them)
+  // should not block the token picker from rendering the tokens we DO have.
   const error =
-    (!portfolioTokenOptions && portfolioTokenOptionsError) ||
-    (!trendingTokenOptions && trendingTokenOptionsError) ||
-    (!commonTokenOptions && commonTokenOptionsError) ||
-    (!bridgingTokenOptions && bridgingTokenOptionsError)
+    (!trendingTokenOptions && trendingTokenOptionsError) &&
+    (!commonTokenOptions && commonTokenOptionsError)
 
   const loading =
     (!portfolioTokenOptions && portfolioTokenOptionsLoading) ||
