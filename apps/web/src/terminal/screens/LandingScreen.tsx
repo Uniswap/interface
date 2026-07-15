@@ -2026,7 +2026,7 @@ function LandingScreenBody(): JSX.Element {
 /* Static config (nav + copy — no data)                                        */
 /* =========================================================================== */
 
-type FeatureIconName = 'swap' | 'markets' | 'buy' | 'liquidity' | 'positions' | 'locker' | 'referral' | 'portfolio' | 'analytics' | 'activity' | 'shield' | 'route' | 'chain'
+type FeatureIconName = 'swap' | 'markets' | 'buy' | 'liquidity' | 'positions' | 'locker' | 'referral' | 'portfolio' | 'analytics' | 'activity' | 'shield' | 'route' | 'chain' | 'launchpad' | 'token' | 'multisender' | 'vesting' | 'farms' | 'airdrop' | 'leaderboard'
 
 function FeatureIcon({ name }: { name: FeatureIconName }): JSX.Element {
   const common = {
@@ -2129,6 +2129,56 @@ function FeatureIcon({ name }: { name: FeatureIconName }): JSX.Element {
           <path d="M15 12a4 4 0 01-4 4H9a4 4 0 010-8h1" />
         </svg>
       )
+    case 'launchpad':
+      return (
+        <svg {...common}>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      )
+    case 'token':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v12M8 10h8" />
+        </svg>
+      )
+    case 'multisender':
+      return (
+        <svg {...common}>
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+        </svg>
+      )
+    case 'vesting':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      )
+    case 'farms':
+      return (
+        <svg {...common}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      )
+    case 'airdrop':
+      return (
+        <svg {...common}>
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+      )
+    case 'leaderboard':
+      return (
+        <svg {...common}>
+          <rect x="3" y="12" width="4" height="8" rx="1" />
+          <rect x="10" y="4" width="4" height="16" rx="1" />
+          <rect x="17" y="8" width="4" height="12" rx="1" />
+        </svg>
+      )
   }
 }
 
@@ -2142,26 +2192,42 @@ interface FeatureModel {
 
 const FEATURE_GROUPS: ReadonlyArray<{ label: string; features: readonly FeatureModel[] }> = [
   {
+    label: 'LAUNCH',
+    features: [
+      { icon: 'launchpad', title: 'LaunchPad', desc: 'Mint a token, seed its v3 pool, and lock LP permanently — one transaction. $8 flat fee.', cta: 'Launch', path: '/launch' },
+      { icon: 'token', title: 'Create token', desc: 'Deploy a fixed-supply ERC-20 with custom name, symbol, and supply.', cta: 'Create', path: '/token/new' },
+    ],
+  },
+  {
     label: 'TRADE',
     features: [
       { icon: 'swap', title: 'Swap', desc: 'Market orders routed across v2 + v3 pools with MEV protection.', cta: 'Trade', path: '/swap' },
       { icon: 'markets', title: 'Markets', desc: 'Every pool ranked by TVL, volume, and APR with live price charts.', cta: 'Explore', path: '/markets' },
+      { icon: 'leaderboard', title: 'Leaderboard', desc: 'Trader ranking by volume, trades, and tokens.', cta: 'View', path: '/leaderboard' },
     ],
   },
   {
     label: 'EARN',
     features: [
       { icon: 'liquidity', title: 'Liquidity', desc: 'Provide concentrated (v3) or full-range (v2) liquidity and earn fees.', cta: 'Add', path: '/pools/new' },
-      { icon: 'positions', title: 'Positions', desc: 'Manage open LP positions, collect fees, and adjust ranges.', cta: 'View', path: '/positions' },
+      { icon: 'farms', title: 'Farms', desc: 'Create a staking reward stream — depositors stake LP tokens, earn your reward token.', cta: 'Stake', path: '/farms' },
+      { icon: 'referral', title: 'Referrals', desc: 'Share your code and earn 0.3% of every referred swap.', cta: 'Get code', path: '/referrals' },
+    ],
+  },
+  {
+    label: 'TOOLS',
+    features: [
       { icon: 'locker', title: 'Locker', desc: 'Lock LP tokens, ERC-20s, and v3 positions with a vesting schedule.', cta: 'Lock', path: '/locker' },
-      { icon: 'referral', title: 'Referrals', desc: 'Share your code and earn a cut of every referred swap, on every chain.', cta: 'Get code', path: '/referrals' },
+      { icon: 'multisender', title: 'Multisender', desc: 'Batch-send a token or native ETH to hundreds of addresses in one tx.', cta: 'Send', path: '/multisender' },
+      { icon: 'vesting', title: 'Vesting', desc: 'Create cliff + linear vesting schedules. Beneficiaries claim on their own.', cta: 'Create', path: '/vesting' },
+      { icon: 'airdrop', title: 'Airdrop', desc: 'Upload a CSV, deploy a merkle distributor. Recipients claim with a proof.', cta: 'Deploy', path: '/airdrop' },
     ],
   },
   {
     label: 'TRACK',
     features: [
-      { icon: 'portfolio', title: 'Portfolio', desc: 'Balances, open LP positions, PnL, and claimable fees in one view.', cta: 'View', path: '/portfolio' },
-      { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends across every chain.', cta: 'Analyze', path: '/analytics' },
+      { icon: 'portfolio', title: 'Portfolio', desc: 'Balances, open LP positions, and claimable fees in one view.', cta: 'View', path: '/portfolio' },
+      { icon: 'analytics', title: 'Analytics', desc: 'Protocol-wide TVL, volume, and fee trends.', cta: 'Analyze', path: '/analytics' },
       { icon: 'activity', title: 'Activity', desc: 'Your full transaction history — swaps, liquidity, transfers.', cta: 'Open', path: '/activity' },
     ],
   },
@@ -2188,7 +2254,16 @@ const FOOTER_COLUMNS: ReadonlyArray<{ label: string; links: readonly FooterLink[
       { label: 'Swap', href: '/swap' },
       { label: 'Markets', href: '/markets' },
       { label: 'Liquidity', href: '/pools/new' },
-      { label: 'Positions', href: '/positions' },
+      { label: 'Leaderboard', href: '/leaderboard' },
+    ],
+  },
+  {
+    label: 'TOOLS',
+    links: [
+      { label: 'LaunchPad', href: '/launch' },
+      { label: 'Create token', href: '/token/new' },
+      { label: 'Locker', href: '/locker' },
+      { label: 'Multisender', href: '/multisender' },
     ],
   },
   {
