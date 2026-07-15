@@ -33,7 +33,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { erc20Abi, erc721Abi, formatUnits, isAddress, parseUnits, type Address, type Hash } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from '~/hooks/useAccount'
@@ -202,6 +204,129 @@ function FieldHint({ children }: { children: React.ReactNode }): JSX.Element {
       }}
     >
       {children}
+    </div>
+  )
+}
+
+/* --- entered-token readout (name / symbol / decimals / contract / balance) --- */
+
+const readoutBox: React.CSSProperties = {
+  border: `1px solid ${terminalColors.line}`,
+  borderRadius: 11,
+  background: terminalColors.panel,
+  padding: '11px 13px',
+  marginTop: 8,
+}
+
+/** One label→value row inside the token readout; value is MONO, optionally a link. */
+function ReadoutRow({
+  label,
+  value,
+  href,
+  muted = false,
+}: {
+  label: string
+  value: string
+  href?: string
+  muted?: boolean
+}): JSX.Element {
+  const valueEl = href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 500, color: terminalColors.greenDeep, textDecoration: 'none' }}
+    >
+      {value} ↗
+    </a>
+  ) : (
+    <span
+      style={{
+        fontFamily: muted ? SANS : MONO,
+        fontSize: 12.5,
+        fontWeight: 500,
+        color: muted ? terminalColors.faint : terminalColors.ink,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {value}
+    </span>
+  )
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '5px 0' }}>
+      <span style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, flexShrink: 0 }}>{label}</span>
+      <span style={{ minWidth: 0, textAlign: 'right' }}>{valueEl}</span>
+    </div>
+  )
+}
+
+/**
+ * Professional readout of the ERC-20 (or LP) contract the user pasted. Every value
+ * is a REAL on-chain read (name/symbol/decimals/balanceOf) — no fabricated numbers.
+ * Honest states: "Resolving…" while reads are in flight, "Couldn't read an ERC-20…"
+ * when nothing decodes, and a "connect wallet" hint for the balance when disconnected.
+ */
+function TokenReadout({
+  resolving,
+  notAToken,
+  name,
+  symbol,
+  decimals,
+  address,
+  explorerHref,
+  connected,
+  balanceValue,
+  balanceLoading,
+}: {
+  resolving: boolean
+  notAToken: boolean
+  name?: string
+  symbol?: string
+  decimals?: number
+  address: string
+  explorerHref?: string
+  connected: boolean
+  balanceValue?: string
+  balanceLoading: boolean
+}): JSX.Element {
+  if (resolving) {
+    return (
+      <div style={readoutBox}>
+        <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>Resolving token…</span>
+      </div>
+    )
+  }
+  if (notAToken) {
+    return (
+      <div style={readoutBox}>
+        <span style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.redDown }}>
+          Couldn&apos;t read an ERC-20 at this address.
+        </span>
+      </div>
+    )
+  }
+  const title = name ?? symbol ?? 'Unknown token'
+  const balanceDisplay = !connected
+    ? 'Connect wallet to see balance'
+    : balanceLoading
+      ? '…'
+      : (balanceValue ?? '—')
+  return (
+    <div style={readoutBox}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+        <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: terminalColors.ink }}>{title}</span>
+        {symbol ? (
+          <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: terminalColors.greenDeep }}>
+            {symbol}
+          </span>
+        ) : null}
+      </div>
+      <div style={{ height: 1, background: terminalColors.line2, margin: '10px 0' }} />
+      <ReadoutRow label="Decimals" value={decimals !== undefined ? String(decimals) : '—'} />
+      <ReadoutRow label="Contract" value={shortAddr(address)} href={explorerHref} />
+      <ReadoutRow label="Your balance" value={balanceDisplay} muted={!connected} />
     </div>
   )
 }
@@ -445,6 +570,64 @@ function TokenLpTab({
   })
   const decimals = decimalsRead.data as number | undefined
 
+  // Real token-identity reads for the entered address — symbol / name / balanceOf —
+  // so the user gets on-chain confirmation of WHAT they pasted (and their holdings)
+  // before locking. Gated on a valid, deployed address (+ a connected wallet for the
+  // balance). Tokens that don't implement name/symbol (bytes32 or revert) just resolve
+  // to undefined; the readout shows what it could read and never crashes.
+  const symbolRead = useReadContract({
+    address: assume0xAddress(validToken ? tokenAddr : undefined),
+    chainId,
+    abi: erc20Abi,
+    functionName: 'symbol',
+    query: { enabled: deployed && validToken },
+  })
+  const nameRead = useReadContract({
+    address: assume0xAddress(validToken ? tokenAddr : undefined),
+    chainId,
+    abi: erc20Abi,
+    functionName: 'name',
+    query: { enabled: deployed && validToken },
+  })
+  const balanceRead = useReadContract({
+    address: assume0xAddress(validToken ? tokenAddr : undefined),
+    chainId,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: owner ? [owner] : undefined,
+    query: { enabled: deployed && validToken && Boolean(owner) },
+  })
+  const tokenSymbol = symbolRead.data as string | undefined
+  const tokenName = nameRead.data as string | undefined
+  const tokenBalance = balanceRead.data as bigint | undefined
+
+  // Readout state — honest loading / resolved / not-a-token.
+  const identityResolving =
+    deployed && validToken && (decimalsRead.isLoading || symbolRead.isLoading || nameRead.isLoading)
+  const identityResolved = decimals !== undefined || tokenSymbol !== undefined || tokenName !== undefined
+  // Valid, settled address where NOTHING decoded → not an ERC-20 at this address.
+  const notAToken = deployed && validToken && !identityResolving && !identityResolved
+
+  const explorerLink =
+    validToken && chainId
+      ? getExplorerLink({ chainId: chainId as UniverseChainId, data: tokenAddr, type: ExplorerDataType.ADDRESS })
+      : ''
+  const explorerHref = explorerLink || undefined
+
+  const balanceValue =
+    tokenBalance !== undefined && decimals !== undefined
+      ? `${formatUnits(tokenBalance, decimals)}${tokenSymbol ? ` ${tokenSymbol}` : ''}`
+      : undefined
+
+  // "Max" fills the human-readable balance — only when a real balance is known (>0).
+  const canMax = tokenBalance !== undefined && decimals !== undefined && tokenBalance > 0n
+  const onMax = (): void => {
+    if (tokenBalance === undefined || decimals === undefined) {
+      return
+    }
+    setAmount(formatUnits(tokenBalance, decimals))
+  }
+
   const { writeContractAsync, isPending } = useWriteContract()
 
   const unlockUnix = toUnix(unlock)
@@ -541,9 +724,45 @@ function TokenLpTab({
                     Enter a valid contract address.
                   </div>
                 ) : null}
+                {validToken ? (
+                  <TokenReadout
+                    resolving={identityResolving}
+                    notAToken={notAToken}
+                    name={tokenName}
+                    symbol={tokenSymbol}
+                    decimals={decimals}
+                    address={tokenAddr}
+                    explorerHref={explorerHref}
+                    connected={connected}
+                    balanceValue={balanceValue}
+                    balanceLoading={Boolean(owner) && balanceRead.isLoading}
+                  />
+                ) : null}
               </div>
               <div>
-                <FieldLabel>Amount</FieldLabel>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 5 }}>
+                  <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt }}>Amount</span>
+                  {canMax ? (
+                    <button
+                      type="button"
+                      onClick={onMax}
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: '0.04em',
+                        color: terminalColors.greenDeep,
+                        background: terminalColors.greenBg,
+                        border: `1px solid ${terminalColors.greenBorder}`,
+                        padding: '2px 8px',
+                        borderRadius: 7,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      MAX
+                    </button>
+                  ) : null}
+                </div>
                 <TextField value={amount} onChange={setAmount} placeholder="0.00" />
               </div>
               <div>
