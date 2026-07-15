@@ -59,11 +59,20 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
   // else: origin not allowlisted → send no ACAO/ACAC; the browser blocks the response.
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+  // Reflect exactly the headers the browser's preflight asks to send. The interface keeps
+  // adding new x-* trading headers over time (e.g. x-uniroute-pulumi-enabled) and any static
+  // allowlist goes stale — one unknown header makes the whole preflight fail and every quote
+  // silently dies in-browser. Echoing Access-Control-Request-Headers is the robust equivalent
+  // and is safe because Access-Control-Allow-Origin above is already a strict exact-origin match
+  // (never `*`) — so only allowlisted origins can send these headers with credentials at all.
+  const requestedHeaders = req.headers['access-control-request-headers']
   res.header(
     'Access-Control-Allow-Headers',
-    // Mirror the headers the interface's trading client sets (see TradingApiClient.ts).
-    'content-type,x-api-key,x-universal-router-version,x-request-source,x-app-version,' +
-      'x-uniquote-enabled,x-viem-provider-enabled,x-erc20eth-enabled,x-universal-router-swapsteps',
+    typeof requestedHeaders === 'string' && requestedHeaders.length > 0
+      ? requestedHeaders
+      : // Fallback for non-preflight or header-less requests: the known interface trading headers.
+        'content-type,x-api-key,x-universal-router-version,x-request-source,x-app-version,' +
+          'x-uniquote-enabled,x-viem-provider-enabled,x-erc20eth-enabled,x-universal-router-swapsteps',
   )
   if (req.method === 'OPTIONS') {
     res.sendStatus(204)
