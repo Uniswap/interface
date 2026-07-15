@@ -93,10 +93,20 @@ function applyCorsHeaders(req: IncomingMessage, res: ServerResponse): void {
     }
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+  // Reflect exactly the headers the browser's preflight asks to send. The interface's data client
+  // adds custom x-* headers over time (e.g. x-request-source) and any static allowlist goes stale —
+  // one unknown header fails the whole preflight and the token feed / Markets / balances silently
+  // break. Echoing Access-Control-Request-Headers is the robust equivalent and is safe: the
+  // credentialed surface above only ever sends Access-Control-Allow-Origin as a strict exact-origin
+  // match (never `*` with credentials), and the public read surface is cookie-free wildcard where
+  // reflected request headers carry no risk.
+  const requestedHeaders = req.headers['access-control-request-headers']
   res.setHeader(
     'Access-Control-Allow-Headers',
-    // Connect-Web sends Content-Type + Connect-Protocol-Version (+ optional timeout / user-agent).
-    'content-type,connect-protocol-version,connect-timeout-ms,x-user-agent',
+    typeof requestedHeaders === 'string' && requestedHeaders.length > 0
+      ? requestedHeaders
+      : // Fallback for non-preflight requests: Connect-Web's baseline headers.
+        'content-type,connect-protocol-version,connect-timeout-ms,x-user-agent',
   )
   // Let the browser read the Connect error trailers on failures.
   res.setHeader('Access-Control-Expose-Headers', 'connect-protocol-version')
