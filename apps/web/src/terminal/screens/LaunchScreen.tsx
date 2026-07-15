@@ -24,6 +24,7 @@ import {
   randomSalt,
   useLaunch,
   useMyLaunches,
+  useRecentLaunches,
   V3Dex,
   PairToken,
   ZERO_SALT,
@@ -243,7 +244,7 @@ function NotDeployedNote({ chainLabel }: { chainLabel: string }): JSX.Element {
   )
 }
 
-/** Toggle button group for DEX / pair / lockOnHookSwap selectors. */
+/** Pill-style toggle group for DEX / pair / lockOnHookSwap selectors. */
 function ToggleRow({
   options,
   value,
@@ -263,15 +264,14 @@ function ToggleRow({
             type="button"
             onClick={() => onChange(opt.value)}
             style={{
-              flex: 1,
               fontFamily: MONO,
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
-              color: active ? terminalColors.btnInk : terminalColors.ink3Alt,
-              background: active ? terminalColors.brandGreen : terminalColors.panel,
+              color: active ? terminalColors.greenDeep : terminalColors.ink3Alt,
+              background: active ? terminalColors.greenBg : 'transparent',
               border: `1px solid ${active ? terminalColors.greenBorder : terminalColors.line}`,
-              borderRadius: 9,
-              padding: '8px 0',
+              borderRadius: 8,
+              padding: '6px 14px',
               cursor: 'pointer',
             }}
           >
@@ -384,6 +384,70 @@ function MyLaunchesPanel({ chainId, owner }: { chainId?: number; owner?: `0x${st
       <div style={{ fontFamily: SANS, fontSize: 10.5, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
         LP is permanently locked in the fee vault. Trading fees are split per-dex (50/50 Uniswap V3, 70/30 HookSwap).
       </div>
+    </Panel>
+  )
+}
+
+/* ------------------------------------------------------------------ recent launches (public) */
+
+function timeAgo(unixSec: bigint): string {
+  const now = Math.floor(Date.now() / 1000)
+  const diff = now - Number(unixSec)
+  if (diff < 60) {
+    return 'just now'
+  }
+  if (diff < 3600) {
+    return `${Math.floor(diff / 60)}m ago`
+  }
+  if (diff < 86400) {
+    return `${Math.floor(diff / 3600)}h ago`
+  }
+  return `${Math.floor(diff / 86400)}d ago`
+}
+
+function RecentLaunchesPanel({ chainId }: { chainId?: number }): JSX.Element {
+  const recent = useRecentLaunches({ chainId, limit: 20 })
+
+  return (
+    <Panel>
+      <StepLabel index="05" label="Recent launches" note={recent.isLoading ? 'loading…' : `${recent.launches.length} total`} />
+
+      {recent.isLoading ? (
+        <Notice tone="muted">Loading recent launches…</Notice>
+      ) : recent.launches.length === 0 ? (
+        <Notice tone="muted">No tokens launched yet — be the first.</Notice>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {recent.launches.map((l) => (
+            <a
+              key={String(l.id)}
+              href={`https://robinscan.io/address/${l.token}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                border: `1px solid ${terminalColors.line}`,
+                borderRadius: 10,
+                padding: '8px 10px',
+                textDecoration: 'none',
+                gap: 8,
+              }}
+            >
+              <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, color: terminalColors.brandGreen }}>
+                {shortAddr(l.token)}
+              </span>
+              <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt }}>
+                {l.dex === V3Dex.HookSwap ? 'HookSwap' : 'UniV3'}
+              </span>
+              <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginLeft: 'auto' }}>
+                {timeAgo(l.createdAt)}
+              </span>
+            </a>
+          ))}
+        </div>
+      )}
     </Panel>
   )
 }
@@ -563,7 +627,7 @@ export function LaunchScreen(): JSX.Element {
 
           {deployed ? (
             <Panel>
-              <StepLabel index="02" label="Pool configuration" />
+              <StepLabel index="02" label="Pool" />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
                   <FieldLabel>DEX</FieldLabel>
@@ -588,57 +652,25 @@ export function LaunchScreen(): JSX.Element {
                   />
                 </div>
                 <div>
-                  <FieldLabel>Lock LP on HookSwap</FieldLabel>
+                  <FieldLabel>Lock LP permanently</FieldLabel>
                   <ToggleRow
                     options={[
-                      { label: 'Yes', value: 'true' },
+                      { label: 'Yes — lock', value: 'true' },
                       { label: 'No', value: 'false' },
                     ]}
                     value={String(input.lockOnHookSwap)}
                     onChange={(v) => set('lockOnHookSwap', v === 'true')}
                   />
                 </div>
-
-                <div>
-                  <FieldLabel>sqrtPriceX96 (uint160)</FieldLabel>
-                  <TextField
-                    value={input.sqrtPriceX96}
-                    onChange={(v) => set('sqrtPriceX96', onlyDigits(v))}
-                    placeholder="79228162514264337593543950336"
-                    mono
-                    inputMode="numeric"
-                  />
-                </div>
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <FieldLabel>tickLower (int24)</FieldLabel>
-                    <TextField
-                      value={input.tickLower}
-                      onChange={(v) => set('tickLower', onlySignedDigits(v))}
-                      placeholder="-887220"
-                      mono
-                    />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <FieldLabel>tickUpper (int24)</FieldLabel>
-                    <TextField
-                      value={input.tickUpper}
-                      onChange={(v) => set('tickUpper', onlySignedDigits(v))}
-                      placeholder="887220"
-                      mono
-                    />
-                  </div>
-                </div>
               </div>
-
               <Notice tone="muted">
-                sqrtPriceX96 sets the opening price; tick range sets the LP band. The pool is single-sided (100% your
-                token), paired against {input.pair === String(PairToken.HOOK) ? 'HOOK' : 'WETH'}.
+                Pool is single-sided (100% your token), paired against {input.pair === String(PairToken.HOOK) ? 'HOOK' : 'WETH'}.
+                LP is locked in the fee vault — trading fees are claimable.
               </Notice>
             </Panel>
           ) : null}
 
-          {/* Advanced: salt, initial buy */}
+          {/* Advanced: v3 price params, salt, initial buy */}
           {deployed ? (
             <Panel>
               <div
@@ -652,20 +684,56 @@ export function LaunchScreen(): JSX.Element {
                   color: terminalColors.ink3Alt,
                 }}
               >
-                {advanced ? '− ADVANCED' : '+ ADVANCED'}
+                {advanced ? '− ADVANCED' : '+ ADVANCED (price, salt, initial buy)'}
               </div>
 
               {advanced ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
+                  <StepLabel index="03" label="Price & range" />
                   <div>
-                    <FieldLabel>salt (bytes32)</FieldLabel>
-                    <TextField value={input.salt} onChange={(v) => set('salt', v)} placeholder={ZERO_SALT} mono />
-                    <PrimaryButton label="Randomize salt" onClick={() => set('salt', randomSalt())} variant="outline" />
+                    <FieldLabel>Initial price (sqrtPriceX96)</FieldLabel>
+                    <TextField
+                      value={input.sqrtPriceX96}
+                      onChange={(v) => set('sqrtPriceX96', onlyDigits(v))}
+                      placeholder="79228162514264337593543950336"
+                      mono
+                      inputMode="numeric"
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <FieldLabel>Tick lower</FieldLabel>
+                      <TextField
+                        value={input.tickLower}
+                        onChange={(v) => set('tickLower', onlySignedDigits(v))}
+                        placeholder="-887220"
+                        mono
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <FieldLabel>Tick upper</FieldLabel>
+                      <TextField
+                        value={input.tickUpper}
+                        onChange={(v) => set('tickUpper', onlySignedDigits(v))}
+                        placeholder="887220"
+                        mono
+                      />
+                    </div>
                   </div>
 
-                  <StepLabel index="03" label="Initial buy (optional)" />
+                  <StepLabel index="04" label="Salt & initial buy" />
                   <div>
-                    <FieldLabel>initialBuyEth (raw wei)</FieldLabel>
+                    <FieldLabel>Deploy salt</FieldLabel>
+                    <TextField
+                      value={input.salt === ZERO_SALT ? '' : input.salt}
+                      onChange={(v) => set('salt', v || ZERO_SALT)}
+                      placeholder="Default (zero) — click Randomize for a unique address"
+                      mono
+                    />
+                    <PrimaryButton label="Randomize salt" onClick={() => set('salt', randomSalt())} variant="outline" />
+                  </div>
+                  <div>
+                    <FieldLabel>Initial buy amount (ETH, in wei)</FieldLabel>
                     <TextField
                       value={input.initialBuyEth}
                       onChange={(v) => set('initialBuyEth', onlyDigits(v))}
@@ -676,7 +744,7 @@ export function LaunchScreen(): JSX.Element {
                   </div>
                   <div style={{ display: 'flex', gap: 12 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <FieldLabel>initialBuyMinOut</FieldLabel>
+                      <FieldLabel>Min tokens received</FieldLabel>
                       <TextField
                         value={input.initialBuyMinOut}
                         onChange={(v) => set('initialBuyMinOut', onlyDigits(v))}
@@ -686,7 +754,7 @@ export function LaunchScreen(): JSX.Element {
                       />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <FieldLabel>initialBuyDeadline</FieldLabel>
+                      <FieldLabel>Deadline (unix timestamp)</FieldLabel>
                       <TextField
                         value={input.initialBuyDeadline}
                         onChange={(v) => set('initialBuyDeadline', onlyDigits(v))}
@@ -697,7 +765,7 @@ export function LaunchScreen(): JSX.Element {
                     </div>
                   </div>
                   <Notice tone="muted">
-                    The initial buy is executed inside the same transaction — its ETH is added to the total cost.
+                    Initial buy executes in the same tx. Its ETH is added to the total cost.
                   </Notice>
                 </div>
               ) : null}
@@ -746,6 +814,7 @@ export function LaunchScreen(): JSX.Element {
           </Panel>
 
           <MyLaunchesPanel chainId={chainId} owner={owner} />
+          <RecentLaunchesPanel chainId={chainId} />
         </div>
       </div>
     </div>

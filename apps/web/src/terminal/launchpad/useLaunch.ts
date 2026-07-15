@@ -455,6 +455,75 @@ export interface UseMyLaunches {
   refetch: () => void
 }
 
+/** All recent launches (no creator filter — public listing). */
+export function useRecentLaunches({ chainId, limit = 20 }: { chainId?: number; limit?: number }): {
+  isLoading: boolean
+  launches: MyLaunch[]
+} {
+  const launcher = getLaunchpadAddress(chainId)
+  const ready = Boolean(launcher)
+
+  const countRead = useReadContract({
+    address: launcher,
+    chainId,
+    abi: hookOSV3LauncherAbi,
+    functionName: 'launchCount',
+    query: { enabled: ready },
+  })
+  const count = countRead.data as bigint | undefined
+
+  const ids = useMemo(() => {
+    if (count === undefined || count <= 0n) {
+      return [] as bigint[]
+    }
+    const out: bigint[] = []
+    const start = count - 1n
+    const end = start - BigInt(limit) + 1n
+    for (let i = start; i >= 0n && i >= end; i--) {
+      out.push(i)
+    }
+    return out
+  }, [count, limit])
+
+  const launchesRead = useReadContracts({
+    contracts: ids.map((id) => ({
+      address: launcher,
+      chainId,
+      abi: hookOSV3LauncherAbi,
+      functionName: 'getLaunch' as const,
+      args: [id] as const,
+    })),
+    query: { enabled: ready && ids.length > 0 },
+  })
+
+  const launches = useMemo(() => {
+    if (!launchesRead.data) {
+      return [] as MyLaunch[]
+    }
+    const out: MyLaunch[] = []
+    launchesRead.data.forEach((entry, i) => {
+      if (entry.status !== 'success' || !entry.result) {
+        return
+      }
+      const r = entry.result as { token: Address; pool: Address; creator: Address; tokenId: bigint; feeTier: number; dex: number; locker: Address; pair: number; pairToken: Address; metadataURI: string; createdAt: bigint }
+      out.push({
+        id: ids[i],
+        token: r.token,
+        pool: r.pool,
+        creator: r.creator,
+        metadataURI: r.metadataURI,
+        tokenId: r.tokenId,
+        dex: r.dex,
+        createdAt: r.createdAt,
+      })
+    })
+    return out
+  }, [launchesRead.data, ids])
+
+  const isLoading = countRead.isLoading || launchesRead.isLoading
+  return useMemo(() => ({ isLoading, launches }), [isLoading, launches])
+}
+
 export function useMyLaunches({ chainId, owner }: { chainId?: number; owner?: Address }): UseMyLaunches {
   const launcher = getLaunchpadAddress(chainId)
   const feeVault = getFeeVaultAddress(chainId)
