@@ -87,6 +87,7 @@ import {
   ProtocolMetadata,
   TimestampedValue,
   Token,
+  TokenMetadata,
   TokenStats,
   TokenType,
   Transaction,
@@ -179,8 +180,17 @@ function resolveChainIds(requested: number[]): number[] {
   return ids.filter(isSupportedChain)
 }
 
+/** Known token logos for HookSwap chains (keyed by lowercase address). */
+const TOKEN_LOGOS: Record<string, string> = {
+  // Robinhood (4663)
+  '0x0bd7d308f8e1639fab988df18a8011f41eacad73': 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/info/logo.png', // WETH → ETH logo
+  '0x3b5a01efc59f3465b8eb04697f97cfe0ba700d9d': 'https://hookswap.org/brand/glyph-mark.png', // tHOOK
+  '0x5fc5360d0400a0fd4f2af552add042d716f1d168': 'https://coin-images.coingecko.com/coins/images/41172/large/USDG_Logo.png', // USDG
+}
+
 /** data.v1.Token for a wrapped-native or seeded ERC-20 (real metadata; ERC-20 type). */
 function toProtoErc20Token(meta: TokenMeta): Token {
+  const logoUrl = TOKEN_LOGOS[meta.address.toLowerCase()]
   return new Token({
     chainId: meta.chainId,
     address: meta.address,
@@ -188,10 +198,7 @@ function toProtoErc20Token(meta: TokenMeta): Token {
     name: meta.name,
     decimals: meta.decimals,
     type: TokenType.ERC20,
-    // metadata/stats intentionally omitted HERE: no logo registry, and USD price/volume need a
-    // stablecoin (USDG) anchor pool that doesn't exist on these chains yet. Native stats
-    // (priceChange1d/priceHistory1d) are attached separately by buildTokenStats when the event indexer
-    // is live. Leaving unset fields empty renders honest "—" in the UI (no fabricated values).
+    metadata: logoUrl ? new TokenMetadata({ logoUrl }) : undefined,
   })
 }
 
