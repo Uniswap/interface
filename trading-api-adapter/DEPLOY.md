@@ -76,7 +76,7 @@ cp config/rpc.example.env config/rpc.env   # then put the real Infura key in it 
 
 Edit `.env`:
 - `ROUTING_MODE=embed` (Option B) **or** `ROUTING_API_URL=http://127.0.0.1:4001` (Option A).
-- `CORS_ALLOW_ORIGIN=https://hookswap.org` (the interface origin; `http://localhost:3000` for local).
+- `CORS_ALLOW_ORIGIN=https://hookswap.org,https://www.hookswap.org` (comma-separated EXACT interface origins; `http://localhost:3000` for local). **Never `*` in prod** — the interface sends credentialed requests, and the browser blocks `Access-Control-Allow-Origin: *` on those (every quote fails CORS).
 - `PORT=4000`.
 
 ## 3. RPC config  **[REGGIE — CREDENTIAL: Infura key]**
