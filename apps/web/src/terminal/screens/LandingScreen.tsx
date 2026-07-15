@@ -1258,6 +1258,7 @@ function LandingScreenBody(): JSX.Element {
       onClick: () => navigate('/swap'),
       children: [
         { label: 'Swap', onClick: () => navigate('/swap') },
+        { label: 'Leaderboard', onClick: () => navigate('/leaderboard') },
         { label: 'Widget builder', onClick: () => navigate('/widget') },
       ],
     },
@@ -1273,6 +1274,18 @@ function LandingScreenBody(): JSX.Element {
       ],
     },
     {
+      label: 'Tools',
+      onClick: () => navigate('/launch'),
+      children: [
+        { label: 'LaunchPad', onClick: () => navigate('/launch') },
+        { label: 'Create token', onClick: () => navigate('/token/new') },
+        { label: 'Multisender', onClick: () => navigate('/multisender') },
+        { label: 'Vesting', onClick: () => navigate('/vesting') },
+        { label: 'Farms', onClick: () => navigate('/farms') },
+        { label: 'Airdrop', onClick: () => navigate('/airdrop') },
+      ],
+    },
+    {
       label: 'Portfolio',
       onClick: () => navigate('/portfolio'),
       children: [
@@ -1282,7 +1295,6 @@ function LandingScreenBody(): JSX.Element {
       ],
     },
     { label: 'Docs', external: true, onClick: () => window.open(HOOKSWAP_LINKS.docs, '_blank', 'noreferrer') },
-    { label: 'Launchpad', external: true, onClick: () => window.open(HOOKSWAP_LINKS.launchpad, '_blank', 'noreferrer') },
   ]
 
   return (
