@@ -163,3 +163,66 @@
   font-family: var(--tm-font-mono);
   font-feature-settings: 'tnum' 1;
 }
+
+/* ============================================================================
+   HookSwap Terminal reskin — shared "Select a token" modal
+   ----------------------------------------------------------------------------
+   The Terminal mounts the app's shared Tamagui `SwapTokenSelector`, which
+   portals its dialog OUTSIDE the Terminal DOM subtree with the default
+   Uniswap dark theme (grey #131313/#1F1F1F surfaces, Inter). We rebrand it in
+   place to the Terminal system by remapping the Tamagui theme CSS variables
+   within the dialog's own scope + a few targeted rules. Scoped with :has() to
+   the token-selector dialog ONLY (it uniquely contains #explore-search-input),
+   so other dialogs (swap review, settings) are untouched. Pure restyle — no
+   component logic is changed. Terminal values mirror theme/tokens.ts. */
+.is_DialogContent:has([data-testid='explore-search-input']) {
+  /* Remap Tamagui theme vars → Terminal surfaces / ink / acid-green */
+  --surface1: #12181f;
+  --background: #12181f;
+  --surface2: #0e141b;
+  --surface1Hovered: #171f28;
+  --surface2Hovered: #1a222c;
+  --surface3: #232b36;
+  --surface3Solid: #2a3542;
+  --neutral1: #e7ecf2;
+  --neutral2: #9aa4b2;
+  --neutral3: #7c8698;
+  --accent1: #2fe07e;
+  --accent2: rgba(47, 224, 126, 0.14);
+  background: #12181f !important;
+  border: 1px solid #232b36 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.6) !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+.is_DialogContent:has([data-testid='explore-search-input']) * {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+/* Modal title "Select a token" → Space Grotesk display face */
+.is_DialogContent:has([data-testid='explore-search-input']) .font_subHeading {
+  font-family: 'Space Grotesk', sans-serif !important;
+  letter-spacing: -0.02em;
+}
+/* Terminal hard rule: addresses / balances / prices are monospace (.font_body
+   carries the token subtitle address + the balance/value column) */
+.is_DialogContent:has([data-testid='explore-search-input']) .font_body {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-feature-settings: 'tnum' 1;
+}
+.is_DialogContent:has([data-testid='explore-search-input']) [data-testid='explore-search-input'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+}
+/* Sharper Terminal radius on token rows */
+.is_DialogContent:has([data-testid='explore-search-input']) [data-testid^='token-option-'] {
+  border-radius: 10px !important;
+}
+/* Section headers → Terminal uppercase micro-label (wins over .font_subHeading) */
+.is_DialogContent:has([data-testid='explore-search-input']) [data-testid^='section-header-'],
+.is_DialogContent:has([data-testid='explore-search-input']) [data-testid^='section-header-'] * {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.09em !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #7c8698 !important;
+}
