@@ -20,8 +20,7 @@ import type { Address } from '~/chains'
  * other HookSwap chains can be added from their deploy output.
  */
 export const DISPERSE_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
-  // Robinhood (4663) — fill after Reggie deploys Disperse (contracts/multisender).
-  // [UniverseChainId.Robinhood]: '0x…',
+  [UniverseChainId.Robinhood]: '0xddb6a9b9e2d6c5636b444c0cda907c9944c6cec7',
 }
 
 /**

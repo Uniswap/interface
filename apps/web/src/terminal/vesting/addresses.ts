@@ -23,8 +23,7 @@ import type { Address } from '~/chains'
  * structured so other HookSwap chains can be added from their deploy output.
  */
 export const VESTING_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
-  // Robinhood (4663) — fill after Reggie deploys HookSwapVestingManager (contracts/vesting).
-  // [UniverseChainId.Robinhood]: '0x…',
+  [UniverseChainId.Robinhood]: '0x7f91048007b653b088282a73d180541f9c228677',
 }
 
 /**

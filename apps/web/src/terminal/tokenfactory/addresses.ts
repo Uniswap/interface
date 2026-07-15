@@ -22,8 +22,7 @@ import type { Address } from '~/chains'
  * structured so other HookSwap chains can be added from their deploy output.
  */
 export const TOKEN_FACTORY_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
-  // Robinhood (4663) — fill after Reggie deploys HookSwapTokenFactory (contracts/token-factory).
-  // [UniverseChainId.Robinhood]: '0x…',
+  [UniverseChainId.Robinhood]: '0x13064247c5687a912fb362e2bb28f24e24f3bdca',
 }
 
 /**

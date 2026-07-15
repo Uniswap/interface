@@ -23,8 +23,7 @@ import type { Address } from '~/chains'
  * structured so other HookSwap chains can be added from their deploy output.
  */
 export const AIRDROP_FACTORY_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
-  // Robinhood (4663) — fill after Reggie deploys MerkleDistributorFactory (contracts/airdrop).
-  // [UniverseChainId.Robinhood]: '0x…',
+  [UniverseChainId.Robinhood]: '0x1a1c0c6f9eadd115e6fed973b1c3cfa71dadd8d5',
 }
 
 /**
