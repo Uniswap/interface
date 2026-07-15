@@ -53,12 +53,22 @@ nx spawns bare `vite`/`typechain`/`openapi` but bun only makes `.bunx` shims the
 3. GraphQL types + UI icons: already committed / regenerate fine.
 4. Launch: `cd apps/web && SKIP_CONFIG_PULL=true USE_NEW_CONFIGS=false node ../../node_modules/vite/bin/vite.js dev --port 3000`.
 
-## Progress (2026-07-03)
+## Progress (2026-07-14)
 - ✅ Rebrand → HookSwap (title/meta/urls/i18n) — live, served title = "HookSwap Interface".
 - ✅ Atlas theme (accent #0c8a42, paper #f4f5f1, ink, Inter+JetBrains Mono).
-- ✅ Chains: Robinhood GA (removed rollout flag), HyperEVM (999) added (`hyperevm.ts`, backendSupported:false + GQL filter guard), Sepolia already present, `supportsV4:false` on Robinhood+HyperEVM. Committed on branch `hookswap-rebrand` (pushed).
+- ✅ Chains: Robinhood GA, HyperEVM (999) added, Sepolia present, `supportsV4:false`.
 - ✅ Forked 15 repos into HooksOS org (see FORK-LIST.md).
-- 🔄 Foundry deploy kit under `contracts/` (in progress).
+- ✅ Full v2+v3+UR stack deployed on Robinhood (see `contracts/deployments/robinhood.json`).
+- ✅ Self-service contracts deployed + verified on Robinhood (blockscout): TokenFactory, Vesting, Farms, Airdrop, Multisender — all wired in UI, no more "COMING SOON".
+- ✅ LaunchPad: HookOSV3Launcher (`0x9B8d…`) + HookOSV3FeeVault (`0x2974…`) integrated — DEX/pair selector, vault fee collection, route at `/launch`.
+- ✅ WETH/USDG anchor pool seeded (`0xF7ddC383…`, $1877.65/ETH) — USD pricing active across all data-api handlers.
+- ✅ Referral swap routing: single-hop v3 ERC-20 swaps route through ReferralRouter with on-chain allowance check (graceful UR fallback).
+- ✅ Data-api: all handlers implemented (listTokens, listTopPools, listPools, getPosition, getPortfolio, listPositions, listTransactions, searchTokens, getWalletBalances). All V2Endpoints feature flags forced ON.
+- ✅ All data transports routed to data.hookswap.org (getPools, getPosition, getPoolsRewards repointed).
+- ✅ Navigation reorganized: TopNav has Trade/Markets/Earn/Tools/Portfolio/Docs; left rail has TRADE/TOOLS/ACCOUNT/MORE/COMMUNITY.
+- ✅ Full Uniswap URL rebrand: UniswapStaticUrls, support links, WalletConnect, GraphQL Origin, 30+ URLs across 20 files → hookswap.org/docs.hookswap.org.
+- ✅ `.env.production` carries DATA_API + TRADING_API overrides.
+- ✅ Landing page: feature grid with LAUNCH/TRADE/EARN/TOOLS/TRACK sections + 7 new SVG icons.
 - ⏳ Localhost: `http://localhost:3000` LIVE (bring-up procedure above).
 
 ## Render fixes (why the page was blank) — in `apps/web/.env.local` (gitignored)
@@ -74,8 +84,8 @@ Result: app renders the HookSwap landing (Atlas green theme confirmed). Remainin
 - **Quoting gap (honest):** interface speaks the Trading API schema, NOT routing-api directly. To quote you need: deploy v2/v3/UR on 999+4663 → fill addresses in sdks + SOR forks → add 3 chains to the SOR fork too → dependency override (@uniswap/* → HooksOS forks) → on-chain liquidity → a Trading API layer (unified-routing-api) or adapter wrapping routing-api.
 
 ## Brand polish TODO (visible in render)
-- [ ] Logo still the Uniswap unicorn (top-left) → swap for HookSwap hex logo (brand-kit/logo).
-- [ ] Inter font not loading (old Basel `.woff2` 404) → wire Inter/JetBrains Mono @font-face or fonts.
+- [x] Logo is the HookSwap hex+hook glyph (HookLogo.tsx / NavIcon.tsx HookMark). DONE.
+- [x] Inter font wired + bundled (index.html, public/fonts/). IBM Plex Mono/Sans for Terminal. DONE.
 
 ## Follow-ups (pre-production, not localhost blockers)
 - [ ] Audit other exhaustive `Record<UniverseChainId,…>` literals across monorepo for a missing `HyperEvm` key (esbuild/dev ignores types; `tsc`/prod build will flag). Candidates: packages/uniswap/src/constants/tokens.ts, apps/web/src/features/Swap/SwapBottomCard.tsx, wallet ContractManager/ProviderManager, chains/utils.ts.

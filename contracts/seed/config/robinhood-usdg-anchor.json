@@ -9,9 +9,9 @@
       "label": "WETH / USDG v2 — STABLECOIN ANCHOR ($15/side). REFRESH price to live before broadcast.",
       "tokenA": { "kind": "WETH", "symbol": "WETH", "decimals": 18 },
       "tokenB": { "kind": "ADDRESS", "address": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168", "symbol": "USDG", "decimals": 6 },
-      "priceAperB": 1782.93,
-      "amountA": 0.008413,
-      "amountB": 15.0
+      "priceAperB": 1877.78,
+      "amountA": 0.0085,
+      "amountB": 15.96
     }
   ]
 }
