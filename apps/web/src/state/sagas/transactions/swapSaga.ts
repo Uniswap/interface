@@ -37,7 +37,7 @@ import {
 import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from '~/constants/misc'
-import { canUseReferralRouter, buildReferralSwapTx } from '~/terminal/referral/referralSwap'
+import { canUseReferralRouter, checkReferralAllowance, buildReferralSwapTx } from '~/terminal/referral/referralSwap'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
@@ -98,17 +98,28 @@ export function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGe
           const outputBi = BigInt(trade.outputAmount.quotient.toString())
           const safeMinOut = outputBi - (outputBi * BigInt(slippageBps)) / 10000n
           const recipient = (txRequest as { to?: string }).to as `0x${string}` | undefined
-          if (recipient) {
-            const referralTx = buildReferralSwapTx({
+          const sender = (txRequest as { from?: string }).from as `0x${string}` | undefined
+          if (recipient && sender) {
+            // Check on-chain allowance — if the user hasn't approved the RR,
+            // silently skip referral routing and use the normal UR path.
+            const hasAllowance = yield* call(checkReferralAllowance, {
               chainId,
               tokenIn,
-              tokenOut,
-              feeTier: pool.fee,
+              owner: sender,
               amountIn,
-              amountOutMin: safeMinOut,
-              recipient,
             })
-            txRequest = { ...txRequest, to: referralTx.to, data: referralTx.data, value: referralTx.value }
+            if (hasAllowance) {
+              const referralTx = buildReferralSwapTx({
+                chainId,
+                tokenIn,
+                tokenOut,
+                feeTier: pool.fee,
+                amountIn,
+                amountOutMin: safeMinOut,
+                recipient,
+              })
+              txRequest = { ...txRequest, to: referralTx.to, data: referralTx.data, value: referralTx.value }
+            }
           }
         }
       }
