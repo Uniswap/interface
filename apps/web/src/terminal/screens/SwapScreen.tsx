@@ -41,6 +41,7 @@ import {
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
 import {
   useSwapFormStore,
@@ -334,6 +335,7 @@ export function SwapTicket(): JSX.Element {
     trade: s.trade,
     exactAmountToken: s.exactAmountToken,
     exactCurrencyField: s.exactCurrencyField,
+    wrapType: s.wrapType,
   }))
 
   const { updateSwapForm, selectingCurrencyField, input, output } = useSwapFormStore((s) => ({
@@ -346,10 +348,30 @@ export function SwapTicket(): JSX.Element {
   const inputInfo = derived.currencies[CurrencyField.INPUT]
   const outputInfo = derived.currencies[CurrencyField.OUTPUT]
   const inSym = inputInfo?.currency.symbol ?? ''
+  const outSym = outputInfo?.currency.symbol ?? ''
   const isExactIn = derived.exactCurrencyField === CurrencyField.INPUT
 
-  const sellValue = isExactIn ? derived.exactAmountToken : fmtAmount(derived.currencyAmounts[CurrencyField.INPUT])
-  const buyValue = !isExactIn ? derived.exactAmountToken : fmtAmount(derived.currencyAmounts[CurrencyField.OUTPUT])
+  // A native ↔ wrapped-native pair (e.g. ETH ↔ WETH) is a pure 1:1 wrap/unwrap, NOT a
+  // poolable swap — the router correctly returns NO_ROUTE for it. Detect it via the
+  // swap engine's own `wrapType` (getWrapType → WRAPPED_NATIVE_CURRENCY) so we bypass
+  // the trading-API quote entirely and drive the existing wrap execution path
+  // (useSwapHandlers → useWrapCallback) instead of hanging on "Fetching best price…".
+  const wrapType = derived.wrapType
+  const isWrap = wrapType !== WrapType.NotApplicable
+
+  // For a wrap the output equals the input (1:1). The trade quote never resolves (there
+  // is no pool), so `currencyAmounts[OUTPUT]` stays empty — mirror the exact amount into
+  // both fields so the ticket shows the correct 1:1 amounts.
+  const sellValue = isWrap
+    ? derived.exactAmountToken
+    : isExactIn
+      ? derived.exactAmountToken
+      : fmtAmount(derived.currencyAmounts[CurrencyField.INPUT])
+  const buyValue = isWrap
+    ? derived.exactAmountToken
+    : !isExactIn
+      ? derived.exactAmountToken
+      : fmtAmount(derived.currencyAmounts[CurrencyField.OUTPUT])
 
   const sellBalance = derived.currencyBalances[CurrencyField.INPUT]
   const buyBalance = derived.currencyBalances[CurrencyField.OUTPUT]
@@ -374,22 +396,47 @@ export function SwapTicket(): JSX.Element {
   const activeTrade = trade.trade
   const hasAmount = Boolean(derived.exactAmountToken && Number(derived.exactAmountToken) > 0)
 
-  const rateValue = activeTrade
-    ? `1 ${inSym} = ${groupNumber(activeTrade.executionPrice.toSignificant(8))}`
-    : trade.isLoading && hasAmount
-      ? 'Fetching…'
-      : '—'
+  // Wrap/unwrap is a fixed 1:1 with no price impact — show constant values and never
+  // "Fetching…" (there is no quote to fetch).
+  const rateValue = isWrap
+    ? `1 ${inSym} = 1 ${outSym}`
+    : activeTrade
+      ? `1 ${inSym} = ${groupNumber(activeTrade.executionPrice.toSignificant(8))}`
+      : trade.isLoading && hasAmount
+        ? 'Fetching…'
+        : '—'
   const impactPct = activeTrade?.priceImpact
-  const impactValue = impactPct ? `${impactPct.toFixed(2)}%` : trade.isLoading && hasAmount ? 'Fetching…' : '—'
-  const impactColor = impactPct
-    ? Math.abs(Number(impactPct.toFixed(2))) < 1
-      ? terminalColors.greenUp
-      : terminalColors.warn
-    : undefined
+  const impactValue = isWrap
+    ? '0.00%'
+    : impactPct
+      ? `${impactPct.toFixed(2)}%`
+      : trade.isLoading && hasAmount
+        ? 'Fetching…'
+        : '—'
+  const impactColor = isWrap
+    ? terminalColors.greenUp
+    : impactPct
+      ? Math.abs(Number(impactPct.toFixed(2))) < 1
+        ? terminalColors.greenUp
+        : terminalColors.warn
+      : undefined
   const minRecv = derived.outputAmountUserWillReceive ?? activeTrade?.minAmountOut
-  const minRecvValue = minRecv ? fmtAmount(minRecv) : trade.isLoading && hasAmount ? 'Fetching…' : '—'
-  const routeValue =
-    inputInfo && outputInfo ? `${inSym} → ${outputInfo.currency.symbol ?? ''}` : '—'
+  const minRecvValue = isWrap
+    ? hasAmount
+      ? groupNumber(derived.exactAmountToken)
+      : '—'
+    : minRecv
+      ? fmtAmount(minRecv)
+      : trade.isLoading && hasAmount
+        ? 'Fetching…'
+        : '—'
+  const routeValue = isWrap
+    ? wrapType === WrapType.Wrap
+      ? 'Wrap'
+      : 'Unwrap'
+    : inputInfo && outputInfo
+      ? `${inSym} → ${outSym}`
+      : '—'
 
   // --- Swap button state ----------------------------------------------------
   let swapLabel: string
@@ -401,6 +448,13 @@ export function SwapTicket(): JSX.Element {
     onSwap = () => accountDrawer.open()
   } else if (!hasAmount) {
     swapLabel = 'Enter an amount'
+  } else if (isWrap) {
+    // Native ↔ wrapped-native: skip the quote entirely and open the REAL review→submit
+    // flow, which routes to useWrapCallback (WETH deposit/withdraw) via useSwapHandlers.
+    // The review pipeline builds the wrap tx from `wrapType` — no trade quote required.
+    swapLabel = wrapType === WrapType.Wrap ? 'Wrap' : 'Unwrap'
+    swapEnabled = true
+    onSwap = onReview
   } else if (trade.isLoading) {
     swapLabel = 'Fetching best price…'
   } else if (trade.error) {
