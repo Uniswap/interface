@@ -42,17 +42,17 @@ interface NavSection {
 }
 
 const DOCS_URL = 'https://docs.hookswap.org'
-const LAUNCHPAD_URL = 'https://hookos.fun/atlas'
 
-/** Handoff nav (Trade / Markets / Earn / Portfolio / Docs) → real routes. NO hooks. */
+/** Handoff nav → real routes. NO hooks. */
 const NAV_SECTIONS: NavSection[] = [
   {
     label: 'Trade',
     path: '/swap',
     navId: 'swap',
-    activeIds: ['swap', 'widget-builder'],
+    activeIds: ['swap', 'widget-builder', 'leaderboard'],
     children: [
       { label: 'Swap', path: '/swap', navId: 'swap' },
+      { label: 'Leaderboard', path: '/leaderboard', navId: 'leaderboard' },
       { label: 'Widget builder', path: '/widget', navId: 'widget-builder' },
     ],
   },
@@ -70,6 +70,20 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    label: 'Tools',
+    path: '/launch',
+    navId: 'launchpad',
+    activeIds: ['launchpad', 'create-token', 'multisender', 'vesting', 'farms', 'airdrop'],
+    children: [
+      { label: 'LaunchPad', path: '/launch', navId: 'launchpad' },
+      { label: 'Create token', path: '/token/new', navId: 'create-token' },
+      { label: 'Multisender', path: '/multisender', navId: 'multisender' },
+      { label: 'Vesting', path: '/vesting', navId: 'vesting' },
+      { label: 'Farms', path: '/farms', navId: 'farms' },
+      { label: 'Airdrop', path: '/airdrop', navId: 'airdrop' },
+    ],
+  },
+  {
     label: 'Portfolio',
     path: '/portfolio',
     navId: 'portfolio',
@@ -81,7 +95,6 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   { label: 'Docs', externalHref: DOCS_URL, activeIds: [] },
-  { label: 'Launchpad', externalHref: LAUNCHPAD_URL, activeIds: [] },
 ]
 
 const FIELD_BASE: CSSProperties = {
