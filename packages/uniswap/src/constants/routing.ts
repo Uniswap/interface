@@ -195,9 +195,10 @@ export const COMMON_BASES: ChainCurrencyList = {
 
   [UniverseChainId.Robinhood]: [
     nativeOnChain(UniverseChainId.Robinhood),
-    USDG_ROBINHOOD,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Robinhood] as Token,
     THOOK_ROBINHOOD,
+    // USDG_ROBINHOOD omitted — no pool seeded yet; showing it in common bases
+    // leads users to select it and immediately see "No route available".
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Arc]: [USDC_ARC, EURC_ARC, CIRBTC_ARC, WETH_ARC, USYC_ARC].map(buildPartialCurrencyInfo),

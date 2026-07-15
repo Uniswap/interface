@@ -403,7 +403,13 @@ export function SwapTicket(): JSX.Element {
     swapLabel = 'Enter an amount'
   } else if (trade.isLoading) {
     swapLabel = 'Fetching best price…'
-  } else if (trade.error || !activeTrade) {
+  } else if (trade.error) {
+    // Surface the actual error when the quote service fails (vs just "no route").
+    const errMsg = typeof trade.error === 'object' && trade.error !== null && 'message' in trade.error
+      ? (trade.error as { message: string }).message
+      : undefined
+    swapLabel = errMsg && errMsg.length < 60 ? errMsg : 'Quote unavailable — try again'
+  } else if (!activeTrade) {
     swapLabel = 'No route available'
   } else {
     // Trade ready — open the REAL review→confirm→submit modal via the interface's
