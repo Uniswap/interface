@@ -285,15 +285,26 @@ function ToggleRow({
 
 /* ------------------------------------------------------------------ initial form state */
 
+/**
+ * Contract-valid pool defaults so the default (non-advanced) form submits.
+ * These are the same canonical values shown as the ADVANCED-section placeholders;
+ * advanced users can override them.
+ *   • sqrtPriceX96 = 2^96 → a 1:1 initial price.
+ *   • ticks ±887220 → the full usable range at tickSpacing 60.
+ */
+const DEFAULT_SQRT_PRICE_X96 = '79228162514264337593543950336'
+const DEFAULT_TICK_LOWER = '-887220'
+const DEFAULT_TICK_UPPER = '887220'
+
 const EMPTY_INPUT: LaunchConfigInput = {
   name: '',
   symbol: '',
   metadataURI: '',
   totalSupply: '',
   salt: ZERO_SALT,
-  sqrtPriceX96: '',
-  tickLower: '',
-  tickUpper: '',
+  sqrtPriceX96: DEFAULT_SQRT_PRICE_X96,
+  tickLower: DEFAULT_TICK_LOWER,
+  tickUpper: DEFAULT_TICK_UPPER,
   dex: String(V3Dex.HookSwap),
   pair: String(PairToken.WETH),
   lockOnHookSwap: true,
