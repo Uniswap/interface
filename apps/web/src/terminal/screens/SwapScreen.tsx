@@ -58,6 +58,7 @@ import { useSelectChain } from '~/hooks/useSelectChain'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { queryParametersToCurrencyState } from '~/pages/Swap/Swap/state/tradeQueryParams'
+import { useWrapCallback as useDirectWrapCallback } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/useWrapCallback'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
@@ -459,6 +460,17 @@ export function SwapTicket(): JSX.Element {
       inputAmount.greaterThan(sellBalance),
   )
 
+  // Native ↔ wrapped-native wrap/unwrap, executed DIRECTLY against WETH9 (viem
+  // deposit/withdraw + addTransaction tracking) — bypasses the Terminal review pipeline,
+  // which silently no-ops for wraps (a wrap has no trade, so prepareSwap falls through /
+  // swallows in the review flow → the button appeared dead). `execute` is defined only
+  // when the wrap is actually submittable. See ~/pages/Swap/Limit/…/useWrapCallback.
+  const directWrap = useDirectWrapCallback({
+    inputCurrency: inputInfo?.currency,
+    outputCurrency: outputInfo?.currency,
+    typedValue: derived.exactAmountToken,
+  })
+
   // --- Swap button state ----------------------------------------------------
   let swapLabel: string
   let swapEnabled = false
@@ -473,12 +485,14 @@ export function SwapTicket(): JSX.Element {
     // Disabled, honest state (matches Uniswap production) — never opens the review flow.
     swapLabel = inSym ? `Insufficient ${inSym} balance` : 'Insufficient balance'
   } else if (isWrap) {
-    // Native ↔ wrapped-native: skip the quote entirely and open the REAL review→submit
-    // flow, which routes to useWrapCallback (WETH deposit/withdraw) via useSwapHandlers.
-    // The review pipeline builds the wrap tx from `wrapType` — no trade quote required.
+    // Native ↔ wrapped-native is a deterministic 1:1 needing no quote/route/review — drive
+    // the WETH9 deposit/withdraw directly (see `directWrap` above). `execute` is present
+    // only when submittable; if absent, keep the button disabled instead of a silent no-op.
     swapLabel = wrapType === WrapType.Wrap ? 'Wrap' : 'Unwrap'
-    swapEnabled = true
-    onSwap = onReview
+    if (directWrap.execute) {
+      swapEnabled = true
+      onSwap = () => void directWrap.execute?.()
+    }
   } else if (trade.isLoading) {
     swapLabel = 'Fetching best price…'
   } else if (trade.error) {
