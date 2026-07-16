@@ -67,6 +67,45 @@ export const poolRouter02Abi = [
       { name: 'liquidity', type: 'uint256' },
     ],
   },
+  // Remove liquidity — burn LP tokens back into both underlying ERC-20s. The LP
+  // (pair) token must be approved to the router first (plain ERC-20 allowance).
+  {
+    type: 'function',
+    name: 'removeLiquidity',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'tokenA', type: 'address' },
+      { name: 'tokenB', type: 'address' },
+      { name: 'liquidity', type: 'uint256' },
+      { name: 'amountAMin', type: 'uint256' },
+      { name: 'amountBMin', type: 'uint256' },
+      { name: 'to', type: 'address' },
+      { name: 'deadline', type: 'uint256' },
+    ],
+    outputs: [
+      { name: 'amountA', type: 'uint256' },
+      { name: 'amountB', type: 'uint256' },
+    ],
+  },
+  // Remove liquidity from a WETH pair, unwrapping the WETH side to native ETH for
+  // the recipient. `token` is the NON-WETH side; `amountETHMin` bounds the WETH side.
+  {
+    type: 'function',
+    name: 'removeLiquidityETH',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'token', type: 'address' },
+      { name: 'liquidity', type: 'uint256' },
+      { name: 'amountTokenMin', type: 'uint256' },
+      { name: 'amountETHMin', type: 'uint256' },
+      { name: 'to', type: 'address' },
+      { name: 'deadline', type: 'uint256' },
+    ],
+    outputs: [
+      { name: 'amountToken', type: 'uint256' },
+      { name: 'amountETH', type: 'uint256' },
+    ],
+  },
 ] as const
 
 /* ------------------------------------------------------------------ v2 Factory */
@@ -115,4 +154,27 @@ export const poolPairAbi = [
     inputs: [],
     outputs: [{ type: 'uint256' }],
   },
+  // Underlying token ordering. getReserves()'s reserve0/reserve1 correspond to
+  // token0()/token1() — used to map on-chain reserves onto the caller's tokens.
+  {
+    type: 'function',
+    name: 'token0',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address' }],
+  },
+  {
+    type: 'function',
+    name: 'token1',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address' }],
+  },
 ] as const
+
+/*
+ * NOTE: the LP token IS a standard ERC-20 (UniswapV2ERC20, 18 decimals) — its
+ * `balanceOf` / `approve` / `allowance` / `totalSupply` come from the canonical
+ * `erc20Abi` re-exported above. Approve the PAIR address to the Router02 before
+ * `removeLiquidity` / `removeLiquidityETH`, exactly like any ERC-20 side.
+ */

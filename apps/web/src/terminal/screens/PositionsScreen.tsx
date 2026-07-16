@@ -24,11 +24,11 @@
  */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
-import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import type { PositionInfo, V2PairInfo } from 'uniswap/src/features/positions/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
@@ -36,6 +36,8 @@ import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { useAccount } from '~/hooks/useAccount'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import { StatCard } from '~/terminal/components/StatCard'
+import { AddLiquidityModal } from '~/terminal/pools/AddLiquidityModal'
+import { RemoveLiquidityModal } from '~/terminal/pools/RemoveLiquidityModal'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 
 const MONO = terminalFonts.mono
@@ -460,6 +462,11 @@ export function PositionsScreen(): JSX.Element {
   const address = account.address
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
+  // Which v2 position (if any) has its Add / Remove modal open. v2 only — the
+  // client-side liquidity hooks are v2 (deployed own UniswapV2Router02).
+  const [addPosition, setAddPosition] = useState<V2PairInfo | null>(null)
+  const [removePosition, setRemovePosition] = useState<V2PairInfo | null>(null)
+
   // Live LP positions (real) — restricted to v2 + v3 (no v4 in HookSwap).
   const positionsResult = useWalletPositions({
     account: address ?? '',
@@ -546,32 +553,52 @@ export function PositionsScreen(): JSX.Element {
       {
         id: 'actions',
         header: '',
-        width: 'minmax(140px,1fr)',
+        width: 'minmax(150px,1fr)',
         align: 'right',
-        // "View" always opens the real position detail route (where add / collect /
-        // remove all live); "Collect" appears only where the feed reports real
-        // uncollected fees, and opens that same detail page (its collect surface).
-        cell: (p) => (
-          <span style={{ display: 'inline-flex', justifyContent: 'flex-end', gap: 6, width: '100%' }}>
-            {(p.uncollectedFeesUsd ?? 0) > 0 ? (
+        // v2 → in-Terminal Add / Remove modals (client-side, direct to the deployed v2
+        // Router02 — the legacy detail page's hosted liquidity gateway 404s on Robinhood).
+        // v2 has no separate fee "Collect": fees accrue into reserves and are realized on
+        // Remove. v3 keeps the legacy detail route (Collect where fees exist, else View).
+        cell: (p) =>
+          p.version === ProtocolVersion.V2 ? (
+            <span style={{ display: 'inline-flex', justifyContent: 'flex-end', gap: 6, width: '100%' }}>
               <RowActionButton
-                label="Collect"
+                label="Add"
                 tone="green"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setAddPosition(p)
+                }}
+              />
+              <RowActionButton
+                label="Remove"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setRemovePosition(p)
+                }}
+              />
+            </span>
+          ) : (
+            <span style={{ display: 'inline-flex', justifyContent: 'flex-end', gap: 6, width: '100%' }}>
+              {(p.uncollectedFeesUsd ?? 0) > 0 ? (
+                <RowActionButton
+                  label="Collect"
+                  tone="green"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    navigate(getPositionUrl(p))
+                  }}
+                />
+              ) : null}
+              <RowActionButton
+                label="View"
                 onClick={(e) => {
                   e.stopPropagation()
                   navigate(getPositionUrl(p))
                 }}
               />
-            ) : null}
-            <RowActionButton
-              label="View"
-              onClick={(e) => {
-                e.stopPropagation()
-                navigate(getPositionUrl(p))
-              }}
-            />
-          </span>
-        ),
+            </span>
+          ),
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -594,7 +621,12 @@ export function PositionsScreen(): JSX.Element {
 
   const showEmpty = !isLoading && !positionsResult.error && positions.length === 0
 
+  const refetchPositions = (): void => {
+    void positionsResult.refetch()
+  }
+
   return (
+    <>
     <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       <Header address={address} onNewPosition={onNewPosition} showAction />
 
@@ -643,11 +675,30 @@ export function PositionsScreen(): JSX.Element {
             initialSort={{ columnId: 'value', direction: 'desc' }}
             skeletonRows={6}
             minWidth={760}
-            onRowClick={(p) => navigate(getPositionUrl(p))}
+            // v2 → open the in-Terminal Add modal (its legacy detail page 404s); v3 → detail route.
+            onRowClick={(p) => (p.version === ProtocolVersion.V2 ? setAddPosition(p) : navigate(getPositionUrl(p)))}
           />
         )}
       </Card>
     </div>
+
+    {addPosition ? (
+      <AddLiquidityModal
+        position={addPosition}
+        open
+        onClose={() => setAddPosition(null)}
+        onSuccess={refetchPositions}
+      />
+    ) : null}
+    {removePosition ? (
+      <RemoveLiquidityModal
+        position={removePosition}
+        open
+        onClose={() => setRemovePosition(null)}
+        onSuccess={refetchPositions}
+      />
+    ) : null}
+    </>
   )
 }
 
