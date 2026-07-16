@@ -1511,6 +1511,23 @@ function LandingScreenBody(): JSX.Element {
                 Explore markets
               </button>
             </div>
+            {chains.length > 0 ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginTop: 22, flexWrap: 'wrap' }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: terminalColors.faint }}>
+                  LIVE ON {chains.length} {chains.length === 1 ? 'CHAIN' : 'CHAINS'}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {chains.slice(0, 8).map((c, i) => (
+                    <span
+                      key={c}
+                      style={{ marginLeft: i === 0 ? 0 : -6, display: 'flex', padding: 2, borderRadius: '50%', background: terminalColors.bg }}
+                    >
+                      <ChainLogo chainId={c} size={20} />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           {/* Featured price card */}
