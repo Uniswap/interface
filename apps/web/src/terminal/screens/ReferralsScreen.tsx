@@ -200,9 +200,9 @@ function NotLiveNote({ chainLabel }: { chainLabel: string }): JSX.Element {
 }
 
 /**
- * Referral earnings info. Rewards accrue on single-hop v3 swaps when a referral
- * code is active (0.3% of input token per swap). Claimable on-chain via the
- * ReferralRouter's `claim(code, token)` function.
+ * Honest "reward payouts not live yet" note for the Earnings panel. Describes how
+ * referral rewards WILL work once fee routing ships — no claim UI is presented here
+ * because fees can't accrue yet (see the earnings/claim comment in the screen body).
  */
 function RewardsNotLiveNote(): JSX.Element {
   return (
@@ -218,9 +218,10 @@ function RewardsNotLiveNote(): JSX.Element {
         padding: '11px 13px',
       }}
     >
-      Referral rewards accrue automatically on single-hop v3 swaps when users trade with your <code>?ref=</code> link.
-      0.3% of the input token is set aside per swap. Use the Claim button below to withdraw accrued fees for a specific
-      token to your claim wallet.
+      Reward payouts aren&apos;t live yet. Once fee routing ships, referral rewards will accrue on single-hop v3 swaps
+      when users trade with your <code>?ref=</code> link — a share of the input token set aside per swap and withdrawable
+      to your claim wallet. Until then no fees accrue, so there&apos;s nothing to claim. Register your code now so it&apos;s
+      ready the moment payouts go live.
     </div>
   )
 }
