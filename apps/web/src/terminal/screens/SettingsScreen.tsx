@@ -15,9 +15,12 @@
  *   • Transaction deadline — LIVE + PERSISTED. Reads `state.user.userDeadline`
  *     (seconds) and writes it via `updateUserDeadline`. This is the exact TTL that
  *     `useGetTransactionDeadline` applies to every submitted transaction.
- *   • Appearance (theme) — LIVE + PERSISTED. Reads/writes the real appearance slice
- *     (`useCurrentAppearanceSetting` / `setSelectedAppearanceSettings`) — System /
- *     Light / Dark, the same setting that drives the app's Tamagui color scheme.
+ *   • Appearance (theme) — DARK ONLY (honest, disabled control). The Terminal surface
+ *     is styled entirely from the static dark `terminalColors` token set
+ *     (theme/tokens.ts) via inline styles; no light token set exists or is consumed
+ *     here, so a System/Light/Dark toggle would retint nothing on this screen. The
+ *     Theme control is therefore rendered disabled and locked to Dark with an honest
+ *     "Dark only" note — never a toggle that silently does nothing.
  *   • Network panel — read-only view of the app's REAL enabled chains
  *     (`useEnabledChains` + `getChainLabel`). No fabricated networks.
  *
@@ -42,8 +45,7 @@
  */
 import { Percent } from '@uniswap/sdk-core'
 import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
-import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
-import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
+import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
@@ -423,7 +425,6 @@ function PanelHeading({ title, subtitle }: { title: string; subtitle: string }):
 interface TradingDraft {
   slippage: string
   deadlineMin: number
-  appearance: AppearanceSettingType
 }
 
 function TradingPanel({
@@ -502,19 +503,21 @@ function TradingPanel({
   )
 }
 
-function AppearancePanel({
-  value,
-  onChange,
-}: {
-  value: AppearanceSettingType
-  onChange: (v: AppearanceSettingType) => void
-}): JSX.Element {
+/**
+ * Appearance — the Terminal ships a SINGLE dark theme. Every Terminal surface is
+ * inline-styled from the static dark `terminalColors` token set (theme/tokens.ts);
+ * no light token set exists or is consumed here, so a System/Light/Dark toggle would
+ * change nothing on this screen. Rather than fake a working toggle, the Theme control
+ * is rendered disabled and locked to Dark with an honest "Dark only" note.
+ */
+function AppearancePanel(): JSX.Element {
   return (
     <>
       <PanelHeading title="Appearance" subtitle="How the HookSwap Terminal looks on this device." />
       <SettingRow
         title="Theme"
-        description="Match your system, or force a light or dark color scheme."
+        description="The HookSwap Terminal ships a single dark theme. A light color scheme isn't available yet."
+        disabledNote="Dark only"
         control={
           <Segmented<AppearanceSettingType>
             options={[
@@ -522,8 +525,8 @@ function AppearancePanel({
               { value: AppearanceSettingType.Light, label: 'Light' },
               { value: AppearanceSettingType.Dark, label: 'Dark' },
             ]}
-            value={value}
-            onChange={onChange}
+            value={AppearanceSettingType.Dark}
+            disabled
           />
         }
       />
@@ -612,7 +615,6 @@ export function SettingsScreen(): JSX.Element {
   // --- Real, persisted stores ------------------------------------------------
   const [userSlippage, setUserSlippage] = useUserSlippageTolerance()
   const userDeadlineSec = useAppSelector((state) => state.user.userDeadline)
-  const storeAppearance = useCurrentAppearanceSetting()
   const dispatch = useAppDispatch()
 
   // Committed store values, normalized to the draft's shape.
@@ -620,9 +622,8 @@ export function SettingsScreen(): JSX.Element {
     () => ({
       slippage: slippageToDraftString(userSlippage),
       deadlineMin: Math.max(DEADLINE_MIN, Math.round(userDeadlineSec / 60)),
-      appearance: storeAppearance,
     }),
-    [userSlippage, userDeadlineSec, storeAppearance],
+    [userSlippage, userDeadlineSec],
   )
 
   // Local DRAFT — initially seeded from the stores; "Save" commits it back.
@@ -638,25 +639,20 @@ export function SettingsScreen(): JSX.Element {
     const prev = prevCommittedRef.current
     const committedChanged =
       !slippageStringsEqual(prev.slippage, committed.slippage) ||
-      prev.deadlineMin !== committed.deadlineMin ||
-      prev.appearance !== committed.appearance
+      prev.deadlineMin !== committed.deadlineMin
     if (!committedChanged) {
       return
     }
     prevCommittedRef.current = committed
     setDraftState((current) => {
       const draftPristine =
-        slippageStringsEqual(current.slippage, prev.slippage) &&
-        current.deadlineMin === prev.deadlineMin &&
-        current.appearance === prev.appearance
+        slippageStringsEqual(current.slippage, prev.slippage) && current.deadlineMin === prev.deadlineMin
       return draftPristine ? committed : current
     })
   }, [committed])
 
   const isDirty =
-    !slippageStringsEqual(draft.slippage, committed.slippage) ||
-    draft.deadlineMin !== committed.deadlineMin ||
-    draft.appearance !== committed.appearance
+    !slippageStringsEqual(draft.slippage, committed.slippage) || draft.deadlineMin !== committed.deadlineMin
 
   const onSave = (): void => {
     if (!isDirty) {
@@ -672,7 +668,6 @@ export function SettingsScreen(): JSX.Element {
     }
 
     dispatch(updateUserDeadline({ userDeadline: draft.deadlineMin * 60 }))
-    dispatch(setSelectedAppearanceSettings(draft.appearance))
   }
 
   const onReset = (): void => setDraftState(committed)
@@ -789,9 +784,7 @@ export function SettingsScreen(): JSX.Element {
         {/* Active panel */}
         <div style={{ flex: 1, minWidth: 0, padding: isMobile ? '22px var(--tm-gutter) 40px' : '26px 30px', maxWidth: 760 }}>
           {panel === 'trading' && <TradingPanel draft={draft} setDraft={setDraft} />}
-          {panel === 'appearance' && (
-            <AppearancePanel value={draft.appearance} onChange={(v) => setDraft({ appearance: v })} />
-          )}
+          {panel === 'appearance' && <AppearancePanel />}
           {panel === 'network' && <NetworkPanel />}
           {panel === 'notifications' && (
             <ComingSoonPanel title="Notifications" subtitle="Choose which alerts reach you and where." />
