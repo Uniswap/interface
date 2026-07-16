@@ -69,20 +69,35 @@ export const ROBINHOOD_CHAIN_INFO = {
   // — this silently broke Locker/Referrals ("Failed to load") despite the contracts
   // and RPC working fine directly (verified via `cast call`). Fix: real public RPC on
   // every RPCType slot, mirroring the already-correct ink.ts/hyperevm.ts pattern.
-  // Two verified public RPCs for chainId 4663, primary first (both return 4663,
-  // both send Access-Control-Allow-Origin:* so they're browser-safe). Ordered so
-  // wagmi's `orderedTransportUrls(chain)` → viem `fallback(...)` fails over to the
-  // Blockscout eth-rpc proxy if the official RPC is down. (The ethers balance path
-  // via rpcUrlSelector uses http[0] — the official RPC — as its single endpoint.)
+  // Primary = QuickNode dedicated endpoint for chainId 4663 (verified: eth_chainId
+  // returns 0x1237, and it reflects the request Origin in Access-Control-Allow-Origin
+  // — browser-safe from hookswap.org; the auth token is public in the client bundle,
+  // so restrict the QuickNode endpoint to the hookswap.org domain). Then the two public
+  // RPCs as fallback (both return 4663 with permissive CORS). Ordered so wagmi's
+  // `orderedTransportUrls(chain)` → viem `fallback(...)` fails over to the official RPC,
+  // then the Blockscout eth-rpc proxy, if QuickNode is down. (The ethers balance path
+  // via rpcUrlSelector uses http[0] — QuickNode — as its single endpoint.)
   rpcUrls: {
     [RPCType.Default]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
+      http: [
+        'https://late-fittest-putty.robinhood-mainnet.quiknode.pro/1b8b235edc8b92a9bcad773b0fcbbda6d537a583',
+        'https://rpc.mainnet.chain.robinhood.com/',
+        'https://robinhoodchain.blockscout.com/api/eth-rpc',
+      ],
     },
     [RPCType.Public]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
+      http: [
+        'https://late-fittest-putty.robinhood-mainnet.quiknode.pro/1b8b235edc8b92a9bcad773b0fcbbda6d537a583',
+        'https://rpc.mainnet.chain.robinhood.com/',
+        'https://robinhoodchain.blockscout.com/api/eth-rpc',
+      ],
     },
     [RPCType.Interface]: {
-      http: ['https://rpc.mainnet.chain.robinhood.com/', 'https://robinhoodchain.blockscout.com/api/eth-rpc'],
+      http: [
+        'https://late-fittest-putty.robinhood-mainnet.quiknode.pro/1b8b235edc8b92a9bcad773b0fcbbda6d537a583',
+        'https://rpc.mainnet.chain.robinhood.com/',
+        'https://robinhoodchain.blockscout.com/api/eth-rpc',
+      ],
     },
   },
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
