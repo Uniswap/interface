@@ -24,6 +24,12 @@ import type { Address } from '~/chains'
  */
 export const AIRDROP_FACTORY_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
   [UniverseChainId.Robinhood]: '0x1a1c0c6f9eadd115e6fed973b1c3cfa71dadd8d5',
+  // Suite mirror deployed 2026-07-16 (see contracts/deployments/<chain>-suite.json).
+  [UniverseChainId.HyperEvm]: '0x1a1c0c6f9eadd115e6fed973b1c3cfa71dadd8d5',
+  [UniverseChainId.XLayer]: '0xfd0dd93a1b6157e68b0a491d94249720506dc787',
+  [UniverseChainId.MegaETH]: '0x250c3448278f7b71e3e9b641f2efeb6074820e25',
+  [UniverseChainId.Ink]: '0xd9d4795f2a12305a12c36455adad011f2d6143ab',
+  [UniverseChainId.Tempo]: '0x144331bb4c3026d135896cafec3ae3d667f4f376',
 }
 
 /**

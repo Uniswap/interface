@@ -23,6 +23,12 @@ import type { Address } from '~/chains'
  */
 export const TOKEN_FACTORY_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
   [UniverseChainId.Robinhood]: '0x13064247c5687a912fb362e2bb28f24e24f3bdca',
+  // Suite mirror deployed 2026-07-16 (see contracts/deployments/<chain>-suite.json).
+  [UniverseChainId.HyperEvm]: '0x13064247c5687a912fb362e2bb28f24e24f3bdca',
+  [UniverseChainId.XLayer]: '0x70b9025746387e10a9ced77a4c1670def0871376',
+  [UniverseChainId.MegaETH]: '0x144331bb4c3026d135896cafec3ae3d667f4f376',
+  [UniverseChainId.Ink]: '0x7effe9dd68035f43ad43ae6c31bc1a47ab4579d0',
+  [UniverseChainId.Tempo]: '0x7effe9dd68035f43ad43ae6c31bc1a47ab4579d0',
 }
 
 /**

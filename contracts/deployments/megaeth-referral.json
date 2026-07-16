@@ -1,0 +1,9 @@
+{
+  "chain": "megaeth",
+  "chainId": 4326,
+  "referralRouter": "0xB5A7BF488f2407479E116f713f116546F67c803b",
+  "defaultFeeBps": 30,
+  "feeAdmin": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "swapRouter02Wired": true,
+  "_note": "Canonical MegaETH referral router — deterministic twin of XLayer's (same deployer 0xc14C897c... + nonce on both chains). Was already deployed + wired in apps/web/src/terminal/referral/addresses.ts (4326), just had no sidecar JSON until now. Verified on-chain 2026-07-16: swapRouter02=0xE8526A0429aeC9a5253ac854F8b6dC964E677EE4 (MegaETH SwapRouter02), defaultFeeBps=30, feeAdmin=owner=deployer. NOTE: a redundant duplicate referral router was also deployed this session at 0xD08E609277eCB0B7E2eF15dF5C1Fb11436627a63 (fully functional but UNUSED / not wired) — canonical remains 0xB5A7BF48..."
+}

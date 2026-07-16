@@ -1,0 +1,24 @@
+{
+  "_note": "HYPEREVM MAINNET (chainId 999) HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. Deployed 2026-07-16. Mirrors the Robinhood suite (identical deterministic addresses, deployer nonce 0-4). Verification: not verified (needs hyperevmscan API key).",
+  "chainId": 999,
+  "network": "hyperevm",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0xddb6a9b9e2d6c5636b444c0cda907c9944c6cec7",
+    "stakingRewardsFactory": "0x8d26aa9d0556fd1483ad630fe9f6e21c168f2e33",
+    "merkleDistributorFactory": "0x1a1c0c6f9eadd115e6fed973b1c3cfa71dadd8d5",
+    "tokenFactory": "0x13064247c5687a912fb362e2bb28f24e24f3bdca",
+    "vestingManager": "0x7f91048007b653b088282a73d180541f9c228677"
+  },
+  "contractParams": {
+    "tokenFactory": { "createFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" },
+    "vestingManager": { "vestingFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" }
+  },
+  "deployTx": {
+    "multisender_Disperse": "0x087fb21663aefd0e42dddefb33cf8a426306f2ef737349a43f08bb877f122692",
+    "stakingRewardsFactory": "0xe78203841a526c5f62fec45efbfc8ae5a042b50969f9bf3d6c2044594d9af9a1",
+    "merkleDistributorFactory": "0x1701ac0244153a5582cede85416f03ddeece91bb678b5c286b4e521c85c356de",
+    "tokenFactory": "0xabf6c93c335dc571cdd7070ac55fe9c9f170cf22b86873299fbc0e99e63eec39",
+    "vestingManager": "0x1b902c2b7cd28e0bd9b7168d12a72ecc5f9ce8e40ec10e83a48cd586cfebf0e8"
+  }
+}

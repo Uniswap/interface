@@ -1,0 +1,24 @@
+{
+  "_note": "TEMPO MAINNET (chainId 4217, pathUSD gas) HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. Deployed 2026-07-16. Verification: not verified (no explorer API key).",
+  "chainId": 4217,
+  "network": "tempo",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0xd9d4795f2a12305a12c36455adad011f2d6143ab",
+    "stakingRewardsFactory": "0x250c3448278f7b71e3e9b641f2efeb6074820e25",
+    "merkleDistributorFactory": "0x144331bb4c3026d135896cafec3ae3d667f4f376",
+    "tokenFactory": "0x7effe9dd68035f43ad43ae6c31bc1a47ab4579d0",
+    "vestingManager": "0xd08e609277ecb0b7e2ef15df5c1fb11436627a63"
+  },
+  "contractParams": {
+    "tokenFactory": { "createFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" },
+    "vestingManager": { "vestingFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" }
+  },
+  "deployTx": {
+    "multisender_Disperse": "0x669980ec0f2aa839229b66c90265369dd7f6586257da7ff85e2efc38523e769d",
+    "stakingRewardsFactory": "0x854b19b5f8c185c190394e768129fd2232d8adebd20aed3c233165231cfdba5f",
+    "merkleDistributorFactory": "0x0992e08455e9ecd414517ba44a84d3aa355e78c84667c1b2e60b9e9280a12bd8",
+    "tokenFactory": "0x8968e517edf1746d7890c02ab7a1b813d23b85a00264aca2ca9422c9e19b28cd",
+    "vestingManager": "0x851609f838642801a9635b6faec9e80e65b4c72c1dc81c265c1cc6a796463818"
+  }
+}

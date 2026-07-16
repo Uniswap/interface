@@ -1,0 +1,24 @@
+{
+  "_note": "XLAYER MAINNET (chainId 196) HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. Deployed 2026-07-16. Verification: not verified (needs OKLink API key).",
+  "chainId": 196,
+  "network": "xlayer",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0x13064247c5687a912fb362e2bb28f24e24f3bdca",
+    "stakingRewardsFactory": "0x7f91048007b653b088282a73d180541f9c228677",
+    "merkleDistributorFactory": "0xfd0dd93a1b6157e68b0a491d94249720506dc787",
+    "tokenFactory": "0x70b9025746387e10a9ced77a4c1670def0871376",
+    "vestingManager": "0xb8b8e647259d5de25754278878893456c72c2a56"
+  },
+  "contractParams": {
+    "tokenFactory": { "createFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" },
+    "vestingManager": { "vestingFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" }
+  },
+  "deployTx": {
+    "multisender_Disperse": "0x587aae67de0c84bfd41599767ab19473012f6f3017225bf32789138b7c7a5880",
+    "stakingRewardsFactory": "0xfa7c2ceb7eaf3e1b39ee13f0a153a76212966e3e9d919ce94fad476a1621135d",
+    "merkleDistributorFactory": "0x93c19e36fcdb69ae4083f894246fd8ed7881a60fbb85ab2f071fe0b09c3abbab",
+    "tokenFactory": "0x1cbd084b9339bd516993acd0e192e3bc35fb70d7c6709e7f0f9a7eb9058594c9",
+    "vestingManager": "0xb01d8bbaeea994b634ee2c6bddce4285f3cca25d04cedb236eefecb7cb689c30"
+  }
+}

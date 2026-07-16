@@ -24,6 +24,12 @@ import type { Address } from '~/chains'
  */
 export const FARM_FACTORY_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
   [UniverseChainId.Robinhood]: '0x8d26aa9d0556fd1483ad630fe9f6e21c168f2e33',
+  // Suite mirror deployed 2026-07-16 (see contracts/deployments/<chain>-suite.json).
+  [UniverseChainId.HyperEvm]: '0x8d26aa9d0556fd1483ad630fe9f6e21c168f2e33',
+  [UniverseChainId.XLayer]: '0x7f91048007b653b088282a73d180541f9c228677',
+  [UniverseChainId.MegaETH]: '0xd9d4795f2a12305a12c36455adad011f2d6143ab',
+  [UniverseChainId.Ink]: '0x144331bb4c3026d135896cafec3ae3d667f4f376',
+  [UniverseChainId.Tempo]: '0x250c3448278f7b71e3e9b641f2efeb6074820e25',
 }
 
 /**

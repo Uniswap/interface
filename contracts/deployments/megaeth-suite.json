@@ -1,0 +1,24 @@
+{
+  "_note": "MEGAETH MAINNET (chainId 4326) HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. Deployed 2026-07-16. Verification: not verified (no explorer API key).",
+  "chainId": 4326,
+  "network": "megaeth",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0xd96fc9629afaf325fcdd7f98dc9b8dc2165adcbb",
+    "stakingRewardsFactory": "0xd9d4795f2a12305a12c36455adad011f2d6143ab",
+    "merkleDistributorFactory": "0x250c3448278f7b71e3e9b641f2efeb6074820e25",
+    "tokenFactory": "0x144331bb4c3026d135896cafec3ae3d667f4f376",
+    "vestingManager": "0x7effe9dd68035f43ad43ae6c31bc1a47ab4579d0"
+  },
+  "contractParams": {
+    "tokenFactory": { "createFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" },
+    "vestingManager": { "vestingFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" }
+  },
+  "deployTx": {
+    "multisender_Disperse": "0x4e3a557a7ba406d2025d6fe4341c24a916b43baf46f85c5e3394c2161861ab79",
+    "stakingRewardsFactory": "0x55005d646372b832952ca5507ff4d9eb5ad3eece35348f558956a25709beb4d3",
+    "merkleDistributorFactory": "0x0bb644fd72d42f20ae2beaeecf392358c9a5d04ae4d6169b19c52fd5c10a8670",
+    "tokenFactory": "0x4e14a2d84ff2b123fe7109576f8bcc9fef2aad2d6cc8d4f9a60c11b5fac2dd0f",
+    "vestingManager": "0xf2a652840130bca16d2a0fa3b2a32cfc4428db21df3e07e4464507f160b92a36"
+  }
+}

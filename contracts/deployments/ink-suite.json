@@ -1,0 +1,24 @@
+{
+  "_note": "INK MAINNET (chainId 57073) HookSwap self-service suite. Deployer 0xc14C897c6bff88a5Eeac31F795693b9230205125. Deployed 2026-07-16. Verification: all 5 contracts verified on Blockscout (explorer.inkonchain.com).",
+  "chainId": 57073,
+  "network": "ink",
+  "deployer": "0xc14C897c6bff88a5Eeac31F795693b9230205125",
+  "contracts": {
+    "multisender_Disperse": "0xd96fc9629afaf325fcdd7f98dc9b8dc2165adcbb",
+    "stakingRewardsFactory": "0x144331bb4c3026d135896cafec3ae3d667f4f376",
+    "merkleDistributorFactory": "0xd9d4795f2a12305a12c36455adad011f2d6143ab",
+    "tokenFactory": "0x7effe9dd68035f43ad43ae6c31bc1a47ab4579d0",
+    "vestingManager": "0x250c3448278f7b71e3e9b641f2efeb6074820e25"
+  },
+  "contractParams": {
+    "tokenFactory": { "createFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" },
+    "vestingManager": { "vestingFee": "0", "feeReceiver": "0xc14C897c6bff88a5Eeac31F795693b9230205125" }
+  },
+  "deployTx": {
+    "multisender_Disperse": "0x3c8bd6d10d8ca51e6222018c8be84925eefc770ef975f94d415111469f3f8612",
+    "stakingRewardsFactory": "0x0d2b4a34b53836b31ea583970f6bdfbd7f2df954ebb1b63c8e6173e1889c9c2f",
+    "merkleDistributorFactory": "0x4cac185d1f5d459b41609db4bb223e02d8446f14304158c87b7882fab77af51c",
+    "tokenFactory": "0x0528472064ae06f0f3694e04709c0595f70b72601d2347ecf6da25e1444888ce",
+    "vestingManager": "0x080ed2f87af36607e7bf35fd07eb47f64fac8a5313496d92b50cb59c27034390"
+  }
+}

@@ -21,6 +21,12 @@ import type { Address } from '~/chains'
  */
 export const DISPERSE_ADDRESSES: Partial<Record<UniverseChainId, Address>> = {
   [UniverseChainId.Robinhood]: '0xddb6a9b9e2d6c5636b444c0cda907c9944c6cec7',
+  // Suite mirror deployed 2026-07-16 (see contracts/deployments/<chain>-suite.json).
+  [UniverseChainId.HyperEvm]: '0xddb6a9b9e2d6c5636b444c0cda907c9944c6cec7',
+  [UniverseChainId.XLayer]: '0x13064247c5687a912fb362e2bb28f24e24f3bdca',
+  [UniverseChainId.MegaETH]: '0xd96fc9629afaf325fcdd7f98dc9b8dc2165adcbb',
+  [UniverseChainId.Ink]: '0xd96fc9629afaf325fcdd7f98dc9b8dc2165adcbb',
+  [UniverseChainId.Tempo]: '0xd9d4795f2a12305a12c36455adad011f2d6143ab',
 }
 
 /**
