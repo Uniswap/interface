@@ -180,7 +180,10 @@ function buildRows(pools: PoolStat[] | undefined, maps: TokenMetricMaps): Market
     const currency0 = displayToken0 ? gqlToCurrency(displayToken0) : undefined
     const currency1 = displayToken1 ? gqlToCurrency(displayToken1) : undefined
 
-    const metric = lookupMetric(pool.token0, maps)
+    // Join the metric feed on token0 first, falling back to token1 when the base
+    // token isn't in the token list (e.g. token0 is a long-tail/wrapped token but
+    // the pool's priced side is token1) so Price/24H/spark still populate.
+    const metric = lookupMetric(pool.token0, maps) ?? lookupMetric(pool.token1, maps)
 
     const tvl = pool.totalLiquidity?.value ?? 0
     const volume24h = pool.volume1Day?.value ?? 0
