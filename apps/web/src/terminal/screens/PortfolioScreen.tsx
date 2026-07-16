@@ -44,11 +44,11 @@ import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWall
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { isSectionHeader, isLoadingItem } from 'uniswap/src/components/activity/utils'
 import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { useAccount } from '~/hooks/useAccount'
-import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { DataTable, DataTableColumn } from '~/terminal/components/DataTable'
 import {
   terminalColors,
@@ -234,7 +234,17 @@ function buildAllocation(balances: Record<string, PortfolioBalance> | undefined)
   return slices
 }
 
-function AllocationDonut({ slices, loading }: { slices?: AllocSlice[]; loading: boolean }): JSX.Element {
+function AllocationDonut({
+  slices,
+  loading,
+  error,
+  onRetry,
+}: {
+  slices?: AllocSlice[]
+  loading: boolean
+  error?: boolean
+  onRetry?: () => void
+}): JSX.Element {
   const gradient = useMemo(() => {
     if (!slices || slices.length === 0) {
       return undefined
@@ -274,6 +284,8 @@ function AllocationDonut({ slices, loading }: { slices?: AllocSlice[]; loading: 
           Array.from({ length: 4 }, (_, i) => (
             <div key={i} style={{ height: 12, width: '70%', borderRadius: 4, background: terminalColors.line2 }} />
           ))
+        ) : error ? (
+          <InlineError message="Couldn't load balances." onRetry={onRetry} />
         ) : slices && slices.length > 0 ? (
           slices.map((s) => (
             <div key={s.symbol} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -301,16 +313,20 @@ interface FeedItem {
   title: string
   detail: string
   timestamp: string
+  /** Block-explorer tx link (real, from the chain's explorer). Undefined if the tx has no hash yet. */
+  explorerUrl?: string
 }
 
 function ActivityFeed({
   items,
   loading,
   error,
+  onRetry,
 }: {
   items?: FeedItem[]
   loading: boolean
   error?: boolean
+  onRetry?: () => void
 }): JSX.Element {
   if (loading) {
     return (
@@ -324,39 +340,81 @@ function ActivityFeed({
       </div>
     )
   }
+  // Honest failed-to-load state (distinct from a successful-but-empty result), with a Retry.
   if (error) {
-    return <ComingSoon variant="inline" subtext="Activity fills with on-chain transactions as they happen." />
+    return <InlineError message="Couldn't load your activity." onRetry={onRetry} />
   }
   if (!items || items.length === 0) {
     return <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>No recent activity.</div>
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {items.map((item, index) => (
-        <div
-          key={item.id}
+      {items.map((item, index) => {
+        const rowStyle = {
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 10,
+          padding: '11px 0',
+          borderTop: index === 0 ? undefined : `1px solid ${terminalColors.line3}`,
+          textDecoration: 'none',
+          color: 'inherit',
+          cursor: item.explorerUrl ? 'pointer' : 'default',
+        } as const
+        const inner = (
+          <>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>
+                {item.title}
+              </div>
+              <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, marginTop: 2 }}>
+                {item.detail}
+              </div>
+            </div>
+            <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint, whiteSpace: 'nowrap' }}>
+              {item.timestamp}
+            </span>
+          </>
+        )
+        return item.explorerUrl ? (
+          <a key={item.id} href={item.explorerUrl} target="_blank" rel="noopener noreferrer" style={rowStyle}>
+            {inner}
+          </a>
+        ) : (
+          <div key={item.id} style={rowStyle}>
+            {inner}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/** Honest "failed to load" state with a Retry — kept distinct from empty (no-data) states. */
+function InlineError({ message, onRetry }: { message: string; onRetry?: () => void }): JSX.Element {
+  return (
+    <div style={{ fontFamily: SANS, fontSize: 12.5 }}>
+      <div style={{ color: terminalColors.redDown }}>{message}</div>
+      {onRetry ? (
+        <button
+          type="button"
+          onClick={onRetry}
           style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            gap: 10,
-            padding: '11px 0',
-            borderTop: index === 0 ? undefined : `1px solid ${terminalColors.line3}`,
+            marginTop: 10,
+            fontFamily: SANS,
+            fontSize: 12.5,
+            fontWeight: 600,
+            color: terminalColors.ink2,
+            background: terminalColors.bg,
+            border: `1px solid ${terminalColors.line}`,
+            padding: '7px 13px',
+            borderRadius: 9,
+            cursor: 'pointer',
           }}
         >
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: terminalColors.ink }}>
-              {item.title}
-            </div>
-            <div style={{ fontFamily: SANS, fontSize: 12, color: terminalColors.ink3Alt, marginTop: 2 }}>
-              {item.detail}
-            </div>
-          </div>
-          <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint, whiteSpace: 'nowrap' }}>
-            {item.timestamp}
-          </span>
-        </div>
-      ))}
+          Retry
+        </button>
+      ) : null}
     </div>
   )
 }
@@ -483,6 +541,9 @@ export function PortfolioScreen(): JSX.Element {
         title,
         detail: getChainLabel(tx.chainId),
         timestamp: formatRelativeTime(tx.addedTime),
+        explorerUrl: tx.hash
+          ? getExplorerLink({ chainId: tx.chainId, data: tx.hash, type: ExplorerDataType.TRANSACTION })
+          : undefined,
       })
       if (items.length >= 6) {
         break
@@ -633,8 +694,8 @@ export function PortfolioScreen(): JSX.Element {
               rows={positionsResult.isLoading && !positionsResult.hasData ? undefined : positions}
               rowKey={(p) => `${p.chainId}-${p.poolId}-${p.tokenId ?? p.currency0Amount.currency.symbol ?? ''}`}
               loading={positionsResult.isLoading && !positionsResult.hasData}
-              comingSoon={Boolean(positionsResult.error)}
-              comingSoonSubtext="Positions appear once you add on-chain liquidity."
+              error={positionsResult.error ? "Couldn't load your positions." : undefined}
+              onRetry={() => positionsResult.refetch()}
               emptyMessage="No open liquidity positions."
               initialSort={{ columnId: 'value', direction: 'desc' }}
               skeletonRows={5}
@@ -649,6 +710,8 @@ export function PortfolioScreen(): JSX.Element {
             <AllocationDonut
               slices={allocation}
               loading={balancesResult.loading && allocation === undefined}
+              error={Boolean(balancesResult.error) && allocation === undefined}
+              onRetry={() => balancesResult.refetch()}
             />
           </Card>
           <Card title="Activity">
@@ -656,6 +719,7 @@ export function PortfolioScreen(): JSX.Element {
               items={feedItems}
               loading={activity.isLoading && !feedItems}
               error={Boolean(activity.error)}
+              onRetry={() => activity.refetch()}
             />
           </Card>
         </div>

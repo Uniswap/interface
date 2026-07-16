@@ -43,7 +43,6 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { useAccount } from '~/hooks/useAccount'
 import { NotificationRow, type NotificationCategory } from '~/terminal/components/NotificationRow'
 import { StatCard } from '~/terminal/components/StatCard'
-import { ComingSoon } from '~/terminal/components/ComingSoon'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
 import { formatRelativeTime } from '~/terminal/utils/time'
 
@@ -349,7 +348,8 @@ export function ActivityScreen(): JSX.Element {
         {loadingFeed ? (
           <FeedSkeleton />
         ) : activity.error ? (
-          <ComingSoon variant="panel" subtext="Your activity feed fills with on-chain transactions as they happen." minHeight={180} />
+          // Honest failed-to-load state (distinct from a successful-but-empty feed), with a Retry.
+          <FeedError onRetry={() => activity.refetch()} />
         ) : filteredRows && filteredRows.length > 0 ? (
           // Bounded scroll region (~8–9 rows) so a long history scrolls INSIDE the
           // card instead of making the page endlessly tall. No pagination controls.
@@ -452,6 +452,34 @@ function FeedMessage({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <div style={{ padding: '40px 18px', textAlign: 'center', fontFamily: SANS, fontSize: 13, color: terminalColors.ink3Alt }}>
       {children}
+    </div>
+  )
+}
+
+function FeedError({ onRetry }: { onRetry: () => void }): JSX.Element {
+  return (
+    <div style={{ padding: '40px 18px', textAlign: 'center' }}>
+      <div style={{ fontFamily: SANS, fontSize: 13, color: terminalColors.redDown }}>
+        Couldn&apos;t load your activity.
+      </div>
+      <button
+        type="button"
+        onClick={onRetry}
+        style={{
+          marginTop: 12,
+          fontFamily: SANS,
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: terminalColors.ink2,
+          background: terminalColors.bg,
+          border: `1px solid ${terminalColors.line}`,
+          padding: '8px 14px',
+          borderRadius: 9,
+          cursor: 'pointer',
+        }}
+      >
+        Retry
+      </button>
     </div>
   )
 }

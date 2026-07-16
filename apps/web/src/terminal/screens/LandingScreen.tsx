@@ -32,8 +32,9 @@
  *                      Liquidity / 24h vol / APR are the real pool stats. We only
  *                      have close series (no OHLC) → an honest line/area, never
  *                      fabricated candles.
- *   • Order book +   — NO live feed for the target chains (AMMs have no order
- *     Liquidity depth   book; no live depth feed) → honest framed empty states.
+ *   • Liquidity depth  — HookSwap pools are constant-product AMMs (no order book);
+ *                      the depth card builds from each pool's live reserves. An
+ *                      honest empty frame until a featured pool has reserves.
  *   • Top markets    — `useTopPools` (sorted by 24h vol): pair + real logos, TVL,
  *                      24h vol, real `pool.apr`, and a real 1d trend sparkline
  *                      (base token `priceHistory1d`) + real 1d change. NO Hook col.
@@ -1555,30 +1556,9 @@ function LandingScreenBody(): JSX.Element {
           </div>
         </div>
 
-        {/* ------------------------------------------- ORDER BOOK + DEPTH */}
+        {/* ------------------------------------------------ LIQUIDITY DEPTH */}
         <div style={{ padding: `6px ${padX}px 34px`, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 300px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 14, color: terminalColors.ink }}>Order book</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>AMM</span>
-            </div>
-            <div
-              style={{
-                minHeight: 150,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                fontFamily: SANS,
-                fontSize: 12.5,
-                lineHeight: 1.5,
-                color: terminalColors.ink3Alt,
-              }}
-            >
-              HookSwap pools are AMMs — there is no order book; depth is set by live pool reserves.
-            </div>
-          </div>
-          <div style={{ flex: '1.6 1 380px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
+          <div style={{ flex: '1 1 100%', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 14, color: terminalColors.ink }}>Liquidity depth</span>
               <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>concentrated ±2%</span>
@@ -2041,8 +2021,8 @@ function LandingScreenBody(): JSX.Element {
         <div style={{ padding: `0 ${padX}px 28px`, fontFamily: SANS, fontSize: 11, color: terminalColors.faint, lineHeight: 1.5 }}>
           Tickers &amp; the featured chart join the live token feed; TVL &amp; 24h volume are the live protocol-stats feed; top
           markets (including the seeded X&nbsp;Layer pool) come from the live pools feed; activity is your connected wallet&apos;s
-          real history. Values with no live source render an honest &ldquo;—&rdquo;; the depth card stays empty
-          until pools have liquidity (HookSwap pools are AMMs — there is no order book).
+          real history. Values with no live source render an honest &ldquo;—&rdquo;; the liquidity-depth card
+          builds from each pool&apos;s live reserves (HookSwap pools are constant-product AMMs).
         </div>
       </div>
 

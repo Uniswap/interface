@@ -309,7 +309,7 @@ export function LeftRail({
                   <div style={{ fontFamily: terminalFonts.mono, fontSize: 12.5, fontWeight: 500 }}>
                     {wallet.addressShort}
                   </div>
-                  <div style={{ fontSize: 10.5, color: terminalColors.railWalletSub }}>{wallet.portfolioUsdLabel}</div>
+                  <div style={{ fontFamily: terminalFonts.mono, fontSize: 10.5, color: terminalColors.railWalletSub }}>{wallet.portfolioUsdLabel}</div>
                 </>
               ) : (
                 <div style={{ fontSize: 12.5, fontWeight: 500 }}>Connect wallet</div>
