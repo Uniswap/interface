@@ -1511,35 +1511,6 @@ function LandingScreenBody(): JSX.Element {
                 Explore markets
               </button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginTop: 28, maxWidth: 470 }}>
-              <StatCard
-                label="TVL"
-                value={tvlStats.totalTVL !== undefined && tvlStats.totalTVL > 0 ? fiatStats(tvlStats.totalTVL) : undefined}
-                delta={
-                  tvlStats.totalChangePercent !== undefined && !Number.isNaN(tvlStats.totalChangePercent) && tvlStats.totalChangePercent !== 0
-                    ? { text: formatSignedPct(tvlStats.totalChangePercent), up: tvlStats.totalChangePercent >= 0 }
-                    : undefined
-                }
-                series={tvlSeries}
-                loading={tvlStats.isLoading}
-              />
-              <StatCard
-                label="24h vol"
-                value={volumeStats.totalVolume !== undefined && volumeStats.totalVolume > 0 ? fiatStats(volumeStats.totalVolume) : undefined}
-                delta={
-                  volumeStats.totalChangePercent !== undefined && !Number.isNaN(volumeStats.totalChangePercent) && volumeStats.totalChangePercent !== 0
-                    ? { text: formatSignedPct(volumeStats.totalChangePercent), up: volumeStats.totalChangePercent >= 0 }
-                    : undefined
-                }
-                series={volumeSeries}
-                loading={volumeStats.isLoading}
-              />
-              <StatCard
-                label="Pools"
-                value={topPools ? topPools.length.toLocaleString('en-US') : undefined}
-                loading={poolsLoading && !topPools}
-              />
-            </div>
           </div>
 
           {/* Featured price card */}
@@ -1627,6 +1598,40 @@ function LandingScreenBody(): JSX.Element {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ------------------------------------------------- STAT WALL */}
+        <div style={{ padding: `2px ${padX}px 10px` }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+            <StatCard
+              label="TVL"
+              value={tvlStats.totalTVL !== undefined && tvlStats.totalTVL > 0 ? fiatStats(tvlStats.totalTVL) : undefined}
+              delta={
+                tvlStats.totalChangePercent !== undefined && !Number.isNaN(tvlStats.totalChangePercent) && tvlStats.totalChangePercent !== 0
+                  ? { text: formatSignedPct(tvlStats.totalChangePercent), up: tvlStats.totalChangePercent >= 0 }
+                  : undefined
+              }
+              series={tvlSeries}
+              loading={tvlStats.isLoading}
+            />
+            <StatCard
+              label="24h Volume"
+              value={volumeStats.totalVolume !== undefined && volumeStats.totalVolume > 0 ? fiatStats(volumeStats.totalVolume) : undefined}
+              delta={
+                volumeStats.totalChangePercent !== undefined && !Number.isNaN(volumeStats.totalChangePercent) && volumeStats.totalChangePercent !== 0
+                  ? { text: formatSignedPct(volumeStats.totalChangePercent), up: volumeStats.totalChangePercent >= 0 }
+                  : undefined
+              }
+              series={volumeSeries}
+              loading={volumeStats.isLoading}
+            />
+            <StatCard
+              label="Pools"
+              value={topPools ? topPools.length.toLocaleString('en-US') : undefined}
+              loading={poolsLoading && !topPools}
+            />
+            <StatCard label="Chains live" value={chains.length > 0 ? String(chains.length) : undefined} loading={false} />
           </div>
         </div>
 
