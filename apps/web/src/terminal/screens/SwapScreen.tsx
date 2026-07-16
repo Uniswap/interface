@@ -53,7 +53,11 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import { useAccount } from '~/hooks/useAccount'
+import { useCurrency } from '~/hooks/Tokens'
 import { useSelectChain } from '~/hooks/useSelectChain'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { queryParametersToCurrencyState } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useIsMobileViewport } from '~/terminal/hooks/useIsMobileViewport'
@@ -401,7 +405,7 @@ export function SwapTicket(): JSX.Element {
   const rateValue = isWrap
     ? `1 ${inSym} = 1 ${outSym}`
     : activeTrade
-      ? `1 ${inSym} = ${groupNumber(activeTrade.executionPrice.toSignificant(8))}`
+      ? `1 ${inSym} = ${groupNumber(activeTrade.executionPrice.toSignificant(8))} ${outSym}`
       : trade.isLoading && hasAmount
         ? 'Fetching…'
         : '—'
@@ -897,7 +901,34 @@ export function SwapScreen(): JSX.Element {
   const account = useAccount()
   const activeChainId = account.chainId
 
+  // Honor deep-link currency params (e.g. ?chain=robinhood&outputCurrency=0x5fc5…USDG) so a
+  // shared swap link opens on the intended pair instead of silently falling back to the
+  // hardcoded default. Parsed from the URL and resolved via the app's own token resolver
+  // (token list + on-chain), so ANY valid token address on the chain is honored — not just
+  // the seeded defaults. When no currency params are present these stay undefined and the
+  // existing default-pair logic below is used unchanged.
+  const { useParsedQueryString } = useUrlContext()
+  const parsedQs = useParsedQueryString()
+  const urlCurrencyState = useMemo(() => queryParametersToCurrencyState(parsedQs), [parsedQs])
+  const urlChainId = useSupportedChainId(urlCurrencyState.chainId)
+  const urlInputCurrency = useCurrency({ address: urlCurrencyState.inputCurrencyAddress, chainId: urlChainId })
+  const urlOutputCurrency = useCurrency({ address: urlCurrencyState.outputCurrencyAddress, chainId: urlChainId })
+
   const { chainId, initialInputCurrency, initialOutputCurrency } = useMemo(() => {
+    // A deep link with a resolved currency wins over every default below (the shared link's
+    // intent). Missing side falls back to the chain's native input / a valid default output.
+    if (urlInputCurrency || urlOutputCurrency) {
+      const resolvedChain = (urlChainId ??
+        (urlOutputCurrency?.chainId as UniverseChainId | undefined) ??
+        (urlInputCurrency?.chainId as UniverseChainId | undefined) ??
+        UniverseChainId.Robinhood) as UniverseChainId
+      return {
+        chainId: resolvedChain,
+        initialInputCurrency: urlInputCurrency ?? nativeOnChain(resolvedChain),
+        initialOutputCurrency:
+          urlOutputCurrency ?? resolveDefaultOutput(resolvedChain) ?? (THOOK_ROBINHOOD as Currency),
+      }
+    }
     // Disconnected, or already on Robinhood → the seeded ETH → tHOOK pair. Robinhood
     // is the only chain the Terminal offers for live trading right now (see
     // TERMINAL_LIVE_CHAIN_IDS in TerminalApp.tsx) — it's the correct default, not
@@ -931,7 +962,16 @@ export function SwapScreen(): JSX.Element {
       initialInputCurrency: nativeOnChain(activeChainId) as Currency,
       initialOutputCurrency: output,
     }
-  }, [activeChainId])
+  }, [activeChainId, urlInputCurrency, urlOutputCurrency, urlChainId])
+
+  // Identity of the resolved pair. A deep-link currency (e.g. USDG) may resolve
+  // asynchronously (undefined → token); re-keying the swap provider subtree on the pair
+  // re-initializes `prefilledState` with the resolved currency so the ticket reflects it
+  // instead of the stale default. Stable for a given pair, so in-screen token switching
+  // (which updates the swap-form store, not these initial values) never remounts.
+  const pairKey = `${chainId}:${
+    initialInputCurrency?.isNative ? 'native' : (initialInputCurrency as Token | undefined)?.address ?? '—'
+  }:${initialOutputCurrency?.isNative ? 'native' : (initialOutputCurrency as Token | undefined)?.address ?? '—'}`
 
   // Minimal transaction-modal context (mirrors TransactionModal.web.tsx) — the
   // SwapTokenSelector's selection hooks require it even outside a modal flow.
@@ -945,7 +985,7 @@ export function SwapScreen(): JSX.Element {
   })
 
   return (
-    <MultichainContextProvider key={chainId} initialChainId={chainId}>
+    <MultichainContextProvider key={pairKey} initialChainId={chainId}>
       <SwapTransactionSettingsStoreContextProvider>
         <SwapAndLimitContextProvider
           initialInputCurrency={initialInputCurrency}
