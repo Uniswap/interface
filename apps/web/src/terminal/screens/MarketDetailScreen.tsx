@@ -62,9 +62,11 @@ import {
   PoolTableTransactionType,
   usePoolTransactions,
 } from '~/appGraphql/data/pools/usePoolTransactions'
-import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
-import { gqlToCurrency, TimePeriod, toHistoryDuration, unwrapToken } from '~/appGraphql/data/util'
+import { calculateApr, PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
+import { gqlToCurrency, OrderDirection, TimePeriod, toHistoryDuration, unwrapToken } from '~/appGraphql/data/util'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useBackendSortedTopPools } from '~/features/Explore/state/topPools/useBackendSortedTopPools'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useAccount } from '~/hooks/useAccount'
@@ -606,7 +608,7 @@ function PairLogos({
 
 /* -------------------------------------------------------------- the screen */
 
-export function MarketDetailScreen(): JSX.Element {
+function MarketDetailScreenBody(): JSX.Element {
   const { poolId } = useParams<{ poolId: string }>()
   const navigate = useNavigate()
   const account = useAccount()
@@ -625,6 +627,27 @@ export function MarketDetailScreen(): JSX.Element {
     chainId,
     isPoolAddress: address ? isEVMAddress(address) : false,
   })
+
+  // Data-api pool — the SAME source the Markets list resolves from
+  // (`dataApiQueries.listTopPools` → data.hookswap.org). The `usePoolData` feed above
+  // is the hosted Uniswap GraphQL gateway, which does NOT serve HookSwap's custom
+  // chains (e.g. Robinhood 4663), so on those chains it returns nothing and the page
+  // would gate to "NO DATA YET" even for pools with real TVL/volume. We resolve THIS
+  // pool from the data-api list and use it as the primary source for identity + KPIs.
+  const { topPools: dataApiPools, isLoading: dataApiLoading } = useBackendSortedTopPools({
+    sortState: { sortBy: PoolSortFields.TVL, sortDirection: OrderDirection.Desc },
+    chainId,
+    enabled: Boolean(chainId),
+  })
+  const dataApiPool = useMemo(() => {
+    if (!address || !dataApiPools) {
+      return undefined
+    }
+    const target = address.toLowerCase()
+    // Address match is case-insensitive: the route param carries the URL's checksum
+    // casing while the API returns its own checksum — compare lowercased on both sides.
+    return dataApiPools.find((pool) => pool.id?.toLowerCase() === target)
+  }, [dataApiPools, address])
 
   const protocolVersion = poolData?.protocolVersion
   const isV2 = protocolVersion === GraphQLApi.ProtocolVersion.V2
@@ -668,16 +691,42 @@ export function MarketDetailScreen(): JSX.Element {
   }, [positionsResult.positions, address, chainId])
 
   // Unwrap WETH → ETH for display (v2/v3 only — no v4 native/WETH ambiguity here).
-  const [token0, token1] = useMemo(() => {
-    if (!poolData || chainId === undefined) {
-      return [undefined, undefined] as const
+  // Prefer the GraphQL pool tokens where present; fall back to the data-api pool
+  // tokens (custom chains). Each branch keeps a concrete token type for gqlToCurrency.
+  const currency0 = useMemo(() => {
+    if (chainId === undefined) {
+      return undefined
     }
-    return [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)] as const
-  }, [poolData, chainId])
-  const currency0 = token0 ? gqlToCurrency(token0) : undefined
-  const currency1 = token1 ? gqlToCurrency(token1) : undefined
-  const symbol0 = currency0?.symbol ?? poolData?.token0?.symbol ?? '—'
-  const symbol1 = currency1?.symbol ?? poolData?.token1?.symbol ?? '—'
+    if (poolData?.token0) {
+      return gqlToCurrency(unwrapToken(chainId, poolData.token0))
+    }
+    if (dataApiPool?.token0) {
+      return gqlToCurrency(unwrapToken(chainId, dataApiPool.token0))
+    }
+    return undefined
+  }, [chainId, poolData?.token0, dataApiPool?.token0])
+  const currency1 = useMemo(() => {
+    if (chainId === undefined) {
+      return undefined
+    }
+    if (poolData?.token1) {
+      return gqlToCurrency(unwrapToken(chainId, poolData.token1))
+    }
+    if (dataApiPool?.token1) {
+      return gqlToCurrency(unwrapToken(chainId, dataApiPool.token1))
+    }
+    return undefined
+  }, [chainId, poolData?.token1, dataApiPool?.token1])
+  const symbol0 = currency0?.symbol ?? poolData?.token0?.symbol ?? dataApiPool?.token0?.symbol ?? '—'
+  const symbol1 = currency1?.symbol ?? poolData?.token1?.symbol ?? dataApiPool?.token1?.symbol ?? '—'
+
+  // Resolved KPI/identity values — GraphQL pool first, then the data-api pool. On the
+  // custom chains the data-api values drive these (GraphQL is empty there).
+  const resolvedTvl = poolData?.tvlUSD ?? dataApiPool?.totalLiquidity?.value
+  const resolvedVolume24h = poolData?.volumeUSD24H ?? dataApiPool?.volume1Day?.value
+  const resolvedFeeAmount = poolData?.feeTier?.feeAmount ?? dataApiPool?.feeTier?.feeAmount
+  const resolvedIsDynamic = poolData?.feeTier?.isDynamic ?? dataApiPool?.feeTier?.isDynamic ?? false
+  const resolvedPoolAddress = poolData?.idOrAddress ?? dataApiPool?.id ?? address
 
   // Swap CTA → open the swap form pre-loaded with THIS pool's pair (same deep-link
   // serializer Landing uses). Native currencies pass the chain's native address so
@@ -740,31 +789,28 @@ export function MarketDetailScreen(): JSX.Element {
     value !== undefined ? convertFiatAmountFormatted(value, NumberType.PortfolioBalance) : '$0.00'
 
   const feeTierLabel = useMemo(() => {
-    const amount = poolData?.feeTier?.feeAmount
-    if (amount === undefined) {
+    if (resolvedFeeAmount === undefined) {
       return undefined
     }
     // Uniswap fee amounts are hundredths of a bip (500 → 0.05%).
-    return `${(amount / 10000).toFixed(2)}%`
-  }, [poolData?.feeTier?.feeAmount])
+    return `${(resolvedFeeAmount / 10000).toFixed(2)}%`
+  }, [resolvedFeeAmount])
 
   const fees24h = useMemo(() => {
-    const amount = poolData?.feeTier?.feeAmount
-    const isDynamic = poolData?.feeTier?.isDynamic ?? false
-    if (amount === undefined || isDynamic || poolData?.volumeUSD24H === undefined) {
+    if (resolvedFeeAmount === undefined || resolvedIsDynamic || resolvedVolume24h === undefined) {
       return undefined
     }
-    return poolData.volumeUSD24H * (amount / 1_000_000)
-  }, [poolData?.feeTier?.feeAmount, poolData?.feeTier?.isDynamic, poolData?.volumeUSD24H])
+    return resolvedVolume24h * (resolvedFeeAmount / 1_000_000)
+  }, [resolvedFeeAmount, resolvedIsDynamic, resolvedVolume24h])
 
   const aprLabel = useMemo(() => {
     const apr = calculateApr({
-      volume24h: poolData?.volumeUSD24H,
-      tvl: poolData?.tvlUSD,
-      feeTier: poolData?.feeTier?.feeAmount,
+      volume24h: resolvedVolume24h,
+      tvl: resolvedTvl,
+      feeTier: resolvedFeeAmount,
     })
     return `${apr.toFixed(1)}%`
-  }, [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier?.feeAmount])
+  }, [resolvedVolume24h, resolvedTvl, resolvedFeeAmount])
 
   const tradeRows = useMemo(() => buildTradeRows(txResult.transactions), [txResult.transactions])
 
@@ -785,7 +831,13 @@ export function MarketDetailScreen(): JSX.Element {
     )
   }
 
-  if (!poolLoading && !poolData) {
+  // Gate the whole page ONLY when neither source resolves the pool AND neither is
+  // still loading. The pool identity comes from either the GraphQL feed (served
+  // chains) or the data-api list (custom chains) — if either has it, we render.
+  const hasPool = Boolean(poolData || dataApiPool)
+  const poolResolving = poolLoading || dataApiLoading
+
+  if (!poolResolving && !hasPool) {
     return (
       <div style={{ padding: '20px var(--tm-gutter)' }}>
         {poolError ? (
@@ -805,6 +857,8 @@ export function MarketDetailScreen(): JSX.Element {
   }
 
   const priceLabel = priceStats ? formatRatio(priceStats.close) : '—'
+  // KPI skeletons only while the pool is still resolving with nothing to show yet.
+  const kpiLoading = poolResolving && !hasPool
 
   /* ------------------------------------------------------------- render */
 
@@ -871,7 +925,7 @@ export function MarketDetailScreen(): JSX.Element {
               ) : null}
             </div>
             <div style={{ fontFamily: MONO, fontSize: 12, color: terminalColors.ink3Alt, marginTop: 4 }}>
-              {shortAddress(poolData?.idOrAddress ?? address)}
+              {shortAddress(resolvedPoolAddress)}
             </div>
           </div>
         </div>
@@ -1002,10 +1056,10 @@ export function MarketDetailScreen(): JSX.Element {
 
           {/* KPI row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 10, marginTop: 14 }}>
-            <KpiTile label="TVL" value={poolLoading ? undefined : fiatStats(poolData?.tvlUSD)} />
-            <KpiTile label="24h volume" value={poolLoading ? undefined : fiatStats(poolData?.volumeUSD24H)} />
-            <KpiTile label="24h fees" value={poolLoading ? undefined : fiatStats(fees24h)} />
-            <KpiTile label="APR" value={poolLoading ? undefined : aprLabel} valueColor={terminalColors.greenUp} />
+            <KpiTile label="TVL" value={kpiLoading ? undefined : fiatStats(resolvedTvl)} />
+            <KpiTile label="24h volume" value={kpiLoading ? undefined : fiatStats(resolvedVolume24h)} />
+            <KpiTile label="24h fees" value={kpiLoading ? undefined : fiatStats(fees24h)} />
+            <KpiTile label="APR" value={kpiLoading ? undefined : aprLabel} valueColor={terminalColors.greenUp} />
           </div>
         </div>
 
@@ -1074,5 +1128,18 @@ export function MarketDetailScreen(): JSX.Element {
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * B6 Market detail. Wraps the body in `ExploreTablesFilterStoreContextProvider` so the
+ * data-api pool query (`useBackendSortedTopPools`, the same source the Markets list
+ * resolves from) can run — it reads the shared filter store for search filtering.
+ */
+export function MarketDetailScreen(): JSX.Element {
+  return (
+    <ExploreTablesFilterStoreContextProvider>
+      <MarketDetailScreenBody />
+    </ExploreTablesFilterStoreContextProvider>
   )
 }
