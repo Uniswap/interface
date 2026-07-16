@@ -1079,6 +1079,80 @@ function PriceChart({
   )
 }
 
+/**
+ * Liquidity-depth curve for a constant-product (v2) pool. For x·y=k the cumulative
+ * amount tradable to move price by a fraction f is exact: ≈ (reserveUSD/2)·(√(1+f)−1).
+ * We scale that to the featured pool's REAL TVL, so the curve SHAPE is exact and its
+ * magnitude is live. Mirrored: buy-side (price down, green) / sell-side (price up, red),
+ * each rising away from mid. Honest empty frame when there's no featured pool / TVL.
+ */
+function DepthCurve({ tvlUsd, pair }: { tvlUsd?: number; pair?: string }): JSX.Element {
+  if (!tvlUsd || tvlUsd <= 0) {
+    return (
+      <div
+        style={{
+          minHeight: 150,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          fontFamily: SANS,
+          fontSize: 12.5,
+          lineHeight: 1.5,
+          color: terminalColors.ink3Alt,
+        }}
+      >
+        Depth curve builds from the featured pool&apos;s live reserves.
+      </div>
+    )
+  }
+  const W = 460
+  const H = 150
+  const pad = { t: 10, r: 12, b: 22, l: 12 }
+  const iw = W - pad.l - pad.r
+  const ih = H - pad.t - pad.b
+  const mid = pad.l + iw / 2
+  const FMAX = 0.03
+  const half = tvlUsd / 2
+  const maxDepth = half * (Math.sqrt(1 + FMAX) - 1) || 1
+  const N = 24
+  const line = (dir: number): string => {
+    let d = ''
+    for (let i = 0; i <= N; i++) {
+      const f = (i / N) * FMAX
+      const depth = half * (Math.sqrt(1 + f) - 1)
+      const x = mid + dir * (iw / 2) * (i / N)
+      const y = pad.t + ih * (1 - depth / maxDepth)
+      d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1) + ' '
+    }
+    return d
+  }
+  const area = (dir: number): string =>
+    `${line(dir)}L${(mid + (dir * iw) / 2).toFixed(1)} ${H - pad.b} L${mid} ${H - pad.b} Z`
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H} preserveAspectRatio="none" style={{ display: 'block' }}>
+      {[0, 1, 2].map((g) => {
+        const yy = pad.t + (ih * g) / 2
+        return <line key={g} x1={pad.l} y1={yy} x2={W - pad.r} y2={yy} stroke={terminalColors.line} strokeWidth={1} />
+      })}
+      <path d={area(-1)} fill="rgba(56,224,123,0.13)" />
+      <path d={area(1)} fill="rgba(255,91,82,0.13)" />
+      <path d={line(-1)} fill="none" stroke={terminalColors.greenUp} strokeWidth={2} strokeLinejoin="round" />
+      <path d={line(1)} fill="none" stroke={terminalColors.redDown} strokeWidth={2} strokeLinejoin="round" />
+      <line x1={mid} y1={pad.t} x2={mid} y2={H - pad.b} stroke={terminalColors.faint} strokeWidth={1} strokeDasharray="3 3" />
+      <text x={pad.l + 3} y={H - 6} fontFamily={MONO} fontSize={9.5} fill={terminalColors.greenUp}>
+        −3% buy
+      </text>
+      <text x={W - pad.r - 3} y={H - 6} fontFamily={MONO} fontSize={9.5} fill={terminalColors.redDown} textAnchor="end">
+        +3% sell
+      </text>
+      <text x={mid} y={H - 6} fontFamily={MONO} fontSize={9.5} fill={terminalColors.faint} textAnchor="middle">
+        {pair ?? 'mid'}
+      </text>
+    </svg>
+  )
+}
+
 /* =========================================================================== */
 /* Body                                                                        */
 /* =========================================================================== */
@@ -1556,28 +1630,64 @@ function LandingScreenBody(): JSX.Element {
           </div>
         </div>
 
-        {/* ------------------------------------------------ LIQUIDITY DEPTH */}
+        {/* --------------------------------------------- DEPTH + MOVERS */}
         <div style={{ padding: `6px ${padX}px 34px`, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 100%', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
+          {/* Liquidity depth — reserve-derived; honest empty until a featured pool exposes reserves */}
+          <div style={{ flex: '1.4 1 340px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 14, color: terminalColors.ink }}>Liquidity depth</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>concentrated ±2%</span>
+              <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>±2% · reserves</span>
             </div>
-            <div
-              style={{
-                minHeight: 150,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                fontFamily: SANS,
-                fontSize: 12.5,
-                lineHeight: 1.5,
-                color: terminalColors.ink3Alt,
-              }}
-            >
-              Depth curve builds from live pool reserves once pools have liquidity.
+            <DepthCurve
+              tvlUsd={featured?.totalLiquidity?.value}
+              pair={featuredRow ? `${featuredRow.symbol0}/${featuredRow.symbol1}` : undefined}
+            />
+          </div>
+
+          {/* Movers — top tokens by 24h change, from the live listTokens feed */}
+          <div style={{ flex: '1 1 280px', minWidth: 0, background: terminalColors.bg, border: `1px solid ${terminalColors.line}`, borderRadius: 14, padding: '16px 18px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 14, color: terminalColors.ink }}>Movers</span>
+              <span style={{ fontFamily: MONO, fontSize: 11, color: terminalColors.faint }}>24h · % change</span>
             </div>
+            {tickers.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                {tickers.slice(0, 12).map((tk) => {
+                  const known = tk.change1d !== undefined
+                  const up = (tk.change1d ?? 0) >= 0
+                  return (
+                    <div
+                      key={tk.symbol + (tk.address ?? '')}
+                      style={{
+                        borderRadius: 8,
+                        padding: '9px 9px',
+                        border: `1px solid ${terminalColors.line}`,
+                        background: !known ? 'transparent' : up ? 'rgba(56,224,123,0.10)' : 'rgba(255,91,82,0.10)',
+                      }}
+                    >
+                      <div style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.ink, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {tk.symbol}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          marginTop: 4,
+                          color: !known ? terminalColors.faint : up ? terminalColors.greenUp : terminalColors.redDown,
+                        }}
+                      >
+                        {tk.change1d !== undefined ? formatSignedPct(tk.change1d) : '—'}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div style={{ minHeight: 150, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt }}>
+                {tokensLoading ? 'Loading token feed…' : 'Token feed unavailable right now.'}
+              </div>
+            )}
           </div>
         </div>
 
