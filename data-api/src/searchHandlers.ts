@@ -23,6 +23,7 @@ import { SearchTokensRequest, SearchTokensResponse } from '@uniswap/client-data-
 import { Token as SearchToken } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
 import { getV2PairsCached, getV3PoolsCached } from './handlers'
+import { resolveTokenLogo } from './logos'
 import { getTokenMeta, TokenMeta } from './onchain'
 
 /** Hard cap on returned tokens when the request doesn't specify a (sane) size. */
@@ -128,8 +129,10 @@ function toSearchToken(c: TokenCandidate): SearchToken {
     symbol: c.symbol,
     name: c.name,
     standard: c.standard,
-    // logoUrl / safetyLevel / feeData intentionally unset — no registry/oracle on these chains.
-    // The interface renders honest defaults (no logo, NonDefault safety) rather than fabricated data.
+    // logoUrl: curated (WETH/tHOOK/USDG) or a launchpad-launched token's on-chain metadataURI, resolved
+    // lazily + cached (undefined until resolved — see logos.ts). safetyLevel / feeData intentionally unset
+    // (no registry/oracle on these chains) — the interface renders honest defaults, never fabricated data.
+    logoUrl: resolveTokenLogo(c.chainId, c.address),
   })
 }
 

@@ -102,6 +102,7 @@ import {
   ProtocolVersion,
 } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { getChain, isSupportedChain, supportedChainIds } from './chains'
+import { resolveTokenLogo } from './logos'
 import {
   getErc20Balance,
   getErc20TotalSupply,
@@ -180,17 +181,11 @@ function resolveChainIds(requested: number[]): number[] {
   return ids.filter(isSupportedChain)
 }
 
-/** Known token logos for HookSwap chains (keyed by lowercase address). */
-const TOKEN_LOGOS: Record<string, string> = {
-  // Robinhood (4663)
-  '0x0bd7d308f8e1639fab988df18a8011f41eacad73': 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/info/logo.png', // WETH → ETH logo
-  '0x3b5a01efc59f3465b8eb04697f97cfe0ba700d9d': 'https://hookswap.org/brand/glyph-mark.png', // tHOOK
-  '0x5fc5360d0400a0fd4f2af552add042d716f1d168': 'https://coin-images.coingecko.com/coins/images/41172/large/USDG_Logo.png', // USDG
-}
-
 /** data.v1.Token for a wrapped-native or seeded ERC-20 (real metadata; ERC-20 type). */
 function toProtoErc20Token(meta: TokenMeta): Token {
-  const logoUrl = TOKEN_LOGOS[meta.address.toLowerCase()]
+  // Curated logo (WETH/tHOOK/USDG) wins; else a launchpad-launched token's on-chain metadataURI is
+  // resolved lazily in the background and cached (undefined until resolved — see logos.ts). Never blocks.
+  const logoUrl = resolveTokenLogo(meta.chainId, meta.address)
   return new Token({
     chainId: meta.chainId,
     address: meta.address,
