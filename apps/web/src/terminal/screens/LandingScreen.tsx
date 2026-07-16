@@ -1157,13 +1157,20 @@ function LandingScreenBody(): JSX.Element {
     [protocolStats.data],
   )
 
-  // Featured pool for the hero chart = highest-volume pool with a non-stable base
-  // (so the real price series shows movement, not a flat $1 line).
+  // Featured pool for the hero chart = highest-24h-volume pool with a non-stable base
+  // (so the real price series shows movement, not a flat $1 line). We sort by the real
+  // `volume1Day` here rather than trusting the backend's array order: the data-api does
+  // not always return pools volume-desc, so a plain `.find(first non-stable)` can surface
+  // a $0-volume pool (whose hero stats-strip 24h vol then honestly reads "—") ahead of the
+  // market that actually has trading activity. Sorting first makes the featured card's real
+  // per-pool 24h vol consistent with the aggregate 24h-vol stat card. Falls back to the
+  // highest-volume pool overall, then the first pool, when no non-stable base exists.
   const featured = useMemo(() => {
     if (!topPools || topPools.length === 0) {
       return undefined
     }
-    return topPools.find((pool) => !isStableSymbol(pool.token0?.symbol)) ?? topPools[0]
+    const byVolumeDesc = [...topPools].sort((a, b) => (b.volume1Day?.value ?? 0) - (a.volume1Day?.value ?? 0))
+    return byVolumeDesc.find((pool) => !isStableSymbol(pool.token0?.symbol)) ?? byVolumeDesc[0]
   }, [topPools])
   const featuredRow = useMemo(() => (featured ? buildMarketRow(featured, 0, metricMaps) : undefined), [featured, metricMaps])
   const featuredMetric = useMemo(() => (featured ? lookupMetric(featured.token0, metricMaps) : undefined), [featured, metricMaps])
