@@ -31,8 +31,9 @@ import { useNavigate } from 'react-router'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { nativeOnChain, THOOK_ROBINHOOD, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { getChainLabel, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import {
   TransactionModalContextProvider,
@@ -118,19 +119,38 @@ function TerminalTokenLogo({
   fallbackGradient: string
 }): JSX.Element {
   const url = currencyInfo?.logoUrl ?? undefined
+  const chainId = currencyInfo?.currency.chainId
+  const badgeSize = Math.max(10, Math.round(size * 0.55))
   return (
-    <span
-      style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        background: url
-          ? `${terminalColors.panel} center/cover no-repeat url(${JSON.stringify(url)})`
-          : fallbackGradient,
-        flexShrink: 0,
-        display: 'inline-block',
-      }}
-    />
+    <span style={{ position: 'relative', display: 'inline-block', width: size, height: size, flexShrink: 0 }}>
+      <span
+        style={{
+          width: size,
+          height: size,
+          borderRadius: '50%',
+          background: url
+            ? `${terminalColors.panel} center/cover no-repeat url(${JSON.stringify(url)})`
+            : fallbackGradient,
+          display: 'block',
+        }}
+      />
+      {chainId !== undefined && isUniverseChainId(chainId) ? (
+        <span
+          style={{
+            position: 'absolute',
+            right: -2,
+            bottom: -2,
+            display: 'flex',
+            lineHeight: 0,
+            padding: 1,
+            borderRadius: '50%',
+            background: terminalColors.bg,
+          }}
+        >
+          <ChainLogo chainId={chainId} size={badgeSize} />
+        </span>
+      ) : null}
+    </span>
   )
 }
 

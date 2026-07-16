@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
@@ -241,7 +242,8 @@ export function ActivityScreen(): JSX.Element {
       out.push({
         id: tx.id,
         title: getTransactionSummaryTitle(tx, t) ?? 'Transaction',
-        detail: statusDetail(tx.status),
+        // Status + network (data spans all 6 HookSwap chains) so each row shows which chain it's on.
+        detail: `${statusDetail(tx.status)} · ${getChainLabel(tx.chainId)}`,
         timestamp: formatRelativeTime(tx.addedTime),
         category: cat.category,
         badge: cat.badge,

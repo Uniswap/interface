@@ -2018,8 +2018,22 @@ function LandingScreenBody(): JSX.Element {
         <div style={{ borderTop: `1px solid ${terminalColors.line2}`, padding: `18px ${padX}px`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint }}>© 2026 HookSwap Labs · All rights reserved</span>
           <div style={{ display: 'flex', gap: 20 }}>
-            <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint }}>Terms</span>
-            <span style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint }}>Privacy</span>
+            <a
+              href="https://docs.hookswap.org/legal/terms"
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint, textDecoration: 'none', cursor: 'pointer' }}
+            >
+              Terms
+            </a>
+            <a
+              href="https://docs.hookswap.org/legal/privacy"
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontFamily: MONO, fontSize: 11.5, color: terminalColors.faint, textDecoration: 'none', cursor: 'pointer' }}
+            >
+              Privacy
+            </a>
           </div>
         </div>
 
@@ -2213,7 +2227,7 @@ const FEATURE_GROUPS: ReadonlyArray<{ label: string; features: readonly FeatureM
   {
     label: 'LAUNCH',
     features: [
-      { icon: 'launchpad', title: 'LaunchPad', desc: 'Mint a token, seed its v3 pool, and lock LP permanently — one transaction. $8 flat fee.', cta: 'Launch', path: '/launch' },
+      { icon: 'launchpad', title: 'LaunchPad', desc: 'Mint a token, seed its v3 pool, and lock LP permanently — one transaction, one flat fee.', cta: 'Launch', path: '/launch' },
       { icon: 'token', title: 'Create token', desc: 'Deploy a fixed-supply ERC-20 with custom name, symbol, and supply.', cta: 'Create', path: '/token/new' },
     ],
   },

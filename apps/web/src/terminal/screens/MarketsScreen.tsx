@@ -34,6 +34,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
@@ -79,6 +80,8 @@ interface MarketRow {
   currency1?: Currency
   symbol0: string
   symbol1: string
+  /** Human-readable network name (e.g. "Robinhood") for the pair cell secondary line. */
+  chainLabel?: string
   price?: number
   change1d?: number
   sparkline?: number[]
@@ -200,6 +203,7 @@ function buildRows(pools: PoolStat[] | undefined, maps: TokenMetricMaps): Market
       currency1,
       symbol0: currency0?.symbol ?? pool.token0?.symbol ?? '—',
       symbol1: currency1?.symbol ?? pool.token1?.symbol ?? '—',
+      chainLabel: chainId !== undefined ? getChainLabel(chainId) : undefined,
       price: metric?.price,
       change1d: metric?.change1d,
       sparkline: metric?.sparkline,
@@ -226,6 +230,26 @@ function applyFilter(rows: MarketRow[] | undefined, filter: MarketFilter): Marke
     default:
       return rows
   }
+}
+
+/**
+ * Client-side text filter over the already-loaded rows: case-insensitive substring
+ * match on either token symbol or the combined "SYM0/SYM1" pair. Never fetches or
+ * fabricates — only narrows the visible set.
+ */
+function applySearch(rows: MarketRow[] | undefined, query: string): MarketRow[] | undefined {
+  if (!rows) {
+    return undefined
+  }
+  const q = query.trim().toLowerCase()
+  if (q === '') {
+    return rows
+  }
+  return rows.filter((row) => {
+    const s0 = row.symbol0.toLowerCase()
+    const s1 = row.symbol1.toLowerCase()
+    return s0.includes(q) || s1.includes(q) || `${s0}/${s1}`.includes(q)
+  })
 }
 
 /* -------------------------------------------------------------- top movers */
@@ -427,18 +451,23 @@ function PairCell({ row }: { row: MarketRow }): JSX.Element {
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
       <DoubleCurrencyLogo currencies={[row.currency0, row.currency1]} size={22} />
-      <span
-        style={{
-          fontFamily: SANS,
-          fontSize: 13,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {row.symbol0} / {row.symbol1}
+      <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: 13,
+            fontWeight: 600,
+            color: terminalColors.ink,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {row.symbol0} / {row.symbol1}
+        </span>
+        {row.chainLabel ? (
+          <span style={{ fontFamily: MONO, fontSize: 10.5, color: terminalColors.ink3Alt }}>{row.chainLabel}</span>
+        ) : null}
       </span>
     </span>
   )
@@ -448,6 +477,7 @@ function PairCell({ row }: { row: MarketRow }): JSX.Element {
 
 function MarketsScreenBody(): JSX.Element {
   const [filter, setFilter] = useState<MarketFilter>('all')
+  const [query, setQuery] = useState('')
   const navigate = useNavigate()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { chains } = useEnabledChains()
@@ -467,13 +497,17 @@ function MarketsScreenBody(): JSX.Element {
   const metricMaps = useMemo(() => buildTokenMetrics(topTokens), [topTokens])
   const rows = useMemo(() => buildRows(topPools, metricMaps), [topPools, metricMaps])
   const filteredRows = useMemo(() => applyFilter(rows, filter), [rows, filter])
+  const searchedRows = useMemo(() => applySearch(filteredRows, query), [filteredRows, query])
 
+  const trimmedQuery = query.trim()
   const emptyMessage =
-    filter === 'new'
-      ? 'New-pool sorting by creation time is not available yet.'
-      : filter === 'stable'
-        ? 'No stablecoin pools in the current data set.'
-        : 'No pools with liquidity yet — appears once pools have liquidity.'
+    trimmedQuery !== ''
+      ? `No markets match "${trimmedQuery}"`
+      : filter === 'new'
+        ? 'New-pool sorting by creation time is not available yet.'
+        : filter === 'stable'
+          ? 'No stablecoin pools in the current data set.'
+          : 'No pools with liquidity yet — appears once pools have liquidity.'
 
   const fiatStats = (value: number | undefined): string =>
     value !== undefined && value > 0 ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : '—'
@@ -622,15 +656,38 @@ function MarketsScreenBody(): JSX.Element {
             All networks · {chains.length}
           </span>
         </div>
-        <div style={{ display: 'flex', gap: 4 }}>
-          {FILTER_CHIPS.map((chip) => (
-            <FilterChip
-              key={chip.id}
-              label={chip.label}
-              active={filter === chip.id}
-              onClick={() => setFilter(chip.id)}
-            />
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Client-side text filter over the loaded rows (symbol / pair). */}
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search markets"
+            spellCheck={false}
+            aria-label="Search markets"
+            style={{
+              boxSizing: 'border-box',
+              width: 180,
+              border: `1px solid ${terminalColors.line}`,
+              borderRadius: 999,
+              background: terminalColors.panel,
+              padding: '6px 13px',
+              fontFamily: MONO,
+              fontSize: 12.5,
+              fontWeight: 500,
+              color: terminalColors.ink,
+              outline: 'none',
+            }}
+          />
+          <div style={{ display: 'flex', gap: 4 }}>
+            {FILTER_CHIPS.map((chip) => (
+              <FilterChip
+                key={chip.id}
+                label={chip.label}
+                active={filter === chip.id}
+                onClick={() => setFilter(chip.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -646,7 +703,7 @@ function MarketsScreenBody(): JSX.Element {
       */}
       <DataTable<MarketRow>
         columns={columns}
-        rows={filteredRows}
+        rows={searchedRows}
         rowKey={(row) => row.key}
         onRowClick={(row) => (row.detailPath ? navigate(row.detailPath) : undefined)}
         loading={poolsLoading}

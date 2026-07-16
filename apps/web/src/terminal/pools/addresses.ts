@@ -39,6 +39,34 @@ export const POOL_ADDRESSES: Partial<Record<UniverseChainId, PoolContractAddress
     v2Factory: '0xD1Cf664944173140AFc302c169eFD55c24966B45',
     weth: '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
   },
+  // MegaETH (4326) — contracts/deployments/megaeth.json
+  [UniverseChainId.MegaETH]: {
+    v2Router02: '0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA',
+    v2Factory: '0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    weth: '0x4200000000000000000000000000000000000006',
+  },
+  // Ink (57073) — contracts/deployments/ink.json
+  [UniverseChainId.Ink]: {
+    v2Router02: '0xBe3729d06E3A17F3c7c5ac394c7bCbe138B6EEFA',
+    v2Factory: '0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    weth: '0x4200000000000000000000000000000000000006',
+  },
+  // XLayer (196) — contracts/deployments/xlayer.json (WOKB wrapped-native)
+  [UniverseChainId.XLayer]: {
+    v2Router02: '0xAa1f5Bd529Be345e7FB77934554112E5ecd7D7f3',
+    v2Factory: '0xD1Cf664944173140AFc302c169eFD55c24966B45',
+    weth: '0xe538905cf8410324e03A5A23C1c177a474D59b2b',
+  },
+  // HyperEVM (999) — contracts/deployments/hyperevm.json (non-deterministic addrs; WHYPE wrapped-native)
+  [UniverseChainId.HyperEvm]: {
+    v2Router02: '0xbd817036c5bF69Cb27D3A342129e39f9f908577d',
+    v2Factory: '0xB92598Fa464B96FEC394a17A269Ad18060Ec60B2',
+    weth: '0x5555555555555555555555555555555555555555',
+  },
+  // NOTE: Tempo (4217) is intentionally omitted — gas is paid in pathUSD and its
+  // `wrappedNativeCurrency` is null, so the native-ETH pool path does not apply. Its
+  // v2 stack IS deployed (tempo.json), but wiring it needs ERC20↔ERC20-only handling
+  // (no native-ETH pair) — a separate change, not a plain address add.
 }
 
 /**

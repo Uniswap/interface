@@ -178,13 +178,22 @@ function shortenAddress(address: string): string {
 }
 
 /**
- * Chains the HookSwap Terminal actually offers for trading right now. Every other
- * chain HookSwap has contracts deployed on (Sepolia, MegaETH, Ink, XLayer, HyperEVM,
- * Tempo) still renders in the switcher for visibility, but disabled with a
- * "Coming soon" badge — no liquidity/production traffic there yet. Update this set
- * as each chain gets seeded liquidity and goes live.
+ * Chains the HookSwap Terminal is live on — the full v2+v3+UR stack AND the
+ * self-service suite (multisender/token-factory/farms/airdrop/vesting/lockers/referral)
+ * are deployed on all of these (see contracts/deployments/<chain>-suite.json). All are
+ * selectable so users can reach their data + Tools on any chain, regardless of the
+ * wallet's connected chain. NOTE: swap liquidity is only seeded on some chains yet, so
+ * the Swap screen shows an honest "No route available" where a pair has no pool — that's
+ * a per-pair data state, not a reason to gate the whole chain.
  */
-const TERMINAL_LIVE_CHAIN_IDS: ReadonlySet<UniverseChainId> = new Set([UniverseChainId.Robinhood])
+const TERMINAL_LIVE_CHAIN_IDS: ReadonlySet<UniverseChainId> = new Set([
+  UniverseChainId.Robinhood,
+  UniverseChainId.MegaETH,
+  UniverseChainId.HyperEvm,
+  UniverseChainId.Ink,
+  UniverseChainId.Tempo,
+  UniverseChainId.XLayer,
+])
 
 /**
  * Chain switcher dropdown, rendered in the top bar's `actions` slot. Lists the

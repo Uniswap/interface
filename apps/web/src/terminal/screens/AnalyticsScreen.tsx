@@ -648,18 +648,21 @@ function PairCell({ presentation }: { presentation: PoolPresentation }): JSX.Ele
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
       <DoubleCurrencyLogo currencies={[presentation.currency0, presentation.currency1]} size={20} />
-      <span
-        style={{
-          fontFamily: SANS,
-          fontSize: 12.5,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {presentation.symbol0} / {presentation.symbol1}
+      <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <span
+          style={{
+            fontFamily: SANS,
+            fontSize: 12.5,
+            fontWeight: 600,
+            color: terminalColors.ink,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {presentation.symbol0} / {presentation.symbol1}
+        </span>
+        <span style={{ fontFamily: MONO, fontSize: 10.5, color: terminalColors.ink3Alt }}>{presentation.chainLabel}</span>
       </span>
     </span>
   )

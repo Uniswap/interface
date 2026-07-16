@@ -21,22 +21,28 @@
  *     enumeration once seeded (no extra wiring here).
  *   • Approve → Create — REAL writes (wagmi), gated behind the required ERC-20 allowance.
  */
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { CurrencyAmount, Token, type Currency } from '@uniswap/sdk-core'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useReadContract, useReadContracts } from 'wagmi'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import type { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { getChainLabel, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import type { V2PairInfo } from 'uniswap/src/features/positions/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { erc20Abi, formatUnits, isAddress } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { useAccount } from '~/hooks/useAccount'
+import { AddLiquidityModal } from '~/terminal/pools/AddLiquidityModal'
 import { getPoolAddresses } from '~/terminal/pools/addresses'
 import { useCreateV2Pool } from '~/terminal/pools/useCreateV2Pool'
 import { terminalColors, terminalFonts } from '~/terminal/theme/tokens'
@@ -94,36 +100,58 @@ function shortAddr(a?: string): string {
 function TokenCircle({ token, size = 22 }: { token?: TokenOption; size?: number }): JSX.Element {
   const [erroredUrl, setErroredUrl] = useState<string | undefined>(undefined)
   const logoUrl = token?.logoUrl
-  if (logoUrl && logoUrl !== erroredUrl) {
-    return (
+  const chainId = token?.chainId
+  const badgeSize = Math.max(10, Math.round(size * 0.55))
+
+  const inner =
+    logoUrl && logoUrl !== erroredUrl ? (
       <img
         src={logoUrl}
         alt=""
         width={size}
         height={size}
-        style={{ borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }}
+        style={{ borderRadius: '50%', display: 'block', objectFit: 'cover' }}
         onError={() => setErroredUrl(logoUrl)}
       />
+    ) : (
+      <span
+        style={{
+          width: size,
+          height: size,
+          borderRadius: '50%',
+          background: terminalColors.panel2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: MONO,
+          fontSize: 10,
+          fontWeight: 600,
+          color: terminalColors.ink2,
+        }}
+      >
+        {token?.symbol?.slice(0, 1) ?? '?'}
+      </span>
     )
-  }
+
   return (
-    <span
-      style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        background: terminalColors.panel2,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: MONO,
-        fontSize: 10,
-        fontWeight: 600,
-        color: terminalColors.ink2,
-        flexShrink: 0,
-      }}
-    >
-      {token?.symbol?.slice(0, 1) ?? '?'}
+    <span style={{ position: 'relative', display: 'inline-block', width: size, height: size, flexShrink: 0 }}>
+      {inner}
+      {chainId !== undefined && isUniverseChainId(chainId) ? (
+        <span
+          style={{
+            position: 'absolute',
+            right: -2,
+            bottom: -2,
+            display: 'flex',
+            lineHeight: 0,
+            padding: 1,
+            borderRadius: '50%',
+            background: terminalColors.bg,
+          }}
+        >
+          <ChainLogo chainId={chainId} size={badgeSize} />
+        </span>
+      ) : null}
     </span>
   )
 }
@@ -505,6 +533,57 @@ function PoolsScreenBody(): JSX.Element {
       ? `Bal ${Number(formatUnits(projectBalance, projectDecimals)).toLocaleString('en-US', { maximumFractionDigits: 4 })}`
       : undefined
 
+  /* ------------------------------------------------- add-to-existing-pool bridge */
+
+  // When the chosen pair already has an on-chain pool with reserves, we don't create —
+  // we open the existing `AddLiquidityModal` (client-side add via `useAddV2Liquidity`).
+  // Build the `V2PairInfo` it expects from the selected base/project + the pair address the
+  // create hook already resolved. Native pairs hold WETH on-chain, so the base side is passed
+  // as the wrapped-native token (the modal maps a WETH side back to a native deposit).
+  const [addOpen, setAddOpen] = useState(false)
+
+  const existingPairPosition = useMemo((): V2PairInfo | null => {
+    if (!create.existingLiquidity || !create.pairAddress) {
+      return null
+    }
+    const baseCurrency: Currency | undefined = baseIsNative
+      ? wrappedNative
+      : resolvedBase?.address && resolvedBase.address !== NATIVE_CHAIN_ID && resolvedBase.decimals !== undefined
+        ? new Token(chainId, resolvedBase.address, resolvedBase.decimals, resolvedBase.symbol)
+        : undefined
+    if (!baseCurrency || !projectResolved || projectDecimals === undefined) {
+      return null
+    }
+    const projectCurrency = new Token(chainId, projectAddr, projectDecimals, projectSymbol)
+    const liquidityToken = new Token(chainId, create.pairAddress, 18, 'UNI-V2', 'HookSwap V2')
+    return {
+      status: PositionStatus.IN_RANGE,
+      version: ProtocolVersion.V2,
+      currency0Amount: CurrencyAmount.fromRawAmount(baseCurrency, 0),
+      currency1Amount: CurrencyAmount.fromRawAmount(projectCurrency, 0),
+      chainId: chainId as EVMUniverseChainId,
+      poolId: create.pairAddress,
+      liquidityToken,
+      feeTier: undefined,
+      v4hook: undefined,
+      owner: undefined,
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    create.existingLiquidity,
+    create.pairAddress,
+    baseIsNative,
+    wrappedNative,
+    resolvedBase?.address,
+    resolvedBase?.decimals,
+    resolvedBase?.symbol,
+    projectResolved,
+    projectDecimals,
+    projectSymbol,
+    projectAddr,
+    chainId,
+  ])
+
   /* --------------------------------------------------------------- primary action */
 
   const busy = create.isWritePending || create.baseApproving || create.projectApproving || create.isConfirming
@@ -512,6 +591,12 @@ function PoolsScreenBody(): JSX.Element {
   const onPrimary = (): void => {
     if (!connected) {
       accountDrawer.open()
+      return
+    }
+    if (create.existingLiquidity) {
+      if (existingPairPosition) {
+        setAddOpen(true)
+      }
       return
     }
     if (create.isDone) {
@@ -544,7 +629,7 @@ function PoolsScreenBody(): JSX.Element {
       return 'Create another pool'
     }
     if (create.existingLiquidity) {
-      return 'Pool already exists'
+      return 'Add liquidity'
     }
     if (!create.inputsValid) {
       return 'Enter token & amounts'
@@ -577,7 +662,11 @@ function PoolsScreenBody(): JSX.Element {
     if (create.isDone) {
       return false
     }
-    if (create.existingLiquidity || busy) {
+    if (create.existingLiquidity) {
+      // Enabled → opens the AddLiquidityModal (only once we can build its pair input).
+      return !existingPairPosition
+    }
+    if (busy) {
       return true
     }
     if (create.needsProjectApproval || create.needsBaseApproval) {
@@ -587,6 +676,7 @@ function PoolsScreenBody(): JSX.Element {
   })()
 
   return (
+    <>
     <div style={{ padding: '20px var(--tm-gutter) 40px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
@@ -683,9 +773,10 @@ function PoolsScreenBody(): JSX.Element {
           {chainReady && projectResolved ? (
             <Panel>
               {create.existingLiquidity ? (
-                <Notice tone="muted">
-                  This pair already has a live pool. Adding to an existing pool (price-matched, with
-                  slippage) is coming soon — for now, trade it on Swap.
+                <Notice tone="green">
+                  This pair already has a live pool. Use{' '}
+                  <strong style={{ fontWeight: 600 }}>Add liquidity</strong> to deposit into it at the
+                  current pool ratio.
                 </Notice>
               ) : create.isFirstLp ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -784,6 +875,15 @@ function PoolsScreenBody(): JSX.Element {
         </div>
       </div>
     </div>
+
+    {addOpen && existingPairPosition ? (
+      <AddLiquidityModal
+        position={existingPairPosition}
+        open
+        onClose={() => setAddOpen(false)}
+      />
+    ) : null}
+    </>
   )
 }
 

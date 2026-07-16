@@ -26,6 +26,7 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/d
 import type { Currency } from '@uniswap/sdk-core'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import type { PositionInfo, V2PairInfo } from 'uniswap/src/features/positions/types'
@@ -350,18 +351,25 @@ function PositionPairCell({ position }: { position: PositionInfo }): JSX.Element
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
       <DoubleCurrencyLogo currencies={[currency0, currency1]} size={22} />
-      <span
-        style={{
-          fontFamily: SANS,
-          fontSize: 13,
-          fontWeight: 600,
-          color: terminalColors.ink,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {currency0?.symbol ?? '—'} / {currency1?.symbol ?? '—'}
+      <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <span
+          style={{
+            fontFamily: SANS,
+            fontSize: 13,
+            fontWeight: 600,
+            color: terminalColors.ink,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {currency0?.symbol ?? '—'} / {currency1?.symbol ?? '—'}
+        </span>
+        {position.chainId !== undefined ? (
+          <span style={{ fontFamily: MONO, fontSize: 10.5, color: terminalColors.ink3Alt }}>
+            {getChainLabel(position.chainId)}
+          </span>
+        ) : null}
       </span>
     </span>
   )
