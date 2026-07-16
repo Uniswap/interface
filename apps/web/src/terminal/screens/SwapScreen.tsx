@@ -438,6 +438,23 @@ export function SwapTicket(): JSX.Element {
       ? `${inSym} → ${outSym}`
       : '—'
 
+  // --- Insufficient-balance guard -------------------------------------------
+  // Compare the REAL amount the user must pay — `currencyAmounts[INPUT]` (the parsed
+  // exact-in amount, or the quote-derived input for an exact-out ticket) — against the
+  // connected wallet's REAL input-token balance (`currencyBalances[INPUT]`, same source
+  // the "Bal" label and preset row use). Flags ONLY when a wallet is connected AND both
+  // amounts are known AND same-currency: an unloaded/unknown balance, disconnected
+  // wallet, or a mid-token-switch currency mismatch never shows a false "insufficient"
+  // state. Applies to wraps too (a native → wrapped deposit needs a funded balance).
+  const inputAmount = derived.currencyAmounts[CurrencyField.INPUT]
+  const insufficientBalance = Boolean(
+    account.address &&
+      inputAmount &&
+      sellBalance &&
+      inputAmount.currency.equals(sellBalance.currency) &&
+      inputAmount.greaterThan(sellBalance),
+  )
+
   // --- Swap button state ----------------------------------------------------
   let swapLabel: string
   let swapEnabled = false
@@ -448,6 +465,9 @@ export function SwapTicket(): JSX.Element {
     onSwap = () => accountDrawer.open()
   } else if (!hasAmount) {
     swapLabel = 'Enter an amount'
+  } else if (insufficientBalance) {
+    // Disabled, honest state (matches Uniswap production) — never opens the review flow.
+    swapLabel = inSym ? `Insufficient ${inSym} balance` : 'Insufficient balance'
   } else if (isWrap) {
     // Native ↔ wrapped-native: skip the quote entirely and open the REAL review→submit
     // flow, which routes to useWrapCallback (WETH deposit/withdraw) via useSwapHandlers.
