@@ -13,9 +13,11 @@
  *   • My launches + pending fees — from the FeeVault; honest empty states.
  */
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { formatUnits } from '~/chains'
+import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from '~/hooks/useAccount'
 import { StatCard } from '~/terminal/components/StatCard'
@@ -418,6 +420,27 @@ function timeAgo(unixSec: bigint): string {
 
 function RecentLaunchesPanel({ chainId }: { chainId?: number }): JSX.Element {
   const recent = useRecentLaunches({ chainId, limit: 20 })
+  const navigate = useNavigate()
+
+  // Jump to the Terminal swap with the launched token pre-selected as OUTPUT on the
+  // launch's chain — the same deep-link the Landing tickers + ⌘K palette use
+  // (serializeSwapAddressesToURLParameters → `/swap?chain=…&outputCurrency=<addr>`).
+  // If the token isn't routable yet the swap screen shows its own honest "no route"
+  // state — we add no fake availability check here.
+  const goToTrade = (token: string): void => {
+    let path = '/swap'
+    if (token && chainId !== undefined) {
+      try {
+        path += serializeSwapAddressesToURLParameters({
+          outputTokenAddress: token,
+          chainId: chainId as UniverseChainId,
+        })
+      } catch {
+        path = '/swap'
+      }
+    }
+    navigate(path)
+  }
 
   return (
     <Panel>
@@ -430,32 +453,64 @@ function RecentLaunchesPanel({ chainId }: { chainId?: number }): JSX.Element {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {recent.launches.map((l) => (
-            <a
+            <div
               key={String(l.id)}
-              href={`https://robinscan.io/address/${l.token}`}
-              target="_blank"
-              rel="noreferrer"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
                 border: `1px solid ${terminalColors.line}`,
                 borderRadius: 10,
                 padding: '8px 10px',
-                textDecoration: 'none',
                 gap: 8,
               }}
             >
-              <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, color: terminalColors.brandGreen }}>
+              {/* Address links to the explorer (kept). */}
+              <a
+                href={`https://robinscan.io/address/${l.token}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: terminalColors.brandGreen,
+                  textDecoration: 'none',
+                }}
+              >
                 {shortAddr(l.token)}
-              </span>
+              </a>
               <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.ink3Alt }}>
-                {l.dex === V3Dex.HookSwap ? 'HookSwap' : 'UniV3'}
+                {l.dex === V3Dex.HookSwap ? 'HookSwap' : 'Legacy'}
               </span>
               <span style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginLeft: 'auto' }}>
                 {timeAgo(l.createdAt)}
               </span>
-            </a>
+              {/* Trade → swap with this token pre-selected as output. Separate control
+                  from the explorer link so the two actions never conflict. Shown only for
+                  HookSwap-DEX launches: those pool on the router's factory and are
+                  routable; legacy (non-HookSwap-factory) launches can't route, so a Trade
+                  button would only dead-end at "no route" — offer the explorer link only. */}
+              {l.dex === V3Dex.HookSwap ? (
+                <button
+                  type="button"
+                  onClick={() => goToTrade(l.token)}
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: terminalColors.greenDeep,
+                    background: terminalColors.greenBg,
+                    border: `1px solid ${terminalColors.greenBorder}`,
+                    borderRadius: 8,
+                    padding: '4px 12px',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                >
+                  Trade
+                </button>
+              ) : null}
+            </div>
           ))}
         </div>
       )}
@@ -642,14 +697,27 @@ export function LaunchScreen(): JSX.Element {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
                   <FieldLabel>DEX</FieldLabel>
-                  <ToggleRow
-                    options={[
-                      { label: 'HookSwap', value: String(V3Dex.HookSwap) },
-                      { label: 'Uniswap V3', value: String(V3Dex.UniswapV3) },
-                    ]}
-                    value={input.dex}
-                    onChange={(v) => set('dex', v)}
-                  />
+                  {/* HookSwap is the only DEX offered: its v3 factory is the one the
+                      router discovers, so every launch is swappable in-app. (The former
+                      second option pooled on a factory the router can't see, producing
+                      unswappable tokens — removed.) dex stays HookSwap via EMPTY_INPUT. */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: 36,
+                      padding: '0 12px',
+                      border: `1px solid ${terminalColors.line}`,
+                      borderRadius: 8,
+                      background: terminalColors.panel2,
+                      fontFamily: SANS,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: terminalColors.ink,
+                    }}
+                  >
+                    HookSwap
+                  </div>
                 </div>
                 <div>
                   <FieldLabel>Pair token</FieldLabel>
