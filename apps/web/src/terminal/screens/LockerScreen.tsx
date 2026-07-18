@@ -1242,7 +1242,7 @@ function V3Tab({
               <div>
                 <FieldLabel>Your v3 position</FieldLabel>
                 {!connected ? (
-                  <FieldHint>Connect your wallet to load your Uniswap-v3 positions.</FieldHint>
+                  <FieldHint>Connect your wallet to load your v3 positions.</FieldHint>
                 ) : !defaultNftManager && !nftManager ? (
                   <FieldHint>
                     No NonfungiblePositionManager is configured for {chainLabel}. Enter one under Advanced to load

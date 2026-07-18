@@ -113,11 +113,11 @@ function V2PositionPage() {
     const token0Symbol = currency0Amount?.currency.symbol
     const token1Symbol = currency1Amount?.currency.symbol
     if (!token0Symbol || !token1Symbol || !pairAddress) {
-      return { title: 'Position on Uniswap', url: window.location.href }
+      return { title: 'Position on HookSwap', url: window.location.href }
     }
     const poolName = `${token0Symbol}/${token1Symbol}`
     return {
-      title: `${poolName} on Uniswap`,
+      title: `${poolName} on HookSwap`,
       url: window.location.href,
       image: `${window.location.origin}/api/image/positions/v2/${chainInfo.urlParam}/${pairAddress}`,
     }

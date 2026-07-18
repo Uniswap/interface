@@ -200,6 +200,46 @@ function NotLiveNote({ chainLabel }: { chainLabel: string }): JSX.Element {
 }
 
 /**
+ * Honest "connect your wallet" prompt (disconnected state). Referral codes are
+ * registered to — and read against — the connected wallet, so nothing loads until a
+ * wallet is connected. No code or stats are shown; the button opens the account drawer.
+ */
+function ConnectWalletNote({ onConnect }: { onConnect: () => void }): JSX.Element {
+  return (
+    <div
+      style={{
+        border: `1px dashed ${terminalColors.line}`,
+        borderRadius: 11,
+        background: terminalColors.panel,
+        padding: '11px 13px',
+      }}
+    >
+      <div style={{ fontFamily: SANS, fontSize: 12.5, color: terminalColors.ink3Alt, lineHeight: 1.5, marginBottom: 11 }}>
+        Connect your wallet to reserve a referral code. Codes are registered on-chain to your connected wallet, so nothing
+        loads until a wallet is connected.
+      </div>
+      <button
+        type="button"
+        onClick={onConnect}
+        style={{
+          fontFamily: SANS,
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: terminalColors.btnInk,
+          background: terminalColors.brandGreen,
+          border: 'none',
+          padding: '9px 16px',
+          borderRadius: 10,
+          cursor: 'pointer',
+        }}
+      >
+        Connect wallet
+      </button>
+    </div>
+  )
+}
+
+/**
  * Honest "reward payouts not live yet" note for the Earnings panel. Describes how
  * referral rewards WILL work once fee routing ships — no claim UI is presented here
  * because fees can't accrue yet (see the earnings/claim comment in the screen body).
@@ -393,10 +433,10 @@ export function ReferralsScreen(): JSX.Element {
     })
   }
 
-  const registerLabel = !deployed
-    ? 'Not available on this network'
-    : !connected
-      ? 'Connect wallet to register'
+  const registerLabel = !connected
+    ? 'Connect wallet to register'
+    : !deployed
+      ? 'Not available on this network'
       : registerPending
         ? 'Confirm in wallet…'
         : status === 'yours'
@@ -481,8 +521,10 @@ export function ReferralsScreen(): JSX.Element {
         {/* Your referral link + register */}
         <div style={{ flex: '1 1 340px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Panel>
-            <StepLabel index="01" label="Your referral code" note={deployed ? undefined : 'not live'} />
-            {!deployed ? (
+            <StepLabel index="01" label="Your referral code" note={!connected ? 'connect wallet' : deployed ? undefined : 'not live'} />
+            {!connected ? (
+              <ConnectWalletNote onConnect={onConnect} />
+            ) : !deployed ? (
               <NotLiveNote chainLabel={chainLabel} />
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -531,8 +573,8 @@ export function ReferralsScreen(): JSX.Element {
           <Panel>
             <SummaryRow label="Referral fee" value={feeValue ?? '…'} valueColor={feeValue && feeValue !== '—' ? terminalColors.ink : terminalColors.faint} />
             <SummaryRow label="Claim wallet" value={connected ? shortAddr(account.address) : 'Not connected'} />
-            <SummaryRow label="Network" value={chainLabel} />
-            <PrimaryButton label={registerLabel} onClick={() => void onRegister()} disabled={deployed ? !canRegister && connected : true} />
+            <SummaryRow label="Network" value={connected ? chainLabel : '—'} />
+            <PrimaryButton label={registerLabel} onClick={() => void onRegister()} disabled={connected && !canRegister} />
             {deployed ? (
               <div style={{ fontFamily: SANS, fontSize: 11, color: terminalColors.faint, marginTop: 10, lineHeight: 1.5 }}>
                 Registering claims the code on-chain and sets your connected wallet as the claim wallet. Reward payouts
@@ -546,7 +588,13 @@ export function ReferralsScreen(): JSX.Element {
         <div style={{ flex: '1 1 340px', minWidth: 0 }}>
           <Panel>
             <StepLabel index="02" label="Earnings" />
-            {!deployed ? <NotLiveNote chainLabel={chainLabel} /> : <RewardsNotLiveNote />}
+            {!connected ? (
+              <ConnectWalletNote onConnect={onConnect} />
+            ) : !deployed ? (
+              <NotLiveNote chainLabel={chainLabel} />
+            ) : (
+              <RewardsNotLiveNote />
+            )}
           </Panel>
         </div>
       </div>
