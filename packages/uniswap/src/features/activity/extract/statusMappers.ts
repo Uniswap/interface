@@ -1,4 +1,5 @@
 import {
+  EarnPlanAction as DataApiEarnPlanAction,
   PlanStatus as DataApiPlanStatus,
   PlanStepStatus as DataApiPlanStepStatus,
   SwapType,
@@ -52,6 +53,20 @@ export function mapDAPIPlanStatusToTAPIPlanStatus(status: DataApiPlanStatus): Tr
       return TradingApi.PlanStatus.IN_PROGRESS
     case DataApiPlanStatus.COMPLETED:
       return TradingApi.PlanStatus.COMPLETED
+    default:
+      return undefined
+  }
+}
+
+export function mapDAPIEarnPlanActionToTAPIEarnAction(
+  action: DataApiEarnPlanAction | undefined,
+): TradingApi.EarnAction | undefined {
+  switch (action) {
+    case DataApiEarnPlanAction.DEPOSIT:
+      return TradingApi.EarnAction.DEPOSIT
+    case DataApiEarnPlanAction.WITHDRAW:
+      return TradingApi.EarnAction.WITHDRAW
+    case DataApiEarnPlanAction.UNKNOWN:
     default:
       return undefined
   }
@@ -122,6 +137,10 @@ export function mapDAPIPlanActivitySwapTypeToTAPIPlanStepType(
       return TradingApi.PlanStepType.APPROVAL_TXN
     case SwapType.RESET_APPROVAL_TXN:
       return TradingApi.PlanStepType.RESET_APPROVAL_TXN
+    case SwapType.VAULT_DEPOSIT:
+      return TradingApi.PlanStepType.VAULT_DEPOSIT
+    case SwapType.VAULT_WITHDRAW:
+      return TradingApi.PlanStepType.VAULT_WITHDRAW
     case SwapType.UNKNOWN:
     default:
       return undefined

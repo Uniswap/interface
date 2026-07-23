@@ -1,8 +1,7 @@
-import { isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { isHoverable, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, type ModifierPressProps, Text, TouchableArea } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { FocusedRowControl, OptionItem, OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
@@ -11,6 +10,7 @@ import {
   TokenOptionItemContextMenu,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import type { ContextMenuHandle } from 'uniswap/src/components/menus/ContextMenu'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MultichainAddressSheet } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
@@ -18,6 +18,7 @@ import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainToke
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { MultichainTokenContextMenuButton } from 'uniswap/src/features/search/SearchModal/MultichainTokenContextMenuButton'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
@@ -32,7 +33,7 @@ export enum TokenContextMenuVariant {
   TokenSelector = 'tokenSelector',
 }
 
-const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
+export const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
   [TokenContextMenuVariant.Search]: [
     TokenContextMenuAction.CopyAddress,
     ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
@@ -231,13 +232,15 @@ export interface MultichainData {
   primaryCurrencyInfo: CurrencyInfo
 }
 
-export interface TokenOptionItemProps {
+export interface TokenOptionItemProps extends ModifierPressProps {
   option: TokenOption
   onPress: () => void
   showTokenAddress?: boolean
   networkCount?: number
   hideNetworkLogo?: boolean
   rightElement?: JSX.Element
+  /** Persistent category pill (e.g. "Stocks") rendered before `rightElement`. */
+  categoryTag?: OptionItemProps['categoryTag']
   showDisabled?: boolean
   modalInfo?: OptionItemProps['modalInfo']
   focusedRowControl?: FocusedRowControl
@@ -246,6 +249,9 @@ export interface TokenOptionItemProps {
   multichainData?: MultichainData
   /** Canonical name override for multichain tokens, used instead of currency.name (which may be chain-specific for native tokens). */
   displayName?: string
+  /** Dimmed issuer label rendered beside the title for RWA rows (e.g. "Ondo"). Already formatted by the caller
+   *  (via formatIssuerLabel). Absent on non-RWA rows. */
+  issuerLabel?: string
 }
 
 function isLegacyTokenOptionItemProps(
@@ -264,11 +270,15 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     networkCount,
     hideNetworkLogo,
     rightElement,
+    categoryTag,
     showDisabled,
     modalInfo,
     focusedRowControl,
     openContextMenu,
     displayName,
+    issuerLabel,
+    modifierPressHref,
+    onModifierPress,
   } = props
   const { currencyInfo } = option
   const { currency } = currencyInfo
@@ -294,6 +304,13 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         />
       }
       title={displayName ?? currency.name ?? currency.symbol ?? ''}
+      titleSuffix={
+        issuerLabel ? (
+          <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
+            {issuerLabel}
+          </Text>
+        ) : undefined
+      }
       subtitle={
         <Flex row alignItems="center" gap="$spacing8">
           <Text color="$neutral2" numberOfLines={1} variant="body3">
@@ -323,15 +340,18 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         ) : undefined
       }
       rightElement={rightElement}
+      categoryTag={categoryTag}
       disabled={showDisabled}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       modalInfo={modalInfo}
       focusedRowControl={focusedRowControl}
+      modifierPressHref={modifierPressHref}
       onPress={onPress}
       onLongPress={() => {
         dismissNativeKeyboard()
         openContextMenu?.()
       }}
+      onModifierPress={onModifierPress}
     />
   )
 })
@@ -342,10 +362,10 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
   const { value: isAddressSheetOpen, setFalse: closeAddressSheet, setTrue: openAddressSheet } = useBooleanState(false)
   const { hapticFeedback } = useHapticFeedback()
+  // Lets the row's right-click (below) open the same menu instance as the "…" kebab.
+  const multichainButtonRef = useRef<ContextMenuHandle>(null)
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const multichainData =
-    !isLegacyTokenOptionItemProps(props) && multichainTokenUxEnabled ? props.multichainData : undefined
+  const multichainData = !isLegacyTokenOptionItemProps(props) ? props.multichainData : undefined
   const rawEntries = useMemo<MultichainTokenEntry[]>(
     () =>
       multichainData
@@ -373,9 +393,36 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
     }
   }, [hasMultipleChains, allNative, closeContextMenu, openAddressSheet])
 
+  // Built internally (not passed via rightElement) so the row's right-click below can ref it.
+  const hasMultichainButton = isHoverable && Boolean(multichainData)
+  const focusedRowControl = !isLegacyTokenOptionItemProps(props) ? props.focusedRowControl : undefined
+  const isMultichainButtonVisible = focusedRowControl
+    ? focusedRowControl.rowIndex === focusedRowControl.focusedRowIndex
+    : undefined
+
   if (!isLegacyTokenOptionItemProps(props)) {
-    return (
-      <>
+    const content =
+      hasMultichainButton && multichainData && isWebPlatform ? (
+        // oxlint-disable-next-line react/forbid-elements -- raw div needed for the onContextMenu right-click trigger
+        <div
+          onContextMenu={(e): void => {
+            e.preventDefault()
+            multichainButtonRef.current?.openAt(e.clientX, e.clientY)
+          }}
+        >
+          <BaseTokenOptionItem
+            {...props}
+            rightElement={
+              <MultichainTokenContextMenuButton
+                ref={multichainButtonRef}
+                tokens={multichainData.tokens}
+                primaryCurrencyInfo={multichainData.primaryCurrencyInfo}
+                isVisible={isMultichainButtonVisible}
+              />
+            }
+          />
+        </div>
+      ) : (
         <TokenOptionItemContextMenu
           actions={CONTEXT_MENU_ACTIONS[props.contextMenuVariant]}
           currency={props.option.currencyInfo.currency}
@@ -398,6 +445,11 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
             />
           )}
         </TokenOptionItemContextMenu>
+      )
+
+    return (
+      <>
+        {content}
         {(isMobileApp || isMobileWeb) && hasMultipleChains && (
           <MultichainAddressSheet isOpen={isAddressSheetOpen} chains={orderedEntries} onClose={closeAddressSheet} />
         )}

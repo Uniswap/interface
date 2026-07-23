@@ -13,6 +13,9 @@ const convertTokenAddress = (networkName: string, tokenAddress: string) => {
         return '0x471EcE3750Da237f93B8E339c536989b8978a438'
       case GraphQLApi.Chain.Polygon:
         return '0x0000000000000000000000000000000000001010'
+      // Canonical Arc USDC ERC-20 (precompile) address.
+      case GraphQLApi.Chain.Arc:
+        return '0x3600000000000000000000000000000000000000'
       default:
         return undefined
     }

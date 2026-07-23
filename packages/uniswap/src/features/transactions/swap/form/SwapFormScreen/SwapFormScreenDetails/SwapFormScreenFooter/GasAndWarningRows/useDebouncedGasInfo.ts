@@ -56,6 +56,9 @@ export function useDebouncedGasInfo(): GasInfo {
 
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
+  const tradeQuote = trade.trade?.quote
+  const sponsorshipInfo = tradeQuote && 'sponsorshipInfo' in tradeQuote ? tradeQuote.sponsorshipInfo : undefined
+
   return useMemo(
     () => ({
       gasFee,
@@ -64,7 +67,8 @@ export function useDebouncedGasInfo(): GasInfo {
       uniswapXGasFeeInfo,
       isLoading,
       chainId,
+      sponsorshipInfo,
     }),
-    [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId],
+    [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId, sponsorshipInfo],
   )
 }

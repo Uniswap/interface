@@ -18,7 +18,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
 import { SwapSkeleton } from '~/features/Swap/SwapSkeleton'
 import { useCurrency } from '~/hooks/Tokens'
-import { StatsWrapper, StatWrapper } from '~/pages/TokenDetails/components/info/StatsSection'
+import { LoadingStats } from '~/pages/TokenDetails/components/info/StatsSection'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
@@ -96,7 +96,7 @@ function NavBubble(props: LoadingBubbleProps) {
 
 function TokenLogoBubble({ isCompact, ...props }: LoadingBubbleProps & { isCompact: boolean }) {
   const media = useMedia()
-  const size = getHeaderLogoSize({ isCompact, media })
+  const size = getHeaderLogoSize({ isCompact, media, scaleMobileOnScroll: true })
   return <DetailBubble width={size} height={size} round containerProps={{ maxWidth: size }} {...props} />
 }
 
@@ -110,14 +110,6 @@ function SectionBubble(props: LoadingBubbleProps) {
   return <SquaredBubble width={120} {...props} />
 }
 
-function StatTitleBubble(props: LoadingBubbleProps) {
-  return <DetailBubble width={80} containerProps={{ mb: '$spacing4' }} {...props} />
-}
-
-function StatBubble(props: LoadingBubbleProps) {
-  return <SquaredBubble width={116} {...props} />
-}
-
 function WideBubble(props: LoadingBubbleProps) {
   return <DetailBubble width="100%" containerProps={{ mb: '$spacing6' }} {...props} />
 }
@@ -129,12 +121,6 @@ function ThinTitleBubble(props: LoadingBubbleProps) {
 function HalfWideBubble(props: LoadingBubbleProps) {
   return <WideBubble width="50%" {...props} />
 }
-
-const StatsLoadingContainer = styled(Flex, {
-  row: true,
-  flexWrap: 'wrap',
-  width: '100%',
-})
 
 const ExtraDetailsContainer = styled(Flex, {
   row: true,
@@ -222,40 +208,6 @@ export function LoadingTitle({
   )
 }
 
-function LoadingStats() {
-  return (
-    <StatsWrapper>
-      <SectionBubble />
-      <StatsLoadingContainer>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-        <StatWrapper>
-          <StatTitleBubble />
-          <StatBubble />
-        </StatWrapper>
-      </StatsLoadingContainer>
-    </StatsWrapper>
-  )
-}
-
 const ChevronRight = (): JSX.Element => <RotatableChevron direction="right" size="$icon.16" />
 
 /* Loading State: row component with loading bubbles */
@@ -325,7 +277,7 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
       <BreadcrumbWrapper>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
           <BreadcrumbNavLink to={`/explore/tokens/${urlParam}`}>
-            {t('common.tokens')} <ChevronRight />
+            {t('common.token.plural')} <ChevronRight />
           </BreadcrumbNavLink>
           <NavBubble />
         </BreadcrumbNavContainer>

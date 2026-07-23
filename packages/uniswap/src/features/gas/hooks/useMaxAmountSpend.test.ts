@@ -7,6 +7,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures/wallet/currencies'
 
 const mockUseDynamicConfigValue = vi.fn()
+const mockUseUniswapContextSelector = vi.fn()
 
 vi.mock('@universe/gating', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@universe/gating')>()
@@ -17,13 +18,17 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
+vi.mock('uniswap/src/contexts/UniswapContext', () => ({
+  useUniswapContextSelector: (selector: (ctx: unknown) => unknown): unknown => mockUseUniswapContextSelector(selector),
+}))
+
 // Get Solana currency with 9 decimals
 const SOLANA_CURRENCY = nativeOnChain(UniverseChainId.Solana)
 
 describe(useMaxAmountSpend, () => {
   beforeEach(() => {
-    // Reset mock to return default values
     mockUseDynamicConfigValue.mockImplementation(({ defaultValue }) => defaultValue)
+    mockUseUniswapContextSelector.mockReturnValue(undefined)
   })
 
   it('handles undefined and null inputs', () => {

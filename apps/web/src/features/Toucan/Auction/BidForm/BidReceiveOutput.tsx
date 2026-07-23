@@ -5,6 +5,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useAuctionValueFormatters } from '~/features/Toucan/Auction/hooks/useAuctionValueFormatters'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 interface BidReceiveOutputProps {
   expectedAmount?: number
@@ -75,7 +76,7 @@ export function BidReceiveOutput({
   const chainId = useAuctionStore((state) => state.auctionDetails?.chainId)
   const currency = useAuctionStore((state) => state.auctionDetails?.currency)
   const tokenTotalSupply = useAuctionStore((state) => state.auctionDetails?.tokenTotalSupply)
-  const auctionTokenDecimals = useAuctionStore((state) => state.auctionDetails?.token?.currency.decimals) ?? 18
+  const auctionTokenDecimals = useAuctionStore((state) => getAuctionTokenDecimals(state.auctionDetails?.token))
 
   const { bidTokenInfo } = useBidTokenInfo({ bidTokenAddress: currency, chainId })
 
@@ -146,7 +147,7 @@ export function BidReceiveOutput({
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start" width="auto" overflow="hidden">
             {isEmpty ? (
               <Text variant="body4" color="$neutral3" width="100%">
-                {t('toucan.bidForm.enterBudgetTokenPrice')}
+                {t('toucan.bidForm.enterBudgetMaxFdv')}
               </Text>
             ) : (
               <Flex flexDirection="row" gap="$spacing4" width="100%">

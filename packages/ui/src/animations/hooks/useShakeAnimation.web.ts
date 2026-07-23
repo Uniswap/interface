@@ -1,25 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ViewStyle } from 'react-native'
+import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
 export interface ShakeAnimation {
   shakeStyle: ViewStyle
   triggerShakeAnimation: () => void
 }
 
-// CSS keyframes for shake animation - injected once into the document
 const SHAKE_KEYFRAMES_NAME = 'uniswap-shake-animation'
 const SHAKE_DURATION_MS = 300
-
-function injectShakeKeyframes(): void {
-  if (typeof document === 'undefined') {
-    return
-  }
-  if (document.getElementById(SHAKE_KEYFRAMES_NAME)) {
-    return
-  }
-  const style = document.createElement('style')
-  style.id = SHAKE_KEYFRAMES_NAME
-  style.textContent = `
+const SHAKE_KEYFRAMES_CSS = `
     @keyframes ${SHAKE_KEYFRAMES_NAME} {
       0%, 100% { transform: translateX(0); }
       16.67% { transform: translateX(5px); }
@@ -29,8 +19,6 @@ function injectShakeKeyframes(): void {
       83.33% { transform: translateX(5px); }
     }
   `
-  document.head.appendChild(style)
-}
 
 /**
  * Web-specific shake animation hook using CSS animations.
@@ -42,13 +30,10 @@ function injectShakeKeyframes(): void {
  * the appropriate CSS animation property.
  */
 export const useShakeAnimation = (): ShakeAnimation => {
+  useInjectSingleStylesheet({ id: SHAKE_KEYFRAMES_NAME, css: SHAKE_KEYFRAMES_CSS })
+
   const [isShaking, setIsShaking] = useState(false)
   const isAnimatingRef = useRef(false)
-
-  // Inject keyframes on first use
-  useMemo(() => {
-    injectShakeKeyframes()
-  }, [])
 
   const triggerShakeAnimation = useCallback(() => {
     if (isAnimatingRef.current) {

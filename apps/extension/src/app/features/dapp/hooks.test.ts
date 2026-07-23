@@ -12,9 +12,9 @@ import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_3 } from 'uniswap/src/test/f
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  ...jest.requireActual('wallet/src/features/wallet/hooks'),
-  useActiveAccountAddress: jest.fn(),
+vi.mock('wallet/src/features/wallet/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('wallet/src/features/wallet/hooks')>()),
+  useActiveAccountAddress: vi.fn(),
 }))
 
 const SAMPLE_DAPP = 'http://example.com'
@@ -33,8 +33,8 @@ const dappState: DappState = {
   },
 }
 
-const mockAddListener = jest.fn()
-const mockGet = jest.fn(() => {
+const mockAddListener = vi.fn()
+const mockGet = vi.fn(() => {
   return Promise.resolve({ dappState })
 })
 Object.defineProperty(global, 'chrome', {
@@ -43,7 +43,7 @@ Object.defineProperty(global, 'chrome', {
     storage: {
       local: {
         get: mockGet,
-        set: jest.fn(),
+        set: vi.fn(),
         onChanged: {
           addListener: mockAddListener,
         },
@@ -56,7 +56,7 @@ describe('Dapp hooks', () => {
   let onChangeListener: (changes: { dappState: chrome.storage.StorageChange }) => void
   beforeAll(async () => {
     await dappStore.init()
-    onChangeListener = mockAddListener.mock.calls[0][0]
+    onChangeListener = mockAddListener.mock.calls[0]![0]
   })
 
   it('useDappStateUpdated should update state when chrome storage changes', () => {
@@ -126,7 +126,7 @@ describe('Dapp hooks', () => {
 
     it('should use active account when no address is provided', async () => {
       // Mock useActiveAccountAddress to return ACCOUNT3's address
-      jest.mocked(useActiveAccountAddress).mockReturnValue(ACCOUNT3.address)
+      vi.mocked(useActiveAccountAddress).mockReturnValue(ACCOUNT3.address)
 
       // ACCOUNT3 (SAMPLE_SEED_ADDRESS_3) is only connected to SAMPLE_DAPP_2
       const { result } = renderHook(() => useAllDappConnectionsForAccount())
@@ -134,7 +134,7 @@ describe('Dapp hooks', () => {
     })
 
     it('should return empty array when no address provided and no active account', async () => {
-      jest.mocked(useActiveAccountAddress).mockReturnValue(null)
+      vi.mocked(useActiveAccountAddress).mockReturnValue(null)
 
       const { result } = renderHook(() => useAllDappConnectionsForAccount())
       await waitFor(() => expect(result.current).toEqual([]))

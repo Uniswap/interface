@@ -3,6 +3,12 @@
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts", "env.d.ts"],
   "references": [
     {
+      "path": "../sessions"
+    },
+    {
+      "path": "../websocket"
+    },
+    {
       "path": "../environment"
     },
     {
@@ -28,6 +34,9 @@
     },
     {
       "path": "../config"
+    },
+    {
+      "path": "../compliance"
     },
     {
       "path": "../chains"

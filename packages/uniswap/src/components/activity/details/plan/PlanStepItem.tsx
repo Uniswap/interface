@@ -15,10 +15,12 @@ import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/util
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
+  DepositTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
+  WithdrawTransactionInfo,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
@@ -145,6 +147,9 @@ function StepDescriptor({ info, chainId }: { info: TransactionTypeInfo; chainId:
       return <SwapStepDescriptor info={info} />
     case TransactionType.Bridge:
       return <BridgeStepDescriptor info={info} />
+    case TransactionType.Deposit:
+    case TransactionType.Withdraw:
+      return <EarnVaultStepDescriptor info={info} chainId={chainId} />
     case TransactionType.Wrap:
       return <WrapStepDescriptor info={info} chainId={chainId} />
     default:
@@ -165,6 +170,44 @@ function ApproveStepDescriptor({
   return (
     <Text variant="body3" flexShrink={1} numberOfLines={1}>
       {t('common.approveSpend', { symbol })}
+    </Text>
+  )
+}
+
+function EarnVaultStepDescriptor({
+  info,
+  chainId,
+}: {
+  info: DepositTransactionInfo | WithdrawTransactionInfo
+  chainId: UniverseChainId
+}): JSX.Element {
+  const { t } = useTranslation()
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, info.tokenAddress))
+  const { formatCurrencyAmount } = useLocalizationContext()
+
+  const text = useMemo(() => {
+    const currencyAmount =
+      currencyInfo?.currency && info.currencyAmountRaw
+        ? getCurrencyAmount({
+            value: info.currencyAmountRaw,
+            valueType: ValueType.Raw,
+            currency: currencyInfo.currency,
+          })
+        : null
+
+    const params = {
+      amount: formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx }),
+      symbol: currencyAmount?.currency.symbol ?? '',
+    }
+
+    return info.type === TransactionType.Withdraw
+      ? t('transaction.status.plan.step.withdraw', params)
+      : t('transaction.status.plan.step.deposit', params)
+  }, [currencyInfo?.currency, formatCurrencyAmount, info.currencyAmountRaw, info.type, t])
+
+  return (
+    <Text variant="body3" flexShrink={1} numberOfLines={1}>
+      {text}
     </Text>
   )
 }

@@ -1,0 +1,14 @@
+/*
+ * React Native (uniwind) Tailwind v4 entry.
+ *
+ * uniwind compiles this at build time via its Metro transformer — oklch/hex are
+ * resolved to RN-consumable colors and var() chains become runtime thunks driven
+ * by Uniwind.setTheme() (see AppInner in src/app/App.tsx).
+ *
+ * @universe/tailwind/native shares the SAME palette as the web bundle and adds
+ * the Mycelium semantic tokens (bg-surface1, text-neutral1, …) in uniwind's
+ * theme dialect. App className usages under src/ are auto-scanned.
+ */
+@import "tailwindcss";
+@import "uniwind";
+@import "@universe/tailwind/native";

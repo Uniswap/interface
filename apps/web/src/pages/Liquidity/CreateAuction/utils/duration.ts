@@ -7,10 +7,10 @@ export const MS_PER_HOUR = 60 * 60 * 1000
 const MS_PER_MINUTE = 60 * 1000
 
 /** Minimum lead before auction start when choosing dates/times (picker clamps to this). */
-export const CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES = 60
+export const CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES = 5
 
-/** Minimum time until start required to advance past configure (picker stays at 1h; this avoids blocking if the user waits on the step). */
-export const CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED = 15
+/** Minimum time until start required to advance past configure (picker stays at 5m; this avoids blocking if the user waits on the step). */
+export const CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED = 1
 
 export const DEFAULT_AUCTION_DURATION_DAYS = 5
 

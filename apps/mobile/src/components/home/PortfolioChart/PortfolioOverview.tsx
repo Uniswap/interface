@@ -1,13 +1,17 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
-import { Flex, TouchableArea } from 'ui/src'
+import { Coachmark, Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { spacing } from 'ui/src/theme'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
+import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -19,11 +23,18 @@ import { noop } from 'utilities/src/react/noop'
 interface PortfolioChartSectionProps {
   evmAddress: string
   chainIds: number[]
-  isPnLEnabled: boolean
 }
 
-export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: PortfolioChartSectionProps): JSX.Element {
+export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectionProps): JSX.Element {
+  const { t } = useTranslation()
   const chartPeriod = ChartPeriod.DAY
+  // The Home heartbeat coordinator only takes over balance refreshing when this flag is on —
+  // otherwise PortfolioBalance must keep its own poll running, or balances would never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+
+  const { shouldShow: shouldShowPoolsCoachmark, dismiss: dismissPoolsCoachmark } = usePoolsBalanceCoachmarkVisibility({
+    evmAddress,
+  })
 
   const {
     data: chartData,
@@ -33,7 +44,6 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
     evmAddress,
     chartPeriod,
     chainIds,
-    enabled: isPnLEnabled,
   })
 
   const chartPercentChange = useMemo(() => {
@@ -57,7 +67,10 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
     portfolioTotalBalanceUSD: portfolioData?.balanceUSD,
   })
 
-  const canShowChart = isPnLEnabled && chartData.length > 0
+  // Hide the chart (and its tap-through to the details/PnL screen) on an empty wallet — a zero
+  // total balance is meaningless to chart. Matches `isEmptyWalletBalance`: a defined, non-positive total.
+  const isEmptyPortfolio = portfolioData?.balanceUSD !== undefined && portfolioData.balanceUSD <= 0
+  const canShowChart = !isEmptyPortfolio && chartData.length > 0
 
   const openPortfolioChartDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -84,13 +97,26 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
         <TouchableArea testID={TestID.PortfolioChartToggle} activeOpacity={1} onPress={openPortfolioChartDetails}>
           <Flex row alignItems="flex-start">
             <Flex flex={1}>
-              <PortfolioBalance
-                evmOwner={evmAddress}
-                endText={chartNavigationIcon}
-                chartPeriod={chartPeriod}
-                overridePercentChange={chartPercentChange?.percentChange}
-                overrideAbsoluteChangeUSD={chartPercentChange?.absoluteChangeUSD}
-              />
+              <Coachmark
+                open={shouldShowPoolsCoachmark}
+                placement="bottom-start"
+                // Shift up so the pill sits under the balance value rather than the change row below it.
+                offset={{ mainAxis: -spacing.spacing16 }}
+                text={t('portfolio.poolsBalance.coachmark.body')}
+                testID={TestID.PoolsBalanceCoachmark}
+                onDismiss={dismissPoolsCoachmark}
+              >
+                <PortfolioBalance
+                  // Disabled because the Home heartbeat coordinator polls balances at the same
+                  // cadence as the rest of the page instead.
+                  disablePolling={isDataLivelinessEnabled}
+                  evmOwner={evmAddress}
+                  endText={chartNavigationIcon}
+                  chartPeriod={chartPeriod}
+                  overridePercentChange={chartPercentChange?.percentChange}
+                  overrideAbsoluteChangeUSD={chartPercentChange?.absoluteChangeUSD}
+                />
+              </Coachmark>
             </Flex>
             <PortfolioChart
               data={chartData}
@@ -104,7 +130,18 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
           </Flex>
         </TouchableArea>
       ) : (
-        <PortfolioBalance evmOwner={evmAddress} />
+        <Coachmark
+          open={shouldShowPoolsCoachmark}
+          placement="bottom-start"
+          // Shift up so the pill sits under the balance value rather than the change row below it.
+          offset={{ mainAxis: -spacing.spacing16 }}
+          text={t('portfolio.poolsBalance.coachmark.body')}
+          testID={TestID.PoolsBalanceCoachmark}
+          onDismiss={dismissPoolsCoachmark}
+        >
+          {/* Disabled because the Home heartbeat coordinator polls balances at the same cadence as the rest of the page instead. */}
+          <PortfolioBalance disablePolling={isDataLivelinessEnabled} evmOwner={evmAddress} />
+        </Coachmark>
       )}
     </Flex>
   )

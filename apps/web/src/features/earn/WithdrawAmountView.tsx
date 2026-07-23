@@ -1,28 +1,45 @@
+import { TradingApi } from '@universe/api'
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { Anchor, Button, Flex, Text, useDynamicFontSizing } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { WITHDRAW_DESTINATION_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
-import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import {
+  getEarnAmountValidation,
+  getEarnFiatPercentageInput,
+  getEarnWithdrawableAmount,
+} from 'uniswap/src/features/earn/amount'
+import { EARN_INPUT_ERROR_DEBOUNCE_MS } from 'uniswap/src/features/earn/constants'
+import { EarnInlineError } from 'uniswap/src/features/earn/EarnInlineError'
+import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { hasConfirmedEarnPositionRawBalance, MORPHO_FAQ_URL } from 'uniswap/src/features/earn/utils'
+import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/withdrawDestination'
+import { WithdrawLiquidityInfoPopover } from 'uniswap/src/features/earn/WithdrawLiquidityInfoPopover'
+import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
+import { useDebounce } from 'utilities/src/time/timing'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
-import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
   NumericalInputWrapper,
   StyledNumericalInput,
-} from '~/pages/Swap/common/shared'
+} from '~/components/NumericalInput/LargeAmountInput'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { EARN_SELECTOR_DROPDOWN_MAX_HEIGHT } from '~/features/earn/constants'
+import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
+import { getWithdrawDestinationChainIds } from '~/features/earn/withdrawDestinationChains'
 
 const CHAR_WIDTH = 45
 const MAX_FONT_SIZE = 70
@@ -34,32 +51,98 @@ const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const
 
 interface WithdrawAmountViewProps {
   vault: EarnVaultInfo
-  availableBalance: number
+  position: EarnPositionInfo
   initialAmount?: string
   initialChainId?: UniverseChainId
+  initialWithdrawMode?: TradingApi.EarnWithdrawMode
   onBack: () => void
   onClose: () => void
-  onReview: (params: { amount: string; chainId: UniverseChainId }) => void
+  onReview: (params: { amount: string; chainId: UniverseChainId; withdrawMode: TradingApi.EarnWithdrawMode }) => void
+}
+
+function getWithdrawCtaLabel({
+  hasPositionBalance,
+  inputAmount,
+  isOverBalance,
+  isOverWithdrawableLiquidity,
+  labels,
+}: {
+  hasPositionBalance: boolean
+  inputAmount: number
+  isOverBalance: boolean
+  isOverWithdrawableLiquidity: boolean
+  labels: {
+    enterAmount: string
+    insufficientBalance: string
+    loading: string
+    lowLiquidity: string
+    review: string
+  }
+}): string {
+  if (inputAmount <= 0) {
+    return labels.enterAmount
+  }
+
+  if (!hasPositionBalance) {
+    return labels.loading
+  }
+
+  if (isOverWithdrawableLiquidity) {
+    return labels.lowLiquidity
+  }
+
+  if (isOverBalance) {
+    return labels.insufficientBalance
+  }
+
+  return labels.review
 }
 
 export function WithdrawAmountView({
   vault,
-  availableBalance,
+  position,
   initialAmount = '',
   initialChainId = UniverseChainId.Unichain,
+  initialWithdrawMode,
   onBack,
   onClose,
   onReview,
 }: WithdrawAmountViewProps): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString, formatPercent } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(vault.currencyId)
-  const currency = currencyInfo?.currency
-  const symbol = currency?.symbol ?? 'USDC'
+  const { convertFiatAmount, convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
+  const fiatCurrency = useAppFiatCurrency()
+  const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const withdrawDestinationChainIds = useMemo(
+    () => getWithdrawDestinationChainIds({ isTestnetModeEnabled }),
+    [isTestnetModeEnabled],
+  )
+  const fallbackChainId = withdrawDestinationChainIds[0] ?? initialChainId
+
+  const withdrawableAmount = getEarnWithdrawableAmount({ position, vault })
+  const withdrawableBalanceUsd = withdrawableAmount.availableUsd
+  const availableBalanceLocal = convertFiatAmount(withdrawableBalanceUsd).amount
 
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
-  const [chainId, setChainId] = useState<UniverseChainId>(initialChainId)
+  const [selectedChainId, setSelectedChainId] = useState<UniverseChainId>(initialChainId)
+  const chainId = withdrawDestinationChainIds.includes(selectedChainId) ? selectedChainId : fallbackChainId
+  const activeAddresses = useActiveAddresses()
+  const tieredNetworkOptions = useNetworkSelectorOptions({
+    addresses: activeAddresses,
+    chainIds: withdrawDestinationChainIds,
+  })
+  const destinationCurrencyId = getEarnVaultWithdrawDestinationCurrencyId({
+    vault,
+    destinationChainId: chainId,
+  })
+  const currencyInfo = useCurrencyInfo(destinationCurrencyId)
+  const currency = currencyInfo?.currency
+  const symbol = currency?.symbol ?? ''
+  // Preserve Max mode across review/back navigation.
+  const [withdrawMode, setWithdrawMode] = useState<TradingApi.EarnWithdrawMode>(
+    initialWithdrawMode ?? TradingApi.EarnWithdrawMode.EXACT_ASSETS,
+  )
   const inputRef = useRef<ComponentRef<typeof StyledNumericalInput>>(null)
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
@@ -87,34 +170,94 @@ export function WithdrawAmountView({
       const normalized = value.replace(/^0+(?=\d)/, '')
       onSetFontSize(normalized)
       setAmount(normalized)
+      setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
     },
     [onSetFontSize],
+  )
+  const convertUsdToLocalFiat = useCallback(
+    (balanceUsd: number): number => convertFiatAmount(balanceUsd).amount,
+    [convertFiatAmount],
   )
 
   const handlePercentPress = useCallback(
     (pct: number) => {
-      const value = (availableBalance * pct).toFixed(FIAT_DECIMALS)
+      const value = getEarnFiatPercentageInput({
+        balanceUsd: withdrawableBalanceUsd,
+        convertUsdToLocalFiat,
+        fiatDecimals: FIAT_DECIMALS,
+        percentage: pct,
+        rounding: pct === 1 && withdrawableAmount.isLiquidityLimited ? 'down' : 'nearest',
+      })
       onSetFontSize(value)
       setAmount(value)
       setInputInFiat(true)
+      setWithdrawMode(
+        pct === 1 && !withdrawableAmount.isLiquidityLimited
+          ? TradingApi.EarnWithdrawMode.MAX_SHARES
+          : TradingApi.EarnWithdrawMode.EXACT_ASSETS,
+      )
     },
-    [availableBalance, onSetFontSize],
+    [convertUsdToLocalFiat, onSetFontSize, withdrawableAmount.isLiquidityLimited, withdrawableBalanceUsd],
   )
 
+  useEffect(() => {
+    if (withdrawableAmount.isLiquidityLimited && withdrawMode === TradingApi.EarnWithdrawMode.MAX_SHARES) {
+      setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
+    }
+  }, [withdrawMode, withdrawableAmount.isLiquidityLimited])
+
   const parsedAmount = Number(amount) || 0
-  const isOverBalance = parsedAmount > availableBalance
-  const isReviewDisabled = parsedAmount <= 0 || isOverBalance
+  const { fiatToToken, tokenToFiat } = useFiatTokenConversion({ currency })
 
-  const balanceLabel = `${formatNumberOrString({ value: availableBalance, type: NumberType.FiatStandard })} ${t(
-    'explore.earn.deposit.available',
-  )}`
+  const alternateDisplayAmount = useMemo(() => {
+    if (!amount) {
+      return undefined
+    }
+    return inputInFiat ? (fiatToToken(amount) ?? undefined) : (tokenToFiat(amount) ?? undefined)
+  }, [amount, fiatToToken, inputInFiat, tokenToFiat])
 
-  const ctaLabel =
-    parsedAmount <= 0
-      ? t('explore.earn.withdraw.enterAmount')
-      : isOverBalance
-        ? t('explore.earn.deposit.insufficientBalance')
-        : t('common.button.review')
+  const inputAsLocalFiat = useMemo<number | undefined>(() => {
+    if (parsedAmount <= 0) {
+      return 0
+    }
+    if (inputInFiat) {
+      return parsedAmount
+    }
+    const fiatAmount = tokenToFiat(amount)
+    return fiatAmount !== null ? Number(fiatAmount) : undefined
+  }, [amount, inputInFiat, parsedAmount, tokenToFiat])
+
+  const hasPositionBalance = hasConfirmedEarnPositionRawBalance(position)
+  const { isOverBalance, isReviewDisabled } = getEarnAmountValidation({
+    availableAmount: availableBalanceLocal,
+    comparisonAmount: inputAsLocalFiat,
+    hasRequiredSelection: hasPositionBalance && destinationCurrencyId !== undefined && currency !== undefined,
+    inputAmount: parsedAmount,
+    skipOverBalanceCheck:
+      withdrawMode === TradingApi.EarnWithdrawMode.MAX_SHARES && !withdrawableAmount.isLiquidityLimited,
+  })
+  const isOverWithdrawableLiquidity = withdrawableAmount.isLiquidityLimited && isOverBalance
+  const debouncedIsOverWithdrawableLiquidity = useDebounce(isOverWithdrawableLiquidity, EARN_INPUT_ERROR_DEBOUNCE_MS)
+  const withdrawableBalanceFormatted = convertFiatAmountFormatted(withdrawableBalanceUsd, NumberType.FiatStandard)
+  const showLiquidityError = debouncedIsOverWithdrawableLiquidity
+
+  // Available is vault-redeemable value, not destination-chain wallet balance.
+  const balanceLabel = `${withdrawableBalanceFormatted} ${t('explore.earn.deposit.available')}`
+  const depositedBalanceFormatted = convertFiatAmountFormatted(position.depositedUsd, NumberType.FiatStandard)
+
+  const ctaLabel = getWithdrawCtaLabel({
+    hasPositionBalance,
+    inputAmount: parsedAmount,
+    isOverBalance,
+    isOverWithdrawableLiquidity,
+    labels: {
+      enterAmount: t('explore.earn.withdraw.enterAmount'),
+      insufficientBalance: t('explore.earn.deposit.insufficientBalance'),
+      loading: t('common.loading'),
+      lowLiquidity: t('explore.earn.withdraw.lowLiquidity.cta'),
+      review: t('common.button.review'),
+    },
+  })
 
   const scaledInputWidth = useMemo(
     () => (amount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined),
@@ -122,34 +265,49 @@ export function WithdrawAmountView({
   )
 
   const handleReview = useCallback(() => {
-    onReview({ amount, chainId })
-  }, [amount, chainId, onReview])
+    if (!hasPositionBalance || !currency) {
+      return
+    }
+    const localFiat = inputInFiat ? amount : tokenToFiat(amount)
+    if (localFiat === null) {
+      return
+    }
+    onReview({ amount: localFiat, chainId, withdrawMode })
+  }, [amount, chainId, currency, hasPositionBalance, inputInFiat, onReview, tokenToFiat, withdrawMode])
 
   const focusInput = useCallback(() => {
     inputRef.current?.focus()
   }, [])
 
-  const handleToggleInputUnit = useCallback(() => setInputInFiat((prev) => !prev), [])
+  const handleToggleInputUnit = useCallback(() => {
+    setInputInFiat((prev) => {
+      const next = !prev
+      if (!amount) {
+        return next
+      }
+      const converted = next ? tokenToFiat(amount) : fiatToToken(amount)
+      if (converted === null) {
+        return next
+      }
+      const trimmed = next ? Number(converted).toFixed(FIAT_DECIMALS) : converted
+      onSetFontSize(trimmed)
+      setAmount(trimmed)
+      return next
+    })
+  }, [amount, fiatToToken, onSetFontSize, tokenToFiat])
 
   const handleNetworkChange = useCallback((next: UniverseChainId | undefined) => {
     if (next) {
-      setChainId(next)
+      setSelectedChainId(next)
     }
   }, [])
 
   const chainLabel = getChainInfo(chainId).label
+  const maxDecimals = inputInFiat ? FIAT_DECIMALS : (currency?.decimals ?? FIAT_DECIMALS)
 
   return (
     <Flex gap="$spacing16">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea onPress={onBack} hoverable>
-          <BackArrow color="$neutral2" size="$icon.24" />
-        </TouchableArea>
-        <Text variant="body2" color="$neutral1">
-          {t('explore.earn.withdraw.title')}
-        </Text>
-        <ModalCloseIcon onClose={onClose} />
-      </Flex>
+      <EarnAmountViewHeader title={t('explore.earn.withdraw.title')} onBack={onBack} onClose={onClose} />
 
       <Flex gap="$spacing4">
         <Flex
@@ -161,6 +319,7 @@ export function WithdrawAmountView({
           py="$spacing48"
           gap="$spacing16"
           alignItems="center"
+          position="relative"
           cursor="text"
           onPress={focusInput}
           onLayout={onLayout}
@@ -169,7 +328,7 @@ export function WithdrawAmountView({
             <Flex onLayout={onExtraElementLayout}>
               {inputInFiat && (
                 <NumericalInputSymbolContainer showPlaceholder={!amount} numericalFontSize={fontSize}>
-                  $
+                  {fiatSymbol}
                 </NumericalInputSymbolContainer>
               )}
             </Flex>
@@ -180,7 +339,7 @@ export function WithdrawAmountView({
               fieldWidth={scaledInputWidth}
               numericalFontSize={fontSize}
               hasPrefix={inputInFiat}
-              maxDecimals={FIAT_DECIMALS}
+              maxDecimals={maxDecimals}
               ref={inputRef}
             />
             <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
@@ -193,19 +352,41 @@ export function WithdrawAmountView({
               <AlternateCurrencyDisplay
                 inputCurrency={currency}
                 inputInFiat={inputInFiat}
-                exactAmountOut={amount}
+                exactAmountOut={alternateDisplayAmount}
                 onToggle={handleToggleInputUnit}
+                disabled={alternateDisplayAmount === undefined}
               />
             </Flex>
           ) : (
             <Flex row alignItems="center" gap="$spacing8" justifyContent="center" flexWrap="wrap">
               {PERCENT_OPTIONS.map((pct) => (
-                <PredefinedAmount
+                <Button
                   key={pct}
-                  label={pct === 1 ? t('common.max') : `${Math.round(pct * 100)}%`}
+                  fill={false}
+                  minWidth="$spacing60"
+                  size="medium"
+                  emphasis="tertiary"
                   onPress={() => handlePercentPress(pct)}
-                />
+                >
+                  {pct === 1 ? t('common.max') : `${Math.round(pct * 100)}%`}
+                </Button>
               ))}
+            </Flex>
+          )}
+          {showLiquidityError && (
+            <Flex position="absolute" left="$spacing24" right="$spacing24" bottom="$spacing12">
+              <Flex row centered flexWrap="wrap" gap="$spacing4">
+                <EarnInlineError
+                  message={t('explore.earn.withdraw.lowLiquidity.available', {
+                    amount: withdrawableBalanceFormatted,
+                  })}
+                />
+                <Anchor href={MORPHO_FAQ_URL} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
+                  <Text color="$neutral1" variant="buttonLabel3">
+                    {t('common.button.learn')}
+                  </Text>
+                </Anchor>
+              </Flex>
             </Flex>
           )}
         </Flex>
@@ -232,13 +413,24 @@ export function WithdrawAmountView({
               <Text variant="body2" color="$neutral1">
                 {currency?.name ?? 'USD Coin'}
               </Text>
-              <Text variant="body3" color="$neutral2">
-                {balanceLabel}
-              </Text>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body3" color="$neutral2">
+                  {balanceLabel}
+                </Text>
+                {withdrawableAmount.isLiquidityLimited && (
+                  <WithdrawLiquidityInfoPopover
+                    currencyInfo={currencyInfo}
+                    depositedBalanceFormatted={depositedBalanceFormatted}
+                    withdrawableBalanceFormatted={withdrawableBalanceFormatted}
+                  />
+                )}
+              </Flex>
             </Flex>
           </Flex>
           <Text variant="body3" color="$accent1">
-            {t('explore.earn.vault.rateValue', { apy: formatPercent(vault.apyPercent) })}
+            {t('explore.earn.vault.rateValue', {
+              apy: formatPercent(vault.apyPercent, 2),
+            })}
           </Text>
         </Flex>
 
@@ -258,13 +450,15 @@ export function WithdrawAmountView({
             {t('explore.earn.withdraw.to')}
           </Text>
           <NetworkFilter
-            networks={WITHDRAW_DESTINATION_CHAIN_IDS}
+            networks={withdrawDestinationChainIds}
             currentChainId={chainId}
             isTriggerStyled={false}
             showMultichainOption={false}
             position="right"
-            // Trigger sits near the bottom of the modal; flip the menu upward so it stays inside.
-            forceFlipUp
+            positionFixed
+            showSearch
+            tieredOptions={tieredNetworkOptions}
+            dropdownStyle={{ maxHeight: EARN_SELECTOR_DROPDOWN_MAX_HEIGHT }}
             onPress={handleNetworkChange}
             customTrigger={
               <Flex row alignItems="center" gap="$spacing6">
@@ -278,7 +472,15 @@ export function WithdrawAmountView({
         </Flex>
       </Flex>
 
-      <Button emphasis="primary" size="large" py="$spacing24" isDisabled={isReviewDisabled} onPress={handleReview}>
+      <Button
+        fill={false}
+        width="100%"
+        variant="branded"
+        emphasis="primary"
+        size="large"
+        isDisabled={isReviewDisabled}
+        onPress={handleReview}
+      >
         {ctaLabel}
       </Button>
     </Flex>

@@ -1,0 +1,22 @@
+diff --git a/apple/Elements/RNSVGImage.mm b/apple/Elements/RNSVGImage.mm
+index 243c24c1b4552d033154823c4b667191782778f7..f24dd5ed9a8259933e712986d26f12864cc036b7 100644
+--- a/apple/Elements/RNSVGImage.mm
++++ b/apple/Elements/RNSVGImage.mm
+@@ -45,7 +45,7 @@ @implementation RNSVGImage {
+ 
+ #ifdef RCT_NEW_ARCH_ENABLED
+   RNSVGImageShadowNode::ConcreteState::Shared _state;
+-  RCTImageResponseObserverProxy _imageResponseObserverProxy;
++  std::shared_ptr<RCTImageResponseObserverProxy> _imageResponseObserverProxy;
+ #endif // RCT_NEW_ARCH_ENABLED
+ }
+ #ifdef RCT_NEW_ARCH_ENABLED
+@@ -62,7 +62,7 @@ - (instancetype)initWithFrame:(CGRect)frame
+     static const auto defaultProps = std::make_shared<const RNSVGImageProps>();
+     _props = defaultProps;
+ 
+-    _imageResponseObserverProxy = RCTImageResponseObserverProxy(self);
++    _imageResponseObserverProxy = std::make_shared<RCTImageResponseObserverProxy>(self);
+   }
+   return self;
+ }

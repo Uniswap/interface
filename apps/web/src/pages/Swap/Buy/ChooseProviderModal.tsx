@@ -6,7 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -165,7 +165,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     >
       <Flex gap="$spacing24">
         <GetHelpHeader
-          link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
+          link={UniswapHelpUrls.articles.fiatOnRampHelp}
           closeModal={closeModal}
           closeDataTestId="ChooseProviderModal-close"
         />

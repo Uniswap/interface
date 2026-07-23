@@ -196,6 +196,22 @@ describe('parseConfig', () => {
       expect(typeof nodeEnv).toBe('string')
     })
 
+    it('surfaces isBetaUsingProdApi through the base config (forwarded to url overrides)', () => {
+      // Guards the beta API-target switch: callers pass getConfig() wholesale to
+      // getUniswapServiceUrls, so the parsed config must retain this field.
+      const enabled = parseConfig({
+        values: { isBetaUsingProdApi: 'true' },
+        schema: z.object({}),
+      })
+      expect(enabled.isBetaUsingProdApi).toBe(true)
+
+      const defaulted = parseConfig({
+        values: {},
+        schema: z.object({}),
+      })
+      expect(defaulted.isBetaUsingProdApi).toBe(false)
+    })
+
     it('has matching keys in BaseConfigSchema and BaseConfigValues', () => {
       const schemaKeys = Object.keys(BaseConfigSchema.shape).sort()
       const valueKeys = Object.keys(BaseConfigValues).sort()

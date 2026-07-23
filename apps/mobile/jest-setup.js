@@ -9,7 +9,23 @@ import 'wallet/jest-package-mocks'
 import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/src/i18n' // Uses real translations for tests
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
-import { setUpTests } from 'react-native-reanimated'
+
+// RNGH v3 GestureDetectors throw without a GestureHandlerRootView ancestor; tests render
+// without one. No-op the dev-only check so gestures mount without polluting snapshots.
+// Both src and lib paths are mocked since either may resolve (mirrors RNGH's own jestSetup).
+jest.mock('react-native-gesture-handler/src/v3/detectors/useEnsureGestureHandlerRootView', () => ({
+  useEnsureGestureHandlerRootView: () => undefined,
+}))
+jest.mock('react-native-gesture-handler/lib/module/v3/detectors/useEnsureGestureHandlerRootView', () => ({
+  useEnsureGestureHandlerRootView: () => undefined,
+}))
+
+// react-native-reanimated 4 imports react-native-worklets which tries to bind to
+// a native module at import time. Mock worklets with the package's official jest
+// mock before reanimated loads. Must come before the reanimated import below.
+jest.mock('react-native-worklets', () => require('react-native-worklets/lib/module/mock'))
+
+const { setUpTests } = require('react-native-reanimated')
 
 setUpTests()
 
@@ -150,8 +166,6 @@ jest.mock('react-native', () => {
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: jest.fn().mockImplementation(() => 200),
 }))
-
-require('react-native-reanimated').setUpTests()
 
 jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),

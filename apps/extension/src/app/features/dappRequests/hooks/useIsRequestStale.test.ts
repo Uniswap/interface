@@ -29,12 +29,12 @@ describe('isRequestStale', () => {
 
 describe('useIsRequestStale', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
   })
 
   it('returns false initially for fresh request', () => {
@@ -57,7 +57,7 @@ describe('useIsRequestStale', () => {
 
     // Fast-forward past expiry time
     act(() => {
-      jest.advanceTimersByTime(120000) // 2 minutes
+      vi.advanceTimersByTime(120000) // 2 minutes
     })
 
     expect(result.current).toBe(true)
@@ -79,7 +79,7 @@ describe('useIsRequestStale', () => {
 
     // Need to advance timer to trigger the interval check
     act(() => {
-      jest.advanceTimersByTime(1000)
+      vi.advanceTimersByTime(1000)
     })
 
     expect(result.current).toBe(true)
@@ -93,7 +93,7 @@ describe('useIsRequestStale', () => {
 
     // Fast-forward by 30 seconds to reach expiry time
     act(() => {
-      jest.advanceTimersByTime(30000)
+      vi.advanceTimersByTime(30000)
     })
 
     // Should now be stale
@@ -101,7 +101,7 @@ describe('useIsRequestStale', () => {
 
     // Verify it stays stale after more time passes
     act(() => {
-      jest.advanceTimersByTime(10000)
+      vi.advanceTimersByTime(10000)
     })
 
     expect(result.current).toBe(true)

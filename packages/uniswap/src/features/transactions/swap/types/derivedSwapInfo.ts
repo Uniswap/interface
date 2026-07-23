@@ -28,6 +28,5 @@ export type DerivedSwapInfo<
   focusOnCurrencyField: CurrencyField | null
   trade: TradeWithStatus
   wrapType: WrapType
-  selectingCurrencyField?: CurrencyField
   txId?: string
 }

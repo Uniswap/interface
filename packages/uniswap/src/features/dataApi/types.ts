@@ -86,6 +86,11 @@ export type PortfolioBalance = {
   id: string
   cacheId: string
   quantity: number // float representation of balance
+  /**
+   * Exact raw (base-unit) balance string when the API provides one. `quantity` is a float64 and
+   * loses precision past ~15-17 significant digits, so use this for exact-amount math.
+   */
+  quantityRaw?: string
   balanceUSD: Maybe<number>
   currencyInfo: CurrencyInfo
   relativeChange24: Maybe<number>

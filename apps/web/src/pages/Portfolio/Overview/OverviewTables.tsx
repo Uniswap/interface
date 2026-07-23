@@ -1,9 +1,9 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
@@ -33,7 +33,7 @@ export const PortfolioOverviewTables = memo(function PortfolioOverviewTables({
   const evmAddress = portfolioAddresses.evmAddress
   const { isConnected: isEvmConnected } = useConnectionStatus(Platform.EVM)
   const { isExternalWallet } = usePortfolioRoutes()
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { isTestnetModeEnabled } = useEnabledChains()
   const showMiniPoolsTable = !!evmAddress
   const showOpenLimitsTable = !!evmAddress && (!chainId || chainId === UniverseChainId.Mainnet)

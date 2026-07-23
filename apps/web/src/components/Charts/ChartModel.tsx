@@ -2,6 +2,7 @@ import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { ReactElement, TouchEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { assertWebElement, ColorTokens, Flex, TamaguiElement, useMedia, useSporeColors } from 'ui/src'
+import { opacify } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ChartModel } from '~/components/Charts/ChartModelCore'
@@ -20,6 +21,9 @@ export {
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
 } from '~/components/Charts/ChartModelCore'
 export type { ChartHoverData, ChartModelParams } from '~/components/Charts/ChartModelCore'
+
+/** Screen-space hover position passed to chart overlay render props. `plotRightEdge` marks where the price axis begins. */
+export type ChartHoverCoordinates = { x: number; y: number; plotRightEdge?: number }
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
@@ -45,21 +49,23 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   disableChartTouchPanning,
   showDottedBackground = false,
   showLeftFadeOverlay = false,
-  showCustomHoverMarker = false,
+  v2HoverStyles = false,
   overrideColor,
+  disableScrubbing = false,
 }: {
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
   params: TParamType
   height?: number
-  children?: (crosshair?: TDataType) => ReactElement | null
+  children?: (crosshair?: TDataType, hover?: ChartHoverCoordinates | null) => ReactElement | null
   onCrosshairChange?: (crosshair?: TDataType) => void
   className?: string
   disableChartTouchPanning?: boolean // On touch devices, optionally disables chart touch panning on mobile devices to avoid interfering with vertical scrolling
   showDottedBackground?: boolean
   showLeftFadeOverlay?: boolean
-  showCustomHoverMarker?: boolean
+  v2HoverStyles?: boolean
   overrideColor?: string // Optional token color override for accent1
+  disableScrubbing?: boolean // When true, the live dot stays pinned at the last point even on hover
 }) {
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
@@ -206,22 +212,41 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       </Flex>
 
       {/* Header/content outside background */}
-      {children && children(crosshairData)}
+      {children &&
+        children(
+          crosshairData,
+          hoverCoordinates ? { ...hoverCoordinates, plotRightEdge: chartModelRef.current?.getPlotRightEdge() } : null,
+        )}
       {TooltipBody && crosshairData && (
         <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
           <TooltipBody data={crosshairData} />
         </ChartTooltip>
       )}
       {params.stale && <StaleBanner />}
+      {/* Right-side dim overlay - covers area past the cursor when scrubbing */}
+      {v2HoverStyles && hoverCoordinates && (
+        <Flex
+          position="absolute"
+          pointerEvents="none"
+          style={{
+            left: `${hoverCoordinates.x}px`,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: opacify(65, colors.surface1.val),
+            zIndex: 1,
+          }}
+        />
+      )}
       {/* Custom hover marker */}
-      {showCustomHoverMarker && hoverCoordinates && chartDivElement && chartModelRef.current && (
+      {v2HoverStyles && hoverCoordinates && chartDivElement && chartModelRef.current && (
         <CustomHoverMarker coordinates={hoverCoordinates} lineColor={colors.accent1.val} />
       )}
       {/* Live dot indicator at the end of line charts - hidden when zoomed */}
       {chartDivElement && isChartModelReady && chartModelRef.current && (
         <LiveDotRenderer
           chartModel={chartModelRef.current as ChartModelWithLiveDot}
-          isHovering={!!crosshairData}
+          isHovering={!disableScrubbing && !!crosshairData}
           isZoomed={isZoomed}
           chartContainer={chartDivElement as HTMLDivElement}
           overrideColor={overrideColor}

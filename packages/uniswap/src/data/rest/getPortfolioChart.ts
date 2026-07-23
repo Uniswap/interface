@@ -1,10 +1,10 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { QueryKey, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { GetPortfolioChartRequest, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
+import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
 import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
@@ -19,15 +19,15 @@ export type GetPortfolioChartInput = {
   enabled?: boolean
 }
 
-const portfolioChartClient = createPromiseClient(DataApiService, uniswapPostTransport)
+const portfolioChartClient = createPromiseClient(DataApiService, entryGatewayPostTransport)
 
 export const getPortfolioHistoricalValueChartQuery = ({
   input,
   enabled = true,
 }: GetPortfolioChartInput): QueryOptionsResult<
-  GetPortfolioChartResponse | undefined,
+  PlainMessage<GetPortfolioChartResponse> | undefined,
   Error,
-  GetPortfolioChartResponse | undefined,
+  PlainMessage<GetPortfolioChartResponse> | undefined,
   QueryKey
 > => {
   const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
@@ -37,20 +37,20 @@ export const getPortfolioHistoricalValueChartQuery = ({
 
   return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.GetPortfolioChart, accountAddressesByPlatform, inputWithoutWalletAccount] as const,
-    queryFn: async (): Promise<GetPortfolioChartResponse | undefined> => {
+    // toPlainMessage strips the Message prototype so the value survives disk persistence.
+    queryFn: async (): Promise<PlainMessage<GetPortfolioChartResponse> | undefined> => {
       if (!transformedInput) {
         return Promise.resolve(undefined)
       }
 
-      const result = await portfolioChartClient.getPortfolioChart(transformedInput)
-      return result as GetPortfolioChartResponse
+      return toPlainMessage(await portfolioChartClient.getPortfolioChart(transformedInput))
     },
     enabled: !!transformedInput && enabled,
     placeholderData: (prev) => prev,
   }) as QueryOptionsResult<
-    GetPortfolioChartResponse | undefined,
+    PlainMessage<GetPortfolioChartResponse> | undefined,
     Error,
-    GetPortfolioChartResponse | undefined,
+    PlainMessage<GetPortfolioChartResponse> | undefined,
     QueryKey
   >
 }
@@ -61,6 +61,6 @@ export const getPortfolioHistoricalValueChartQuery = ({
  */
 export function useGetPortfolioHistoricalValueChartQuery(
   params: GetPortfolioChartInput,
-): UseQueryResult<GetPortfolioChartResponse | undefined, Error> {
+): UseQueryResult<PlainMessage<GetPortfolioChartResponse> | undefined, Error> {
   return useQuery(getPortfolioHistoricalValueChartQuery(params))
 }

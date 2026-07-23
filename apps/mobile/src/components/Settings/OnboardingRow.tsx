@@ -23,9 +23,9 @@ export function OnboardingRow({ iconProps }: { iconProps: IconProps }): JSX.Elem
   const onPressReset = (): void => {
     setShowConfirmModal(false)
     const uniqueMnemonicIds = new Set(associatedAccounts.map((a) => a.mnemonicId))
-    const mnemonicPromises = [...uniqueMnemonicIds].map(Keyring.removeMnemonic)
+    const mnemonicPromises = [...uniqueMnemonicIds].map((id) => Keyring.removeMnemonic(id))
     const accountAddresses = associatedAccounts.map((a) => a.address)
-    const keyPromises = accountAddresses.map(Keyring.removePrivateKey)
+    const keyPromises = accountAddresses.map((address) => Keyring.removePrivateKey(address))
     Promise.all([...mnemonicPromises, ...keyPromises])
       .then(() => appStateResetter.resetAll())
       .then(() => {

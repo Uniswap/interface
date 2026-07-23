@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, FlexLoader, Image, Skeleton, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -19,8 +20,15 @@ import { LP_INCENTIVES_CHAIN_IDS, LP_INCENTIVES_DUST_THRESHOLD } from '~/feature
 import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/useEffectivelyClaimed'
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
+import { PortfolioPoolsSidebarCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsSidebarCard'
 
-export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: string | undefined }) {
+export function PortfolioPoolsRewardsCard({
+  walletAddress,
+  isExternalWallet = false,
+}: {
+  walletAddress: string | undefined
+  isExternalWallet?: boolean
+}) {
   const { t } = useTranslation()
 
   const {
@@ -72,11 +80,6 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
     setTokenRewards(effectivelyClaimed ? '0' : (rewardsData?.totalUnclaimedAmountUni ?? '0'))
   }, [effectivelyClaimed, rewardsData?.totalUnclaimedAmountUni, setTokenRewards])
 
-  const handleCollectPress = useCallback(() => {
-    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
-    openModal()
-  }, [openModal])
-
   const handleClaimSuccess = useCallback(() => {
     sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
       token_rewards: tokenRewards,
@@ -93,7 +96,7 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
 
   return (
     <>
-      <Flex backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing20" gap="$gap8" width="100%">
+      <PortfolioPoolsSidebarCard gap="$gap8">
         <Flex row gap="$gap4" alignItems="center">
           <Text variant="body3" color="$neutral2">
             {t('pool.rewards')}
@@ -115,7 +118,7 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
                   </Text>
                   {!hasError && (
                     <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-                      <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
+                      <LearnMoreLink textVariant="buttonLabel4" url={UniswapHelpUrls.articles.lpIncentiveInfo} />
                     </Trace>
                   )}
                 </Flex>
@@ -128,29 +131,38 @@ export function PortfolioPoolsRewardsCard({ walletAddress }: { walletAddress: st
           {showSkeleton ? (
             <Flex flexGrow={1}>
               <Skeleton>
-                <FlexLoader borderRadius="$rounded4" height={24} width={100} opacity={0.4} />
+                <FlexLoader borderRadius="$rounded12" height={24} width={100} opacity={0.4} />
               </Skeleton>
             </Flex>
           ) : (
-            <Text variant="heading3" color={userHasRewards || hasError ? '$neutral1' : '$neutral3'} flexGrow={1}>
-              {hasError
-                ? '-'
-                : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))}
-            </Text>
+            <Flex flexGrow={1}>
+              <AnimatedNumber
+                value={
+                  hasError
+                    ? '-'
+                    : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))
+                }
+                numericValue={rewardsUsdValue ? Number(rewardsUsdValue.toExact()) : 0}
+                textVariant="$heading3"
+                color={userHasRewards || hasError ? '$neutral1' : '$neutral3'}
+              />
+            </Flex>
           )}
-          {!isZero && !showSkeleton && (
-            <Button
-              size="xsmall"
-              emphasis="secondary"
-              fill={false}
-              isDisabled={hasError || isPendingTransaction}
-              onPress={handleCollectPress}
-            >
-              {t('common.collect.button')}
-            </Button>
+          {!isZero && !showSkeleton && !isExternalWallet && (
+            <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveCollectRewardsButtonClicked}>
+              <Button
+                size="xsmall"
+                emphasis="secondary"
+                fill={false}
+                isDisabled={hasError || isPendingTransaction}
+                onPress={openModal}
+              >
+                {t('common.collect.button')}
+              </Button>
+            </Trace>
           )}
         </Flex>
-      </Flex>
+      </PortfolioPoolsSidebarCard>
       <LpIncentiveClaimModal
         isOpen={isModalOpen}
         onClose={closeModal}

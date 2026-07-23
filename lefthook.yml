@@ -17,6 +17,9 @@ pre-commit:
       fail_text: "If this is a fresh git worktree, run 'bun install' first — fast-checks needs node_modules/."
       stage_fixed: true
 
+    env-files:
+      run: ./scripts/check-env-files.sh
+
     git-secrets:
       run: |
         export TERM=dumb
@@ -37,6 +40,37 @@ pre-commit:
           git diff --cached --no-color | trufflehog stdin --only-verified --fail
         else
           echo "trufflehog not installed, skipping..."
+        fi
+
+    i18n-check:
+      glob: "{apps,packages}/**/*.{ts,tsx}"
+      env:
+        CI: "true"
+        FORCE_COLOR: "0"
+      run: |
+        export TERM=dumb
+        # Check if any staged TS/TSX files exist that might contain i18n strings
+        STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "(apps|packages)/.*\.(ts|tsx)$" || true)
+
+        if [ -n "$STAGED_FILES" ]; then
+          echo "Checking i18n strings (found modified TS/TSX files)..."
+
+          # Run i18n extraction (--silent suppresses per-file [read]/[write] logs)
+          bun run i18n:extract --silent
+
+          # Check if the i18n source file was modified
+          if git diff --exit-code packages/uniswap/src/i18n/locales/source/en-US.json > /dev/null 2>&1; then
+            echo "✅ i18n strings are up to date"
+          else
+            echo "❌ i18n strings need to be updated!"
+            echo "Please run 'bun i18n:extract' and commit the changes."
+            echo ""
+            echo "Modified translation file:"
+            git diff --stat packages/uniswap/src/i18n/locales/source/en-US.json
+            exit 1
+          fi
+        else
+          echo "No TS/TSX files staged, skipping i18n check..."
         fi
 
 post-checkout:

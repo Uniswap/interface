@@ -1,5 +1,4 @@
-/* oxlint-disable typescript/no-unnecessary-condition */
-/* oxlint-disable max-lines */
+/* oxlint-disable typescript/no-unnecessary-condition max-lines */
 
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper, Row } from '@tanstack/react-table'
@@ -14,7 +13,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -41,7 +40,7 @@ import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTab
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
 import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
-import { useSimplePagination } from '~/hooks/useSimplePagination'
+import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
@@ -80,6 +79,7 @@ interface PoolTableValues {
   rewardApr?: number
   token0CurrencyId?: string
   token1CurrencyId?: string
+  selected?: boolean
 }
 
 function isGqlPool(pool: TablePool | PoolStat): pool is TablePool & { hash: string } {
@@ -189,7 +189,7 @@ function PoolTableHeader({
     [PoolSortFields.RewardApr]: (
       <>
         {t('pool.incentives.merklDocs')}
-        <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.merklDocsUrl} />
+        <LearnMoreLink textVariant="buttonLabel4" url={UniswapStaticUrls.merklDocsUrl} />
       </>
     ),
   }
@@ -227,7 +227,13 @@ interface TopPoolTableProps {
   isError: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }
-function ExploreTopPoolTableContent(): JSX.Element {
+function ExploreTopPoolTableContent({
+  staticSize,
+  pageSize,
+}: {
+  staticSize?: boolean
+  pageSize?: number
+}): JSX.Element {
   const chainId = useChainIdFromUrlParam()
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
     sortMethod: s.sortMethod,
@@ -249,13 +255,26 @@ function ExploreTopPoolTableContent(): JSX.Element {
     protocol: selectedProtocol,
   })
 
-  return <TopPoolTable topPoolData={{ topPools, isLoading, isError, loadMore }} />
+  return (
+    <TopPoolTable
+      topPoolData={{ topPools, isLoading, isError, loadMore }}
+      staticSize={staticSize}
+      pageSize={pageSize}
+    />
+  )
 }
 
-export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
+export const ExploreTopPoolTable = memo(function ExploreTopPoolTable({
+  staticSize,
+  pageSize,
+}: {
+  // Render a fixed set of rows with no infinite scroll / internal scroll area (e.g. discovery surfaces).
+  staticSize?: boolean
+  pageSize?: number
+} = {}) {
   return (
     <PoolTableStoreContextProvider>
-      <ExploreTopPoolTableContent />
+      <ExploreTopPoolTableContent staticSize={staticSize} pageSize={pageSize} />
     </PoolTableStoreContextProvider>
   )
 })
@@ -273,14 +292,18 @@ const TopPoolTable = memo(function TopPoolTable({
 }) {
   const { topPools, isLoading, isError, loadMore: backendLoadMore } = topPoolData
 
-  // Client-side pagination fallback (for legacy mode when loadMore is undefined)
-  const { page, loadMore: clientLoadMore } = useSimplePagination()
+  // Client-side pagination fallback (for legacy mode when backend loadMore is undefined).
+  // useSimplePagination paces the reveal so the load-more indicator shows, and gates loadMore once
+  // all loaded rows are displayed.
+  const { page, loadMore: clientLoadMore } = useSimplePagination({ totalCount: topPools?.length, pageSize })
 
   // Use backend loadMore if available, otherwise fall back to client-side slicing
   const effectiveLoadMore = backendLoadMore ?? clientLoadMore
-  const displayedPools = backendLoadMore
-    ? topPools // Backend pagination: use all fetched pools
-    : topPools?.slice(0, page * pageSize) // Client-side: slice by page
+  const displayedPools = staticSize
+    ? topPools?.slice(0, pageSize) // Static: fixed number of rows, no pagination
+    : backendLoadMore
+      ? topPools // Backend pagination: use all fetched pools
+      : topPools?.slice(0, page * pageSize) // Client-side: slice by page
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
@@ -291,7 +314,6 @@ const TopPoolTable = memo(function TopPoolTable({
         loadMore={staticSize ? undefined : effectiveLoadMore}
         maxWidth={1200}
         forcePinning={forcePinning}
-        maxHeight={staticSize ? 1000 : undefined}
       />
     </TableWrapper>
   )
@@ -305,9 +327,12 @@ export function PoolsTable({
   maxWidth,
   maxHeight,
   hiddenColumns,
+  hideIndex,
   forcePinning,
   getLink,
   linkState,
+  selectedPoolId,
+  selectedPoolChainId,
 }: {
   pools?: TablePool[] | PoolStat[]
   loading: boolean
@@ -316,13 +341,19 @@ export function PoolsTable({
   maxWidth?: number
   maxHeight?: number
   hiddenColumns?: PoolSortFields[]
+  hideIndex?: boolean
   forcePinning?: boolean
   getLink?: (pool: PoolLinkData) => string
   linkState?: { entryPoint?: string }
+  // The pool currently selected in the URL (pool id/hash + its chain). The matching row renders
+  // with a selected highlight — used by the add-liquidity pool browser where the table stays
+  // visible after a pool is picked.
+  selectedPoolId?: string
+  selectedPoolChainId?: UniverseChainId
 }) {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isLPIncentivesTablesColumnEnabled = useFeatureFlag(FeatureFlags.LpIncentivesTablesColumn)
 
   const { formatPercent, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
@@ -340,9 +371,15 @@ export function PoolsTable({
         const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain) ?? defaultChainId
         const poolIdOrHash = getPoolIdOrHash(pool)
         const volumes = getPoolVolumes(pool)
+        // The row link is built from this same `poolIdOrHash`, so the URL route param matches it
+        // verbatim for the clicked pool — exact equality is correct (and avoids address-casing rules
+        // that don't apply to v4 pool-id hashes).
+        const selected =
+          selectedPoolId !== undefined && chainId === selectedPoolChainId && poolIdOrHash === selectedPoolId
 
         return {
           index: poolSortRank,
+          selected,
           poolDescription: (
             <PoolDescription
               token0={unwrapToken(chainId, pool.token0) as TokenStats | Token | undefined}
@@ -378,7 +415,16 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [convertFiatAmountFormatted, defaultChainId, filterString, getLink, linkState, pools],
+    [
+      convertFiatAmountFormatted,
+      defaultChainId,
+      filterString,
+      getLink,
+      linkState,
+      pools,
+      selectedPoolId,
+      selectedPoolChainId,
+    ],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -386,7 +432,7 @@ export function PoolsTable({
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     const filteredColumns = [
-      !media.lg
+      !media.lg && !hideIndex
         ? columnHelper.accessor((row) => row.index, {
             id: 'index',
             size: 60,
@@ -422,7 +468,7 @@ export function PoolsTable({
       }),
       columnHelper.accessor((row) => row.protocolVersion, {
         id: 'protocolVersion',
-        size: 80,
+        size: 68,
         header: () => (
           <HeaderCell justifyContent="flex-end">
             <Text variant="body3" color="$neutral2">
@@ -496,7 +542,7 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled
+      !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled && isLPIncentivesTablesColumnEnabled
         ? columnHelper.accessor((row) => row.rewardApr, {
             id: PoolSortFields.RewardApr,
             size: 120,
@@ -602,7 +648,9 @@ export function PoolsTable({
   }, [
     media.lg,
     hiddenColumns,
+    hideIndex,
     isLPIncentivesEnabled,
+    isLPIncentivesTablesColumnEnabled,
     showLoadingSkeleton,
     t,
     sortMethod,
@@ -617,7 +665,6 @@ export function PoolsTable({
       data={poolTableValues}
       loading={loading}
       error={error}
-      v2={multichainTokenUxEnabled}
       loadMore={loadMore}
       maxWidth={maxWidth}
       maxHeight={maxHeight}

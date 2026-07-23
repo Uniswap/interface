@@ -13,7 +13,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -32,7 +32,7 @@ import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { ExternalLink } from '~/theme/components/Links'
 
@@ -288,7 +288,9 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN0?.currency.symbol })}
+                    {t('pool.newSpecificPosition', {
+                      symbol: currencyAmounts?.TOKEN0?.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                 ),
                 Value: () => (
@@ -308,7 +310,9 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN1?.currency.symbol })}
+                    {t('pool.newSpecificPosition', {
+                      symbol: currencyAmounts?.TOKEN1?.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                 ),
                 Value: () => (

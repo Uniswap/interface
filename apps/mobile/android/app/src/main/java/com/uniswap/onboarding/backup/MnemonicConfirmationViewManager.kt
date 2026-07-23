@@ -4,14 +4,14 @@ import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.uniswap.R
 import com.uniswap.RnEthersRs
+import com.uniswap.compose.ComposeHostView
+import com.uniswap.compose.dispatchComposeHostEvent
 import com.uniswap.onboarding.backup.ui.MnemonicConfirmation
 import com.uniswap.onboarding.backup.ui.MnemonicConfirmationViewModel
 import com.uniswap.theme.UniswapComponent
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.update
  * for the MnemonicTest component used to test if user has saved their
  * seed phrase
  */
-class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
+class MnemonicConfirmationViewManager : ViewGroupManager<ComposeHostView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -35,13 +35,15 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
   private val currentPageFlow = MutableStateFlow(0)
   private val totalPagesFlow = MutableStateFlow(0)
 
-  override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
+  override fun createViewInstance(reactContext: ThemedReactContext): ComposeHostView {
     val ethersRs = RnEthersRs(reactContext)
     val viewModel = MnemonicConfirmationViewModel(ethersRs)
 
-    return ComposeView(reactContext).apply {
+    val host = ComposeHostView(reactContext).apply {
       id = R.id.mnemonic_confirmation_compose_id // Needed for RN event emitter
+    }
 
+    val composeView = ComposeView(reactContext).apply {
       setContent {
         val mnemonicId by mnemonicIdFlow.collectAsState()
         val shouldShowSmallText by shouldShowSmallTextFlow.collectAsState()
@@ -63,14 +65,14 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
             currentPage = currentPage,
             totalPages = totalPages,
           ) {
-            context as ReactContext
-            reactContext
-              .getJSModule(RCTEventEmitter::class.java)
-              .receiveEvent(id, EVENT_COMPLETED, null) // Sends event to RN bridge
+            dispatchComposeHostEvent(reactContext, host.id, EVENT_COMPLETED) // Sends event to RN bridge
           }
         }
       }
     }
+
+    host.setComposeView(composeView)
+    return host
   }
 
   /**

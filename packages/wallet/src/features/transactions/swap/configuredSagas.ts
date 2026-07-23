@@ -2,6 +2,7 @@ import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { getSharedTransactionSagaDependencies } from 'wallet/src/features/transactions/configuredSagas'
 import { createExecutePlanSaga } from 'wallet/src/features/transactions/swap/executePlanSaga'
 import { createExecuteSwapSaga } from 'wallet/src/features/transactions/swap/executeSwapSaga'
+import { createExecuteUserOpSwapSaga } from 'wallet/src/features/transactions/swap/executeUserOpSwapSaga'
 import { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 
 // Create configured saga instances using dependency injection
@@ -11,6 +12,7 @@ export const configuredExecuteSwapSaga = createExecuteSwapSaga(
   configuredPrepareAndSignSwapSaga,
 )
 export const configuredExecutePlanSaga = createExecutePlanSaga(getSharedTransactionSagaDependencies())
+export const configuredExecuteUserOpSwapSaga = createExecuteUserOpSwapSaga(getSharedTransactionSagaDependencies())
 
 // Export the monitored sagas
 export const {
@@ -44,4 +46,14 @@ export const {
   options: {
     parallel: true,
   },
+})
+
+export const {
+  name: executeUserOpSwapSagaName,
+  wrappedSaga: executeUserOpSwapSaga,
+  reducer: executeUserOpSwapReducer,
+  actions: executeUserOpSwapActions,
+} = createMonitoredSaga({
+  saga: configuredExecuteUserOpSwapSaga,
+  name: 'executeUserOpSwap',
 })

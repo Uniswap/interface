@@ -6,7 +6,6 @@ import {
   FlexProps,
   Loader,
   Text,
-  TouchableArea,
   UniswapXText,
   UniversalImage,
   UniversalImageResizeMode,
@@ -18,7 +17,9 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
+import { InfoRowActionButton } from 'uniswap/src/components/activity/details/InfoRowActionButton'
 import { getVisiblePlanSteps } from 'uniswap/src/components/activity/details/plan/getVisiblePlanSteps'
+import { getActivityDisplayVaultRows } from 'uniswap/src/components/activity/details/TransactionDetailsInfoRowsVaultRows'
 import { TransactionParticipantRow } from 'uniswap/src/components/activity/details/TransactionParticipantRow'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -39,6 +40,7 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
+  UnknownTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import { ExplorerDataType, getExplorerLink, openTransactionLink, openUri } from 'uniswap/src/utils/linking'
@@ -51,14 +53,22 @@ export function TransactionDetailsInfoRows({
   pt,
   openPlanView,
   onClose,
+  isEarnActivityDisplayEnabled = true,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
   pt?: FlexProps['pt']
   openPlanView: () => void
   onClose: () => void
+  isEarnActivityDisplayEnabled?: boolean
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows({ transactionDetails, isShowingMore, onClose, openPlanView })
+  const rows = useTransactionDetailsInfoRows({
+    transactionDetails,
+    isShowingMore,
+    onClose,
+    openPlanView,
+    isEarnActivityDisplayEnabled,
+  })
 
   return (
     <Flex gap="$spacing8" px="$spacing8" pt={pt}>
@@ -72,11 +82,13 @@ function useTransactionDetailsInfoRows({
   isShowingMore,
   openPlanView,
   onClose,
+  isEarnActivityDisplayEnabled,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
   openPlanView: () => void
   onClose: () => void
+  isEarnActivityDisplayEnabled: boolean
 }): JSX.Element[] {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
@@ -92,6 +104,15 @@ function useTransactionDetailsInfoRows({
     </InfoRow>,
   ]
   const specificRows: JSX.Element[] = []
+  const vaultRows = getActivityDisplayVaultRows({
+    transactionDetails,
+    typeInfo,
+    isEarnActivityDisplayEnabled,
+  })
+
+  if (vaultRows) {
+    specificRows.push(...vaultRows)
+  }
 
   switch (typeInfo.type) {
     case TransactionType.Approve:
@@ -176,39 +197,14 @@ function useTransactionDetailsInfoRows({
       break
 
     case TransactionType.Unknown:
-      if (typeInfo.dappInfo) {
-        if (typeInfo.dappInfo.name) {
-          specificRows.push(
-            <DappInfoRow
-              key="dappInfo"
-              label={t('transaction.details.dappName')}
-              iconUrl={typeInfo.dappInfo.icon}
-              name={typeInfo.dappInfo.name}
-            />,
-          )
-        }
-        const address = typeInfo.dappInfo.address
-        if (address) {
-          specificRows.push(
-            <InfoRow key="contract" label={t('common.text.contract')}>
-              <Text variant="body3">{shortenAddress({ address })}</Text>
-              <TouchableArea
-                onPress={async (): Promise<void> => {
-                  await openUri({
-                    uri: getExplorerLink({
-                      chainId: transactionDetails.chainId,
-                      data: address,
-                      type: ExplorerDataType.ADDRESS,
-                    }),
-                  })
-                }}
-              >
-                <ExternalLink color="$neutral3" size="$icon.16" />
-              </TouchableArea>
-            </InfoRow>,
-          )
-        }
-      }
+      specificRows.push(
+        ...getUnknownTransactionInfoRows({
+          appLabel: t('transaction.details.dappName'),
+          chainId: transactionDetails.chainId,
+          contractLabel: t('common.text.contract'),
+          typeInfo,
+        }),
+      )
       break
     default:
       break
@@ -219,10 +215,59 @@ function useTransactionDetailsInfoRows({
   return [...specificRows, ...defaultRows]
 }
 
+function getUnknownTransactionInfoRows({
+  appLabel,
+  typeInfo,
+  chainId,
+  contractLabel,
+}: {
+  appLabel: string
+  typeInfo: UnknownTransactionInfo
+  chainId: TransactionDetails['chainId']
+  contractLabel: string
+}): JSX.Element[] {
+  const rows: JSX.Element[] = []
+
+  if (!typeInfo.dappInfo) {
+    return rows
+  }
+
+  if (typeInfo.dappInfo.name) {
+    rows.push(
+      <DappInfoRow key="dappInfo" label={appLabel} iconUrl={typeInfo.dappInfo.icon} name={typeInfo.dappInfo.name} />,
+    )
+  }
+
+  const address = typeInfo.dappInfo.address
+  if (address) {
+    rows.push(
+      <InfoRow key="contract" label={contractLabel}>
+        <InfoRowActionButton
+          icon={<ExternalLink color="$neutral3" size="$icon.16" />}
+          onPress={async (): Promise<void> => {
+            await openUri({
+              uri: getExplorerLink({
+                chainId,
+                data: address,
+                type: ExplorerDataType.ADDRESS,
+              }),
+            })
+          }}
+        >
+          {shortenAddress({ address })}
+        </InfoRowActionButton>
+      </InfoRow>,
+    )
+  }
+
+  return rows
+}
+
 /**
  * Row shown in the transaction details screen for the network fee.
  * If gas is paid on multiple chains, the logo will be hidden.
  * If it's a uniswapx transaction, the uniswapx UI will be shown.
+ * If the tx was sponsored by an ERC-4337 paymaster, the sponsorship UI will be shown.
  */
 function NetworkFeeRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element {
   const { t } = useTranslation()
@@ -235,6 +280,29 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
     : [transactionDetails.chainId]
   const showNetworkLogo = chainIds.length === 1
   const Logo = isUniswapX(transactionDetails) ? UniswapX : showNetworkLogo ? NetworkLogo : undefined
+
+  const paymaster = 'paymaster' in transactionDetails ? transactionDetails.paymaster : undefined
+  const sponsorInfo = 'sponsorInfo' in transactionDetails ? transactionDetails.sponsorInfo : undefined
+
+  // Prefer the resolved sponsor name (e.g. "Sponsored by Uniswap"); fall back to the paymaster address.
+  const sponsorName = sponsorInfo?.name ?? (paymaster ? shortenAddress({ address: paymaster }) : undefined)
+
+  if (sponsorName) {
+    return (
+      <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
+        <Flex row centered gap="$spacing4">
+          {sponsorInfo?.icon && (
+            <UniversalImage
+              size={{ width: iconSizes.icon16, height: iconSizes.icon16 }}
+              style={{ image: { borderRadius: borderRadii.roundedFull } }}
+              uri={sponsorInfo.icon}
+            />
+          )}
+          <Text variant="body3">{t('transaction.details.sponsoredBy', { name: sponsorName })}</Text>
+        </Flex>
+      </InfoRow>
+    )
+  }
 
   return (
     <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
@@ -264,16 +332,14 @@ function TransactionHashRow({
   if (stepInfosLength > 1) {
     return (
       <InfoRow key="transactionId" label={t('transaction.details.transactions')}>
-        <TouchableArea
-          alignItems="center"
-          flexDirection="row"
-          gap="$spacing6"
-          justifyContent="center"
+        <InfoRowActionButton
+          icon={<RotatableChevron color="$neutral3" direction="right" size="$icon.16" />}
           onPress={openPlanView}
         >
-          <Text variant="body3">{t('transaction.details.transactions.actions', { actionCount: stepInfosLength })}</Text>
-          <RotatableChevron color="$neutral3" direction="right" size="$icon.16" />
-        </TouchableArea>
+          {t('transaction.details.transactions.actions', {
+            actionCount: stepInfosLength,
+          })}
+        </InfoRowActionButton>
       </InfoRow>
     )
   }
@@ -292,16 +358,12 @@ function TransactionHashRow({
 
   return (
     <InfoRow key="transactionId" label={t('transaction.details.transaction')}>
-      <TouchableArea
-        alignItems="center"
-        flexDirection="row"
-        gap="$spacing6"
-        justifyContent="center"
+      <InfoRowActionButton
+        icon={<ExternalLink color="$neutral3" size="$icon.16" />}
         onPress={() => openTransactionLink(hash, chainId)}
       >
-        <Text variant="body3">{shortenHash(hash)}</Text>
-        <ExternalLink color="$neutral3" size="$icon.16" />
-      </TouchableArea>
+        {shortenHash(hash)}
+      </InfoRowActionButton>
     </InfoRow>
   )
 }
@@ -316,11 +378,8 @@ function TransactionOfframpRow({ transactionId }: { transactionId?: string }): J
 
   return (
     <InfoRow key="forTransactionId" label={t('common.transactionId')}>
-      <TouchableArea
-        alignItems="center"
-        flexDirection="row"
-        gap="$spacing6"
-        justifyContent="center"
+      <InfoRowActionButton
+        icon={<CopyAlt color="$neutral3" size="$icon.16" />}
         onPress={async (): Promise<void> => {
           await setClipboard(transactionId)
           dispatch(
@@ -331,9 +390,8 @@ function TransactionOfframpRow({ transactionId }: { transactionId?: string }): J
           )
         }}
       >
-        <Text variant="body3">{shortenAddress({ address: transactionId })}</Text>
-        <CopyAlt color="$neutral3" size="$icon.16" />
-      </TouchableArea>
+        {shortenAddress({ address: transactionId })}
+      </InfoRowActionButton>
     </InfoRow>
   )
 }

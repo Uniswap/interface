@@ -1,9 +1,10 @@
 import { createDataServiceApiClient } from '@universe/api'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { config } from 'uniswap/src/config'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 
 const DataServiceFetchClient = createUniswapFetchClient({
-  baseUrl: uniswapUrls.dataApiServiceUrl,
+  baseUrl: getUniswapServiceUrls(config).dataApiServiceUrl,
 })
 
 export const DataServiceApiClient = createDataServiceApiClient({

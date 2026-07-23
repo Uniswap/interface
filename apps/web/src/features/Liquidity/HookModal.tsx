@@ -6,10 +6,11 @@ import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { Page } from 'ui/src/components/icons/Page'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,7 +20,6 @@ import {
   getFlagsFromContractAddress,
   getFlagWarning,
 } from '~/features/Liquidity/utils/getFlagWarnings'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {
   const { t } = useTranslation()
@@ -171,7 +171,7 @@ export function HookModal({
             <LearnMoreLink
               centered
               display="flex"
-              url={uniswapUrls.helpArticleUrls.addingV4Hooks}
+              url={UniswapHelpUrls.articles.addingV4Hooks}
               textVariant="buttonLabel3"
             />
           </Flex>

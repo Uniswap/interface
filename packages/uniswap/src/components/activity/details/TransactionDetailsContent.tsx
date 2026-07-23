@@ -9,14 +9,17 @@ import { OnRampTransactionDetails } from 'uniswap/src/components/activity/detail
 import { PlanTransactionDetails } from 'uniswap/src/components/activity/details/transactions/PlanTransactionDetails'
 import { SwapTransactionDetails } from 'uniswap/src/components/activity/details/transactions/SwapTransactionDetails'
 import { TransferTransactionDetails } from 'uniswap/src/components/activity/details/transactions/TransferTransactionDetails'
+import { VaultTransactionDetails } from 'uniswap/src/components/activity/details/transactions/VaultTransactionDetails'
 import { WrapTransactionDetails } from 'uniswap/src/components/activity/details/transactions/WrapTransactionDetails'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function TransactionDetailsContent({
   transactionDetails,
+  isEarnActivityDisplayEnabled = true,
   onClose,
 }: {
   transactionDetails: TransactionDetails
+  isEarnActivityDisplayEnabled?: boolean
   onClose: () => void
 }): JSX.Element | null {
   const { typeInfo } = transactionDetails
@@ -37,6 +40,11 @@ export function TransactionDetailsContent({
         return (
           <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
+      case TransactionType.Deposit:
+      case TransactionType.Withdraw:
+        return typeInfo.isVault ? (
+          <VaultTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        ) : null
       case TransactionType.Bridge:
         return <BridgeTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.Swap:
@@ -62,13 +70,22 @@ export function TransactionDetailsContent({
       case TransactionType.MigrateLiquidityV3ToV4:
         return <LiquidityTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.Plan:
-        return <PlanTransactionDetails status={transactionDetails.status} typeInfo={typeInfo} onClose={onClose} />
+        return (
+          <PlanTransactionDetails
+            status={transactionDetails.status}
+            typeInfo={typeInfo}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+            onClose={onClose}
+          />
+        )
       case TransactionType.AuctionBid:
       case TransactionType.AuctionClaimed:
       case TransactionType.AuctionExited:
         return (
           <AuctionTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
+      case TransactionType.AuctionLaunch:
+        return null
       default:
         return null
     }

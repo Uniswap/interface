@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { formatUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,10 +12,12 @@ import { useEvent } from 'utilities/src/react/hooks'
 export function ResumePlanButton({
   typeInfo,
   onSuccess,
+  isEarnActivityDisplayEnabled = true,
 }: {
   typeInfo: PlanTransactionInfo
   onSuccess?: () => void
-}): JSX.Element {
+  isEarnActivityDisplayEnabled?: boolean
+}): JSX.Element | null {
   const { planId, inputCurrencyId, outputCurrencyId, inputCurrencyAmountRaw } = typeInfo
   const { t } = useTranslation()
   const isPriceChangeInterrupted = useIsPriceChangeInterrupted(planId)
@@ -28,6 +31,20 @@ export function ResumePlanButton({
   }, [inputCurrencyAmountRaw, inputCurrencyDecimals])
 
   const { mutate: resumePlan, isPending, isSuccess } = useResumePlanMutation({ successCallback: onSuccess })
+  const resumeButtonLabel = useMemo(() => {
+    if (isPriceChangeInterrupted) {
+      return t('transaction.status.plan.priceChange.viewNewPrice')
+    }
+
+    switch (typeInfo.earnAction) {
+      case TradingApi.EarnAction.DEPOSIT:
+        return t('explore.earn.review.deposit.idleFallback')
+      case TradingApi.EarnAction.WITHDRAW:
+        return t('explore.earn.review.withdraw.idleFallback')
+      default:
+        return t('transaction.status.plan.completeSwap')
+    }
+  }, [isPriceChangeInterrupted, t, typeInfo.earnAction])
 
   const onPress = useEvent(() => {
     if (inputCurrencyAmount) {
@@ -36,9 +53,15 @@ export function ResumePlanButton({
         inputCurrencyId,
         outputCurrencyId,
         inputCurrencyAmount,
+        earnAction: typeInfo.earnAction,
+        isEarnActivityDisplayEnabled,
       })
     }
   })
+
+  if (typeInfo.earnAction && !isEarnActivityDisplayEnabled) {
+    return null
+  }
 
   // A loading state should be shown if:
   // - The mutation is pending
@@ -55,9 +78,7 @@ export function ResumePlanButton({
       icon={isPending ? <SpinningLoader /> : undefined}
       onPress={onPress}
     >
-      {isPriceChangeInterrupted
-        ? t('transaction.status.plan.priceChange.viewNewPrice')
-        : t('transaction.status.plan.completeSwap')}
+      {resumeButtonLabel}
     </Button>
   )
 }

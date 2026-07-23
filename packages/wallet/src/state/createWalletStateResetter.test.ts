@@ -3,23 +3,24 @@ import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/sr
 import { addFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import type { Mock } from 'vitest'
 import { createWalletStateResetter } from 'wallet/src/state/createWalletStateResetter'
 import { type WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/walletReducer'
 
 describe('createWalletStateResetter', () => {
   let store: ReturnType<typeof configureStore<WalletStateReducersOnly>>
   let resetter: ReturnType<typeof createWalletStateResetter>
-  let onResetAccountHistory: jest.Mock
-  let onResetUserSettings: jest.Mock
-  let onResetQueryCaches: jest.Mock
+  let onResetAccountHistory: Mock
+  let onResetUserSettings: Mock
+  let onResetQueryCaches: Mock
 
   beforeEach(() => {
     store = configureStore({
       reducer: walletRootReducer,
     })
-    onResetAccountHistory = jest.fn()
-    onResetUserSettings = jest.fn()
-    onResetQueryCaches = jest.fn()
+    onResetAccountHistory = vi.fn()
+    onResetUserSettings = vi.fn()
+    onResetQueryCaches = vi.fn()
     resetter = createWalletStateResetter({
       dispatch: store.dispatch,
       onResetAccountHistory,

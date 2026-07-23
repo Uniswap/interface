@@ -234,6 +234,49 @@ describe('Web Accounts Store Provider', () => {
     })
   })
 
+  describe('Given the Uniswap Wallet connector reconnected after a page refresh', () => {
+    // Regression: an active Uniswap connector must surface as connected (Web3Status showed "Connect"
+    // before, when the connector was left out of the config and never reconnected on mount).
+    it('When the connector is present and active, Then the store reflects it as connected without duplicating the wallet', () => {
+      // Given
+      const uniswapConnector = createMockWagmiConnector({
+        id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+        name: 'Uniswap Wallet',
+        icon: 'uniswap-wallet-icon',
+        type: 'uniswapWalletConnect',
+      })
+      const wagmiAccount = createMockWagmiAccount({
+        address: '0x1234567890123456789012345678901234567890',
+        chainId: 1,
+        status: 'connected',
+        connector: uniswapConnector,
+      })
+
+      mockUseWagmiAccount.mockReturnValue(wagmiAccount)
+      mockUseWagmiConnectors.mockReturnValue([uniswapConnector])
+      mockUseSolanaWallet.mockReturnValue({ wallet: null, wallets: [] })
+
+      // When
+      const { result } = renderWithProvider()
+      const state = result.current.getState()
+
+      // Then: the reconnected connector is the active EVM connector and reports Connected.
+      expect(state.activeConnectors.evm).toBeDefined()
+      expect(state.activeConnectors.evm?.externalLibraryId).toBe(
+        CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+      )
+      expect(state.activeConnectors.evm?.status).toBe(ConnectorStatus.Connected)
+
+      // And: the account is populated (button shows the connected wallet, not "Connect").
+      expect(state.accounts).toHaveProperty('0x1234567890123456789012345678901234567890')
+
+      // And: the manual fallback entry is skipped, so the wallet is present exactly once.
+      const walletIds = Object.keys(state.wallets)
+      expect(walletIds).toHaveLength(1)
+      expect(state.wallets[walletIds[0]].name).toBe('Uniswap Wallet')
+    })
+  })
+
   describe('Given a connecting wallet', () => {
     it('When the provider builds the accounts state, Then it should set the connector status to Connecting', () => {
       // Given

@@ -4,7 +4,7 @@ import {
   isReceiveTokenTransactionInfo,
   isSendTokenTransactionInfo,
 } from 'uniswap/src/components/activity/details/types'
-import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
+import type { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import {

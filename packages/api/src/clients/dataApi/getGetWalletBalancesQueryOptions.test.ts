@@ -15,6 +15,7 @@ describe('getGetWalletBalancesQueryOptions', () => {
     mockClient = {
       getPortfolio: vi.fn(),
       getWalletBalances: vi.fn().mockResolvedValue(createMockResponse()),
+      getWalletsBalances: vi.fn(),
       listTokens: vi.fn(),
       listTopPools: vi.fn(),
     }
@@ -49,6 +50,19 @@ describe('getGetWalletBalancesQueryOptions', () => {
       })
       expect(options.queryKey[0]).toBe(ReactQueryCacheKey.GetWalletBalances)
       expect(options.queryKey[1]).toEqual({ evmAddress: '0xabc', svmAddress: 'solana' })
+    })
+
+    it('includes include_categories in the cache key', () => {
+      const tokensOnly = getGetWalletBalancesQueryOptions(mockClient, {
+        input: { evmAddress: '0xabc', chainIds: [1], includeCategories: [] },
+      })
+      const withPools = getGetWalletBalancesQueryOptions(mockClient, {
+        input: { evmAddress: '0xabc', chainIds: [1], includeCategories: [1] },
+      })
+      expect(tokensOnly.queryKey[2]).toEqual(expect.objectContaining({ includeCategories: [] }))
+      expect(withPools.queryKey[2]).toEqual(expect.objectContaining({ includeCategories: [1] }))
+      // Distinct categories must produce distinct cache entries.
+      expect(hashKey(tokensOnly.queryKey)).not.toBe(hashKey(withPools.queryKey))
     })
 
     it('excludes modifier from the cache key', () => {
@@ -129,6 +143,17 @@ describe('getGetWalletBalancesQueryOptions', () => {
       >[0])
       const callArg = (mockClient.getWalletBalances as ReturnType<typeof vi.fn>).mock.calls[0][0]
       expect(callArg.modifier).toEqual(modifier)
+    })
+
+    it('passes include_categories through to client.getWalletBalances', async () => {
+      const options = getGetWalletBalancesQueryOptions(mockClient, {
+        input: { evmAddress: '0xabc', chainIds: [1], includeCategories: [1] },
+      })
+      await options.queryFn?.({ queryKey: options.queryKey } as unknown as Parameters<
+        NonNullable<typeof options.queryFn>
+      >[0])
+      const callArg = (mockClient.getWalletBalances as ReturnType<typeof vi.fn>).mock.calls[0][0]
+      expect(callArg.includeCategories).toEqual([1])
     })
   })
 

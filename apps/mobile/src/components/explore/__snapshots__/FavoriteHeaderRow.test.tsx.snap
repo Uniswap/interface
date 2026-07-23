@@ -32,86 +32,125 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     Editing Title
   </Text>
   <View
-    collapsable={false}
-    focusVisibleStyle={{}}
-    forwardedRef={[Function]}
-    hitSlop={16}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
+    handlerTags={
       [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
+        15,
+        14,
+        13,
       ]
     }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="button"
+    onGestureHandlerEvent={[Function]}
+    onGestureHandlerReanimatedEvent={
+      {
+        "workletEventHandler": WorkletEventHandlerWeb {
+          "eventNames": [],
+          "listeners": {},
+          "worklet": [Function],
+        },
+      }
+    }
+    onGestureHandlerStateChange={[Function]}
+    onGestureHandlerTouchEvent={[Function]}
+    pointerEvents="box-none"
     style={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-        {},
-      ]
+      {
+        "display": "contents",
+      }
     }
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.2}
-      style={
+    <RNGestureHandlerButton
+      accessible={true}
+      collapsable={false}
+      enabled={true}
+      forwardedRef={[Function]}
+      hitSlop={
         {
-          "color": "#FF37C7",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 17,
-          "fontWeight": "500",
-          "lineHeight": 19.549999999999997,
+          "bottom": 16,
+          "left": 16,
+          "right": 16,
+          "top": 16,
         }
       }
-      suppressHighlighting={true}
-      testID="done"
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      jestInlineStyle={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
+            "flexDirection": "column",
+            "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          },
+        ]
+      }
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onLayout={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      rippleColor="transparent"
+      style={
+        [
+          {},
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ],
+        ]
+      }
     >
-      Done
-    </Text>
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.2}
+        style={
+          {
+            "color": "#FF37C7",
+            "fontFamily": "Basel Grotesk",
+            "fontSize": 17,
+            "fontWeight": "500",
+            "lineHeight": 19.549999999999997,
+          }
+        }
+        suppressHighlighting={true}
+        testID="done"
+      >
+        Done
+      </Text>
+    </RNGestureHandlerButton>
   </View>
 </View>
 `;
@@ -148,192 +187,231 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     Title
   </Text>
   <View
-    collapsable={false}
-    focusVisibleStyle={{}}
-    forwardedRef={[Function]}
-    hitSlop={16}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
+    handlerTags={
       [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
+        3,
+        2,
+        1,
       ]
     }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="button"
+    onGestureHandlerEvent={[Function]}
+    onGestureHandlerReanimatedEvent={
+      {
+        "workletEventHandler": WorkletEventHandlerWeb {
+          "eventNames": [],
+          "listeners": {},
+          "worklet": [Function],
+        },
+      }
+    }
+    onGestureHandlerStateChange={[Function]}
+    onGestureHandlerTouchEvent={[Function]}
+    pointerEvents="box-none"
     style={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-        {},
-      ]
+      {
+        "display": "contents",
+      }
     }
-    testID="edit"
   >
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={20}
-      bbWidth={20}
-      fill="none"
-      focusable={false}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      strokeLinecap="round"
-      strokeWidth={1}
-      style={
+    <RNGestureHandlerButton
+      accessible={true}
+      collapsable={false}
+      enabled={true}
+      forwardedRef={[Function]}
+      hitSlop={
+        {
+          "bottom": 16,
+          "left": 16,
+          "right": 16,
+          "top": 16,
+        }
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      jestInlineStyle={
         [
           {
             "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "color": "rgba(19, 19, 19, 0.63)",
-            "height": 20,
-            "width": 20,
-          },
-          {
-            "flex": 0,
-            "height": 20,
-            "width": 20,
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
+            "flexDirection": "column",
+            "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           },
         ]
       }
-      vbHeight={4}
-      vbWidth={18}
-    >
-      <RNSVGGroup
-        color="rgba(19, 19, 19, 0.63)"
-        fill={null}
-        propList={
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onLayout={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      rippleColor="transparent"
+      style={
+        [
+          {},
           [
-            "fill",
-            "strokeWidth",
-            "strokeLinecap",
+            {
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ],
+        ]
+      }
+      testID="edit"
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeLinecap="round"
+        strokeWidth={1}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "rgba(19, 19, 19, 0.63)",
+              "height": 20,
+              "width": 20,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
           ]
         }
-        strokeLinecap={1}
-        strokeWidth={1}
+        vbHeight={4}
+        vbWidth={18}
       >
-        <RNSVGPath
-          d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-          fill={
-            {
-              "payload": 4278190080,
-              "type": 0,
-            }
-          }
+        <RNSVGGroup
+          color="rgba(19, 19, 19, 0.63)"
+          fill={null}
           propList={
             [
-              "stroke",
+              "fill",
               "strokeWidth",
               "strokeLinecap",
-              "strokeLinejoin",
             ]
           }
-          stroke={
-            {
-              "type": 2,
-            }
-          }
           strokeLinecap={1}
-          strokeLinejoin={1}
-          strokeWidth="2"
-        />
-        <RNSVGPath
-          d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-          fill={
-            {
-              "payload": 4278190080,
-              "type": 0,
+          strokeWidth={1}
+        >
+          <RNSVGPath
+            d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
             }
-          }
-          propList={
-            [
-              "stroke",
-              "strokeWidth",
-              "strokeLinecap",
-              "strokeLinejoin",
-            ]
-          }
-          stroke={
-            {
-              "type": 2,
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
             }
-          }
-          strokeLinecap={1}
-          strokeLinejoin={1}
-          strokeWidth="2"
-        />
-        <RNSVGPath
-          d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-          fill={
-            {
-              "payload": 4278190080,
-              "type": 0,
+            stroke={
+              {
+                "type": 2,
+              }
             }
-          }
-          propList={
-            [
-              "stroke",
-              "strokeWidth",
-              "strokeLinecap",
-              "strokeLinejoin",
-            ]
-          }
-          stroke={
-            {
-              "type": 2,
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="2"
+          />
+          <RNSVGPath
+            d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
             }
-          }
-          strokeLinecap={1}
-          strokeLinejoin={1}
-          strokeWidth="2"
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="2"
+          />
+          <RNSVGPath
+            d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="2"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </RNGestureHandlerButton>
   </View>
 </View>
 `;

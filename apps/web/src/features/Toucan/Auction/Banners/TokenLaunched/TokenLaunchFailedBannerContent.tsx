@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { opacifyRaw, zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { TokenLaunchedBannerWrapper } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerWrapper'
 import { ExternalLink } from '~/theme/components/Links'
 
-const LEARN_MORE_URL = uniswapUrls.helpArticleUrls.toucanFailedToLaunchHelp
+const LEARN_MORE_URL = UniswapHelpUrls.articles.toucanFailedToLaunchHelp
 
 interface TokenLaunchFailedBannerContentProps {
   tokenName: string

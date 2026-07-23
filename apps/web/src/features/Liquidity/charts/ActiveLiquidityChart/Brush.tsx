@@ -144,6 +144,7 @@ export const Brush = ({
     ) {
       select(brushRef.current)
         .transition()
+        // eslint-disable-next-line typescript/unbound-method
         .call(brushBehavior.current.move as any, scaledExtent)
     }
 

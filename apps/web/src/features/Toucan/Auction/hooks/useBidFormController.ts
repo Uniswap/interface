@@ -20,6 +20,7 @@ import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Aucti
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 interface UseBidFormControllerResult {
   budgetField: BudgetFieldState
@@ -61,6 +62,7 @@ export function useBidFormController({
     auctionContractAddress,
     auctionDetails,
     checkpointData,
+    totalCleared,
     floorPrice,
     tickSize,
     selectedTickPrice,
@@ -68,6 +70,7 @@ export function useBidFormController({
     auctionTokenDecimals,
     auctionTokenSymbol,
     auctionTokenName,
+    auctionTokenAddress,
   } = useAuctionStore((state) => ({
     chainId: state.auctionDetails?.chainId,
     currency: state.auctionDetails?.currency,
@@ -75,13 +78,15 @@ export function useBidFormController({
     auctionContractAddress: state.auctionAddress,
     auctionDetails: state.auctionDetails,
     checkpointData: state.checkpointData,
+    totalCleared: state.totalCleared,
     floorPrice: state.auctionDetails?.floorPrice,
     tickSize: state.auctionDetails?.tickSize,
     selectedTickPrice: state.selectedTickPrice,
     totalSupply: state.auctionDetails?.totalSupply,
-    auctionTokenDecimals: state.auctionDetails?.token?.currency.decimals,
+    auctionTokenDecimals: getAuctionTokenDecimals(state.auctionDetails?.token),
     auctionTokenSymbol: state.auctionDetails?.token?.currency.symbol,
     auctionTokenName: state.auctionDetails?.token?.currency.name,
+    auctionTokenAddress: state.auctionDetails?.tokenAddress,
   }))
 
   const clearingPrice = getClearingPrice(checkpointData, auctionDetails)
@@ -238,7 +243,7 @@ export function useBidFormController({
     }
 
     const totalSupplyRaw = BigInt(totalSupply)
-    const totalClearedRaw = checkpointData?.totalCleared ? BigInt(checkpointData.totalCleared) : 0n
+    const totalClearedRaw = totalCleared ? BigInt(totalCleared) : 0n
     const remainingRaw = totalSupplyRaw - totalClearedRaw
     const safeRemainingRaw = remainingRaw > 0n ? remainingRaw : 0n
 
@@ -246,7 +251,7 @@ export function useBidFormController({
       raw: safeRemainingRaw,
       decimals: auctionTokenDecimals,
     })
-  }, [auctionTokenDecimals, checkpointData?.totalCleared, totalSupply])
+  }, [auctionTokenDecimals, totalCleared, totalSupply])
 
   // Initialize submit hook
   const { submitState } = useBidFormSubmit({
@@ -260,6 +265,7 @@ export function useBidFormController({
     chainId,
     isNativeBidToken,
     currency,
+    auctionTokenAddress,
     resetBudgetField,
     resetMaxValuationField,
     budgetAmountIsZero,

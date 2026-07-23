@@ -1,9 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Flex, useExtractedTokenColor, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
+import { useEarnMainnetActionCurrencyForToken } from 'uniswap/src/features/earn/hooks/useEarnMainnetActionCurrency'
 import { YouNeedTokenView } from 'uniswap/src/features/earn/YouNeedTokenView'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -26,15 +25,7 @@ export function EarnYouNeedTokenModal({
   const { navigateToSwapFlow, navigateToFiatOnRamp } = useWalletNavigation()
   const currencyInfo = useCurrencyInfo(currencyId)
   const symbol = currencyInfo?.currency.symbol ?? ''
-
-  const { data: tokenProject } = useTokenProjects(currencyId ? [currencyId] : [])
-  const mainnetCurrencyInfo = useMemo(
-    () => tokenProject?.find((info) => info.currency.chainId === UniverseChainId.Mainnet),
-    [tokenProject],
-  )
-  // Disable CTAs until the token-project query resolves — without this, a tap before
-  // mainnetCurrencyInfo lands is a silent no-op.
-  const actionsDisabled = !mainnetCurrencyInfo
+  const { actionsDisabled, currencyInfoForActions } = useEarnMainnetActionCurrencyForToken({ currencyId })
 
   const { tokenColor } = useExtractedTokenColor({
     imageUrl: currencyInfo?.logoUrl,
@@ -44,25 +35,27 @@ export function EarnYouNeedTokenModal({
   })
 
   const handleSwapForToken = useCallback(() => {
-    if (!mainnetCurrencyInfo) {
+    if (!currencyInfoForActions) {
       return
     }
     onClose()
     navigateToSwapFlow({
       currencyField: CurrencyField.OUTPUT,
-      currencyAddress: currencyIdToAddress(mainnetCurrencyInfo.currencyId),
-      currencyChainId: mainnetCurrencyInfo.currency.chainId,
+      currencyAddress: currencyIdToAddress(currencyInfoForActions.currencyId),
+      currencyChainId: currencyInfoForActions.currency.chainId,
       origin: ModalName.EarnYouNeedToken,
     })
-  }, [mainnetCurrencyInfo, navigateToSwapFlow, onClose])
+  }, [currencyInfoForActions, navigateToSwapFlow, onClose])
 
   const handleBuyWithCash = useCallback(() => {
-    if (!mainnetCurrencyInfo) {
+    if (!currencyInfoForActions) {
       return
     }
     onClose()
-    navigateToFiatOnRamp({ prefilledCurrency: { currencyInfo: mainnetCurrencyInfo } })
-  }, [mainnetCurrencyInfo, navigateToFiatOnRamp, onClose])
+    navigateToFiatOnRamp({
+      prefilledCurrency: { currencyInfo: currencyInfoForActions },
+    })
+  }, [currencyInfoForActions, navigateToFiatOnRamp, onClose])
 
   if (!currencyId) {
     return null

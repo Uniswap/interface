@@ -1,4 +1,4 @@
-import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import type { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export function sendAnalyticsEvent<EventName extends keyof UniverseEventProperties>(

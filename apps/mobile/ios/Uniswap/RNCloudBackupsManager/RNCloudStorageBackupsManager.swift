@@ -7,6 +7,7 @@
 
 import Foundation
 import CryptoKit
+import React
 
 struct CloudStorageMnemonicBackup: Codable {
   let mnemonicId: String

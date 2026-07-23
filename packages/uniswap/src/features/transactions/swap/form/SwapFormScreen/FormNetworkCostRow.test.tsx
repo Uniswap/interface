@@ -42,6 +42,11 @@ vi.mock('uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/
     selector(mockUseSwapFormScreenStore()),
 }))
 
+vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore', () => ({
+  useSwapFormStoreDerivedSwapInfo: (selector: (s: { trade: { trade: undefined } }) => unknown): unknown =>
+    selector({ trade: { trade: undefined } }),
+}))
+
 vi.mock(
   'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
   () => ({

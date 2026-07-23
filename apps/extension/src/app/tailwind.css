@@ -1,0 +1,13 @@
+/* Tailwind v4 + shared Universe design tokens for the extension UI pages. */
+/* Fonts are loaded via each entrypoint's index.html, so /fonts is omitted. */
+/*
+ * The explicit `.css` extension is required here: WXT's getTsconfigAliases()
+ * turns the `@universe/tailwind/*` tsconfig path into a hard Vite alias
+ * (@universe/tailwind -> packages/tailwind) with no extension resolution, so a
+ * bare "@universe/tailwind/tailwind" resolves to an extensionless path and
+ * @tailwindcss/vite fails with ENOENT. The full path resolves to the real file.
+ * (web/dev-portal use vite-tsconfig-paths, which extension-resolves, so they
+ * import it without the suffix.)
+ */
+@import "tailwindcss";
+@import "@universe/tailwind/tailwind.css";

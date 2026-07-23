@@ -1,5 +1,4 @@
 // oxlint-disable eslint-js/no-restricted-syntax
-import 'dotenv/config'
 import { type ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -7,6 +6,9 @@ import { promiseTimeout, sleep } from 'utilities/src/time/timing'
 import { createClient, createTestClient, http, publicActions, walletActions } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
+import { loadTestRunnerEnv } from '../../../vite/resolveEnvConfigs'
+
+loadTestRunnerEnv(process.cwd())
 
 const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
@@ -38,15 +40,18 @@ interface AnvilManager {
 }
 
 /**
+ * Fork from PublicNode, a free unkeyed public RPC. UniRPC can't serve anvil (it
+ * 401s cookieless/session-less requests) and the QuickNode endpoint formerly used
+ * here has its mainnet methods paused due to abuse. Override via ANVIL_FORK_URL;
+ * keep in sync with scripts/start-anvil.sh.
+ */
+const DEFAULT_MAINNET_FORK_URL = 'https://ethereum-rpc.publicnode.com'
+
+/**
  * Build fork URL from environment variables
  */
 function buildForkUrl(): string {
-  const endpoint = process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME
-  const token = process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN
-  if (!endpoint || !token) {
-    throw new Error('Missing QuickNode credentials for Anvil fork')
-  }
-  return `https://${endpoint}.quiknode.pro/${token}`
+  return process.env.ANVIL_FORK_URL ?? DEFAULT_MAINNET_FORK_URL
 }
 
 /**

@@ -23,6 +23,7 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   input: getDefaultInputCurrency(defaultChainId),
   output: undefined,
   isFiatMode: false,
+  isEarnFlow: false,
   isMax: false,
   isSubmitting: false,
   isConfirmed: false,

@@ -1,0 +1,30 @@
+diff --git a/build/serializer/fork/hmrJSBundle.js b/build/serializer/fork/hmrJSBundle.js
+index c8fdb8687f978806d9bec77c717807e0d0708d55..26ecad7f8cfe7bf47a463a3ad45f46f9cd32bf29 100644
+--- a/build/serializer/fork/hmrJSBundle.js
++++ b/build/serializer/fork/hmrJSBundle.js
+@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ const metro_transform_plugins_1 = require("@expo/metro/metro-transform-plugins");
+ const jsc_safe_url_1 = __importDefault(require("jsc-safe-url"));
+ const node_path_1 = __importDefault(require("node:path"));
++const node_url_1 = __importDefault(require("node:url"));
+ const js_1 = require("./js");
+ const debug = require('debug')('Metro:HMR');
+ function generateModules(sourceModules, graph, options) {
+@@ -30,7 +31,7 @@ function generateModules(sourceModules, graph, options) {
+                     .map((segment) => encodeURIComponent(segment))
+                     .join('/'));
+             };
+-            const clientUrl = new URL(options.clientUrl);
++            const clientUrl = new URL(typeof options.clientUrl === 'string' ? options.clientUrl : node_url_1.default.format(options.clientUrl));
+             clientUrl.searchParams.delete('excludeSource');
+             clientUrl.pathname = getPathname('map');
+             const sourceMappingURL = clientUrl.toString();
+@@ -52,7 +53,7 @@ function generateModules(sourceModules, graph, options) {
+ function prepareModule(module, graph, options) {
+     const code = (0, js_1.wrapModule)(module, {
+         ...options,
+-        sourceUrl: options.clientUrl.toString(),
++        sourceUrl: typeof options.clientUrl === 'string' ? options.clientUrl : node_url_1.default.format(options.clientUrl),
+         dev: true,
+         skipWrapping: false,
+         computedAsyncModulePaths: null,

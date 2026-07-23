@@ -4,8 +4,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isAndroid } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type TextInput } from 'react-native'
-import type { FlatList } from 'react-native-gesture-handler'
+import { type ScrollView, type TextInput } from 'react-native'
 import { useAnimatedRef } from 'react-native-reanimated'
 import type { Edge } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
@@ -47,7 +46,8 @@ export function ExploreScreen(): JSX.Element {
   const { t } = useTranslation()
 
   const textInputRef = useRef<TextInput>(null)
-  const listRef = useAnimatedRef<FlatList<unknown>>()
+  const listRef = useAnimatedRef<ScrollView>()
+  const exploreScrollToTopRef = useRef<(() => void) | null>(null)
   const isFocused = useIsFocused()
 
   const [isAtTop, setIsAtTop] = useState<boolean>(true)
@@ -98,16 +98,15 @@ export function ExploreScreen(): JSX.Element {
         textInputRef.current?.focus()
       } else {
         // If not at top, scroll to top
-        listRef.current?.scrollToOffset({ offset: 0, animated: true })
+        exploreScrollToTopRef.current?.()
       }
     })
 
     return unsubscribe
-    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [navigation])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
-  const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
+  const canRenderList = useRenderNextFrame(isSheetReady)
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(chainId ?? null, ModalName.Search)
@@ -186,6 +185,9 @@ export function ExploreScreen(): JSX.Element {
           chainId={chainId}
           orderByMetric={orderByMetric}
           showFavorites={showFavorites}
+          onScrollToTopReady={(scrollToTop): void => {
+            exploreScrollToTopRef.current = scrollToTop
+          }}
         />
       ) : null}
     </Screen>
@@ -200,21 +202,14 @@ export function ExploreScreen(): JSX.Element {
 const useRenderNextFrame = (condition: boolean): boolean => {
   const [canRender, setCanRender] = useState<boolean>(false)
   const rafRef = useRef<number>(undefined)
-  const mountedRef = useRef<boolean>(true)
-
   const conditionRef = useRef<boolean>(condition)
 
-  // clean up on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
-    }
-  }, [])
-
-  // schedule render for next frame if we should mount
+  // schedule render for next frame if we should mount.
+  // The cleanup cancels the RAF on real unmount, so the callback can't fire after
+  // unmount — no separate `mountedRef` guard is needed (and a `mountedRef` set
+  // only by the cleanup is broken under React 19 strict-mode dev double-invocation:
+  // the simulated unmount sets it to false and the simulated remount never resets
+  // it, so `setCanRender(true)` is never called).
   useEffect(() => {
     conditionRef.current = condition
 
@@ -222,7 +217,7 @@ const useRenderNextFrame = (condition: boolean): boolean => {
       rafRef.current = requestAnimationFrame(() => {
         // By the time this callback runs, 'condition' might have changed
         // since RAF executes in the next frame, so we store the condition in a ref
-        if (mountedRef.current && conditionRef.current) {
+        if (conditionRef.current) {
           setCanRender(true)
         }
       })

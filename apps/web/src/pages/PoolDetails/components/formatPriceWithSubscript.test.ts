@@ -83,4 +83,37 @@ describe('formatPriceWithSubscript', () => {
       ).toBe('0.0₆123457')
     })
   })
+
+  describe('fraction-digit override (low-variance axes)', () => {
+    it('formats at/above threshold with fixed decimals, bypassing the numberType formatter', () => {
+      // Without the override, TokenNonTx would round both of these to "1.00".
+      expect(
+        formatPriceWithSubscript({
+          price: 1.0002,
+          locale: 'en-US',
+          formatNumberOrString: mockFormatNumberOrString,
+          fractionDigits: 4,
+        }),
+      ).toBe('1.0002')
+      expect(
+        formatPriceWithSubscript({
+          price: 0.9998,
+          locale: 'en-US',
+          formatNumberOrString: mockFormatNumberOrString,
+          fractionDigits: 4,
+        }),
+      ).toBe('0.9998')
+    })
+
+    it('still uses subscript notation below the threshold', () => {
+      expect(
+        formatPriceWithSubscript({
+          price: 0.000052,
+          locale: 'en-US',
+          formatNumberOrString: mockFormatNumberOrString,
+          fractionDigits: 4,
+        }),
+      ).toBe('0.0₄52')
+    })
+  })
 })

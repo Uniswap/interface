@@ -1,6 +1,6 @@
 import UIKit
-import Expo
-import ExpoModulesCore
+internal import Expo
+internal import ExpoModulesCore
 import React
 import ReactAppDependencyProvider
 import Firebase
@@ -52,7 +52,6 @@ class AppDelegate: ExpoAppDelegate {
 
     reactNativeDelegate = delegate
     reactNativeFactory = factory
-    bindReactNativeFactory(factory)
 
     window = UIWindow(frame: UIScreen.main.bounds)
     factory.startReactNative(

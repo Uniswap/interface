@@ -1,7 +1,9 @@
+import { useStatsigClientStatus } from '@universe/gating'
 import { useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
@@ -31,13 +33,17 @@ function TDPPageContent() {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isCompact = useScrollCompact({ thresholdCompact: 100, thresholdExpanded: 60 })
 
-  const { address, currency, currencyChain, currencyChainId, tokenQuery } = useTDPStore((s) => ({
+  const { address, currency, currencyChain, currencyChainId, tokenQuery, tokenProjectQuery } = useTDPStore((s) => ({
     address: s.address,
     currency: s.currency,
     currencyChain: s.currencyChain,
     currencyChainId: s.currencyChainId,
     tokenQuery: s.tokenQuery,
+    tokenProjectQuery: s.tokenProjectQuery,
   }))
+
+  const featureFlaggedChainIds = useFeatureFlaggedChainIds()
+  const { isStatsigReady } = useStatsigClientStatus()
 
   const tokenQueryData = tokenQuery.data?.token
 
@@ -64,12 +70,15 @@ function TDPPageContent() {
   // Structured TDP data for SEO indexing
   const structuredData = getTokenStructuredData({ tokenQueryData, price, pageDescription })
 
-  // redirect to /explore if token is not found
+  // redirect to /explore if the token is not found, or if its chain is feature-gated (e.g. unlaunched Arc/Robinhood).
+  // Gate the chain check on `isStatsigReady`: before Statsig loads, feature flags read as their default (false), so a
+  // launched-but-flag-gated chain (e.g. Linea) would otherwise be transiently treated as gated and wrongly redirected.
   useEffect(() => {
-    if (!tokenQuery.loading && !currency) {
+    const isChainGated = isStatsigReady && !featureFlaggedChainIds.includes(currencyChainId)
+    if (isChainGated || (!tokenProjectQuery.loading && !currency)) {
       navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
     }
-  }, [currency, tokenQuery.loading, navigate])
+  }, [currency, currencyChainId, featureFlaggedChainIds, isStatsigReady, tokenProjectQuery.loading, navigate])
 
   return (
     <>
@@ -80,7 +89,8 @@ function TDPPageContent() {
         ))}
         {structuredData && <script type="application/ld+json">{JSON.stringify(structuredData)}</script>}
       </Helmet>
-      {tokenQuery.loading || !currency ? (
+      {/* Gate on metadata (not the market `tokenQuery`) so the shell + header paint before market data loads. */}
+      {tokenProjectQuery.loading || !currency ? (
         <TokenDetailsPageSkeleton isCompact={isCompact} />
       ) : (
         <TokenDetailsContent isCompact={isCompact} />

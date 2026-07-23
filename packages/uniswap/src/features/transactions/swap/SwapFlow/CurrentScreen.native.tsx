@@ -7,6 +7,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { GeoRestrictionModalStoreContextProvider } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionModalStoreContextProvider'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
@@ -31,15 +32,17 @@ export function CurrentScreen({
   switch (screen) {
     case TransactionScreen.Form:
       return (
-        <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreenDelayedRender settings={settings} />
-          <TransactionModalFooterContainer>
-            <SwapFormWarningStoreContextProvider>
-              <SwapFormButton />
-              <SwapFormWarningModals />
-            </SwapFormWarningStoreContextProvider>
-          </TransactionModalFooterContainer>
-        </Trace>
+        <GeoRestrictionModalStoreContextProvider>
+          <Trace logImpression section={SectionName.SwapForm}>
+            <SwapFormScreenDelayedRender settings={settings} />
+            <TransactionModalFooterContainer>
+              <SwapFormWarningStoreContextProvider>
+                <SwapFormButton />
+                <SwapFormWarningModals />
+              </SwapFormWarningStoreContextProvider>
+            </TransactionModalFooterContainer>
+          </Trace>
+        </GeoRestrictionModalStoreContextProvider>
       )
     case TransactionScreen.Review:
       return (

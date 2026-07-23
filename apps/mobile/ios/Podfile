@@ -1,5 +1,3 @@
-# should be removed after migrating to react-native new architecture
-ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 # changes from here: https://docs.expo.dev/bare/installing-expo-modules/
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 
@@ -28,6 +26,10 @@ end
 podfile_properties = read_podfile_properties
 ENV['RCT_USE_RN_DEP'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
 ENV['RCT_USE_PREBUILT_RNCORE'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
+# RN 0.85 treats these as prebuilt unless explicitly '0', so buildReactNativeFromSource alone doesn't force source.
+# Prebuilt pods (React-Core-prebuilt, ReactNativeDependencies) carry env-specific checksums; force source for a reproducible Podfile.lock.
+ENV['RCT_USE_RN_DEP'] = '0' if podfile_properties['ios.buildReactNativeFromSource'] == 'true'
+ENV['RCT_USE_PREBUILT_RNCORE'] = '0' if podfile_properties['ios.buildReactNativeFromSource'] == 'true'
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/react-native-permissions/scripts/setup'
 

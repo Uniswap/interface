@@ -67,4 +67,14 @@ describe('getCanonicalUrl', () => {
     const result = getCanonicalUrl('/swap/123/')
     expect(result).toBe('http://localhost:3000/swap/123')
   })
+
+  it('should preserve explicit multichain token details canonical state', () => {
+    const result = getCanonicalUrl('/explore/tokens/ethereum/0xabc', '?chain=multichain&foo=bar')
+    expect(result).toBe('http://localhost:3000/explore/tokens/ethereum/0xabc?chain=multichain')
+  })
+
+  it('should omit non-multichain search params from canonical URL', () => {
+    const result = getCanonicalUrl('/explore/tokens/ethereum/0xabc', '?chain=base&foo=bar')
+    expect(result).toBe('http://localhost:3000/explore/tokens/ethereum/0xabc')
+  })
 })

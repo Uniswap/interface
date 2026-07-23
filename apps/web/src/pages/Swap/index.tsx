@@ -1,18 +1,20 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import type { SegmentedControlOption } from 'ui/src'
-import { Flex, SegmentedControl, stackingLayerAbove, styled, Text, Tooltip } from 'ui/src'
+import { Flex, SegmentedControl, stackingLayerAbove, styled, Text, Tooltip, useMedia, WidthAnimator } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
+import { TokenSelectorHoverConfigProvider } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ShowGetStartedProvider } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -24,34 +26,38 @@ import type {
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
-import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { noop } from 'utilities/src/react/noop'
-import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
-import { useInitialCurrencyState } from '~/features/Swap/state/swap/hooks'
-import { SwapAndLimitContextProvider } from '~/features/Swap/state/swap/SwapContext'
-import { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
-import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
-import { PageWrapper } from '~/features/Swap/styled'
-import { SwapBottomCard } from '~/features/Swap/SwapBottomCard'
+import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
+import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
+import type { CurrencyState } from '~/features/Swap/state/types'
+import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
+import { PAGE_WRAPPER_MAX_WIDTH, PageWrapper, SwapModuleWrapper } from '~/features/Swap/styled'
 import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { useAccount } from '~/hooks/useAccount'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
 import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
-import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
-import { useWebSwapSettings } from '~/pages/Swap/settings/useWebSwapSettings'
+import { SlideoutChartCard } from '~/pages/Swap/Swap/SlideoutChartCard/SlideoutChartCard'
+import { useSlideoutChartCardCurrencies } from '~/pages/Swap/Swap/SlideoutChartCard/useSlideoutChartCardCurrencies'
+import { useInitialCurrencyState } from '~/pages/Swap/Swap/state/hooks'
+import { SwapChartToggleButton } from '~/pages/Swap/Swap/SwapChartToggleButton'
+import { SwapForm, SwapFormSettingsButton } from '~/pages/Swap/Swap/SwapForm'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { isIFramed } from '~/utils/isIFramed'
+
+function wrapWithTokenHoverCard(element: JSX.Element, currencyInfo: CurrencyInfo): JSX.Element {
+  return (
+    <TokenHoverCard currencyInfo={currencyInfo} placement="right-start" offset={8}>
+      {element}
+    </TokenHoverCard>
+  )
+}
 
 export function SwapPage() {
   const navigate = useNavigate()
@@ -114,6 +120,7 @@ export function Swap({
   initialInputChainId,
   hideHeader = false,
   hideFooter = false,
+  hideChart = false,
   onCurrencyChange,
   syncTabToUrl,
   swapRedirectCallback,
@@ -130,6 +137,7 @@ export function Swap({
   syncTabToUrl: boolean
   hideHeader?: boolean
   hideFooter?: boolean
+  hideChart?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
   passkeyAuthStatus?: PasskeyAuthStatus
@@ -137,6 +145,7 @@ export function Swap({
   tdpCurrency?: Currency
 }) {
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const media = useMedia()
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(initialInputChainId)
@@ -165,24 +174,21 @@ export function Swap({
   })
 
   return (
-    <ShowGetStartedProvider value={showGetStarted}>
-      <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
-        <SwapTransactionSettingsStoreContextProvider>
-          <SwapAndLimitContextProvider
-            initialInputCurrency={initialInputCurrency}
-            initialOutputCurrency={initialOutputCurrency}
-          >
-            <PrefetchBalancesWrapper>
-              <SwapFormStoreContextProvider
-                prefilledState={prefilledState}
-                hideSettings={hideHeader}
-                hideFooter={hideFooter}
-              >
+    <TokenSelectorHoverConfigProvider wrapTokenRow={media.xl ? undefined : wrapWithTokenHoverCard}>
+      <ShowGetStartedProvider value={showGetStarted}>
+        <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
+          <SwapTransactionSettingsStoreContextProvider>
+            <SwapAndLimitContextProvider
+              initialInputCurrency={initialInputCurrency}
+              initialOutputCurrency={initialOutputCurrency}
+            >
+              <SwapFormStoreContextProvider prefilledState={prefilledState} hideFooter={hideFooter}>
                 <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
                   {isSharedSwapDisabled && <DisabledSwapOverlay />}
                   <UniversalSwapFlow
                     hideHeader={hideHeader}
                     hideFooter={hideFooter}
+                    hideChart={hideChart}
                     syncTabToUrl={syncTabToUrl}
                     swapRedirectCallback={swapRedirectCallback}
                     onCurrencyChange={onCurrencyChange}
@@ -192,11 +198,11 @@ export function Swap({
                   />
                 </Flex>
               </SwapFormStoreContextProvider>
-            </PrefetchBalancesWrapper>
-          </SwapAndLimitContextProvider>
-        </SwapTransactionSettingsStoreContextProvider>
-      </MultichainContextProvider>
-    </ShowGetStartedProvider>
+            </SwapAndLimitContextProvider>
+          </SwapTransactionSettingsStoreContextProvider>
+        </MultichainContextProvider>
+      </ShowGetStartedProvider>
+    </TokenSelectorHoverConfigProvider>
   )
 }
 
@@ -217,9 +223,19 @@ const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/sell': SwapTab.Sell,
 }
 
+const CHART_CARD_HEIGHT = 288
+const CHART_CARD_GAP = 24
+
+const CHART_ELIGIBLE_TABS = new Set<SwapTab>([SwapTab.Swap, SwapTab.Limit])
+
+function isChartEligibleTab(tab: SwapTab): boolean {
+  return CHART_ELIGIBLE_TABS.has(tab)
+}
+
 function UniversalSwapFlow({
   hideHeader = false,
   hideFooter = false,
+  hideChart = false,
   disableTokenInputs = false,
   syncTabToUrl = true,
   prefilledState,
@@ -230,6 +246,7 @@ function UniversalSwapFlow({
 }: {
   hideHeader?: boolean
   hideFooter?: boolean
+  hideChart?: boolean
   syncTabToUrl?: boolean
   disableTokenInputs?: boolean
   prefilledState?: SwapFormState
@@ -241,11 +258,23 @@ function UniversalSwapFlow({
 }) {
   const { currentTab, setCurrentTab } = useSwapAndLimitContext()
   const tdpCurrencyAsset = currencyToAsset(tdpCurrency)
+  const { inputCurrency, outputCurrency } = useSlideoutChartCardCurrencies()
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+  const [showChart, setShowChart] = useState(false)
+  const [tabsRowHeight, setTabsRowHeight] = useState(0)
+  const [swapFlowPanelsHeight, setSwapFlowPanelsHeight] = useState(0)
+  const onCurrencyPanelsLayout = useCallback((height: number) => setSwapFlowPanelsHeight(height), [])
+  const media = useMedia()
+
+  useEffect(() => {
+    if (media.lg) {
+      setShowChart(false)
+    }
+  }, [media.lg])
 
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const swapHandlers = useSwapHandlers()
 
   const LimitFormWrapper = useDeferredComponent(() =>
     import('~/pages/Swap/Limit/LimitForm').then((module) => ({
@@ -269,13 +298,20 @@ function UniversalSwapFlow({
         openSendFormModal()
       }
     } else {
-      setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
+      const tab = PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap
+      setCurrentTab(tab)
+      if (!isChartEligibleTab(tab)) {
+        setShowChart(false)
+      }
     }
   }, [pathname, openSendFormModal, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
       sendAnalyticsEvent(InterfaceEventName.SwapTabClicked, { tab })
+      if (!isChartEligibleTab(tab)) {
+        setShowChart(false)
+      }
       if (syncTabToUrl) {
         navigate(`/${tab}`, { replace: true })
       } else {
@@ -284,6 +320,33 @@ function UniversalSwapFlow({
     },
     [navigate, syncTabToUrl, setCurrentTab],
   )
+
+  const isChartVisible = showChart && isChartEligibleTab(currentTab)
+
+  const chartSettingsLeftContent = useMemo(() => {
+    if (!isDataLivelinessEnabled || media.lg || hideChart) {
+      return undefined
+    }
+    return (
+      <SwapChartToggleButton
+        showChart={showChart}
+        onPress={() => {
+          const next = !showChart
+          sendAnalyticsEvent(InterfaceEventName.SlideoutChartCardToggled, {
+            is_open: next,
+            tab: currentTab,
+            token_in_symbol: inputCurrency?.symbol,
+            token_in_chain_id: inputCurrency?.chainId,
+            token_in_chain_name: inputCurrency ? getChainLabel(inputCurrency.chainId as UniverseChainId) : undefined,
+            token_out_symbol: outputCurrency?.symbol,
+            token_out_chain_id: outputCurrency?.chainId,
+            token_out_chain_name: outputCurrency ? getChainLabel(outputCurrency.chainId as UniverseChainId) : undefined,
+          })
+          setShowChart(next)
+        }}
+      />
+    )
+  }, [isDataLivelinessEnabled, media.lg, showChart, hideChart, currentTab, inputCurrency, outputCurrency])
 
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
     return SWAP_TABS.map((tab) => ({
@@ -302,60 +365,75 @@ function UniversalSwapFlow({
     }))
   }, [t, currentTab, syncTabToUrl])
 
-  const swapSettings = useWebSwapSettings()
-  const resetDisableOneClickSwap = useResetOverrideOneClickSwapFlag()
-
-  const connectorId = useAccount().connector?.id
-  const passkeyAuthStatus = useGetPasskeyAuthStatus(connectorId)
-
   return (
-    <Flex>
-      {!hideHeader && (
-        <Flex row gap="$spacing16">
-          <SegmentedControl
-            outlined={false}
-            size="large"
-            options={SWAP_TAB_OPTIONS}
-            selectedOption={currentTab}
-            onSelectOption={onTabClick}
-            gap={isMobileWeb ? '$spacing8' : undefined}
-          />
-        </Flex>
+    <Flex row alignItems="flex-start" maxWidth="calc(100vw - 16px)">
+      {/* Chart card animates in from the left (gated behind DataLivelinessUI flag).
+          Not mounted on pages that hide the header (e.g. landing page) since the chart
+          toggle lives in the header and the collapsed animator would still consume gap space.
+          Also not shown when hideChart is set (e.g. TDP embedded swap). */}
+      {isDataLivelinessEnabled && !hideHeader && !hideChart && (
+        <WidthAnimator
+          open={isChartVisible}
+          height={swapFlowPanelsHeight || CHART_CARD_HEIGHT}
+          mt={tabsRowHeight}
+          contentWidth={PAGE_WRAPPER_MAX_WIDTH + CHART_CARD_GAP}
+          $platform-web={{ flexShrink: 1, minWidth: 0 }}
+        >
+          <Flex width="100%" height="100%" pr="$spacing24">
+            <SlideoutChartCard isChartOpen={isChartVisible} />
+          </Flex>
+        </WidthAnimator>
       )}
-      {currentTab === SwapTab.Swap && (
-        <Flex gap="$spacing16">
-          <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
-            <SwapFlow
-              settings={swapSettings}
-              hideHeader={hideHeader}
-              hideFooter={hideFooter}
-              onClose={noop}
-              swapRedirectCallback={swapRedirectCallback}
-              onCurrencyChange={onCurrencyChange}
-              prefilledState={prefilledState}
-              tokenColor={tokenColor}
-              onSubmitSwap={resetDisableOneClickSwap}
-              passkeyAuthStatus={passkeyAuthStatus}
+
+      <SwapModuleWrapper $platform-web={{ flexShrink: 1, minWidth: 0 }}>
+        {!hideHeader && (
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            onLayout={(e) => setTabsRowHeight(e.nativeEvent.layout.height)}
+          >
+            <SegmentedControl
+              outlined={false}
+              size="large"
+              options={SWAP_TAB_OPTIONS}
+              selectedOption={currentTab}
+              onSelectOption={onTabClick}
+              gap={isMobileWeb ? '$spacing8' : undefined}
             />
-          </SwapDependenciesStoreContextProvider>
-          <SwapBottomCard />
-        </Flex>
-      )}
-      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Buy && BuyForm && (
-        <BuyForm
-          rampDirection={RampDirection.ON_RAMP}
-          disabled={disableTokenInputs}
-          initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
-        />
-      )}
-      {currentTab === SwapTab.Sell && BuyForm && (
-        <BuyForm
-          rampDirection={RampDirection.OFF_RAMP}
-          disabled={disableTokenInputs}
-          initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
-        />
-      )}
+            <Flex row gap="$spacing8" alignItems="center">
+              {isChartEligibleTab(currentTab) && chartSettingsLeftContent}
+              {currentTab === SwapTab.Swap && <SwapFormSettingsButton />}
+            </Flex>
+          </Flex>
+        )}
+        {currentTab === SwapTab.Swap && (
+          <SwapForm
+            hideHeader={hideHeader}
+            hideFooter={hideFooter}
+            onCurrencyChange={onCurrencyChange}
+            prefilledState={prefilledState}
+            swapRedirectCallback={swapRedirectCallback}
+            tokenColor={tokenColor}
+            onCurrencyPanelsLayout={isDataLivelinessEnabled ? onCurrencyPanelsLayout : undefined}
+          />
+        )}
+        {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+        {currentTab === SwapTab.Buy && BuyForm && (
+          <BuyForm
+            rampDirection={RampDirection.ON_RAMP}
+            disabled={disableTokenInputs}
+            initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
+          />
+        )}
+        {currentTab === SwapTab.Sell && BuyForm && (
+          <BuyForm
+            rampDirection={RampDirection.OFF_RAMP}
+            disabled={disableTokenInputs}
+            initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
+          />
+        )}
+      </SwapModuleWrapper>
     </Flex>
   )
 }

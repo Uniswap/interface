@@ -42,6 +42,8 @@ vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   registerNewPasskey: vi.fn(),
+  toRecoveryAuthMethodType: (provider: 'google' | 'apple' | null) =>
+    provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
 }))
 
 vi.mock('uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient', () => ({
@@ -155,9 +157,9 @@ async function goToEnterPinStep() {
   pasteIntoFirstInput('123456')
 
   await waitFor(() => {
-    // PIN input visible — disabled input type "password"
-    const inputs = document.querySelectorAll('input[inputmode="numeric"]')
-    expect(inputs).toHaveLength(4)
+    // PIN step visible: 4 digit cells
+    const cells = document.querySelectorAll('.digit-input-cell')
+    expect(cells).toHaveLength(4)
   })
 }
 
@@ -212,8 +214,8 @@ describe('RecoverWalletModal', () => {
     setupMocks()
     render(<RecoverWalletModal />)
     await goToEnterPinStep()
-    const inputs = document.querySelectorAll('input[inputmode="numeric"]')
-    expect(inputs).toHaveLength(4)
+    const cells = document.querySelectorAll('.digit-input-cell')
+    expect(cells).toHaveLength(4)
   })
 
   it('hides the back arrow on email entry step', async () => {
@@ -411,8 +413,8 @@ describe('RecoverWalletModal', () => {
       render(<RecoverWalletModal />)
 
       await waitFor(() => {
-        const inputs = document.querySelectorAll('input[inputmode="numeric"]')
-        expect(inputs).toHaveLength(4)
+        const cells = document.querySelectorAll('.digit-input-cell')
+        expect(cells).toHaveLength(4)
       })
     })
 
@@ -455,8 +457,8 @@ describe('RecoverWalletModal', () => {
       render(<RecoverWalletModal />)
 
       await waitFor(() => {
-        const inputs = document.querySelectorAll('input[inputmode="numeric"]')
-        expect(inputs).toHaveLength(4)
+        const cells = document.querySelectorAll('.digit-input-cell')
+        expect(cells).toHaveLength(4)
       })
     })
 

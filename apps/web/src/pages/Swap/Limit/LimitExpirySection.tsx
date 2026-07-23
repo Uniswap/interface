@@ -4,7 +4,7 @@ import { Flex, styled, Text, TouchableArea } from 'ui/src'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
+import { useLimitContext } from '~/pages/Swap/Limit/state/LimitContext'
 
 const ExpirySection = styled(Flex, {
   row: true,

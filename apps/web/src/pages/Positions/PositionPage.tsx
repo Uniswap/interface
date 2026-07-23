@@ -1,5 +1,4 @@
 /* oxlint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
@@ -36,12 +35,13 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -54,7 +54,6 @@ import { MouseoverTooltip } from '~/components/Tooltip'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
-import { useGetRangeDisplay } from '~/features/Liquidity/hooks/useGetRangeDisplay/useGetRangeDisplay'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
 import { LiquidityPositionAmountRows } from '~/features/Liquidity/LiquidityPositionAmountRows'
@@ -92,12 +91,12 @@ const BodyWrapper = styled(Main, {
   },
 })
 
-function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
+function parseTokenId(tokenId: string | undefined): bigint | undefined {
   if (!tokenId) {
     return undefined
   }
   try {
-    return BigNumber.from(tokenId)
+    return BigInt(tokenId)
   } catch {
     return undefined
   }
@@ -365,8 +364,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       <Helmet>
         <title>
           {t(`liquidityPool.positions.page.title`, {
-            quoteSymbol: currency1Amount.currency.symbol,
-            baseSymbol: currency0Amount.currency.symbol,
+            quoteSymbol: currency1Amount.currency.symbol ?? t('common.token'),
+            baseSymbol: currency0Amount.currency.symbol ?? t('common.token'),
           })}
         </title>
         {metatags.map((tag, index) => (

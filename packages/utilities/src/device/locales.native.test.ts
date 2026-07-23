@@ -18,7 +18,7 @@ vi.mock('expo-localization', () => ({
       currencySymbol: null,
       decimalSeparator: null,
       digitGroupingSeparator: null,
-      textDirection: null,
+      textDirection: 'ltr',
       measurementSystem: null,
       temperatureUnit: null,
     },

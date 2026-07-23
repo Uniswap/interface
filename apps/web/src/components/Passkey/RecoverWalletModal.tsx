@@ -1,5 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { base64urlToBase64 } from '@universe/encoding'
+import { isMobileWeb } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { connect } from '@wagmi/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,12 +11,13 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
 import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
 import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
+import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import { registerNewPasskey } from 'uniswap/src/features/passkey/embeddedWallet'
+import { registerNewPasskey, toRecoveryAuthMethodType } from 'uniswap/src/features/passkey/embeddedWallet'
 import { executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
 import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -24,13 +27,17 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import { AddPasskeyStep } from '~/components/Passkey/RecoverWalletSteps'
+import { PasscodeStep } from '~/components/Passkey/AddBackupLoginSteps'
+import { AddPasskeyStep, RotationExpiredStep, RotationIntroStep } from '~/components/Passkey/RecoverWalletSteps'
 import { useRecoveryPrivyAuth } from '~/components/Passkey/useRecoveryPrivyAuth'
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
+import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useModalState } from '~/hooks/useModalState'
+import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { setOpenModal } from '~/state/application/reducer'
 import type { RecoverWalletModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
@@ -39,6 +46,9 @@ import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
 export function RecoverWalletModal(): JSX.Element {
   const { t } = useTranslation()
   const { isOpen, onClose } = useModalState(ModalName.RecoverWallet)
+  // Android Chrome shoves this fixed bottom sheet above the viewport when the soft keyboard opens; keep
+  // it on-screen while the modal is open. No-op on iOS/desktop. See hook for the full explanation.
+  useAndroidKeyboardViewportFix(isOpen)
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
   const { setIsConnected, setWalletAddress, setWalletId } = useEmbeddedWalletState()
@@ -48,13 +58,24 @@ export function RecoverWalletModal(): JSX.Element {
 
   const [addPasskeyError, setAddPasskeyError] = useState<string | undefined>()
   const [oauthError, setOauthError] = useState<string | undefined>()
+  const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
 
   const { appId: privyAppId } = getPrivyConfig(false)
   const handleOAuthError = useCallback((err: string) => setOauthError(err), [])
   const privy = useRecoveryPrivyAuth({ onOAuthError: handleOAuthError })
+  const disableV1EwRotation = useFeatureFlag(FeatureFlags.DisableV1EwRotation)
 
   const onPinDecryptSuccess = useEvent(
-    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+    async ({
+      authPrivateKey,
+      authMethodId,
+      accessToken,
+    }: {
+      authPrivateKey: Uint8Array
+      authMethodId: string
+      email: string
+      accessToken: string
+    }) => {
       let passkeyUsername: string | undefined
       if (flow.recoveryWalletAddress) {
         try {
@@ -75,6 +96,7 @@ export function RecoverWalletModal(): JSX.Element {
       const recoveryResult = await executeRecovery({
         authPrivateKey,
         authMethodId,
+        accessToken,
         newPasskeyCredential: credential,
         newPasskeyPublicKey,
         generateAuthorizationSignature: privy.generateAuthorizationSignature,
@@ -103,6 +125,10 @@ export function RecoverWalletModal(): JSX.Element {
     onPinDecryptSuccess,
     setOauthError,
     showAddPasskeyStep: true,
+    // v1 backup logins rotate to v2 in place (no passkey) instead of the add-passkey recovery.
+    enableRotation: true,
+    // Kill switch: when on, v1 rotation is disabled and the user is routed to passkey sign-in.
+    disableRotation: disableV1EwRotation,
   })
 
   // Safe against re-fire: EmailEntry hides its back arrow, so the user can't return to
@@ -123,6 +149,36 @@ export function RecoverWalletModal(): JSX.Element {
     onClose()
   })
 
+  const { signInWithPasskey } = useSignInWithPasskey({ onSuccess: onClose })
+
+  // Rotation disabled: close the recovery modal and start passkey sign-in.
+  const handleContinueWithPasskey = useEvent(() => {
+    handleClose()
+    signInWithPasskey()
+  })
+
+  // Overflow → delete the legacy v1 recovery method. RemoveBackupLoginModal does the
+  // passkey-authorized delete; pass the walletId since there is no active session here.
+  const handleRemoveRecoveryMethod = useEvent(() => {
+    const walletId = flow.walletId
+    handleClose()
+    dispatch(
+      setOpenModal({
+        name: ModalName.RemoveBackupLogin,
+        initialState: {
+          recoveryMethodType: toRecoveryAuthMethodType(flow.oauthProvider),
+          recoveryMethodIdentifier: flow.effectiveEmail || undefined,
+          walletId,
+        },
+      }),
+    )
+  })
+
+  const handleCreateAccount = useEvent(() => {
+    handleClose()
+    openGetTheApp()
+  })
+
   const handleAddPasskey = useEvent(async () => {
     setAddPasskeyError(undefined)
     try {
@@ -138,7 +194,7 @@ export function RecoverWalletModal(): JSX.Element {
       name={ModalName.RecoverWallet}
       isModalOpen={isOpen}
       onClose={handleClose}
-      isDismissible={false}
+      isDismissible={isMobileWeb}
       maxWidth={420}
     >
       <Flex gap="$gap24" alignItems="center" width="100%">
@@ -203,10 +259,58 @@ export function RecoverWalletModal(): JSX.Element {
             addPasskeyError={addPasskeyError}
             handleAddPasskey={handleAddPasskey}
             handleClose={handleClose}
+            isRotation={flow.didRotate}
+            walletAddress={flow.recoveryWalletAddress}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.NewPasscodeIntro && (
+          <RotationIntroStep
+            provider={flow.oauthProvider}
+            email={flow.effectiveEmail}
+            onContinue={flow.continueToSetNewPasscode}
+            onRemove={handleRemoveRecoveryMethod}
+            handleClose={handleClose}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.RotationExpired && (
+          <RotationExpiredStep onContinueWithPasskey={handleContinueWithPasskey} handleClose={handleClose} t={t} />
+        )}
+        {flow.step === RecoveryStep.SetNewPasscode && (
+          <PasscodeStep
+            modalName={ModalName.RecoverWallet}
+            title={t('account.passkey.reconnect.setPasscode.title')}
+            description={t('account.passkey.backupLogin.setPasscode.description')}
+            digitInput={flow.newPasscodeInput}
+            showPasscode={flow.showPasscode}
+            setShowPasscode={flow.setShowPasscode}
+            passcodeError={flow.newPasscodeError}
+            isEncrypting={false}
+            handleBack={flow.handleBack}
+            handleClose={handleClose}
+            t={t}
+          />
+        )}
+        {flow.step === RecoveryStep.ConfirmNewPasscode && (
+          <PasscodeStep
+            modalName={ModalName.RecoverWallet}
+            title={t('account.passkey.reconnect.confirmPasscode.title')}
+            description={t('account.passkey.reconnect.confirmPasscode.description')}
+            digitInput={flow.confirmNewPasscodeInput}
+            showPasscode={flow.showPasscode}
+            setShowPasscode={flow.setShowPasscode}
+            passcodeError={flow.newPasscodeError}
+            isEncrypting={false}
+            handleBack={flow.handleBack}
+            handleClose={handleClose}
             t={t}
           />
         )}
         {flow.step === RecoveryStep.Recovering && <RecoveringStep t={t} />}
+        {flow.step === RecoveryStep.NoWalletFound && (
+          <NoWalletFoundStep t={t} handleClose={handleClose} onCreateAccount={handleCreateAccount} />
+        )}
       </Flex>
     </Modal>
   )

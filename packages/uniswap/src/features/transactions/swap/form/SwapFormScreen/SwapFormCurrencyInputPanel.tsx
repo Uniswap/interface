@@ -1,4 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
@@ -6,9 +7,11 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function SwapFormCurrencyInputPanel(): JSX.Element {
+export const SwapFormCurrencyInputPanel = memo(function SwapFormCurrencyInputPanel(): JSX.Element {
   const { t } = useTranslation()
   const {
     inputRef,
@@ -56,6 +59,10 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
 
   const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.INPUT)
 
+  // When gas is sponsored, "Max" should spend the full native balance.
+  // alternateGasFees (wallet capability) is handled inside useMaxAmountSpend.
+  const isGasCovered = useSwapTxStore((s) => isSponsorableSwap(s) && s.trade?.quote.sponsorshipInfo?.sponsored)
+
   return (
     <Trace section={SectionName.CurrencyInputPanel}>
       <Flex
@@ -74,6 +81,7 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
           currencyBalance={currencyBalances[CurrencyField.INPUT]}
           currencyField={CurrencyField.INPUT}
           currencyInfo={currencies[CurrencyField.INPUT]}
+          isGasCovered={isGasCovered}
           // We do not want to force-focus the input when the token selector is open.
           focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
           isFiatMode={isFiatMode && exactFieldIsInput}
@@ -95,4 +103,4 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
       </Flex>
     </Trace>
   )
-}
+})

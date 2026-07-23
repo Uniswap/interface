@@ -37,7 +37,7 @@ function getStatsigApiKeyOrThrow(): string {
 
 export function getOverrideAdapter(): LocalOverrideAdapterWrapper {
   if (!localOverrideAdapter) {
-    localOverrideAdapter = new LocalOverrideAdapterWrapper(getStatsigApiKeyOrThrow())
+    localOverrideAdapter = new LocalOverrideAdapterWrapper(getStatsigApiKeyOrThrow(), getStatsigClient)
   }
   return localOverrideAdapter
 }

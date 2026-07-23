@@ -32,16 +32,23 @@ const createMockQueryClient = (): QueryClient => {
   return client
 }
 
+// Disable dev-mode state checks: under CI load the immutable-check middleware
+// exceeds its 32ms warning threshold and the console.warn fails the test
+// via jest-fail-on-console.
+const createTestStore = () =>
+  configureStore({
+    reducer: interfaceReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ immutableCheck: false, serializableCheck: false }),
+  })
+
 describe('createWebAppStateResetter', () => {
-  let store: ReturnType<typeof configureStore<InterfaceState>>
+  let store: ReturnType<typeof createTestStore>
   let apolloClient: ApolloClient<unknown>
   let queryClient: QueryClient
   let resetter: ReturnType<typeof createWebAppStateResetter>
 
   beforeEach(() => {
-    store = configureStore({
-      reducer: interfaceReducer,
-    })
+    store = createTestStore()
     apolloClient = createMockApolloClient()
     queryClient = createMockQueryClient()
     resetter = createWebAppStateResetter({

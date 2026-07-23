@@ -1,7 +1,13 @@
 import { useScrollToTop } from '@react-navigation/native'
 import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import {
+  type AnimatedStyle,
+  Extrapolate,
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { ColorTokens, Flex } from 'ui/src'
@@ -96,7 +102,7 @@ function HeaderWrapper({
 }: {
   fullScreen: boolean
   children: ReactElement
-  style?: StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>
+  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
   backgroundColor?: ColorTokens
 }): JSX.Element {
   if (!fullScreen) {

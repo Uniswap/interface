@@ -8,6 +8,7 @@ import { ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
   ArbitrumOne = UniswapSDKChainId.ARBITRUM_ONE,
+  Arc = UniswapSDKChainId.ARC,
   Avalanche = UniswapSDKChainId.AVALANCHE,
   Base = UniswapSDKChainId.BASE,
   Blast = UniswapSDKChainId.BLAST,
@@ -16,6 +17,7 @@ export enum UniverseChainId {
   Monad = UniswapSDKChainId.MONAD,
   Optimism = UniswapSDKChainId.OPTIMISM,
   Polygon = UniswapSDKChainId.POLYGON,
+  Robinhood = UniswapSDKChainId.ROBINHOOD,
   Sepolia = UniswapSDKChainId.SEPOLIA,
   Soneium = UniswapSDKChainId.SONEIUM,
   Tempo = UniswapSDKChainId.TEMPO,
@@ -24,6 +26,7 @@ export enum UniverseChainId {
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
   XLayer = UniswapSDKChainId.XLAYER,
   Linea = UniswapSDKChainId.LINEA,
+  MegaETH = UniswapSDKChainId.MEGAETH,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
   Solana = 501000101,

@@ -1,4 +1,4 @@
-import { isWebPlatform } from '@universe/environment'
+import { isWebApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,8 +18,12 @@ import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
 import { useShowInterfaceReviewSteps } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
-import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
+import {
+  useIsEarnQuoteRefreshLoading,
+  useSwapReviewTransactionStore,
+} from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
 import { useSwapReviewWarningStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
+import { EarnSwapToggle } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/EarnSwapToggle'
 import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -47,6 +51,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
 
   const hasActivePlan = useStore(activePlanStore, (state) => !!state.activePlan)
   const allowRetryPlan = hasActivePlan && !isSubmitting
+  const showEarnSwapToggle = (isWebApp || !isWebPlatform) && !showInterfaceReviewSteps && !hasActivePlan
 
   // Mirror the same warning derivation that drives the Network cost row, so
   // the submit button and the row stay in sync when the user has saved a risky
@@ -115,6 +120,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
           </Flex>
         </Flex>
       )}
+      {showEarnSwapToggle && <EarnSwapToggle />}
       <Flex row gap="$spacing8">
         {!isWebPlatform && !showPendingUI && (
           <IconButton
@@ -163,6 +169,7 @@ function useSwapSubmitButton(): {
   }))
 
   const tokenWarningChecked = useSwapReviewWarningStore((s) => s.tokenWarningChecked)
+  const isEarnQuoteRefreshLoading = useIsEarnQuoteRefreshLoading()
   const { isSubmitting, showPendingUI } = useSwapFormStore((s) => ({
     isSubmitting: s.isSubmitting,
     showPendingUI: s.showPendingUI,
@@ -188,6 +195,7 @@ function useSwapSubmitButton(): {
       !!blockingWarning ||
       newTradeRequiresAcceptance ||
       isSubmitting ||
+      isEarnQuoteRefreshLoading ||
       isTokenWarningBlocking ||
       isSwapOrPlanSagaRunning
     )
@@ -197,6 +205,7 @@ function useSwapSubmitButton(): {
     blockingWarning,
     newTradeRequiresAcceptance,
     isSubmitting,
+    isEarnQuoteRefreshLoading,
     tokenWarningChecked,
     shouldDisplayTokenWarningCard,
     isSwapOrPlanSagaRunning,

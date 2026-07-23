@@ -1,22 +1,25 @@
-import '~/features/Toucan/Auction/Bids/AuctionGraduated.css'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { formatUnits } from '~/chains'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
-import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerColorData'
 import { q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { AuctionGraduatedSkeleton } from '~/features/Toucan/Auction/Bids/AuctionGraduatedSkeleton'
+import { AuctionRedeemable } from '~/features/Toucan/Auction/Bids/AuctionRedeemable'
+import { GraduatedCardFrame } from '~/features/Toucan/Auction/Bids/GraduatedCardFrame'
+import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
+import { useAuctionTokenInfo } from '~/features/Toucan/Auction/hooks/useAuctionTokenInfo'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
+import { useRedeemableBalance } from '~/features/Toucan/Auction/hooks/useRedeemableBalance'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { sumTokensReceived } from '~/features/Toucan/Auction/utils/tokensReceived'
 
 const AuctionGraduatedSuccess = ({
   auctionLogoUrl,
@@ -44,7 +47,6 @@ const AuctionGraduatedSuccess = ({
     userBids: state.userBids,
     tokenColor: state.tokenColor,
   }))
-  const colors = useSporeColors()
   const { formatNumberOrString } = useLocalizationContext()
   const auctionTokenDecimals = auctionCurrency.decimals
   const bidTokenDecimals = bidTokenCurrency.decimals
@@ -56,18 +58,8 @@ const AuctionGraduatedSuccess = ({
     return currentBlockNumber < Number(claimBlock)
   }, [claimBlock, currentBlockNumber])
 
-  const { bannerGradient } = useTokenLaunchedBannerColorData({
-    tokenColor,
-    colors,
-    gradientLtr: false,
-  })
-
   // Calculate tokens received in raw units (auction token)
-  const tokensReceived = useMemo(() => {
-    return userBids.reduce((acc, bid) => {
-      return acc + BigInt(bid.amount)
-    }, 0n)
-  }, [userBids])
+  const tokensReceived = useMemo(() => sumTokensReceived(userBids), [userBids])
 
   // Calculate currency spent in raw units (bid token)
   const currencySpent = useMemo(() => {
@@ -175,142 +167,71 @@ const AuctionGraduatedSuccess = ({
   const percentageColor = '$statusSuccess'
 
   return (
-    <Flex gap="$spacing8" width="100%">
-      {/* Main congratulations card */}
-      <Flex
-        position="relative"
-        overflow="hidden"
-        borderRadius="$rounded24"
-        borderWidth="$spacing1"
-        borderColor="$surface3"
-        backgroundColor="$surface1"
-        minHeight={344}
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-        style={bannerGradient}
-      >
-        {/* Floating token logos with blur */}
-        <Flex
-          position="absolute"
-          left={319}
-          top={238}
-          opacity={0.54}
-          style={{ filter: 'blur(3px)', animation: 'float1 8s ease-in-out infinite' }}
-        >
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={58} />
-        </Flex>
-        <Flex
-          position="absolute"
-          left={65.5}
-          top={-3.95}
-          opacity={0.3}
-          style={{ filter: 'blur(8px)', animation: 'float2 10s ease-in-out infinite 1s' }}
-        >
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={45} />
-        </Flex>
-        <Flex
-          position="absolute"
-          left={336.47}
-          top={128.15}
-          opacity={0.3}
-          style={{ filter: 'blur(8px)', animation: 'float3 9s ease-in-out infinite 2s' }}
-        >
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={45} />
-        </Flex>
-        <Flex
-          position="absolute"
-          left={280.02}
-          top={-15.24}
-          opacity={0.54}
-          style={{ filter: 'blur(4px)', animation: 'float4 11s ease-in-out infinite 0.5s' }}
-        >
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={56} />
-        </Flex>
-        <Flex
-          position="absolute"
-          left={-16.92}
-          top={165.41}
-          opacity={0.54}
-          style={{ filter: 'blur(4px)', animation: 'float5 7s ease-in-out infinite 1.5s' }}
-        >
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={56} />
-        </Flex>
-
-        {/* Bottom glow effect */}
-        <Flex
-          position="absolute"
-          bottom={-251}
-          left="50%"
-          width={299}
-          height={299}
-          borderRadius={999}
-          backgroundColor="#7482ff"
-          opacity={0.3}
-          style={{ transform: 'translateX(-50%)', filter: 'blur(100px)' }}
-        />
-
-        {/* Token logo */}
-        <Flex position="absolute" left="calc(50% - 32px)" top={56}>
-          <TokenLogo url={auctionLogoUrl} chainId={chainId} symbol={auctionCurrency.symbol} size={64} />
-        </Flex>
-
-        {/* Text content */}
-        <Flex gap="$spacing8" alignItems="center" justifyContent="center" width="100%" px="$spacing20">
-          <Text variant="body2" color="$neutral2" textAlign="center" mt={100}>
-            {t('toucan.auction.youReceived')}
+    <GraduatedCardFrame
+      auctionLogoUrl={auctionLogoUrl}
+      auctionSymbol={auctionCurrency.symbol}
+      chainId={chainId}
+      tokenColor={tokenColor}
+    >
+      {/* Top-anchored below the logo, with the same gaps as the redeem card (logo→label 34,
+          then 6px between lines). */}
+      <Flex flex={1} gap={6} width="100%" alignItems="center">
+        <Text variant="body2" color="$neutral2" textAlign="center" mt={34}>
+          {t('toucan.auction.youReceived')}
+        </Text>
+        <Flex row gap="$spacing8" alignItems="center">
+          <Text color="$neutral1" variant="heading2">
+            {formatNumberOrString({ value: tokensReceivedDecimal, type: NumberType.TokenNonTx })}
           </Text>
-          <Flex row gap="$spacing8" alignItems="center">
-            <Text color="$neutral1" variant="heading2">
-              {formatNumberOrString({ value: tokensReceivedDecimal, type: NumberType.TokenNonTx })}
-            </Text>
-            <Text color="$neutral1" variant="heading2">
-              {auctionCurrency.symbol}
-            </Text>
-          </Flex>
-          <Flex row alignItems="center" gap="$spacing4">
-            <SubscriptZeroPrice
-              value={currencySpentPerTokenNumeric}
-              symbol={bidTokenSymbol}
-              minSignificantDigits={2}
-              maxSignificantDigits={4}
-              variant="body2"
-              color="$neutral2"
-            />
-            <Text variant="body2" color="$neutral2">
-              {t('toucan.auction.avgPrice')}
-            </Text>
-          </Flex>
-          {clearingPriceToCurrencySpentPerTokenPercentDifference !== null && (
-            <Flex row alignItems="center" justifyContent="center">
-              <Text variant="body2" color="$neutral2">
-                (
-              </Text>
-              <Text variant="body2" color={percentageColor}>
-                {formatNumberOrString({
-                  value: Math.abs(clearingPriceToCurrencySpentPerTokenPercentDifference).toString(),
-                  type: NumberType.Percentage,
-                })}
-              </Text>
-              <Text variant="body2" color="$neutral2">
-                {' '}
-                {t('toucan.auction.belowClearingPrice')})
-              </Text>
-            </Flex>
-          )}
-          {isClaimPeriodNotOpen && (
-            <Flex mt="$spacing24" alignItems="center" justifyContent="center">
-              <Text variant="body4" color="$neutral2" textAlign="center">
-                {t('toucan.auction.withdrawalPeriodNotOpen')}
-              </Text>
-            </Flex>
-          )}
+          <Text color="$neutral1" variant="heading2">
+            {auctionCurrency.symbol}
+          </Text>
         </Flex>
+        <Flex row alignItems="center" gap="$spacing4">
+          <SubscriptZeroPrice
+            value={currencySpentPerTokenNumeric}
+            symbol={bidTokenSymbol}
+            minSignificantDigits={2}
+            maxSignificantDigits={4}
+            variant="body2"
+            color="$neutral2"
+          />
+          <Text variant="body2" color="$neutral2">
+            {t('toucan.auction.avgPrice')}
+          </Text>
+        </Flex>
+        {clearingPriceToCurrencySpentPerTokenPercentDifference !== null && (
+          <Flex row alignItems="center" justifyContent="center">
+            <Text variant="body2" color="$neutral2">
+              (
+            </Text>
+            <Text variant="body2" color={percentageColor}>
+              {formatNumberOrString({
+                value: Math.abs(clearingPriceToCurrencySpentPerTokenPercentDifference).toString(),
+                type: NumberType.Percentage,
+              })}
+            </Text>
+            <Text variant="body2" color="$neutral2">
+              {' '}
+              {t('toucan.auction.belowClearingPrice')})
+            </Text>
+          </Flex>
+        )}
+        {isClaimPeriodNotOpen && (
+          <Flex mt="$spacing24" alignItems="center" justifyContent="center">
+            <Text variant="body4" color="$neutral2" textAlign="center">
+              {t('toucan.auction.withdrawalPeriodNotOpen')}
+            </Text>
+          </Flex>
+        )}
       </Flex>
-    </Flex>
+    </GraduatedCardFrame>
   )
 }
 
+// Orchestrates which graduated view to show (skeleton / redeem / success) from several data
+// sources; the branching is inherent, matching TokenLaunchedBanner's data container.
+// oxlint-disable-next-line complexity
 export function AuctionGraduated() {
   const { auctionDetails, checkpointData, currentBlockNumber } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
@@ -321,6 +242,17 @@ export function AuctionGraduated() {
   const clearingPrice = getClearingPrice(checkpointData, auctionDetails)
   const auctionCurrency = auctionToken?.currency
   const auctionLogoUrl = auctionToken?.logoUrl
+
+  const { isRedeemable, redeemUrl, realTokenAddress, loading: redemptionLoading } = useAuctionRedemption()
+
+  // Live virtual-token (rCAP) balance of the connected wallet — the redeemable amount. It is 0
+  // before the wallet claims from the auction and again after it redeems, and > 0 only while the
+  // wallet holds the token; this drives whether the redeem card shows.
+  const { balance: redeemableBalance, loading: redeemableBalanceLoading } = useRedeemableBalance({
+    tokenAddress: auctionDetails?.tokenAddress,
+    chainId: auctionDetails?.chainId,
+    enabled: isRedeemable,
+  })
 
   const { bidTokenInfo } = useBidTokenInfo({
     bidTokenAddress: auctionDetails?.currency,
@@ -341,6 +273,39 @@ export function AuctionGraduated() {
   const bidTokenPriceFiat = bidTokenInfo?.priceFiat ?? 0
 
   const bidTokenSymbol = bidTokenCurrency?.symbol
+
+  // Real (redeemable) token info for the redeem card's symbol. useAuctionTokenInfo falls back to
+  // an on-chain symbol read when the token isn't GraphQL-indexed, so the redeemable amount is
+  // never mislabeled with the virtual token's symbol.
+  const { tokenInfo: realTokenInfo, loading: realTokenLoading } = useAuctionTokenInfo(
+    isRedeemable && realTokenAddress ? realTokenAddress : undefined,
+    auctionDetails?.chainId,
+  )
+
+  // While still resolving redeemability or the wallet's balance, hold on the skeleton so we don't
+  // flash the success card before the redeem card.
+  if (isRedeemable && (redemptionLoading || redeemableBalanceLoading)) {
+    return <AuctionGraduatedSkeleton />
+  }
+
+  // Redeem variant: the auctioned token is redeemable (override + on-chain underlying) AND the
+  // wallet currently holds it. Before claim and after redeem the balance is 0, so this falls
+  // through to the success card below.
+  if (isRedeemable && redeemableBalance && redeemableBalance > 0n) {
+    if (!auctionDetails || !auctionCurrency || !redeemUrl || !realTokenAddress || realTokenLoading) {
+      return <AuctionGraduatedSkeleton />
+    }
+    return (
+      <AuctionRedeemable
+        auctionLogoUrl={auctionLogoUrl}
+        auctionCurrency={auctionCurrency}
+        chainId={auctionDetails.chainId}
+        realTokenSymbol={realTokenInfo?.currency.symbol ?? ''}
+        redeemableBalanceRaw={redeemableBalance}
+        redeemUrl={redeemUrl}
+      />
+    )
+  }
 
   if (!auctionDetails || !auctionCurrency || clearingPrice === '0' || !bidTokenCurrency || !bidTokenSymbol) {
     return <AuctionGraduatedSkeleton />

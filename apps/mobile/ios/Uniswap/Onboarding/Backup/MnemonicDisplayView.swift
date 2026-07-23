@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import React
 
 // Standard HD wallet mnemonic length (BIP-39 12 words). Embedded wallets use 24.
 fileprivate let mnemonicLengthHD = 12

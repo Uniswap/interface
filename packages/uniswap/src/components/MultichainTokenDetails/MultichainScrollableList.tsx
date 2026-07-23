@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors, type SpaceTokens } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 
@@ -14,6 +14,7 @@ export interface MultichainScrollableListProps {
    * provides its own scrollable container (e.g. BottomSheetScrollView on native).
    */
   renderedInModal?: boolean
+  padding?: SpaceTokens | number
 }
 
 /**
@@ -25,6 +26,7 @@ export function MultichainScrollableList({
   data,
   renderItem,
   renderedInModal,
+  padding = '$spacing8',
 }: MultichainScrollableListProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -55,7 +57,7 @@ export function MultichainScrollableList({
   }, [renderedInModal, updateGradient])
 
   const items = (
-    <Flex gap="$spacing2" py="$spacing8" $md={{ gap: '$spacing4' }}>
+    <Flex gap="$spacing2" py={padding} $md={{ gap: '$spacing4' }}>
       {data.map((entry, index) => (
         <Fragment key={entry.chainId}>{renderItem(entry, index)}</Fragment>
       ))}

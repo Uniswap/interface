@@ -9,26 +9,14 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
-import { AppTFunction } from 'ui/src/i18n/types'
-import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
+import type { AppTFunction } from 'ui/src/i18n/types'
+import type { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
-import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SelectOption } from '~/components/Dropdowns/DropdownSelector'
-
-export enum ActivityFilterType {
-  All = 'all',
-  Sends = 'sends',
-  Receives = 'receives',
-  Swaps = 'swaps',
-  Wraps = 'wraps',
-  Approvals = 'approvals',
-  CreatePool = 'create-pool',
-  AddLiquidity = 'add-liquidity',
-  RemoveLiquidity = 'remove-liquidity',
-  Mints = 'mints',
-  ClaimFees = 'claim-fees',
-  Withdrawals = 'withdrawals',
-}
+import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { SelectOption } from '~/components/Dropdowns/DropdownSelector'
+import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 
 /**
  * Type guard to check if an ActivityItem is a TransactionDetails
@@ -51,6 +39,24 @@ export function filterTransactionDetailsFromActivityItems(transactions: Activity
   return transactions.filter(
     (item): item is TransactionDetails => !isLoadingItem(item) && !isSectionHeader(item) && isTransactionDetails(item),
   )
+}
+
+export function getTransactionTypeForActivityFilter({
+  transaction,
+  isEarnActivityDisplayEnabled = true,
+}: {
+  transaction: TransactionDetails
+  isEarnActivityDisplayEnabled?: boolean
+}): TransactionType {
+  if (
+    isEarnActivityDisplayEnabled &&
+    transaction.typeInfo.type === TransactionType.Plan &&
+    transaction.typeInfo.earnAction
+  ) {
+    return getEarnPlanTransactionType(transaction.typeInfo.earnAction)
+  }
+
+  return transaction.typeInfo.type
 }
 
 export function getTransactionTypeFilterOptions(t: AppTFunction): Record<string, SelectOption> {
@@ -112,7 +118,7 @@ export function getTransactionTypeFilterOptions(t: AppTFunction): Record<string,
 export function getTransactionTypesForFilter(filterType: string): TransactionType[] | 'all' {
   switch (filterType) {
     case ActivityFilterType.Sends:
-      return [TransactionType.Send, TransactionType.ToucanBid]
+      return [TransactionType.Send, TransactionType.Deposit, TransactionType.ToucanBid]
     case ActivityFilterType.Receives:
       return [TransactionType.Receive]
     case ActivityFilterType.Swaps:
@@ -146,8 +152,12 @@ export function getTransactionTypesForFilter(filterType: string): TransactionTyp
  */
 export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
   [ActivityFilterType.All]: undefined,
-  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND],
-  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE],
+  [ActivityFilterType.Sends]: [
+    TransactionTypeFilter.SEND,
+    TransactionTypeFilter.VAULT_DEPOSIT,
+    TransactionTypeFilter.VAULT_TRANSFER,
+  ],
+  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE, TransactionTypeFilter.VAULT_TRANSFER],
   [ActivityFilterType.Swaps]: [TransactionTypeFilter.SWAP],
   [ActivityFilterType.Wraps]: [TransactionTypeFilter.WRAP],
   [ActivityFilterType.Approvals]: [TransactionTypeFilter.APPROVE],
@@ -156,7 +166,28 @@ export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter
   [ActivityFilterType.RemoveLiquidity]: [TransactionTypeFilter.DECREASE_LIQUIDITY],
   [ActivityFilterType.Mints]: [TransactionTypeFilter.MINT],
   [ActivityFilterType.ClaimFees]: [TransactionTypeFilter.CLAIM],
+  [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW, TransactionTypeFilter.VAULT_WITHDRAW],
+}
+
+const LEGACY_SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
+  ...SERVER_FILTER_MAP,
+  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND],
+  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE],
   [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW],
+}
+
+export function getServerTransactionTypesForFilter({
+  filterType,
+  isEarnEnabled,
+}: {
+  filterType: string
+  isEarnEnabled: boolean
+}): TransactionTypeFilter[] | undefined {
+  // TODO(CONS-2244): Remove this fallback once Earn is launched and ListTransactions supports multi-filter requests.
+  const serverFilterMap = isEarnEnabled ? SERVER_FILTER_MAP : LEGACY_SERVER_FILTER_MAP
+  const serverFilterTypes = serverFilterMap[filterType as ActivityFilterType]
+
+  return serverFilterTypes?.length === 1 ? serverFilterTypes : undefined
 }
 
 export enum TimePeriod {
@@ -169,8 +200,12 @@ export enum TimePeriod {
 export function getTimePeriodFilterOptions(t: AppTFunction): Record<string, SelectOption> {
   return {
     [TimePeriod.All]: { label: t('portfolio.activity.filters.timePeriod.all') },
-    [TimePeriod.Last24Hours]: { label: t('common.time.past.hours', { hours: 24 }) },
+    [TimePeriod.Last24Hours]: {
+      label: t('common.time.past.hours', { hours: 24 }),
+    },
     [TimePeriod.Last7Days]: { label: t('common.time.past.days', { days: 7 }) },
-    [TimePeriod.Last30Days]: { label: t('common.time.past.days', { days: 30 }) },
+    [TimePeriod.Last30Days]: {
+      label: t('common.time.past.days', { days: 30 }),
+    },
   }
 }

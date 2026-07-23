@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Image } from 'ui/src'
 import { Unichain } from 'ui/src/components/icons/Unichain'
 import { opacify } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { CardContents } from '~/pages/Landing/components/cards/CardContents'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
 import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
@@ -14,7 +14,7 @@ export function UnichainCard() {
 
   return (
     <ValuePropCard
-      href={uniswapUrls.unichainUrl}
+      href={UniswapStaticUrls.unichainUrl}
       color={primary}
       backgroundColor={opacify(6, primary)}
       $theme-dark={{ backgroundColor: opacify(12, primary) }}

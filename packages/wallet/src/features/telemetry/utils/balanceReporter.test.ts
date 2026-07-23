@@ -1,8 +1,9 @@
+import { hasRequiredDataForBalancesReport } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { shouldSendBalanceReport } from 'wallet/src/features/telemetry/utils/balanceReporter'
 
-jest.mock('uniswap/src/features/accounts/reportBalancesForAnalytics', () => ({
-  hasRequiredDataForBalancesReport: jest.fn(),
+vi.mock('uniswap/src/features/accounts/reportBalancesForAnalytics', () => ({
+  hasRequiredDataForBalancesReport: vi.fn(),
 }))
 
 describe('shouldSendBalanceReport', () => {
@@ -10,9 +11,8 @@ describe('shouldSendBalanceReport', () => {
   const FIVE_MINUTES = ONE_MINUTE_MS * 5
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    const module = require('uniswap/src/features/accounts/reportBalancesForAnalytics')
-    ;(module.hasRequiredDataForBalancesReport as jest.Mock).mockReturnValue(true)
+    vi.clearAllMocks()
+    vi.mocked(hasRequiredDataForBalancesReport).mockReturnValue(true)
   })
 
   describe('when data is valid', () => {
@@ -84,8 +84,7 @@ describe('shouldSendBalanceReport', () => {
 
   describe('when data is invalid', () => {
     it('should return false when required data validation fails', () => {
-      const module = require('uniswap/src/features/accounts/reportBalancesForAnalytics')
-      ;(module.hasRequiredDataForBalancesReport as jest.Mock).mockReturnValue(false)
+      vi.mocked(hasRequiredDataForBalancesReport).mockReturnValue(false)
 
       const result = shouldSendBalanceReport({
         lastReport: mockCurrentTime - FIVE_MINUTES - 1000,

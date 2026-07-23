@@ -78,7 +78,16 @@ export function usePreEstimatedCreatePositionGas({
   }, [isV2, pair, token0, token1, chainId])
 
   const v3V4PreEstimate = useMemo(() => {
-    if (isV2 || !v3OrV4Pool || !token0 || !token1 || chainId == null || tickLower == null || tickUpper == null) {
+    if (
+      isV2 ||
+      !v3OrV4Pool ||
+      !token0 ||
+      !token1 ||
+      chainId == null ||
+      tickLower == null ||
+      tickUpper == null ||
+      tickLower >= tickUpper
+    ) {
       return undefined
     }
     return computePreEstimateIndependentAmount({

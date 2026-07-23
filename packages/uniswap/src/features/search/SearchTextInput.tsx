@@ -45,8 +45,6 @@ export const springConfig = {
   damping: 500,
   mass: 3,
   overshootClamping: true,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
 }
 
 export enum CancelBehaviorType {
@@ -157,84 +155,94 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         <Flex
           fill
           grow
-          row
-          alignItems="center"
-          animateOnly={animateOnly}
           animation="quick"
-          backgroundColor={backgroundColor}
-          borderRadius="$rounded16"
-          gap="$spacing8"
-          minHeight={minHeight}
+          animateOnly={animateOnly}
           ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           my={my}
-          px={px}
-          py={py}
-          borderColor={borderColor}
-          borderWidth={borderWidth}
-          {...(showShadow && SHADOW_PROPS)}
+          minHeight={minHeight}
         >
-          {!hideIcon && (
-            <Flex py="$spacing4">
-              <Search color="$neutral2" size="$icon.20" />
-            </Flex>
-          )}
-
-          <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
-            <ViewGestureHandler>
-              <Input
-                ref={combinedRef}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoFocus={autoFocus}
-                backgroundColor="$transparent"
-                borderWidth="$none"
-                fontFamily="$body"
-                fontWeight="$book"
-                height="100%"
-                maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
-                outlineColor="transparent"
-                outlineWidth={0}
-                p="$none"
-                placeholder={placeholder}
-                placeholderTextColor={placeholderTextColor}
-                position="absolute"
-                returnKeyType="done"
-                testID={TestID.ExploreSearchInput}
-                textContentType="none"
-                keyboardType={keyboardType}
-                inputMode={inputMode}
-                top={0}
-                // avoid turning into a controlled input if not wanting to
-                {...(typeof value !== 'undefined' && {
-                  value,
-                })}
-                // web and iOS need this to avoid platform specific issues
-                // fix Android TextInput issue when the width is changed
-                // (the placeholder text was wrapping in 2 lines when the width was changed)
-                width={!isAndroid ? '100%' : value ? undefined : 9999}
-                onChangeText={onChangeText}
-                onFocus={onTextInputFocus}
-                onSubmitEditing={dismissNativeKeyboard}
-                onKeyPress={onKeyPress}
-              />
-            </ViewGestureHandler>
-          </Flex>
-
-          <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
-          <AnimatePresence>
-            {showCloseButton && (
-              <TouchableArea
-                animation="quick"
-                backgroundColor={backgroundColor}
-                enterStyle={ENTER_EXIT_STYLE}
-                exitStyle={ENTER_EXIT_STYLE}
-                onPress={onClose}
-              >
-                <RotatableChevron color="$neutral3" direction="up" size="$icon.20" />
-              </TouchableArea>
+          <Flex
+            fill
+            grow
+            row
+            alignItems="center"
+            backgroundColor={backgroundColor}
+            borderRadius="$rounded16"
+            gap="$spacing8"
+            px={px}
+            py={py}
+            borderColor={borderColor}
+            borderWidth={borderWidth}
+            {...(showShadow && SHADOW_PROPS)}
+          >
+            {!hideIcon && (
+              <Flex py="$spacing4">
+                <Search color="$neutral2" size="$icon.20" />
+              </Flex>
             )}
-          </AnimatePresence>
+
+            <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
+              <ViewGestureHandler>
+                <Input
+                  ref={combinedRef}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoFocus={autoFocus}
+                  backgroundColor="$transparent"
+                  borderWidth="$none"
+                  fontFamily="$body"
+                  fontWeight="$book"
+                  // Pin lineHeight to the font size: the $body token's larger lineHeight adds leading
+                  // that Fabric renders above the glyph, pushing the single-line text/placeholder down
+                  // and clipping it at the bottom of this tight input on iOS.
+                  fontSize={fonts.body1.fontSize}
+                  lineHeight={fonts.body1.fontSize}
+                  height="100%"
+                  maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+                  outlineColor="transparent"
+                  outlineWidth={0}
+                  p="$none"
+                  placeholder={placeholder}
+                  placeholderTextColor={placeholderTextColor}
+                  position="absolute"
+                  returnKeyType="done"
+                  testID={TestID.ExploreSearchInput}
+                  textContentType="none"
+                  keyboardType={keyboardType}
+                  inputMode={inputMode}
+                  top={0}
+                  // avoid turning into a controlled input if not wanting to
+                  {...(typeof value !== 'undefined' && {
+                    value,
+                  })}
+                  // web and iOS need this to avoid platform specific issues
+                  // fix Android TextInput issue when the width is changed
+                  // (the placeholder text was wrapping in 2 lines when the width was changed)
+                  width={!isAndroid ? '100%' : value ? undefined : 9999}
+                  onChangeText={onChangeText}
+                  onFocus={onTextInputFocus}
+                  onSubmitEditing={dismissNativeKeyboard}
+                  onKeyPress={onKeyPress}
+                />
+              </ViewGestureHandler>
+            </Flex>
+
+            <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
+            <AnimatePresence>
+              {showCloseButton && (
+                <TouchableArea
+                  animation="quick"
+                  backgroundColor={backgroundColor}
+                  enterStyle={ENTER_EXIT_STYLE}
+                  exitStyle={ENTER_EXIT_STYLE}
+                  onPress={onClose}
+                >
+                  <RotatableChevron color="$neutral3" direction="up" size="$icon.20" />
+                </TouchableArea>
+              )}
+            </AnimatePresence>
+          </Flex>
         </Flex>
         {showCancelButton && (
           <Flex

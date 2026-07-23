@@ -55,14 +55,18 @@
       ]
     },
     "apps/extension": {
+      "entry": [
+        "src/entrypoints/**/*.{ts,tsx}"
+      ],
       "ignoreDependencies": [
         "@svgr/webpack",
+        "@tailwindcss/vite",
         "@testing-library/dom",
         "@wxt-dev/module-react",
         "concurrently",
         "css-loader",
+        "dotenv",
         "esbuild-loader",
-        "jest-environment-jsdom",
         "react-native-web",
         "serve",
         "style-loader",
@@ -90,7 +94,12 @@
         "react-native-svg-transformer",
         "@amplitude/analytics-react-native",
         "@datadog/datadog-ci",
+        "@ethersproject/shims",
         "@expo/fingerprint",
+        "@formatjs/intl-getcanonicallocales",
+        "@formatjs/intl-locale",
+        "react-native-quick-base64",
+        "react-native-quick-crypto",
         "@react-native-community/cli",
         "@react-native-community/cli-platform-android",
         "@react-native-community/cli-platform-ios",
@@ -113,7 +122,6 @@
         "expo-modules-core",
         "expo-secure-store",
         "inquirer",
-        "madge",
         "postinstall-postinstall",
         "react-native-argon2",
         "react-native-asset",
@@ -123,7 +131,12 @@
         "react-native-restart",
         "sp-react-native-in-app-updates",
         "ts-jest",
-        "ts-node"
+        "ts-node",
+        "@ethersproject/shims",
+        "@formatjs/intl-getcanonicallocales",
+        "@formatjs/intl-locale",
+        "react-native-quick-base64",
+        "react-native-quick-crypto"
       ]
     },
     "apps/web": {
@@ -140,6 +153,7 @@
       "ignoreDependencies": [
         "@babel/preset-env",
         "@cloudflare/vite-plugin",
+        "@tailwindcss/vite",
         "@tamagui/vite-plugin",
         "vite-plugin-bundlesize",
         "vite-plugin-commonjs",
@@ -166,6 +180,7 @@
         "@walletconnect/ethereum-provider",
         "@web3-react/eip1193",
         "@web3-react/empty",
+        "agentation-mcp",
         "ajv-formats",
         "babel-plugin-react-compiler",
         "browser-cache-mock",
@@ -182,7 +197,6 @@
         "http-server",
         "jpeg-js",
         "lint-staged",
-        "madge",
         "mini-css-extract-plugin",
         "playwright",
         "png-ts",
@@ -247,6 +261,13 @@
         "@vitest/coverage-v8"
       ]
     },
+    "packages/compliance": {
+      "ignoreDependencies": [
+        "@universe/api",
+        "@universe/environment",
+        "@vitest/coverage-v8"
+      ]
+    },
     "packages/config-cli": {
       "entry": [
         "src/main.ts"
@@ -302,6 +323,7 @@
       "ignoreDependencies": [
         "@react-native-masked-view/masked-view",
         "@shopify/react-native-skia",
+        "@tamagui/animations-moti",
         "@tamagui/animations-react-native",
         "@tamagui/font-inter",
         "@tamagui/theme-base",
@@ -326,6 +348,7 @@
         "@redux-devtools/extension",
         "@typechain/ethers-v5",
         "expo-blur",
+        "expo-file-system",
         "expo-linear-gradient",
         "i18next-resources-for-ts",
         "react-native-appsflyer",
@@ -347,7 +370,6 @@
     },
     "packages/wallet": {
       "ignoreDependencies": [
-        "jest-presets",
         "react-native-context-menu-view",
         "react-native-image-picker",
         "react-native-restart",

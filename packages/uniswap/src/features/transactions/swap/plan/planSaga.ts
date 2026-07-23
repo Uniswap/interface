@@ -3,6 +3,10 @@ import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { call, cancel, delay, fork } from 'typed-redux-saga'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
+import {
+  mapTAPIPlanStatusToTXStatus,
+  mapTAPIPlanStepStatusToTXStatus,
+} from 'uniswap/src/features/activity/extract/statusMappers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AppNotificationType, type PlanTxNotification } from 'uniswap/src/features/notifications/slice/types'
@@ -37,6 +41,7 @@ import {
   ExpectedPlanError,
   PlanParams,
   PlanPriceChangeInterrupt,
+  type PlanFinalizedCallbackParams,
   type PlanSagaAnalytics,
   ShouldRetryPlanError,
 } from 'uniswap/src/features/transactions/swap/plan/types'
@@ -99,6 +104,51 @@ function buildAnalyticsWithPlanStepContext(params: {
   }
 }
 
+function getPlanFinalizedStatus({
+  planResponse,
+  stepStatus,
+}: {
+  planResponse?: TradingApi.PlanResponse
+  stepStatus?: TradingApi.PlanStepStatus
+}): TransactionStatus | undefined {
+  if (planResponse?.status) {
+    return mapTAPIPlanStatusToTXStatus(planResponse.status)
+  }
+
+  if (stepStatus) {
+    return mapTAPIPlanStepStatusToTXStatus(stepStatus)
+  }
+
+  return undefined
+}
+
+function isTerminalPlanStepStatus(
+  stepStatus: TradingApi.PlanStepStatus | undefined,
+): stepStatus is TradingApi.PlanStepStatus.COMPLETE | TradingApi.PlanStepStatus.STEP_ERROR {
+  return stepStatus === TradingApi.PlanStepStatus.COMPLETE || stepStatus === TradingApi.PlanStepStatus.STEP_ERROR
+}
+
+function getWatchedLastStepFinalizedStatus({
+  planResponse,
+  stepStatus,
+}: {
+  planResponse?: TradingApi.PlanResponse
+  stepStatus?: TradingApi.PlanStepStatus
+}): TransactionStatus | undefined {
+  // Prefer a terminal step status over the plan status because the plan response
+  // can lag behind the just-watched step during finalization.
+  if (isTerminalPlanStepStatus(stepStatus)) {
+    return mapTAPIPlanStepStatusToTXStatus(stepStatus)
+  }
+
+  return getPlanFinalizedStatus({ planResponse, stepStatus })
+}
+
+function omitPayloadGasFee(payload: TradingApi.PlanStep['payload']): TradingApi.PlanStep['payload'] {
+  const { gasFee: _omittedGasFee, ...rest } = payload
+  return rest
+}
+
 /**
  * Saga for executing a plan returned from the Trading API. This plan
  * includes a list of steps to be executed in sequence in order to execute
@@ -138,6 +188,7 @@ export function* plan(params: PlanParams) {
   }
 
   const { trade } = swapTxContext
+  const modalClosedActionType = params.modalClosedActionType
 
   let planId: string | undefined
   let response: TradingApi.PlanResponse | undefined
@@ -155,6 +206,7 @@ export function* plan(params: PlanParams) {
       quote: swapTxContext.trade.quote.quote,
       routing: swapTxContext.trade.quote.routing,
       trade: swapTxContext.trade,
+      modalClosedActionType,
     })
     planId = initialPlan.planId
     response = initialPlan.response
@@ -169,7 +221,14 @@ export function* plan(params: PlanParams) {
 
     // Check for price changes on the created plan (not resumed)
     if (response && !wasPlanResumed) {
-      const refreshedTrade = buildTradeFromPlanResponse({ originalTrade: trade, planResponse: response, address })
+      const refreshedTrade = buildTradeFromPlanResponse({
+        originalTrade: trade,
+        planResponse: response,
+        address,
+      })
+      // Earn plans interrupt too: the swap review screen recovers via the accept-new-trade prompt,
+      // and the earn review modals convert the interrupt into a displayable "review again" error
+      // via their getDisplayableError wrappers (see useEarnSagaCallback / useEarnExecuteCallback).
       if (requireAcceptNewTrade(trade, refreshedTrade)) {
         markPlanPriceChangeInterrupted(planId)
         resetActivePlan()
@@ -188,12 +247,24 @@ export function* plan(params: PlanParams) {
     const displayableError = getDisplayableError({ error })
     const onPressRetry = params.getOnPressRetry?.(displayableError)
     onFailure(displayableError, onPressRetry)
-    logHelper({ planId: planId ?? 'notCreated', response, swapTxContext, error, wasPlanResumed, failurePhase: 'init' })
+    logHelper({
+      planId: planId ?? 'notCreated',
+      response,
+      swapTxContext,
+      error,
+      wasPlanResumed,
+      failurePhase: 'init',
+    })
     return
   }
 
   timeToCreatePlan = response ? Date.now() - startTime : undefined
-  const earlyCloseTask = yield* fork(showPendingOnEarlyModalClose, { sendToast, planId, onClose: onSuccess })
+  const earlyCloseTask = yield* fork(showPendingOnEarlyModalClose, {
+    sendToast,
+    planId,
+    onClose: onSuccess,
+    modalClosedActionType,
+  })
 
   /** Only updates UI state if the plan is not backgrounded */
   const setCurrentStepIfActive = (args: { accepted: boolean }): void => {
@@ -214,7 +285,11 @@ export function* plan(params: PlanParams) {
       let hash: string | undefined
       let patchResponse: TradingApi.PlanResponse | undefined
 
-      currentStep = steps[currentStepIndex]
+      // TODO: API-1530 should be fixed by now, if not request removal.
+      // Drop the API-provided per-step gasFee. Built as a copy (rather than `delete` on the
+      // stored step) because `steps` is shared with the active-plan store.
+      const storedStep = steps[currentStepIndex]
+      currentStep = storedStep ? { ...storedStep, payload: omitPayloadGasFee(storedStep.payload) } : undefined
 
       logger.debug('planSaga', 'plan', '🚨 Starting step', currentStep)
 
@@ -225,9 +300,6 @@ export function* plan(params: PlanParams) {
           throw new HandledTransactionInterrupt('Chain switch failed')
         }
       }
-
-      // TODO: API-1530 should be fixed by now, if not request removal.
-      delete currentStep?.payload['gasFee']
 
       // Compute per-step routing from the step's stepType (e.g., CLASSIC, BRIDGE, DUTCH_V3)
       const stepRouting = currentStep?.stepType
@@ -405,10 +477,11 @@ export function* plan(params: PlanParams) {
         })
       }
       const stepFailure = executedUpdatedStep?.status === TradingApi.PlanStepStatus.STEP_ERROR
+      currentStep = executedUpdatedStep ?? currentStep
       const updatedAnalyticsWithPlanStepContext = buildAnalyticsWithPlanStepContext({
         analytics,
         planId,
-        currentStep: executedUpdatedStep ?? currentStep,
+        currentStep,
         steps: updatedSteps,
         stepRouting,
       })
@@ -425,7 +498,10 @@ export function* plan(params: PlanParams) {
         chainId: stepChainId ?? undefined,
         stepFailure,
         analyticsWithPlanStepContext: updatedAnalyticsWithPlanStepContext,
-        errorExtra: { planResponse: latestPlanResponse, stepIndex: currentStep.stepIndex },
+        errorExtra: {
+          planResponse: latestPlanResponse,
+          stepIndex: currentStep.stepIndex,
+        },
       })
 
       const nextStep = findFirstActionableStep(updatedSteps)
@@ -433,7 +509,11 @@ export function* plan(params: PlanParams) {
         steps = updatedSteps
         currentStepIndex = nextStep.index
         if (!isPlanBackgrounded(planId)) {
-          updateGlobalStateWithLatestSteps({ steps, currentStepIndex, proofPending: false })
+          updateGlobalStateWithLatestSteps({
+            steps,
+            currentStepIndex,
+            proofPending: false,
+          })
         }
 
         if (stepFailure) {
@@ -447,6 +527,7 @@ export function* plan(params: PlanParams) {
           planResponse: latestPlanResponse,
           address,
         })
+        // Price-change interrupts retain the active plan so completed steps remain resumable.
         if (requireAcceptNewTrade(trade, refreshedTrade)) {
           markPlanPriceChangeInterrupted(planId)
           throw new PlanPriceChangeInterrupt()
@@ -462,7 +543,9 @@ export function* plan(params: PlanParams) {
       step: currentStep,
     })
     if (displayableError) {
-      logger.error(displayableError, { tags: { file: 'planSaga', function: 'plan' } })
+      logger.error(displayableError, {
+        tags: { file: 'planSaga', function: 'plan' },
+      })
     }
     const onPressRetry = params.getOnPressRetry?.(displayableError)
 
@@ -496,7 +579,18 @@ export function* plan(params: PlanParams) {
       unlockPlanExecution(planId)
 
       if (!isPlanBackgrounded(planId)) {
-        onPlanFinalized?.(planId)
+        const finalizedStatus = getWatchedLastStepFinalizedStatus({
+          planResponse: response,
+          stepStatus: currentStep?.status,
+        })
+        onPlanFinalized?.({
+          planId,
+          // This finally only handles non-completion exits. The completed last-step path
+          // backgrounds the plan first, so a COMPLETE step here is only an intermediate step.
+          status: finalizedStatus === TransactionStatus.Success ? TransactionStatus.Pending : finalizedStatus,
+          planResponse: response,
+          stepStatus: currentStep?.status,
+        })
       }
     }
     yield* cancel(earlyCloseTask)
@@ -509,7 +603,7 @@ interface HandleLastStepCompletionParams {
   inputChainId: UniverseChainId
   address: Address
   onSuccess: () => void
-  onPlanFinalized?: (planId: string) => void
+  onPlanFinalized?: PlanParams['onPlanFinalized']
   sendToast: PlanParams['sendToast']
   startTime: number
   timeToCreatePlan: number | undefined
@@ -524,7 +618,7 @@ interface HandleLastStepCompletionParams {
 type WatchLastPlanStepParams = WatchPlanStepParams & {
   stepType: TransactionStepType
   analyticsWithPlanStepContext: PlanSagaAnalytics
-  onPlanFinalized?: (planId: string) => void
+  onPlanFinalized?: PlanParams['onPlanFinalized']
   sendToast: PlanParams['sendToast']
   hash: string | undefined
   chainId: number | undefined
@@ -550,6 +644,7 @@ function buildPlanErrorToast(params: {
     outputCurrencyId: currencyId(params.swapTxContext.trade.outputAmount.currency),
     inputCurrencyAmountRaw: params.swapTxContext.trade.inputAmount.quotient.toString(),
     outputCurrencyAmountRaw: params.swapTxContext.trade.outputAmount.quotient.toString(),
+    earnAction: params.swapTxContext.trade.earnIntent?.action,
   }
 }
 
@@ -579,11 +674,24 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
     ...watchParams
   } = params
 
-  const errorExtra: Record<string, unknown> = { planId: params.planId, hash, chainId }
+  const errorExtra: Record<string, unknown> = {
+    planId: params.planId,
+    hash,
+    chainId,
+  }
+  let finalizedPlanResponse: TradingApi.PlanResponse | undefined = response
+  let finalizedStepStatus: TradingApi.PlanStepStatus | undefined
+  let finalizedStatus: PlanFinalizedCallbackParams['status'] | undefined
 
   try {
     const { steps: updatedSteps, planResponse: latestPlanResponse } = yield* call(watchPlanStep, watchParams)
     const updatedWatchedStep = getStepBySemanticIndex(updatedSteps, watchParams.targetStepIndex)
+    finalizedPlanResponse = latestPlanResponse
+    finalizedStepStatus = updatedWatchedStep?.status
+    finalizedStatus = getWatchedLastStepFinalizedStatus({
+      planResponse: latestPlanResponse,
+      stepStatus: finalizedStepStatus,
+    })
     if (!updatedWatchedStep) {
       logger.error(new Error('Unable to find watched step by semantic step index after watchPlanStep'), {
         tags: { file: 'planSaga', function: 'watchLastPlanStepWithCleanup' },
@@ -630,22 +738,32 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
       swapTxContext,
     })
   } catch (error) {
-    yield* call(
-      sendToast,
-      buildPlanErrorToast({ planId: params.planId, chainId: watchParams.sourceChainId, swapTxContext }),
-      params.planId,
-    )
+    // Watcher errors are not proof of on-chain failure; keep the plan resumable/pollable.
+    const isCancellation = error instanceof HandledTransactionInterrupt
+    finalizedStatus = isCancellation ? TransactionStatus.Canceled : TransactionStatus.Pending
 
-    logPlanStepTradeAnalytics({
-      stepType,
-      updatedSteps: undefined,
-      semanticStepIndex: watchParams.targetStepIndex,
-      hash,
-      chainId,
-      stepFailure: true,
-      analyticsWithPlanStepContext,
-      errorExtra,
-    })
+    if (!isCancellation) {
+      yield* call(
+        sendToast,
+        buildPlanErrorToast({
+          planId: params.planId,
+          chainId: watchParams.sourceChainId,
+          swapTxContext,
+        }),
+        params.planId,
+      )
+
+      logPlanStepTradeAnalytics({
+        stepType,
+        updatedSteps: undefined,
+        semanticStepIndex: watchParams.targetStepIndex,
+        hash,
+        chainId,
+        stepFailure: true,
+        analyticsWithPlanStepContext,
+        errorExtra,
+      })
+    }
 
     logHelper({
       planId: watchParams.planId,
@@ -664,7 +782,12 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
     if (isPlanBackgrounded(params.planId)) {
       clearPlan(params.planId)
     }
-    onPlanFinalized?.(params.planId)
+    onPlanFinalized?.({
+      planId: params.planId,
+      status: finalizedStatus,
+      planResponse: finalizedPlanResponse,
+      stepStatus: finalizedStepStatus,
+    })
   }
 }
 

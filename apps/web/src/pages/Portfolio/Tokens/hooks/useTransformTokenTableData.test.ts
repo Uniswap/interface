@@ -8,13 +8,16 @@ import type {
   PortfolioChainBalance,
   PortfolioMultichainBalance,
 } from 'uniswap/src/features/dataApi/types'
+import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useSortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/hooks'
 import {
   createPortfolioChainBalance,
   createPortfolioMultichainBalance,
 } from 'uniswap/src/test/fixtures/dataApi/portfolioMultichainBalances'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it, vi } from 'vitest'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
@@ -32,22 +35,24 @@ vi.mock('~/pages/Portfolio/hooks/usePortfolioAddresses', () => ({
   usePortfolioAddresses: vi.fn(),
 }))
 
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal()),
-  useFeatureFlag: vi.fn().mockReturnValue(false),
-  FeatureFlags: { MultichainTokenUx: 'multichain_token_ux' },
-}))
-
-vi.mock('uniswap/src/features/portfolio/balances/hooks', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/features/portfolio/balances/hooks')>()
+vi.mock('uniswap/src/features/portfolio/balances/hooks', () => {
   return {
-    ...actual,
     useSortedPortfolioBalancesMultichain: vi.fn(),
   }
 })
 
+vi.mock('uniswap/src/features/earn/hooks/useEarnVaults', () => ({
+  useEarnVaults: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/earn/hooks/useIsEarnEnabled', () => ({
+  useIsEarnEnabled: vi.fn(),
+}))
+
 const mockUsePortfolioAddresses = vi.mocked(usePortfolioAddresses)
 const mockUseSortedPortfolioBalancesMultichain = vi.mocked(useSortedPortfolioBalancesMultichain)
+const mockUseEarnVaults = vi.mocked(useEarnVaults)
+const mockUseIsEarnEnabled = vi.mocked(useIsEarnEnabled)
 
 /** Web-only preset around shared {@link createPortfolioChainBalance} (quantity/valueUsd for token table tests). */
 function createPortfolioTableChainBalance(
@@ -96,6 +101,26 @@ const createChainBalance = (overrides: Partial<PortfolioChainBalance> = {}): Por
 const createMultichainBalance = (overrides: Partial<PortfolioMultichainBalance> = {}): PortfolioMultichainBalance =>
   createPortfolioTableMultichainBalance(TEST_TOKEN_1_INFO, overrides)
 
+const VAULT_SHARE_ADDRESS = '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0'
+const VAULT_SHARE_TOKEN = new Token(UniverseChainId.Mainnet, VAULT_SHARE_ADDRESS, 18, 'gtUSDC', 'Gauntlet USDC Prime')
+const VAULT_SHARE_INFO: CurrencyInfo = {
+  currency: VAULT_SHARE_TOKEN,
+  currencyId: buildCurrencyId(UniverseChainId.Mainnet, VAULT_SHARE_ADDRESS),
+  logoUrl: null,
+}
+const EARN_VAULT: EarnVaultInfo = {
+  id: `1-${VAULT_SHARE_ADDRESS.toLowerCase()}`,
+  currencyId: buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address),
+  displayCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address),
+  vaultAddress: VAULT_SHARE_ADDRESS,
+  chainId: UniverseChainId.Mainnet,
+  apyPercent: 4,
+  exposureCurrencyIds: [buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)],
+  totalDepositsUsd: 1_000_000,
+  liquidityUsd: 1_000_000,
+  curator: { name: 'Gauntlet' },
+}
+
 describe('useTransformTokenTableData', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -112,6 +137,18 @@ describe('useTransformTokenTableData', () => {
       refetch: undefined,
       networkStatus: NetworkStatus.ready,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+    mockUseIsEarnEnabled.mockReturnValue(true)
+    mockUseEarnVaults.mockReturnValue({
+      hasLoadedPositions: true,
+      isError: false,
+      isLoadingPositions: false,
+      isLoadingVaults: false,
+      positionsByVaultId: new Map(),
+      refetch: vi.fn(),
+      totalDepositedUsd: 0,
+      vaults: [],
+      vaultsSortedByPosition: [],
+    })
   })
 
   it('returns empty visible and hidden when no sorted balances', () => {
@@ -190,6 +227,82 @@ describe('useTransformTokenTableData', () => {
     expect(result.current.hidden![0].id).toBe('hidden-with-tokens')
     expect(result.current.hidden![0].tokens).toHaveLength(1)
     expect(result.current.hidden![0].isMultichainAsset).toBe(false)
+  })
+
+  it('omits Earn vault share tokens from visible portfolio token rows', () => {
+    mockUseEarnVaults.mockReturnValue({
+      hasLoadedPositions: true,
+      isError: false,
+      isLoadingPositions: false,
+      isLoadingVaults: false,
+      positionsByVaultId: new Map(),
+      refetch: vi.fn(),
+      totalDepositedUsd: 0,
+      vaults: [EARN_VAULT],
+      vaultsSortedByPosition: [EARN_VAULT],
+    })
+
+    const balance = createMultichainBalance({
+      id: 'mixed-vault-share-row',
+      tokens: [
+        createPortfolioTableChainBalance(VAULT_SHARE_INFO, { quantity: 1, valueUsd: 500 }),
+        createPortfolioTableChainBalance(USDC_INFO, { quantity: 100, valueUsd: 100 }),
+      ],
+    })
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: {
+        balances: [balance],
+        hiddenBalances: [],
+      },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      networkStatus: NetworkStatus.ready,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({}))
+
+    expect(result.current.visible).toHaveLength(1)
+    expect(result.current.visible![0].tokens).toHaveLength(1)
+    expect(result.current.visible![0].tokens[0].currencyInfo).toBe(USDC_INFO)
+    expect(result.current.hidden).toEqual([])
+  })
+
+  it('drops fully hidden Earn vault share token rows instead of moving them to hidden balances', () => {
+    mockUseEarnVaults.mockReturnValue({
+      hasLoadedPositions: true,
+      isError: false,
+      isLoadingPositions: false,
+      isLoadingVaults: false,
+      positionsByVaultId: new Map(),
+      refetch: vi.fn(),
+      totalDepositedUsd: 0,
+      vaults: [EARN_VAULT],
+      vaultsSortedByPosition: [EARN_VAULT],
+    })
+    const hiddenVaultShareBalance = createMultichainBalance({
+      id: 'hidden-vault-share-row',
+      tokens: [createPortfolioTableChainBalance(VAULT_SHARE_INFO, { quantity: 1, valueUsd: 500, isHidden: true })],
+    })
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: {
+        balances: [],
+        hiddenBalances: [hiddenVaultShareBalance],
+      },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      networkStatus: NetworkStatus.ready,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({}))
+
+    expect(result.current.visible).toEqual([])
+    expect(result.current.hidden).toEqual([])
   })
 
   it('flattens fully hidden multichain balances to one TokenData row per chain before table mapping', () => {

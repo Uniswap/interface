@@ -55,15 +55,15 @@ export function formApproveNotificationTitle({
   const address = shortenAddress({ address: spender })
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.approve.success', {
-        currencySymbol: currencyDisplayText,
+        currencySymbol: currencyDisplayText ?? i18n.t('common.token'),
         address,
       })
     : txStatus === TransactionStatus.Canceled
       ? i18n.t('notification.transaction.approve.canceled', {
-          currencySymbol: currencyDisplayText,
+          currencySymbol: currencyDisplayText ?? i18n.t('common.token'),
         })
       : i18n.t('notification.transaction.approve.fail', {
-          currencySymbol: currencyDisplayText,
+          currencySymbol: currencyDisplayText ?? i18n.t('common.token'),
           address,
         })
 }
@@ -129,8 +129,8 @@ export const formSwapNotificationTitle = ({
       })
     case TransactionStatus.Canceled:
       return i18n.t('notification.transaction.swap.canceled', {
-        inputCurrencySymbol,
-        outputCurrencySymbol,
+        inputCurrencySymbol: inputCurrencySymbol ?? i18n.t('common.token'),
+        outputCurrencySymbol: outputCurrencySymbol ?? i18n.t('common.token'),
       })
     case TransactionStatus.Expired:
       return i18n.t('notification.transaction.swap.expired', {
@@ -185,7 +185,7 @@ export const formWrapNotificationTitle = ({
         })
       : txStatus === TransactionStatus.Canceled
         ? i18n.t('notification.transaction.unwrap.canceled', {
-            inputCurrencySymbol,
+            inputCurrencySymbol: inputCurrencySymbol ?? i18n.t('common.token'),
           })
         : i18n.t('notification.transaction.unwrap.fail', {
             inputCurrencyAmountWithSymbol,
@@ -198,7 +198,7 @@ export const formWrapNotificationTitle = ({
       })
     : txStatus === TransactionStatus.Canceled
       ? i18n.t('notification.transaction.wrap.canceled', {
-          inputCurrencySymbol,
+          inputCurrencySymbol: inputCurrencySymbol ?? i18n.t('common.token'),
         })
       : i18n.t('notification.transaction.wrap.fail', {
           inputCurrencyAmountWithSymbol,

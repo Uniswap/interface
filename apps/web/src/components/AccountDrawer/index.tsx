@@ -7,7 +7,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { DefaultMenu } from '~/components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
-import { Web3StatusRef } from '~/components/Web3Status'
+import { Web3StatusRef } from '~/components/Web3Status/web3StatusRef'
 import { WebNotificationToastWrapper } from '~/features/notifications/WebNotificationToastWrapper'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 

@@ -28,6 +28,7 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
         auctionDetailsError: null,
         checkpointData: null,
         onchainCheckpoint: null,
+        totalCleared: null,
         tokenColor: undefined, // Will be set by useSrcColor in provider
         tokenColorLoading: true,
         currentBlockNumber: INITIAL_CURRENT_BLOCK,
@@ -74,6 +75,9 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
         awaitingConfirmationBidIds: new Set<string>(),
         withdrawalTxHashes: new Map<string, string>(),
         chartSelectedBid: null,
+        isBidInputFocused: false,
+        // On-chain sweepUnsoldTokensBlock() — undefined until the chain read resolves
+        sweepUnsoldTokensBlock: undefined,
 
         // Actions
         actions: {
@@ -200,6 +204,9 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
           setOnchainCheckpoint: (data) => {
             set({ onchainCheckpoint: data })
           },
+          setTotalCleared: (totalCleared) => {
+            set({ totalCleared })
+          },
           setSelectedTickPrice: (price) => {
             set({ selectedTickPrice: price })
           },
@@ -287,6 +294,12 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
               awaitingConfirmationBidIds: new Set<string>(),
               withdrawalTxHashes: new Map<string, string>(),
             })
+          },
+          setBidInputFocused: (focused) => {
+            set({ isBidInputFocused: focused })
+          },
+          setSweepUnsoldTokensBlock: (block) => {
+            set({ sweepUnsoldTokensBlock: block })
           },
         },
       }),

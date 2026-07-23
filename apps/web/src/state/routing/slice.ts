@@ -4,7 +4,7 @@ import { REQUEST_SOURCE } from '@universe/environment'
 import ms from 'ms'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/logSwapQuoteFetch'
 import { logger } from 'utilities/src/logger/logger'
 import { getConfig } from '~/config'
 import {

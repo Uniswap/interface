@@ -3,13 +3,17 @@ import { providers } from 'ethers'
 import { call, delay, put, SagaGenerator, select } from 'typed-redux-saga'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { POLLING_CONSTANTS, shouldCheckTransaction, withTimeout } from 'uniswap/src/utils/polling'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { buildPendingTransactionStuckProperties } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
 import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 import {
   FINALIZED_SWAP_STATUS,
@@ -159,6 +163,8 @@ export type TransactionStatusResult = {
   status: TransactionStatus
   /** On-chain tx hash resolved from the /swaps response (relevant for 4337 UserOps where the mined hash differs from the userOpHash) */
   txHash?: string
+  sponsorInfo?: TradingApi.SponsorMetadata
+  paymaster?: string
 }
 
 /**
@@ -179,7 +185,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
   const isUserOp = !!userOpHash
 
   const isMaybeBridgeTransaction = isMaybeBridge(
-    'options' in transaction ? transaction.options.request.to?.toString() : undefined,
+    'options' in transaction ? transaction.options.request?.to?.toString() : undefined,
     transaction.chainId,
   )
 
@@ -189,6 +195,8 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
   let swapStatus: TradingApi.SwapStatus | undefined
   let resolvedTxHash: string | undefined
+  let resolvedSponsorInfo: TradingApi.SponsorMetadata | undefined
+  let resolvedPaymaster: string | undefined
 
   // User-op time to inclusion is longer: ~30s for p90
   // Classic swaps also have a updateTransactionWithReceipt backup mechanism, which userOps do not
@@ -215,6 +223,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
     const data = yield* call(TradingApiClient.fetchSwaps, {
       ...(userOpHash ? { userOpHashes: [userOpHash] } : txHash ? { txHashes: [txHash] } : {}),
       chainId,
+      swapper: transaction.from,
     })
 
     const swapItem = data.swaps?.[0]
@@ -222,6 +231,14 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
     if (swapItem?.txHash) {
       resolvedTxHash = swapItem.txHash
+    }
+
+    if (swapItem?.paymaster) {
+      resolvedPaymaster = swapItem.paymaster
+    }
+
+    if (swapItem?.sponsorship) {
+      resolvedSponsorInfo = swapItem.sponsorship
     }
 
     logger.debug(
@@ -251,7 +268,12 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
         updatedTransaction.status,
       )
 
-      return { status: updatedTransaction.status, txHash: resolvedTxHash }
+      return {
+        status: updatedTransaction.status,
+        txHash: resolvedTxHash,
+        sponsorInfo: resolvedSponsorInfo,
+        paymaster: resolvedPaymaster,
+      }
     }
 
     pollIndex++
@@ -259,10 +281,38 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
   logger.debug('watchTransactionSaga', `[${transaction.id}] waitForTransactionStatus`, 'final swapStatus:', swapStatus)
 
+  // SWAP-2471: distinguish a force-Failed (polling exhausted with NO terminal status) from a genuine
+  // FAILED — a force-Failed tx may still mine later, leaving local state out of sync.
+  if (!swapStatus) {
+    logger.warn('watchTransactionSaga', 'waitForTransactionStatus', 'Polling exhausted; defaulting to Failed', {
+      transactionId: transaction.id,
+      txHash: resolvedTxHash,
+      isUserOp,
+      maxRetries,
+    })
+    // SWAP-2471: surface the force-Failed (poll-exhausted) outcome as an unsampled event too — it may
+    // still mine later, so local state can drift. isClassic narrows to the OnChain tx the builder needs.
+    if (isClassic(transaction)) {
+      yield* call(
+        sendAnalyticsEvent,
+        WalletEventName.PendingTransactionStuck,
+        // provider_knows_tx omitted: this is the Trading-API poll path with no chain provider in scope,
+        // so we never probed whether the provider knows the tx — emitting false would mislead (SWAP-2471).
+        buildPendingTransactionStuckProperties({
+          transaction,
+          reason: 'poll_exhausted',
+          nowMs: Date.now(),
+        }),
+      )
+    }
+  }
+
   // If we didn't get a status after polling, assume it's failed.
   // Classic swaps still have provider.waitForTransaction(hash) if the tx lands on-chain later, which will override this status
   return {
     status: swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed,
     txHash: resolvedTxHash,
+    sponsorInfo: resolvedSponsorInfo,
+    paymaster: resolvedPaymaster,
   }
 }

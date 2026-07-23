@@ -16,7 +16,7 @@ const MISSING_PROVIDER = Symbol()
 
 export const BlockNumberContext = createContext<
   | {
-      fastForward(block: number): void
+      fastForward: (block: number) => void
       block?: number
       mainnetBlock?: number
     }

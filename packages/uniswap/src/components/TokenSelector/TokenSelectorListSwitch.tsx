@@ -5,7 +5,7 @@ import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelect
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
-import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectRwaToken, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -18,6 +18,7 @@ interface TokenSelectorListSwitchProps {
   variation: TokenSelectorVariation
   addresses: AddressGroup
   chainFilter: UniverseChainId | null
+  chainIds: UniverseChainId[]
   input: TradeableAsset | undefined
   output: TradeableAsset | undefined
   renderedInModal: boolean
@@ -31,6 +32,7 @@ interface TokenSelectorListSwitchProps {
   debouncedParsedSearchFilter: string | null
   debouncedSearchFilter: string | null
   parsedChainFilter: UniverseChainId | null
+  onSelectRwaToken?: OnSelectRwaToken
 }
 
 export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
@@ -40,6 +42,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
   variation,
   addresses,
   chainFilter,
+  chainIds,
   input,
   output,
   renderedInModal,
@@ -48,12 +51,14 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
   debouncedParsedSearchFilter,
   debouncedSearchFilter,
   parsedChainFilter,
+  onSelectRwaToken,
 }: TokenSelectorListSwitchProps): JSX.Element | null {
   if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
     return (
       <TokenSelectorEmptySearchList
         addresses={addresses}
         chainFilter={chainFilter}
+        chainIds={chainIds}
         renderedInModal={renderedInModal}
         onSelectCurrency={onSelectCurrency}
       />
@@ -65,6 +70,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
       <TokenSelectorSearchResultsList
         addresses={addresses}
         chainFilter={chainFilter}
+        chainIds={chainIds}
         debouncedParsedSearchFilter={debouncedParsedSearchFilter}
         debouncedSearchFilter={debouncedSearchFilter}
         isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
@@ -83,6 +89,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
         <TokenSelectorSendList
           addresses={addresses}
           chainFilter={chainFilter}
+          chainIds={chainIds}
           renderedInModal={renderedInModal}
           onEmptyActionPress={onSendEmptyActionPress}
           onSelectCurrency={onSelectCurrency}
@@ -94,8 +101,11 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           oppositeSelectedToken={output}
           addresses={addresses}
           chainFilter={chainFilter}
+          chainIds={chainIds}
           renderedInModal={renderedInModal}
+          variation={variation}
           onSelectCurrency={onSelectCurrency}
+          onSelectRwaToken={onSelectRwaToken}
         />
       )
     case TokenSelectorVariation.SwapOutput:
@@ -104,8 +114,11 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           oppositeSelectedToken={input}
           addresses={addresses}
           chainFilter={chainFilter}
+          chainIds={chainIds}
           renderedInModal={renderedInModal}
+          variation={variation}
           onSelectCurrency={onSelectCurrency}
+          onSelectRwaToken={onSelectRwaToken}
         />
       )
     default:

@@ -40,8 +40,10 @@
       "@universe/api/*": ["./packages/api/*"],
       "@universe/chains/*": ["./packages/chains/*"],
       "@universe/cli/*": ["./apps/cli/*"],
+      "@universe/compliance/*": ["./packages/compliance/*"],
       "@universe/config/*": ["./packages/config/*"],
       "@universe/config-cli/*": ["./packages/config-cli/*"],
+      "@universe/cryptography/*": ["./packages/cryptography/*"],
       "@universe/encoding/*": ["./packages/encoding/*"],
       "@universe/environment/*": ["./packages/environment/*"],
       "@universe/gating/*": ["./packages/gating/*"],
@@ -54,14 +56,14 @@
       "@universe/privacy/*": ["./packages/privacy/*"],
       "@universe/react-query/*": ["./packages/react-query/*"],
       "@universe/sessions/*": ["./packages/sessions/*"],
+      "@universe/tailwind/*": ["./packages/tailwind/*"],
       "@universe/transactional/*": ["./packages/transactional/*"],
       "@universe/trpc/*": ["./packages/trpc/*"],
       "@universe/websocket/*": ["./packages/websocket/*"],
       "ui/*": ["./packages/ui/*"],
       "uniswap/*": ["./packages/uniswap/*"],
       "utilities/*": ["./packages/utilities/*"],
-      "wallet/*": ["./packages/wallet/*"],
-      "@universe/cryptography/*": ["./packages/cryptography/*"]
+      "wallet/*": ["./packages/wallet/*"]
     }
   }
 }

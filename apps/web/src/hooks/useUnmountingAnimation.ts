@@ -41,6 +41,7 @@ export function useUnmountingAnimation({
     // Gather all elements to animate, defaulting to the current node if none are specified.
     const animated = animatedElements?.map((element) => element.current) ?? [current]
     const parent = current?.parentElement
+    // eslint-disable-next-line typescript/unbound-method
     const removeChild = parent?.removeChild
 
     // If we can't remove the child or skipping is requested, stop here.

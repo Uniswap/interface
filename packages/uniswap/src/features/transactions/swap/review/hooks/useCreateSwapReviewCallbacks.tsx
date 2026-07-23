@@ -91,6 +91,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
       exactAmountToken: '',
       txHash: undefined,
       txHashReceivedTime: undefined,
+      isEarnFlow: false,
     })
   }, [updateSwapForm])
 
@@ -101,6 +102,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: '',
+        isEarnFlow: false,
         showPendingUI: false,
         isConfirmed: false,
         txHash: undefined,

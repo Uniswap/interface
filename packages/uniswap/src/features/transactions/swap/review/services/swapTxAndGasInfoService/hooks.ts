@@ -9,7 +9,10 @@ import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
-import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type {
+  SignDelegationAuthorizationFn,
+  SwapDelegationInfo,
+} from 'uniswap/src/features/smartWallet/delegation/types'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
@@ -28,6 +31,7 @@ import type {
   SwapTxAndGasInfoService,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
+import { createUniswapXSponsoredApprovalStrategy } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/sponsoredApproval'
 import { createUniswapXSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/uniswapXSwapTxAndGasInfoService'
 import { createWrapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/wrap/wrapTxAndGasInfoService'
 import {
@@ -55,7 +59,7 @@ const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
   trade: undefined,
   permit: undefined,
   swapRequestArgs: undefined,
-  unsigned: false,
+  hasUnsignedPermit: false,
   includesDelegation: false,
 } satisfies SwapTxAndGasInfo
 
@@ -65,19 +69,31 @@ function useSwapConfig(): {
   gasStrategy: GasStrategy
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
+  signDelegationAuthorization?: SignDelegationAuthorizationFn
+  supportsUserOpSwaps?: boolean
 } {
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const gasStrategy = useActiveGasStrategy(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
-  const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
+  const { getCanBatchTransactions, getSwapDelegationInfo, signDelegationAuthorization, supportsUserOpSwaps } =
+    useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
       gasStrategy,
       getCanBatchTransactions,
       getSwapDelegationInfo,
+      signDelegationAuthorization,
+      supportsUserOpSwaps,
     }),
-    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo],
+    [
+      v4SwapEnabled,
+      gasStrategy,
+      getCanBatchTransactions,
+      getSwapDelegationInfo,
+      signDelegationAuthorization,
+      supportsUserOpSwaps,
+    ],
   )
 }
 
@@ -89,12 +105,8 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   // tx is unavailable here; this service-level hook runs before individual
   // tx requests are resolved. Recommended falls back to undefined for full overrides.
   const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
-  // Only treat as "overrides" for the display path when the user explicitly
-  // set `gasLimit`. The backend skips its `limitInflationFactor` (1.15x) only
-  // for an explicit top-level `gasLimit`; partial overrides (maxBaseFee or
-  // priority only) still get the inflated auto-probed limit, so the display
-  // should keep its inflation backoff in that case.
-  const hasOverrides = gasOverrides?.gasLimit !== undefined
+  // Any user gas override → display the tx max cost (matches the editor's "Max cost").
+  const hasOverrides = gasOverrides !== undefined
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,
@@ -125,9 +137,22 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
     return decorateWithEVMLogging(bridgeService)
   }, [swapConfig, transactionSettings, instructionService, hasOverrides, decorateWithEVMLogging])
 
+  // Sponsored approval: 5792 wallet-call on web, 4337 userOp on wallet.
   const uniswapXSwapTxInfoService = useMemo(() => {
-    return createUniswapXSwapTxAndGasInfoService()
-  }, [])
+    return createUniswapXSwapTxAndGasInfoService({
+      fetchSponsoredApproval: createUniswapXSponsoredApprovalStrategy({
+        getCanBatchTransactions: swapConfig.getCanBatchTransactions,
+        getSwapDelegationInfo: swapConfig.getSwapDelegationInfo,
+        signDelegationAuthorization: swapConfig.signDelegationAuthorization,
+        gasOverrides,
+      }),
+    })
+  }, [
+    swapConfig.getCanBatchTransactions,
+    swapConfig.getSwapDelegationInfo,
+    swapConfig.signDelegationAuthorization,
+    gasOverrides,
+  ])
 
   const chainedSwapTxInfoService = useMemo(() => {
     return createChainedActionSwapTxAndGasInfoService({
@@ -263,6 +288,14 @@ function createGetQueryOptions(ctx: {
   }
 }
 
+/** Reads the quote's `isTokenApprovalApplicable` off EVM trades; Solana quotes don't carry it (undefined ⇒ assume applicable). */
+function getIsTokenApprovalApplicable(trade: Trade | null): boolean | undefined {
+  if (!trade || trade.routing === TradingApi.Routing.JUPITER) {
+    return undefined
+  }
+  return trade.quote.isTokenApprovalApplicable
+}
+
 export function useSwapParams(): {
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
@@ -286,6 +319,7 @@ export function useSwapParams(): {
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
     currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
+    isTokenApprovalApplicable: getIsTokenApprovalApplicable(trade),
   })
 
   return {

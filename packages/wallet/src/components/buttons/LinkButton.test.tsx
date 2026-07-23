@@ -1,8 +1,9 @@
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { openUri } from 'uniswap/src/utils/linking'
 import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
 import { fireEvent, render } from 'wallet/src/test/test-utils'
 
-jest.mock('uniswap/src/utils/linking')
+vi.mock('uniswap/src/utils/linking')
 
 describe(LinkButton, () => {
   it('renders without error', () => {
@@ -38,7 +39,7 @@ describe(LinkButton, () => {
       const button = getByText('link text')
       fireEvent.press(button, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(require('uniswap/src/utils/linking').openUri).toHaveBeenCalledWith({
+      expect(openUri).toHaveBeenCalledWith({
         uri: 'https://example.com',
         openExternalBrowser,
         isSafeUri,

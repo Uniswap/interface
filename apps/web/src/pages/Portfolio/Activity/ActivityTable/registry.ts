@@ -1,35 +1,25 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { mapTAPIPlanStatusToTXStatus } from 'uniswap/src/features/activity/extract/statusMappers'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
 import { ActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
 import { toProtocolInfo } from '~/pages/Portfolio/Activity/ActivityTable/protocolInfo'
-import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/utils'
+import {
+  cacheActivityRowFragments,
+  getCachedActivityRowFragments,
+} from '~/pages/Portfolio/Activity/ActivityTable/registryCache'
+import { buildEarnPlanActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registryEarnPlanFragments'
+import { logInvalidTransactionType } from '~/pages/Portfolio/Activity/ActivityTable/registryLogging'
+import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 
-// Cache size set to 2x the maximum possible transactions (250) to handle refetches and scrolling
-const MAX_CACHE_SIZE = 500
-const fragmentsCache = new Map<string, ActivityRowFragments>()
-
-/**
- * Creates a stable cache key from transaction details.
- * Uses chainId and id which are stable identifiers that persist across refetches.
- */
-function getTransactionCacheKey(details: TransactionDetails): string {
-  if (details.typeInfo.type === TransactionType.Plan) {
-    return `${details.chainId}:${details.id}:${details.typeInfo.planStatus}`
-  }
-  return `${details.chainId}:${details.id}`
-}
+type ActivityRowFragmentsOptions = { isEarnActivityDisplayEnabled?: boolean }
 
 /**
  * Builds activity row fragments for a transaction by mapping from parsed typeInfo.
@@ -39,28 +29,18 @@ function getTransactionCacheKey(details: TransactionDetails): string {
  * @param details - The transaction details with parsed typeInfo
  * @returns Activity row fragments containing amount, counterparty, and type label data
  */
-export function buildActivityRowFragments(details: TransactionDetails): ActivityRowFragments {
-  // Check cache first using stable identifier
-  const cacheKey = getTransactionCacheKey(details)
-  const cached = fragmentsCache.get(cacheKey)
+export function buildActivityRowFragments(
+  details: TransactionDetails,
+  { isEarnActivityDisplayEnabled = true }: ActivityRowFragmentsOptions = {},
+): ActivityRowFragments {
+  const options = { isEarnActivityDisplayEnabled }
+  const cached = getCachedActivityRowFragments(details, options)
   if (cached) {
     return cached
   }
 
-  // Compute fragments
-  const fragments = buildActivityRowFragmentsInternal(details)
-
-  // Simple LRU: remove oldest entry if cache is full
-  if (fragmentsCache.size >= MAX_CACHE_SIZE) {
-    const firstKey = fragmentsCache.keys().next().value
-
-    if (typeof firstKey === 'string') {
-      fragmentsCache.delete(firstKey)
-    }
-  }
-
-  // Cache and return
-  fragmentsCache.set(cacheKey, fragments)
+  const fragments = buildActivityRowFragmentsInternal(details, options)
+  cacheActivityRowFragments({ details, fragments, isEarnActivityDisplayEnabled })
   return fragments
 }
 
@@ -69,7 +49,10 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
  * Separated to allow memoization wrapper.
  */
 // oxlint-disable-next-line complexity
-function buildActivityRowFragmentsInternal(details: TransactionDetails): ActivityRowFragments {
+function buildActivityRowFragmentsInternal(
+  details: TransactionDetails,
+  { isEarnActivityDisplayEnabled }: Required<ActivityRowFragmentsOptions>,
+): ActivityRowFragments {
   const { typeInfo, chainId } = details
 
   switch (typeInfo.type) {
@@ -96,7 +79,11 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         logInvalidTransactionType(typeInfo)
         return {}
       }
-      const status = mapTAPIPlanStatusToTXStatus(typeInfo.planStatus)
+      const status = details.status
+      if (isEarnActivityDisplayEnabled && typeInfo.earnAction) {
+        return buildEarnPlanActivityRowFragments(typeInfo, status)
+      }
+
       const overrideLabelKey =
         status === TransactionStatus.Success
           ? 'transaction.status.swap.success'
@@ -220,6 +207,24 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
+    case TransactionType.Deposit: {
+      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
+      return {
+        amount: {
+          kind: 'single',
+          currencyId,
+          amountRaw: typeInfo.currencyAmountRaw,
+        },
+        counterparty: typeInfo.dappInfo?.address
+          ? getValidAddress({ address: typeInfo.dappInfo.address, chainId })
+          : null,
+        typeLabel: {
+          baseGroup: ActivityFilterType.Sends,
+          overrideLabelKey: 'transaction.status.deposit.success',
+        },
+        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
+      }
+    }
     case TransactionType.Withdraw: {
       const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
       return {
@@ -430,6 +435,23 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
       }
     }
 
+    case TransactionType.AuctionLaunch: {
+      const currencyId = buildCurrencyId(chainId, typeInfo.predictedTokenAddress)
+      return {
+        amount: {
+          kind: 'single',
+          currencyId,
+          amountRaw: undefined,
+        },
+        counterparty: null,
+        typeLabel: {
+          baseGroup: ActivityFilterType.Sends,
+          overrideLabelKey: 'toucan.createAuction.transaction.success',
+        },
+        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
+      }
+    }
+
     case TransactionType.ClaimUni: {
       const tokenAddress = UNI_ADDRESSES[chainId]
       const currencyId = tokenAddress ? buildCurrencyId(chainId, tokenAddress) : undefined
@@ -465,16 +487,4 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
     default:
       return {}
   }
-}
-
-const logInvalidTransactionType = (typeInfo: TransactionTypeInfo): void => {
-  logger.error(new Error('Invalid transaction type ' + typeInfo.type), {
-    tags: {
-      file: 'buildActivityRowFragments',
-      function: 'buildActivityRowFragmentsInternal',
-    },
-    extra: {
-      typeInfo,
-    },
-  })
 }

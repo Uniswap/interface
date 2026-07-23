@@ -16,12 +16,13 @@ import { TXN_HISTORY_ICON_SIZE, TXN_STATUS_ICON_SIZE } from 'uniswap/src/compone
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsQueuedTransaction } from 'uniswap/src/features/transactions/hooks/useIsQueuedTransaction'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { useRecyclingBooleanState } from 'uniswap/src/hooks/useRecyclingBooleanState/useRecyclingBooleanState'
 
 const LOADING_SPINNER_SIZE = 20
 
@@ -83,22 +84,25 @@ const TransactionSummaryLayoutContent = memo(function TransactionSummaryLayoutCo
     value: showDetailsModal,
     setTrue: handleShowDetailsModal,
     setFalse: handleHideDetailsModal,
-  } = useBooleanState(false)
+  } = useRecyclingBooleanState(false)
 
   const { status } = transaction
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
 
   const { useWalletDisplayName } = useUniswapContext()
   const walletDisplayName = useWalletDisplayName(transaction.ownerAddress)
 
-  title = title ?? getTransactionSummaryTitle(transaction, t) ?? ''
+  title =
+    title ??
+    getTransactionSummaryTitle({
+      tx: transaction,
+      t,
+      isEarnActivityDisplayEnabled,
+    }) ??
+    ''
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
   const isCancel = status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
-
-  const { renderModals } = useTransactionActions({
-    authTrigger,
-    transaction,
-  })
 
   const sortTime = isPlanTransactionDetails(transaction) ? transaction.updatedTime : transaction.addedTime
   const formattedSortTime = useFormattedTimeForActivity(sortTime)
@@ -181,14 +185,43 @@ const TransactionSummaryLayoutContent = memo(function TransactionSummaryLayoutCo
       </Trace>
       <AnimatePresence>
         {showDetailsModal && (
-          <TransactionDetailsModal
+          <TransactionSummaryModals
             authTrigger={authTrigger}
             isExternalProfile={isExternalProfile}
-            transactionDetails={transaction}
+            transaction={transaction}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
             onClose={handleHideDetailsModal}
           />
         )}
       </AnimatePresence>
+    </>
+  )
+})
+
+const TransactionSummaryModals = memo(function TransactionSummaryModalsInner({
+  authTrigger,
+  transaction,
+  isExternalProfile,
+  isEarnActivityDisplayEnabled,
+  onClose,
+}: Pick<TransactionSummaryLayoutProps, 'authTrigger' | 'transaction' | 'isExternalProfile'> & {
+  isEarnActivityDisplayEnabled: boolean
+  onClose: () => void
+}): JSX.Element {
+  const { renderModals } = useTransactionActions({
+    authTrigger,
+    transaction,
+  })
+
+  return (
+    <>
+      <TransactionDetailsModal
+        authTrigger={authTrigger}
+        isExternalProfile={isExternalProfile}
+        isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+        transactionDetails={transaction}
+        onClose={onClose}
+      />
       {renderModals()}
     </>
   )

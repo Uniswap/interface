@@ -1,0 +1,44 @@
+{
+  "name": "@universe/tailwind",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./tailwind": "./tailwind.css",
+    "./tailwind.css": "./tailwind.css",
+    "./native": "./native.css",
+    "./native.css": "./native.css",
+    "./theme": "./css/theme.css",
+    "./fonts": "./css/fonts.css",
+    "./fonts/*": "./fonts/*",
+    "./types": "./src/types.ts"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "tailwindcss": "4.1.16",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test tailwind",
+    "typecheck": "nx typecheck tailwind",
+    "check": "nx check tailwind",
+    "check:fast": "nx check:fast tailwind",
+    "check:deps:usage": "nx check:deps:usage tailwind",
+    "format": "nx format tailwind",
+    "format:check": "nx format:check tailwind",
+    "lint": "nx lint tailwind",
+    "lint:fix": "nx lint:fix tailwind"
+  },
+  "nx": {
+    "includedScripts": []
+  }
+}

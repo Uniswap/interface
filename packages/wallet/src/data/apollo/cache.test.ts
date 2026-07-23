@@ -2,23 +2,24 @@ import { InMemoryCache } from '@apollo/client'
 import { persistCache } from 'apollo3-cache-persist'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
 import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import type { Mocked, MockedFunction } from 'vitest'
 import { initAndPersistCache, shouldResetCache, storeCacheVersion } from 'wallet/src/data/apollo/cache'
 
 // Mock external dependencies
-jest.mock('@apollo/client')
-jest.mock('apollo3-cache-persist')
-jest.mock('uniswap/src/data/cache')
-jest.mock('utilities/src/logger/logger')
+vi.mock('@apollo/client')
+vi.mock('apollo3-cache-persist')
+vi.mock('uniswap/src/data/cache')
+vi.mock('utilities/src/logger/logger')
 
-const mockPersistCache = persistCache as jest.MockedFunction<typeof persistCache>
-const mockSetupSharedApolloCache = setupSharedApolloCache as jest.MockedFunction<typeof setupSharedApolloCache>
+const mockPersistCache = persistCache as MockedFunction<typeof persistCache>
+const mockSetupSharedApolloCache = setupSharedApolloCache as MockedFunction<typeof setupSharedApolloCache>
 
 describe('shouldResetCache', () => {
-  let mockCache: jest.Mocked<InMemoryCache>
+  let mockCache: Mocked<InMemoryCache>
 
   beforeEach(() => {
     mockCache = {
-      readQuery: jest.fn(),
+      readQuery: vi.fn(),
     } as never
   })
 
@@ -62,11 +63,11 @@ describe('shouldResetCache', () => {
 })
 
 describe('storeCacheVersion', () => {
-  let mockCache: jest.Mocked<InMemoryCache>
+  let mockCache: Mocked<InMemoryCache>
 
   beforeEach(() => {
     mockCache = {
-      writeQuery: jest.fn(),
+      writeQuery: vi.fn(),
     } as never
   })
 
@@ -92,22 +93,22 @@ describe('storeCacheVersion', () => {
 })
 
 describe('initAndPersistCache', () => {
-  let mockCache: jest.Mocked<InMemoryCache>
+  let mockCache: Mocked<InMemoryCache>
   let mockStorage: PersistentStorage<string>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     mockCache = {
-      readQuery: jest.fn(),
-      writeQuery: jest.fn(),
-      reset: jest.fn(),
+      readQuery: vi.fn(),
+      writeQuery: vi.fn(),
+      reset: vi.fn(),
     } as never
 
     mockStorage = {
-      getItem: jest.fn(),
-      setItem: jest.fn(),
-      removeItem: jest.fn(),
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
     } as never
 
     mockSetupSharedApolloCache.mockReturnValue(mockCache)

@@ -1,8 +1,5 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import dayjs from 'dayjs'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -14,13 +11,6 @@ import { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/
 interface ActivityGroup {
   title: string
   transactions: Array<Activity>
-}
-
-/**
- * Helper function to get currency address with proper fallback for native tokens
- */
-export function getCurrencyAddress(token: GraphQLApi.TokenAssetPartsFragment, chainId: UniverseChainId): string {
-  return token.address || getNativeAddress(chainId) || ''
 }
 
 /**
@@ -90,41 +80,6 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
   ]
 
   return transactionGroups.filter(({ transactions }) => transactions.length > 0)
-}
-
-/**
- * Extracts nonce from an Activity object.
- *
- * @param activity - The activity to extract nonce from
- * @returns the nonce as BigNumber if available, undefined otherwise
- */
-export function getActivityNonce(activity: Activity): BigNumber | undefined {
-  /* oxlint-disable typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here */
-  if (
-    // sometime the nonce is being sent in as null value
-    // when creating a limit order (should be undefined or BigNumberish)
-    activity.options?.request?.nonce !== undefined &&
-    activity.options.request.nonce !== null
-  ) {
-    /* oxlint-enable typescript/no-unnecessary-condition */
-    return BigNumber.from(activity.options.request.nonce)
-  }
-
-  return undefined
-}
-
-/**
- * Checks if two activities have the same nonce for cancellation detection.
- *
- * @param activity1 - First activity
- * @param activity2 - Second activity
- * @returns true if both activities have the same nonce
- */
-export function haveSameNonce(activity1: Activity, activity2: Activity): boolean {
-  const nonce1 = getActivityNonce(activity1)
-  const nonce2 = getActivityNonce(activity2)
-
-  return Boolean(nonce1 && nonce2 && nonce1.eq(nonce2))
 }
 
 /**

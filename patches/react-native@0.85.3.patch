@@ -1,0 +1,28 @@
+diff --git a/sdks/hermes-engine/hermes-engine.podspec b/sdks/hermes-engine/hermes-engine.podspec
+index 58e003985c6dc3cd664d434339bf68ec09bce5bd..30f3ef2f9ed76f5002274a3aaaa29058e4f0d8aa 100644
+--- a/sdks/hermes-engine/hermes-engine.podspec
++++ b/sdks/hermes-engine/hermes-engine.podspec
+@@ -4,6 +4,7 @@
+ # LICENSE file in the root directory of this source tree.
+ 
+ require "json"
++require "pathname"
+ require_relative "./hermes-utils.rb"
+ 
+ begin
+@@ -92,8 +93,14 @@ Pod::Spec.new do |spec|
+         "require.resolve(\"hermes-compiler\", {paths: [\"#{react_native_path}\"]})", __dir__]).strip
+       )
+ 
++      # Use a path relative to PODS_ROOT so the absolute home-directory path isn't baked into the
++      # generated podspec JSON, which would make Podfile.lock checksums differ per machine/CI.
++      # See https://github.com/facebook/react-native/issues/54891
++      hermesc_absolute_path = "#{hermes_compiler_path}/hermesc/osx-bin/hermesc"
++      relative_hermesc_path = Pathname.new(hermesc_absolute_path).relative_path_from(Pod::Config.instance.sandbox_root)
++
+       spec.user_target_xcconfig = {
+-        'HERMES_CLI_PATH' => "#{hermes_compiler_path}/hermesc/osx-bin/hermesc"
++        'HERMES_CLI_PATH' => "${PODS_ROOT}/#{relative_hermesc_path}"
+       }
+     end
+ 

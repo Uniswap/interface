@@ -1,3 +1,4 @@
+import 'src/app/tailwind.css'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import {
   getIsHashcashSolverEnabled,
@@ -30,6 +31,7 @@ import { useOnCrashAppStateResetter } from 'src/store/appStateResetter'
 import { getReduxStore } from 'src/store/store'
 import { createHashcashWorker } from 'src/workers/hashcashWorker'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
@@ -60,17 +62,21 @@ const provideSessionInitializationService = (): SessionInitializationService => 
       ChallengeType.HASHCASH,
       createHashcashSolver({
         performanceTracker,
-        getWorkerChannel: () =>
-          createHashcashWorkerChannel({
-            getWorker: createHashcashWorker,
-            // Log worker boot failures (e.g. `importScripts` NetworkError from
-            // a broken Vite chunk path)
-            // to Datadog so a regression is visible before users report it.
-            onWorkerError: (error) =>
-              getLogger().error(error, {
-                tags: { file: 'BaseAppContainer.tsx', function: 'createHashcashWorkerChannel' },
+        // Vite dev serves workers from the dev-server origin, cross-origin to chrome-extension:// — Chrome kills
+        // the renderer (DWH_INVALID_SCRIPT_URL_ORIGIN). Solve on the main thread in dev; builds bundle it same-origin.
+        getWorkerChannel: __DEV__
+          ? undefined
+          : () =>
+              createHashcashWorkerChannel({
+                getWorker: createHashcashWorker,
+                // Log worker boot failures (e.g. `importScripts` NetworkError from
+                // a broken Vite chunk path)
+                // to Datadog so a regression is visible before users report it.
+                onWorkerError: (error) =>
+                  getLogger().error(error, {
+                    tags: { file: 'BaseAppContainer.tsx', function: 'createHashcashWorkerChannel' },
+                  }),
               }),
-          }),
         onSolveCompleted: onHashcashSolveCompleted,
         getLogger,
       }),
@@ -111,6 +117,7 @@ function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
       <SharedWalletProvider reduxStore={getReduxStore()}>
         <ErrorBoundaryWrapper>
           <LanguageSync />
+          <TailwindThemeSync />
           <GraphqlProvider>
             <BlankUrlProvider>
               <LocalizationContextProvider>
@@ -149,6 +156,22 @@ function LanguageSync(): null {
   useEffect(() => {
     changeLanguage(getLocale(currentLanguage)).catch(() => undefined)
   }, [currentLanguage])
+
+  return null
+}
+
+/**
+ * Mirrors the resolved color scheme onto the <html> `.dark` class so Tailwind v4
+ * `dark:` variants and @universe/tailwind dark tokens activate in sync with the
+ * Tamagui theme (driven by the same useSelectedColorScheme signal). Each
+ * extension UI page is its own document, so this runs per entrypoint.
+ */
+function TailwindThemeSync(): null {
+  const colorScheme = useSelectedColorScheme()
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', colorScheme === 'dark')
+  }, [colorScheme])
 
   return null
 }

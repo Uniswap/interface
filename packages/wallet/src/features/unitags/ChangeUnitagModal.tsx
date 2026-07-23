@@ -19,7 +19,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
-import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
+import { parseUnitagErrorCode, normalizeUnitagUsernameInput } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
@@ -50,7 +50,7 @@ export function ChangeUnitagModal({
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 
-  const [newUnitag, setNewUnitag] = useState(unitag)
+  const [newUnitag, setNewUnitag] = useState(() => normalizeUnitagUsernameInput(unitag))
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
 
@@ -194,9 +194,9 @@ export function ChangeUnitagModal({
                   px="$none"
                   py="$spacing20"
                   returnKeyType="done"
-                  defaultValue={newUnitag}
+                  value={newUnitag}
                   width="100%"
-                  onChangeText={(text: string) => setNewUnitag(text.trim().toLowerCase())}
+                  onChangeText={(text: string) => setNewUnitag(normalizeUnitagUsernameInput(text))}
                   onSubmitEditing={onFinishEditing}
                 />
                 <Flex position="absolute" right="$spacing20" top="$spacing20">

@@ -1,23 +1,38 @@
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { iconSizes } from 'ui/src/theme'
-import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { Button, Flex, Text, useDynamicFontSizing } from 'ui/src'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  getEarnAmountValidation,
+  getEarnDepositMinimumValidation,
+  getEarnDepositPercentageInput,
+  getMaxDepositTokenAmount,
+  getProjectedAnnualEarnings,
+} from 'uniswap/src/features/earn/amount'
+import { useEarnMinDepositUsd } from 'uniswap/src/features/earn/config'
+import { EARN_INPUT_ERROR_DEBOUNCE_MS } from 'uniswap/src/features/earn/constants'
+import { EarnInlineError } from 'uniswap/src/features/earn/EarnInlineError'
+import type { EarnDepositSourceOption, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
+import { useDebounce } from 'utilities/src/time/timing'
+import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
   NumericalInputWrapper,
   StyledNumericalInput,
-} from '~/pages/Swap/common/shared'
+} from '~/components/NumericalInput/LargeAmountInput'
+import { DepositTokenSelector } from '~/features/earn/DepositTokenSelector'
+import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
+import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 
 const CHAR_WIDTH = 45
 const MAX_FONT_SIZE = 70
@@ -29,29 +44,50 @@ const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const
 
 interface DepositAmountViewProps {
   vault: EarnVaultInfo
-  availableBalance: number
+  depositSourceOptions: EarnDepositSourceOption[]
+  selectedDepositSource: EarnDepositSourceOption | undefined
+  onSelectDepositSource: (currencyId: string) => void
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
   initialAmount?: string
+  initialIsMax?: boolean
   onBack: () => void
   onClose: () => void
-  onReview: (amount: string) => void
+  onReview: (params: {
+    amount: string
+    sourceChainId: UniverseChainId
+    sourceCurrencyId: string
+    isMax?: boolean
+    tokenAmount?: string
+  }) => void
 }
 
 export function DepositAmountView({
   vault,
-  availableBalance,
+  depositSourceOptions,
+  selectedDepositSource,
+  onSelectDepositSource,
+  unsupportedDepositSourceOptions,
   initialAmount = '',
+  initialIsMax = false,
   onBack,
   onClose,
   onReview,
 }: DepositAmountViewProps): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString, formatPercent } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(vault.currencyId)
-  const currency = currencyInfo?.currency
-  const symbol = currency?.symbol ?? 'USDC'
+  const { convertFiatAmount, formatNumberOrString, formatPercent } = useLocalizationContext()
+  const minDepositUsd = useEarnMinDepositUsd()
+  const fiatCurrency = useAppFiatCurrency()
+  const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
+
+  const currency = selectedDepositSource?.currencyInfo.currency
+
+  const availableBalanceQuantity = selectedDepositSource?.balanceQuantity ?? 0
+  const availableBalanceUsd = selectedDepositSource?.balanceUsd
 
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
+  // Max uses exact token balance instead of display-rounded fiat.
+  const [isMaxSelected, setIsMaxSelected] = useState(initialIsMax)
   const inputRef = useRef<ComponentRef<typeof StyledNumericalInput>>(null)
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
@@ -61,6 +97,8 @@ export function DepositAmountView({
     minFontSize: MIN_FONT_SIZE,
     maxWidth: INPUT_MAX_WIDTH,
   })
+  const selectedDepositSourceId = selectedDepositSource?.currencyInfo.currencyId
+  const previousDepositSourceIdRef = useRef(selectedDepositSourceId)
 
   // Recalculate font sizing once on mount when seeded with a non-empty amount
   // (e.g., navigating back from the review view).
@@ -71,6 +109,55 @@ export function DepositAmountView({
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- intentional run-once on mount
   }, [])
 
+  useEffect(() => {
+    if (previousDepositSourceIdRef.current === selectedDepositSourceId) {
+      return
+    }
+
+    previousDepositSourceIdRef.current = selectedDepositSourceId
+    setAmount('')
+    setInputInFiat(true)
+    setIsMaxSelected(false)
+    onSetFontSize('')
+  }, [onSetFontSize, selectedDepositSourceId])
+
+  // Source chain drives the fiat<->token conversion — per-chain variants price independently.
+  const { fiatToToken, tokenToFiat } = useFiatTokenConversion({ currency })
+  const convertUsdToLocalFiat = useCallback(
+    (balanceUsd: number): number => convertFiatAmount(balanceUsd).amount,
+    [convertFiatAmount],
+  )
+  const selectedDepositSourceBalanceAmount = useMemo(
+    () =>
+      selectedDepositSource && currency
+        ? getCurrencyAmount({
+            value: selectedDepositSource.balanceRaw ?? availableBalanceQuantity.toFixed(currency.decimals),
+            valueType: selectedDepositSource.balanceRaw ? ValueType.Raw : ValueType.Exact,
+            currency,
+          })
+        : undefined,
+    [availableBalanceQuantity, currency, selectedDepositSource],
+  )
+  const maxSpendableAmount = useMaxAmountSpend({
+    currencyAmount: selectedDepositSourceBalanceAmount,
+    txType: TransactionType.Deposit,
+  })
+  const maxDepositTokenAmount = useMemo(() => {
+    if (!selectedDepositSource || !currency) {
+      return undefined
+    }
+
+    if (currency.isNative && maxSpendableAmount) {
+      return maxSpendableAmount.toExact()
+    }
+
+    return getMaxDepositTokenAmount({
+      balanceQuantity: availableBalanceQuantity,
+      balanceRaw: selectedDepositSource.balanceRaw,
+      currency,
+    })
+  }, [availableBalanceQuantity, currency, maxSpendableAmount, selectedDepositSource])
+
   const handleUserInput = useCallback(
     (value: string) => {
       if (!isSafeNumber(value)) {
@@ -79,64 +166,179 @@ export function DepositAmountView({
       const normalized = value.replace(/^0+(?=\d)/, '')
       onSetFontSize(normalized)
       setAmount(normalized)
+      setIsMaxSelected(false)
     },
     [onSetFontSize],
   )
 
   const handlePercentPress = useCallback(
     (pct: number) => {
-      // TODO(CONS-1784): availableBalance is a single mocked number used for both fiat ($) and token modes.
-      // Once real wallet balance + quote-driven fiat/token conversion land, pick the value in the active unit.
-      const value = (availableBalance * pct).toFixed(FIAT_DECIMALS)
+      const percentageInput = getEarnDepositPercentageInput({
+        balanceQuantity: availableBalanceQuantity,
+        balanceUsd: availableBalanceUsd,
+        convertUsdToLocalFiat,
+        exactMaxTokenAmount: maxDepositTokenAmount,
+        fiatDecimals: FIAT_DECIMALS,
+        percentage: pct,
+        tokenDecimals: currency?.decimals ?? FIAT_DECIMALS,
+      })
+      const isMax = pct === 1
+      const inputInFiatNext = percentageInput.inputInFiat
+      const value = inputInFiatNext ? percentageInput.exactAmountFiat : percentageInput.exactAmountToken
+      setInputInFiat(inputInFiatNext)
+      setIsMaxSelected(isMax)
       onSetFontSize(value)
       setAmount(value)
     },
-    [availableBalance, onSetFontSize],
+    [
+      availableBalanceQuantity,
+      availableBalanceUsd,
+      convertUsdToLocalFiat,
+      currency?.decimals,
+      maxDepositTokenAmount,
+      onSetFontSize,
+    ],
   )
 
   const parsedAmount = Number(amount) || 0
-  const isOverBalance = parsedAmount > availableBalance
-  const isReviewDisabled = parsedAmount <= 0 || isOverBalance
 
-  const projectedAnnualEarnings = parsedAmount * (vault.apyPercent / 100)
+  const alternateDisplayAmount = useMemo(() => {
+    if (!amount) {
+      return undefined
+    }
+    return inputInFiat ? (fiatToToken(amount) ?? undefined) : (tokenToFiat(amount) ?? undefined)
+  }, [amount, fiatToToken, inputInFiat, tokenToFiat])
 
-  const formatFiat = useCallback(
-    (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard }),
-    [formatNumberOrString],
+  // Validate in token units so unpriced tokens (no USD valuation) still gate over-balance.
+  const inputAsTokens = useMemo<number | undefined>(() => {
+    if (parsedAmount <= 0) {
+      return 0
+    }
+    if (!inputInFiat) {
+      return parsedAmount
+    }
+    const tokenStr = fiatToToken(amount)
+    return tokenStr !== null ? Number(tokenStr) : undefined
+  }, [amount, fiatToToken, inputInFiat, parsedAmount])
+
+  const inputAsLocalFiat = useMemo<number | undefined>(() => {
+    if (parsedAmount <= 0) {
+      return 0
+    }
+    if (inputInFiat) {
+      return parsedAmount
+    }
+    const fiatAmount = tokenToFiat(amount)
+    return fiatAmount !== null ? Number(fiatAmount) : undefined
+  }, [amount, inputInFiat, parsedAmount, tokenToFiat])
+
+  const minimumDepositLocalFiat = convertFiatAmount(minDepositUsd).amount
+  const isBelowMinimumDeposit = getEarnDepositMinimumValidation({
+    inputAmount: inputAsLocalFiat,
+    minimumAmount: minimumDepositLocalFiat,
+  })
+  const debouncedIsBelowMinimumDeposit = useDebounce(isBelowMinimumDeposit, EARN_INPUT_ERROR_DEBOUNCE_MS)
+
+  // Review needs fiat math plus token units for over-balance checks.
+  const { isOverBalance, isReviewDisabled } = getEarnAmountValidation({
+    availableAmount: availableBalanceQuantity,
+    comparisonAmount: inputAsTokens,
+    hasRequiredSelection: selectedDepositSource !== undefined,
+    inputAmount: parsedAmount,
+    isConversionPending: !inputInFiat && alternateDisplayAmount === undefined,
+    // "Max" deposits spend the exact token balance, so the displayed fiat amount (rounded up for
+    // display, then re-priced at spot) can sit a hair above the balance without being invalid.
+    skipOverBalanceCheck: isMaxSelected,
+  })
+
+  // Base projection on local-fiat so the figure stays comparable across unit toggles.
+  const projectedEarningsBaseLocalFiat = inputInFiat
+    ? parsedAmount
+    : parsedAmount > 0
+      ? Number(tokenToFiat(amount) ?? 0)
+      : 0
+  const projectedAnnualEarnings = getProjectedAnnualEarnings({
+    balance: projectedEarningsBaseLocalFiat,
+    apyPercent: vault.apyPercent,
+  })
+
+  const formatLocalFiat = useCallback(
+    (value: number): string =>
+      formatNumberOrString({
+        value,
+        type: NumberType.FiatStandard,
+        currencyCode: fiatCurrency,
+      }),
+    [fiatCurrency, formatNumberOrString],
   )
 
-  const balanceLabel = `${formatNumberOrString({ value: availableBalance, type: NumberType.TokenNonTx })} ${t(
-    'explore.earn.deposit.available',
-  )}`
-
-  const ctaLabel = isOverBalance ? t('explore.earn.deposit.insufficientBalance') : t('common.button.review')
+  const showDepositMinimumError = isBelowMinimumDeposit && debouncedIsBelowMinimumDeposit
+  const depositMinimumError = showDepositMinimumError
+    ? t('explore.earn.deposit.minimum', {
+        amount: formatLocalFiat(minimumDepositLocalFiat),
+      })
+    : undefined
+  const ctaLabel = isOverBalance
+    ? t('explore.earn.deposit.insufficientBalance')
+    : isBelowMinimumDeposit
+      ? t('explore.earn.deposit.enterLargerAmount')
+      : t('common.button.review')
+  const apyLabel = t('explore.earn.vault.rateValue', {
+    apy: formatPercent(vault.apyPercent, 2),
+  })
 
   const scaledInputWidth = useMemo(
     () => (amount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined),
     [amount, hiddenObserver.width],
   )
 
+  // Wire format is local fiat — review converts to USD internally. See useEarnVaultModalFlow.
   const handleReview = useCallback(() => {
-    onReview(amount)
-  }, [amount, onReview])
+    if (!selectedDepositSource) {
+      return
+    }
+    const localFiat = inputInFiat ? amount : tokenToFiat(amount)
+    if (localFiat === null) {
+      return
+    }
+    onReview({
+      amount: localFiat,
+      sourceChainId: selectedDepositSource.chainId,
+      sourceCurrencyId: selectedDepositSource.currencyInfo.currencyId,
+      isMax: isMaxSelected,
+      // Max quotes against the exact token balance, reserving gas for native deposit sources.
+      tokenAmount: isMaxSelected ? maxDepositTokenAmount : undefined,
+    })
+  }, [amount, inputInFiat, isMaxSelected, maxDepositTokenAmount, onReview, selectedDepositSource, tokenToFiat])
 
   const focusInput = useCallback(() => {
     inputRef.current?.focus()
   }, [])
 
-  const handleToggleInputUnit = useCallback(() => setInputInFiat((prev) => !prev), [])
+  // Toggle also converts the value so $1 of ETH becomes ~0.0003 ETH (not the literal string).
+  const handleToggleInputUnit = useCallback(() => {
+    setInputInFiat((prev) => {
+      const next = !prev
+      if (!amount) {
+        return next
+      }
+      const converted = next ? tokenToFiat(amount) : fiatToToken(amount)
+      if (converted === null) {
+        // No price yet — leave the input as-is.
+        return next
+      }
+      const trimmed = next ? Number(converted).toFixed(FIAT_DECIMALS) : converted
+      onSetFontSize(trimmed)
+      setAmount(trimmed)
+      return next
+    })
+  }, [amount, fiatToToken, onSetFontSize, tokenToFiat])
+
+  const maxDecimals = inputInFiat ? FIAT_DECIMALS : (currency?.decimals ?? FIAT_DECIMALS)
 
   return (
     <Flex gap="$spacing16">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea onPress={onBack} hoverable>
-          <BackArrow color="$neutral2" size="$icon.24" />
-        </TouchableArea>
-        <Text variant="body2" color="$neutral1">
-          {t('explore.earn.deposit.title')}
-        </Text>
-        <ModalCloseIcon onClose={onClose} />
-      </Flex>
+      <EarnAmountViewHeader title={t('explore.earn.deposit.title')} onBack={onBack} onClose={onClose} />
 
       <Flex gap="$spacing4">
         <Flex
@@ -148,6 +350,7 @@ export function DepositAmountView({
           py="$spacing48"
           gap="$spacing16"
           alignItems="center"
+          position="relative"
           cursor="text"
           onPress={focusInput}
           onLayout={onLayout}
@@ -156,7 +359,7 @@ export function DepositAmountView({
             <Flex onLayout={onExtraElementLayout}>
               {inputInFiat && (
                 <NumericalInputSymbolContainer showPlaceholder={!amount} numericalFontSize={fontSize}>
-                  $
+                  {fiatSymbol}
                 </NumericalInputSymbolContainer>
               )}
             </Flex>
@@ -167,7 +370,7 @@ export function DepositAmountView({
               fieldWidth={scaledInputWidth}
               numericalFontSize={fontSize}
               hasPrefix={inputInFiat}
-              maxDecimals={FIAT_DECIMALS}
+              maxDecimals={maxDecimals}
               ref={inputRef}
             />
             <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
@@ -180,8 +383,9 @@ export function DepositAmountView({
               <AlternateCurrencyDisplay
                 inputCurrency={currency}
                 inputInFiat={inputInFiat}
-                exactAmountOut={amount}
+                exactAmountOut={alternateDisplayAmount}
                 onToggle={handleToggleInputUnit}
+                disabled={alternateDisplayAmount === undefined}
               />
             </Flex>
           ) : (
@@ -190,56 +394,49 @@ export function DepositAmountView({
                 <PredefinedAmount
                   key={pct}
                   label={pct === 1 ? t('common.max') : `${Math.round(pct * 100)}%`}
+                  disabled={!selectedDepositSource}
                   onPress={() => handlePercentPress(pct)}
                 />
               ))}
             </Flex>
           )}
+          {depositMinimumError && (
+            <Flex position="absolute" left="$spacing24" right="$spacing24" bottom="$spacing12">
+              <EarnInlineError message={depositMinimumError} />
+            </Flex>
+          )}
         </Flex>
 
-        <Flex
-          row
-          alignItems="center"
-          justifyContent="space-between"
-          backgroundColor="$surface1"
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          borderRadius="$rounded20"
-          p="$spacing16"
-        >
-          <Flex row alignItems="center" gap="$spacing12">
-            <TokenLogo
-              url={currencyInfo?.logoUrl}
-              size={iconSizes.icon32}
-              chainId={currency?.chainId}
-              symbol={symbol}
-              name={currency?.name}
-            />
-            <Flex>
-              <Text variant="body2" color="$neutral1">
-                {symbol}
-              </Text>
-              <Text variant="body3" color="$neutral2">
-                {balanceLabel}
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
+        <DepositTokenSelector
+          displayBalanceInFiat={inputInFiat}
+          options={depositSourceOptions}
+          selectedSourceCurrencyId={selectedDepositSource?.currencyInfo.currencyId ?? vault.currencyId}
+          onSelectSourceCurrency={onSelectDepositSource}
+          unsupportedOptions={unsupportedDepositSourceOptions}
+        />
       </Flex>
 
-      <Flex row alignItems="center" justifyContent="space-between">
+      <Flex row alignItems="center" justifyContent="space-between" px="$spacing16">
         <Text variant="body3" color="$accent1">
-          {t('explore.earn.vault.rateValue', { apy: formatPercent(vault.apyPercent) })}
+          {apyLabel}
         </Text>
         <Text variant="body3" color={parsedAmount > 0 ? '$statusSuccess' : '$neutral2'}>
-          {`+${formatFiat(projectedAnnualEarnings)} `}
+          {`+${formatLocalFiat(projectedAnnualEarnings)} `}
           <Text variant="body3" color="$neutral2">
             {t('explore.earn.deposit.perYear')}
           </Text>
         </Text>
       </Flex>
 
-      <Button emphasis="primary" size="large" py="$spacing24" isDisabled={isReviewDisabled} onPress={handleReview}>
+      <Button
+        fill={false}
+        width="100%"
+        variant="branded"
+        emphasis="primary"
+        size="large"
+        isDisabled={isReviewDisabled || isBelowMinimumDeposit}
+        onPress={handleReview}
+      >
         {ctaLabel}
       </Button>
     </Flex>

@@ -6,49 +6,50 @@ import { useHasBiometricUnlockCredential } from 'src/app/features/biometricUnloc
 import { PasswordResetFlowState, usePasswordResetFlow } from 'src/app/features/settings/password/usePasswordResetFlow'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import type { MockedFunction } from 'vitest'
 
 // Mock dependencies
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
+vi.mock('react-redux', () => ({
+  useDispatch: vi.fn(),
 }))
 
-jest.mock('src/app/features/biometricUnlock/useShouldShowBiometricUnlock', () => ({
-  useHasBiometricUnlockCredential: jest.fn(),
+vi.mock('src/app/features/biometricUnlock/useShouldShowBiometricUnlock', () => ({
+  useHasBiometricUnlockCredential: vi.fn(),
 }))
 
-jest.mock('src/app/features/biometricUnlock/useChangePasswordWithBiometricMutation', () => ({
-  useChangePasswordWithBiometricMutation: jest.fn(),
+vi.mock('src/app/features/biometricUnlock/useChangePasswordWithBiometricMutation', () => ({
+  useChangePasswordWithBiometricMutation: vi.fn(),
 }))
 
-jest.mock('src/app/features/biometricUnlock/useBiometricUnlockDisableMutation', () => ({
-  useBiometricUnlockDisableMutation: jest.fn(),
+vi.mock('src/app/features/biometricUnlock/useBiometricUnlockDisableMutation', () => ({
+  useBiometricUnlockDisableMutation: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/notifications/slice/slice', () => ({
-  pushNotification: jest.fn(),
+vi.mock('uniswap/src/features/notifications/slice/slice', () => ({
+  pushNotification: vi.fn(),
 }))
 
-jest.mock('utilities/src/react/hooks', () => ({
-  useEvent: jest.fn((fn) => fn),
+vi.mock('utilities/src/react/hooks', () => ({
+  useEvent: vi.fn((fn) => fn),
 }))
 
-const mockDispatch = jest.fn()
-const mockMutate = jest.fn()
-const mockDisableBiometricMutate = jest.fn()
-const mockUseHasBiometricUnlockCredential = useHasBiometricUnlockCredential as jest.MockedFunction<
+const mockDispatch = vi.fn()
+const mockMutate = vi.fn()
+const mockDisableBiometricMutate = vi.fn()
+const mockUseHasBiometricUnlockCredential = useHasBiometricUnlockCredential as MockedFunction<
   typeof useHasBiometricUnlockCredential
 >
-const mockUseChangePasswordWithBiometricMutation = useChangePasswordWithBiometricMutation as jest.MockedFunction<
+const mockUseChangePasswordWithBiometricMutation = useChangePasswordWithBiometricMutation as MockedFunction<
   typeof useChangePasswordWithBiometricMutation
 >
-const mockUseBiometricUnlockDisableMutation = useBiometricUnlockDisableMutation as jest.MockedFunction<
+const mockUseBiometricUnlockDisableMutation = useBiometricUnlockDisableMutation as MockedFunction<
   typeof useBiometricUnlockDisableMutation
 >
-const mockUseDispatch = useDispatch as jest.MockedFunction<typeof useDispatch>
+const mockUseDispatch = useDispatch as MockedFunction<typeof useDispatch>
 
 describe('usePasswordResetFlow', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseDispatch.mockReturnValue(mockDispatch)
     mockUseHasBiometricUnlockCredential.mockReturnValue(false)
     mockUseChangePasswordWithBiometricMutation.mockReturnValue({

@@ -1,4 +1,4 @@
-import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 
 export const selectHasViewedBridgingBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasViewedBridgingBanner === true
@@ -31,3 +31,6 @@ export const selectHasDismissedCrosschainSwapsPromoBanner = (state: UniswapState
 
 export const selectHasDismissedPoolsBalanceCoachmark = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedPoolsBalanceCoachmark === true
+
+export const selectHasDismissedPoolsOutageBanner = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasDismissedPoolsOutageBanner === true

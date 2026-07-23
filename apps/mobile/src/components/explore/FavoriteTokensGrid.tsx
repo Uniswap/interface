@@ -1,8 +1,6 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ScrollView } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 import type { AnimatedRef } from 'react-native-reanimated'
 import { FadeIn } from 'react-native-reanimated'
 import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-native-sortables'
@@ -26,7 +24,7 @@ const DEFAULT_TOKENS_TO_DISPLAY = 4
 
 type FavoriteTokensGridProps = {
   showLoading: boolean
-  listRef: AnimatedRef<FlatList> | AnimatedRef<ScrollView>
+  listRef: AnimatedRef<ScrollView>
 }
 
 /** Renders the favorite tokens section on the Explore tab */
@@ -34,13 +32,11 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   const { t } = useTranslation()
   const { hapticFeedback } = useHapticFeedback()
   const dispatch = useDispatch()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   // Pull multichain rankings independent of the Explore network filter so badge visibility and the
   // one-time migration see the same cross-chain data regardless of which chain pill is selected.
   const { tokenRankingsData, networkCountByKey } = useMultichainFavoritesRankings()
 
-  useCanonicalFavoritesMigration({ multichainTokenUxEnabled, tokenRankingsData })
+  useCanonicalFavoritesMigration({ tokenRankingsData })
 
   const [isEditing, setIsEditing] = useState(false)
   const [showAll, setShowAll] = useState(false)

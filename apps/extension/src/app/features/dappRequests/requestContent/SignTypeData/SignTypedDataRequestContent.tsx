@@ -84,6 +84,7 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
       title={t('dapp.request.signature.header')}
       showAddressFooter={false}
       disableConfirm={disableConfirm}
+      isCriticalRisk={riskLevel === TransactionRiskLevel.Critical}
     >
       <DappSignTypedDataContent
         chainId={chainId}

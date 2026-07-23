@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
@@ -52,7 +52,7 @@ export function SwapRateRatio({
       flexGrow={1}
       onPress={() => setShowInverseRate(!showInverseRate)}
     >
-      <Flex row width="max-content">
+      <Flex row maxContent>
         <Text
           adjustsFontSizeToFit
           $group-hover={{ color: isPrimary ? '$neutral1Hovered' : '$neutral2Hovered' }}

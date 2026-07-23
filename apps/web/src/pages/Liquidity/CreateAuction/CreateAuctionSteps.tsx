@@ -1,4 +1,6 @@
 import { AnimatePresence, Flex, HeightAnimator } from 'ui/src'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useUpdateCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useUpdateCreateAuctionTokenColor'
 import { AddTokenInfoStep } from '~/pages/Liquidity/CreateAuction/steps/AddTokenInfoStep'
@@ -17,32 +19,40 @@ export function CreateAuctionSteps() {
     <Flex width="100%" overflow="hidden">
       <AnimatePresence>
         {isAddTokenInfoStep && (
-          <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-            <AddTokenInfoStep />
-          </Flex>
+          <Trace logImpression page={InterfacePageName.LaunchAuctionTokenDetails}>
+            <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+              <AddTokenInfoStep />
+            </Flex>
+          </Trace>
         )}
       </AnimatePresence>
       {!isAddTokenInfoStep && (
         <HeightAnimator animation="200ms">
           <AnimatePresence>
             {step === CreateAuctionStep.CONFIGURE_AUCTION && (
-              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-                <ConfigureAuctionStep />
-              </Flex>
+              <Trace logImpression page={InterfacePageName.LaunchAuctionAuctionDetails}>
+                <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                  <ConfigureAuctionStep />
+                </Flex>
+              </Trace>
             )}
           </AnimatePresence>
           <AnimatePresence>
             {step === CreateAuctionStep.CUSTOMIZE_POOL && (
-              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-                <CustomizePoolStep />
-              </Flex>
+              <Trace logImpression page={InterfacePageName.LaunchAuctionPoolDetails}>
+                <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                  <CustomizePoolStep />
+                </Flex>
+              </Trace>
             )}
           </AnimatePresence>
           <AnimatePresence>
             {step === CreateAuctionStep.REVIEW_LAUNCH && (
-              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-                <ReviewLaunchStep />
-              </Flex>
+              <Trace logImpression page={InterfacePageName.LaunchAuctionReview}>
+                <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                  <ReviewLaunchStep />
+                </Flex>
+              </Trace>
             )}
           </AnimatePresence>
         </HeightAnimator>

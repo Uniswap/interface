@@ -4,10 +4,10 @@
       "id": "toucan-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Toucan/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state", "/pages/Liquidity/CreateAuction/"],
       "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
       "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
-      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, or from within features/Toucan/."
+      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Liquidity/CreateAuction/, or from within features/Toucan/."
     },
     {
       "id": "liquidity-feature",
@@ -26,7 +26,7 @@
         "/pages/Portfolio/",
         "/pages/Positions/",
         "/pages/RemoveLiquidity/",
-        "/pages/App/TopLevelModals/"
+        "/app/layout/TopLevelModals/"
       ],
       "importPrefixes": ["~/features/Liquidity/", "features/Liquidity/"],
       "bareModuleSources": ["~/features/Liquidity", "features/Liquidity"],
@@ -40,12 +40,12 @@
         "/pages/Swap/",
         "/pages/TokenDetails/",
         "/pages/Landing/",
-        "/pages/App/WebUniswapContext",
+        "/app/WebUniswapContext",
         "/features/Liquidity/Create/"
       ],
       "importPrefixes": ["~/features/Swap/", "features/Swap/"],
       "bareModuleSources": ["~/features/Swap", "features/Swap"],
-      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, pages/Landing/, pages/App/, features/Liquidity/Create/, or from within features/Swap/."
+      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, pages/Landing/, app/WebUniswapContext, features/Liquidity/Create/, or from within features/Swap/."
     },
     {
       "id": "explore-feature",

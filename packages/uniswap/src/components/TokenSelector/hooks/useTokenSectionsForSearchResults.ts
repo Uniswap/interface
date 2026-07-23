@@ -13,18 +13,21 @@ import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/Acc
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useMultichainSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { isWSOL } from 'uniswap/src/utils/isWSOL'
 
 export function useTokenSectionsForSearchResults({
   addresses,
   chainFilter,
+  chainIds,
   searchFilter,
   isBalancesOnlySearch,
   input,
 }: {
   addresses: AddressGroup
   chainFilter: UniverseChainId | null
+  chainIds: UniverseChainId[]
   searchFilter: string | null
   isBalancesOnlySearch: boolean
   input?: TradeableAsset
@@ -44,7 +47,7 @@ export function useTokenSectionsForSearchResults({
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions({ chainFilter, searchFilter: searchFilter ?? undefined, portfolioData })
+  } = usePortfolioTokenOptions({ chainFilter, chainIds, searchFilter: searchFilter ?? undefined, portfolioData })
 
   // Bridging tokens are only shown if input is provided
   const {
@@ -52,20 +55,25 @@ export function useTokenSectionsForSearchResults({
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ oppositeSelectedToken: input, chainFilter, portfolioData })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, chainFilter, chainIds, portfolioData })
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
-    data: searchResultCurrencies,
+    data: searchResultsMultichain,
     error: searchTokensError,
     refetch: refetchSearchTokens,
     loading: searchTokensLoading,
-  } = useSearchTokens({
+  } = useMultichainSearchTokens({
     searchQuery: searchFilter,
     chainFilter,
+    chainIds,
     skip: isBalancesOnlySearch,
-    hideWSOL: true, // Hide WSOL in token selector
   })
+
+  const searchResultCurrencies = useMemo(
+    () => searchResultsMultichain?.flatMap((r) => r.tokens).filter((c) => !isWSOL(c.currency)),
+    [searchResultsMultichain],
+  )
 
   const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {
     if (!searchResultCurrencies) {

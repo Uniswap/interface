@@ -651,6 +651,20 @@ describe(usePortfolioTokenOptions, () => {
         },
       },
       {
+        test: 'returns shown tokens filtered by chainIds when no single-chain filter is selected',
+        input: {
+          portfolioData: allTokenBalancesPortfolioData,
+          chainFilter: null,
+          chainIds: [fromGraphQLChain(usdcTokenBalance.token.chain) ?? UniverseChainId.Base],
+        },
+        output: {
+          data: [usdcPortfolioBalanceTokenOption],
+          loading: false,
+          refetch: expect.any(Function),
+          error: undefined,
+        },
+      },
+      {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
         input: {
           portfolioData: allTokenBalancesPortfolioData,

@@ -1,3 +1,4 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import {
   ProtectionInfo,
   AttackType as RestAttackType,
@@ -91,7 +92,7 @@ export function mapRestProtectionResultToProtectionResult(result?: RestProtectio
 
 export function getRestCurrencySafetyInfo(
   safetyLevel?: GraphQLApi.SafetyLevel,
-  protectionInfo?: ProtectionInfo,
+  protectionInfo?: PlainMessage<ProtectionInfo>,
 ): SafetyInfo {
   return {
     tokenList: getTokenListFromSafetyLevel(safetyLevel),

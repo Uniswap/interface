@@ -1,5 +1,5 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { EffectCallback, MutableRefObject } from 'react'
+import type { StyleProp, ViewStyle } from 'react-native'
 import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -35,7 +35,7 @@ export interface OnchainItemListProps<T extends OnchainItemListOption> {
   expandedItems?: string[]
   renderedInModal: boolean
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
-  contentContainerStyle?: ContentStyle
+  contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 export function OnchainItemList<T extends OnchainItemListOption>(_props: OnchainItemListProps<T>): JSX.Element {

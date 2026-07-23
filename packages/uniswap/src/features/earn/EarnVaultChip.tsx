@@ -8,6 +8,23 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { NumberType } from 'utilities/src/format/types'
 
+export const EARN_VAULT_CHIP_MAX_WIDTH = 240
+export const EARN_VAULT_CHIP_FRAME_PROPS = {
+  row: true,
+  alignItems: 'center',
+  gap: '$spacing12',
+  borderWidth: '$spacing1',
+  borderColor: '$surface3',
+  borderRadius: '$rounded20',
+  backgroundColor: '$surface1',
+  px: '$spacing16',
+  py: '$spacing12',
+  flex: 1,
+  maxWidth: EARN_VAULT_CHIP_MAX_WIDTH,
+  minWidth: 0,
+  $md: { maxWidth: '100%' },
+} as const
+
 export function EarnVaultChip({
   onPress,
   position,
@@ -19,7 +36,7 @@ export function EarnVaultChip({
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
-  const currencyInfo = useCurrencyInfo(vault.currencyId)
+  const currencyInfo = useCurrencyInfo(vault.displayCurrencyId)
   const currency = currencyInfo?.currency
   const depositedUsd = position?.depositedUsd
   const depositedLabel =
@@ -28,23 +45,7 @@ export function EarnVaultChip({
       : undefined
 
   return (
-    <TouchableArea
-      row
-      alignItems="center"
-      gap="$spacing12"
-      borderWidth="$spacing1"
-      borderColor="$surface3"
-      borderRadius="$rounded20"
-      backgroundColor="$surface1"
-      px="$spacing16"
-      py="$spacing12"
-      flex={1}
-      maxWidth={240}
-      minWidth={0}
-      hoverStyle={{ backgroundColor: '$surface2' }}
-      $md={{ maxWidth: '100%' }}
-      onPress={onPress}
-    >
+    <TouchableArea {...EARN_VAULT_CHIP_FRAME_PROPS} hoverStyle={{ backgroundColor: '$surface2' }} onPress={onPress}>
       <TokenLogo
         hideNetworkLogo
         url={currencyInfo?.logoUrl}

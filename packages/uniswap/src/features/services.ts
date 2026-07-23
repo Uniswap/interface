@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -27,28 +26,24 @@ import { getLogger } from 'utilities/src/logger/logger'
 
 interface TradeServiceContext {
   // dependencies from React layer
-  getIsUniswapXSupported?: (chainId?: number) => boolean
-  getEnabledChains: () => UniverseChainId[]
+  // Used to disable UniswapX for accounts/chains where it isn't supported (e.g. delegation mismatch).
+  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
 }
 
 /**
  * Trade Service
  *
  * Creates a trade service instance with the necessary dependencies.
- * Only requires minimal context from the React layer.
  *
  * @param ctx - Context containing React-layer dependencies
  * @returns A trade service that orchestrates the swap flow
  */
-export function getTradeService(ctx: TradeServiceContext): TradeService {
-  const { getIsUniswapXSupported, getEnabledChains } = ctx
-
+export function getTradeService(ctx: TradeServiceContext = {}): TradeService {
   const evmTradeService = createEVMTradeService({
     tradeRepository: getEVMTradeRepository(),
-    getIsUniswapXSupported,
-    getEnabledChains,
     getIsL2ChainId: (chainId?: UniverseChainId) => (chainId ? isL2ChainId(chainId) : false),
     getMinAutoSlippageToleranceL2,
+    getIsUniswapXSupported: ctx.getIsUniswapXSupported,
     logger: getLogger(),
   })
 
@@ -67,14 +62,10 @@ export function getTradeService(ctx: TradeServiceContext): TradeService {
 export function useTradeService(): TradeService {
   const withQuoteLogging = useWithQuoteLogging()
   const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
-  const enabledChains = useEnabledChains()
 
   return useMemo(() => {
-    const baseService = getTradeService({
-      getIsUniswapXSupported: getIsUniswapXSupported ?? ((): boolean => false),
-      getEnabledChains: () => enabledChains.chains,
-    })
+    const baseService = getTradeService({ getIsUniswapXSupported })
 
     return withQuoteLogging(baseService)
-  }, [getIsUniswapXSupported, enabledChains, withQuoteLogging])
+  }, [getIsUniswapXSupported, withQuoteLogging])
 }

@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { describe, expect, it } from 'vitest'
 import {
   buildAuctionAmountsFromLiquidityPreview,
@@ -32,7 +32,7 @@ describe('isPostAuctionLiquidityAllocationValid', () => {
     ).toBe(true)
   })
 
-  it('requires a positive marginal effective rate for tiered allocations', () => {
+  it('rejects tiered allocations when any tier is below the minimum LP percent', () => {
     expect(
       isPostAuctionLiquidityAllocationValid({
         type: PostAuctionLiquidityAllocationType.TIERED,
@@ -42,6 +42,27 @@ describe('isPostAuctionLiquidityAllocationValid', () => {
         ],
       }),
     ).toBe(false)
+    expect(
+      isPostAuctionLiquidityAllocationValid({
+        type: PostAuctionLiquidityAllocationType.TIERED,
+        tiers: [
+          { id: 'tier-1', raiseMilestone: '1m', percent: 50 },
+          { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 10 },
+        ],
+      }),
+    ).toBe(false)
+  })
+
+  it('accepts tiered allocations when every tier meets the minimum LP percent', () => {
+    expect(
+      isPostAuctionLiquidityAllocationValid({
+        type: PostAuctionLiquidityAllocationType.TIERED,
+        tiers: [
+          { id: 'tier-1', raiseMilestone: '1m', percent: 25 },
+          { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 25 },
+        ],
+      }),
+    ).toBe(true)
   })
 })
 
@@ -111,7 +132,8 @@ describe('buildAuctionAmountsFromLiquidityPreview', () => {
     const { auctionSupplyAmount, postAuctionLiquidityAmount } = buildAuctionAmountsFromLiquidityPreview(totalSupply, {
       previewPercent: 50,
     })
-    expect(auctionSupplyAmount.equalTo(totalSupply.multiply(new Percent(25, 100)))).toBe(true)
+    // New tokens default to depositing their full minted supply.
+    expect(auctionSupplyAmount.equalTo(totalSupply)).toBe(true)
     expect(postAuctionLiquidityAmount.greaterThan(0)).toBe(true)
   })
 
@@ -127,7 +149,7 @@ describe('buildAuctionAmountsFromLiquidityPreview', () => {
 })
 
 describe('getPostAuctionLiquidityAmountFromAllocation', () => {
-  it('returns zero for tiered allocations with no effective LP rate', () => {
+  it('returns a positive reservation for tiered allocations with valid milestones and minimum tier percents', () => {
     const auctionSupply = CurrencyAmount.fromRawAmount(
       TEST_TOKEN_1,
       (100n * 10n ** BigInt(TEST_TOKEN_1.decimals)).toString(),
@@ -135,11 +157,11 @@ describe('getPostAuctionLiquidityAmountFromAllocation', () => {
     const amount = getPostAuctionLiquidityAmountFromAllocation(auctionSupply, {
       type: PostAuctionLiquidityAllocationType.TIERED,
       tiers: [
-        { id: 'tier-1', raiseMilestone: '1m', percent: 0 },
-        { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 0 },
+        { id: 'tier-1', raiseMilestone: '1m', percent: 25 },
+        { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 25 },
       ],
     })
-    expect(amount.equalTo(0)).toBe(true)
+    expect(amount.greaterThan(0)).toBe(true)
   })
 })
 

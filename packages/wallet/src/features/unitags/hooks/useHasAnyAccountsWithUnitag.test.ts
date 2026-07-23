@@ -1,19 +1,20 @@
 import { useUnitagsAddressesQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import type { MockedFunction } from 'vitest'
 import { useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks/useHasAnyAccountsWithUnitag'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useSignerAccounts: jest.fn(),
-  useActiveAccount: jest.fn().mockReturnValue(undefined),
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useSignerAccounts: vi.fn(),
+  useActiveAccount: vi.fn().mockReturnValue(undefined),
 }))
 
-jest.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({
-  useUnitagsAddressesQuery: jest.fn(),
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({
+  useUnitagsAddressesQuery: vi.fn(),
 }))
 
-const mockUseSignerAccounts = useSignerAccounts as jest.MockedFunction<typeof useSignerAccounts>
-const mockUseUnitagsAddressesQuery = useUnitagsAddressesQuery as jest.MockedFunction<typeof useUnitagsAddressesQuery>
+const mockUseSignerAccounts = useSignerAccounts as MockedFunction<typeof useSignerAccounts>
+const mockUseUnitagsAddressesQuery = useUnitagsAddressesQuery as MockedFunction<typeof useUnitagsAddressesQuery>
 
 const mockQueryResult = (data: any): ReturnType<typeof useUnitagsAddressesQuery> =>
   ({
@@ -22,7 +23,7 @@ const mockQueryResult = (data: any): ReturnType<typeof useUnitagsAddressesQuery>
 
 describe('useHasAnyAccountsWithUnitag', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns false when there are no signer accounts', () => {

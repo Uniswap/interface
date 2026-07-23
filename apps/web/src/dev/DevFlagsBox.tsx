@@ -10,9 +10,10 @@ import {
 } from '@universe/gating'
 import { memo, useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Separator, Switch, Text, useShadowPropsShort } from 'ui/src'
+import { Button, Flex, Separator, Switch, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Settings } from 'ui/src/components/icons/Settings'
+import { X } from 'ui/src/components/icons/X'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAnalyticsDebugStore } from 'uniswap/src/features/telemetry/debug/useAnalyticsDebugStore'
@@ -43,7 +44,13 @@ const Override = (name: string, value: unknown) => {
   )
 }
 
-const PinnedFlagRow = memo(function PinnedFlagRow({ gateName }: { gateName: string }): JSX.Element {
+const PinnedFlagRow = memo(function PinnedFlagRow({
+  gateName,
+  onUnpin,
+}: {
+  gateName: string
+  onUnpin: () => void
+}): JSX.Element {
   const checked = useGateValue(gateName, { disableExposureLog: true })
 
   const onCheckedChange = useEvent((value: boolean): void => {
@@ -61,7 +68,12 @@ const PinnedFlagRow = memo(function PinnedFlagRow({ gateName }: { gateName: stri
       onPress={(e: { stopPropagation: () => void }) => e.stopPropagation()}
     >
       <Text {...EllipsisTamaguiStyle}>{gateName}</Text>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} variant="branded" />
+      <Flex row alignItems="center" gap="$spacing4">
+        <Switch checked={checked} onCheckedChange={onCheckedChange} variant="branded" />
+        <TouchableArea hitSlop={8} onPress={onUnpin}>
+          <X size="$icon.16" color="$neutral2" hoverColor="$neutral1" />
+        </TouchableArea>
+      </Flex>
     </Flex>
   )
 })
@@ -111,7 +123,7 @@ export function DevFlagsBox() {
   }, [statsigClient, statsigClient.loadingStatus])
 
   const { gateOverrides, configOverrides } = displayOverrides
-  const { pinnedFlags } = usePinnedFeatureFlags()
+  const { pinnedFlags, unpinFlag } = usePinnedFeatureFlags()
   const { pinnedExperiments } = usePinnedExperiments()
   const shadowProps = useShadowPropsShort()
 
@@ -202,7 +214,7 @@ export function DevFlagsBox() {
           {hasPinnedFlags && (
             <Flex gap="$spacing4" mt="$spacing8" flexDirection="column">
               {pinnedFlags.map((gateName) => (
-                <PinnedFlagRow key={gateName} gateName={gateName} />
+                <PinnedFlagRow key={gateName} gateName={gateName} onUnpin={() => unpinFlag(gateName)} />
               ))}
             </Flex>
           )}

@@ -1,8 +1,13 @@
-import { PropsWithChildren, ReactNode } from 'react'
+import { forwardRef, PropsWithChildren, ReactNode } from 'react'
 import { DropdownMenuSheetItemProps, GeneratedIcon, IconProps, TextProps } from 'ui/src'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { PlatformSplitStubError } from 'utilities/src/errors'
+
+/** Imperative handle for opening the menu at explicit screen coordinates, independent of `triggerMode`. */
+export type ContextMenuHandle = {
+  openAt: (x: number, y: number) => void
+}
 
 export type MenuOptionItemWithId = MenuOptionItem & {
   id: string
@@ -39,6 +44,7 @@ export type MenuOptionItem = {
  * @property sectionName - section name for analytics tracking
  * @property trackItemClicks - whether to track menu item clicks in analytics
  * @property adaptToSheet - When false, never show as bottom sheet on small viewports. Only applies in web app (never in extension). Defaults to true when undefined.
+ * @property dimBackground - When true, dims the screen behind the open menu with a scrim. Native only.
  */
 export type ContextMenuProps = {
   menuItems: MenuOptionItem[]
@@ -59,8 +65,11 @@ export type ContextMenuProps = {
   trackItemClicks?: boolean
   /** When false, never show as bottom sheet on small viewports. Only applies in web app (never in extension). */
   adaptToSheet?: boolean
+  dimBackground?: boolean
 }
 
-export function ContextMenu(_: PropsWithChildren<ContextMenuProps>): JSX.Element {
+function ContextMenuStub(): JSX.Element {
   throw new PlatformSplitStubError('ContextMenu')
 }
+
+export const ContextMenu = forwardRef<ContextMenuHandle, PropsWithChildren<ContextMenuProps>>(ContextMenuStub)

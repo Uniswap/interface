@@ -26,6 +26,7 @@ import {
   computeFractionFromRaw,
   formatCompactFromRaw,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 // Module-level constant for description highlighting (no deps, never changes)
 const HIGHLIGHT_COMPONENT = <Text variant="body4" color="$neutral1" />
@@ -147,12 +148,12 @@ export function useBidDetails({
   }, [bid.baseTokenInitial, bid.currencySpent])
 
   const totalTokensReceived = useMemo(() => {
-    const decimals = auctionDetails.token?.currency.decimals
+    const decimals = getAuctionTokenDecimals(auctionDetails.token)
     if (decimals === undefined) {
       return 0
     }
     return Number(formatUnits(BigInt(bid.amount), decimals))
-  }, [auctionDetails.token?.currency.decimals, bid.amount])
+  }, [auctionDetails.token, bid.amount])
 
   const refundBudgetAmount = useMemo(() => {
     try {
@@ -180,7 +181,10 @@ export function useBidDetails({
   )
 
   const clearingPriceDecimal = useMemo(() => {
-    const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
+    if (auctionTokenDecimals === undefined) {
+      return 0
+    }
     const priceString = q96ToPriceString({
       q96Value: clearingPrice,
       bidTokenDecimals: bidTokenInfo.decimals,
@@ -188,13 +192,13 @@ export function useBidDetails({
     })
     const parsed = Number.parseFloat(priceString)
     return Number.isFinite(parsed) ? parsed : 0
-  }, [auctionDetails.token?.currency.decimals, bidTokenInfo.decimals, clearingPrice])
+  }, [auctionDetails.token, bidTokenInfo.decimals, clearingPrice])
 
   const { fdvFraction, maxFdvBidTokenRaw, currentFdvBidTokenRaw } = useMemo(() => {
-    const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
     const totalSupplyRaw = auctionDetails.tokenTotalSupply
 
-    if (!totalSupplyRaw || totalSupplyRaw === '0') {
+    if (!totalSupplyRaw || totalSupplyRaw === '0' || auctionTokenDecimals === undefined) {
       return { fdvFraction: 0, maxFdvBidTokenRaw: 0n, currentFdvBidTokenRaw: 0n }
     }
 
@@ -221,13 +225,7 @@ export function useBidDetails({
       maxFdvBidTokenRaw,
       currentFdvBidTokenRaw,
     }
-  }, [
-    clearingPrice,
-    auctionDetails.token?.currency.decimals,
-    auctionDetails.tokenTotalSupply,
-    bid.maxPrice,
-    bidTokenInfo.decimals,
-  ])
+  }, [clearingPrice, auctionDetails.token, auctionDetails.tokenTotalSupply, bid.maxPrice, bidTokenInfo.decimals])
 
   const maxFdvDisplay = useMemo(() => {
     const formatted = formatCompactFromRaw({ raw: maxFdvBidTokenRaw, decimals: bidTokenInfo.decimals })
@@ -421,11 +419,11 @@ export function useBidDetails({
       : '-'
 
     // FDV from average price = avgPriceFiat × totalSupply
-    const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
     const totalSupplyRaw = auctionDetails.tokenTotalSupply
     let fdvFromAvgPriceFormatted = '-'
 
-    if (hasPriceFiat && totalSupplyRaw && totalSupplyRaw !== '0') {
+    if (hasPriceFiat && totalSupplyRaw && totalSupplyRaw !== '0' && auctionTokenDecimals !== undefined) {
       const totalSupplyApprox = approximateNumberFromRaw({
         raw: BigInt(totalSupplyRaw),
         decimals: auctionTokenDecimals,
@@ -465,7 +463,7 @@ export function useBidDetails({
         : '-',
     }
   }, [
-    auctionDetails.token?.currency.decimals,
+    auctionDetails.token,
     auctionDetails.tokenTotalSupply,
     bidTokenInfo.priceFiat,
     bidTokenInfo.symbol,

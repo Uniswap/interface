@@ -44,7 +44,6 @@ vi.mock('redux-persist', () => {
 
 // Mock expo clipboard lib due to native deps
 vi.mock('expo-clipboard', () => ({
-  setString: vi.fn(),
   setStringAsync: vi.fn(),
   getStringAsync: () => Promise.resolve(),
 }))

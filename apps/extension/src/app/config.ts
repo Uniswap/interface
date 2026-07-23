@@ -1,6 +1,10 @@
 // oxlint-disable eslint-js/no-restricted-syntax allow process.env access
 import type { BaseConfig } from '@universe/config'
 import { AppId, boolFromString, parseConfig } from '@universe/config'
+import {
+  getUniswapServiceUrls as getUniswapServiceUrlsFromOverrides,
+  type UniswapServiceUrls,
+} from 'uniswap/src/constants/urls'
 import { z } from 'zod'
 
 /**
@@ -34,4 +38,8 @@ export function getConfig(): Config {
     schema: extensionConfigSchema,
   })
   return cachedConfig
+}
+
+export function getUniswapServiceUrls(): UniswapServiceUrls {
+  return getUniswapServiceUrlsFromOverrides(getConfig())
 }

@@ -8,7 +8,7 @@ import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletCo
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
@@ -21,7 +21,7 @@ export function ActionCannotBeCompletedContent({
   onReject: () => void
 }): JSX.Element {
   const handleLearnMore = async (): Promise<void> => {
-    await openUri({ uri: uniswapUrls.helpArticleUrls.mismatchedImports })
+    await openUri({ uri: UniswapHelpUrls.articles.mismatchedImports })
   }
 
   return (
@@ -48,9 +48,9 @@ function ActionCannotBeCompletedModalContent({
   onLearnMore: () => Promise<void>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value - spacing.spacing12,
+    height: animatedLayoutState.value.footerHeight - spacing.spacing12,
   }))
 
   return (

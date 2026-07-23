@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import type { FlashListRef } from '@shopify/flash-list'
 import { isAndroid } from '@universe/environment'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
@@ -17,7 +17,7 @@ import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NftsTab = memo(
-  forwardRef<FlashList<unknown>, TabProps>(function NftsTabInner(
+  forwardRef<FlashListRef<unknown>, TabProps>(function NftsTabInner(
     {
       owner,
       containerProps,

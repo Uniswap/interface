@@ -5,6 +5,7 @@ import type { ColorTokens, IconProps } from 'ui/src'
 import { Flex, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
 import { AlertCircleFilled, AlertTriangleFilled, OctagonExclamation } from 'ui/src/components/icons'
 import { defaultHitslop } from 'ui/src/theme'
+import { PoweredByBlockaid } from 'uniswap/src/components/logos/PoweredByBlockaid'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DappScanInfoModal } from 'wallet/src/components/dappRequests/DappScanInfoModal'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
@@ -72,52 +73,61 @@ export function TransactionWarningBanner({
   }
 
   const Icon = config.icon
+  const backgroundColor = isCritical ? '$statusCritical2' : '$surface2'
+  const showRiskCheckbox = isCritical && Boolean(onConfirmRisk)
 
   return (
     <>
-      <Flex
-        row
-        backgroundColor="$surface2"
-        borderRadius="$rounded12"
-        p="$spacing12"
-        gap="$spacing12"
-        justifyContent="space-between"
-      >
-        <Flex row gap="$spacing12" flex={1} flexShrink={1}>
-          <Icon color={config.color} size="$icon.20" flexShrink={0} />
-          <Flex gap="$spacing2" flex={1} flexShrink={1}>
-            <Text color={config.color} variant="buttonLabel3">
-              {title}
-            </Text>
-            <Text color="$neutral2" variant="body3" textWrap="wrap">
-              {description}
-            </Text>
+      <Flex gap="$spacing4">
+        <Flex
+          row
+          backgroundColor={backgroundColor}
+          borderRadius="$rounded12"
+          p="$spacing12"
+          gap="$spacing12"
+          justifyContent="space-between"
+        >
+          <Flex row gap="$spacing12" flex={1} flexShrink={1}>
+            <Icon color={config.color} size="$icon.20" flexShrink={0} />
+            <Flex gap="$spacing2" flex={1} flexShrink={1}>
+              <Text color={config.color} variant="buttonLabel3">
+                {title}
+              </Text>
+              <Text color="$neutral2" variant="body3" textWrap="wrap">
+                {description}
+              </Text>
 
-            {/* Show checkbox for critical risks requiring acknowledgment */}
-            {isCritical && onConfirmRisk && (
-              <Flex pt="$spacing8" pb="$spacing4">
-                <LabeledCheckbox
-                  checked={Boolean(confirmedRisk)}
-                  checkboxPosition="start"
-                  gap="$spacing8"
-                  size="$icon.16"
-                  px="$none"
-                  text={
-                    <Text color="$neutral2" flexShrink={1} variant="body3">
-                      {t('dapp.request.pending.threat.confirmationText')}
-                    </Text>
-                  }
-                  onCheckPressed={handleConfirmRisk}
-                />
-              </Flex>
-            )}
+              {isCritical && (
+                <Flex row pt="$spacing8">
+                  <PoweredByBlockaid />
+                </Flex>
+              )}
+            </Flex>
           </Flex>
+
+          {/* Info icon to learn more */}
+          <TouchableArea hitSlop={defaultHitslop} onPress={openInfoModal}>
+            <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
+          </TouchableArea>
         </Flex>
 
-        {/* Info icon to learn more */}
-        <TouchableArea hitSlop={defaultHitslop} onPress={openInfoModal}>
-          <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
-        </TouchableArea>
+        {showRiskCheckbox && (
+          <Flex backgroundColor={backgroundColor} borderRadius="$rounded12" p="$spacing12">
+            <LabeledCheckbox
+              checked={Boolean(confirmedRisk)}
+              checkboxPosition="start"
+              gap="$spacing8"
+              size="$icon.16"
+              px="$none"
+              text={
+                <Text color="$neutral1" flexShrink={1} variant="body3">
+                  {t('dapp.request.pending.threat.confirmationText')}
+                </Text>
+              }
+              onCheckPressed={handleConfirmRisk}
+            />
+          </Flex>
+        )}
       </Flex>
 
       <DappScanInfoModal

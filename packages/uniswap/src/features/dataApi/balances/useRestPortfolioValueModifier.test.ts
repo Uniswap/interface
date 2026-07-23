@@ -65,6 +65,8 @@ describe(useRestPortfolioValueModifiers, () => {
         address: EVM_ADDRESS_A,
         includeOverrides: [],
         excludeOverrides: [],
+        poolIncludeOverrides: [],
+        poolExcludeOverrides: [],
         includeSmallBalances: true,
         includeSpamTokens: true,
       },
@@ -72,10 +74,198 @@ describe(useRestPortfolioValueModifiers, () => {
         address: EVM_ADDRESS_B,
         includeOverrides: [],
         excludeOverrides: [],
+        poolIncludeOverrides: [],
+        poolExcludeOverrides: [],
         includeSmallBalances: true,
         includeSpamTokens: true,
       },
     ])
+  })
+
+  it('splits position visibility map into poolIncludeOverrides and poolExcludeOverrides with positionId', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            'visible-pos': {
+              isVisible: true,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xPoolVisible',
+              tokenId: '101',
+            },
+            'hidden-pos': {
+              isVisible: false,
+              chainId: UniverseChainId.Optimism,
+              poolId: '0xPoolHidden',
+              tokenId: '202',
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]).toMatchObject({
+      poolIncludeOverrides: [{ chainId: UniverseChainId.Mainnet, poolId: '0xPoolVisible', positionId: '101' }],
+      poolExcludeOverrides: [{ chainId: UniverseChainId.Optimism, poolId: '0xPoolHidden', positionId: '202' }],
+    })
+  })
+
+  it('emits a distinct PoolRef per position when multiple positions share a pool', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            'pos-a': {
+              isVisible: false,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xSharedPool',
+              tokenId: '11',
+            },
+            'pos-b': {
+              isVisible: false,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xSharedPool',
+              tokenId: '22',
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]?.poolExcludeOverrides).toEqual(
+      expect.arrayContaining([
+        { chainId: UniverseChainId.Mainnet, poolId: '0xSharedPool', positionId: '11' },
+        { chainId: UniverseChainId.Mainnet, poolId: '0xSharedPool', positionId: '22' },
+      ]),
+    )
+    expect(result.current?.[0]?.poolExcludeOverrides).toHaveLength(2)
+  })
+
+  it('routes same-pool positions to opposite buckets when their visibility differs', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            'pos-keep': {
+              isVisible: true,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xSharedPool',
+              tokenId: '11',
+            },
+            'pos-hide': {
+              isVisible: false,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xSharedPool',
+              tokenId: '22',
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]).toMatchObject({
+      poolIncludeOverrides: [{ chainId: UniverseChainId.Mainnet, poolId: '0xSharedPool', positionId: '11' }],
+      poolExcludeOverrides: [{ chainId: UniverseChainId.Mainnet, poolId: '0xSharedPool', positionId: '22' }],
+    })
+  })
+
+  it('omits positionId from PoolRef for V2 positions (tokenId undefined)', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            'v2-hidden': {
+              isVisible: false,
+              chainId: UniverseChainId.Mainnet,
+              poolId: '0xV2Pair',
+              tokenId: undefined,
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]?.poolExcludeOverrides).toEqual([
+      { chainId: UniverseChainId.Mainnet, poolId: '0xV2Pair' },
+    ])
+  })
+
+  it('recovers chainId/poolId/tokenId from the positionId key when the legacy value lacks them', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            // Pre-extension entry: value lacks chainId/poolId/tokenId, but the key encodes them.
+            [`0xLegacyPool-42-${UniverseChainId.Mainnet}`]: { isVisible: false } as unknown as {
+              isVisible: boolean
+              chainId: UniverseChainId
+              poolId: string
+            },
+            // Legacy V2 entry: tokenId segment is literal "undefined", should recover as no positionId.
+            [`0xLegacyV2-undefined-${UniverseChainId.Base}`]: { isVisible: false } as unknown as {
+              isVisible: boolean
+              chainId: UniverseChainId
+              poolId: string
+            },
+            // Fresh entry: value carries chainId/poolId/tokenId directly.
+            'fresh-pos': {
+              isVisible: false,
+              chainId: UniverseChainId.Optimism,
+              poolId: '0xPoolFresh',
+              tokenId: '99',
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]?.poolExcludeOverrides).toEqual(
+      expect.arrayContaining([
+        { chainId: UniverseChainId.Mainnet, poolId: '0xLegacyPool', positionId: '42' },
+        { chainId: UniverseChainId.Base, poolId: '0xLegacyV2' },
+        { chainId: UniverseChainId.Optimism, poolId: '0xPoolFresh', positionId: '99' },
+      ]),
+    )
+  })
+
+  it('skips entries with malformed positionIds that cannot be parsed back', () => {
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]), {
+      preloadedState: {
+        visibility: {
+          positions: {
+            // Not in the `poolId-tokenId-chainId` format — parser returns null.
+            unparseable: { isVisible: false } as unknown as {
+              isVisible: boolean
+              chainId: UniverseChainId
+              poolId: string
+            },
+          },
+          tokens: {},
+          nfts: {},
+          activity: {},
+        },
+      },
+    })
+
+    expect(result.current?.[0]).toMatchObject({
+      poolIncludeOverrides: [],
+      poolExcludeOverrides: [],
+    })
   })
 
   it('splits visibility map into includeOverrides (visible) and excludeOverrides (hidden) on every address', () => {
@@ -153,6 +343,8 @@ describe(useRestPortfolioValueModifier, () => {
       address: EVM_ADDRESS_A,
       includeOverrides: [],
       excludeOverrides: [],
+      poolIncludeOverrides: [],
+      poolExcludeOverrides: [],
       includeSmallBalances: true,
       includeSpamTokens: true,
     })

@@ -1,4 +1,5 @@
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 describe('ExpandoRow', () => {
@@ -30,9 +31,9 @@ describe('ExpandoRow', () => {
     expect(screen.getByText('Test Label')).toBeTruthy()
 
     // Check if the component has the correct structure
-    expect(screen.getByTestId('expando-row')).toBeTruthy()
-    expect(screen.getByTestId('expando-row-label')).toBeTruthy()
-    expect(screen.getByTestId('expando-row-icon')).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRow)).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRowLabel)).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRowIcon)).toBeTruthy()
   })
 
   it('renders correctly when expanded', () => {
@@ -42,16 +43,16 @@ describe('ExpandoRow', () => {
     expect(screen.getByText('Test Label')).toBeTruthy()
 
     // Check if the component has the correct structure
-    expect(screen.getByTestId('expando-row')).toBeTruthy()
-    expect(screen.getByTestId('expando-row-label')).toBeTruthy()
-    expect(screen.getByTestId('expando-row-icon')).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRow)).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRowLabel)).toBeTruthy()
+    expect(screen.getByTestId(TestID.ExpandoRowIcon)).toBeTruthy()
   })
 
   it('calls onPress when pressed', () => {
     render(<ExpandoRow {...defaultProps} />)
 
     // Find and press the TouchableArea using testID
-    const touchableArea = screen.getByTestId('expando-row')
+    const touchableArea = screen.getByTestId(TestID.ExpandoRow)
     fireEvent.press(touchableArea, {
       nativeEvent: {
         pageX: 0,

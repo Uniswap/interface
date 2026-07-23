@@ -15,13 +15,13 @@
     "check": {},
     "check:fast": {},
     "test": {
-      "command": "jest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "snapshots": {
-      "command": "jest -u",
+      "command": "vitest run -u",
       "options": {
         "cwd": "{projectRoot}"
       }

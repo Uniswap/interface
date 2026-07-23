@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DynamicConfigs, SwapConfigKey, useDynamicConfigValue } from '@universe/gating'
 import JSBI from 'jsbi'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -17,22 +18,27 @@ const ACTUAL_GAS_FEE_BUFFER_PERCENT = 10
  * @param transactionType to determine cost of transaction
  * @param isExtraTx adds a gas buffer to cover one additional transaction
  * @param actualGasFee optional gas fee in wei from backend simulation, used instead of static reservation
+ * @param isGasCovered when gas is sponsored/paid via a paymaster, skip the reservation and return the full balance
  */
 export function useMaxAmountSpend({
   currencyAmount,
   txType,
   isExtraTx = false,
   actualGasFee,
+  isGasCovered = false,
 }: {
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   txType?: TransactionType
   isExtraTx?: boolean
   actualGasFee?: string
+  isGasCovered?: boolean
 }): Maybe<CurrencyAmount<Currency>> {
   const chainId = currencyAmount?.currency.chainId
   const gasToken = chainId !== undefined ? getChainGasToken(chainId) : undefined
   const minAmountPerTx = useMinGasAmount({ chainId, txType, gasTokenDecimals: gasToken?.decimals })
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
+  // Wallets that pay gas via a non-native method don't need a native reservation.
+  const hasAlternateGasFees = useUniswapContextSelector((ctx) => ctx.getHasAlternateGasFees?.(chainId)) ?? false
 
   if (!currencyAmount) {
     return undefined
@@ -42,6 +48,11 @@ export function useMaxAmountSpend({
   // The chainId guard is redundant (gasToken is only set when chainId !== undefined) but
   // included so TypeScript narrows both variables for the branches below.
   if (!gasToken || chainId === undefined || !currencyAmount.currency.equals(gasToken)) {
+    return currencyAmount
+  }
+
+  // Gas won't come out of the native balance — let the user spend all of it.
+  if (isGasCovered || hasAlternateGasFees) {
     return currencyAmount
   }
 

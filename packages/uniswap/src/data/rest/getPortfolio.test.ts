@@ -1,4 +1,5 @@
-import { doesGetPortfolioQueryMatchAddress } from 'uniswap/src/data/rest/getPortfolio'
+import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { doesGetPortfolioQueryMatchAddress } from 'uniswap/src/data/rest/getPortfolioQueryUtils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -188,5 +189,22 @@ describe(doesGetPortfolioQueryMatchAddress, () => {
       })
       expect(result).toBe(false)
     })
+  })
+})
+
+describe(getPortfolioQuery, () => {
+  const input = { evmAddress: TEST_EVM_ADDRESS_1, chainIds: [1] }
+
+  it('subscribes enabled queries and unsubscribes disabled ones by default', () => {
+    expect(getPortfolioQuery({ input }).subscribed).toBe(true)
+    expect(getPortfolioQuery({ input, enabled: false }).subscribed).toBe(false)
+  })
+
+  it('cacheOnly disables fetching but stays subscribed to cached data updates', () => {
+    const options = getPortfolioQuery({ input, cacheOnly: true })
+
+    expect(options.enabled).toBe(false)
+    expect(options.subscribed).toBe(true)
+    expect(options.notifyOnChangeProps).toEqual(['data'])
   })
 })

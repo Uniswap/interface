@@ -3,10 +3,10 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { FileListCheck } from 'ui/src/components/icons'
-import { defaultHitslop, zIndexes } from 'ui/src/theme'
+import { defaultHitslop } from 'ui/src/theme'
 import { PoweredByBlockaid } from 'uniswap/src/components/logos/PoweredByBlockaid'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -23,19 +23,13 @@ export function DappScanInfoModal({ isOpen, onClose, title, description }: DappS
   const colors = useSporeColors()
 
   const handleLearnMore = useCallback((): void => {
-    openUri({ uri: uniswapUrls.helpArticleUrls.dappProtectionInfo }).catch((e) => {
+    openUri({ uri: UniswapHelpUrls.articles.dappProtectionInfo }).catch((e) => {
       logger.error(e, { tags: { file: 'DappScanInfoModal', function: 'handleLearnMore' } })
     })
   }, [])
 
   return (
-    <Modal
-      backgroundColor={colors.surface1.val}
-      isModalOpen={isOpen}
-      name={ModalName.DappScanInfo}
-      zIndex={zIndexes.overlay} // This is needed to properly display it above modals in the extension
-      onClose={onClose}
-    >
+    <Modal backgroundColor={colors.surface1.val} isModalOpen={isOpen} name={ModalName.DappScanInfo} onClose={onClose}>
       <Flex
         alignItems="center"
         gap="$spacing16"

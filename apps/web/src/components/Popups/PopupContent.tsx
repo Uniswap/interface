@@ -10,6 +10,7 @@ import { CrossChainIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -19,7 +20,7 @@ import { noop } from 'utilities/src/react/noop'
 import {
   getFORTransactionToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/queryOptions'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -118,6 +119,8 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
     <PendingPortfolioLogo
       chainId={activity.chainId}
       currencies={activity.currencies}
+      images={activity.logos}
+      fallbackSymbols={activity.fallbackSymbols}
       accountAddress={activity.otherAccount}
       customIcon={pendingCustomIcon}
     />
@@ -126,6 +129,8 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
     <PortfolioLogo
       chainId={activity.chainId}
       currencies={activity.currencies}
+      images={activity.logos}
+      fallbackSymbols={activity.fallbackSymbols}
       accountAddress={activity.otherAccount}
       customIcon={completedCustomIcon}
     />
@@ -166,28 +171,26 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
               <AlertTriangleFilled color="$neutral2" size="$icon.32" />
             </Flex>
           )}
-          <Flex justifyContent="center" gap="$gap4" fill>
-            <Flex row alignItems="center" gap="$gap8" minWidth={0}>
+          <Flex justifyContent="center" gap="$gap4" fill minWidth={0}>
+            <Flex row gap="$gap4">
               {activity.isUniswapX ? (
                 <Flex flexShrink={0} alignItems="center" justifyContent="center">
                   <UniswapX size="$icon.12" />
                 </Flex>
               ) : null}
-              <Flex gap="$gap4" flex={1} minWidth={0}>
-                <Text variant="body2" color="$neutral1">
-                  {activity.title}
-                </Text>
-                {typeof activity.descriptor === 'string' ? (
-                  <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
-                    {activity.descriptor}
-                  </Text>
-                ) : (
-                  <Flex overflow="hidden" maxHeight={28}>
-                    {activity.descriptor}
-                  </Flex>
-                )}
-              </Flex>
+              <Text variant="body2" color="$neutral1">
+                {activity.title}
+              </Text>
             </Flex>
+            {typeof activity.descriptor === 'string' ? (
+              <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
+                {activity.descriptor}
+              </Text>
+            ) : (
+              <Flex overflow="hidden" maxHeight={28}>
+                {activity.descriptor}
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </TouchableArea>
@@ -205,11 +208,13 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
 export function TransactionPopupContent({ hash, onClose }: { hash: string; onClose: () => void }) {
   const transaction = useTransaction(hash)
   const { formatNumberOrString } = useLocalizationContext()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
 
   const { data: activity } = useQuery(
     getTransactionToActivityQueryOptions({
       transaction,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 
@@ -246,10 +251,12 @@ export function PlanPopupContent({ planId, onClose }: { planId: string; onClose:
   const plan = usePlanTransactions([planId]).at(0)
   const openTransactionDetailsModal = useOpenTransactionDetailsModal()
   const { formatNumberOrString } = useLocalizationContext()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
   const { data: activity } = useQuery(
     getTransactionToActivityQueryOptions({
       transaction: plan,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 
@@ -265,6 +272,7 @@ export function PlanPopupContent({ planId, onClose }: { planId: string; onClose:
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
   const order = useUniswapXOrderByOrderHash(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
 
   const { formatNumberOrString } = useLocalizationContext()
 
@@ -272,6 +280,7 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
     getTransactionToActivityQueryOptions({
       transaction: order,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 

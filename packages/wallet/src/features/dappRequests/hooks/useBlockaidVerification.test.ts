@@ -1,20 +1,21 @@
 import { waitFor } from '@testing-library/react-native'
 import { BlockaidApiClient } from 'uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient'
+import type { MockedFunction } from 'vitest'
 import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-jest.mock('uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient', () => ({
+vi.mock('uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient', () => ({
   BlockaidApiClient: {
-    scanSite: jest.fn(),
+    scanSite: vi.fn(),
   },
 }))
 
-const mockScanSite = BlockaidApiClient.scanSite as jest.MockedFunction<typeof BlockaidApiClient.scanSite>
+const mockScanSite = BlockaidApiClient.scanSite as MockedFunction<typeof BlockaidApiClient.scanSite>
 
 describe('useBlockaidVerification', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     // Reset mock implementation to ensure clean state
     mockScanSite.mockReset()
   })

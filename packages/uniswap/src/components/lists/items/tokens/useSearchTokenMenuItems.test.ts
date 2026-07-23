@@ -1,4 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import { useFeatureFlag } from '@universe/gating'
 import {
   TokenContextMenuAction,
   UseSearchTokenMenuItemsParams,
@@ -7,11 +8,17 @@ import {
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { renderHook } from 'uniswap/src/test/test-utils'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import type { Mock } from 'vitest'
 
 vi.mock('uniswap/src/contexts/UniswapContext', async (importOriginal) => ({
   ...(await importOriginal()),
   useUniswapContext: vi.fn(),
+}))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
@@ -83,6 +90,7 @@ function renderUseSearchTokenMenuItems(overrides: Partial<UseSearchTokenMenuItem
 describe(useSearchTokenMenuItems, () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(useFeatureFlag).mockReturnValue(false)
     ;(useUniswapContext as Mock).mockReturnValue({
       navigateToTokenDetails: mockNavigateToTokenDetails,
       navigateToSwapFlow: mockNavigateToSwapFlow,
@@ -221,5 +229,21 @@ describe(useSearchTokenMenuItems, () => {
 
     expect(closeMenu).toHaveBeenCalled()
     expect(mockNavigateToTokenDetails).toHaveBeenCalled()
+  })
+
+  it('passes the token chain as TDP chain filter', () => {
+    const closeMenu = vi.fn()
+    const { result } = renderUseSearchTokenMenuItems({
+      closeMenu,
+      actions: [TokenContextMenuAction.ViewDetails],
+    })
+
+    result.current.menuItems[0]!.onPress()
+
+    expect(closeMenu).toHaveBeenCalled()
+    expect(mockNavigateToTokenDetails).toHaveBeenCalledWith('1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Mainnet,
+    })
   })
 })

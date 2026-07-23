@@ -25,12 +25,15 @@ import { useSetMenu, MenuStateVariant } from '~/components/AccountDrawer/menuSta
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { getProviderIcon } from '~/components/Passkey/authenticatorProvider'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { StatusIcon } from '~/components/StatusIcon'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import type { DeletePasskeyModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 type RemovePasskeyStep = 'speedbump' | 'confirm'
 
@@ -98,6 +101,11 @@ export function RemovePasskeyModal() {
       if (!success) {
         return
       }
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('notification.passkey.deleted') },
+        'passkey-deleted-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
       if (initialState?.isLastAuthenticator) {
         await disconnectWallet(walletId)
         disconnect()

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAnimatedStyle, useDerivedValue, withSequence, withTiming } from 'react-native-reanimated'
-import { Flex, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { HeartWithFill } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 interface FavoriteButtonProps {
   isFavorited: boolean
@@ -29,17 +30,16 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
     return () => clearTimeout(timer)
   }, [getColor, isFavorited])
 
-  /* oxlint-disable react/exhaustive-deps -- isFavorited triggers animation re-derivation even though it's not read in the worklet */
   const scale = useDerivedValue(() => {
     return withSequence(withTiming(0, ANIMATION_CONFIG), withTiming(1, ANIMATION_CONFIG))
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- isFavorited triggers animation re-derivation even though it's not read in the worklet
   }, [isFavorited])
-  /* oxlint-enable react/exhaustive-deps */
 
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
 
   return (
-    <Flex animation={null} style={animatedStyle}>
+    <AnimatedFlex style={animatedStyle}>
       <HeartWithFill color={color} height={size} width={size} />
-    </Flex>
+    </AnimatedFlex>
   )
 }

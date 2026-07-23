@@ -18,6 +18,7 @@ import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/c
 import { usePrevious } from 'utilities/src/react/hooks'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { DynamicFeeTierSpeedbump } from '~/features/Liquidity/Create/DynamicFeeTierSpeedbump'
+import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
@@ -48,19 +49,10 @@ function CreatePositionInner({
     step,
     setStep,
   } = useCreateLiquidityContext()
-  const v2Selected = protocolVersion === ProtocolVersion.V2
 
   const handleContinue = useCallback(() => {
-    if (v2Selected) {
-      if (step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER && creatingPoolOrPair) {
-        setStep(PositionFlowStep.PRICE_RANGE)
-      } else {
-        setStep(PositionFlowStep.DEPOSIT)
-      }
-    } else {
-      setStep(step + 1)
-    }
-  }, [creatingPoolOrPair, step, v2Selected, setStep])
+    setStep(getNextFlowStep({ currentStep: step, protocolVersion, creatingPoolOrPair: Boolean(creatingPoolOrPair) }))
+  }, [creatingPoolOrPair, step, protocolVersion, setStep])
 
   return (
     <FormStepsWrapper
@@ -164,7 +156,9 @@ const Toolbar = () => {
         .map((version) => (
           <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
             <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
-              <Text variant="body2">{t('position.new.protocol', { protocol: getProtocolVersionLabel(version) })}</Text>
+              <Text variant="body2">
+                {t('position.new.protocol', { protocol: getProtocolVersionLabel(version) ?? '' })}
+              </Text>
             </Flex>
           </TouchableArea>
         )),
@@ -188,7 +182,7 @@ const Toolbar = () => {
           adaptToSheet
           menuLabel={
             <Text variant="buttonLabel3" lineHeight="16px" whiteSpace="nowrap">
-              {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
+              {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) ?? '' })}
             </Text>
           }
           isOpen={versionDropdownOpen}

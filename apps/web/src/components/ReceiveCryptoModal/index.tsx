@@ -4,7 +4,7 @@ import { AnimateTransition } from 'ui/src'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -82,7 +82,7 @@ export function ReceiveCryptoModal() {
               ? goBack
               : undefined
           }
-          link={uniswapUrls.helpArticleUrls.transferCryptoHelp}
+          link={UniswapHelpUrls.articles.transferCryptoHelp}
           closeModal={onClose}
         />
         <AnimateTransition currentIndex={currentIndex} animationType="forward">

@@ -64,7 +64,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
         case SearchTab.All:
           return t('common.all')
         case SearchTab.Tokens:
-          return t('common.tokens')
+          return t('common.token.plural')
         case SearchTab.Pools:
           return t('common.pools')
         case SearchTab.Wallets:
@@ -82,7 +82,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
   )
 
   return (
-    <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
+    <KeyboardAvoidingView behavior="padding" style={flexStyles.fill}>
       <Trace section={SectionName.ExploreSearch}>
         <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
           {MOBILE_SEARCH_TABS.map((tab) => (

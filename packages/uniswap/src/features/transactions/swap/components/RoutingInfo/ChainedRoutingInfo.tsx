@@ -12,7 +12,7 @@ import { RoutingLabel } from 'uniswap/src/components/RoutingDiagram/RoutingLabel
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 const STEPS_TO_HIDE = [TradingApi.PlanStepType.APPROVAL_PERMIT]
@@ -102,6 +102,8 @@ const StepLogo = ({ step }: { step: TradingApi.TruncatedPlanStep }): JSX.Element
     case TradingApi.PlanStepType.DUTCH_V2:
     case TradingApi.PlanStepType.DUTCH_V3:
     case TradingApi.PlanStepType.PRIORITY:
+    case TradingApi.PlanStepType.VAULT_DEPOSIT:
+    case TradingApi.PlanStepType.VAULT_WITHDRAW:
       return (
         <SplitLogo
           chainId={chainIdIn}

@@ -1,30 +1,36 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
+import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { SharedQueryClient } from '@universe/api'
+import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   convertRestBalanceToPortfolioBalance,
   formatPortfolioResponseToMap,
+  usePortfolioTotalBalancesUsdPerChain,
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import { act, waitFor } from 'uniswap/src/test/test-utils'
 
 const {
   mockUseEnabledChains,
   mockUseCurrencyIdToVisibility,
-  mockUseGetPortfolioQuery,
+  mockUseGetWalletBalancesQuery,
   mockUseHideSmallBalancesSetting,
   mockUseHideSpamTokensSetting,
   mockUsePlatformBasedFetchPolicy,
 } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseCurrencyIdToVisibility: vi.fn(),
-  mockUseGetPortfolioQuery: vi.fn(),
+  mockUseGetWalletBalancesQuery: vi.fn(),
   mockUseHideSmallBalancesSetting: vi.fn(),
   mockUseHideSpamTokensSetting: vi.fn(),
   mockUsePlatformBasedFetchPolicy: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getPortfolio', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getPortfolio')>()),
-  useGetPortfolioQuery: mockUseGetPortfolioQuery,
+vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/rest/getWalletBalances/getWalletBalances')>()),
+  useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -255,7 +261,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns the raw error state when the portfolio total request errors before any cached data exists', () => {
-    mockUseGetPortfolioQuery.mockReturnValue({
+    mockUseGetWalletBalancesQuery.mockReturnValue({
       data: undefined,
       isFetching: false,
       refetch: vi.fn(),
@@ -277,7 +283,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns cached portfolio total data alongside the raw error metadata', () => {
-    mockUseGetPortfolioQuery.mockReturnValue({
+    mockUseGetWalletBalancesQuery.mockReturnValue({
       data: {
         balanceUSD: 100,
         percentChange: 2,
@@ -304,5 +310,58 @@ describe(usePortfolioTotalValue, () => {
     })
     expect(result.current.error).toEqual(expect.any(Error))
     expect(result.current.dataUpdatedAt).toBe(1710000000000)
+  })
+})
+
+describe(usePortfolioTotalBalancesUsdPerChain, () => {
+  const evmAddress = '0x123'
+
+  // The exact input shape every fetching consumer uses (usePortfolioData & friends):
+  // `multichain` is always present in the cache key.
+  const producerQueryKey = getPortfolioQuery({
+    input: { evmAddress, chainIds: [UniverseChainId.Mainnet], multichain: false },
+  }).queryKey
+
+  const portfolioResponse = {
+    portfolio: {
+      balances: [
+        { token: { chainId: UniverseChainId.Mainnet }, valueUsd: 1200 },
+        { token: { chainId: UniverseChainId.Mainnet }, valueUsd: 300 },
+      ],
+    },
+  } as unknown as PlainMessage<GetPortfolioResponse>
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    window.localStorage.clear()
+    SharedQueryClient.clear()
+
+    mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    mockUsePlatformBasedFetchPolicy.mockReturnValue({ pollInterval: false })
+    mockUseCurrencyIdToVisibility.mockReturnValue({})
+    mockUseHideSmallBalancesSetting.mockReturnValue(false)
+    mockUseHideSpamTokensSetting.mockReturnValue(false)
+  })
+
+  it('never fetches on its own', () => {
+    renderHookWithProviders(() => usePortfolioTotalBalancesUsdPerChain({ evmAddress }))
+
+    expect(SharedQueryClient.isFetching()).toBe(0)
+  })
+
+  // CONS-2575 regression: the analytics read must share a cache key with the queries that actually
+  // fetch portfolio data AND stay subscribed so it re-renders when one of them fills the cache.
+  it('starts undefined on a cold cache, then emits per-chain totals when a producer fills the cache', async () => {
+    const { result } = renderHookWithProviders(() => usePortfolioTotalBalancesUsdPerChain({ evmAddress }))
+
+    expect(result.current).toBeUndefined()
+
+    act(() => {
+      SharedQueryClient.setQueryData(producerQueryKey, portfolioResponse)
+    })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({ ETHEREUM: 1500 })
+    })
   })
 })

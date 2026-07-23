@@ -1,16 +1,14 @@
-import Portal from '@reach/portal'
 import { type QueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Button, Flex, Loader, Popover, Text, TouchableArea } from 'ui/src'
+import { Anchor, Button, Flex, Loader, Text, TouchableArea } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Buoy } from 'ui/src/components/icons/Buoy'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
-import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
-import { Trash } from 'ui/src/components/icons/Trash'
-import { zIndexes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -27,6 +25,7 @@ import {
 import { MenuColumn } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { getProviderIcon } from '~/components/Passkey/authenticatorProvider'
+import { OverflowMenu } from '~/components/Passkey/OverflowMenu'
 import { getPrivyAppId } from '~/config'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
@@ -41,68 +40,6 @@ export function resetListAuthenticators(queryClient: QueryClient, walletId: stri
   return queryClient.resetQueries({
     queryKey: [ReactQueryCacheKey.ListAuthenticators],
   })
-}
-
-// Uses Tamagui Popover directly (not the shared ContextMenu) because this row
-// can live inside the AccountDrawer's mweb bottom sheet, whose scroll/transform
-// ancestors clip ContextMenu's `strategy="absolute"` popover. `strategy="fixed"`
-// + an explicit z-index above the sheet keeps the menu visible everywhere.
-const OverflowMenu = ({ onRemove, testID }: { onRemove: () => void; testID?: string }) => {
-  const { t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
-
-  const handleRemove = useEvent(() => {
-    setIsOpen(false)
-    onRemove()
-  })
-
-  return (
-    <Flex ml="auto">
-      <Popover open={isOpen} onOpenChange={setIsOpen} placement="bottom-end" allowFlip strategy="fixed" offset={4}>
-        <Popover.Trigger asChild>
-          <TouchableArea testID={testID} onPress={() => setIsOpen((v) => !v)}>
-            <MoreHorizontal size="$icon.20" color="$neutral2" />
-          </TouchableArea>
-        </Popover.Trigger>
-        <Portal>
-          <Popover.Content
-            zIndex={zIndexes.tooltip}
-            elevate
-            padding="$spacing4"
-            backgroundColor="$surface1"
-            borderRadius="$rounded16"
-            borderWidth="$spacing1"
-            borderColor="$surface3"
-            minWidth={200}
-            alignItems="stretch"
-            enterStyle={{ opacity: 0, scale: 0.95 }}
-            exitStyle={{ opacity: 0, scale: 0.95 }}
-            animation="100ms"
-            // Exclude color props: animating $-prefixed color tokens flashes on
-            // light/dark mode toggle. Only opacity + scale are animated here.
-            animateOnly={['transform', 'opacity']}
-          >
-            <TouchableArea
-              row
-              alignItems="center"
-              justifyContent="flex-start"
-              gap="$spacing8"
-              px="$spacing8"
-              py="$spacing8"
-              borderRadius="$rounded12"
-              hoverStyle={{ backgroundColor: '$surface2' }}
-              onPress={handleRemove}
-            >
-              <Trash size="$icon.16" color="$statusCritical" />
-              <Text variant="body3" color="$statusCritical">
-                {t('common.button.remove')}
-              </Text>
-            </TouchableArea>
-          </Popover.Content>
-        </Portal>
-      </Popover>
-    </Flex>
-  )
 }
 
 const AuthenticatorRow = ({
@@ -123,7 +60,7 @@ const AuthenticatorRow = ({
   })
 
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+    <Flex row gap="$gap12" alignItems="center">
       <Flex
         height={40}
         width={40}
@@ -138,7 +75,7 @@ const AuthenticatorRow = ({
         <Text variant="body2">{authenticator.label}</Text>
         {isValidDate && (
           <Text variant="body3" color="$neutral2">
-            {i18n.t('common.created.date', { date: formattedDate })}
+            {i18n.t('common.created.date', { date: formattedDate ?? i18n.t('common.unknown') })}
           </Text>
         )}
       </Flex>
@@ -151,7 +88,7 @@ const AuthenticatorRow = ({
 
 function LoadingPasskeyRow() {
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16" testID={TestID.PasskeyLoadingRow}>
+    <Flex row gap="$gap12" alignItems="center" testID={TestID.PasskeyLoadingRow}>
       <Loader.Box borderRadius="$roundedFull" height={40} width={40} opacity={0.5} />
       <Flex gap="$gap8">
         <Loader.Box borderRadius="$rounded12" height={14} width={72} opacity={0.5} />
@@ -183,9 +120,17 @@ export function getRecoveryMethodLabel(type: string): string {
   }
 }
 
-const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRemove: () => void }) => {
+const RecoveryMethodRow = ({
+  method,
+  onRemove,
+  actionRequired,
+}: {
+  method: RecoveryMethod
+  onRemove: () => void
+  actionRequired?: boolean
+}) => {
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+    <Flex row gap="$gap12" alignItems="center">
       <Flex
         height={40}
         width={40}
@@ -193,6 +138,7 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
         borderRadius="$rounded12"
         alignItems="center"
         justifyContent="center"
+        opacity={actionRequired ? 0.5 : undefined}
       >
         {getRecoveryMethodIcon(method.type)}
       </Flex>
@@ -206,6 +152,29 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
       </Flex>
       <OverflowMenu testID={TestID.RemoveBackupLoginOverflow} onRemove={onRemove} />
     </Flex>
+  )
+}
+
+const ActionRequiredRow = ({ onPress }: { onPress: () => void }) => {
+  const { t } = useTranslation()
+  return (
+    <TouchableArea
+      row
+      alignItems="center"
+      gap="$gap8"
+      p="$padding12"
+      backgroundColor="$surface3"
+      borderRadius="$rounded12"
+      hoverStyle={{ opacity: 0.8 }}
+      onPress={onPress}
+      testID={TestID.ReconnectBackupLogin}
+    >
+      <AlertTriangleFilled size="$icon.20" color="$neutral1" />
+      <Text variant="body3" color="$neutral1" flex={1}>
+        {t('account.passkey.reconnect.actionRequired')}
+      </Text>
+      <RotatableChevron color="$neutral2" direction="right" size="$icon.20" />
+    </TouchableArea>
   )
 }
 
@@ -267,6 +236,10 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
     )
   })
 
+  const handleReconnectBackupLogin = useEvent(() => {
+    dispatch(setOpenModal({ name: ModalName.ReconnectBackupLogin }))
+  })
+
   const handleAddBackupLogin = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddBackupLogin }))
   })
@@ -289,7 +262,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
             <Anchor
               target="_blank"
               rel="noreferrer"
-              href={uniswapUrls.helpArticleUrls.passkeysInfo}
+              href={UniswapHelpUrls.articles.passkeysInfo}
               height="$padding20"
               {...ClickableTamaguiStyle}
             >
@@ -298,49 +271,52 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
           </Trace>
         }
       >
-        <MenuColumn gap="12px">
-          <Text variant="subheading2" color="$neutral1">
-            {t('common.passkeys')}
-          </Text>
-          {isLoading ? (
-            Array.from({ length: 3 }).map((_, index) => <LoadingPasskeyRow key={index} />)
-          ) : authenticators.length ? (
-            <>
-              {authenticators.map((authenticator) => (
-                <AuthenticatorRow
-                  key={authenticator.credentialId}
-                  authenticator={authenticator}
-                  handleDeletePasskey={handleDeletePasskey}
-                  isOnlyPasskey={authenticators.length === 1}
-                />
-              ))}
-              <Flex row alignSelf="stretch">
-                <Trace logPress element={ElementName.AddPasskey}>
-                  <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddPasskey}>
-                    <Text variant="buttonLabel2">{t('common.passkeys.add')}</Text>
-                  </Button>
-                </Trace>
-              </Flex>
-            </>
-          ) : null}
+        <MenuColumn px="$padding8" gap="$spacing24">
+          <Flex gap="$spacing16">
+            <Text variant="subheading2" color="$neutral1">
+              {t('common.passkeys')}
+            </Text>
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => <LoadingPasskeyRow key={index} />)
+            ) : authenticators.length ? (
+              <>
+                {authenticators.map((authenticator) => (
+                  <AuthenticatorRow
+                    key={authenticator.credentialId}
+                    authenticator={authenticator}
+                    handleDeletePasskey={handleDeletePasskey}
+                    isOnlyPasskey={authenticators.length === 1}
+                  />
+                ))}
+                <Flex row alignSelf="stretch" mt="$spacing4">
+                  <Trace logPress element={ElementName.AddPasskey}>
+                    <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddPasskey}>
+                      <Text variant="buttonLabel2">{t('common.passkeys.add')}</Text>
+                    </Button>
+                  </Trace>
+                </Flex>
+              </>
+            ) : null}
+          </Flex>
 
           {getPrivyAppId() ? (
-            <>
-              <Flex row alignItems="center" gap="$gap4" pt="$padding8">
-                <Text variant="subheading2" color="$neutral1">
-                  {t('account.passkey.sections.backupLogin')}
-                </Text>
-              </Flex>
+            <Flex gap="$spacing16">
+              <Text variant="subheading2" color="$neutral1">
+                {t('account.passkey.sections.backupLogin')}
+              </Text>
               {recoveryMethods.length > 0 ? (
                 recoveryMethods.map((method, index) => (
-                  <RecoveryMethodRow
-                    key={`${method.type}-${method.identifier}-${index}`}
-                    method={method}
-                    onRemove={() => handleRemoveBackupLogin(method)}
-                  />
+                  <Flex key={`${method.type}-${method.identifier}-${index}`} gap="$gap12">
+                    <RecoveryMethodRow
+                      method={method}
+                      onRemove={() => handleRemoveBackupLogin(method)}
+                      actionRequired={method.shouldRotate}
+                    />
+                    {method.shouldRotate ? <ActionRequiredRow onPress={handleReconnectBackupLogin} /> : null}
+                  </Flex>
                 ))
               ) : (
-                <Flex row alignSelf="stretch">
+                <Flex row alignSelf="stretch" mt="$spacing4">
                   <Trace logPress element={ElementName.AddBackupLogin}>
                     <Button variant="default" emphasis="secondary" size="medium" onPress={handleAddBackupLogin}>
                       <Text variant="buttonLabel2">{t('account.passkey.backupLogin.addButton')}</Text>
@@ -348,7 +324,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   </Trace>
                 </Flex>
               )}
-            </>
+            </Flex>
           ) : null}
         </MenuColumn>
       </SlideOutMenu>

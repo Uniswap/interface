@@ -14,8 +14,10 @@
   "paths": {
     "/check_approval": {
       "post": {
-        "tags": ["Approval"],
-        "summary": "Check if token approval is required",
+        "tags": [
+          "swapping"
+        ],
+        "summary": "Check swap approvals",
         "description": "Allows the requestor to check if the `walletAddress` has the required approval to transact the `token` up to the `amount` specified. If the `walletAddress` does not have the required approval, the response will include a transaction to approve the token spend. If the `walletAddress` has the required approval, the response will return the approval with a `null` value. If the parameter `includeGasInfo` is set to `true` and an approval is needed, then the response will include both the transaction and the gas fee for the approval transaction.\n\nCertain tokens may require that approval be reset before approving a new spend amount. If this condition is detected for the `walletAddress` and `token`, the response will include the necessary approval cancellation in the `cancel` paragraph. When `cancel` is not applicable, the paragraph will have a `null` value.",
         "operationId": "check_approval",
         "security": [
@@ -70,9 +72,62 @@
         }
       }
     },
+    "/permissions": {
+      "post": {
+        "tags": [
+          "utilities"
+        ],
+        "summary": "Check token KYC permissions",
+        "description": "For each token in the request, reports whether the token requires a permissioned adapter and whether the supplied `walletAddress` is allowlisted to trade it. If the token is permissioned but the wallet is not allowlisted, the response includes a `kycUrl` the wallet holder must complete to gain access. The request supports a maximum of 2 tokens.",
+        "operationId": "permissions",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionsRequest"
+              },
+              "example": {
+                "walletAddress": "0xC9bebBA9f481b12cE6f3EA54c4B182c9636ec421",
+                "tokens": [
+                  "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+                ],
+                "chainId": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PermissionsSuccess200"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized401"
+          },
+          "404": {
+            "$ref": "#/components/responses/PermissionsNotFound404"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalErr500"
+          },
+          "504": {
+            "$ref": "#/components/responses/Timeout504"
+          }
+        }
+      }
+    },
     "/quote": {
       "post": {
-        "tags": ["Quote"],
+        "tags": [
+          "swapping"
+        ],
         "summary": "Get a quote",
         "description": "Requests a quote according to the specified swap parameters. This endpoint may be used to get a quote for a swap, a bridge, or a wrap/unwrap. The resulting response includes a quote for the swap and the proposed route by which the quote was achieved. The response will also include estimated gas fees for the proposed quote route. If the proposed route is via a Uniswap Protocol pool, the response may include a permit2 message for the swapper to sign prior to making a /swap request. The proposed route will also be simulated. If the simulation fails, the response will include an error message or `txFailureReason`.\n\nCertain routing options may be whitelisted by the requestor through the use of the `protocols` field. Further, the requestor may ask for the best price route or for the fastest price route through the 'routingPreference' field. Note that the fastest price route refers to the speed with which a quote is returned, not the number of transactions that may be required to get from the input token and chain to the output token and chain. Further note that all `routingPreference` values except for `FASTEST` and `BEST_PRICE` are deprecated. For more information on the `protocols` and `routingPreference` fields, see the [Token Trading Workflow](https://uniswap-docs.readme.io/reference/trading-flow#swap-routing) explanation of Swap Routing.\n\nAPI integrators using this API for the benefit of customer end users may request a service fee be taken from the output token and deposited to a fee collection address. To request this, please reach out to your Uniswap Labs contact. This optional fee is associated to the API key and is always taken from the output token. Note if there is a fee and the `type` is `EXACT_INPUT`, the output amount quoted will **not** include the fee subtraction. If there is a fee and the `type` is `EXACT_OUTPUT`, the input amount quoted will **not** include the fee addition. Instead, in both cases, the fee will be recorded in the `portionBips` and `portionAmount` fields.\n\nNative ETH on UniswapX: UniswapX routes (e.g. `DUTCH_V2`, `DUTCH_V3`, `PRIORITY`) can use native ETH as the input token by setting `tokenIn` to the native currency address (e.g. `0x0000000000000000000000000000000000000000`) and passing `x-erc20eth-enabled: true`. Native ETH input on UniswapX requires wallet support for EIP-7914, a smart wallet activated on your desired network, and a sufficient native allowance (set via /swap_7702 if x-erc20eth-enabled header is set to `true`). If these requirements are not met, UniswapX quotes for native input may be omitted and the response may fall back to `CLASSIC` routing instead.",
         "operationId": "aggregator_quote",
@@ -90,6 +145,9 @@
           },
           {
             "$ref": "#/components/parameters/permit2DisabledHeader"
+          },
+          {
+            "$ref": "#/components/parameters/swapStepsEnabledHeader"
           }
         ],
         "requestBody": {
@@ -112,7 +170,12 @@
                 "tokenIn": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
                 "tokenOut": "0x0000000000000000000000000000000000000000",
                 "swapper": "0xC9bebBA9f481b12cE6f3EA54c4B182c9636ec421",
-                "protocols": ["UNISWAPX_V2", "V4", "V3", "V2"]
+                "protocols": [
+                  "UNISWAPX_V2",
+                  "V4",
+                  "V3",
+                  "V2"
+                ]
               }
             }
           }
@@ -144,7 +207,9 @@
     },
     "/order": {
       "post": {
-        "tags": ["Order"],
+        "tags": [
+          "swapping"
+        ],
         "summary": "Create a gasless order",
         "description": "The order endpoint is used to submit a UniswapX intent. If the `routing` field in the response to a quote is any of `DUTCH_V2`, `DUTCH_V3`, `LIMIT_ORDER`, or `PRIORITY` this endpoint is used to submit your order to the UniswapX protocol to be filled by the filler network. These orders are gasless because the filler will pay the gas to complete the transaction.\n\nThe order will be validated and, if valid, will be submitted to the filler network. The network will try to fill the order at the quoted `startAmount`. If the order is not filled at the `startAmount` by the `deadline`, the amount will start decaying until the `endAmount` is reached. The order will remain `open` until it is either filled, canceled, or has expired by remaining unfilled beyond the `decayEndTime`.\n\nFor simplicity, the order request is identical to the quote response except for the addition of the signed permit.\n\nNative ETH on UniswapX: If the quote you are submitting uses native ETH as the input token (e.g. `tokenIn` is `0x0000000000000000000000000000000000000000`), include `x-erc20eth-enabled: true`. Native ETH input on UniswapX requires wallet support for EIP-7914 and sufficient native allowance. For 7702-delegated smart contract wallets, you can generate the required approval call(s) via `/swap_7702` when needed.",
         "operationId": "post_order",
@@ -194,8 +259,10 @@
     },
     "/orders": {
       "get": {
-        "tags": ["Order"],
-        "summary": "Get gasless orders",
+        "tags": [
+          "swapping"
+        ],
+        "summary": "Get gasless order status",
         "description": "Retrieve one or more gasless orders filtered, optionally filered by query param(s). The request must at minimum include one of the following parameters: `orderId`, `orderIds`, `orderStatus`, `swapper`, or `filler`.",
         "operationId": "get_order",
         "security": [
@@ -262,7 +329,9 @@
     },
     "/swap": {
       "post": {
-        "tags": ["Swap"],
+        "tags": [
+          "swapping"
+        ],
         "summary": "Create swap calldata",
         "description": "Create the calldata for a swap transaction (including wrap/unwrap) against the Uniswap Protocols. If the `quote` parameter includes the fee parameters, then the calldata will include the fee disbursement. The gas estimates will be **more precise** when the the response calldata would be valid if submitted on-chain.",
         "operationId": "create_swap_transaction",
@@ -446,8 +515,10 @@
     },
     "/swaps": {
       "get": {
-        "tags": ["Swap"],
-        "summary": "Get swaps status",
+        "tags": [
+          "swapping"
+        ],
+        "summary": "Get swap status",
         "description": "Get the status of swap or bridge transactions. Accepts on-chain transaction hashes (`txHashes`), ERC-4337 userOperation hashes (`userOpHashes`), or both. At least one of the two must contain at least one item.",
         "operationId": "get_swaps",
         "security": [
@@ -464,6 +535,10 @@
           },
           {
             "$ref": "#/components/parameters/chainIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/swapperParam",
+            "x-internal": true
           }
         ],
         "responses": {
@@ -490,7 +565,9 @@
     },
     "/swappable_tokens": {
       "get": {
-        "tags": ["SwappableTokens"],
+        "tags": [
+          "utilities"
+        ],
         "summary": "Get bridgable tokens",
         "description": "Returns the list of destination bridge chains for a given token on a given chain.",
         "operationId": "get_swappable_tokens",
@@ -534,7 +611,9 @@
     },
     "/limit_order_quote": {
       "post": {
-        "tags": ["LimitOrderQuote"],
+        "tags": [
+          "swapping"
+        ],
         "summary": "Get a limit order quote",
         "description": "Get a quote for a limit order according to the provided configuration.",
         "operationId": "get_limit_order_quote",
@@ -581,7 +660,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Check LP token approvals",
         "description": "Checks whether the wallet has the required token approvals to perform an LP action (create, increase, decrease, or migrate). Returns any needed approval transactions. If `simulateTransaction` is set to `true`, the response will include gas fees for the approval transactions.\n\nThe `action` field specifies which LP operation the approval is for. Different actions may require different approvals (e.g., V2 decrease requires approval of the LP token, V3 migrate requires approval of the V3 NFT).",
         "operationId": "check_lp_approval",
@@ -648,7 +729,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Create a V3 or V4 LP position",
         "description": "Creates a new LP position in a V3 or V4 pool (including full-range positions). You can create a position in an existing pool by providing `existingPool` parameters, or create a new pool by providing `newPool` parameters (fee, tick spacing, initial price, and optionally hooks for V4). The position's price range is specified via either `priceBounds` or `tickBounds`. The server computes the dependent token amount. If `simulateTransaction` is set to `true`, the response will include the gas fee.",
         "operationId": "create_position",
@@ -723,7 +806,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Increase an LP position",
         "description": "Increases liquidity in an existing position. Specify the independent token and amount; the server derives the dependent token amount from the current pool state. Supports V2 (by token pair), V3, and V4 (by NFT token ID). If `simulateTransaction` is set to `true`, the response will include the gas fee.",
         "operationId": "increase_position",
@@ -787,7 +872,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Decrease an LP position",
         "description": "Decreases liquidity in an existing position by a specified percentage. The server derives all position state (liquidity, fees, ticks) from on-chain data. Supports V2 (by token pair), V3, and V4 (by NFT token ID). If `simulateTransaction` is set to `true`, the response will include the gas fee.",
         "operationId": "decrease_position",
@@ -848,7 +935,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Claim LP position fees",
         "description": "Claims accumulated trading fees from a V3 or V4 LP position. If `simulateTransaction` is set to `true`, the response will include the gas fee for the claim transaction.\n\nNote: V2 positions do not have claimable fees. V2 trading fees are automatically added to your LP token balance.",
         "operationId": "claim_fees",
@@ -906,7 +995,9 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
+        "tags": [
+          "liquidity-provisioning"
+        ],
         "summary": "Create a classic (V2) LP position",
         "description": "Creates a full-range liquidity position in a Uniswap V2 pool. Specify the independent token and amount; the server computes the dependent token amount based on the current pool ratio. If `simulateTransaction` is set to `true`, the response will include the gas fee for the creation transaction.",
         "operationId": "create_classic_position",
@@ -974,8 +1065,10 @@
         }
       ],
       "post": {
-        "tags": ["Liquidity"],
-        "summary": "Fetch Pool Information",
+        "tags": [
+          "utilities"
+        ],
+        "summary": "Get pool state",
         "description": "Fetches detailed information about one or more liquidity pools across Uniswap V2, V3, and V4. Returns pool state including token addresses, reserves, liquidity, current tick, sqrtRatioX96, fee tier, tick spacing, and hook addresses (V4).\n\nProvide one of `poolParameters` or `poolReferences` (not both):\n- `poolParameters`: Look up pools by token pair. Provide token addresses and optional fee/tickSpacing/hooks to find matching pools.\n- `poolReferences`: Look up specific known pools by their reference identifier (pool address for V3, pool ID for V4, pair address for V2).",
         "operationId": "pool_info",
         "security": [
@@ -1029,9 +1122,11 @@
     },
     "/wallet/encode_7702": {
       "post": {
-        "tags": ["WalletEncode7702"],
+        "tags": [
+          "swap-batching"
+        ],
         "summary": "Encode wallet transactions",
-        "description": "Encodes a list of transactions into a single transaction for smart contract wallet execution. All transactions must have the same chainId.",
+        "description": "Encodes a list of transactions into a single transaction for an EIP-7702 delegated smart contract wallet. All transactions must have the same chainId.",
         "operationId": "wallet_encode_7702",
         "security": [
           {
@@ -1074,8 +1169,10 @@
     },
     "/wallet/check_delegation": {
       "post": {
-        "tags": ["WalletCheckDelegation"],
-        "summary": "Get wallet delegation info",
+        "tags": [
+          "utilities"
+        ],
+        "summary": "Get wallet delegations",
         "description": "Gets the current delegation status and message for a smart contract wallet across different chains. Returns delegation information for each chain ID in the request.",
         "operationId": "wallet_check_delegation",
         "security": [
@@ -1093,7 +1190,10 @@
                 "walletAddresses": [
                   "0xC9bebBA9f481b12cE6f3EA54c4B182c9636ec421"
                 ],
-                "chainIds": [1, 8453]
+                "chainIds": [
+                  1,
+                  8453
+                ]
               }
             }
           }
@@ -1125,7 +1225,9 @@
     },
     "/swap_5792": {
       "post": {
-        "tags": ["Swap"],
+        "tags": [
+          "swap-batching"
+        ],
         "summary": "Create swap EIP 5792 calldata",
         "description": "Create the EIP 5792 calldata for a swap transaction (including wrap/unwrap and bridging) against the Uniswap Protocols. If the `quote` parameter includes the fee parameters, then the calldata will include the fee disbursement. The gas estimates will be **more precise** when the response calldata would be valid if submitted on-chain.",
         "operationId": "create_swap_5792_transaction",
@@ -1291,9 +1393,11 @@
     },
     "/swap_7702": {
       "post": {
-        "tags": ["Swap"],
+        "tags": [
+          "swap-batching"
+        ],
         "summary": "Create swap EIP 7702 calldata",
-        "description": "Create the EIP 7702 calldata for a swap transaction (including wrap/unwrap and bridging) against the Uniswap Protocols. If the `quote` parameter includes the fee parameters, then the calldata will include the fee disbursement. The gas estimates will be **more precise** when the the response calldata would be valid if submitted on-chain.\n\nNative ETH / UniswapX setup: When `x-erc20eth-enabled` is `true` and the input token is native ETH, the response may include an additional native approval call (e.g. an `approveNative` step) to enable ERC20-ETH (EIP-7914) spending for the wallet. This native allowance is a prerequisite for native ETH input on UniswapX (`/quote` \u2192 `/order`) for supported wallets.",
+        "description": "Create the EIP 7702 calldata for a swap transaction (including wrap/unwrap and bridging) against the Uniswap Protocols. If the `quote` parameter includes the fee parameters, then the calldata will include the fee disbursement. The gas estimates will be **more precise** when the the response calldata would be valid if submitted on-chain.\n\nNative ETH / UniswapX setup: When `x-erc20eth-enabled` is `true` and the input token is native ETH, the response may include an additional native approval call (e.g. an `approveNative` step) to enable ERC20-ETH (EIP-7914) spending for the wallet. This native allowance is a prerequisite for native ETH input on UniswapX (`/quote` then `/order`) for supported wallets.",
         "operationId": "create_swap_7702_transaction",
         "security": [
           {
@@ -1460,7 +1564,9 @@
     },
     "/swap_4337": {
       "post": {
-        "tags": ["Swap"],
+        "tags": [
+          "swapping"
+        ],
         "summary": "Create swap ERC-4337 UserOperation",
         "description": "Builds and returns a partially-populated ERC-4337 v0.8 UserOperation for executing a swap (including wrap/unwrap and bridging) against the Uniswap Protocols. The response includes any required ERC-20 approval and Permit2 calls bundled into the UserOperation's `callData`. Paymaster fields are left empty for the wallet to populate via `pm_sponsorUserOperation` before signing and submitting to the bundler. The `signature` field contains a dummy value that the wallet must replace before submission.",
         "operationId": "create_swap_4337_transaction",
@@ -1516,9 +1622,66 @@
         "x-internal": true
       }
     },
+    "/check_approval_4337": {
+      "post": {
+        "tags": [
+          "swapping"
+        ],
+        "summary": "Create approval ERC-4337 UserOperation",
+        "description": "Builds and returns an ERC-4337 v0.8 UserOperation that performs the ERC-20 approval (and any required allowance reset) needed before a swap. Paymaster fields and `signature` are left for the client to populate. When `sponsorshipInfo.sponsored` is `true`, the approval is tagged for sponsorship and a `paymasterServiceContext` envelope is returned for the client to forward to the paymaster.",
+        "operationId": "check_approval_4337",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckApproval4337Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UserOperation encoded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckApproval4337Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest400"
+          },
+          "401": {
+            "$ref": "#/components/responses/SwapUnauthorized401"
+          },
+          "404": {
+            "$ref": "#/components/responses/SwapNotFound404"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitedErr429"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalErr500"
+          },
+          "504": {
+            "$ref": "#/components/responses/Timeout504"
+          }
+        },
+        "x-internal": true
+      }
+    },
     "/plan": {
       "post": {
-        "tags": ["Plan"],
+        "tags": [
+          "chained-swapping"
+        ],
         "summary": "Create an execution plan",
         "description": "Creates a multi-step execution plan for chained transactions. The plan breaks down complex multi-chain or multi-transaction flows into sequential steps that can be executed by the client. Each step includes the method (transaction, message signature, or batch calls), payload, and current status. The response includes the current step index to track progress through the plan.",
         "operationId": "create_plan",
@@ -1563,7 +1726,9 @@
     },
     "/plan/{planId}": {
       "get": {
-        "tags": ["Plan"],
+        "tags": [
+          "chained-swapping"
+        ],
         "summary": "Get an execution plan",
         "description": "Retrieves an existing execution plan by its ID. Returns the full plan with current status and all steps. If forceRefresh is set to true, the plan will be refreshed to check for any updates to step statuses. Note: Completed plans cannot be refreshed.",
         "operationId": "get_plan",
@@ -1621,7 +1786,7 @@
         }
       },
       "patch": {
-        "summary": "Update an existing plan with step proofs",
+        "summary": "Update an execution plan",
         "description": "Updates an existing execution plan by submitting proof of completed plan steps (transaction hashes or signatures). The endpoint retrieves the existing plan, attaches proofs to specified steps, verifies the proofs, and potentially regenerates remaining steps if needed. Returns the full updated plan with current status. Note: Order IDs are not accepted in requests; they are system-generated after receiving a signature.",
         "operationId": "update_plan",
         "security": [
@@ -1675,12 +1840,17 @@
           "504": {
             "$ref": "#/components/responses/Timeout504"
           }
-        }
+        },
+        "tags": [
+          "chained-swapping"
+        ]
       }
     },
     "/wallet/encode_4337": {
       "post": {
-        "tags": ["Wallet"],
+        "tags": [
+          "utilities"
+        ],
         "summary": "Encode ERC-4337 UserOperation",
         "description": "Builds and returns a fully-populated ERC-4337 v0.8 UserOperation for the given batch of calls. When a `paymasterUrl` is provided the endpoint attempts gas sponsorship via the paymaster; the response indicates whether sponsorship was granted and includes sponsor metadata when available.",
         "operationId": "encode_4337",
@@ -1780,7 +1950,10 @@
                     "decayEndTime": 1774555306,
                     "exclusiveFiller": "0x8392876883Cf0e9e7ee24d9b1F606ED88644f23B",
                     "inputOverride": "0",
-                    "outputOverrides": ["3306647558219378950381", "0"]
+                    "outputOverrides": [
+                      "3306647558219378950381",
+                      "0"
+                    ]
                   },
                   "input": {
                     "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -2411,6 +2584,35 @@
           }
         }
       },
+      "PermissionsSuccess200": {
+        "description": "Token permissions lookup successful.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PermissionsResponse"
+            },
+            "example": {
+              "requestId": "e63f1e1e-b9e9-411a-bcc8-ff18ce4e77cf",
+              "results": [
+                {
+                  "token": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+                  "isPermissioned": false
+                }
+              ]
+            }
+          }
+        }
+      },
+      "PermissionsNotFound404": {
+        "description": "ResourceNotFound eg. Failed to fetch token permissions.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Err404"
+            }
+          }
+        }
+      },
       "SwapBadRequest400": {
         "description": "RequestValidationError, Bad Input",
         "content": {
@@ -2651,7 +2853,13 @@
       },
       "SwapStatus": {
         "type": "string",
-        "enum": ["PENDING", "SUCCESS", "NOT_FOUND", "FAILED", "EXPIRED"]
+        "enum": [
+          "PENDING",
+          "SUCCESS",
+          "NOT_FOUND",
+          "FAILED",
+          "EXPIRED"
+        ]
       },
       "GetSwapsResponse": {
         "type": "object",
@@ -2683,14 +2891,29 @@
                 },
                 "hashType": {
                   "type": "string",
-                  "enum": ["TX", "USER_OP"],
+                  "enum": [
+                    "TX",
+                    "USER_OP"
+                  ],
                   "description": "Identifies whether the row was resolved from a transaction hash or a userOperation hash. Omitted on transaction rows; absence is equivalent to `TX`."
+                },
+                "paymaster": {
+                  "$ref": "#/components/schemas/Address",
+                  "description": "Paymaster address from the userOperation receipt. Present only for userOperation queries when the receipt is available and a paymaster was used."
+                },
+                "sponsorship": {
+                  "$ref": "#/components/schemas/SponsorMetadata",
+                  "description": "Present only when `swapper` is supplied and the transaction's gas fees were sponsored by Uniswap. Use this to display \"Sponsored by Uniswap\" in activity history.",
+                  "x-internal": true
                 }
               }
             }
           }
         },
-        "required": ["requestId", "status"]
+        "required": [
+          "requestId",
+          "status"
+        ]
       },
       "GetSwappableTokensResponse": {
         "type": "object",
@@ -2738,7 +2961,10 @@
             }
           }
         },
-        "required": ["requestId", "tokens"]
+        "required": [
+          "requestId",
+          "tokens"
+        ]
       },
       "CreateSwapRequest": {
         "type": "object",
@@ -2794,7 +3020,9 @@
             "$ref": "#/components/schemas/Urgency"
           }
         },
-        "required": ["quote"]
+        "required": [
+          "quote"
+        ]
       },
       "CreateSwap5792Request": {
         "type": "object",
@@ -2809,6 +3037,18 @@
               },
               {
                 "$ref": "#/components/schemas/BridgeQuote"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuote"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuoteV2"
+              },
+              {
+                "$ref": "#/components/schemas/DutchQuoteV3"
+              },
+              {
+                "$ref": "#/components/schemas/PriorityQuote"
               }
             ]
           },
@@ -2820,9 +3060,20 @@
           },
           "urgency": {
             "$ref": "#/components/schemas/Urgency"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
+          },
+          "approvalOnly": {
+            "type": "boolean",
+            "description": "Return only the ERC-20 approval call(s) for the quote's input token — no swap transaction. Required (and only supported) for UniswapX quotes, whose swap is an off-chain signed order.",
+            "x-internal": true
           }
         },
-        "required": ["quote"]
+        "required": [
+          "quote"
+        ]
       },
       "CreateSwap7702Request": {
         "type": "object",
@@ -2860,7 +3111,9 @@
             "type": "boolean"
           }
         },
-        "required": ["quote"]
+        "required": [
+          "quote"
+        ]
       },
       "Swap4337Request": {
         "type": "object",
@@ -2891,9 +3144,16 @@
           },
           "eip7702Auth": {
             "$ref": "#/components/schemas/Eip7702Authorization"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
           }
         },
-        "required": ["quote", "sender"]
+        "required": [
+          "quote",
+          "sender"
+        ]
       },
       "Swap4337Response": {
         "type": "object",
@@ -2907,18 +3167,107 @@
           },
           "gasSponsored": {
             "type": "boolean",
-            "description": "Whether gas for this operation will be sponsored by a paymaster."
+            "description": "Whether gas for this operation will be sponsored by a paymaster.",
+            "x-internal": true
           },
           "gasSponsorshipRejectionReason": {
             "type": "string",
-            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`."
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
+          },
+          "paymasterServiceContext": {
+            "$ref": "#/components/schemas/PaymasterServiceContext",
+            "x-internal": true
           }
         },
-        "required": ["requestId", "userOperation", "gasSponsored"]
+        "required": [
+          "requestId",
+          "userOperation",
+          "gasSponsored"
+        ]
+      },
+      "CheckApproval4337Request": {
+        "type": "object",
+        "description": "Request body for building an ERC-4337 UserOperation that performs a token approval, optionally gas-sponsored.",
+        "properties": {
+          "sender": {
+            "$ref": "#/components/schemas/Address",
+            "description": "Smart account address that will execute the UserOperation."
+          },
+          "token": {
+            "$ref": "#/components/schemas/inputToken"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "urgency": {
+            "$ref": "#/components/schemas/Urgency"
+          },
+          "tokenOut": {
+            "$ref": "#/components/schemas/outputToken"
+          },
+          "tokenOutChainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "walletExecutionContext": {
+            "$ref": "#/components/schemas/WalletExecutionContext",
+            "x-internal": true
+          },
+          "eip7702Auth": {
+            "$ref": "#/components/schemas/Eip7702Authorization"
+          },
+          "sponsorshipInfo": {
+            "$ref": "#/components/schemas/SponsorshipInfo",
+            "x-internal": true
+          }
+        },
+        "required": [
+          "sender",
+          "token",
+          "amount",
+          "chainId"
+        ]
+      },
+      "CheckApproval4337Response": {
+        "type": "object",
+        "description": "Response containing the approval ERC-4337 UserOperation. `userOperation` is omitted when no approval is required.",
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/RequestId"
+          },
+          "userOperation": {
+            "$ref": "#/components/schemas/UserOperation"
+          },
+          "gasSponsored": {
+            "type": "boolean",
+            "description": "Whether gas for this approval will be sponsored.",
+            "x-internal": true
+          },
+          "gasSponsorshipRejectionReason": {
+            "type": "string",
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
+          },
+          "paymasterServiceContext": {
+            "$ref": "#/components/schemas/PaymasterServiceContext",
+            "x-internal": true
+          }
+        },
+        "required": [
+          "requestId",
+          "gasSponsored"
+        ]
       },
       "UniversalRouterVersion": {
         "type": "string",
-        "enum": ["1.2", "2.0", "2.1.1"],
+        "enum": [
+          "2.0",
+          "2.1.1",
+          "2.2.0"
+        ],
         "default": "2.0"
       },
       "Address": {
@@ -2942,7 +3291,10 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "swap"]
+        "required": [
+          "requestId",
+          "swap"
+        ]
       },
       "CreateSwap5792Response": {
         "type": "object",
@@ -2970,11 +3322,17 @@
             "x-internal": true
           }
         },
-        "required": ["requestId", "from", "chainId", "calls"]
+        "required": [
+          "requestId",
+          "from",
+          "chainId",
+          "calls"
+        ]
       },
       "PaymasterServiceCapability": {
         "type": "object",
         "description": "EIP-7677 paymasterService capability. Present only when this swap is sponsored. The wallet forwards `context` as-is to the URL; the trading service does not expect the wallet to inspect or modify it.",
+        "x-internal": true,
         "properties": {
           "url": {
             "type": "string",
@@ -2983,16 +3341,26 @@
             "example": "https://unirpc.uniswap.org/paymaster/v1/130"
           },
           "context": {
-            "type": "object",
-            "properties": {
-              "sponsorship": {
-                "type": "string"
-              }
-            },
-            "required": ["sponsorship"]
+            "$ref": "#/components/schemas/PaymasterServiceContext"
           }
         },
-        "required": ["url", "context"]
+        "required": [
+          "url",
+          "context"
+        ]
+      },
+      "PaymasterServiceContext": {
+        "type": "object",
+        "description": "EIP-7677 paymasterService.context bundle. The wallet forwards this verbatim to the paymaster RPC (or \u2014 for ERC-4337 \u2014 to /wallet/encode_4337). `sponsorship` is opaque AES-256-GCM ciphertext whose integrity is enforced cryptographically on the uniRPC side.",
+        "x-internal": true,
+        "properties": {
+          "sponsorship": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sponsorship"
+        ]
       },
       "CreateSwap7702Response": {
         "type": "object",
@@ -3007,7 +3375,10 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "swap"]
+        "required": [
+          "requestId",
+          "swap"
+        ]
       },
       "QuoteResponse": {
         "type": "object",
@@ -3020,6 +3391,10 @@
           },
           "routing": {
             "$ref": "#/components/schemas/Routing"
+          },
+          "isTokenApprovalApplicable": {
+            "type": "boolean",
+            "description": "Whether an ERC-20 token approval is applicable to this swap's input. `true` when the routing pulls the input token via an allowance, so an approval may be required — verify (or orchestrate) it via `/check_approval`. `false` when no approval is ever needed for this route (e.g. native-currency input, wrap/unwrap, or a native-gas-token input paid as native value). Reflects the routing mechanism, not the swapper's current on-chain allowance. If absent, assume an approval is applicable."
           },
           "permitTransaction": {
             "$ref": "#/components/schemas/TransactionRequest"
@@ -3035,11 +3410,17 @@
             "x-internal": true
           }
         },
-        "required": ["routing", "quote", "permitData", "requestId"]
+        "required": [
+          "routing",
+          "quote",
+          "permitData",
+          "requestId"
+        ]
       },
       "SponsorshipInfo": {
         "type": "object",
-        "description": "Gas sponsorship information for the quoted swap. When `sponsored` is `true`, gas fees for executing this swap will be covered by the `sponsor`. When `sponsored` is `false`, `rejectionReason` describes why sponsorship was not granted.",
+        "description": "Gas sponsorship information for the quoted swap. When `sponsored` is `true`, gas fees for executing this swap will be covered by the sponsor described in `sponsorMetadata`, under the campaign described in `campaign`. When `sponsored` is `false`, `rejectionReason` describes why sponsorship was not granted.",
+        "x-internal": true,
         "properties": {
           "sponsored": {
             "type": "boolean",
@@ -3049,22 +3430,83 @@
             "type": "string",
             "description": "Reason gas sponsorship was not granted. Present only when `sponsored` is `false`."
           },
-          "sponsor": {
-            "$ref": "#/components/schemas/SponsorSummary"
+          "campaign": {
+            "$ref": "#/components/schemas/CampaignDetails"
+          },
+          "sponsorMetadata": {
+            "$ref": "#/components/schemas/SponsorMetadata"
           }
         }
       },
-      "SponsorSummary": {
+      "CampaignDetails": {
+        "type": "object",
+        "description": "Display information about the sponsorship campaign covering gas fees for the swap.",
+        "x-internal": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Machine-readable campaign identifier."
+          },
+          "description": {
+            "type": "string",
+            "description": "Subheader text for the campaign."
+          },
+          "headline": {
+            "type": "string",
+            "description": "Human-readable headline for the campaign."
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "description": "URL of the campaign's thumbnail image."
+          },
+          "allowances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignAllowance"
+            },
+            "description": "Per-wallet caps and utilization, one entry per dimension (free-swap count and/or cost)."
+          },
+          "eligibleChains": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Chain IDs the campaign covers, for the eligible-chains modal."
+          }
+        }
+      },
+      "CampaignAllowance": {
+        "type": "object",
+        "description": "A per-wallet cap and remaining utilization, e.g. \"5 of 5 free swaps remaining\".",
+        "x-internal": true,
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": ["FREE_SWAPS", "USD_CENT"],
+            "description": "Unit the allowance is denominated in."
+          },
+          "total": {
+            "type": "string",
+            "description": "Total per-wallet allowance."
+          },
+          "remaining": {
+            "type": "string",
+            "description": "Allowance still available to this wallet."
+          }
+        }
+      },
+      "SponsorMetadata": {
         "type": "object",
         "description": "Display information about the sponsor covering gas fees for the swap.",
+        "x-internal": true,
         "properties": {
           "name": {
             "type": "string",
             "description": "Display name of the sponsor."
           },
-          "logoUrl": {
+          "icon": {
             "type": "string",
-            "description": "URL of the sponsor's logo."
+            "description": "URL of the sponsor's icon."
           }
         }
       },
@@ -3097,7 +3539,14 @@
             "description": "ECDSA y parity."
           }
         },
-        "required": ["address", "chainId", "nonce", "r", "s", "yParity"]
+        "required": [
+          "address",
+          "chainId",
+          "nonce",
+          "r",
+          "s",
+          "yParity"
+        ]
       },
       "UserOperation": {
         "type": "object",
@@ -3179,21 +3628,6 @@
           "signature"
         ]
       },
-      "Encode4337SponsorMetadata": {
-        "type": "object",
-        "description": "Display information about the sponsor covering gas fees.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Display name of the sponsor."
-          },
-          "icon": {
-            "type": "string",
-            "description": "URL of the sponsor's logo or icon."
-          }
-        },
-        "required": ["name"]
-      },
       "Encode4337Request": {
         "type": "object",
         "description": "Request body for encoding an ERC-4337 UserOperation.",
@@ -3226,7 +3660,11 @@
             "$ref": "#/components/schemas/Eip7702Authorization"
           }
         },
-        "required": ["calls", "sender", "chainId"]
+        "required": [
+          "calls",
+          "sender",
+          "chainId"
+        ]
       },
       "Encode4337Response": {
         "type": "object",
@@ -3240,18 +3678,25 @@
             "$ref": "#/components/schemas/UserOperation"
           },
           "sponsorMetadata": {
-            "$ref": "#/components/schemas/Encode4337SponsorMetadata"
+            "$ref": "#/components/schemas/SponsorMetadata",
+            "x-internal": true
           },
           "gasSponsored": {
             "type": "boolean",
-            "description": "Whether gas for this operation is sponsored by a paymaster."
+            "description": "Whether gas for this operation is sponsored by a paymaster.",
+            "x-internal": true
           },
           "gasSponsorshipRejectionReason": {
             "type": "string",
-            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`."
+            "description": "Reason gas sponsorship was not granted. Present only when `gasSponsored` is `false`.",
+            "x-internal": true
           }
         },
-        "required": ["requestId", "userOperation", "gasSponsored"]
+        "required": [
+          "requestId",
+          "userOperation",
+          "gasSponsored"
+        ]
       },
       "LimitOrderQuoteResponse": {
         "type": "object",
@@ -3264,13 +3709,20 @@
           },
           "routing": {
             "type": "string",
-            "enum": ["LIMIT_ORDER"]
+            "enum": [
+              "LIMIT_ORDER"
+            ]
           },
           "permitData": {
             "$ref": "#/components/schemas/NullablePermit"
           }
         },
-        "required": ["routing", "quote", "permitData", "requestId"]
+        "required": [
+          "routing",
+          "quote",
+          "permitData",
+          "requestId"
+        ]
       },
       "QuoteRequest": {
         "type": "object",
@@ -3337,6 +3789,10 @@
           },
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
+            "x-internal": true
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnIntent",
             "x-internal": true
           }
         },
@@ -3407,7 +3863,10 @@
             "type": "string"
           }
         },
-        "required": ["orders", "requestId"]
+        "required": [
+          "orders",
+          "requestId"
+        ]
       },
       "OrderResponse": {
         "type": "object",
@@ -3422,7 +3881,11 @@
             "$ref": "#/components/schemas/OrderStatus"
           }
         },
-        "required": ["requestId", "orderId", "orderStatus"]
+        "required": [
+          "requestId",
+          "orderId",
+          "orderStatus"
+        ]
       },
       "OrderRequest": {
         "type": "object",
@@ -3448,7 +3911,11 @@
             "$ref": "#/components/schemas/Routing"
           }
         },
-        "required": ["signature", "quote"]
+        "required": [
+          "signature",
+          "quote",
+          "routing"
+        ]
       },
       "Urgency": {
         "oneOf": [
@@ -3468,7 +3935,7 @@
       },
       "UrgencyOverrides": {
         "type": "object",
-        "description": "Caller-supplied caps applied on top of the gas service's computed quote. All fields are absolute wei (decimal string). `maxPriorityFeePerGas` and `maxFeePerGas` are treated as caps — they lower the quote, never raise it. `gasLimit`, if set, replaces the limit calculation entirely.",
+        "description": "Caller-supplied caps applied on top of the gas service's computed quote. All fields are absolute wei (decimal string). `maxPriorityFeePerGas` and `maxFeePerGas` are treated as caps - they lower the quote, never raise it. `gasLimit`, if set, replaces the limit calculation entirely.",
         "properties": {
           "maxPriorityFeePerGas": {
             "type": "string",
@@ -3513,7 +3980,11 @@
       },
       "HooksOptions": {
         "type": "string",
-        "enum": ["V4_HOOKS_INCLUSIVE", "V4_HOOKS_ONLY", "V4_NO_HOOKS"],
+        "enum": [
+          "V4_HOOKS_INCLUSIVE",
+          "V4_HOOKS_ONLY",
+          "V4_NO_HOOKS"
+        ],
         "description": "The hook options to use for V4 pool quotes. `V4_HOOKS_INCLUSIVE` will get quotes for V4 pools with or without hooks. `V4_HOOKS_ONLY` will only get quotes for V4 pools with hooks. `V4_NO_HOOKS` will only get quotes for V4 pools without hooks. Defaults to `V4_HOOKS_INCLUSIVE` if `V4` is included in `protocols` and `hookOptions` is not set. This field is ignored if `V4` is not passed in `protocols`."
       },
       "Err400": {
@@ -3621,8 +4092,31 @@
         "description": "The unique ID of the blockchain. For a list of supported chains see the [FAQ](https://api-docs.uniswap.org/guides/faqs).",
         "type": "number",
         "enum": [
-          1, 10, 56, 130, 137, 143, 196, 324, 480, 1868, 4217, 8453, 10143,
-          42161, 42220, 43114, 59144, 81457, 7777777, 1301, 84532, 11155111
+          1,
+          10,
+          56,
+          130,
+          137,
+          143,
+          196,
+          324,
+          480,
+          1868,
+          4217,
+          4326,
+          4663,
+          5042,
+          8453,
+          10143,
+          42161,
+          42220,
+          43114,
+          59144,
+          81457,
+          7777777,
+          1301,
+          84532,
+          11155111
         ],
         "default": 1
       },
@@ -3672,7 +4166,9 @@
             "$ref": "#/components/schemas/endAmount"
           }
         },
-        "required": ["token"]
+        "required": [
+          "token"
+        ]
       },
       "OrderOutput": {
         "type": "object",
@@ -3693,7 +4189,9 @@
             "$ref": "#/components/schemas/receiverWalletAddress"
           }
         },
-        "required": ["token"]
+        "required": [
+          "token"
+        ]
       },
       "CosignerData": {
         "type": "object",
@@ -3740,11 +4238,22 @@
       },
       "OrderType": {
         "type": "string",
-        "enum": ["DutchLimit", "Dutch", "Dutch_V2", "Dutch_V3", "Priority"]
+        "enum": [
+          "DutchLimit",
+          "Dutch",
+          "Dutch_V2",
+          "Dutch_V3",
+          "Priority"
+        ]
       },
       "OrderTypeQuery": {
         "type": "string",
-        "enum": ["Dutch_V2", "Dutch_V3", "Limit", "Priority"]
+        "enum": [
+          "Dutch_V2",
+          "Dutch_V3",
+          "Limit",
+          "Priority"
+        ]
       },
       "UniswapXOrder": {
         "type": "object",
@@ -3813,7 +4322,9 @@
       },
       "SortKey": {
         "type": "string",
-        "enum": ["createdAt"]
+        "enum": [
+          "createdAt"
+        ]
       },
       "OrderIds": {
         "type": "string"
@@ -3876,7 +4387,11 @@
             "$ref": "#/components/schemas/isSpam"
           }
         },
-        "required": ["logo", "safetyLevel", "isSpam"]
+        "required": [
+          "logo",
+          "safetyLevel",
+          "isSpam"
+        ]
       },
       "TokenProjectLogo": {
         "type": "object",
@@ -3885,7 +4400,9 @@
             "type": "string"
           }
         },
-        "required": ["url"]
+        "required": [
+          "url"
+        ]
       },
       "DutchInput": {
         "type": "object",
@@ -3900,7 +4417,11 @@
             "$ref": "#/components/schemas/inputToken"
           }
         },
-        "required": ["startAmount", "endAmount", "type"]
+        "required": [
+          "startAmount",
+          "endAmount",
+          "type"
+        ]
       },
       "DutchOutput": {
         "type": "object",
@@ -3918,7 +4439,12 @@
             "$ref": "#/components/schemas/receiverWalletAddress"
           }
         },
-        "required": ["startAmount", "endAmount", "token", "recipient"]
+        "required": [
+          "startAmount",
+          "endAmount",
+          "token",
+          "recipient"
+        ]
       },
       "Curve": {
         "type": "object",
@@ -3936,7 +4462,9 @@
             }
           }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "DutchInputV3": {
         "type": "object",
@@ -4214,7 +4742,11 @@
             }
           }
         },
-        "required": ["encodedOrder", "orderInfo", "orderId"]
+        "required": [
+          "encodedOrder",
+          "orderInfo",
+          "orderId"
+        ]
       },
       "DutchQuoteV2": {
         "title": "UniswapX V2 Quote",
@@ -4263,7 +4795,11 @@
             }
           }
         },
-        "required": ["encodedOrder", "orderInfo", "orderId"]
+        "required": [
+          "encodedOrder",
+          "orderInfo",
+          "orderId"
+        ]
       },
       "DutchQuoteV3": {
         "title": "UniswapX V3 Quote",
@@ -4318,7 +4854,11 @@
             }
           }
         },
-        "required": ["encodedOrder", "orderInfo", "orderId"]
+        "required": [
+          "encodedOrder",
+          "orderInfo",
+          "orderId"
+        ]
       },
       "PriorityInput": {
         "type": "object",
@@ -4333,7 +4873,11 @@
             "type": "string"
           }
         },
-        "required": ["amount", "token", "mpsPerPriorityFeeWei"]
+        "required": [
+          "amount",
+          "token",
+          "mpsPerPriorityFeeWei"
+        ]
       },
       "PriorityOutput": {
         "type": "object",
@@ -4352,7 +4896,12 @@
             "description": "The scaling factor of the priority fee based on the output token amount."
           }
         },
-        "required": ["amount", "token", "recipient", "mpsPerPriorityFeeWei"]
+        "required": [
+          "amount",
+          "token",
+          "recipient",
+          "mpsPerPriorityFeeWei"
+        ]
       },
       "PriorityOrderInfo": {
         "type": "object",
@@ -4465,7 +5014,11 @@
             }
           }
         },
-        "required": ["encodedOrder", "orderInfo", "orderId"]
+        "required": [
+          "encodedOrder",
+          "orderInfo",
+          "orderId"
+        ]
       },
       "BridgeQuote": {
         "title": "Bridge Quote",
@@ -4543,11 +5096,19 @@
       },
       "SafetyLevel": {
         "type": "string",
-        "enum": ["BLOCKED", "MEDIUM_WARNING", "STRONG_WARNING", "VERIFIED"]
+        "enum": [
+          "BLOCKED",
+          "MEDIUM_WARNING",
+          "STRONG_WARNING",
+          "VERIFIED"
+        ]
       },
       "TradeType": {
         "type": "string",
-        "enum": ["EXACT_INPUT", "EXACT_OUTPUT"],
+        "enum": [
+          "EXACT_INPUT",
+          "EXACT_OUTPUT"
+        ],
         "description": "The handling of the `amount` field. `EXACT_INPUT` means the requester will send the specified `amount` of input tokens and get a quote with a variable quantity of output tokens. `EXACT_OUTPUT` means the requester will receive the specified `amount` of output tokens and get a quote with a variable quantity of input tokens.",
         "default": "EXACT_INPUT"
       },
@@ -4581,6 +5142,8 @@
           "DUTCH_V3",
           "QUICKROUTE",
           "CHAINED",
+          "VAULT_DEPOSIT",
+          "VAULT_WITHDRAW",
           "APPROVAL_TXN",
           "APPROVAL_PERMIT",
           "RESET_APPROVAL_TXN"
@@ -4647,16 +5210,28 @@
             "$ref": "#/components/schemas/tokenAmount"
           }
         },
-        "required": ["tokenAddress", "amount"]
+        "required": [
+          "tokenAddress",
+          "amount"
+        ]
       },
       "LPAction": {
         "type": "string",
-        "enum": ["CREATE", "INCREASE", "DECREASE", "MIGRATE"],
+        "enum": [
+          "CREATE",
+          "INCREASE",
+          "DECREASE",
+          "MIGRATE"
+        ],
         "description": "The LP operation that the approval is needed for."
       },
       "GasUrgency": {
         "type": "string",
-        "enum": ["NORMAL", "FAST", "URGENT"],
+        "enum": [
+          "NORMAL",
+          "FAST",
+          "URGENT"
+        ],
         "description": "The urgency level for gas price estimation. Higher urgency results in higher gas price and faster transaction inclusion. Defaults to URGENT if not provided."
       },
       "V2PoolParameters": {
@@ -4673,7 +5248,11 @@
             "$ref": "#/components/schemas/ChainId"
           }
         },
-        "required": ["token0Address", "token1Address", "chainId"]
+        "required": [
+          "token0Address",
+          "token1Address",
+          "chainId"
+        ]
       },
       "ApprovalTransactionRequest": {
         "type": "object",
@@ -4693,7 +5272,11 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["transaction", "cancelApproval", "action"]
+        "required": [
+          "transaction",
+          "cancelApproval",
+          "action"
+        ]
       },
       "CreatePositionExistingPoolParameters": {
         "type": "object",
@@ -4710,7 +5293,11 @@
             "description": "The pool address (V3) or pool ID (V4) identifying the existing pool."
           }
         },
-        "required": ["token0Address", "token1Address", "poolReference"]
+        "required": [
+          "token0Address",
+          "token1Address",
+          "poolReference"
+        ]
       },
       "CreatePoolParameters": {
         "type": "object",
@@ -4764,7 +5351,10 @@
             "description": "The maximum price (token1 per token0) for the position range."
           }
         },
-        "required": ["minPrice", "maxPrice"]
+        "required": [
+          "minPrice",
+          "maxPrice"
+        ]
       },
       "PositionTickBounds": {
         "type": "object",
@@ -4779,7 +5369,10 @@
             "description": "The upper tick of the position range."
           }
         },
-        "required": ["tickLower", "tickUpper"]
+        "required": [
+          "tickLower",
+          "tickUpper"
+        ]
       },
       "CreateToken": {
         "type": "object",
@@ -4793,7 +5386,10 @@
             "description": "The token amount in raw (base unit) format."
           }
         },
-        "required": ["tokenAddress", "amount"]
+        "required": [
+          "tokenAddress",
+          "amount"
+        ]
       },
       "LPApprovalRequest": {
         "type": "object",
@@ -4802,7 +5398,7 @@
             "$ref": "#/components/schemas/Address"
           },
           "protocol": {
-            "$ref": "#/components/schemas/ProtocolItems"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "chainId": {
             "$ref": "#/components/schemas/ChainId"
@@ -4875,7 +5471,9 @@
             "description": "NFT permit data for V3 positions, if applicable."
           }
         },
-        "required": ["requestId"]
+        "required": [
+          "requestId"
+        ]
       },
       "ApprovalRequest": {
         "type": "object",
@@ -4905,7 +5503,12 @@
             "$ref": "#/components/schemas/ChainId"
           }
         },
-        "required": ["walletAddress", "token", "amount", "chainId"]
+        "required": [
+          "walletAddress",
+          "token",
+          "amount",
+          "chainId"
+        ]
       },
       "ApprovalResponse": {
         "type": "object",
@@ -4926,7 +5529,88 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "approval", "cancel"]
+        "required": [
+          "requestId",
+          "approval",
+          "cancel"
+        ]
+      },
+      "PermissionsRequest": {
+        "type": "object",
+        "properties": {
+          "walletAddress": {
+            "$ref": "#/components/schemas/senderWalletAddress"
+          },
+          "tokens": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/inputToken"
+            },
+            "description": "Tokens to check permissions for. Maximum of 2 per request."
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          }
+        },
+        "required": [
+          "walletAddress",
+          "tokens",
+          "chainId"
+        ]
+      },
+      "PermissionsResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/RequestId"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionsResult"
+            }
+          }
+        },
+        "required": [
+          "requestId",
+          "results"
+        ]
+      },
+      "PermissionsResult": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/inputToken"
+          },
+          "isPermissioned": {
+            "type": "boolean",
+            "description": "Whether the token requires a permissioned adapter to trade."
+          },
+          "isAllowlisted": {
+            "type": "boolean",
+            "description": "Only provided when isPermissioned is true. Indicates whether the wallet is allowed to swap this token."
+          },
+          "adapterTokenAddress": {
+            "type": "string",
+            "pattern": "^(0x)?[0-9a-fA-F]{40}$",
+            "description": "Address of the permissioned adapter token to use in place of the underlying token. Always provided when isPermissioned is true."
+          },
+          "kycUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL the wallet holder must visit to complete KYC and become allowlisted. Always provided when isAllowlisted is false."
+          },
+          "issuer": {
+            "type": "string",
+            "description": "KYC provider display name (e.g. \"Superstate\"). Always provided when isPermissioned is true."
+          }
+        },
+        "required": [
+          "token",
+          "isPermissioned"
+        ]
       },
       "ClassicQuote": {
         "title": "Classic Quote",
@@ -5027,8 +5711,633 @@
             "items": {
               "$ref": "#/components/schemas/AggregatedOutput"
             }
+          },
+          "swapSteps": {
+            "type": "array",
+            "description": "Universal Router swap step sequence. Additive, opt-in via the `x-universal-router-swapsteps` header. When present, mirrors the inputs to `SwapRouter.encodeSwaps`. Only emitted when GuideStar wins the hybrid quoter race (`EXACT_INPUT` today; broader coverage once UniRoute's transformer ships).",
+            "items": {
+              "$ref": "#/components/schemas/SwapStep"
+            }
           }
         }
+      },
+      "SwapStep": {
+        "x-internal": true,
+        "description": "Universal Router swap step. Discriminated by the `type` field.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/V2SwapExactInStep"
+          },
+          {
+            "$ref": "#/components/schemas/V2SwapExactOutStep"
+          },
+          {
+            "$ref": "#/components/schemas/V3SwapExactInStep"
+          },
+          {
+            "$ref": "#/components/schemas/V3SwapExactOutStep"
+          },
+          {
+            "$ref": "#/components/schemas/V4SwapStep"
+          },
+          {
+            "$ref": "#/components/schemas/WrapEthStep"
+          },
+          {
+            "$ref": "#/components/schemas/UnwrapWethStep"
+          }
+        ]
+      },
+      "V2SwapExactInStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "V2_SWAP_EXACT_IN"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amountIn": {
+            "type": "string"
+          },
+          "amountOutMin": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amountIn",
+          "amountOutMin",
+          "path"
+        ]
+      },
+      "V2SwapExactOutStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "V2_SWAP_EXACT_OUT"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amountOut": {
+            "type": "string"
+          },
+          "amountInMax": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amountOut",
+          "amountInMax",
+          "path"
+        ]
+      },
+      "V3SwapExactInStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "V3_SWAP_EXACT_IN"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amountIn": {
+            "type": "string"
+          },
+          "amountOutMin": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "description": "Hex-encoded packed V3 path (e.g. `0xa0b8...000bb8c02aaa...`)."
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amountIn",
+          "amountOutMin",
+          "path"
+        ]
+      },
+      "V3SwapExactOutStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "V3_SWAP_EXACT_OUT"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amountOut": {
+            "type": "string"
+          },
+          "amountInMax": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "description": "Hex-encoded packed V3 path (e.g. `0xa0b8...000bb8c02aaa...`)."
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amountOut",
+          "amountInMax",
+          "path"
+        ]
+      },
+      "V4SwapStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "V4_SWAP"
+            ]
+          },
+          "v4Actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V4Action"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "v4Actions"
+        ]
+      },
+      "WrapEthStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "WRAP_ETH"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amount"
+        ]
+      },
+      "UnwrapWethStep": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "UNWRAP_WETH"
+            ]
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amountMin": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "recipient",
+          "amountMin"
+        ]
+      },
+      "V4Action": {
+        "x-internal": true,
+        "description": "V4 action. Discriminated by the `action` field.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/V4SwapExactIn"
+          },
+          {
+            "$ref": "#/components/schemas/V4SwapExactInSingle"
+          },
+          {
+            "$ref": "#/components/schemas/V4SwapExactOut"
+          },
+          {
+            "$ref": "#/components/schemas/V4SwapExactOutSingle"
+          },
+          {
+            "$ref": "#/components/schemas/V4Settle"
+          },
+          {
+            "$ref": "#/components/schemas/V4SettleAll"
+          },
+          {
+            "$ref": "#/components/schemas/V4Take"
+          },
+          {
+            "$ref": "#/components/schemas/V4TakeAll"
+          },
+          {
+            "$ref": "#/components/schemas/V4TakePortion"
+          }
+        ]
+      },
+      "V4SwapExactIn": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SWAP_EXACT_IN"
+            ]
+          },
+          "currencyIn": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SwapPathKey"
+            }
+          },
+          "amountIn": {
+            "type": "string"
+          },
+          "amountOutMinimum": {
+            "type": "string"
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "action",
+          "currencyIn",
+          "path",
+          "amountIn",
+          "amountOutMinimum"
+        ]
+      },
+      "V4SwapExactInSingle": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SWAP_EXACT_IN_SINGLE"
+            ]
+          },
+          "poolKey": {
+            "$ref": "#/components/schemas/SwapPoolKey"
+          },
+          "zeroForOne": {
+            "type": "boolean"
+          },
+          "amountIn": {
+            "type": "string"
+          },
+          "amountOutMinimum": {
+            "type": "string"
+          },
+          "hookData": {
+            "type": "string"
+          },
+          "minHopPriceX36": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "poolKey",
+          "zeroForOne",
+          "amountIn",
+          "amountOutMinimum",
+          "hookData"
+        ]
+      },
+      "V4SwapExactOut": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SWAP_EXACT_OUT"
+            ]
+          },
+          "currencyOut": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SwapPathKey"
+            }
+          },
+          "amountOut": {
+            "type": "string"
+          },
+          "amountInMaximum": {
+            "type": "string"
+          },
+          "minHopPriceX36": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "action",
+          "currencyOut",
+          "path",
+          "amountOut",
+          "amountInMaximum"
+        ]
+      },
+      "V4SwapExactOutSingle": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SWAP_EXACT_OUT_SINGLE"
+            ]
+          },
+          "poolKey": {
+            "$ref": "#/components/schemas/SwapPoolKey"
+          },
+          "zeroForOne": {
+            "type": "boolean"
+          },
+          "amountOut": {
+            "type": "string"
+          },
+          "amountInMaximum": {
+            "type": "string"
+          },
+          "hookData": {
+            "type": "string"
+          },
+          "minHopPriceX36": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "poolKey",
+          "zeroForOne",
+          "amountOut",
+          "amountInMaximum",
+          "hookData"
+        ]
+      },
+      "V4Settle": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SETTLE"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "currency",
+          "amount"
+        ]
+      },
+      "V4SettleAll": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "SETTLE_ALL"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "maxAmount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "currency",
+          "maxAmount"
+        ]
+      },
+      "V4Take": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "TAKE"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "currency",
+          "recipient",
+          "amount"
+        ]
+      },
+      "V4TakeAll": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "TAKE_ALL"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "minAmount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "currency",
+          "minAmount"
+        ]
+      },
+      "V4TakePortion": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "TAKE_PORTION"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "bips": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "currency",
+          "recipient",
+          "bips"
+        ]
+      },
+      "SwapPoolKey": {
+        "type": "object",
+        "properties": {
+          "currency0": {
+            "type": "string"
+          },
+          "currency1": {
+            "type": "string"
+          },
+          "fee": {
+            "type": "integer"
+          },
+          "tickSpacing": {
+            "type": "integer"
+          },
+          "hooks": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "currency0",
+          "currency1",
+          "fee",
+          "tickSpacing",
+          "hooks"
+        ]
+      },
+      "SwapPathKey": {
+        "x-internal": true,
+        "type": "object",
+        "properties": {
+          "intermediateCurrency": {
+            "type": "string"
+          },
+          "fee": {
+            "type": "integer"
+          },
+          "tickSpacing": {
+            "type": "integer"
+          },
+          "hooks": {
+            "type": "string"
+          },
+          "hookData": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "intermediateCurrency",
+          "fee",
+          "tickSpacing",
+          "hooks",
+          "hookData"
+        ]
       },
       "WrapUnwrapQuote": {
         "title": "Wrap/Unwrap Quote",
@@ -5275,7 +6584,10 @@
       },
       "PermitAmount": {
         "type": "string",
-        "enum": ["FULL", "EXACT"],
+        "enum": [
+          "FULL",
+          "EXACT"
+        ],
         "description": "For Uniswap Protocols (v2, v3, v4) swaps, specify the input token spend allowance (e.g. quantity) to be set in the permit. `FULL` can be used to specify an unlimited token quantity, and may prevent the wallet from needing to sign another permit for the same token in the future. `EXACT` can be used to specify the exact input token quantity for this request. Defaults to `FULL`.",
         "default": "FULL"
       },
@@ -5296,29 +6608,57 @@
             "pattern": "^0x[a-fA-F0-9]{40}$"
           }
         },
-        "required": ["bips", "recipient"]
+        "required": [
+          "bips",
+          "recipient"
+        ]
       },
       "SpreadOptimization": {
         "type": "string",
-        "enum": ["EXECUTION", "PRICE"],
+        "enum": [
+          "EXECUTION",
+          "PRICE"
+        ],
         "description": "For UniswapX swaps, when set to `EXECUTION`, quotes optimize for looser spreads at higher fill rates. When set to `PRICE`, quotes optimize for tighter spreads at lower fill rates. This field is not applicable to Uniswap Protocols (v2, v3, v4), bridging, or wrapping/unwrapping and will be ignored if set.",
         "default": "EXECUTION"
       },
       "AutoSlippage": {
         "type": "string",
-        "enum": ["DEFAULT"],
+        "enum": [
+          "DEFAULT"
+        ],
         "description": "The auto slippage strategy to employ. For Uniswap Protocols (v2, v3, v4) the auto slippage will be automatically calculated when this field is set to `DEFAULT`. Auto slippage cannot be calculated for UniswapX swaps.\n\nNote that if the trade type is `EXACT_INPUT`, then the slippage is in terms of the output token. If the trade type is `EXACT_OUTPUT`, then the slippage is in terms of the input token.\n\nWhen submitting a request, `autoSlippage` may not be set when `slippageTolerance` is defined. One of `slippageTolerance` or `autoSlippage` must be defined."
       },
       "RoutingPreference": {
         "type": "string",
         "description": "The `routingPreference` specifies the preferred strategy to determine the quote. If the `routingPreference` is `BEST_PRICE`, then the quote will propose a route through the specified whitelisted protocols (or all, if none are specified) that provides the best price. When the `routingPreference` is `FASTEST`, the quote will propose the first route which is found to complete the swap.",
-        "enum": ["BEST_PRICE", "FASTEST"],
+        "enum": [
+          "BEST_PRICE",
+          "FASTEST"
+        ],
         "default": "BEST_PRICE"
       },
       "ProtocolItems": {
         "type": "string",
-        "enum": ["V2", "V3", "V4", "UNISWAPX", "UNISWAPX_V2", "UNISWAPX_V3"],
-        "description": "The protocol to use for the swap/order."
+        "enum": [
+          "V2",
+          "V3",
+          "V4",
+          "UNISWAPX",
+          "UNISWAPX_V2",
+          "UNISWAPX_V3",
+          "UNISWAPX_LATEST"
+        ],
+        "description": "The protocol to use for the swap/order. Use `UNISWAPX_LATEST` to route through the latest UniswapX protocol supported on the request chain."
+      },
+      "ProtocolItemsAmm": {
+        "type": "string",
+        "enum": [
+          "V2",
+          "V3",
+          "V4"
+        ],
+        "description": "The protocol of the pool."
       },
       "encodedOrder": {
         "type": "string",
@@ -5447,7 +6787,13 @@
             "$ref": "#/components/schemas/gasPrice"
           }
         },
-        "required": ["to", "from", "data", "value", "chainId"]
+        "required": [
+          "to",
+          "from",
+          "data",
+          "value",
+          "chainId"
+        ]
       },
       "TransactionRequest5792": {
         "type": "object",
@@ -5476,7 +6822,12 @@
             "$ref": "#/components/schemas/gasPrice"
           }
         },
-        "required": ["to", "data", "value", "chainId"]
+        "required": [
+          "to",
+          "data",
+          "value",
+          "chainId"
+        ]
       },
       "TransactionFailureReason": {
         "type": "string",
@@ -5490,7 +6841,9 @@
       },
       "SwapSafetyMode": {
         "type": "string",
-        "enum": ["SAFE"],
+        "enum": [
+          "SAFE"
+        ],
         "description": "Swap safety mode will automatically sweep the transaction for the native token and return it to the sender wallet address. This is to prevent accidental loss of funds in the event that the token amount is set in the transaction value instead of as part of the calldata."
       },
       "CreateClassicPositionRequest": {
@@ -5529,7 +6882,11 @@
             "description": "If true, the response will include approval simulation data."
           }
         },
-        "required": ["walletAddress", "poolParameters", "independentToken"]
+        "required": [
+          "walletAddress",
+          "poolParameters",
+          "independentToken"
+        ]
       },
       "CreateClassicPositionResponse": {
         "type": "object",
@@ -5583,7 +6940,7 @@
             "$ref": "#/components/schemas/ChainId"
           },
           "protocol": {
-            "$ref": "#/components/schemas/ProtocolItems"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "independentToken": {
             "allOf": [
@@ -5649,7 +7006,12 @@
             "description": "The wallet's native token balance, used for wrapping calculations when one of the tokens is the native token."
           }
         },
-        "required": ["walletAddress", "chainId", "protocol", "independentToken"]
+        "required": [
+          "walletAddress",
+          "chainId",
+          "protocol",
+          "independentToken"
+        ]
       },
       "CreatePositionResponse": {
         "type": "object",
@@ -5707,7 +7069,7 @@
             "$ref": "#/components/schemas/ChainId"
           },
           "protocol": {
-            "$ref": "#/components/schemas/ProtocolItems"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "token0Address": {
             "$ref": "#/components/schemas/Address"
@@ -5783,7 +7145,12 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "token0", "token1", "increase"]
+        "required": [
+          "requestId",
+          "token0",
+          "token1",
+          "increase"
+        ]
       },
       "DecreasePositionRequest": {
         "type": "object",
@@ -5795,7 +7162,7 @@
             "$ref": "#/components/schemas/ChainId"
           },
           "protocol": {
-            "$ref": "#/components/schemas/ProtocolItems"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "token0Address": {
             "$ref": "#/components/schemas/Address"
@@ -5859,13 +7226,18 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "token0", "token1", "decrease"]
+        "required": [
+          "requestId",
+          "token0",
+          "token1",
+          "decrease"
+        ]
       },
       "ClaimFeesRequest": {
         "type": "object",
         "properties": {
           "protocol": {
-            "$ref": "#/components/schemas/ProtocolItems"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "walletAddress": {
             "$ref": "#/components/schemas/Address"
@@ -5886,7 +7258,12 @@
             "description": "If true, native tokens will be collected as WETH instead of unwrapping to ETH."
           }
         },
-        "required": ["protocol", "walletAddress", "chainId", "tokenId"]
+        "required": [
+          "protocol",
+          "walletAddress",
+          "chainId",
+          "tokenId"
+        ]
       },
       "ClaimFeesResponse": {
         "type": "object",
@@ -5907,13 +7284,18 @@
             "$ref": "#/components/schemas/gasFee"
           }
         },
-        "required": ["requestId", "token0", "token1", "claim"]
+        "required": [
+          "requestId",
+          "token0",
+          "token1",
+          "claim"
+        ]
       },
       "PoolInfoRequest": {
         "type": "object",
         "properties": {
           "protocol": {
-            "$ref": "#/components/schemas/Protocols"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "poolParameters": {
             "$ref": "#/components/schemas/PoolParameters"
@@ -5935,7 +7317,9 @@
             "type": "number"
           }
         },
-        "required": ["protocol"]
+        "required": [
+          "protocol"
+        ]
       },
       "PoolInfoResponse": {
         "type": "object",
@@ -5966,7 +7350,7 @@
             "description": "The unique identifier for the pool reference, which can be a pool address, pool id, or pair address depending on the protocol."
           },
           "poolProtocol": {
-            "$ref": "#/components/schemas/Protocols"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "tokenAddressA": {
             "type": "string",
@@ -6035,22 +7419,27 @@
           },
           "fee": {
             "type": "number",
-            "description": "The fee of the pool, if the pool has a fee value."
+            "description": "The fee of the pool, if the pool has a fee value. Must be provided for V3 or V4 pools."
           },
           "tickSpacing": {
-            "$ref": "#/components/schemas/tickSpacing"
+            "type": "number",
+            "description": "The width of ticks in this pool (e.g. the price range between two ticks) specified in basis points. Must be provided for V3 or V4 pools."
           },
           "hookAddress": {
             "type": "string",
             "description": "The address of the hook for the pool, if any."
           }
-        }
+        },
+        "required": [
+          "tokenAddressA",
+          "tokenAddressB"
+        ]
       },
       "PoolReferenceByProtocol": {
         "type": "object",
         "properties": {
           "protocol": {
-            "$ref": "#/components/schemas/Protocols"
+            "$ref": "#/components/schemas/ProtocolItemsAmm"
           },
           "chainId": {
             "$ref": "#/components/schemas/ChainId"
@@ -6060,7 +7449,11 @@
             "pattern": "^(0x)?[0-9a-fA-F]"
           }
         },
-        "required": ["protocol", "poolAddress", "chainId"]
+        "required": [
+          "protocol",
+          "poolAddress",
+          "chainId"
+        ]
       },
       "WalletEncode7702RequestBody": {
         "type": "object",
@@ -6081,7 +7474,11 @@
             "description": "The address of the wallet for which the transactions will be encoded."
           }
         },
-        "required": ["calls", "smartContractDelegationAddress", "walletAddress"]
+        "required": [
+          "calls",
+          "smartContractDelegationAddress",
+          "walletAddress"
+        ]
       },
       "Encode7702ResponseBody": {
         "type": "object",
@@ -6093,7 +7490,10 @@
             "$ref": "#/components/schemas/TransactionRequest"
           }
         },
-        "required": ["requestId", "encoded"]
+        "required": [
+          "requestId",
+          "encoded"
+        ]
       },
       "WalletCheckDelegationRequestBody": {
         "type": "object",
@@ -6113,7 +7513,10 @@
             }
           }
         },
-        "required": ["walletAddress", "chainIds"]
+        "required": [
+          "walletAddress",
+          "chainIds"
+        ]
       },
       "DelegationDetails": {
         "type": "object",
@@ -6159,14 +7562,19 @@
             }
           }
         },
-        "required": ["requestId", "delegationDetails"]
+        "required": [
+          "requestId",
+          "delegationDetails"
+        ]
       },
       "CreatePlanRequest": {
         "type": "object",
         "properties": {
           "routing": {
             "type": "string",
-            "enum": ["CHAINED"],
+            "enum": [
+              "CHAINED"
+            ],
             "description": "The routing type for the plan. Currently only CHAINED is supported for multi-step execution plans."
           },
           "quote": {
@@ -6178,9 +7586,16 @@
           },
           "urgency": {
             "$ref": "#/components/schemas/Urgency"
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnIntent",
+            "x-internal": true
           }
         },
-        "required": ["routing", "quote"]
+        "required": [
+          "routing",
+          "quote"
+        ]
       },
       "UpdatePlanRequest": {
         "type": "object",
@@ -6194,7 +7609,9 @@
             }
           }
         },
-        "required": ["steps"]
+        "required": [
+          "steps"
+        ]
       },
       "StepUpdate": {
         "type": "object",
@@ -6219,7 +7636,10 @@
             }
           }
         },
-        "required": ["stepIndex", "proof"]
+        "required": [
+          "stepIndex",
+          "proof"
+        ]
       },
       "PlanResponse": {
         "type": "object",
@@ -6315,6 +7735,10 @@
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
             "x-internal": true
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnQuoteIntent",
+            "x-internal": true
           }
         },
         "required": [
@@ -6408,7 +7832,13 @@
             "$ref": "#/components/schemas/slippageTolerance"
           }
         },
-        "required": ["stepIndex", "method", "payloadType", "payload", "status"]
+        "required": [
+          "stepIndex",
+          "method",
+          "payloadType",
+          "payload",
+          "status"
+        ]
       },
       "PlanStepProof": {
         "type": "object",
@@ -6451,12 +7881,20 @@
       },
       "PlanStepMethod": {
         "type": "string",
-        "enum": ["SEND_TX", "SIGN_MSG", "SEND_CALLS"],
+        "enum": [
+          "SEND_TX",
+          "SIGN_MSG",
+          "SEND_CALLS"
+        ],
         "description": "The execution method for the step. SEND_TX is a standard transaction. SIGN_MSG is for signing a message (e.g., permit). SEND_CALLS is for batch transaction execution (EIP-5792)."
       },
       "PlanStepPayloadType": {
         "type": "string",
-        "enum": ["TX", "EIP_712", "EIP_5792"],
+        "enum": [
+          "TX",
+          "EIP_712",
+          "EIP_5792"
+        ],
         "description": "The type of payload data. TX is a standard transaction object. EIP_712 is a typed structured data for signing. EIP_5792 is a batch of transaction calls."
       },
       "TruncatedPlanStep": {
@@ -6482,7 +7920,9 @@
             "$ref": "#/components/schemas/slippageTolerance"
           }
         },
-        "required": ["stepType"]
+        "required": [
+          "stepType"
+        ]
       },
       "ChainedQuote": {
         "title": "Chained Quote",
@@ -6568,6 +8008,14 @@
           },
           "autoSlippage": {
             "$ref": "#/components/schemas/AutoSlippage"
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnQuoteIntent",
+            "x-internal": true
+          },
+          "earnPreview": {
+            "$ref": "#/components/schemas/EarnPreview",
+            "x-internal": true
           }
         },
         "required": [
@@ -6596,7 +8044,9 @@
             "$ref": "#/components/schemas/WalletProperties"
           }
         },
-        "required": ["scopes"]
+        "required": [
+          "scopes"
+        ]
       },
       "ScopeData": {
         "type": "object",
@@ -6632,7 +8082,10 @@
             "$ref": "#/components/schemas/ClientContext"
           }
         },
-        "required": ["accounts", "methods"]
+        "required": [
+          "accounts",
+          "methods"
+        ]
       },
       "ClientContext": {
         "type": "object",
@@ -6721,6 +8174,212 @@
           "priceInflationFactor",
           "percentileThresholdFor1559Fee"
         ]
+      },
+      "EarnAction": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "deposit",
+          "withdraw"
+        ],
+        "description": "The Earn vault action to quote or plan."
+      },
+      "EarnWithdrawMode": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "EXACT_ASSETS",
+          "MAX_SHARES"
+        ],
+        "description": "The ERC-4626 withdraw mode. EXACT_ASSETS withdraws the requested asset amount; MAX_SHARES redeems the owner's currently redeemable shares."
+      },
+      "EarnDestinationGasMode": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "WALLET_BALANCE",
+          "SELF_FUNDED"
+        ],
+        "description": "Backend-selected funding mode for destination-chain gas on standard cross-chain Earn deposits. WALLET_BALANCE means the swapper has enough destination native gas; SELF_FUNDED means the route bridges native gas and reserves part of it for the remaining destination transactions."
+      },
+      "EarnIntent": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Earn vault intent supplied on /quote and repeated on /plan. Earn currently supports the allowlisted Mainnet Morpho vaults.",
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/EarnAction"
+          },
+          "vault": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "withdrawMode": {
+            "$ref": "#/components/schemas/EarnWithdrawMode"
+          }
+        },
+        "required": [
+          "action",
+          "vault",
+          "chainId"
+        ]
+      },
+      "EarnPreview": {
+        "x-internal": true,
+        "description": "Action-specific preview amounts computed while normalizing an Earn intent.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EarnDepositPreview"
+          },
+          {
+            "$ref": "#/components/schemas/EarnExactAssetsWithdrawPreview"
+          },
+          {
+            "$ref": "#/components/schemas/EarnMaxSharesWithdrawPreview"
+          }
+        ]
+      },
+      "EarnDepositPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Deposit preview. Asset amounts are vault-underlying assets, and share amounts are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "DEPOSIT"
+            ]
+          },
+          "depositAssets": {
+            "type": "array",
+            "description": "Vault underlying assets that will be deposited after any swap, bridge, wrap, or unwrap steps.",
+            "items": {
+              "$ref": "#/components/schemas/EarnPreviewDepositAsset"
+            }
+          },
+          "estimatedSharesOut": {
+            "description": "Estimated vault shares received from the deposit.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "depositAssets",
+          "estimatedSharesOut"
+        ]
+      },
+      "EarnExactAssetsWithdrawPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Exact-assets withdraw preview. Assets are vault-underlying assets, and shares are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "EXACT_ASSETS_WITHDRAW"
+            ]
+          },
+          "requestedAssetsOut": {
+            "description": "Requested vault underlying assets returned by the withdraw.",
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "estimatedSharesIn": {
+            "description": "Estimated vault shares spent to withdraw the requested assets.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "requestedAssetsOut",
+          "estimatedSharesIn"
+        ]
+      },
+      "EarnMaxSharesWithdrawPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Max-shares withdraw preview. Assets are vault-underlying assets, and shares are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MAX_SHARES_WITHDRAW"
+            ]
+          },
+          "maxRedeemableSharesIn": {
+            "description": "Vault shares spent by the max-shares redeem.",
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "previewAssetsOut": {
+            "description": "Estimated vault underlying assets received by redeeming max redeemable shares.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "maxRedeemableSharesIn",
+          "previewAssetsOut"
+        ]
+      },
+      "EarnPreviewDepositAsset": {
+        "x-internal": true,
+        "type": "object",
+        "description": "A vault deposit input asset amount after all pre-vault routing has completed.",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "token",
+          "chainId",
+          "amount"
+        ]
+      },
+      "EarnQuoteIntent": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Validated Earn intent returned by /quote and /plan. Internal vault execution metadata is kept off the public contract.",
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/EarnAction"
+          },
+          "vault": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "withdrawMode": {
+            "$ref": "#/components/schemas/EarnWithdrawMode"
+          },
+          "destinationGasMode": {
+            "$ref": "#/components/schemas/EarnDestinationGasMode"
+          },
+          "underlyingAsset": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "requestedAssets": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "Requested underlying asset amount for EXACT_ASSETS withdraw intents."
+          },
+          "preview": {
+            "$ref": "#/components/schemas/EarnPreview"
+          }
+        },
+        "required": [
+          "action",
+          "vault",
+          "chainId",
+          "underlyingAsset"
+        ]
       }
     },
     "parameters": {
@@ -6747,6 +8406,17 @@
         "name": "x-permit2-disabled",
         "in": "header",
         "description": "Disables the Permit2 approval flow. When set to `true`, `permitData` is returned as `null` and the header is forwarded to the routing layer for correct gas simulation against the Proxy Universal Router contract. When `false` or omitted, the standard Permit2 approval flow is used. This header is intended for integrators whose infrastructure uses a direct approval-then-swap pattern without Permit2.",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "swapStepsEnabledHeader": {
+        "x-internal": true,
+        "name": "x-universal-router-swapsteps",
+        "in": "header",
+        "description": "Opts the request into Universal Router SwapSteps mode. Additive and opt-in: when set to `true`, the response's `ClassicQuote` may include a `swapSteps[]` array describing the Universal Router step sequence (the inputs to `SwapRouter.encodeSwaps`). The field is only populated when the GuideStar quoter wins the hybrid quote race (currently `EXACT_INPUT`; broader coverage will follow once UniRoute's transformer ships). Omitting or setting `false` preserves the existing response shape.",
         "required": false,
         "schema": {
           "type": "boolean",

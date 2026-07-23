@@ -1,6 +1,6 @@
+import { typographyClasses } from '@universe/tailwind/types'
 import { type ClassValue, clsx } from 'clsx'
 import { extendTailwindMerge } from 'tailwind-merge'
-import { typographyClasses } from './types'
 
 /** Custom color classes for tailwind-merge conflict resolution */
 const colorClasses = [

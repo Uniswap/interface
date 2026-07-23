@@ -3,6 +3,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { createTransactionDetails } from 'uniswap/src/features/activity/extract/extractPlanUtils'
 import {
+  mapDAPIEarnPlanActionToTAPIEarnAction,
   mapDAPIPlanActivitySwapTypeToTAPIPlanStepType,
   mapDAPIPlanStatusToTAPIPlanStatus,
   mapDAPIPlanStatusToTXStatus,
@@ -57,6 +58,7 @@ export default function extractPlanDetails(transaction: PlanTransaction): PlanTr
     inputCurrencyAmountRaw: assetIn.amount?.raw ?? '0',
     outputCurrencyAmountRaw: assetOut.amount?.raw ?? '0',
     tradeType: TradeType.EXACT_INPUT,
+    earnAction: mapDAPIEarnPlanActionToTAPIEarnAction(transaction.earnMetadata?.action),
     transactionHashes: activities.map((activity) => activity.transactionHash).filter((hash) => hash !== undefined),
   }
 

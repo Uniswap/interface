@@ -110,10 +110,14 @@ vi.mock('react-native-reanimated', async () => {
   }
 })
 
+// reanimated 4 pulls in react-native-worklets, whose lib/module build uses extensionless
+// ESM imports vitest can't resolve. Its src mock loads cleanly and covers what RNGH v3 needs.
+vi.mock('react-native-worklets', async () => vi.importActual('react-native-worklets/src/mock'))
+
 // Mock environment variables
 process.env.EXPO_OS = 'web'
-process.env.REACT_APP_ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
-process.env.REACT_APP_ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
+process.env.ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
+process.env.ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
 
 setupi18n()
 
@@ -434,6 +438,7 @@ failOnConsole({
         (message.includes('Trans') ||
           message.includes('UniswapXDescription') ||
           message.includes('SwapPreview') ||
+          message.includes('LimitOrderPreview') ||
           message.includes('LimitPriceInputLabel'))
       ) {
         return true
@@ -471,6 +476,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
     ...(await importOriginal()),
     useFeatureFlag: vi.fn(),
     useFeatureFlagWithLoading: vi.fn(),
+    useFeatureFlagWithExposureLoggingDisabled: vi.fn(),
     getFeatureFlag: vi.fn(),
     getFeatureFlagWithExposureLoggingDisabled: vi.fn(),
     useExperimentGroupNameWithLoading: vi.fn(),
@@ -558,7 +564,9 @@ vi.mock('./components/Table/TableSizeProvider', () => ({
     height: 768,
     top: 0,
     left: 0,
+    rowContentMinWidthPx: 0,
   })),
+  useTableRowContentMinWidthPx: vi.fn(() => 0),
   TableSizeProvider: ({ children }: { children: JSX.Element }) => {
     return React.createElement(React.Fragment, {}, children)
   },

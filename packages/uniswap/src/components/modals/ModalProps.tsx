@@ -28,6 +28,8 @@ export type ModalProps = PropsWithChildren<{
   blurredBackground?: boolean
   dismissOnBackPress?: boolean
   isDismissible?: boolean
+  // defaults to isDismissible; set false to keep handle/backdrop dismissal but stop drags on the sheet content from dismissing (e.g. long scrollable content)
+  enableContentPanningGesture?: boolean
   overrideInnerContainer?: boolean
   position?: ComponentProps<typeof View>['position']
   renderBehindTopInset?: boolean
@@ -59,6 +61,7 @@ export type ModalProps = PropsWithChildren<{
   zIndex?: number
   borderWidth?: number
   borderColor?: ColorTokens
+  borderRadius?: ComponentProps<typeof View>['borderRadius']
   overlayOpacity?: number
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
   testID?: string

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
 
 interface BidReviewHeaderProps {
@@ -17,7 +17,7 @@ export function BidReviewHeader({ auctionDetails, onClose }: BidReviewHeaderProp
   const tokenName = auctionDetails.token?.currency.name ?? ''
   const logoUrl = auctionDetails.token?.logoUrl ?? null
 
-  const helpLink = uniswapUrls.helpArticleUrls.toucanBidHelp
+  const helpLink = UniswapHelpUrls.articles.toucanBidHelp
 
   return (
     <Flex gap="$spacing16">

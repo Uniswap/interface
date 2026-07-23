@@ -8,7 +8,9 @@ import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 
 function PaginationSkeletonRowInner(): JSX.Element {
   // Memoize columns - they only depend on loading state which is always true here
-  const skeletonColumns = useActivityTableColumns(true)
+  const skeletonColumns = useActivityTableColumns({
+    showLoadingSkeleton: true,
+  })
 
   // Create table instance - columns are memoized so this will be stable
   const skeletonTable = useReactTable({
@@ -18,7 +20,7 @@ function PaginationSkeletonRowInner(): JSX.Element {
   })
 
   return (
-    <DataRow v2={true} height={PORTFOLIO_TABLE_ROW_HEIGHT}>
+    <DataRow height={PORTFOLIO_TABLE_ROW_HEIGHT}>
       {skeletonTable.getAllColumns().map((column) => (
         <CellContainer key={column.id} style={getColumnSizingStyles(column)}>
           {flexRender(column.columnDef.cell, {} as CellContext<TransactionDetails, any>)}

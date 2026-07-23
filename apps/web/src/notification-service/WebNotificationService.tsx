@@ -52,7 +52,8 @@ function provideWebNotificationService(ctx: {
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
-  getMachineTime: () => number
+  getBlockTimestampUpdatedAt: () => number
+  getStalenessCheckTimeMs: () => number
   getPathname: () => string
 }): NotificationService {
   const notifApiBaseUrl = getEntryGatewayUrl()
@@ -116,7 +117,8 @@ function provideWebNotificationService(ctx: {
   const systemAlertsDataSource = createSystemAlertsDataSource({
     getSwapInputChainId: ctx.getSwapInputChainId,
     getBlockTimestamp: ctx.getBlockTimestamp,
-    getMachineTime: ctx.getMachineTime,
+    getBlockTimestampUpdatedAt: ctx.getBlockTimestampUpdatedAt,
+    getStalenessCheckTimeMs: ctx.getStalenessCheckTimeMs,
     getPathname: ctx.getPathname,
     pollIntervalMs: 5000,
   })
@@ -176,7 +178,8 @@ function getNotificationServiceQueryOptions(ctx: {
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
-  getMachineTime: () => number
+  getBlockTimestampUpdatedAt: () => number
+  getStalenessCheckTimeMs: () => number
   getPathname: () => string
 }): QueryOptionsResult<NotificationService, Error, NotificationService, [ReactQueryCacheKey.NotificationService]> {
   return queryOptions({
@@ -187,7 +190,8 @@ function getNotificationServiceQueryOptions(ctx: {
         navigate: ctx.navigate,
         getSwapInputChainId: ctx.getSwapInputChainId,
         getBlockTimestamp: ctx.getBlockTimestamp,
-        getMachineTime: ctx.getMachineTime,
+        getBlockTimestampUpdatedAt: ctx.getBlockTimestampUpdatedAt,
+        getStalenessCheckTimeMs: ctx.getStalenessCheckTimeMs,
         getPathname: ctx.getPathname,
       }),
     enabled: !isE2eTestEnv(),
@@ -208,18 +212,23 @@ export function WebNotificationServiceManager(): JSX.Element | null {
 
   // Hook values that need to be passed to system alerts data source
   const { swapInputChainId } = useUniswapContext()
-  const blockTimestamp = useCurrentBlockTimestamp({ refetchInterval: ms('5min'), chainId: swapInputChainId })
+  const { blockTimestamp, blockTimestampUpdatedAt } = useCurrentBlockTimestamp({
+    refetchInterval: ms('5min'),
+    chainId: swapInputChainId,
+  })
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME_MS)
 
   // Store latest values in refs so getter functions always return current values
   const swapInputChainIdRef = useRef<UniverseChainId | undefined>(swapInputChainId)
   const blockTimestampRef = useRef<bigint | undefined>(blockTimestamp)
+  const blockTimestampUpdatedAtRef = useRef<number>(blockTimestampUpdatedAt)
   const machineTimeRef = useRef<number>(machineTime)
   const pathnameRef = useRef<string>(location.pathname)
 
   // Update refs on every render to ensure getters return fresh values
   swapInputChainIdRef.current = swapInputChainId
   blockTimestampRef.current = blockTimestamp
+  blockTimestampUpdatedAtRef.current = blockTimestampUpdatedAt
   machineTimeRef.current = machineTime
   pathnameRef.current = location.pathname
 
@@ -228,7 +237,8 @@ export function WebNotificationServiceManager(): JSX.Element | null {
     () => ({
       getSwapInputChainId: () => swapInputChainIdRef.current,
       getBlockTimestamp: () => blockTimestampRef.current,
-      getMachineTime: () => machineTimeRef.current,
+      getBlockTimestampUpdatedAt: () => blockTimestampUpdatedAtRef.current,
+      getStalenessCheckTimeMs: () => machineTimeRef.current,
       getPathname: () => pathnameRef.current,
     }),
     [],

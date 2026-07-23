@@ -41,7 +41,7 @@ export function testMigratePendingDappRequestsToRecord(migration: (state: any) =
 
   // Test: sets sequential timestamps
   const mockTime = 1000
-  jest.spyOn(Date, 'now').mockReturnValue(mockTime)
+  vi.spyOn(Date, 'now').mockReturnValue(mockTime)
 
   const timestampResult = migration({
     dappRequests: {
@@ -53,7 +53,7 @@ export function testMigratePendingDappRequestsToRecord(migration: (state: any) =
   expect(timestampResult.dappRequests.requests.r1.createdAt).toBe(mockTime + 1000)
   expect(timestampResult.dappRequests.requests.r2.createdAt).toBe(mockTime + 2000)
 
-  jest.restoreAllMocks()
+  vi.restoreAllMocks()
 
   // Test: preserves data and handles missing IDs
   const mockData = {

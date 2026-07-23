@@ -9,7 +9,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -71,7 +71,7 @@ export const CurrencyInputPanelValue = memo(function CurrencyInputPanelValueInne
       onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
     >
       {!isTestnetModeEnabled && (
-        <Flex centered row shrink gap="$spacing4" width="max-content">
+        <Flex centered row shrink maxContent gap="$spacing4">
           <Text
             color="$neutral2"
             $group-item-hover={{ color: '$neutral2Hovered' }}

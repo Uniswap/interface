@@ -9,6 +9,7 @@ import { TransactionErrorType } from 'wallet/src/components/dappRequests/Transac
 import { TransactionLoadingState } from 'wallet/src/components/dappRequests/TransactionLoadingState'
 import { TransactionPreviewCard } from 'wallet/src/components/dappRequests/TransactionPreviewCard'
 import { useBlockaidTransactionScan } from 'wallet/src/features/dappRequests/hooks/useBlockaidTransactionScan'
+import { useEarnAwareSections } from 'wallet/src/features/dappRequests/hooks/useEarnAwareSections'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import {
   determineTransactionErrorType,
@@ -78,8 +79,15 @@ export function DappTransactionScanningContent({
     [scanResult, chainId],
   )
 
+  // Collapse Earn deposit/withdraw into a dedicated Depositing/Withdrawing row when detected
+  const earnAwareSections = useEarnAwareSections({ sections, chainId })
+
   // Determine the appropriate error type (if any) to display
-  const errorType = determineTransactionErrorType({ sections, providedErrorType, rawData: data ?? '' })
+  const errorType = determineTransactionErrorType({
+    sections: earnAwareSections,
+    providedErrorType,
+    rawData: data ?? '',
+  })
 
   // Notify parent when risk level changes
   useEffect(() => {
@@ -99,7 +107,7 @@ export function DappTransactionScanningContent({
     <Flex gap="$spacing12">
       {/* Transaction Preview Card */}
       <TransactionPreviewCard
-        sections={sections}
+        sections={earnAwareSections}
         riskLevel={riskLevel}
         errorType={errorType}
         functionName={functionName}

@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { toHistoryDuration } from '~/appGraphql/data/util'
@@ -17,8 +16,6 @@ import { getTDPChartGraphqlTarget } from '~/pages/TokenDetails/hooks/getTDPChart
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 
 function ChartSectionBody(): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   const {
     tokenColor,
     currency,
@@ -40,19 +37,17 @@ function ChartSectionBody(): JSX.Element {
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
 
-  const showMultichainAggregation =
-    multichainTokenUxEnabled && isMultiChainAsset && selectedMultichainChainId === undefined
+  const showMultichainAggregation = isMultiChainAsset && selectedMultichainChainId === undefined
 
   const { chain: tokenChain, address: tokenDBAddress } = useMemo(
     () =>
       getTDPChartGraphqlTarget({
-        multichainTokenUxEnabled,
         selectedMultichainChainId,
         tokenQueryData,
         pathGraphqlChain,
         pathTokenDbAddress,
       }),
-    [multichainTokenUxEnabled, pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId, tokenQueryData],
+    [pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId, tokenQueryData],
   )
 
   const { chartType, timePeriod, priceChartType, disableCandlestickUI, setDisableCandlestickUI } =

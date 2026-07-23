@@ -12,6 +12,7 @@ export enum PopupType {
   Mismatch = 'mismatch',
   FORTransaction = 'forTransaction',
   Error = 'error',
+  EarnSwapUpsell = 'earnSwapUpsell',
   Success = 'success',
   Unhide = 'unhide',
 }
@@ -64,6 +65,12 @@ export type PopupContent =
   | {
       type: PopupType.Error
       error: string
+    }
+  | {
+      type: PopupType.EarnSwapUpsell
+      outputCurrencyId: CurrencyId
+      transactionId: string
+      swapAmountUsd?: number
     }
   | {
       type: PopupType.Success

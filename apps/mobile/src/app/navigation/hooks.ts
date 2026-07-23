@@ -101,7 +101,7 @@ export function useHomeScreenCustomAndroidBackButton(
         return false
       }
       const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return subscription.remove
+      return () => subscription.remove()
     }, [routeTabIndex, setRouteTabIndex]),
   )
 }

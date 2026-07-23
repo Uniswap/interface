@@ -3,6 +3,7 @@ import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuction
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { ValuationInputType, ValuationSlider } from '~/features/Toucan/Shared/ValuationSlider'
 
 interface BidMaxValuationSliderProps {
@@ -66,7 +67,7 @@ function BidMaxValuationSliderComponent({
       clearingPriceQ96={clearingPriceQ96}
       floorPriceQ96={floorPriceQ96}
       tickSizeQ96={tickSizeQ96}
-      auctionTokenDecimals={auctionDetails?.token?.currency.decimals ?? 18}
+      auctionTokenDecimals={getAuctionTokenDecimals(auctionDetails?.token)}
       tokenTotalSupply={auctionDetails?.tokenTotalSupply}
       bidTokenPriceFiat={bidTokenInfo?.priceFiat}
       tickGrouping={tickGrouping}

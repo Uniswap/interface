@@ -5,6 +5,14 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
 
+// Echo the i18n key and the interpolation values so both the key selection and the
+// amount/symbol formatting stay covered without depending on real translations
+vi.mock('uniswap/src/i18n', () => ({
+  default: {
+    t: (key: string, options?: Record<string, unknown>): string => [key, ...Object.values(options ?? {})].join('|'),
+  },
+}))
+
 const mockFormatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(formSwapNotificationTitle, () => {
@@ -21,7 +29,7 @@ describe(formSwapNotificationTitle, () => {
         outputCurrencyAmountRaw: '1000000',
         tradeType: TradeType.EXACT_INPUT,
       }),
-    ).toEqual('Swapped 1.00 DAI for ~1.00 USDC.')
+    ).toEqual('notification.transaction.swap.success|1.00 DAI|~1.00 USDC')
   })
 
   it('formats successful remote swap title', () => {
@@ -36,7 +44,7 @@ describe(formSwapNotificationTitle, () => {
         inputCurrencyAmountRaw: '1000000000000000000',
         outputCurrencyAmountRaw: '1200000',
       }),
-    ).toEqual('Swapped 1.00 DAI for 1.20 USDC.')
+    ).toEqual('notification.transaction.swap.success|1.00 DAI|1.20 USDC')
   })
 
   it('formats canceled swap title', () => {
@@ -52,7 +60,7 @@ describe(formSwapNotificationTitle, () => {
         outputCurrencyAmountRaw: '1000000',
         tradeType: TradeType.EXACT_INPUT,
       }),
-    ).toEqual('Canceled DAI-USDC swap.')
+    ).toEqual('notification.transaction.swap.canceled|DAI|USDC')
   })
 
   it('formats failed swap title', () => {
@@ -68,7 +76,7 @@ describe(formSwapNotificationTitle, () => {
         outputCurrencyAmountRaw: '1000000',
         tradeType: TradeType.EXACT_INPUT,
       }),
-    ).toEqual('Failed to swap 1.00 DAI for ~1.00 USDC.')
+    ).toEqual('notification.transaction.swap.fail|1.00 DAI|~1.00 USDC')
   })
 
   it('formats expired swap title', () => {
@@ -84,6 +92,6 @@ describe(formSwapNotificationTitle, () => {
         outputCurrencyAmountRaw: '1000000',
         tradeType: TradeType.EXACT_INPUT,
       }),
-    ).toEqual('1.00 DAI for ~1.00 USDC swap expired.')
+    ).toEqual('notification.transaction.swap.expired|1.00 DAI|~1.00 USDC')
   })
 })

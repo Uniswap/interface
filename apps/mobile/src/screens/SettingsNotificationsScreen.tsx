@@ -8,7 +8,6 @@ import {
   useSettingNotificationToggle,
 } from 'src/features/notifications/hooks/useNotificationsToggle'
 import { Flex, Switch, Text } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -17,8 +16,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useAccountsList } from 'wallet/src/features/wallet/hooks'
-
-const ROW_ITEM_HEIGHT = 40
 
 enum NotificationItemType {
   Setting = 'setting',
@@ -44,7 +41,6 @@ type NotificationItem = SettingItem | AccountItem
 function SettingsNotificationsScreenInner(): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
-  const { fullWidth, fullHeight } = useDeviceDimensions()
   const accounts = useAccountsList()
 
   const onGeneralUpdatesToggle = useCallback(
@@ -87,13 +83,6 @@ function SettingsNotificationsScreenInner(): JSX.Element {
     return items
   }, [t, updatesNotifEnabled, toggleUpdatesNotif, accounts])
 
-  const estimatedListSize = useMemo(() => {
-    return {
-      height: fullHeight,
-      width: fullWidth,
-    }
-  }, [fullHeight, fullWidth])
-
   const contentContainerStyle = useMemo(() => {
     return {
       paddingBottom: insets.bottom - spacing.spacing16,
@@ -107,10 +96,8 @@ function SettingsNotificationsScreenInner(): JSX.Element {
       <FlashList
         data={data}
         renderItem={renderItem}
-        estimatedItemSize={ROW_ITEM_HEIGHT}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={contentContainerStyle}
-        estimatedListSize={estimatedListSize}
         keyExtractor={keyExtractor}
       />
     </ScreenWithHeader>

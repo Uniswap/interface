@@ -11,6 +11,7 @@ import { TouchableAreaFrame } from 'ui/src/components/touchable/TouchableArea/To
 import type { TouchableAreaProps } from 'ui/src/components/touchable/TouchableArea/types'
 import { useAutoDimensions } from 'ui/src/components/touchable/TouchableArea/useAutoDimensions'
 import { useAutoHitSlop } from 'ui/src/components/touchable/TouchableArea/useAutoHitSlop'
+import { useModifierPress } from 'ui/src/components/touchable/TouchableArea/useModifierPress'
 import { getMaybeHoverColor, zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -23,7 +24,7 @@ const DEFAULT_ANIMATION_PROPS: Partial<YStackProps> = isTestEnv()
       animation: 'simple',
       animateOnly: ['transform', 'opacity'],
     }
-const blurViewStyle: BlurViewProps['style'] = { ...StyleSheet.absoluteFillObject, zIndex: zIndexes.negative }
+const blurViewStyle: BlurViewProps['style'] = { ...StyleSheet.absoluteFill, zIndex: zIndexes.negative }
 
 const WithInjectedColors = memo(function WithInjectedColors({
   children,
@@ -108,6 +109,8 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     onPressIn,
     onPressOut,
     shouldAutomaticallyInjectColors = isWebPlatform,
+    modifierPressHref,
+    onModifierPress,
     ...restProps
   },
   ref,
@@ -185,6 +188,8 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     onPressOut?.(event)
   })
 
+  const modifierProps = useModifierPress({ modifierPressHref, onPress: handlePress, onModifierPress })
+
   if (variant === 'floating' && isMobileApp) {
     return (
       <TouchableAreaFrame
@@ -201,6 +206,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
         onPress={onPress ? handlePress : undefined}
         onPressIn={onPressIn ? handlePressIn : undefined}
         onPressOut={onPressOut ? handlePressOut : undefined}
+        {...modifierProps}
       >
         <WithInjectedColors enabled={shouldAutomaticallyInjectColors} variant={variant} disabled={restProps.disabled}>
           {children}
@@ -231,6 +237,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
       onPress={onPress ? handlePress : undefined}
       onPressIn={onPressIn ? handlePressIn : undefined}
       onPressOut={onPressOut ? handlePressOut : undefined}
+      {...modifierProps}
     >
       <WithInjectedColors enabled={shouldAutomaticallyInjectColors} variant={variant} disabled={restProps.disabled}>
         {children}
@@ -277,4 +284,12 @@ export const TouchableArea = withStaticProperties(TouchableAreaComponent, {
   Icon: ThemedIcon,
 })
 
-export const AnimatedTouchableArea = withAnimated(TouchableArea)
+const AnimatedTouchableAreaBase = withAnimated(TouchableArea)
+
+// Loosen `style` to accept reanimated's AnimatedStyleHandle, which doesn't compose with Tamagui's style type.
+export const AnimatedTouchableArea = AnimatedTouchableAreaBase as React.ComponentType<
+  Omit<React.ComponentProps<typeof AnimatedTouchableAreaBase>, 'style'> & {
+    // oxlint-disable-next-line typescript/no-explicit-any -- reanimated animated styles have complex types
+    style?: any
+  }
+>

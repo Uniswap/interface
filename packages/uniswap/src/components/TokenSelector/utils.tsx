@@ -1,9 +1,5 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
-import {
-  type OnchainItemListOption,
-  OnchainItemListOptionType,
-  type TokenOption,
-} from 'uniswap/src/components/lists/items/types'
+import { TradingApi } from '@universe/api'
+import { OnchainItemListOptionType, type TokenOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
@@ -25,21 +21,6 @@ export function createEmptyTokenOptionFromBridgingToken(
     currencyInfo,
     balanceUSD: null,
     quantity: null,
-  }
-}
-
-export function toGqlSafetyLevel(safetyLevel: TradingApi.SafetyLevel): GraphQLApi.SafetyLevel | null {
-  switch (safetyLevel) {
-    case TradingApi.SafetyLevel.BLOCKED:
-      return GraphQLApi.SafetyLevel.Blocked
-    case TradingApi.SafetyLevel.MEDIUM_WARNING:
-      return GraphQLApi.SafetyLevel.MediumWarning
-    case TradingApi.SafetyLevel.STRONG_WARNING:
-      return GraphQLApi.SafetyLevel.StrongWarning
-    case TradingApi.SafetyLevel.VERIFIED:
-      return GraphQLApi.SafetyLevel.Verified
-    default:
-      return null
   }
 }
 
@@ -113,11 +94,6 @@ export function mergeSearchResultsWithBridgingTokens({
 
   // Remove empty sections
   return [bridgingSection, ...extractedSearchResults].filter((section) => section.data.length > 0)
-}
-
-export function isTokenOptionArray(option: OnchainItemListOption): option is TokenOption[] {
-  // oxlint-disable-next-line typescript/no-unnecessary-condition
-  return Array.isArray(option) && option.every((item) => item.type === OnchainItemListOptionType.Token)
 }
 
 export function isSwapListLoading({

@@ -2,7 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { LayerGroup } from 'ui/src/components/icons/LayerGroup'
 import { opacify } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { CardContents } from '~/pages/Landing/components/cards/CardContents'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
 import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
@@ -19,7 +19,7 @@ export function TradingApiCard() {
       $theme-dark={{
         backgroundColor: opacify(12, primary),
       }}
-      href={uniswapUrls.tradingApiDocsUrl}
+      href={UniswapStaticUrls.tradingApiDocsUrl}
       color={primary}
       title={
         <PillButton

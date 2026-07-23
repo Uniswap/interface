@@ -18,6 +18,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 vi.mock('@universe/gating', () => ({
+  getFeatureFlag: vi.fn(),
   useFeatureFlag: vi.fn(),
   FeatureFlags: {
     ToucanAuctionKYC: 'toucan_auction_kyc',

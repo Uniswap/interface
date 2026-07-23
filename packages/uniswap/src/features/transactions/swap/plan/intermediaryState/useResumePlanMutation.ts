@@ -1,9 +1,10 @@
 import { UseMutationResult, useMutation } from '@tanstack/react-query'
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
+import { TradingApi } from '@universe/api'
 import { NavigateToSwapFlowArgs, useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { extractPlanResponseAssetDetails } from 'uniswap/src/features/activity/extract/extractPlanResponseDetails'
+import { getEarnPlanReuseIdentityFromPlanResponse } from 'uniswap/src/features/transactions/swap/plan/earnPlanReuseIdentity'
 import { transformPlanResponse, updateGlobalPlanState } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
@@ -16,6 +17,8 @@ interface UseResumePlanParams {
   inputCurrencyId: string
   outputCurrencyId: string
   inputCurrencyAmount: string
+  earnAction?: TradingApi.EarnAction
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 /** Mutation for fetching a plan and navigating to swap with the plan loaded. */
@@ -30,27 +33,34 @@ export function useResumePlanMutation({
     mutationFn: async ({
       planId,
       inputCurrencyAmount,
+      earnAction,
+      isEarnActivityDisplayEnabled = true,
     }: UseResumePlanParams): Promise<NavigateToSwapFlowArgs | undefined> => {
+      if (earnAction !== undefined && !isEarnActivityDisplayEnabled) {
+        throw new Error('Earn plan resume is disabled')
+      }
+
       // Fetch fresh plan details
       const planResponse = await TradingApiSessionClient.refreshExistingPlan({ planId })
+
+      if (earnAction !== undefined && planResponse.earnIntent === undefined) {
+        throw new Error('Earn plan refresh response is missing earnIntent')
+      }
 
       // Transform and store
       const transformed = transformPlanResponse(planResponse)
       const assetDetails = extractPlanResponseAssetDetails(planResponse.steps)
 
       activePlanStore.setState({
-        activePlan: {
-          response: planResponse,
-          planId: planResponse.planId,
-          steps: transformed.steps,
-          inputChainId: transformed.inputChainId,
-          proofPending: false,
-          currentStepIndex: planResponse.currentStepIndex,
-        },
         resumePlanSwapFormState: createSwapFormStateFromPlanResponse(planResponse, inputCurrencyAmount),
       })
       activePlanStore.getState().actions.clearPriceChangeInterrupted(planId)
-      updateGlobalPlanState({ activePlan: transformed, originalResponse: planResponse })
+      // Keep activePlan writes centralized so resumed plans preserve derived metadata like Earn reuse identity.
+      updateGlobalPlanState({
+        activePlan: transformed,
+        originalResponse: planResponse,
+        earnReuseIdentity: getEarnPlanReuseIdentityFromPlanResponse(planResponse),
+      })
 
       if (assetDetails) {
         return {
@@ -65,7 +75,10 @@ export function useResumePlanMutation({
     },
     onError: (error, { planId }) => {
       logger.error(error, {
-        tags: { file: 'useResumePlanMutation.ts', function: 'useResumePlanMutation' },
+        tags: {
+          file: 'useResumePlanMutation.ts',
+          function: 'useResumePlanMutation',
+        },
         extra: { planId },
       })
     },
@@ -77,7 +90,7 @@ export function useResumePlanMutation({
 }
 
 function createSwapFormStateFromPlanResponse(
-  planResponse: PlanResponse,
+  planResponse: TradingApi.PlanResponse,
   exactAmountToken: string,
 ): Partial<SwapFormState> | undefined {
   const extractedAssetDetails = extractPlanResponseAssetDetails(planResponse.steps)

@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { render } from '~/test-utils/render'
 
@@ -24,9 +24,9 @@ describe('KeyManagementModal', () => {
     expect(getByText('Your wallet. Your crypto.')).toBeVisible()
   })
 
-  it('renders Secured by text', () => {
+  it('renders Protected by text', () => {
     const { getByText } = render(<KeyManagementModal setPage={mockSetPage} goBack={mockGoBack} onClose={mockOnClose} />)
-    expect(getByText('Secured by')).toBeVisible()
+    expect(getByText('Protected by')).toBeVisible()
   })
 
   it('Continue button calls setPage(Page.PasskeyGeneration)', () => {

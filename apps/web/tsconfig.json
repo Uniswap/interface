@@ -46,16 +46,19 @@
   "exclude": ["scripts/build-vercel.ts"],
   "references": [
     {
-      "path": "../../packages/environment"
+      "path": "../../packages/wallet"
     },
     {
-      "path": "../../packages/wallet"
+      "path": "../../packages/environment"
     },
     {
       "path": "../../packages/utilities"
     },
     {
       "path": "../../packages/websocket"
+    },
+    {
+      "path": "../../packages/tailwind"
     },
     {
       "path": "../../packages/sessions"
@@ -73,6 +76,12 @@
       "path": "../../packages/encoding"
     },
     {
+      "path": "../../packages/cryptography"
+    },
+    {
+      "path": "../../packages/compliance"
+    },
+    {
       "path": "../../packages/chains"
     },
     {
@@ -86,6 +95,9 @@
     },
     {
       "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ]
 }

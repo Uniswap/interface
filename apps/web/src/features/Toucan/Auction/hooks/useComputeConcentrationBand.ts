@@ -9,6 +9,7 @@ import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 /**
  * Converts a value from smallest unit to decimal using viem's formatUnits
@@ -56,7 +57,10 @@ export function useComputeConcentrationBand(): void {
     const isAuctionActive = auctionProgressState === AuctionProgressState.IN_PROGRESS
     const effectiveCheckpoint = isAuctionActive ? onchainCheckpoint : checkpointData
     const clearingPrice = getClearingPrice(effectiveCheckpoint, auctionDetails)
-    const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
+    if (auctionTokenDecimals === undefined) {
+      return null
+    }
     const clearingPriceDecimal = fromQ96ToDecimalWithTokenDecimals({
       q96Value: clearingPrice,
       bidTokenDecimals: bidTokenInfo.decimals,

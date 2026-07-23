@@ -9,6 +9,7 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { usePrepareSwapTransactionEffect } from 'uniswap/src/features/transactions/swap/review/hooks/usePrepareSwapTransactionEffect'
+import { useResetEarnFlowOnQuoteError } from 'uniswap/src/features/transactions/swap/review/hooks/useResetEarnFlowOnQuoteError'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { SwapReviewCallbacksContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/SwapReviewCallbacksStoreContextProvider'
 import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
@@ -20,6 +21,8 @@ import {
 } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
 import { SwapReviewTransactionStoreContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/SwapReviewTransactionStoreContextProvider'
 import {
+  useEarnQuoteRefreshField,
+  useHasSettledEarnQuoteRefreshError,
   useIsSwapMissingParams,
   useIsSwapReviewLoading,
   useSwapReviewError,
@@ -84,6 +87,8 @@ export function SwapReviewScreenProviders({
 
 export function SwapReviewScreen(): JSX.Element | null {
   usePerformanceLogger(DDRumManualTiming.SwapReviewScreenRender, [])
+  useResetEarnFlowOnQuoteError()
+
   const { acceptedDerivedSwapInfo, isWrap, newTradeRequiresAcceptance } = useSwapReviewTransactionStore((s) => ({
     acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
     isWrap: s.isWrap,
@@ -104,6 +109,8 @@ export function SwapReviewScreen(): JSX.Element | null {
   const { onPrev } = useSwapOnPrevious()
 
   const isLoading = useIsSwapReviewLoading()
+  const earnQuoteRefreshField = useEarnQuoteRefreshField()
+  const hasSettledEarnQuoteRefreshError = useHasSettledEarnQuoteRefreshError()
   const isSwapMissingParams = useIsSwapMissingParams()
   const error = useSwapReviewError()
 
@@ -150,6 +157,7 @@ export function SwapReviewScreen(): JSX.Element | null {
           {acceptedDerivedSwapInfo && (
             <TransactionAmountsReview
               acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              quoteRefreshField={earnQuoteRefreshField}
               newTradeRequiresAcceptance={newTradeRequiresAcceptance}
               onClose={onPrev}
             />
@@ -162,7 +170,10 @@ export function SwapReviewScreen(): JSX.Element | null {
           ) : isWrap ? (
             <SwapReviewWrapTransactionDetails />
           ) : (
-            <SwapReviewSwapDetails />
+            <SwapReviewSwapDetails
+              isQuoteRefreshLoading={earnQuoteRefreshField !== undefined}
+              hasQuoteRefreshError={hasSettledEarnQuoteRefreshError}
+            />
           )}
         </Flex>
       </SwapReviewContentWrapper>

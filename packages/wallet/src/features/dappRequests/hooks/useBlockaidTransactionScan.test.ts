@@ -1,17 +1,18 @@
 import { waitFor } from '@testing-library/react-native'
 import { BlockaidScanTransactionRequest, SharedQueryClient } from '@universe/api'
 import { BlockaidApiClient } from 'uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient'
+import type { MockedFunction } from 'vitest'
 import { useBlockaidTransactionScan } from 'wallet/src/features/dappRequests/hooks/useBlockaidTransactionScan'
 import { renderHook } from 'wallet/src/test/test-utils'
 
 // Mock the BlockaidApiClient
-jest.mock('uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient', () => ({
+vi.mock('uniswap/src/data/apiClients/blockaidApi/BlockaidApiClient', () => ({
   BlockaidApiClient: {
-    scanTransaction: jest.fn(),
+    scanTransaction: vi.fn(),
   },
 }))
 
-const mockScanTransaction = BlockaidApiClient.scanTransaction as jest.MockedFunction<
+const mockScanTransaction = BlockaidApiClient.scanTransaction as MockedFunction<
   typeof BlockaidApiClient.scanTransaction
 >
 
@@ -46,7 +47,7 @@ describe('useBlockaidTransactionScan', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockScanTransaction.mockReset()
     // Clear the query cache to ensure test isolation
     SharedQueryClient.clear()

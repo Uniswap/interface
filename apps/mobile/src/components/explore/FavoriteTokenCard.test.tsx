@@ -70,7 +70,7 @@ describe('FavoriteTokenCard', () => {
 
   describe('when token data is being fetched', () => {
     it('renders loader', async () => {
-      const { queryByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
+      const { queryByTestId, queryByText } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
       const loaderPrice = queryByTestId('loader/favorite/price')
       const loaderPriceChange = queryByTestId('loader/favorite/priceChange')
@@ -79,7 +79,7 @@ describe('FavoriteTokenCard', () => {
       expect(loaderPriceChange).toBeTruthy()
 
       await waitFor(() => {
-        expect(queryByTestId(touchableId)).toBeTruthy()
+        expect(queryByText(getSymbolDisplayText(favoriteToken.symbol)!)).toBeTruthy()
       })
     })
   })
@@ -118,7 +118,7 @@ describe('FavoriteTokenCard', () => {
     it('navigates to the token details screen when pressed', async () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const touchable = await findByTestId(`${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`)
+      const touchable = await findByTestId(touchableId)
       act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })

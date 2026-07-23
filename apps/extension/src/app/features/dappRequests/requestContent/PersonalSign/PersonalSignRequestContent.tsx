@@ -61,6 +61,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
       title={t('dapp.request.signature.header')}
       showAddressFooter={false}
       disableConfirm={disableConfirm}
+      isCriticalRisk={riskLevel === TransactionRiskLevel.Critical}
     >
       <DappPersonalSignContent
         chainId={activeChain}

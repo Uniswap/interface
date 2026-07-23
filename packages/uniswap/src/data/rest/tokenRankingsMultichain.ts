@@ -4,9 +4,15 @@ import {
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { parseProtectionInfo, parseSafetyLevel } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { CurrencyInfo, MultichainSearchResult, SafetyInfo } from 'uniswap/src/features/dataApi/types'
+import {
+  CurrencyInfo,
+  MultichainSearchResult,
+  SafetyInfo,
+  SearchMultichainParent,
+} from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import type { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 function exploreChainTokenToCurrencyInfo({
@@ -58,12 +64,18 @@ export function tokenRankingsStatToSearchResult(stat: TokenRankingsStat): Multic
     return undefined
   }
 
+  const id = `${stat.chain}_${stat.address}`
+  const searchMultichainParent: SearchMultichainParent = {
+    id,
+    tokenCurrencyIds: tokens.map((t) => t.currencyId) as CurrencyId[],
+  }
+
   return {
-    id: `${stat.chain}_${stat.address}`,
+    id,
     name: stat.name ?? '',
     symbol: stat.symbol ?? '',
     logoUrl: stat.logo || undefined,
     safetyInfo,
-    tokens,
+    tokens: tokens.map((t) => ({ ...t, searchMultichainParent })),
   }
 }

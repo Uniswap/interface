@@ -1,4 +1,29 @@
+import type { BigNumberish } from '@ethersproject/bignumber'
+
 const GWEI_TO_WEI = BigInt('1000000000')
+
+/**
+ * maxFeePerGas (wei) x gasLimit -> wei (decimal string): a populated tx's max
+ * cost. Like {@link computeMaxCost} but reads the resolved wei fields off the
+ * swap `TransactionRequest`, so the Network cost row matches the editor's "Max
+ * cost" once overrides are applied. Returns undefined when either field is
+ * missing or unparseable.
+ */
+export function computeMaxCostFromTx(args: {
+  maxFeePerGas?: BigNumberish | null
+  gasLimit?: BigNumberish | null
+}): string | undefined {
+  const { maxFeePerGas, gasLimit } = args
+  if (maxFeePerGas === undefined || maxFeePerGas === null || gasLimit === undefined || gasLimit === null) {
+    return undefined
+  }
+  try {
+    // `.toString()` then `BigInt` handles every `BigNumberish` shape.
+    return (BigInt(maxFeePerGas.toString()) * BigInt(gasLimit.toString())).toString()
+  } catch {
+    return undefined
+  }
+}
 
 /**
  * (maxBaseFee + priorityFee) GWEI x gasLimit -> wei (decimal string).

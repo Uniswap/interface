@@ -1,6 +1,5 @@
 import { type QueryFunction, type QueryKey, skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
-import { type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { V1_TRADING_API_PATHS, type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -26,7 +25,7 @@ export function useWalletCheckDelegationQuery({
 }
 
 const walletCheckDelegationQueryKey = (params?: WalletCheckDelegationParams): QueryKey => {
-  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.wallet.checkDelegation, params]
+  return [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.wallet.checkDelegation, params]
 }
 
 const walletCheckDelegationQueryFn = (

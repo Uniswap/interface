@@ -100,12 +100,13 @@ export function DappNetworkCostRow({
   })
 
   return (
-    <Flex px="$spacing8">
+    <Flex px="$spacing8" py="$spacing8">
       <NetworkCostRow
         gasFeeUsd={gasFeeFormatted}
         enableCustomGasFeeEntry={enableCustomGasFeeEntry}
         hasOverrides={hasOverrides}
         hasWarning={hasWarning}
+        includesDelegation={showSmartWalletActivation}
         onPress={onPressRow}
       />
       <NetworkCostEditorModal

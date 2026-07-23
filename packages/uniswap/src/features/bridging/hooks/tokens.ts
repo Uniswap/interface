@@ -123,10 +123,12 @@ export function useBridgingTokenWithHighestBalance({
 export function useBridgingTokensOptions({
   oppositeSelectedToken,
   chainFilter,
+  chainIds,
   portfolioData,
 }: {
   oppositeSelectedToken: TradeableAsset | undefined
   chainFilter: UniverseChainId | null
+  chainIds?: UniverseChainId[]
   portfolioData: PortfolioBalancesResult
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
   const tokenIn = oppositeSelectedToken?.address
@@ -161,8 +163,13 @@ export function useBridgingTokensOptions({
   const isSameChain = oppositeSelectedToken?.chainId === chainFilter
   const shouldFilterByChain = chainFilter !== null && !isSameChain
   const filteredTokenOptions = useMemo(
-    () => filter({ tokenOptions: tokenOptions ?? null, chainFilter: shouldFilterByChain ? chainFilter : null }),
-    [tokenOptions, shouldFilterByChain, chainFilter],
+    () =>
+      filter({
+        tokenOptions: tokenOptions ?? null,
+        chainFilter: shouldFilterByChain ? chainFilter : null,
+        chainIds: shouldFilterByChain ? undefined : chainIds,
+      }),
+    [tokenOptions, shouldFilterByChain, chainFilter, chainIds],
   )
 
   const error = (!portfolioBalancesById && portfolioBalancesByIdError) || (!tokenOptions && errorBridgingTokens)

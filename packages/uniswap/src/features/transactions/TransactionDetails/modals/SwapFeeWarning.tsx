@@ -6,7 +6,7 @@ import { AlertCircleFilled } from 'ui/src/components/icons/AlertCircleFilled'
 import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 
@@ -20,7 +20,7 @@ export function SwapFeeWarning({
   const { t } = useTranslation()
 
   const onPressLearnMore = async (): Promise<void> => {
-    await openUri({ uri: uniswapUrls.helpArticleUrls.swapFeeInfo })
+    await openUri({ uri: UniswapHelpUrls.articles.swapFeeInfo })
   }
 
   const caption =

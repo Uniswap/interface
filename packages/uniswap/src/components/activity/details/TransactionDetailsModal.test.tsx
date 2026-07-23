@@ -2,6 +2,7 @@ import { TradingApi } from '@universe/api/src'
 import { TransactionDetailsContent } from 'uniswap/src/components/activity/details/TransactionDetailsContent'
 import { TransactionDetailsHeader } from 'uniswap/src/components/activity/details/TransactionDetailsHeader'
 import { TransactionDetailsInfoRows } from 'uniswap/src/components/activity/details/TransactionDetailsInfoRows'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   TransactionDetails,
@@ -164,5 +165,35 @@ describe('TransactionDetails Components', () => {
     )
 
     expect(tree).toMatchSnapshot()
+  })
+
+  it('renders Earn vault details rows for vault deposits', () => {
+    const onClose = vi.fn()
+    const vaultAddress = '0x1111111111111111111111111111111111111111'
+
+    const { queryByText } = render(
+      <TransactionDetailsInfoRows
+        isShowingMore={false}
+        transactionDetails={{
+          ...mockTransaction,
+          chainId: 1,
+          typeInfo: {
+            type: TransactionType.Deposit,
+            assetType: AssetType.Currency,
+            tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            currencyAmountRaw: '1000000000000000000',
+            isVault: true,
+            vaultAddress,
+          },
+        }}
+        openPlanView={vi.fn()}
+        onClose={onClose}
+      />,
+    )
+
+    expect(queryByText('common.text.recipient')).toBeTruthy()
+    expect(queryByText('explore.earn.title')).toBeTruthy()
+    expect(queryByText('transaction.details.vaultAddress')).toBeTruthy()
+    expect(queryByText('0x1111...1111')).toBeTruthy()
   })
 })

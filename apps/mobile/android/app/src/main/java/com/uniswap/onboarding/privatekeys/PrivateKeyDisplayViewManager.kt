@@ -10,8 +10,9 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.uniswap.RnEthersRs
+import com.uniswap.compose.ComposeHostView
+import com.uniswap.compose.dispatchComposeHostEvent
 import com.uniswap.theme.UniswapComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.update
  * for the PrivateKeyDisplay which shows the private key for the given
  * address and enabled copying it to clipboard.
  */
-class PrivateKeyDisplayViewManager : ViewGroupManager<ComposeView>() {
+class PrivateKeyDisplayViewManager : ViewGroupManager<ComposeHostView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -29,12 +30,13 @@ class PrivateKeyDisplayViewManager : ViewGroupManager<ComposeView>() {
 
   private val addressFlow = MutableStateFlow("")
 
-  override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
+  override fun createViewInstance(reactContext: ThemedReactContext): ComposeHostView {
     context = reactContext
     val ethersRs = RnEthersRs(reactContext)
     val viewModel = PrivateKeyDisplayViewModel(ethersRs)
 
-    return ComposeView(reactContext).apply {
+    val host = ComposeHostView(reactContext)
+    val composeView = ComposeView(reactContext).apply {
       setContent {
         val address by addressFlow.collectAsState()
 
@@ -46,12 +48,15 @@ class PrivateKeyDisplayViewManager : ViewGroupManager<ComposeView>() {
               val bundle = Arguments.createMap().apply {
                 putDouble(FIELD_HEIGHT, it.toDouble())
               }
-              sendEvent(id, EVENT_HEIGHT_MEASURED, bundle)
+              sendEvent(host.id, EVENT_HEIGHT_MEASURED, bundle)
             },
           )
         }
       }
     }
+
+    host.setComposeView(composeView)
+    return host
   }
 
   /**
@@ -73,9 +78,7 @@ class PrivateKeyDisplayViewManager : ViewGroupManager<ComposeView>() {
   }
 
   private fun sendEvent(id: Int, eventName: String, bundle: WritableMap? = null) {
-    context
-      .getJSModule(RCTEventEmitter::class.java)
-      .receiveEvent(id, eventName, bundle)
+    dispatchComposeHostEvent(context, id, eventName, bundle)
   }
 
   @ReactProp(name = "address")

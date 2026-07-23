@@ -37,7 +37,7 @@ export function KycActionButton({ kycStatus, onPress }: { kycStatus: AuctionKycS
               color="$surface2"
               whiteSpace="nowrap"
             >
-              {t('toucan.kyc.requiredByTeam', { teamName: auctionDetails?.token?.currency.name })}
+              {t('toucan.kyc.requiredByTeam', { teamName: auctionDetails?.token?.currency.name ?? t('common.token') })}
             </Text>
           </Flex>
         </Button>

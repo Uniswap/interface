@@ -73,7 +73,7 @@ function NetworkCostPickerRow({
             {description}
           </Text>
         </Flex>
-        {selected && <CheckCircleFilled color="$accent1" size="$icon.24" />}
+        {selected && <CheckCircleFilled color="$accent1" size="$icon.24" flexShrink={0} />}
       </Flex>
     </TouchableArea>
   )

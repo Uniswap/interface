@@ -12,7 +12,7 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
+import type { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { roundRect } from '~/components/Charts/utils'
 import { positionsLine } from '~/components/Charts/VolumeChart/CrosshairHighlightPrimitive'
 import { positionsBox } from '~/components/Charts/VolumeChart/utils'

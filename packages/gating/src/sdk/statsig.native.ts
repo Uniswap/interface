@@ -25,7 +25,7 @@ let localOverrideAdapter: LocalOverrideAdapterWrapper | undefined
 
 export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
   if (!localOverrideAdapter) {
-    localOverrideAdapter = new LocalOverrideAdapterWrapper(config.statsigApiKey)
+    localOverrideAdapter = new LocalOverrideAdapterWrapper(config.statsigApiKey, getStatsigClient)
   }
   return localOverrideAdapter
 }

@@ -10,18 +10,19 @@ import {
   isAppRatingNotification,
 } from 'src/notification-service/triggers/appRatingTrigger'
 import { type ExtensionState } from 'src/store/extensionReducer'
+import type { MockedFunction } from 'vitest'
 import { appRatingStateSelector } from 'wallet/src/features/appRating/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 
-jest.mock('wallet/src/features/appRating/selectors')
-const mockAppRatingStateSelector = appRatingStateSelector as jest.MockedFunction<typeof appRatingStateSelector>
+vi.mock('wallet/src/features/appRating/selectors')
+const mockAppRatingStateSelector = appRatingStateSelector as MockedFunction<typeof appRatingStateSelector>
 
 describe('appRatingTrigger', () => {
-  const mockDispatch = jest.fn()
-  const mockGetState = jest.fn<ExtensionState, []>()
+  const mockDispatch = vi.fn()
+  const mockGetState = vi.fn<() => ExtensionState>()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('createAppRatingTrigger', () => {

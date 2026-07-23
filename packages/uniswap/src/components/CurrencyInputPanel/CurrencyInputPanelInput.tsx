@@ -90,6 +90,9 @@ export const CurrencyInputPanelInput = memo(
       const colors = useSporeColors()
       const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
+      const currencySymbolMargin =
+        fiatCurrencySymbol.length > 1 ? (isWebPlatform ? '$spacing2' : '$spacing4') : undefined
+
       const { value, color } = indicativeQuoteTextDisplay
 
       const inputRef = useRef<TextInput | null>(null)
@@ -139,7 +142,7 @@ export const CurrencyInputPanelInput = memo(
               color={showInsufficientBalanceWarning ? '$statusCritical' : color}
               fontSize={inputFontSize.fontSize}
               lineHeight={inputFontSize.lineHeight}
-              mr={isWebPlatform ? '$spacing2' : undefined}
+              mr={currencySymbolMargin}
             >
               {fiatCurrencySymbol}
             </Text>

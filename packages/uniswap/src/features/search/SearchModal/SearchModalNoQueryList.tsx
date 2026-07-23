@@ -1,11 +1,12 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex, GeneratedIcon, Text } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSectionsForNoQuerySearch } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForNoQuerySearch'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
+import { useRwaIssuerCurrencyInfos } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
 
@@ -25,7 +26,8 @@ interface SearchModalNoQueryListProps {
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
   renderedInModal: boolean
-  contentContainerStyle?: ContentStyle
+  contentContainerStyle?: StyleProp<ViewStyle>
+  rowWrapper?: SearchModalListProps['rowWrapper']
 }
 
 export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner({
@@ -34,10 +36,14 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   onSelect,
   renderedInModal,
   contentContainerStyle,
+  rowWrapper,
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
   const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
+
+  // Primary-chain CurrencyInfos for the no-query Stocks-shelf RwaCollection rows' context menu.
+  const rwaIssuerCurrencyInfos = useRwaIssuerCurrencyInfos({ sections })
 
   useMultichainSearchModalMetricsAnalytics({
     sections,
@@ -67,6 +73,8 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
       renderedInModal={renderedInModal}
       contentContainerStyle={contentContainerStyle}
       emptyElement={getEmptyElementComponent()}
+      rowWrapper={rowWrapper}
+      rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
     />
   )

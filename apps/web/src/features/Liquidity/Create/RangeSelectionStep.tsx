@@ -408,7 +408,8 @@ export const SelectPriceRangeStep = ({
   }, [priceRangeState.fullRange, priceRangeState.minTick, priceRangeState.maxTick, poolId, setFallbackRangePrices])
 
   if (protocolVersion === ProtocolVersion.V2) {
-    return <InitialPriceInput />
+    // Only a brand-new pair needs an initial price; an existing pair has nothing to set here.
+    return creatingPoolOrPair ? <InitialPriceInput /> : null
   }
 
   const isDisabled = migratingPosition?.isOutOfRange

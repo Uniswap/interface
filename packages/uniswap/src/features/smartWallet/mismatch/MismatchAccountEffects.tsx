@@ -4,7 +4,7 @@ import {
   useCurrentAccountChainMismatchEffect,
   useOnConnectCheckAllAccountChainMismatchEffect,
 } from 'uniswap/src/features/smartWallet/mismatch/hooks'
-import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContextValue'
 import { useOnDisconnectEffect } from 'uniswap/src/features/smartWallet/mismatch/useOnDisconnectEffect'
 
 /**

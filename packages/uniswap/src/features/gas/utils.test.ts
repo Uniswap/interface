@@ -7,7 +7,9 @@ import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import {
   applyNativeTokenPercentageBuffer,
   getActiveGasStrategy,
+  getDisplayGasStrategy,
   hasGasEstimationFailed,
+  hasGasOverrides,
   hasSufficientFundsIncludingGas,
   hasSufficientGasBalance,
 } from 'uniswap/src/features/gas/utils'
@@ -27,6 +29,27 @@ vi.mock('@universe/gating', async (importOriginal) => {
 const ZERO_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 0)
 const ONE_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 1e18)
 const TEN_ETH = ONE_ETH.multiply(10)
+
+describe(getDisplayGasStrategy, () => {
+  it('returns undefined when no strategy is available', () => {
+    expect(getDisplayGasStrategy(undefined)).toBeUndefined()
+  })
+
+  it('returns a display strategy without mutating the submission strategy', () => {
+    const strategy: GasStrategy = {
+      limitInflationFactor: 1.2,
+      displayLimitInflationFactor: 1.2,
+      priceInflationFactor: 1.3,
+      percentileThresholdFor1559Fee: 80,
+    }
+
+    expect(getDisplayGasStrategy(strategy)).toEqual({
+      ...strategy,
+      displayLimitInflationFactor: 1,
+    })
+    expect(strategy.displayLimitInflationFactor).toBe(1.2)
+  })
+})
 
 describe(applyNativeTokenPercentageBuffer, () => {
   it('returns undefined if no currency amount is provided', () => {
@@ -121,7 +144,7 @@ describe(hasSufficientGasBalance, () => {
     ).toBe(false)
   })
 
-  it('delegates to hasSufficientFundsIncludingTempoGas for Tempo', () => {
+  it('delegates to the shifted-gas-token path for Tempo', () => {
     expect(
       hasSufficientGasBalance({
         chainId: UniverseChainId.Tempo,
@@ -282,5 +305,18 @@ describe(hasGasEstimationFailed, () => {
 
   it('returns true when the query settled with an error', () => {
     expect(hasGasEstimationFailed(true, erroredResult)).toBe(true)
+  })
+})
+
+describe(hasGasOverrides, () => {
+  it('returns false when no overrides are saved', () => {
+    expect(hasGasOverrides(undefined)).toBe(false)
+    expect(hasGasOverrides({})).toBe(false)
+  })
+
+  it('returns true when any override field is set', () => {
+    expect(hasGasOverrides({ maxBaseFeeGwei: '10' })).toBe(true)
+    expect(hasGasOverrides({ priorityFeeGwei: '1' })).toBe(true)
+    expect(hasGasOverrides({ gasLimit: '21000' })).toBe(true)
   })
 })

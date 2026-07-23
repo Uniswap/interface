@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
@@ -37,8 +36,7 @@ export function ActivitySection() {
     currencyChainId: s.currencyChainId,
     selectedMultichainChainId: s.selectedMultichainChainId,
   }))
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const isMultichainView = multichainTokenUxEnabled && selectedMultichainChainId === undefined
+  const isMultichainView = selectedMultichainChainId === undefined
 
   const [activityInView, setActivityInView] = useState(ActivityTab.Txs)
 

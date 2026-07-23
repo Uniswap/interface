@@ -6,6 +6,8 @@ import type {
   GetPortfolioResponse,
   GetWalletBalancesRequest,
   GetWalletBalancesResponse,
+  GetWalletsBalancesRequest,
+  GetWalletsBalancesResponse,
   ListTokensRequest,
   ListTokensResponse,
   ListTopPoolsRequest,
@@ -19,6 +21,7 @@ export interface DataApiServiceClientContext {
 export interface DataApiServiceClient {
   getPortfolio: (params: PartialMessage<GetPortfolioRequest>) => Promise<GetPortfolioResponse>
   getWalletBalances: (params: PartialMessage<GetWalletBalancesRequest>) => Promise<GetWalletBalancesResponse>
+  getWalletsBalances: (params: PartialMessage<GetWalletsBalancesRequest>) => Promise<GetWalletsBalancesResponse>
   listTokens: (params: PartialMessage<ListTokensRequest>) => Promise<ListTokensResponse>
   listTopPools: (params: PartialMessage<ListTopPoolsRequest>) => Promise<ListTopPoolsResponse>
 }
@@ -27,6 +30,7 @@ export function createDataApiServiceClient({ rpcClient }: DataApiServiceClientCo
   return {
     getPortfolio: (params): Promise<GetPortfolioResponse> => rpcClient.getPortfolio(params),
     getWalletBalances: (params): Promise<GetWalletBalancesResponse> => rpcClient.getWalletBalances(params),
+    getWalletsBalances: (params): Promise<GetWalletsBalancesResponse> => rpcClient.getWalletsBalances(params),
     listTokens: (params): Promise<ListTokensResponse> => rpcClient.listTokens(params),
     listTopPools: (params): Promise<ListTopPoolsResponse> => rpcClient.listTopPools(params),
   }

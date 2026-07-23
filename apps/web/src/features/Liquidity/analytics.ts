@@ -1,11 +1,34 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { SharedQueryClient } from '@universe/api'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { currencyId, currencyIdToAddress, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+
+export function logPositionCardClick(position: PositionInfo, trace: ITraceContext): void {
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+    element: ElementName.LiquidityPositionCard,
+    pool_address: position.poolId,
+    chain_id: position.chainId,
+    ...trace,
+  })
+}
+
+export function logCollectFeesClick(position: PositionInfo, trace: ITraceContext): void {
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+    element: ElementName.CollectFeesButton,
+    pool_address: position.poolId,
+    token0_symbol: position.currency0Amount.currency.symbol,
+    token1_symbol: position.currency1Amount.currency.symbol,
+    ...trace,
+  })
+}
 
 export function getLPBaseAnalyticsProperties({
   trace,

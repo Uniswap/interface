@@ -7,19 +7,23 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import {
-  AuctionStatusFilter as AuctionStatusFilterEnum,
+  AuctionQuickFilter,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+
+/** Status options exposed by the dropdown; shares the AuctionQuickFilter dimension with the pills. */
+const STATUS_OPTIONS = [AuctionQuickFilter.All, AuctionQuickFilter.Active, AuctionQuickFilter.Completed] as const
+
 export function AuctionStatusFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const selectedFilter = useExploreTablesFilterStore((s) => s.statusFilter)
-  const { setStatusFilter: setSelectedFilter } = useExploreTablesFilterStoreActions()
+  const selectedFilter = useExploreTablesFilterStore((s) => s.quickFilter)
+  const { setQuickFilter: setSelectedFilter } = useExploreTablesFilterStoreActions()
   const media = useMedia()
 
   const onFilterChange = useCallback(
-    (filter: AuctionStatusFilterEnum) => {
+    (filter: AuctionQuickFilter) => {
       setSelectedFilter(filter)
       setOpen(false)
       sendAnalyticsEvent(UniswapEventName.AuctionFilterSelected, {
@@ -30,28 +34,31 @@ export function AuctionStatusFilter() {
   )
 
   const getFilterLabel = useCallback(
-    (filter: AuctionStatusFilterEnum) => {
+    (filter: AuctionQuickFilter) => {
       switch (filter) {
-        case AuctionStatusFilterEnum.All:
-          return t('common.all')
-        case AuctionStatusFilterEnum.Active:
+        case AuctionQuickFilter.Active:
           return t('toucan.filter.active')
-        case AuctionStatusFilterEnum.Complete:
+        case AuctionQuickFilter.Completed:
           return t('toucan.auction.timeRemaining.completed')
+        default:
+          return t('common.all')
       }
-      throw new Error(`Unknown filter: ${filter}`)
     },
     [t],
   )
 
   const filterOptions = useMemo(() => {
-    return Object.values(AuctionStatusFilterEnum).map((option) => (
+    return STATUS_OPTIONS.map((option) => (
       <InternalMenuItem key={`AuctionStatusFilter-${option}`} onPress={() => onFilterChange(option)}>
         {getFilterLabel(option)}
         {selectedFilter === option && <Check size="$icon.16" color="$accent1" />}
       </InternalMenuItem>
     ))
   }, [selectedFilter, onFilterChange, getFilterLabel])
+
+  // Pill-only selections (Verified / New) aren't statuses, so the trigger keeps its generic label for them.
+  const isStatusSelection =
+    selectedFilter === AuctionQuickFilter.Active || selectedFilter === AuctionQuickFilter.Completed
 
   return (
     <Flex>
@@ -61,9 +68,7 @@ export function AuctionStatusFilter() {
           toggleOpen={() => setOpen((prev) => !prev)}
           menuLabel={
             <Text variant="buttonLabel3" width="max-content">
-              {selectedFilter === AuctionStatusFilterEnum.All
-                ? t('toucan.filter.status')
-                : getFilterLabel(selectedFilter)}
+              {isStatusSelection ? getFilterLabel(selectedFilter) : t('toucan.filter.status')}
             </Text>
           }
           dropdownStyle={{ width: 160 }}

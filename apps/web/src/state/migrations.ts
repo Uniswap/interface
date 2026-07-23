@@ -1,3 +1,4 @@
+// oxlint-disable import/no-cycle -- sagas and redux store have many cycles, deep refactoring is needed
 import localForage from 'localforage'
 import type { MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { createMigrate } from 'redux-persist'

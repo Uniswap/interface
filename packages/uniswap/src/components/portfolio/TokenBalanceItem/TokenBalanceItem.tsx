@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, useIsDarkMode } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
@@ -15,14 +16,17 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPortfolioBalanceDisplayQuantity } from 'uniswap/src/features/portfolio/balances/getPortfolioBalanceDisplayQuantity'
+import { TokenMenuActionType } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
-import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
+import { useTokenBalanceItemConfig } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
 /**
- * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.
+ * IMPORTANT: if you modify the UI of this component, update `TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT`
+ * and the corresponding Skeleton component.
  */
 
 /** When set (e.g. mobile portfolio), wraps the row in {@link TokenBalanceItemContextMenu}. */
@@ -36,11 +40,19 @@ interface TokenBalanceItemProps {
   portfolioBalance?: PortfolioMultichainBalance
   isLoading?: boolean
   padded?: boolean
-  isHidden: boolean
   contextMenuActions?: TokenBalanceItemContextMenuConfig
 }
 
 const MULTICHAIN_BALANCES_SLOT_HEIGHT = 20
+
+/** Row tap navigates to TDP — View details in the long-press menu is redundant. */
+const EXCLUDED_ACTIONS = [TokenMenuActionType.ViewDetails]
+
+/**
+ * Estimated row height for list virtualization (FlatList `getItemLayout`, scroll windowing).
+ * Update when `TokenBalanceItem` layout changes (logo, padding, or text lines).
+ */
+export const TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT = 64
 
 /**
  * If you add any props to this component, make sure you use the react-devtools profiler to confirm that this doesn't break the memoization.
@@ -51,14 +63,12 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   portfolioBalance,
   isLoading,
   padded,
-  isHidden,
   contextMenuActions,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken } =
-    useTokenBalanceListContext()
+  const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
+    useTokenBalanceItemConfig()
 
   // Ensure items rerender when theme is switched
   useIsDarkMode()
@@ -67,15 +77,14 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   const symbol = portfolioBalance?.symbol ?? currency.symbol
   const logoUrl = portfolioBalance?.logoUrl ?? currencyInfo.logoUrl
   const shortenedSymbol = getSymbolDisplayText(symbol)
-  const isSpam = portfolioBalance
-    ? portfolioBalance.tokens.length > 0 && portfolioBalance.tokens.every((token) => token.currencyInfo.isSpam === true)
-    : currencyInfo.isSpam
 
   const showBalancesHoverTransition = Boolean(
     isExtensionApp && multichainRowExpansionEnabled && portfolioBalance && portfolioBalance.tokens.length > 1,
   )
 
   const isMultichainRowExpanded = Boolean(portfolioBalance && expandedCurrencyIds.has(portfolioBalance.id))
+
+  const isHiddenSectionRow = Boolean(portfolioBalance && hiddenBalanceRowIds.has(portfolioBalance.id))
 
   const multichainChainIds = useMemo((): UniverseChainId[] => {
     if (!portfolioBalance) {
@@ -128,7 +137,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
           symbol={symbol}
           url={logoUrl ?? undefined}
           networkCount={portfolioBalance?.tokens.length}
-          alwaysShowNetworkLogo={multichainTokenUxEnabled && portfolioBalance?.tokens.length === 1}
+          alwaysShowNetworkLogo={portfolioBalance?.tokens.length === 1}
         />
         <Flex shrink alignItems="flex-start">
           <Text ellipsizeMode="tail" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>
@@ -158,7 +167,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
         </Flex>
       </Flex>
 
-      {isSpam === true && isHidden ? null : (
+      {isHiddenSectionRow ? null : (
         <TokenBalanceRightSideColumn
           isLoading={isLoading}
           currencyId={currencyInfo.currencyId}
@@ -176,6 +185,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
       <TokenBalanceItemContextMenu
         portfolioBalance={portfolioBalanceForMenu}
         isMultichainAsset={isMultichainAsset}
+        excludedActions={EXCLUDED_ACTIONS}
         copyAddressToClipboard={contextMenuActions.copyAddressToClipboard}
         openReportTokenModal={contextMenuActions.openReportTokenModal}
         onPressToken={handleMenuRowPress}
@@ -269,7 +279,7 @@ function TokenBalanceQuantity({
     svmAddress,
   })
 
-  const quantity = portfolioBalance?.totalAmount ?? restTokenBalance.data?.quantity
+  const quantity = getPortfolioBalanceDisplayQuantity(portfolioBalance) ?? restTokenBalance.data?.quantity
 
   return (
     <Text color="$neutral2" numberOfLines={1} variant={isWebPlatform ? 'body3' : 'body2'}>
@@ -291,6 +301,7 @@ function TokenBalanceRightSideColumn({
   svmAddress?: string
   portfolioBalance?: PortfolioMultichainBalance
 }): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -323,9 +334,14 @@ function TokenBalanceRightSideColumn({
           </Flex>
         ) : (
           <Flex alignItems="flex-end" pl="$spacing8">
-            <Text color="$neutral1" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>
-              {balanceFormatted}
-            </Text>
+            <AnimatedNumber
+              alignRight
+              numericValue={balanceUSD}
+              value={balanceFormatted}
+              textVariant={isWebPlatform ? '$body2' : '$body1'}
+              disableAnimations={!isDataLivelinessEnabled}
+              warmLoading={isLoading}
+            />
             <RelativeChange
               alignRight
               change={relativeChange24 ?? undefined}

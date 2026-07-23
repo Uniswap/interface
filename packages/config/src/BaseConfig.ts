@@ -29,6 +29,12 @@ export const BaseConfigValues = {
   isUnitTest: process.env.JEST_WORKER_ID ?? process.env.VITEST_WORKER_ID,
   isE2ETest: process.env.IS_E2E_TEST,
   isVercelEnvironment: process.env.VERCEL,
+  // Build-time channel for the extension (dev/beta/prod). Used to resolve the env of
+  // unpacked builds whose runtime extension ID matches none of the trusted IDs.
+  buildEnv: process.env.BUILD_ENV,
+  // When true, a Beta build points its APIs at prod instead of staging. Set at build time
+  // (e.g. by the on-demand beta workflow); unset/false keeps the default beta → staging in urls.ts.
+  isBetaUsingProdApi: process.env.BETA_USES_PROD_API,
 
   // API Keys
   alchemyApiKey: process.env.ALCHEMY_API_KEY ?? process.env.REACT_APP_ALCHEMY_API_KEY,
@@ -49,9 +55,10 @@ export const BaseConfigValues = {
   jupiterProxyUrl: process.env.JUPITER_PROXY_URL ?? process.env.REACT_APP_JUPITER_PROXY_URL,
   quicknodeEndpointName: process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
+  quicknodeSolanaRpcUrl: process.env.QUICKNODE_SOLANA_RPC_URL ?? process.env.REACT_APP_QUICKNODE_SOLANA_RPC_URL,
 
   // Feature Flags
-  enableEntryGatewayProxy: process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.ENABLE_ENTRY_GATEWAY_PROXY,
+  enableEntryGatewayProxy: process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY,
   enableSessionService: process.env.ENABLE_SESSION_SERVICE,
   enableSessionUpgradeAuto:
     process.env.ENABLE_SESSION_UPGRADE_AUTO ?? process.env.REACT_APP_ENABLE_SESSION_UPGRADE_AUTO,
@@ -69,7 +76,7 @@ export const BaseConfigValues = {
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE,
   tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE ?? process.env.REACT_APP_TRADING_API_URL_OVERRIDE,
-  tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV,
+  tradingApiWebTestEnv: process.env.TRADING_API_TEST_ENV ?? process.env.REACT_APP_TRADING_API_TEST_ENV,
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
 }
 
@@ -88,6 +95,8 @@ export const BaseConfigSchema = z.object({
   isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
   isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),
+  buildEnv: optionalString.describe('Build-time channel for the extension (dev/beta/prod)'),
+  isBetaUsingProdApi: boolFromString.describe('For Beta builds, point APIs at prod instead of staging'),
 
   // API Keys
   alchemyApiKey: optionalString.describe('API key for Alchemy'),
@@ -108,6 +117,9 @@ export const BaseConfigSchema = z.object({
   jupiterProxyUrl: optionalString.describe('URL for Jupiter proxy'),
   quicknodeEndpointName: optionalString.describe('QuickNode endpoint name'),
   quicknodeEndpointToken: optionalString.describe('QuickNode endpoint token'),
+  quicknodeSolanaRpcUrl: optionalString.describe(
+    'Dedicated QuickNode RPC URL for Solana; overrides the built-in default until UniRPC routes Solana',
+  ),
 
   // Feature Flags
   enableEntryGatewayProxy: boolFromString.describe('Is the entry gateway proxy enabled'),

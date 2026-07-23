@@ -13,7 +13,6 @@ import {
   passKeySignInOption,
   seedPhraseImportOption,
 } from 'src/screens/Import/constants'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Eye, WalletFilled } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
@@ -31,8 +30,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const entryPoint = params.entryPoint
-
-  useNavigationHeader(navigation)
 
   const handleOnPressRestoreBackup = async (): Promise<void> => {
     const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
@@ -110,16 +107,16 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
+        <TouchableArea
+          alignItems="center"
+          hitSlop={16}
+          mb="$spacing12"
+          testID={TestID.WatchWallet}
+          onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
+        >
           <Flex row alignItems="center" gap="$spacing8">
             <Eye color="$accent1" size="$icon.20" />
-            <Text
-              numberOfLines={1}
-              color="$accent1"
-              variant="buttonLabel1"
-              lineHeight={regionalizedLineHeight}
-              onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
-            >
+            <Text numberOfLines={1} color="$accent1" variant="buttonLabel1" lineHeight={regionalizedLineHeight}>
               {t('account.wallet.button.watch')}
             </Text>
           </Flex>

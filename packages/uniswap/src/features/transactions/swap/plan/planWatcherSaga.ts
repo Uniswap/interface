@@ -1,21 +1,23 @@
 import { FeatureFlags, getFeatureFlag, getStatsigClient } from '@universe/gating'
-import { call, delay, fork, select } from 'typed-redux-saga'
+import { call, delay, fork, type SagaGenerator, select } from 'typed-redux-saga'
 import { makeSelectPlanTransaction } from 'uniswap/src/features/transactions/selectors'
 import {
   logPlanPollDebug,
   PLAN_MAX_AGE_MS,
   PLAN_POLLING_INITIAL_DELAY_MS,
   PLAN_POLLING_INTERVAL_MS,
+  planIsTooOld,
   pollPlanStatus,
   shouldPollPlan,
 } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
-import { PlanTransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { PlanTransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface PlanListener {
-  updatePlanStatus: (updatedPlan: PlanTransactionDetails) => void
-  promise: Promise<PlanTransactionDetails>
+  resolvePlanStatus: (updatedPlan: PlanTransactionDetails | undefined) => void
+  promise: Promise<PlanTransactionDetails | undefined>
   timeoutId: NodeJS.Timeout
 }
 
@@ -99,7 +101,7 @@ export class PlanWatcher {
     }
 
     if (!shouldPollPlan(localPlan)) {
-      PlanWatcher.listeners[planId]?.updatePlanStatus(localPlan)
+      PlanWatcher.listeners[planId]?.resolvePlanStatus(localPlan)
       PlanWatcher.cleanupListener(planId)
       return
     }
@@ -107,16 +109,15 @@ export class PlanWatcher {
     const result = yield* call(pollPlanStatus, localPlan)
 
     if (result.updatedPlan) {
-      PlanWatcher.listeners[planId]?.updatePlanStatus(result.updatedPlan)
+      PlanWatcher.listeners[planId]?.resolvePlanStatus(result.updatedPlan)
       PlanWatcher.cleanupListener(planId)
     } else if (result.shouldRemoveFromWatchList) {
-      PlanWatcher.listeners[planId]?.updatePlanStatus(localPlan)
+      PlanWatcher.listeners[planId]?.resolvePlanStatus(localPlan)
       PlanWatcher.cleanupListener(planId)
     }
   }
 
-  // oxlint-disable-next-line typescript/explicit-function-return-type
-  static *waitForPlanStatus(planId: string) {
+  static *waitForPlanStatus(planId: string): SagaGenerator<PlanTransactionDetails | undefined> {
     logPlanPollDebug({
       fileName: 'planWatcherSaga',
       functionName: 'waitForPlanStatus',
@@ -128,8 +129,8 @@ export class PlanWatcher {
       return yield* call(() => existingListenerPromise)
     }
 
-    let resolvePromise: (value: PlanTransactionDetails) => void
-    const promise = new Promise<PlanTransactionDetails>((resolve) => {
+    let resolvePromise: (value: PlanTransactionDetails | undefined) => void = () => undefined
+    const promise = new Promise<PlanTransactionDetails | undefined>((resolve) => {
       resolvePromise = resolve
     })
 
@@ -137,15 +138,36 @@ export class PlanWatcher {
       const listener = PlanWatcher.listeners[planId]
       if (listener) {
         logger.warn('planWatcherSaga', 'waitForPlanStatus', 'Plan listener timed out', { planId })
-        // Resolve with undefined to unblock the caller - they should handle this case
-        // oxlint-disable-next-line typescript/no-explicit-any -- Resolving with undefined to signal timeout
-        resolvePromise(undefined as any)
+        resolvePromise(undefined)
         delete PlanWatcher.listeners[planId]
       }
     }, PLAN_MAX_AGE_MS)
 
-    // oxlint-disable-next-line typescript/no-non-null-assertion -- Must appease typechecker since resolvePromise is assigned inside promise scope
-    PlanWatcher.listeners[planId] = { updatePlanStatus: resolvePromise!, promise, timeoutId }
+    PlanWatcher.listeners[planId] = {
+      resolvePlanStatus: resolvePromise,
+      promise,
+      timeoutId,
+    }
     return yield* call(() => promise)
   }
+}
+
+export function* waitForPlanUpdateOrFinalizedState(
+  planTx: PlanTransactionDetails,
+): SagaGenerator<PlanTransactionDetails | undefined> {
+  // AwaitingAction plans require user action and won't change from polling.
+  // Return undefined so the watcher exits without dispatching an update.
+  if (planTx.status === TransactionStatus.AwaitingAction) {
+    return undefined
+  }
+
+  if (isFinalizedTx(planTx)) {
+    return planTx
+  }
+
+  if (planIsTooOld(planTx)) {
+    return { ...planTx, status: TransactionStatus.AwaitingAction }
+  }
+
+  return yield* call(PlanWatcher.waitForPlanStatus, planTx.typeInfo.planId)
 }

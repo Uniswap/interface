@@ -34,7 +34,7 @@ export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineP
   }, [shimmerDuration])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     transform: [
       {
         translateX: interpolate(xPosition.value, [0, 1], [layout ? -layout.width : 0, layout ? layout.width : 0]),

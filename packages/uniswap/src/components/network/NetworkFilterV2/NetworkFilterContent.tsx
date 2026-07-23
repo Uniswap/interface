@@ -17,6 +17,8 @@ interface NetworkFilterContentProps {
   onPressChain: (chainId: UniverseChainId | null) => void
   chainIds: UniverseChainId[]
   showAllNetworks: boolean
+  allNetworksChainIds?: UniverseChainId[]
+  forceAllNetworksLabel?: boolean
 }
 
 interface SelectableNetworkOptionProps {
@@ -24,6 +26,8 @@ interface SelectableNetworkOptionProps {
   selectedChain: UniverseChainId | null
   newChains: UniverseChainId[]
   onPressChain: (chainId: UniverseChainId | null) => void
+  allNetworksChainIds?: UniverseChainId[]
+  forceAllNetworksLabel?: boolean
 }
 
 function SectionHeader({ title }: { title: string }): JSX.Element {
@@ -50,6 +54,8 @@ function SelectableNetworkOption({
   selectedChain,
   newChains,
   onPressChain,
+  allNetworksChainIds,
+  forceAllNetworksLabel,
 }: SelectableNetworkOptionProps): JSX.Element {
   const handlePress = useEvent((): void => {
     onPressChain(chainId)
@@ -63,7 +69,9 @@ function SelectableNetworkOption({
       onPress={handlePress}
     >
       <NetworkOption
+        forceAllNetworksLabel={forceAllNetworksLabel}
         chainId={chainId}
+        chainIds={chainId === null ? allNetworksChainIds : undefined}
         currentlySelected={selectedChain === chainId}
         isNew={chainId !== null && newChains.includes(chainId)}
         borderRadius="$rounded16"
@@ -79,6 +87,8 @@ export function NetworkFilterContent({
   onPressChain,
   chainIds,
   showAllNetworks,
+  allNetworksChainIds,
+  forceAllNetworksLabel,
 }: NetworkFilterContentProps): JSX.Element {
   const { t } = useTranslation()
   const newChains = useNewChainIds()
@@ -100,6 +110,8 @@ export function NetworkFilterContent({
             chainId={null}
             selectedChain={selectedChain}
             newChains={newChains}
+            allNetworksChainIds={allNetworksChainIds}
+            forceAllNetworksLabel={forceAllNetworksLabel}
             onPressChain={onPressChain}
           />
         )}
@@ -128,6 +140,8 @@ export function NetworkFilterContent({
           chainId={null}
           selectedChain={selectedChain}
           newChains={newChains}
+          allNetworksChainIds={allNetworksChainIds}
+          forceAllNetworksLabel={forceAllNetworksLabel}
           onPressChain={onPressChain}
         />
       )}

@@ -15,8 +15,12 @@
  * Transformations:
  * 1. Strips __Host- and __Secure- prefixes from cookie names
  * 2. Removes Domain attribute (lets browser default to request origin)
- * 3. Ensures SameSite=Lax
- * 4. Keeps Secure flag (both Vercel and Cloudflare serve over HTTPS)
+ *
+ * SameSite (and every other attribute) passes through untouched — cookie
+ * policy is owned by entry-gateway/platform-service, not this proxy.
+ * Platform-service mints session cookies `SameSite=None; Secure` so iframe
+ * embeds keep their session (INC-344); overriding SameSite here would
+ * silently undo that in every environment served through this proxy.
  */
 export function rewriteProxiedCookie(cookie: string): string {
   let rewritten = cookie
@@ -25,24 +29,15 @@ export function rewriteProxiedCookie(cookie: string): string {
   // Only touch the name portion (before first '=') to avoid corrupting values.
   const nameEndIndex = rewritten.indexOf('=')
   if (nameEndIndex > 0) {
-    const cookieName = rewritten.substring(0, nameEndIndex)
-    const strippedName = cookieName.replace(/^(__Host-|__Secure-)/, '')
-    if (strippedName !== cookieName) {
-      rewritten = strippedName + rewritten.substring(nameEndIndex)
+    const rawName = rewritten.substring(0, nameEndIndex)
+    const cookieName = rawName.replace(/^(__Host-|__Secure-)/, '')
+    if (cookieName !== rawName) {
+      rewritten = cookieName + rewritten.substring(nameEndIndex)
     }
   }
 
   // Remove Domain attribute (e.g., Domain=.uniswap.org)
   rewritten = rewritten.replace(/Domain=[^;]+;?\s?/gi, '')
-
-  // Handle SameSite attribute — ensure Lax
-  if (rewritten.includes('SameSite=')) {
-    rewritten = rewritten.replace(/SameSite=\w+/gi, 'SameSite=Lax')
-  } else if (rewritten.includes('Path=')) {
-    rewritten = rewritten.replace(/(Path=[^;]+)/, 'SameSite=Lax; $1')
-  } else {
-    rewritten = `${rewritten}; SameSite=Lax`
-  }
 
   return rewritten
 }

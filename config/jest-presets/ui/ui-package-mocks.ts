@@ -33,3 +33,17 @@ jest.mock('react-native-webview', () => {
 })
 
 jest.mock('ui/src/hooks/useDeviceInsets', () => jest.requireActual('ui/src/hooks/useDeviceInsets.web.ts'))
+
+// RotatableChevron drives a Tamagui reanimated animation; in native jest its withSpring values
+// serialize as non-deterministic spring nodes (omega1: NaN) depending on worker state. Render it
+// without animation so snapshots are stable. RotatableChevron.tsx is a generated/cached output
+// (nx build:icons), so the fix can't live in the component itself.
+jest.mock('ui/src/components/icons/RotatableChevron', () => {
+  const actual = jest.requireActual('ui/src/components/icons/RotatableChevron')
+  const React = require('react')
+  return {
+    ...actual,
+    RotatableChevron: (props: Record<string, unknown>) =>
+      React.createElement(actual.RotatableChevron, { ...props, animation: null }),
+  }
+})

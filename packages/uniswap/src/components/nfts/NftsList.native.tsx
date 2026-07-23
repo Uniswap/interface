@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { FlashList } from '@shopify/flash-list'
+import type { FlashListRef } from '@shopify/flash-list'
 import { isNonPollingRequestInFlight } from '@universe/api'
 import { forwardRef, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -32,7 +32,7 @@ const LOADING_ITEM = 'loading'
 const keyExtractor = (item: NFTItem | string): string =>
   typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function NftsTabInner(
+export const NftsList = forwardRef<FlashListRef<unknown>, NftsListProps>(function NftsTabInner(
   {
     owner,
     footerHeight,

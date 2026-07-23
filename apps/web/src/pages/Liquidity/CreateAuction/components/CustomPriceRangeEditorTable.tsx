@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Spacer, Text, TouchableArea } from 'ui/src'
+import { Flex, Spacer, Text, TouchableArea, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { X } from 'ui/src/components/icons/X'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -198,56 +198,69 @@ export function AddRangeRow({
 }) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
+  const media = useMedia()
+  // Hover-reveal is unusable on touch: below md the preset chips always render in their own
+  // horizontally scrollable row below the Add range row.
+  const alwaysShowPresetsRow = Boolean(media.md)
   const [showPresets, setShowPresets] = useState(false)
   const formatFinitePercentValue = (value: number): string => normalizeSignedInput(formatPercent(value, 4))
 
-  return (
-    <Flex
-      row
-      alignItems="center"
-      gap="$spacing4"
-      height={32}
-      pr="$spacing24"
-      onMouseEnter={() => setShowPresets(true)}
-      onMouseLeave={() => setShowPresets(false)}
-      opacity={canAddEntry ? 1 : 0.5}
+  const presetChips = CUSTOM_PRICE_RANGE_PRESETS.map((preset) => (
+    <TouchableArea
+      key={`${preset.minPercentFromClearing}-${preset.maxPercentFromClearing}`}
+      flexShrink={0}
+      borderWidth="$spacing1"
+      borderColor="$surface3"
+      borderRadius="$rounded16"
+      px="$spacing8"
+      py="$spacing6"
+      hoverStyle={{ backgroundColor: '$surface3' }}
+      onPress={() => onAddPreset(preset)}
     >
-      <TouchableArea
-        minWidth={0}
-        disabled={!canAddEntry}
-        onPress={() =>
-          onAddPreset({
-            minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
-            maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
-          })
-        }
+      <Text variant="buttonLabel4" color="$neutral1">
+        {formatPresetLabel(preset, formatFinitePercentValue)}
+      </Text>
+    </TouchableArea>
+  ))
+
+  return (
+    <Flex gap="$spacing8" opacity={canAddEntry ? 1 : 0.5}>
+      <Flex
+        row
+        alignItems="center"
+        gap="$spacing4"
+        height={32}
+        pr="$spacing24"
+        onMouseEnter={alwaysShowPresetsRow ? undefined : () => setShowPresets(true)}
+        onMouseLeave={alwaysShowPresetsRow ? undefined : () => setShowPresets(false)}
       >
-        <Flex row alignItems="center" gap="$spacing4">
-          <Plus size="$icon.16" color={canAddEntry ? '$neutral2' : '$neutral3'} />
-          <Text variant="buttonLabel4" color={canAddEntry ? '$neutral2' : '$neutral3'}>
-            {t('toucan.createAuction.step.customizePool.priceRange.custom.addRange')}
-          </Text>
-        </Flex>
-      </TouchableArea>
-      <Spacer flex={1} />
-      {showPresets && canAddEntry && (
-        <Flex row gap="$spacing2" flexShrink={0}>
-          {CUSTOM_PRICE_RANGE_PRESETS.map((preset) => (
-            <TouchableArea
-              key={`${preset.minPercentFromClearing}-${preset.maxPercentFromClearing}`}
-              borderWidth="$spacing1"
-              borderColor="$surface3"
-              borderRadius="$rounded16"
-              px="$spacing8"
-              py="$spacing6"
-              hoverStyle={{ backgroundColor: '$surface3' }}
-              onPress={() => onAddPreset(preset)}
-            >
-              <Text variant="buttonLabel4" color="$neutral1">
-                {formatPresetLabel(preset, formatFinitePercentValue)}
-              </Text>
-            </TouchableArea>
-          ))}
+        <TouchableArea
+          minWidth={0}
+          disabled={!canAddEntry}
+          onPress={() =>
+            onAddPreset({
+              minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
+              maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
+            })
+          }
+        >
+          <Flex row alignItems="center" gap="$spacing4">
+            <Plus size="$icon.16" color={canAddEntry ? '$neutral2' : '$neutral3'} />
+            <Text variant="buttonLabel4" color={canAddEntry ? '$neutral2' : '$neutral3'}>
+              {t('toucan.createAuction.step.customizePool.priceRange.custom.addRange')}
+            </Text>
+          </Flex>
+        </TouchableArea>
+        <Spacer flex={1} />
+        {!alwaysShowPresetsRow && showPresets && canAddEntry && (
+          <Flex row gap="$spacing2" flexShrink={0}>
+            {presetChips}
+          </Flex>
+        )}
+      </Flex>
+      {alwaysShowPresetsRow && canAddEntry && (
+        <Flex row gap="$spacing8" width="100%" $platform-web={{ overflowX: 'auto', scrollbarWidth: 'none' }}>
+          {presetChips}
         </Flex>
       )}
     </Flex>

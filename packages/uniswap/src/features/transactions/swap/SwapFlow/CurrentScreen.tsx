@@ -5,6 +5,7 @@ export function CurrentScreen(_props: {
   settings: TransactionSettingConfig[]
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
+  onCurrencyPanelsLayout?: (height: number) => void
 }): JSX.Element {
   throw new PlatformSplitStubError('CurrentScreen')
 }

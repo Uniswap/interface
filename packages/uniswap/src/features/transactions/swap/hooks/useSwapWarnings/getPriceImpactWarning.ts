@@ -3,7 +3,7 @@ import { TFunction } from 'i18next'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PRICE_IMPACT_CRITICAL_THRESHOLD, PRICE_IMPACT_WARNING_THRESHOLD } from 'uniswap/src/constants/transactions'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { formatPriceImpact } from 'uniswap/src/features/transactions/swap/utils/formatPriceImpact'
 
@@ -38,6 +38,6 @@ export function getPriceImpactWarning({
     message: t('swap.warning.priceImpact.message', {
       priceImpactValue,
     }),
-    link: uniswapUrls.helpArticleUrls.priceImpact,
+    link: UniswapHelpUrls.articles.priceImpact,
   }
 }

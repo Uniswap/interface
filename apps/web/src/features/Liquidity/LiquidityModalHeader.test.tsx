@@ -1,7 +1,7 @@
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { LiquidityModalHeader } from '~/features/Liquidity/LiquidityModalHeader'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
-import { WebUniswapProvider } from '~/pages/App/WebUniswapContext'
 import { act, fireEvent, render } from '~/test-utils/render'
 
 describe('LiquidityModalHeader', () => {

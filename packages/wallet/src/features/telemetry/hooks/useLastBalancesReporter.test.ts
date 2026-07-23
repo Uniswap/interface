@@ -6,31 +6,32 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import * as telemetrySend from 'uniswap/src/features/telemetry/send'
 import * as walletHooks from 'uniswap/src/features/wallet/hooks/useWallet'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import type { Mock } from 'vitest'
 import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
 import * as portfolioData from 'wallet/src/features/telemetry/hooks/usePortfolioDataForReporting'
 import * as balanceReporter from 'wallet/src/features/telemetry/utils/balanceReporter'
 import * as walletFundingDetector from 'wallet/src/features/telemetry/utils/walletFundingDetector'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: jest.fn(),
-  useSelector: jest.fn(),
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')),
+  useDispatch: vi.fn(),
+  useSelector: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/telemetry/hooks/usePortfolioDataForReporting')
-jest.mock('wallet/src/features/telemetry/utils/walletFundingDetector', () => ({
-  isWalletJustFunded: jest.fn(),
+vi.mock('wallet/src/features/telemetry/hooks/usePortfolioDataForReporting')
+vi.mock('wallet/src/features/telemetry/utils/walletFundingDetector', () => ({
+  isWalletJustFunded: vi.fn(),
 }))
-jest.mock('wallet/src/features/telemetry/utils/balanceReporter')
+vi.mock('wallet/src/features/telemetry/utils/balanceReporter')
 
-jest.mock('uniswap/src/data/balances/utils', () => ({
-  ...jest.requireActual('uniswap/src/data/balances/utils'),
-  calculateTotalBalancesUsdPerChainRest: jest.fn(),
+vi.mock('uniswap/src/data/balances/utils', async () => ({
+  ...(await vi.importActual('uniswap/src/data/balances/utils')),
+  calculateTotalBalancesUsdPerChainRest: vi.fn(),
 }))
-jest.mock('uniswap/src/features/accounts/reportBalancesForAnalytics', () => ({
-  reportBalancesForAnalytics: jest.fn(),
-  hasRequiredDataForBalancesReport: jest.fn().mockReturnValue(true),
+vi.mock('uniswap/src/features/accounts/reportBalancesForAnalytics', () => ({
+  reportBalancesForAnalytics: vi.fn(),
+  hasRequiredDataForBalancesReport: vi.fn().mockReturnValue(true),
 }))
 
 function mockSelector(selector: { name?: string }): number | boolean | undefined {
@@ -56,15 +57,15 @@ const mockTotalBalance = 300
 const mockTotalBalancesUsdPerChain = { '1': 150, '42161': 150 }
 
 describe('useLastBalancesReporter', () => {
-  let mockDispatch: jest.Mock
+  let mockDispatch: Mock
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
-    mockDispatch = jest.fn()
-    ;(reactRedux.useDispatch as jest.Mock).mockReturnValue(mockDispatch)
+    mockDispatch = vi.fn()
+    ;(reactRedux.useDispatch as Mock).mockReturnValue(mockDispatch)
 
-    ;(portfolioData.usePortfolioDataForReporting as jest.Mock).mockReturnValue({
+    ;(portfolioData.usePortfolioDataForReporting as Mock).mockReturnValue({
       portfolioQuery: {
         data: { positions: [] },
         isLoading: false,
@@ -76,18 +77,18 @@ describe('useLastBalancesReporter', () => {
       totalBalancesUsdPerChain: mockTotalBalancesUsdPerChain,
     })
 
-    ;(balanceReporter.shouldSendBalanceReport as jest.Mock).mockReturnValue(false)
+    ;(balanceReporter.shouldSendBalanceReport as Mock).mockReturnValue(false)
 
-    jest.spyOn(telemetrySend, 'sendAnalyticsEvent').mockImplementation(() => undefined)
+    vi.spyOn(telemetrySend, 'sendAnalyticsEvent').mockImplementation(() => undefined)
 
-    jest.spyOn(walletHooks, 'useWallet').mockReturnValue({
+    vi.spyOn(walletHooks, 'useWallet').mockReturnValue({
       evmAccount: mockAccount,
     } as ReturnType<typeof walletHooks.useWallet>)
-    ;(reactRedux.useSelector as jest.Mock).mockImplementation((selector: unknown) =>
+    ;(reactRedux.useSelector as Mock).mockImplementation((selector: unknown) =>
       mockSelector(selector as { name?: string }),
     )
 
-    ;(balanceUtils.calculateTotalBalancesUsdPerChainRest as jest.Mock).mockReturnValue(mockTotalBalancesUsdPerChain)
+    ;(balanceUtils.calculateTotalBalancesUsdPerChainRest as Mock).mockReturnValue(mockTotalBalancesUsdPerChain)
   })
 
   describe('Query configuration', () => {
@@ -100,13 +101,13 @@ describe('useLastBalancesReporter', () => {
     })
 
     it('should report balances when conditions are met', async () => {
-      const mockReportBalancesForAnalytics = jest.fn()
-      jest
-        .spyOn(reportBalancesForAnalytics, 'reportBalancesForAnalytics')
-        .mockImplementation(mockReportBalancesForAnalytics)
+      const mockReportBalancesForAnalytics = vi.fn()
+      vi.spyOn(reportBalancesForAnalytics, 'reportBalancesForAnalytics').mockImplementation(
+        mockReportBalancesForAnalytics,
+      )
 
       // Mock shouldSendBalanceReport to return true
-      ;(balanceReporter.shouldSendBalanceReport as jest.Mock).mockReturnValue(true)
+      ;(balanceReporter.shouldSendBalanceReport as Mock).mockReturnValue(true)
 
       renderHook(() => useLastBalancesReporter({ isOnboarded: true }))
 
@@ -116,12 +117,12 @@ describe('useLastBalancesReporter', () => {
     })
 
     it('should not report when loading', async () => {
-      const mockReportBalancesForAnalytics = jest.fn()
-      jest
-        .spyOn(reportBalancesForAnalytics, 'reportBalancesForAnalytics')
-        .mockImplementation(mockReportBalancesForAnalytics)
+      const mockReportBalancesForAnalytics = vi.fn()
+      vi.spyOn(reportBalancesForAnalytics, 'reportBalancesForAnalytics').mockImplementation(
+        mockReportBalancesForAnalytics,
+      )
 
-      ;(portfolioData.usePortfolioDataForReporting as jest.Mock).mockReturnValue({
+      ;(portfolioData.usePortfolioDataForReporting as Mock).mockReturnValue({
         portfolioQuery: {
           data: undefined,
           isLoading: true,
@@ -157,17 +158,17 @@ describe('useLastBalancesReporter', () => {
         return undefined
       }
 
-      ;(reactRedux.useSelector as jest.Mock).mockImplementation((selector: unknown) =>
+      ;(reactRedux.useSelector as Mock).mockImplementation((selector: unknown) =>
         mockSelectorForWalletFunding(selector as { name?: string }),
       )
 
       // Ensure wallet is properly mocked
-      jest.spyOn(walletHooks, 'useWallet').mockReturnValue({
+      vi.spyOn(walletHooks, 'useWallet').mockReturnValue({
         evmAccount: mockAccount,
       } as ReturnType<typeof walletHooks.useWallet>)
 
       // Mock portfolioData with proper totalBalance
-      ;(portfolioData.usePortfolioDataForReporting as jest.Mock).mockReturnValue({
+      ;(portfolioData.usePortfolioDataForReporting as Mock).mockReturnValue({
         portfolioQuery: {
           data: { positions: [] },
           isLoading: false,
@@ -180,10 +181,10 @@ describe('useLastBalancesReporter', () => {
       })
 
       // Mock isWalletJustFunded to return true
-      ;(walletFundingDetector.isWalletJustFunded as jest.Mock).mockReturnValue(true)
+      ;(walletFundingDetector.isWalletJustFunded as Mock).mockReturnValue(true)
 
-      const mockSendAppsFlyerEvent = jest.fn().mockResolvedValue(undefined)
-      jest.spyOn(telemetrySend, 'sendAppsFlyerEvent').mockImplementation(mockSendAppsFlyerEvent)
+      const mockSendAppsFlyerEvent = vi.fn().mockResolvedValue(undefined)
+      vi.spyOn(telemetrySend, 'sendAppsFlyerEvent').mockImplementation(mockSendAppsFlyerEvent)
 
       renderHook(() => useLastBalancesReporter({ isOnboarded: true }))
 

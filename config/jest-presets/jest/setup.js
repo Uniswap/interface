@@ -65,6 +65,7 @@ jest.mock('expo-local-authentication', () => ({
   hasHardwareAsync: jest.fn(() => Promise.resolve(true)),
   isEnrolledAsync: jest.fn(() => Promise.resolve(true)),
   supportedAuthenticationTypesAsync: jest.fn(() => Promise.resolve([1, 2])),
+  AuthenticationType: { FINGERPRINT: 1, FACIAL_RECOGNITION: 2, IRIS: 3 },
 }))
 
 // Mock Amplitde log reporting
@@ -134,6 +135,7 @@ jest.mock('@universe/gating', () => {
     // Mock functions
     useDynamicConfigValue: jest.fn((args) => args.defaultValue),
     useFeatureFlag: jest.fn(() => false),
+    useFeatureFlagWithExposureLoggingDisabled: jest.fn(() => false),
     useGate: jest.fn(() => ({ isLoading: false, value: false })),
     useConfig: jest.fn(() => ({})),
     getStatsigClient: jest.fn(() => ({

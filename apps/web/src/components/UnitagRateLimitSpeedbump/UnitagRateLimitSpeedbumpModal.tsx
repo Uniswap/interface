@@ -1,4 +1,3 @@
-import { useUpdateAtom } from 'jotai/utils'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
@@ -7,10 +6,10 @@ import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { showEmbeddedLoginViewAtom } from '~/components/WalletModal/EmbeddedWalletModal'
 import { useModalState } from '~/hooks/useModalState'
 import { useOnCompleteEmbeddedWalletLogin } from '~/hooks/useOnCompleteEmbeddedWalletLogin'
 import { setCloseModal, type UnitagRateLimitSpeedbumpModalParams } from '~/state/application/reducer'
+import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
 import { useAppSelector } from '~/state/hooks'
 
 /**
@@ -24,7 +23,7 @@ export function UnitagRateLimitSpeedbumpModal(): JSX.Element {
   const dispatch = useDispatch()
   const { isOpen } = useModalState(ModalName.UnitagRateLimitSpeedbump)
   const accountDrawer = useAccountDrawer()
-  const setShowLoginView = useUpdateAtom(showEmbeddedLoginViewAtom)
+  const setShowLoginView = useEmbeddedWalletLoginViewStore((s) => s.setShowLoginView)
   const onCompleteLogin = useOnCompleteEmbeddedWalletLogin()
 
   const initialState = useAppSelector(

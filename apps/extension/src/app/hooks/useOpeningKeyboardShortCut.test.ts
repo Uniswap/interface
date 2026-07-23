@@ -1,16 +1,17 @@
 import { State, useOpeningKeyboardShortCut } from 'src/app/hooks/useOpeningKeyboardShortCut'
 import * as isAppleDeviceDep from 'src/app/utils/isAppleDevice'
 import { act, renderHook } from 'src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('src/app/utils/isAppleDevice', () => ({
-  isAppleDevice: jest.fn(),
+vi.mock('src/app/utils/isAppleDevice', () => ({
+  isAppleDevice: vi.fn(),
 }))
 
-const isAppleDevice = isAppleDeviceDep.isAppleDevice as jest.MockedFunction<typeof isAppleDeviceDep.isAppleDevice>
+const isAppleDevice = isAppleDeviceDep.isAppleDevice as MockedFunction<typeof isAppleDeviceDep.isAppleDevice>
 
 describe('useOpeningKeyboardShortCut', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should initialize with the correct keys for an Apple device', () => {

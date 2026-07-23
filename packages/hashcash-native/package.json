@@ -31,9 +31,7 @@
     "README.md"
   ],
   "scripts": {
-    "postinstall": "tsc || exit 0;",
     "typecheck": "nx typecheck hashcash-native",
-    "build": "nx build hashcash-native",
     "clean": "nx clean hashcash-native",
     "check": "nx check hashcash-native",
     "check:fast": "nx check:fast hashcash-native",
@@ -41,8 +39,8 @@
     "specs": "nx specs hashcash-native",
     "codegen": "nx codegen hashcash-native",
     "codegen:clean": "nx codegen:clean hashcash-native",
-    "format": "nx format hashcash-native",
-    "format:check": "nx format:check hashcash-native",
+    "format": "nx run hashcash-native:format",
+    "format:check": "nx run hashcash-native:format:check",
     "lint": "nx lint hashcash-native",
     "lint:fix": "nx lint:fix hashcash-native"
   },
@@ -55,8 +53,8 @@
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "nitrogen": "0.33.2",
-    "react": "19.1.0",
-    "react-native": "0.81.5",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
     "react-native-nitro-modules": "0.33.2",
     "typescript": "5.9.2"
   },

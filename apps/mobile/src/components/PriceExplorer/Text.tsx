@@ -1,8 +1,12 @@
 import { isAndroid } from '@universe/environment'
-import React, { useEffect } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import React, { useEffect, useState } from 'react'
+import type { StyleProp, ViewStyle } from 'react-native'
 import Animated, {
   cancelAnimation,
+  runOnJS,
   SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -16,6 +20,7 @@ import { AnimatedText } from 'src/components/text/AnimatedText'
 import { numberToPercentWorklet } from 'src/utils/reanimated'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
@@ -62,6 +67,30 @@ export function RelativeChangeText({
 }): JSX.Element {
   const colors = useSporeColors()
   const { isActive } = useLineChart()
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+
+  // Bridge Reanimated isActive to React state so we can conditionally render AnimatedNumber
+  const [isChartScrubbing, setIsChartScrubbing] = useState(false)
+  useAnimatedReaction(
+    () => isActive.value,
+    (current, previous) => {
+      if (current !== previous) {
+        runOnJS(setIsChartScrubbing)(current)
+      }
+    },
+  )
+
+  // Bridge spotRelativeChange to React state for AnimatedNumber's numericValue
+  const [idleChangePercent, setIdleChangePercent] = useState<number | undefined>(undefined)
+  useAnimatedReaction(
+    () => spotRelativeChange?.value,
+    (current, previous) => {
+      if (current !== previous && current !== undefined) {
+        runOnJS(setIdleChangePercent)(current)
+      }
+    },
+    [spotRelativeChange],
+  )
 
   // Calculate relative change from chart data (used when scrubbing)
   const calculatedRelativeChange = useLineChartRelativeChange()
@@ -91,8 +120,37 @@ export function RelativeChangeText({
     return calculatedRelativeChange.formatted.value
   })
 
-  // Shared value for fade-in animation; always start hidden since
-  // the component always mounts with loading=true
+  const changeColor = useDerivedValue(() => {
+    // Round the range to 2 decimal places to check if is equal to 0
+    const absRelativeChange = Math.round(Math.abs(relativeChange.value) * 100)
+    if (absRelativeChange === 0) {
+      return colors.neutral3.val
+    }
+    return relativeChange.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val
+  })
+
+  // reanimated 4 returns an AnimatedStyleHandle, accepted by the animated icon at runtime.
+  const caretStyle = useAnimatedStyle(() => ({
+    color: changeColor.value,
+    transform: [
+      { rotate: relativeChange.value >= 0 ? '180deg' : '0deg' },
+      // fix vertical centering
+      { translateY: relativeChange.value >= 0 ? -1 : 1 },
+    ],
+  })) as unknown as StyleProp<ViewStyle>
+
+  // Combine fiat delta and percentage in a derived value
+  const combinedText = useDerivedValue(() => {
+    const delta = fiatDelta.formatted.value
+    if (delta) {
+      return `${delta} (${relativeChangeFormatted.value})`
+    }
+    return relativeChangeFormatted.value
+  })
+
+  const showAnimatedNumber = isDataLivelinessEnabled && !isChartScrubbing && !loading && idleChangePercent !== undefined
+
+  // Shared value for fade-in animation; always start hidden since the component always mounts with loading=true
   const contentOpacity = useSharedValue(0)
 
   useEffect(() => {
@@ -109,33 +167,6 @@ export function RelativeChangeText({
     opacity: contentOpacity.value,
   }))
 
-  const changeColor = useDerivedValue(() => {
-    // Round the range to 2 decimal places to check if is equal to 0
-    const absRelativeChange = Math.round(Math.abs(relativeChange.value) * 100)
-    if (absRelativeChange === 0) {
-      return colors.neutral3.val
-    }
-    return relativeChange.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val
-  })
-
-  const caretStyle = useAnimatedStyle(() => ({
-    color: changeColor.value,
-    transform: [
-      { rotate: relativeChange.value >= 0 ? '180deg' : '0deg' },
-      // fix vertical centering
-      { translateY: relativeChange.value >= 0 ? -1 : 1 },
-    ],
-  }))
-
-  // Combine fiat delta and percentage in a derived value
-  const combinedText = useDerivedValue(() => {
-    const delta = fiatDelta.formatted.value
-    if (delta) {
-      return `${delta} (${relativeChangeFormatted.value})`
-    }
-    return relativeChangeFormatted.value
-  })
-
   return (
     <Flex
       row
@@ -150,12 +181,22 @@ export function RelativeChangeText({
         // TODO(WALL-5215): we can remove `no-shimmer` once we have a better Skeleton component.
         <Text loading="no-shimmer" loadingPlaceholderText="00.00%" variant="body1" />
       )}
-      {/* Must always mount this component to avoid stale values on initial render */}
+      {/* Always mount this content to avoid stale values on initial render (new arch); fade in once loaded */}
       <Animated.View style={animatedContentStyle}>
-        <Flex row alignItems="center" gap="$spacing2">
-          <AnimatedCaretChange size="$icon.16" strokeWidth={2} style={caretStyle} />
-          <AnimatedText testID="relative-change-text" text={combinedText} variant="body1" color="$neutral2" />
-        </Flex>
+        {showAnimatedNumber ? (
+          <RelativeChange
+            shouldAnimate
+            absoluteChange={fiatDelta.idleNumericDelta}
+            change={idleChangePercent}
+            color="$neutral2"
+            variant="body1"
+          />
+        ) : (
+          <Flex row alignItems="center" gap="$spacing2">
+            <AnimatedCaretChange size="$icon.16" strokeWidth={2} style={caretStyle} />
+            <AnimatedText testID="relative-change-text" text={combinedText} variant="body1" color="$neutral2" />
+          </Flex>
+        )}
       </Animated.View>
     </Flex>
   )

@@ -4,13 +4,14 @@ import { EmbeddedWalletService as NewEmbeddedWalletService } from '@uniswap/clie
 import type { EmbeddedWalletClientContext } from '@universe/api'
 import { createEmbeddedWalletApiClient, getTransport } from '@universe/api'
 import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { config } from 'uniswap/src/config'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
 import { getEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 
 function createEmbeddedWalletTransport(): Transport {
   return getTransport({
-    getBaseUrl: () => uniswapUrls.privyEmbeddedWalletUrl,
+    getBaseUrl: () => getUniswapServiceUrls(config).privyEmbeddedWalletUrl,
     getHeaders: () => ({
       ...(isMobileApp && { Origin: getEmbeddedWalletBaseUrl() }),
       'x-request-source': REQUEST_SOURCE,

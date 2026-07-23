@@ -134,3 +134,5 @@ web-build/
 
 coverage/
 
+# C++ build artifacts (new arch)
+.cxx

@@ -6,12 +6,14 @@ import { TransactionRequestDetails } from 'uniswap/src/components/transactions/r
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { TransactionApprovingSection } from 'wallet/src/components/dappRequests/TransactionApprovingSection'
+import { TransactionDepositingSection } from 'wallet/src/components/dappRequests/TransactionDepositingSection'
 import {
   TransactionErrorSection,
   TransactionErrorType,
 } from 'wallet/src/components/dappRequests/TransactionErrorSection'
 import { TransactionReceivingSection } from 'wallet/src/components/dappRequests/TransactionReceivingSection'
 import { TransactionSendingSection } from 'wallet/src/components/dappRequests/TransactionSendingSection'
+import { TransactionWithdrawingSection } from 'wallet/src/components/dappRequests/TransactionWithdrawingSection'
 import {
   TransactionRiskLevel,
   TransactionSection,
@@ -73,12 +75,14 @@ export function TransactionPreviewCard({
   const hasDetails = Boolean(functionName || contractName || rawData)
   const showDetailsButton = hasDetails
 
-  // Sort sections: Approving first, then Sending, then Receiving
+  // Sort sections: Approving first, then Earn (deposit/withdraw), then Sending, then Receiving
   const sortedSections = useMemo(() => {
     const order = {
       [TransactionSectionType.Approving]: 0,
-      [TransactionSectionType.Sending]: 1,
-      [TransactionSectionType.Receiving]: 2,
+      [TransactionSectionType.Depositing]: 1,
+      [TransactionSectionType.Withdrawing]: 1,
+      [TransactionSectionType.Sending]: 2,
+      [TransactionSectionType.Receiving]: 3,
     }
     return [...sections].sort((a, b) => order[a.type] - order[b.type])
   }, [sections])
@@ -94,15 +98,11 @@ export function TransactionPreviewCard({
       <Flex gap="$spacing12" pb="$spacing12" pt="$spacing16">
         {errorType && <TransactionErrorSection errorType={errorType} />}
 
-        {sortedSections.map((section, index) => {
-          const SectionComponent = getSectionComponent(section.type)
-
-          return (
-            <Flex key={`section-${section.type}-${index}`} mt={index > 0 ? '$spacing12' : undefined}>
-              <SectionComponent assets={section.assets} riskLevel={riskLevel} />
-            </Flex>
-          )
-        })}
+        {sortedSections.map((section, index) => (
+          <Flex key={`section-${section.type}-${index}`} mt={index > 0 ? '$spacing12' : undefined}>
+            {renderSection(section, riskLevel)}
+          </Flex>
+        ))}
 
         {children}
 
@@ -142,19 +142,20 @@ export function TransactionPreviewCard({
 }
 
 /**
- * Maps section type to the appropriate component
+ * Renders the appropriate section component for a given section type
  */
-function getSectionComponent(
-  type: TransactionSectionType,
-): typeof TransactionSendingSection | typeof TransactionReceivingSection | typeof TransactionApprovingSection {
-  switch (type) {
-    case TransactionSectionType.Sending:
-      return TransactionSendingSection
+function renderSection(section: TransactionSection, riskLevel: TransactionRiskLevel): JSX.Element {
+  switch (section.type) {
     case TransactionSectionType.Receiving:
-      return TransactionReceivingSection
+      return <TransactionReceivingSection assets={section.assets} riskLevel={riskLevel} />
     case TransactionSectionType.Approving:
-      return TransactionApprovingSection
+      return <TransactionApprovingSection assets={section.assets} riskLevel={riskLevel} />
+    case TransactionSectionType.Depositing:
+      return <TransactionDepositingSection assets={section.assets} apyPercent={section.apyPercent} />
+    case TransactionSectionType.Withdrawing:
+      return <TransactionWithdrawingSection assets={section.assets} />
+    case TransactionSectionType.Sending:
     default:
-      return TransactionSendingSection
+      return <TransactionSendingSection assets={section.assets} riskLevel={riskLevel} />
   }
 }

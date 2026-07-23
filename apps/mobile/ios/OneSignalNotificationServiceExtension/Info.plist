@@ -14,6 +14,6 @@
 	<key>OneSignal_app_groups_key</key>
 	<string>group.com.uniswap.mobile.onesignal</string>
 	<key>RCTNewArchEnabled</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

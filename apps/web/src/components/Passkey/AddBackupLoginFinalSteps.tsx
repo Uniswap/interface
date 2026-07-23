@@ -50,6 +50,8 @@ export function SuccessStep({
   oauthEmail,
   oauthProvider,
   t,
+  title,
+  description,
 }: {
   email: string
   handleClose: () => void
@@ -57,6 +59,9 @@ export function SuccessStep({
   oauthEmail: string | undefined
   oauthProvider: 'google' | 'apple' | null
   t: TFunction
+  // Reconnect (rotation) overrides; default to the add-backup-login copy.
+  title?: string
+  description?: string
 }) {
   return (
     <Trace logImpression modal={ModalName.AddBackupLogin}>
@@ -69,14 +74,15 @@ export function SuccessStep({
         </IconBox>
         <Flex gap="$gap8" alignItems="center" maxWidth={360}>
           <Text variant="subheading1" textAlign="center">
-            {t('account.passkey.backupLogin.success.title')}
+            {title ?? t('account.passkey.backupLogin.success.title')}
           </Text>
           <Text variant="body2" textAlign="center" color="$neutral2">
-            {oauthProvider
-              ? t('account.passkey.backupLogin.success.description.oauth', {
-                  provider: oauthProvider === 'google' ? 'Google' : 'Apple',
-                })
-              : t('account.passkey.backupLogin.success.description')}
+            {description ??
+              (oauthProvider
+                ? t('account.passkey.backupLogin.success.description.oauth', {
+                    provider: oauthProvider === 'google' ? 'Google' : 'Apple',
+                  })
+                : t('account.passkey.backupLogin.success.description'))}
           </Text>
         </Flex>
       </Flex>

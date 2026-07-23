@@ -1,0 +1,22 @@
+diff --git a/src/utils/nx-key.js b/src/utils/nx-key.js
+index ea741d869da241a08204b45dd1c2b3adedfd3270..b017a23c746821f203493a4d5d4231d05ae71bb9 100644
+--- a/src/utils/nx-key.js
++++ b/src/utils/nx-key.js
+@@ -18,13 +18,10 @@ function createNxKeyLicenseeInformation(nxKey) {
+     }
+ }
+ async function printNxKey() {
+-    try {
+-        const key = await getNxKeyInformation();
+-        if (key) {
+-            logger_1.logger.log(createNxKeyLicenseeInformation(key));
+-        }
+-    }
+-    catch { }
++    // Patched: suppress the "Licensed to <org>." banner that nx prints after
++    // every task once @nx/key is installed (pulled in transitively by
++    // @nx/s3-cache). The license check still runs in getNxKeyInformation();
++    // we just skip logging the result.
+ }
+ async function getNxKeyInformation() {
+     try {

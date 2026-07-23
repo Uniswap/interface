@@ -24,7 +24,11 @@ interface PortfolioLogoProps {
 export const PORTFOLIO_LOGO_DEFAULT_SIZE = 40
 
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
-  if (isTestnetChain(props.chainId)) {
+  // On testnets, currency-based activities resolve their logo through CurrencyLogo (useCurrencyInfo).
+  // But activities that carry raw image URLs instead of a Currency — e.g. a just-launched token that
+  // isn't indexed yet — have nothing for CurrencyLogo to resolve, so it would render blank. Let those
+  // fall through to getLogo (TokenLogo already applies testnet styling) instead of swallowing them.
+  if (isTestnetChain(props.chainId) && !props.images?.length) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 

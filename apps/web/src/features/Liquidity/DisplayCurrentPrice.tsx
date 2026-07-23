@@ -7,7 +7,14 @@ import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
   const { t } = useTranslation()
   return (
-    <Flex gap="$gap4" row alignItems="center" $md={{ row: false, alignItems: 'flex-start' }}>
+    <Flex
+      gap="$gap4"
+      row
+      alignItems="center"
+      flexShrink={1}
+      minWidth={0}
+      $md={{ row: false, alignItems: 'flex-start' }}
+    >
       {isLoading ? (
         <Text variant="body3" color="$neutral2">
           {t('common.marketPrice.fetching')}
@@ -26,9 +33,9 @@ export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Curren
           />
         </Flex>
       ) : (
-        <Flex row alignItems="center" gap="$spacing4">
-          <AlertTriangleFilled size={16} color="$neutral2" />
-          <Text variant="body3" color="$neutral2">
+        <Flex row alignItems="flex-start" gap="$spacing4" width="100%" flexShrink={1}>
+          <AlertTriangleFilled size={16} color="$neutral2" flexShrink={0} mt="$spacing2" />
+          <Text variant="body3" color="$neutral2" flex={1}>
             {t('common.marketPrice.unavailable')}
           </Text>
         </Flex>

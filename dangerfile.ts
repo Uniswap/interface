@@ -1,6 +1,6 @@
-import { danger, fail, markdown, message, warn } from 'danger'
 import * as fs from 'fs'
 import { dirname } from 'path'
+import { danger, fail, markdown, message, warn } from 'danger'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
   const searchStrLen = searchStr.length
@@ -332,11 +332,12 @@ async function checkPRSize() {
   }
 }
 
-/* Warn about storing credentials in GH and uploading env.local to 1Password */
-const envChanged = danger.git.modified_files.includes('.env.defaults')
+/* Warn about storing credentials in GH  */
+const modified_files = danger.git.modified_files.concat(danger.git.created_files)
+const envChanged = modified_files.includes('.env')
 if (envChanged) {
   warn(
-    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `bun upload-env-local` to store it in 1Password.',
+    'No .env files should be committed to the repo. Store configs in the backend Config Service via the parameter manager in Mission Control',
   )
 }
 

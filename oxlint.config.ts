@@ -520,7 +520,7 @@ export default defineConfig({
     'typescript/no-unsafe-return': 'error',
     'typescript/no-unnecessary-condition': ['error', { allowConstantLoopConditions: true }],
     'typescript/no-redundant-type-constituents': 'off',
-    'typescript/unbound-method': 'off',
+    'typescript/unbound-method': ['error', { ignoreStatic: true }],
     'typescript/restrict-template-expressions': 'off',
     'typescript/no-base-to-string': 'off',
 
@@ -570,6 +570,8 @@ export default defineConfig({
 
     // ── jsPlugin rules (excluded when ENABLE_FAST_LINT=true) ──────────
     ...(!isFastLint && {
+      // correctness
+      'import/no-cycle': ['error', { ignoreExternal: true }],
       // security
       'security/detect-unsafe-regex': 'error',
       'security/detect-buffer-noassert': 'error',
@@ -604,6 +606,7 @@ export default defineConfig({
       ],
       'universe-custom/no-redux-modals': 'error',
       'universe-custom/no-tolowercase-address-currencyid': 'warn',
+      'universe-custom/no-platform-gate-in-chain-flags': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
       '@jambit/typed-redux-saga/delegate-effects': 'error',
@@ -624,6 +627,18 @@ export default defineConfig({
         'typescript/no-unsafe-return': 'off',
       },
     },
+
+    // ── Saga files ──────────────────────
+    {
+      files: ['**/*saga.ts', '**/*saga.tsx', '**/*Saga.ts', '**/*Saga.tsx'],
+      rules: {
+        // redux-saga's call/fork/etc. bind the receiver via the
+        // [obj, method] array form, an idiom unbound-method can't model, so it
+        // false-positives on the bound method reference. Disable it for sagas.
+        'typescript/unbound-method': 'off',
+      },
+    },
+
     // ── Logger, scripts, devtools: allow console ──────────────────────
     {
       files: [
@@ -950,6 +965,7 @@ export default defineConfig({
                 { allowSameFolder: false, rootDir: 'src' },
               ],
               'universe-custom/import-boundary': 'error' as const,
+              'universe-custom/no-direct-viem-ethers-import': 'error' as const,
             },
           },
         ]
@@ -985,6 +1001,14 @@ export default defineConfig({
           },
         ]
       : []),
+    // Disable the no-cycles lint rule for web/state/sagas
+    // The sagas and redux store have many cycles, deep refactoring is needed
+    {
+      files: ['apps/web/src/state/sagas/**/*.ts'],
+      rules: {
+        'import/no-cycle': 'off',
+      },
+    },
     {
       files: [
         'apps/web/vite.config.*',
@@ -1028,10 +1052,6 @@ export default defineConfig({
                 message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
               },
               {
-                name: 'ethers',
-                message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
-              },
-              {
                 name: 'ui/src/components/icons',
                 message:
                   'Please import icons directly from their respective files to avoid importing the entire icons folder.',
@@ -1056,6 +1076,12 @@ export default defineConfig({
                   'useWatchBlockNumber',
                 ],
                 message: 'Import wrapped utilities from internal hooks instead.',
+              },
+              {
+                name: '@privy-io/react-auth',
+                importNames: ['usePrivy', 'useLoginWithOAuth', 'useLoginWithEmail', 'useAuthorizationSignature'],
+                message:
+                  'Use the gated `useMaybe*` hooks from `~/hooks/useMaybePrivy` instead. `MaybePrivyProvider` only mounts <PrivyProvider> when Privy is configured (PRIVY_APP_ID / PRIVY_CLIENT_ID); Privy hooks read provider-backed contexts at render and crash the page when it is not.',
               },
               {
                 name: 'i18next',
@@ -1234,7 +1260,9 @@ export default defineConfig({
 
     // ── @universe/* packages with standard pattern ────────────────────
     // (no-relative-import-paths + restrictedImportPatternsForUniversePackage)
-    ...(['api', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
+    ...(
+      ['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const
+    ).map((pkg) => ({
       files: [`packages/${pkg}/**`],
       rules: {
         ...(!isFastLint && {
@@ -1280,11 +1308,13 @@ export default defineConfig({
         'no-console': 'off',
         'no-lone-blocks': 'off',
         'no-unsafe-optional-chaining': 'off',
+        'import/no-cycle': 'off',
         'typescript/triple-slash-reference': 'off',
         'typescript/await-thenable': 'off',
         'typescript/no-unsafe-return': 'off',
         'typescript/no-misused-spread': 'off',
         'typescript/no-var-requires': 'off',
+        'typescript/unbound-method': 'off',
         'prefer-const': 'off',
         'vitest/hoisted-apis-on-top': 'error',
         ...(!isFastLint && {
@@ -1295,6 +1325,7 @@ export default defineConfig({
           'universe-custom/no-unwrapped-t': 'off',
           'universe-custom/custom-map-sort': 'off',
           'universe-custom/no-hex-string-casting': 'off',
+          'universe-custom/no-direct-viem-ethers-import': 'off',
           'security/detect-non-literal-regexp': 'off',
           'eslint-js/no-restricted-syntax': 'off',
           '@jambit/typed-redux-saga/use-typed-effects': 'off',

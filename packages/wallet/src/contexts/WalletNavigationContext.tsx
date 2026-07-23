@@ -4,9 +4,10 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { EarnAction, EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -118,8 +119,12 @@ export type ShareTokenArgs = {
 }
 
 export type NavigateToEarnVaultArgs = {
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint
   vault: EarnVaultInfo
   position?: EarnPositionInfo
+  /** When set, skip the vault overview and land directly in the deposit/withdraw flow. */
+  initialAction?: EarnAction
+  minimumBalanceDataUpdatedAtMs?: number
 }
 
 export type WalletNavigationContextState = {

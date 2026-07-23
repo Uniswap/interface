@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines max-params */
 /**
  * Test helpers for testing migrations run in sequence.
  *
@@ -6,8 +7,6 @@
  *
  * For unit tests of individual migrations, see walletMigrations.test.ts.
  */
-/* oxlint-disable max-lines */
-/* oxlint-disable max-params */
 
 import { RankingType } from '@universe/api'
 import { BigNumber } from 'ethers'

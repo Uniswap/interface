@@ -3,7 +3,20 @@ import {
   computeFdvBidTokenRaw,
   formatCompactFromRaw,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { isUsableAuctionTokenMetadata } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+
+/** Auction token decimals from the auction API, or undefined when the metadata is unusable — see isUsableAuctionTokenMetadata */
+function getUsableApiTokenDecimals(auction: {
+  tokenDecimals?: number
+  tokenSymbol?: string
+  tokenName?: string
+}): number | undefined {
+  const { tokenDecimals, tokenSymbol, tokenName } = auction
+  return isUsableAuctionTokenMetadata({ decimals: tokenDecimals, symbol: tokenSymbol, name: tokenName })
+    ? tokenDecimals
+    : undefined
+}
 
 export interface ProjectedFdvTableValue {
   raw: bigint // Raw FDV in bid token for computation
@@ -73,7 +86,7 @@ export function computeProjectedFdvTableValue({
     if (auction.timeRemaining.isCompleted && auctionTokenUsdPrice !== undefined) {
       const usd = computeCompletedAuctionMarketFdvUsd({
         totalSupplyRaw: totalSupply,
-        auctionTokenDecimals: auction.auction.tokenDecimals,
+        auctionTokenDecimals: getUsableApiTokenDecimals(auction.auction),
         auctionTokenUsdPrice,
       })
 
@@ -104,7 +117,7 @@ export function computeProjectedFdvTableValue({
       priceQ96,
       bidTokenDecimals,
       totalSupplyRaw: totalSupply,
-      auctionTokenDecimals: auction.auction.tokenDecimals,
+      auctionTokenDecimals: getUsableApiTokenDecimals(auction.auction),
     })
 
     // Convert to USD

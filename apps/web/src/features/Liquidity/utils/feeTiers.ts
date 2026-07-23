@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-unnecessary-condition */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -24,6 +25,26 @@ export function validateFeeTier(feeTier: string): string {
 // tick spacing must be a whole number >= 1
 export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
   return Math.max(Math.round((2 * feeAmount) / 100), 1)
+}
+
+const SMALLEST_FEE_TIER_STEP_PERCENT = 0.0001
+
+/**
+ * Next fee-tier value (as a percent string) for the +/- stepper. Any fee up to the max is valid (the
+ * backend derives a tick spacing for it), so this just steps by a fine-grained amount.
+ */
+export function getSteppedFeePercent(current: string, direction: 'up' | 'down'): string {
+  if (direction === 'down') {
+    if (!current || current === '') {
+      return '0'
+    }
+    const next = parseFloat(current) - SMALLEST_FEE_TIER_STEP_PERCENT
+    return isNaN(next) || next < 0 ? '0' : next.toFixed(MAX_FEE_TIER_DECIMALS)
+  }
+  if (!current || current === '') {
+    return SMALLEST_FEE_TIER_STEP_PERCENT.toString()
+  }
+  return validateFeeTier((parseFloat(current) + SMALLEST_FEE_TIER_STEP_PERCENT).toFixed(MAX_FEE_TIER_DECIMALS))
 }
 
 export function getFeeTierKey({
@@ -165,7 +186,27 @@ export function getDefaultFeeTiersForChainWithDynamicFeeTier({
   }
 }
 
-/* oxlint-disable typescript/no-unnecessary-condition */
+/**
+ * Returns the chain's common/default fee tiers, each annotated with whether a pool already exists
+ * (`created`). Unlike {@link getDefaultFeeTiersWithData}, this always returns the common tiers
+ * (not the top-N by TVL) — used by flows that must require a brand-new pool (e.g. CCA auctions).
+ */
+export function getCommonFeeTiersWithData({
+  chainId,
+  feeTierData,
+  protocolVersion,
+}: {
+  chainId?: UniverseChainId
+  feeTierData: Record<string, FeeTierData>
+  protocolVersion: ProtocolVersion
+}): Array<{ value: FeeData; title: string; created: boolean }> {
+  return Object.entries(getDefaultFeeTiersForChain(chainId, protocolVersion)).map(([key, feeData]) => ({
+    value: feeData,
+    title: getFeeTierTitle(feeData.feeAmount, feeData.isDynamic),
+    created: feeTierData[key]?.created ?? false,
+  }))
+}
+
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
@@ -232,7 +273,6 @@ export function getDefaultFeeTiersWithData({
     )
     .sort(sortFeeTiersByTvl)
 }
-/* oxlint-enable typescript/no-unnecessary-condition */
 
 export function isDynamicFeeTier(feeData?: FeeData): feeData is DynamicFeeData {
   return feeData?.isDynamic || feeData?.feeAmount === DYNAMIC_FEE_DATA.feeAmount

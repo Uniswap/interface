@@ -1,7 +1,10 @@
+import { CurrencyAmount, Token, TradeType as SdkTradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import {
   createBuildQuoteRequest,
+  parseTradeInputForTradingApiQuote,
+  validateParsedInput,
   type ValidatedTradeInput,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -33,10 +36,12 @@ vi.mock('uniswap/src/features/gas/utils', async (importOriginal) => {
 describe('createBuildQuoteRequest — wire shape', () => {
   const routingParams = { v4Enabled: true }
   const slippageParams = { autoSlippage: TradingApi.AutoSlippage.DEFAULT } as const
+  const getRoutingParams = vi.fn(() => routingParams)
+  const getSlippageParams = vi.fn(() => slippageParams)
 
   const ctx = {
-    getRoutingParams: vi.fn(() => routingParams),
-    getSlippageParams: vi.fn(() => slippageParams),
+    getRoutingParams,
+    getSlippageParams,
   } as unknown as Parameters<typeof createBuildQuoteRequest>[0]
 
   // Cast to ValidatedTradeInput — Currency objects are not read by buildQuoteRequest itself
@@ -54,6 +59,8 @@ describe('createBuildQuoteRequest — wire shape', () => {
 
   beforeEach(() => {
     vi.mocked(getFeatureFlag).mockReset()
+    getRoutingParams.mockClear()
+    getSlippageParams.mockClear()
   })
 
   it('sends gasStrategies + string urgency when flag is OFF', () => {
@@ -87,5 +94,70 @@ describe('createBuildQuoteRequest — wire shape', () => {
       level: 'urgent',
       overrides: { maxFeePerGas: '12000000000', gasLimit: '500000' },
     })
+  })
+
+  it('parses a caller-provided API output override while preserving the selected output currency', () => {
+    const inputToken = new Token(TradingApi.ChainId._130, '0xc3eacf0612346366db554c991d7858716db09f58', 18, 'TEST')
+    const selectedOutputToken = new Token(
+      TradingApi.ChainId._130,
+      '0x078D782b760474a361dDA0AF3839290b0EF57AD6',
+      6,
+      'USDC',
+    )
+    const earnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: TradingApi.ChainId._1,
+    }
+    const quoteOutputOverride = {
+      tokenOutAddress: earnIntent.vault,
+      tokenOutChainId: Number(earnIntent.chainId),
+    }
+
+    const result = parseTradeInputForTradingApiQuote({
+      amountSpecified: CurrencyAmount.fromRawAmount(inputToken, '100000000000000'),
+      otherCurrency: selectedOutputToken,
+      tradeType: SdkTradeType.EXACT_INPUT,
+      earnIntent,
+      quoteOutputOverride,
+    })
+
+    expect(result.currencyOut).toBe(selectedOutputToken)
+    expect(result.tokenOutAddress).toBe(quoteOutputOverride.tokenOutAddress)
+    expect(result.tokenOutChainId).toBe(quoteOutputOverride.tokenOutChainId)
+  })
+
+  it('validates same-token Earn deposits when the API output is the vault', () => {
+    const selectedToken = new Token(TradingApi.ChainId._1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
+    const earnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: TradingApi.ChainId._1,
+    }
+
+    const parsed = parseTradeInputForTradingApiQuote({
+      amountSpecified: CurrencyAmount.fromRawAmount(selectedToken, '1000000'),
+      otherCurrency: selectedToken,
+      tradeType: SdkTradeType.EXACT_INPUT,
+      earnIntent,
+      quoteOutputOverride: {
+        tokenOutAddress: earnIntent.vault,
+        tokenOutChainId: Number(earnIntent.chainId),
+      },
+    })
+
+    expect(validateParsedInput(parsed)).toEqual(expect.objectContaining({ earnIntent }))
+  })
+
+  it('rejects same-token non-Earn swaps', () => {
+    const selectedToken = new Token(TradingApi.ChainId._1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
+
+    const parsed = parseTradeInputForTradingApiQuote({
+      amountSpecified: CurrencyAmount.fromRawAmount(selectedToken, '1000000'),
+      otherCurrency: selectedToken,
+      tradeType: SdkTradeType.EXACT_INPUT,
+    })
+
+    expect(validateParsedInput(parsed)).toBeUndefined()
   })
 })

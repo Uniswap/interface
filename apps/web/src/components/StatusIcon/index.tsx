@@ -1,5 +1,4 @@
 import { Flex, FlexProps } from 'ui/src/components/layout'
-import { breakpoints } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -9,25 +8,6 @@ import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
 import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
 import { useHasSocks } from '~/hooks/useSocksBalance'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { flexColumnNoWrap } from '~/theme/styles'
-
-const IconWrapper = deprecatedStyled.div<{ size?: number }>`
-  position: relative;
-  ${flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  @media only screen and (min-width: ${breakpoints.xl}px) {
-    margin-right: 4px;
-  }
-  & > img,
-  span {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    align-items: flex-end;
-  `};
-`
 
 const MINI_ICON_SIZE = 16
 
@@ -50,15 +30,10 @@ const MiniIconContainer = deprecatedStyled.div<{ $side: 'left' | 'right'; size?:
   }
 `
 
-const MiniImg = deprecatedStyled.img`
-  width: ${MINI_ICON_SIZE + 'px'};
-  height: ${MINI_ICON_SIZE + 'px'};
-`
-
 function Socks() {
   return (
     <MiniIconContainer $side="left">
-      <MiniImg src={sockImg} />
+      <img width={MINI_ICON_SIZE} height={MINI_ICON_SIZE} src={sockImg} />
     </MiniIconContainer>
   )
 }
@@ -78,7 +53,7 @@ function MiniWalletIcon({ platform }: { platform: Platform }) {
 
   return (
     <MiniIconContainer $side="right" data-testid="MiniIcon">
-      <MiniImg src={icon} alt={`${wallet.name} icon`} />
+      <img width={MINI_ICON_SIZE} height={MINI_ICON_SIZE} src={icon} alt={`${wallet.name} icon`} />
     </MiniIconContainer>
   )
 }
@@ -111,10 +86,18 @@ export function StatusIcon({
   const platform = isEVMAddress(addressToDisplay) ? Platform.EVM : Platform.SVM
 
   return (
-    <IconWrapper size={size} data-testid="StatusIconRoot">
+    <Flex
+      centered
+      height={size}
+      width={size}
+      ml="$spacing4"
+      mr="$spacing4"
+      $xl={{ mr: '$none' }}
+      data-testid="StatusIconRoot"
+    >
       <AccountIcon address={addressToDisplay} size={size} transition={transition} centered />
       {showConnectedIndicator ? <MiniConnectedIndicator /> : showMiniIcons && <MiniWalletIcon platform={platform} />}
       {hasSocks && showMiniIcons && <Socks />}
-    </IconWrapper>
+    </Flex>
   )
 }

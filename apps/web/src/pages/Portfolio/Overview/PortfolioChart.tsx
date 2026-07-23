@@ -1,4 +1,4 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -26,12 +26,16 @@ import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/p
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimatedColor'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart, PriceChartBody, PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
+import { ChartScrubBreakdown } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/ChartScrubBreakdown'
 import { chartPeriodToHistoryDuration } from '~/pages/Portfolio/Overview/chartPeriodToHistoryDuration'
+import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioBalanceHeader } from '~/pages/Portfolio/Overview/PortfolioBalanceHeader'
+import { PortfolioChartCategorySelector } from '~/pages/Portfolio/Overview/PortfolioChartCategorySelector'
 
 type ChartPercentChange = ReturnType<typeof getPortfolioChartPercentChange>
 
@@ -42,10 +46,42 @@ const ChartContainer = styled(Flex, {
 const CHART_HEIGHT = 300
 const UNFUNDED_CHART_SKELETON_HEIGHT = 275
 
+/**
+ * Picks the chart line color from the net change between the series start and a reference value.
+ * `reference` is the hovered point's value while scrubbing, or the last point at rest.
+ */
+function portfolioChartColor({
+  colors,
+  series,
+  reference,
+}: {
+  colors: ReturnType<typeof useSporeColors>
+  series: PriceChartData[]
+  reference: number | undefined
+}): string {
+  if (series.length < 2) {
+    return colors.accent1.val
+  }
+  const firstValue = series[0].close
+  const referenceValue = reference ?? series[series.length - 1].close
+  if (referenceValue < firstValue) {
+    return colors.statusCritical.val
+  }
+  return colors.statusSuccess.val
+}
+
 interface PortfolioChartProps {
   isPortfolioZero: boolean
   series: PriceChartData[]
+  /** Per-category series (shared timestamps) for the scrub breakdown overlay. */
+  tokensSeries: PriceChartData[]
+  poolsSeries: PriceChartData[]
+  earnSeries: PriceChartData[]
   chartPercentChange: ChartPercentChange
+  /** Period percent change per category, for the breakdown popover rows at rest. */
+  tokensPercentChange: number | undefined
+  poolsPercentChange: number | undefined
+  earnPercentChange: number | undefined
   isLoading: boolean
   isChartEmpty: boolean
   error?: Error | null
@@ -55,26 +91,47 @@ interface PortfolioChartProps {
   portfolioTotalBalanceUSD?: number
   tokensValue?: PortfolioTotalValue
   poolsValue?: PortfolioTotalValue
+  earnValue?: PortfolioTotalValue
+  /** Opt-in categories the backend omitted, so the total is a partial sum shown with a warning. */
+  unavailableCategories?: WalletBalanceCategory[]
   isTotalValueMatch: boolean
   /** portfolio_pools_balances flag: when removed, make this the default and drop the legacy chart-internal header path. */
   showBalanceHeaderRow?: boolean
+  selectedCategory: PortfolioChartCategory
+  setSelectedCategory: (category: PortfolioChartCategory) => void
+  /** Non-total categories with data, in fixed display order — what the selector lists. */
+  availableCategories: PortfolioChartCategory[]
+  /** Gates the category selector; true only when at least two categories have data. */
+  hasCategoryBreakdown: boolean
 }
 
 export function PortfolioChart({
   isPortfolioZero,
   series,
+  tokensSeries,
+  poolsSeries,
+  earnSeries,
   chartPercentChange,
+  tokensPercentChange,
+  poolsPercentChange,
+  earnPercentChange,
   isLoading,
   isChartEmpty,
   error,
   portfolioTotalBalanceUSD,
   tokensValue,
   poolsValue,
+  earnValue,
+  unavailableCategories,
   selectedPeriod,
   setSelectedPeriod,
   onHoverPeriod,
   isTotalValueMatch,
   showBalanceHeaderRow,
+  selectedCategory,
+  setSelectedCategory,
+  availableCategories,
+  hasCategoryBreakdown,
 }: PortfolioChartProps): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
@@ -98,21 +155,14 @@ export function PortfolioChart({
     }))
   }, [selectedPeriod, t])
 
-  // Determine color based on portfolio balance change
-  const chartColor = useMemo(() => {
-    if (series.length < 2) {
-      return colors.accent1.val
-    }
-    const firstValue = series[0].close
-    const lastValue = series[series.length - 1].close
-    if (lastValue > firstValue) {
-      return colors.statusSuccess.val
-    }
-    if (lastValue < firstValue) {
-      return colors.statusCritical.val
-    }
-    return colors.statusSuccess.val
-  }, [series, colors])
+  // Static color from the period's net change (first vs last); used by the legacy chart path.
+  const chartColor = useMemo(() => portfolioChartColor({ colors, series, reference: undefined }), [series, colors])
+  // Scrub-aware target: while scrubbing, color by the hovered point vs the period start.
+  const scrubAwareColorTarget = useMemo(
+    () => portfolioChartColor({ colors, series, reference: hoveredChartData?.close }),
+    [series, colors, hoveredChartData],
+  )
+  const animatedChartColor = useChartAnimatedColor(scrubAwareColorTarget)
 
   const isDisabled = isPortfolioZero || !!error
 
@@ -136,12 +186,16 @@ export function PortfolioChart({
     type: PriceChartType.LINE,
     stale: false,
     timePeriod: chartPeriodToHistoryDuration(selectedPeriod),
-    overrideColor: chartColor,
+    // New flag path animates toward the scrub-aware color; legacy path keeps the static color.
+    overrideColor: showBalanceHeaderRow ? animatedChartColor : chartColor,
     hideYAxis: !isTotalValueMatch,
     yAxisFormatter,
   }
 
   const shouldShowBalanceHeader = showBalanceHeaderRow && !isPortfolioZero
+
+  // Kept visible on error (grayed out below) so the controls row layout is stable; only hidden when there's no breakdown.
+  const showCategorySelector = shouldShowBalanceHeader && hasCategoryBreakdown && !isLoading && !isChartEmpty
 
   useEffect(() => {
     if (!shouldShowBalanceHeader || error || isLoading || isChartEmpty) {
@@ -160,9 +214,15 @@ export function PortfolioChart({
           portfolioTotalBalanceUSD={portfolioTotalBalanceUSD}
           tokensValue={tokensValue}
           poolsValue={poolsValue}
+          earnValue={earnValue}
+          unavailableCategories={unavailableCategories}
           series={series}
           chartPercentChange={chartPercentChange}
+          tokensPercentChange={tokensPercentChange}
+          poolsPercentChange={poolsPercentChange}
+          earnPercentChange={earnPercentChange}
           selectedPeriod={selectedPeriod}
+          selectedCategory={selectedCategory}
           isPortfolioZero={isPortfolioZero}
           isLoading={isLoading}
           hoveredData={hoveredChartData}
@@ -173,12 +233,18 @@ export function PortfolioChart({
           <ChartSkeleton
             type={ChartType.PRICE}
             height={CHART_HEIGHT}
+            errorTitle={t('portfolio.overview.chart.errorTitle')}
             errorText={t('portfolio.overview.chart.errorText')}
+            errorColor={colors.surface3.val}
+            errorBackgroundColor={colors.surface3Solid.val}
+            errorBorderColor="transparent"
+            // The balance header already renders the value from the separate wallet-balances call.
+            hidePriceIndicators={shouldShowBalanceHeader}
           />
         </ChartContainer>
       ) : isLoading ? (
         <ChartContainer centered grow shrink>
-          <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} />
+          <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} hidePriceIndicators={shouldShowBalanceHeader} />
         </ChartContainer>
       ) : isPortfolioZero || isChartEmpty ? (
         <Flex
@@ -196,7 +262,19 @@ export function PortfolioChart({
       ) : (
         <Flex pointerEvents={isTotalValueMatch ? 'auto' : 'none'}>
           {shouldShowBalanceHeader ? (
-            <PriceChartBody {...bodyProps} onCrosshairChange={setHoveredChartData} />
+            <PriceChartBody {...bodyProps} onCrosshairChange={setHoveredChartData}>
+              {(crosshairData, hover) =>
+                selectedCategory === PortfolioChartCategory.Total && hasCategoryBreakdown && crosshairData && hover ? (
+                  <ChartScrubBreakdown
+                    coordinates={hover}
+                    time={crosshairData.time}
+                    tokensSeries={tokensSeries}
+                    earnSeries={earnSeries}
+                    poolsSeries={poolsSeries}
+                  />
+                ) : null
+              }
+            </PriceChartBody>
           ) : (
             <PriceChart
               {...bodyProps}
@@ -215,20 +293,37 @@ export function PortfolioChart({
         </Flex>
       )}
       <Flex
-        $md={{ width: '100%' }}
-        opacity={isPortfolioZero ? 0.5 : 1}
-        pointerEvents={isPortfolioZero || isDemoView ? 'none' : 'auto'}
+        row
+        alignItems="center"
+        justifyContent="space-between"
+        gap="$spacing8"
+        $md={{ flexDirection: 'column', alignItems: 'stretch' }}
       >
-        <SegmentedControl
-          disabled={isDisabled}
-          fullWidth={media.md}
-          options={periodOptions}
-          selectedOption={String(selectedPeriod)}
-          onSelectOption={(periodStr: string) => setSelectedPeriod(Number(periodStr) as ChartPeriod)}
-          onHoverOption={
-            onHoverPeriod ? (periodStr: string) => onHoverPeriod(Number(periodStr) as ChartPeriod) : undefined
-          }
-        />
+        <Flex
+          $md={{ width: '100%' }}
+          opacity={error ? 0.4 : isPortfolioZero ? 0.5 : 1}
+          pointerEvents={error || isPortfolioZero || isDemoView ? 'none' : 'auto'}
+        >
+          <SegmentedControl
+            disabled={isDisabled}
+            fullWidth={media.md}
+            options={periodOptions}
+            selectedOption={String(selectedPeriod)}
+            onSelectOption={(periodStr: string) => setSelectedPeriod(Number(periodStr) as ChartPeriod)}
+            onHoverOption={
+              onHoverPeriod ? (periodStr: string) => onHoverPeriod(Number(periodStr) as ChartPeriod) : undefined
+            }
+          />
+        </Flex>
+        {showCategorySelector && (
+          <Flex opacity={error ? 0.4 : 1} pointerEvents={error ? 'none' : 'auto'}>
+            <PortfolioChartCategorySelector
+              value={selectedCategory}
+              availableCategories={availableCategories}
+              onChange={setSelectedCategory}
+            />
+          </Flex>
+        )}
       </Flex>
     </Flex>
   )

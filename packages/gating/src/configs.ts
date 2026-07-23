@@ -69,6 +69,7 @@ export enum DynamicConfigs {
   BlockedAsyncSubmissionChainIds = 'blocked_async_submission_chain_ids',
   Chains = 'chains',
   DisableWalletSearchTerms = 'disable_wallet_search_terms',
+  Earn = 'earn_config',
   NetworkRequests = 'network_requests',
   Swap = 'swap_config',
   SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
@@ -87,14 +88,15 @@ export enum DynamicConfigs {
   // Web
   AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
   AstroChain = 'astro_chain',
-  CreateAuction = 'create_auction_config',
   EmbeddedWalletBetaPassphrases = 'embedded_wallet_beta_passphrases',
   ExternallyConnectableExtension = 'externally_connectable_extension',
   LiquidityApprovalSimulation = 'liquidity_approval_simulation',
   LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
   OutageBannerChainId = 'outage_banner_chain_id',
+  RWAIssuerLogos = 'rwa_issuer_logos',
   VerifiedAuctions = 'verified_auctions',
+  AuctionFdvWarning = 'auction_fdv_warning',
 }
 
 // Config values go here for easy access
@@ -123,8 +125,12 @@ export enum SwapConfigKey {
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
   TempoSwapMinGasAmount = 'tempoSwapMinGasAmount',
   TempoSendMinGasAmount = 'tempoSendMinGasAmount',
+  ArcSwapMinGasAmount = 'arcSwapMinGasAmount',
+  ArcSendMinGasAmount = 'arcSendMinGasAmount',
 
   LowBalanceWarningGasPercentage = 'lowBalanceWarningGasPercentage',
+
+  ChainedActionsUnsupportedChainIds = 'chainedActionsUnsupportedChainIds',
 }
 
 export enum NetworkRequestsConfigKey {
@@ -138,6 +144,11 @@ export enum ChainsConfigKey {
 
 export enum DisableWalletSearchTermsConfigKey {
   Terms = 'terms',
+}
+
+export enum EarnConfigKey {
+  MinDepositUsd = 'minDepositUsd',
+  SwapToggleMonthlyEarningsThresholdUsd = 'swapToggleMonthlyEarningsThresholdUsd',
 }
 
 // Wallet
@@ -245,13 +256,14 @@ export enum VerifiedAuctionsConfigKey {
   VerifiedAuctionIds = 'verifiedAuctionIds',
 }
 
-export enum OutageBannerChainIdConfigKey {
-  ChainId = 'chainId',
+export enum AuctionFdvWarningConfigKey {
+  CommittedVolumeUsdThreshold = 'committedVolumeUsdThreshold',
+  BidCountThreshold = 'bidCountThreshold',
+  FdvUsdThreshold = 'fdvUsdThreshold',
 }
 
-export enum CreateAuctionConfigKey {
-  AllowedNetworks = 'allowedNetworks',
-  AllowedTokenCreationNetworks = 'allowedTokenCreationNetworks',
+export enum OutageBannerChainIdConfigKey {
+  ChainId = 'chainId',
 }
 
 export enum LiquidityGasPreEstimationConfigKey {
@@ -266,11 +278,16 @@ export enum EmbeddedWalletBetaPassphrasesKey {
   Passphrases = 'passphrases',
 }
 
+export enum RWAIssuerLogosConfigKey {
+  Logos = 'logos',
+}
+
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
   [DynamicConfigs.Chains]: ChainsConfigKey
   [DynamicConfigs.DisableWalletSearchTerms]: DisableWalletSearchTermsConfigKey
+  [DynamicConfigs.Earn]: EarnConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
@@ -287,16 +304,26 @@ export type DynamicConfigKeys = {
 
   // Web
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
+  [DynamicConfigs.AuctionFdvWarning]: AuctionFdvWarningConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
-  [DynamicConfigs.CreateAuction]: CreateAuctionConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LiquidityApprovalSimulation]: LiquidityApprovalSimulationConfigKey
   [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.OutageBannerChainId]: OutageBannerChainIdConfigKey
+  [DynamicConfigs.RWAIssuerLogos]: RWAIssuerLogosConfigKey
   [DynamicConfigs.VerifiedAuctions]: VerifiedAuctionsConfigKey
 }
+
+// This type must match the format in the statsig dynamic config for rwa_issuer_logos.
+// Per-issuer light/dark URLs because remote SVGs can't be recolored by theme.
+export type RWAIssuerLogo = {
+  light?: string
+  dark?: string
+}
+
+export type RWAIssuerLogosMap = Record<string, RWAIssuerLogo>
 
 // This type must match the format in statsig dynamic config for uwulink
 // https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config

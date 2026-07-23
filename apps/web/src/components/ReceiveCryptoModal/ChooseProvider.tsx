@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, GeneratedIcon, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
+import { CopyToClipboard } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -12,7 +13,6 @@ import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOp
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
-import { CopyToClipboard } from '~/theme/components/CopyHelper'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {

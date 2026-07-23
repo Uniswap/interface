@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
@@ -7,6 +8,7 @@ import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalS
 const VAULT_A: EarnVaultInfo = {
   id: 'vault-a',
   currencyId: '1-0xa',
+  displayCurrencyId: '1-0xa',
   vaultAddress: '0xa',
   chainId: UniverseChainId.Mainnet,
   apyPercent: 4,
@@ -35,7 +37,7 @@ describe(useEarnVaultModalState, () => {
   it('respects an explicit initialView when opening', () => {
     const { result } = renderHook(() => useEarnVaultModalState())
 
-    act(() => result.current.openModal(VAULT_A, EarnVaultView.WithdrawAmount))
+    act(() => result.current.openModal(VAULT_A, { initialView: EarnVaultView.WithdrawAmount }))
 
     expect(result.current.selectedVaultState).toEqual({
       vault: VAULT_A,
@@ -51,6 +53,18 @@ describe(useEarnVaultModalState, () => {
     expect(result.current.selectedVaultState).toEqual({
       vault: VAULT_A,
       initialView: EarnVaultView.DepositAmount,
+    })
+  })
+
+  it('stores per-open analytics entry point options', () => {
+    const { result } = renderHook(() => useEarnVaultModalState())
+
+    act(() => result.current.openDepositModal(VAULT_A, { analyticsEntryPoint: EarnEntryPoint.PortfolioEarnGetToken }))
+
+    expect(result.current.selectedVaultState).toEqual({
+      vault: VAULT_A,
+      initialView: EarnVaultView.DepositAmount,
+      analyticsEntryPoint: EarnEntryPoint.PortfolioEarnGetToken,
     })
   })
 
@@ -79,7 +93,7 @@ describe(useEarnVaultModalState, () => {
     const { result } = renderHook(() => useEarnVaultModalState())
 
     act(() => result.current.openModal(VAULT_A))
-    act(() => result.current.openModal(VAULT_B, EarnVaultView.WithdrawAmount))
+    act(() => result.current.openModal(VAULT_B, { initialView: EarnVaultView.WithdrawAmount }))
 
     expect(result.current.selectedVaultState).toEqual({
       vault: VAULT_B,

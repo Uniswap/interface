@@ -1,4 +1,5 @@
 import { AppTFunction } from 'ui/src/i18n/types'
+import { getEarnPlanStatusTitleKeyFromTransactionStatus } from 'uniswap/src/features/earn/planActivityTitles'
 import {
   NFTTradeType,
   REVOKE_APPROVAL_AMOUNT,
@@ -7,10 +8,25 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
-export function getTransactionSummaryTitle(
-  tx: Pick<TransactionDetails, 'typeInfo' | 'status'>,
-  t: AppTFunction,
-): string | undefined {
+export function getTransactionSummaryTitle({
+  tx,
+  t,
+  isEarnActivityDisplayEnabled = true,
+}: {
+  tx: Pick<TransactionDetails, 'typeInfo' | 'status'>
+  t: AppTFunction
+  isEarnActivityDisplayEnabled?: boolean
+}): string | undefined {
+  // Earn plans share the canonical status→title mapping with notifications and the activity tables.
+  if (isEarnActivityDisplayEnabled && tx.typeInfo.type === TransactionType.Plan && tx.typeInfo.earnAction) {
+    return t(
+      getEarnPlanStatusTitleKeyFromTransactionStatus({
+        earnAction: tx.typeInfo.earnAction,
+        transactionStatus: tx.status,
+      }),
+    )
+  }
+
   const { success, pending, failed, canceling, canceled, expired, insufficientFunds, awaitingAction } =
     getTransactionTypeVerbs(tx.typeInfo, t)
 
@@ -88,6 +104,16 @@ function getTransactionTypeVerbs(
         failed: t('transaction.status.send.failed'),
         canceling: t('transaction.status.send.canceling'),
         canceled: t('transaction.status.send.canceled'),
+      }
+    case TransactionType.Deposit:
+      return {
+        success: externalDappName
+          ? t('transaction.status.deposit.successDapp', { externalDappName })
+          : t('transaction.status.deposit.success'),
+        pending: t('transaction.status.deposit.pending'),
+        failed: t('transaction.status.deposit.failed'),
+        canceling: t('transaction.status.deposit.canceling'),
+        canceled: t('transaction.status.deposit.canceled'),
       }
     case TransactionType.Wrap:
       if (typeInfo.unwrapped) {
@@ -188,8 +214,12 @@ function getTransactionTypeVerbs(
     case TransactionType.OnRampPurchase: {
       const serviceProvider = typeInfo.serviceProvider.name
       return {
-        success: t('transaction.status.purchase.successOn', { serviceProvider }),
-        pending: t('transaction.status.purchase.pendingOn', { serviceProvider }),
+        success: t('transaction.status.purchase.successOn', {
+          serviceProvider,
+        }),
+        pending: t('transaction.status.purchase.pendingOn', {
+          serviceProvider,
+        }),
         failed: t('transaction.status.purchase.failedOn', { serviceProvider }),
         canceling: t('transaction.status.purchase.canceling'), // On ramp transactions are not cancellable
         canceled: t('transaction.status.purchase.canceled'), // On ramp transactions are not cancellable
@@ -198,8 +228,12 @@ function getTransactionTypeVerbs(
     case TransactionType.OnRampTransfer: {
       const serviceProvider = typeInfo.serviceProvider.name
       return {
-        success: t('transaction.status.receive.successFrom', { serviceProvider }),
-        pending: t('transaction.status.receive.pendingFrom', { serviceProvider }),
+        success: t('transaction.status.receive.successFrom', {
+          serviceProvider,
+        }),
+        pending: t('transaction.status.receive.pendingFrom', {
+          serviceProvider,
+        }),
         failed: t('transaction.status.receive.failedFrom', { serviceProvider }),
         canceling: t('transaction.status.receive.canceling'), // On ramp transactions are not cancellable
         canceled: t('transaction.status.receive.canceled'), // On ramp transactions are not cancellable
@@ -272,6 +306,14 @@ function getTransactionTypeVerbs(
         success: t('transaction.status.withdrawBid.success'),
         pending: t('transaction.status.withdrawBid.pending'),
         failed: t('transaction.status.withdrawBid.failed'),
+      }
+    case TransactionType.AuctionLaunch:
+      return {
+        success: t('toucan.createAuction.transaction.success'),
+        pending: t('toucan.createAuction.transaction.pending'),
+        failed: t('toucan.createAuction.transaction.failed'),
+        canceling: t('toucan.createAuction.transaction.canceling'),
+        canceled: t('toucan.createAuction.transaction.canceled'),
       }
     case TransactionType.CreatePair:
       return {

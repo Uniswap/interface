@@ -23,7 +23,7 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
 }))
 
 const mockRefreshNeckSession = vi.fn()
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('uniswap/src/features/passkey/passkeySession', () => ({
   refreshNeckSession: (...args: unknown[]) => mockRefreshNeckSession(...args),
 }))
 

@@ -42,7 +42,7 @@ type PortfolioHeaderProps = {
 // it's not in any kind of Context because it's only animation variable and it shouldn't trigger rerenders
 let shouldEnableAnimationNextEnter = false
 
-const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }): JSX.Element => {
+const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings: () => void }): JSX.Element => {
   const isScreenFocused = useIsFocused()
   const pressProgress = useSharedValue(0)
 

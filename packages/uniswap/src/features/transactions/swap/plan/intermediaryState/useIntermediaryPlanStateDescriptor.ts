@@ -46,11 +46,17 @@ export function getLongIntermediaryStateDescriptor(params: GetLongIntermediarySt
 
   if (params.hasBridged && !params.hasSwapped) {
     const destinationChain = getChainLabel(params.intermediaryCurrencyAmount.currency.chainId)
-    return params.t('transaction.status.plan.intermediaryState.bridged.extended', { tokenInSymbol, destinationChain })
+    return params.t('transaction.status.plan.intermediaryState.bridged.extended', {
+      tokenInSymbol: tokenInSymbol ?? params.t('common.token'),
+      destinationChain,
+    })
   }
 
   const tokenOutSymbol = params.intermediaryCurrencyAmount.currency.symbol
-  return params.t('transaction.status.plan.intermediaryState.swapped.extended', { tokenInSymbol, tokenOutSymbol })
+  return params.t('transaction.status.plan.intermediaryState.swapped.extended', {
+    tokenInSymbol: tokenInSymbol ?? params.t('common.token'),
+    tokenOutSymbol: tokenOutSymbol ?? params.t('common.token'),
+  })
 }
 
 interface GetShortIntermediaryStateDescriptorParams extends GetLongIntermediaryStateDescriptorParams {
@@ -62,12 +68,19 @@ function getShortIntermediaryStateDescriptor(params: GetShortIntermediaryStateDe
 
   if (params.hasBridged && !params.hasSwapped) {
     const destinationChain = getChainLabel(params.intermediaryCurrencyAmount.currency.chainId)
-    return params.t('transaction.status.plan.intermediaryState.bridged', { tokenInSymbol, destinationChain })
+    return params.t('transaction.status.plan.intermediaryState.bridged', {
+      tokenInSymbol: tokenInSymbol ?? params.t('common.token'),
+      destinationChain,
+    })
   }
 
   const tokenOutSymbol = params.intermediaryCurrencyAmount.currency.symbol
   const amount = params.formatCurrencyAmount({ value: params.intermediaryCurrencyAmount })
-  const strParams = { tokenInSymbol, tokenOutSymbol, amount }
+  const strParams = {
+    tokenInSymbol: tokenInSymbol ?? params.t('common.token'),
+    tokenOutSymbol: tokenOutSymbol ?? params.t('common.token'),
+    amount,
+  }
 
   return params.t('transaction.status.plan.intermediaryState.swapped', strParams)
 }

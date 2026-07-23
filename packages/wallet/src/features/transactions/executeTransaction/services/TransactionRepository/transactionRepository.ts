@@ -4,6 +4,7 @@ import type {
   TransactionDetails,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { PrivatePendingTxSummaryInput } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
 
 /**
  * Repository for transaction state management.
@@ -37,6 +38,16 @@ export interface TransactionRepository {
    * @returns The count of pending private transactions
    */
   getPendingPrivateTransactionCount(input: { address: string; chainId: UniverseChainId }): Promise<number>
+
+  /**
+   * Get lightweight details of the pending private-RPC transactions for an address on a chain.
+   * SWAP-2471 nonce-inflation telemetry only — NOT used for control flow.
+   * @returns The pending private transactions' ids, hashes, nonces, addedTime and status
+   */
+  getPendingPrivateTransactionDetails(input: {
+    address: string
+    chainId: UniverseChainId
+  }): Promise<PrivatePendingTxSummaryInput[]>
 
   /**
    * Get all transactions for a specific address

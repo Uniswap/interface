@@ -1,3 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TransactionHistoryUpdater skips rendering when no accounts available 1`] = `null`;
+exports[`TransactionHistoryUpdater > skips rendering when no accounts available 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

@@ -1,9 +1,10 @@
 import { isProdEnv } from '@universe/environment'
 import React, { type ErrorInfo, type PropsWithChildren, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { type Dispatch } from 'redux'
-import { Button, Flex, Switch, Text } from 'ui/src'
+import { Button, Flex, flexStyles, Switch, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -86,7 +87,15 @@ class InternalErrorBoundary extends React.Component<
     const { fallback, appStateResetter } = this.props
 
     if (error !== null) {
-      return fallback === null ? null : fallback || <ErrorScreen error={error} appStateResetter={appStateResetter} />
+      // Own gesture root: the boundary can mount above the app's GestureHandlerRootView (or replace
+      // a crashed one), and the fallback contains RNGH-backed controls that throw without a root.
+      return fallback === null
+        ? null
+        : fallback || (
+            <GestureHandlerRootView style={flexStyles.fill}>
+              <ErrorScreen error={error} appStateResetter={appStateResetter} />
+            </GestureHandlerRootView>
+          )
     }
 
     return this.props.children

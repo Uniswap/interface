@@ -10,6 +10,8 @@ import {
   render as RNRender,
   renderHook as RNRenderHook,
 } from '@testing-library/react-native'
+import { SharedQueryClient } from '@universe/api'
+import { PriceServiceProvider } from '@universe/prices'
 import { ParsedQs } from 'qs'
 import { PropsWithChildren } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -176,9 +178,11 @@ function SharedUniswapProvider({ children }: Pick<TamaguiProviderProps, 'childre
     <UniswapProvider {...mockUniswapContext}>
       <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
         <SharedPersistQueryClientProvider>
-          <OGTamaguiProvider config={config} defaultTheme="dark">
-            {children}
-          </OGTamaguiProvider>
+          <PriceServiceProvider queryClient={SharedQueryClient}>
+            <OGTamaguiProvider config={config} defaultTheme="dark">
+              {children}
+            </OGTamaguiProvider>
+          </PriceServiceProvider>
         </SharedPersistQueryClientProvider>
       </UrlContext.Provider>
     </UniswapProvider>

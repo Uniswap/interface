@@ -30,3 +30,35 @@ export function blockToTimestamp({
   const deltaSec = (block - anchorBlock) * secPerBlock
   return new Date(anchorTime.getTime() + deltaSec * 1000)
 }
+
+/**
+ * Like blockToTimestamp, but calibrates the block rate from a second live anchor
+ * (currentBlock observed at currentTime). Needed on demand-driven-block chains
+ * (e.g. Arbitrum Orbit) where the real cadence can differ several-fold from the
+ * chain-constant blockTimeMs. Interpolates between the anchors and extrapolates
+ * past currentBlock at the calibrated rate; falls back to the chain constant when
+ * no usable live anchor is available.
+ */
+export function calibratedBlockToTimestamp({
+  block,
+  anchorBlock,
+  anchorTime,
+  chainId,
+  currentBlock,
+  currentTime,
+}: {
+  block: number
+  anchorBlock: number
+  anchorTime: Date
+  chainId: EVMUniverseChainId
+  currentBlock?: number
+  currentTime?: Date
+}): Date {
+  const anchorMs = anchorTime.getTime()
+  const currentMs = currentTime?.getTime()
+  if (currentBlock === undefined || currentMs === undefined || currentBlock <= anchorBlock || currentMs <= anchorMs) {
+    return blockToTimestamp({ block, anchorBlock, anchorTime, chainId })
+  }
+  const msPerBlock = (currentMs - anchorMs) / (currentBlock - anchorBlock)
+  return new Date(anchorMs + (block - anchorBlock) * msPerBlock)
+}

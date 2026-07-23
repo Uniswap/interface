@@ -1,7 +1,4 @@
 import { type Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE,
   MAX_POST_AUCTION_LIQUIDITY_PERCENT,
@@ -9,8 +6,6 @@ import {
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
   type PostAuctionLiquidityTier,
-  PriceRangeStrategy,
-  RaiseCurrency,
   UNBOUNDED_TIER_ID,
 } from '~/pages/Liquidity/CreateAuction/types'
 
@@ -34,16 +29,12 @@ function formatCompactNormalized(normalized: number): string {
     : normalized.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
 }
 
-export function getRecommendedStrategy(): PriceRangeStrategy {
-  return PriceRangeStrategy.CONCENTRATED_FULL_RANGE
-}
-
 export function clampPostAuctionLiquidityPercent(percent: number): number {
   return Math.min(Math.max(percent, MIN_POST_AUCTION_LIQUIDITY_PERCENT), MAX_POST_AUCTION_LIQUIDITY_PERCENT)
 }
 
 export function clampPostAuctionLiquidityTierPercent(percent: number): number {
-  return Math.min(Math.max(percent, 0), MAX_POST_AUCTION_LIQUIDITY_PERCENT)
+  return Math.min(Math.max(percent, MIN_POST_AUCTION_LIQUIDITY_PERCENT), MAX_POST_AUCTION_LIQUIDITY_PERCENT)
 }
 
 /** Maximum fractional digits allowed while editing post-auction liquidity percent inputs. */
@@ -155,6 +146,11 @@ export function formatCompactNumberDisplay(value: number): string {
   return formatted.replace(/k$/, 'K').replace(/m$/, 'M').replace(/b$/, 'B').replace(/t$/, 'T')
 }
 
+/** Ellipsizes a token symbol for compact display next to an amount (e.g. "SUPERLONGTOKEN" -> "SUPERLON…"). */
+export function truncateSymbol(symbol: string, maxLength = 8): string {
+  return symbol.length > maxLength ? `${symbol.slice(0, maxLength)}…` : symbol
+}
+
 export function expandCompactNumberInput(input: string): string | null {
   const trimmed = input.trim().toLowerCase()
   if (!trimmed) {
@@ -201,6 +197,15 @@ export function parseCompactNumberInput(input: string): number | null {
 
 export function isAllowedCompactNumberInput(value: string): boolean {
   return /^(\d*\.?\d*)[kmbt]?$/i.test(value)
+}
+
+/** True when `value` carries more fractional digits than `decimals` after compact-suffix expansion.
+ * Below the token's smallest unit, `tryParseCurrencyAmount` rounds to zero wei and downstream percent
+ * math (`amountToPercent`, LP derivation) can then divide by an unexpected zero. */
+export function inputExceedsCurrencyPrecision(value: string, decimals: number): boolean {
+  const expanded = expandCompactNumberInput(value) ?? ''
+  const dotIdx = expanded.indexOf('.')
+  return dotIdx !== -1 && expanded.length - dotIdx - 1 > decimals
 }
 
 export function getMinimumPostAuctionLiquidityTierMilestone(previousMilestone?: number): number {
@@ -381,23 +386,14 @@ export function getPostAuctionLiquidityPreviewPercent(allocation: PostAuctionLiq
   return clampPostAuctionLiquidityPercent(effectivePercent)
 }
 
-/**
- * Maps RaiseCurrency + chainId to the corresponding SDK Currency.
- * Use this whenever you need a Currency from the raise-currency constant (e.g. for pool data, sorting).
- */
-export function getRaiseCurrencyAsCurrency(
-  raiseCurrency: RaiseCurrency,
-  chainId: UniverseChainId,
-): Currency | undefined {
-  switch (raiseCurrency) {
-    case RaiseCurrency.ETH:
-      return nativeOnChain(chainId)
-    case RaiseCurrency.USDC:
-      return getChainInfo(chainId).tokens.USDC
-    default:
-      return undefined
-  }
-}
+// Raise-currency resolution lives in its own module; re-exported here so callers keep one import
+// path for CreateAuction utilities.
+export {
+  getPrimaryStablecoin,
+  getRaiseCurrencyAddress,
+  getRaiseCurrencyAsCurrency,
+  getSupportedAuctionCurrencyAddresses,
+} from '~/pages/Liquidity/CreateAuction/raiseCurrency'
 
 /**
  * Converts a float percentage into a SDK Percent (exact rational).
@@ -415,17 +411,16 @@ export function percentOfAmount(amount: CurrencyAmount<Currency>, percent: numbe
 }
 
 /**
- * Derives the float percentage that `part` represents of `total`.
- * Uses the SDK's Fraction for exact rational division.
- *
- * Precondition: `total` and `part` must share the same currency and decimals —
- * this function divides raw `quotient` values directly without currency conversion.
+ * Derives the float percentage that `part` represents of `total` (same currency/decimals).
+ * Divides on the exact fractions, not the floored `quotient` integers: a sub-base-unit `total`
+ * (e.g. half a base unit from an LP split) floors to a `0` quotient and would divide by zero.
+ * The exact fraction is non-zero whenever `total` is (already guarded), so this is crash-safe.
  */
 export function amountToPercent(total: CurrencyAmount<Currency>, part: CurrencyAmount<Currency>): number {
   if (total.equalTo(0)) {
     return 0
   }
-  const ratio = new Fraction(part.quotient, total.quotient).multiply(100)
+  const ratio = part.asFraction.divide(total.asFraction).multiply(100)
   return parseFloat(ratio.toFixed(6))
 }
 
@@ -471,12 +466,6 @@ export function percentOfSoldToLiquidityFromDepositAndLiquidityAmount(
   }
   return amountToPercent(sold, postAuctionLiquidityAmount)
 }
-
-export {
-  isAllowedWebsiteLinkInput,
-  isValidWebsiteLink,
-  normalizeWebsiteLink,
-} from '~/pages/Liquidity/CreateAuction/websiteLink'
 
 export {
   addCustomPriceRangePreset,

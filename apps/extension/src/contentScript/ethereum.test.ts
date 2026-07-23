@@ -1,50 +1,52 @@
+import type { MockInstance } from 'vitest'
+
 let mockIsSandboxed = false
 
-jest.mock('src/contentScript/isSandboxedFrame', () => ({
-  isSandboxedFrame: jest.fn(() => mockIsSandboxed),
+vi.mock('src/contentScript/isSandboxedFrame', () => ({
+  isSandboxedFrame: vi.fn(() => mockIsSandboxed),
 }))
 
-jest.mock('wxt/utils/define-content-script', () => ({
-  defineContentScript: jest.fn((definition) => definition),
+vi.mock('wxt/utils/define-content-script', () => ({
+  defineContentScript: vi.fn((definition) => definition),
 }))
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mock-uuid'),
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => 'mock-uuid'),
 }))
 
-jest.mock('src/background/messagePassing/messageUtils', () => ({
-  addWindowMessageListener: jest.fn(),
-  removeWindowMessageListener: jest.fn(),
+vi.mock('src/background/messagePassing/messageUtils', () => ({
+  addWindowMessageListener: vi.fn(),
+  removeWindowMessageListener: vi.fn(),
 }))
 
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    debug: jest.fn(),
-    error: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
+    debug: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
   },
 }))
 
-jest.mock('src/contentScript/WindowEthereumProxy', () => ({
-  WindowEthereumProxy: jest.fn().mockImplementation(() => ({
-    emit: jest.fn(),
+vi.mock('src/contentScript/WindowEthereumProxy', () => ({
+  WindowEthereumProxy: vi.fn().mockImplementation(() => ({
+    emit: vi.fn(),
     isMetaMask: false,
   })),
 }))
 
 describe('ethereum.content', () => {
   let definition: { main: () => void }
-  let postMessageSpy: jest.SpyInstance
+  let postMessageSpy: MockInstance
 
   beforeEach(() => {
-    jest.resetModules()
+    vi.resetModules()
     // Reset the mock flag before re-requiring
     mockIsSandboxed = false
     // Clear window.ethereum
     Object.defineProperty(window, 'ethereum', { value: undefined, writable: true, configurable: true })
     // jsdom's postMessage requires a targetOrigin; spy to prevent the call from throwing
-    postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation(jest.fn())
+    postMessageSpy = vi.spyOn(window, 'postMessage').mockImplementation(vi.fn())
   })
 
   afterEach(() => {
@@ -52,13 +54,13 @@ describe('ethereum.content', () => {
   })
 
   describe('normal frame', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       mockIsSandboxed = false
-      definition = require('../entrypoints/ethereum.content').default
+      definition = (await import('../entrypoints/ethereum.content')).default as unknown as { main: () => void }
     })
 
     it('assigns window.ethereum after main()', () => {
-      const eip6963Listener = jest.fn()
+      const eip6963Listener = vi.fn()
       window.addEventListener('eip6963:announceProvider', eip6963Listener)
 
       definition.main()
@@ -69,7 +71,7 @@ describe('ethereum.content', () => {
     })
 
     it('fires EIP-6963 announceProvider event', () => {
-      const eip6963Listener = jest.fn()
+      const eip6963Listener = vi.fn()
       window.addEventListener('eip6963:announceProvider', eip6963Listener)
 
       definition.main()
@@ -81,13 +83,13 @@ describe('ethereum.content', () => {
   })
 
   describe('sandboxed frame', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       mockIsSandboxed = true
-      definition = require('../entrypoints/ethereum.content').default
+      definition = (await import('../entrypoints/ethereum.content')).default as unknown as { main: () => void }
     })
 
     it('does NOT assign window.ethereum', () => {
-      const eip6963Listener = jest.fn()
+      const eip6963Listener = vi.fn()
       window.addEventListener('eip6963:announceProvider', eip6963Listener)
 
       definition.main()
@@ -98,7 +100,7 @@ describe('ethereum.content', () => {
     })
 
     it('does NOT fire EIP-6963 announceProvider event', () => {
-      const eip6963Listener = jest.fn()
+      const eip6963Listener = vi.fn()
       window.addEventListener('eip6963:announceProvider', eip6963Listener)
 
       definition.main()

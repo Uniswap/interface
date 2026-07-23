@@ -1,4 +1,4 @@
-import { Text } from 'ui/src'
+import { type ModifierPressProps, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
 import { UnitagOption } from 'uniswap/src/components/lists/items/types'
@@ -8,12 +8,17 @@ import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 
-type UnitagOptionItemProps = {
+type UnitagOptionItemProps = ModifierPressProps & {
   unitagOption: UnitagOption
   onPress: OptionItemProps['onPress']
 }
 
-export function UnitagOptionItem({ unitagOption, onPress }: UnitagOptionItemProps): JSX.Element {
+export function UnitagOptionItem({
+  unitagOption,
+  onPress,
+  modifierPressHref,
+  onModifierPress,
+}: UnitagOptionItemProps): JSX.Element {
   const { address, unitag } = unitagOption
 
   return (
@@ -33,7 +38,9 @@ export function UnitagOptionItem({ unitagOption, onPress }: UnitagOptionItemProp
           {sanitizeAddressText(shortenAddress({ address }))}
         </Text>
       }
+      modifierPressHref={modifierPressHref}
       onPress={onPress}
+      onModifierPress={onModifierPress}
     />
   )
 }

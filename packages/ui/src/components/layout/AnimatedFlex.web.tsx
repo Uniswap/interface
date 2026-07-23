@@ -19,8 +19,8 @@ type AnimatedFlexComponent = React.ForwardRefExoticComponent<
  * The Reanimated props (entering, exiting, layout) are accepted for compatibility
  * with native code but are ignored on web.
  *
- * @deprecated Prefer `<Flex animation="" />` - see: https://tamagui.dev/docs/core/animations
- * TODO(MOB-1948): Remove this
+ * Prefer Tamagui declarative animations (`<Flex animation="..." />`); reach for AnimatedFlex only for an
+ * external Reanimated `useAnimatedStyle` worklet. See: https://tamagui.dev/docs/core/animations
  */
 export const AnimatedFlex: AnimatedFlexComponent = forwardRef<ComponentRef<typeof Flex>, AnimatedFlexProps>(
   function AnimatedFlex({ entering: _entering, exiting: _exiting, layout: _layout, ...props }, ref) {

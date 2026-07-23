@@ -5,7 +5,7 @@ import { isWebPlatform } from '@universe/environment'
 import { create, QRCodeErrorCorrectionLevel, QRCodeSegment } from 'qrcode'
 import { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
-import { BaseQRProps } from 'ui/src/components/QRCode/QRCodeDisplay'
+import type { BaseQRProps } from 'ui/src/components/QRCode/QRCodeDisplay'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 // size of the SVG element of the eye for the SVG we use in particular.

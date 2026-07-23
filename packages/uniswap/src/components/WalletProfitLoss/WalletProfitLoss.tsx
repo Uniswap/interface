@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { PnlInfoTrigger } from 'uniswap/src/components/ProfitLoss/PnlInfoTrigger'
 import { ProfitLossRow } from 'uniswap/src/components/ProfitLoss/ProfitLossRow'
 
 interface WalletProfitLossProps {
@@ -26,9 +27,12 @@ export function WalletProfitLoss({
   return (
     <Flex gap="$gap16" width="100%" pointerEvents="box-none">
       <Flex row justifyContent="space-between" alignItems="center" width="100%" pointerEvents="box-none">
-        <Text variant="subheading1" color="$neutral1" pointerEvents="none">
-          {t('pnl.title')}
-        </Text>
+        <Flex row alignItems="center" gap="$spacing4">
+          <Text variant="subheading1" color="$neutral1" pointerEvents="none">
+            {t('pnl.title')}
+          </Text>
+          <PnlInfoTrigger metrics={['unrealizedReturn', 'realizedReturn', 'totalReturn']} />
+        </Flex>
         {periodSelector}
       </Flex>
       <Flex gap="$gap12" pointerEvents="box-none">

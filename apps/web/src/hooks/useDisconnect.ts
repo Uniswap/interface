@@ -15,7 +15,8 @@ function useDisconnectEVM(): () => void {
 }
 
 function useDisconnectSVM(): () => void {
-  return useSolanaWalletContext().disconnect
+  const wallet = useSolanaWalletContext()
+  return useEvent(() => wallet.disconnect())
 }
 
 export function useDisconnect(): () => void {

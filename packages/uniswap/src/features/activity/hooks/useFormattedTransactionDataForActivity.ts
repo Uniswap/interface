@@ -1,8 +1,7 @@
-import { NetworkStatus, QueryHookOptions } from '@apollo/client'
+import { NetworkStatus } from '@apollo/client'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { isAndroid } from '@universe/environment'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
@@ -27,7 +26,7 @@ const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING
 
 // Native FlatList performance degrades with large lists; callers that don't have this constraint
 // (e.g. web) can pass a higher maxItems value
-const MOBILE_MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
+const MOBILE_MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 200
 
 function hasReachedLimit(transactions: TransactionDetails[] | undefined, maxItems: number): boolean {
   const currentTransactionCount = transactions?.length ?? 0
@@ -36,10 +35,6 @@ function hasReachedLimit(transactions: TransactionDetails[] | undefined, maxItem
 
 // Contract for returning Transaction data
 
-type TransactionListQueryArgs = QueryHookOptions<
-  GraphQLApi.TransactionListQuery,
-  GraphQLApi.TransactionListQueryVariables
->
 interface UseFormattedTransactionDataOptions {
   evmAddress?: Address
   svmAddress?: Address
@@ -54,10 +49,9 @@ interface UseFormattedTransactionDataOptions {
   maxItems?: number
 }
 
-type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
-  TransactionListQueryArgs & {
-    showLoadingOnRefetch?: boolean
-  }
+type FormattedTransactionInputs = UseFormattedTransactionDataOptions & {
+  showLoadingOnRefetch?: boolean
+}
 
 export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean

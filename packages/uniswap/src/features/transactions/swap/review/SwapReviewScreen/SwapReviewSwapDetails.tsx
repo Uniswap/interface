@@ -1,8 +1,7 @@
 import type { GasFeeResult } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useEffect, useState } from 'react'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
+import { QuoteRefreshErrorRow } from 'uniswap/src/features/earn/QuoteRefreshErrorRow'
 import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import { useIsCustomGasFlowAvailable } from 'uniswap/src/features/gas/hooks/useIsCustomGasFlowAvailable'
 import {
@@ -16,12 +15,33 @@ import {
   useSwapReviewWarningStore,
 } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails/SwapDetails'
-import { ReviewNetworkCostRow } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/ReviewNetworkCostRow'
+import { resolveSponsorshipInfo } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/resolveSponsorshipInfo'
+import { ReviewNetworkCostRowSlot } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/ReviewNetworkCostRowSlot'
 import { getEVMTxRequest } from 'uniswap/src/features/transactions/swap/utils/routing'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.Element | null {
+const QUOTE_REFRESH_GAS_FEE: GasFeeResult = {
+  value: undefined,
+  displayValue: undefined,
+  isLoading: true,
+  error: null,
+}
+
+// A settled refresh error has no live quote to price gas against — show the placeholder, not a spinner.
+const QUOTE_REFRESH_ERROR_GAS_FEE: GasFeeResult = {
+  value: undefined,
+  displayValue: undefined,
+  isLoading: false,
+  error: null,
+}
+
+export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails({
+  isQuoteRefreshLoading = false,
+  hasQuoteRefreshError = false,
+}: {
+  isQuoteRefreshLoading?: boolean
+  hasQuoteRefreshError?: boolean
+}): JSX.Element | null {
   const {
     acceptedDerivedSwapInfo,
     derivedSwapInfo,
@@ -72,17 +92,30 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
   }
 
   const inputChainId = acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT]?.currency.chainId
+  const displayGasFee = isQuoteRefreshLoading
+    ? QUOTE_REFRESH_GAS_FEE
+    : hasQuoteRefreshError
+      ? QUOTE_REFRESH_ERROR_GAS_FEE
+      : gasFee
+  const displayDerivedSwapInfo =
+    isQuoteRefreshLoading || hasQuoteRefreshError ? acceptedDerivedSwapInfo : derivedSwapInfo
 
   // Pull the primary EVM tx from the swapTxContext for the warning-state
   // derivation. Returns undefined for UniswapX / Jupiter, which is what we
   // want — those routings have no editable EVM gas.
   const txRequest = getEVMTxRequest(swapTxContext)
+  const sponsorshipInfo = resolveSponsorshipInfo(swapTxContext)
+  const sponsorMetadata = sponsorshipInfo?.sponsorMetadata
 
   const NetworkCostRowSlot =
-    isGasFeeOverridesEnabled && isCustomGasFlowAvailable && enableCustomGasFeeEntry && inputChainId !== undefined ? (
+    !sponsorMetadata &&
+    isGasFeeOverridesEnabled &&
+    isCustomGasFlowAvailable &&
+    enableCustomGasFeeEntry &&
+    inputChainId !== undefined ? (
       <ReviewNetworkCostRowSlot
         chainId={inputChainId}
-        gasFee={gasFee}
+        gasFee={displayGasFee}
         tx={txRequest}
         includesDelegation={stableIncludesDelegation}
       />
@@ -93,46 +126,22 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
       acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
       autoSlippageTolerance={autoSlippageTolerance}
       customSlippageTolerance={customSlippageTolerance}
-      derivedSwapInfo={derivedSwapInfo}
+      derivedSwapInfo={displayDerivedSwapInfo}
       feeOnTransferProps={feeOnTransferProps}
       tokenWarningProps={tokenWarningProps}
       tokenWarningChecked={tokenWarningChecked}
       setTokenWarningChecked={setTokenWarningChecked}
-      gasFee={gasFee}
+      gasFee={displayGasFee}
       newTradeRequiresAcceptance={newTradeRequiresAcceptance}
       uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={reviewScreenWarning?.warning}
       txSimulationErrors={txSimulationErrors}
       includesDelegation={stableIncludesDelegation}
+      BannerSlot={hasQuoteRefreshError ? <QuoteRefreshErrorRow /> : undefined}
       NetworkCostRowSlot={NetworkCostRowSlot}
+      sponsorshipInfo={sponsorshipInfo}
       onAcceptTrade={onAcceptTrade}
       onShowWarning={onShowWarning}
     />
   )
 })
-
-/**
- * Renders the gas-overrides Network cost row in place of the default
- * `<NetworkFee />`. Extracted as a child so the `useGasFeeFormattedDisplayAmounts`
- * hook can run with a resolved `chainId` (the parent only renders this when
- * `chainId` is defined).
- */
-function ReviewNetworkCostRowSlot({
-  chainId,
-  gasFee,
-  tx,
-  includesDelegation,
-}: {
-  chainId: UniverseChainId
-  gasFee: GasFeeResult
-  tx: ValidatedTransactionRequest | undefined
-  includesDelegation?: boolean
-}): JSX.Element {
-  const { gasFeeFormatted } = useGasFeeFormattedDisplayAmounts({
-    gasFee,
-    chainId,
-    placeholder: '-',
-    includesDelegation,
-  })
-  return <ReviewNetworkCostRow gasFeeUsd={gasFeeFormatted} tx={tx} />
-}

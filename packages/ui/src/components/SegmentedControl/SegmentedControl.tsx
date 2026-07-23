@@ -54,7 +54,7 @@ const OptionsSelector = styled(Tabs.List, {
         borderRadius: '$rounded20',
       },
       large: {
-        height: 42,
+        height: 44,
         gap: '$gap12',
         borderRadius: '$rounded24',
       },
@@ -140,7 +140,7 @@ const OptionButton = styled(Tabs.Tab, {
         px: '$padding8',
       },
       large: {
-        height: '$spacing32',
+        height: '$spacing36',
         py: '$padding8',
         px: '$padding12',
       },

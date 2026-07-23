@@ -1,4 +1,5 @@
-import { PermitMethod, PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
+import { PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 
 export const mockPermit = {
   method: PermitMethod.TypedData,

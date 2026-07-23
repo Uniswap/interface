@@ -3,6 +3,7 @@ import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
 // Module self-reference to enable mocking of internal function calls in tests.
 // TODO: figure out how to rewrite `Keyring.test.ts` to avoid doing this.
+// oxlint-disable-next-line import/no-cycle -- intentional self-reference for test mocking
 import * as CryptoModule from 'wallet/src/features/wallet/Keyring/crypto'
 
 export const PBKDF2_PARAMS: Omit<Pbkdf2Params, 'salt'> & { hash: string } = {

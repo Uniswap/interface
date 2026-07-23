@@ -1,5 +1,5 @@
+import { V1_TRADING_API_PATHS } from '@universe/api'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -387,7 +387,7 @@ test.describe(
       })
 
       test('V3 can increment/decrement price range correctly', async ({ page, graphql }) => {
-        await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
+        await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
         await page.goto(
           buildUrl({
             subPath: '/v3',

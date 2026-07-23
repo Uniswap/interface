@@ -5,6 +5,9 @@
   "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts"],
   "references": [
     {
+      "path": "../../packages/tailwind"
+    },
+    {
       "path": "../../packages/sessions"
     },
     {
@@ -21,6 +24,9 @@
     },
     {
       "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/compliance"
     },
     {
       "path": "../../packages/api"

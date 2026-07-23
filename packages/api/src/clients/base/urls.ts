@@ -13,7 +13,6 @@ export enum TrafficFlows {
   GraphQL = 'graphql',
   Metrics = 'metrics',
   Gating = 'gating',
-  TradingApi = 'trading-api-labs',
   Unitags = 'unitags',
   FOR = 'for',
   Scantastic = 'scantastic',
@@ -61,13 +60,9 @@ export function getServicePrefix(flow?: TrafficFlows): string {
 export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?: string }): string {
   const { flow, postfix } = params ?? {}
   let baseUrl
-  if (flow === TrafficFlows.TradingApi && !isE2eTestEnv()) {
-    // This is an exception that only applies to dev + TAPI where the order of the prefix matters
-    baseUrl = `https://${isDevEnv() ? 'beta.' : ''}trading-api-labs.${getCloudflarePrefix(flow)}.gateway.uniswap.org`
-  }
   // DataApi: use staging entry gateway in dev to avoid CORS issues with beta.gateway.
   // Entry gateway doesn't use the /v2 path prefix, so postfix is intentionally ignored here.
-  else if (flow === TrafficFlows.DataApi && isDevEnv() && !isE2eTestEnv()) {
+  if (flow === TrafficFlows.DataApi && isDevEnv() && !isE2eTestEnv()) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
   } else if (flow === TrafficFlows.DataApi) {
     baseUrl = `https://${getCloudflarePrefix(flow)}.gateway.uniswap.org`
@@ -80,9 +75,12 @@ export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?
   return baseUrl
 }
 
-export function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {
+export function createHelpArticleUrl(resourceId: string, options?: { path?: string; section?: string }): string {
+  const { path = 'articles', section } = options ?? {}
   const product = isMobileApp ? 'mobileApp' : isExtensionApp ? 'extension' : 'web'
-  return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
+  // The fragment must come after the query string so the browser resolves it to a section anchor.
+  const fragment = section ? `#${section}` : ''
+  return `${helpUrl}/${path}/${resourceId}?product_link=${product}${fragment}`
 }
 
 // Entry Gateway API URLs
@@ -93,4 +91,5 @@ export const PROD_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.ba
 // WebSocket URLs
 export const DEV_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-staging.api.uniswap.org'
 export const STAGING_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-staging.api.uniswap.org'
-export const PROD_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-prod.api.uniswap.org'
+// Same host as the session cookie so browsers attach it to the WS handshake; the gateway authenticates and proxies to the websockets service.
+export const PROD_WEBSOCKET_BASE_URL: string = 'wss://entry-gateway.backend-prod.api.uniswap.org/ws'

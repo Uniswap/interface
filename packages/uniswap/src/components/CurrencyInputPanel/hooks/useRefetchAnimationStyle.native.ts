@@ -34,10 +34,11 @@ export function useRefetchAnimationStyle({
   // The component is 'refetching' the full quote when the amount hasn't changed, and there is no indicative UI being displayed.
   const isRefetching = isLoading && amountIsTheSame && noIndicativeUI
 
+  // reanimated 4 returns an AnimatedStyleHandle; cast to the shared cross-platform shape.
   return useAnimatedStyle(
     () => ({
       opacity: isRefetching ? loadingFlexProgress.value : 1,
     }),
     [isRefetching, loadingFlexProgress],
-  )
+  ) as unknown as { opacity: number }
 }

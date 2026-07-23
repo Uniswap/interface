@@ -1,19 +1,35 @@
 /**
  * First-Visit Attribution Capture
  *
- * Captures UTM params, referrer, browser, and country on the first visit.
- * Persists UTM in a cookie (first-touch attribution) and fires an Amplitude
- * `identify` call to set user properties.
+ * Captures UTM params, referrer, browser, and country. Persists UTM and referrer
+ * in cookies (both first- and latest-touch) so attribution survives the anonymous
+ * → authenticated handoff, then fires an Amplitude `identify` to set user
+ * properties.
  *
  * Called from the root loader — runs on every SSR page load but only
- * identifies when there's new attribution data to capture.
+ * identifies when there's a userId and something meaningful to set.
  */
 
 import { getClientCountry } from './client-identity'
 import type { AnalyticsService, UserTraits } from './service'
 import { extractDomain, stripQueryParams } from './url-utils'
 
-const UTM_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'] as const
+/**
+ * The UTM params we capture, in one place: the cookie key (Amplitude-standard
+ * snake_case) plus the camelCase `UserTraits` keys for latest- and first-touch.
+ * Add a row and it flows through capture (`extractUtm`), the cookie merge
+ * (`mergeUtmCookie`), and the identify traits (`utmTraits`) — nothing else to edit.
+ */
+const UTM_PARAMS = [
+  { key: 'utm_source', latestTrait: 'utmSource', initialTrait: 'initialUtmSource' },
+  { key: 'utm_medium', latestTrait: 'utmMedium', initialTrait: 'initialUtmMedium' },
+  { key: 'utm_campaign', latestTrait: 'utmCampaign', initialTrait: 'initialUtmCampaign' },
+  { key: 'utm_content', latestTrait: 'utmContent', initialTrait: 'initialUtmContent' },
+] as const satisfies ReadonlyArray<{
+  key: string
+  latestTrait: keyof UserTraits
+  initialTrait: keyof UserTraits
+}>
 
 export interface AttributionData {
   utmSource?: string
@@ -63,7 +79,10 @@ function parseBrowser(ua: string): string {
 
 interface AttributionTrackerDeps {
   analyticsService: AnalyticsService
+  /** First-touch UTM cookie. */
   cookie: CookieAdapter
+  /** Referrer attribution cookie — bridges the anonymous → authenticated gap, like UTM. */
+  referrerCookie: CookieAdapter
 }
 
 interface AttributionInput {
@@ -71,86 +90,204 @@ interface AttributionInput {
   userId: string | undefined
 }
 
+/** A cross-origin referrer extracted from a request. */
+interface ExternalReferral {
+  referrer: string
+  referringDomain: string
+}
+
+/**
+ * Resolve the real (cross-origin) referrer for a request, or undefined.
+ *
+ * Two things are filtered out — both previously made every user look like they
+ * came from developers.uniswap.org:
+ *  - React Router `.data` loader fetches, whose Referer is always same-origin.
+ *  - A Referer on our own host (internal navigation / post-login redirect).
+ */
+function resolveExternalReferral(url: URL, rawReferrer: string | undefined): ExternalReferral | undefined {
+  if (url.pathname.endsWith('.data') || !rawReferrer) {
+    return undefined
+  }
+  const referringDomain = extractDomain(rawReferrer)
+  if (!referringDomain || referringDomain === url.hostname) {
+    return undefined
+  }
+  return { referrer: stripQueryParams(rawReferrer) ?? rawReferrer, referringDomain }
+}
+
+/**
+ * Merge a fresh external referral into the persisted cookie value: the latest
+ * referral wins for `referrer`/`referring_domain`, while `initial_*` is sticky.
+ */
+function mergeReferrerCookie(
+  external: ExternalReferral,
+  existing: Record<string, string> | null,
+): Record<string, string> {
+  return {
+    referrer: external.referrer,
+    referring_domain: external.referringDomain,
+    initial_referrer: existing?.['initial_referrer'] ?? external.referrer,
+    initial_referring_domain: existing?.['initial_referring_domain'] ?? external.referringDomain,
+  }
+}
+
+/**
+ * Referrer cookie keys → `UserTraits` keys. referrer / referring_domain are
+ * latest-touch (`set` in the service); initial_* are first-touch (`setOnce`).
+ */
+const REFERRER_TRAITS = [
+  { key: 'referrer', trait: 'referrer' },
+  { key: 'referring_domain', trait: 'referringDomain' },
+  { key: 'initial_referrer', trait: 'initialReferrer' },
+  { key: 'initial_referring_domain', trait: 'initialReferringDomain' },
+] as const satisfies ReadonlyArray<{ key: string; trait: keyof UserTraits }>
+
+/**
+ * Referrer user-property traits from the persisted cookie value. All values are
+ * external-only — never a self-referral.
+ */
+function referrerTraits(referrerData: Record<string, string> | null): UserTraits {
+  const traits: UserTraits = {}
+  if (!referrerData) {
+    return traits
+  }
+  for (const { key, trait } of REFERRER_TRAITS) {
+    const value = referrerData[key]
+    if (value) {
+      traits[trait] = value
+    }
+  }
+  return traits
+}
+
+/** Extract UTM params present in the current request's query string. */
+function extractUtm(url: URL): Record<string, string> {
+  const utm: Record<string, string> = {}
+  for (const { key } of UTM_PARAMS) {
+    const value = url.searchParams.get(key)
+    if (value) {
+      utm[key] = value
+    }
+  }
+  return utm
+}
+
+/**
+ * Merge the current request's UTM into the persisted cookie value: the latest
+ * campaign wins for `utm_*`, while `initial_utm_*` is sticky. Legacy cookies that
+ * stored only the bare `utm_*` keys are migrated — that value seeds initial_*.
+ */
+function mergeUtmCookie(
+  current: Record<string, string>,
+  existing: Record<string, string> | null,
+): Record<string, string> {
+  const merged: Record<string, string> = {}
+  for (const { key } of UTM_PARAMS) {
+    const latest = current[key] ?? existing?.[key]
+    if (latest) {
+      merged[key] = latest
+    }
+    const initial = existing?.[`initial_${key}`] ?? existing?.[key] ?? current[key]
+    if (initial) {
+      merged[`initial_${key}`] = initial
+    }
+  }
+  return merged
+}
+
+/**
+ * UTM traits from the persisted cookie value. utm_* are latest-touch (`set` in
+ * the service); initial_utm_* are first-touch (`setOnce`). The initial_* read
+ * falls back to the bare key so legacy first-touch-only cookies still resolve.
+ */
+function utmTraits(utm: Record<string, string> | null): UserTraits {
+  const traits: UserTraits = {}
+  if (!utm) {
+    return traits
+  }
+  for (const { key, latestTrait, initialTrait } of UTM_PARAMS) {
+    const latest = utm[key]
+    if (latest) {
+      traits[latestTrait] = latest
+    }
+    const initial = utm[`initial_${key}`] ?? utm[key]
+    if (initial) {
+      traits[initialTrait] = initial
+    }
+  }
+  return traits
+}
+
 /**
  * Create an attribution tracker with the analytics service injected.
  *
- * The boundary (root loader) owns the wiring; the returned function
- * only takes per-request input. Returns a Set-Cookie header for UTM
- * persistence on first-touch, and fires an Amplitude identify call.
+ * The boundary (root loader) owns the wiring; the returned function only takes
+ * per-request input. It persists first-touch UTM and first/latest-touch referrer
+ * cookies — so attribution survives the anonymous → authenticated handoff — and,
+ * once a userId is known, fires an Amplitude identify call.
  */
-export function createAttributionTracker({ analyticsService, cookie }: AttributionTrackerDeps) {
-  return async ({ request, userId }: AttributionInput): Promise<{ setCookieHeader: string | null }> => {
+export function createAttributionTracker({ analyticsService, cookie, referrerCookie }: AttributionTrackerDeps) {
+  return async ({
+    request,
+    userId,
+  }: AttributionInput): Promise<{ setCookieHeader: string | null; referrerCookieHeader: string | null }> => {
     const url = new URL(request.url)
-    const ua = request.headers.get('user-agent') ?? ''
-    const referrer = request.headers.get('Referer') ?? undefined
+    const cookieHeader = request.headers.get('Cookie')
 
-    // Extract UTM from query params
-    const utmData: Record<string, string> = {}
-    for (const param of UTM_PARAMS) {
-      const value = url.searchParams.get(param)
-      if (value) {
-        utmData[param] = value
+    // --- UTM (first- and latest-touch) ---
+    const currentUtm = extractUtm(url)
+    const existingUtm = await cookie.parse(cookieHeader)
+    const hasNewUtm = Object.keys(currentUtm).length > 0
+    // Update the latest campaign (keeping the sticky first-touch) whenever new
+    // params arrive; persist even for anonymous visitors so it survives login.
+    const mergedUtm = hasNewUtm ? mergeUtmCookie(currentUtm, existingUtm) : existingUtm
+    const setCookieHeader = hasNewUtm ? await cookie.serialize(mergedUtm ?? {}) : null
+
+    // --- Referrer (first- and latest-touch) ---
+    const existingReferrer = await referrerCookie.parse(cookieHeader)
+    const external = resolveExternalReferral(url, request.headers.get('Referer') ?? undefined)
+
+    // A fresh external referral wins; otherwise fall back to the persisted cookie
+    // (which, like UTM, survives the anonymous → authenticated handoff).
+    let referrerData = existingReferrer
+    let referrerCookieHeader: string | null = null
+    if (external) {
+      const next = mergeReferrerCookie(external, existingReferrer)
+      referrerData = next
+      // Re-issue the cookie only when the value actually changed.
+      const changed =
+        existingReferrer?.['referrer'] !== next['referrer'] ||
+        existingReferrer?.['initial_referring_domain'] !== next['initial_referring_domain']
+      if (changed) {
+        referrerCookieHeader = await referrerCookie.serialize(next)
       }
     }
 
-    const hasUtm = Object.keys(utmData).length > 0
-    const existingUtm = await cookie.parse(request.headers.get('Cookie'))
-    const isFirstUtm = hasUtm && !existingUtm
-
-    // Persist the first-touch UTM cookie even for anonymous visitors so
-    // attribution survives the redirect through signup/login into the dashboard.
-    const setCookieHeader = isFirstUtm ? await cookie.serialize(utmData) : null
-
     // Amplitude identify requires a userId — skip if we don't have one yet.
-    // The cookie above still captures first-touch; a later authenticated request
-    // picks it up via `existingUtm` below.
+    // The cookies above still capture attribution; a later authenticated request
+    // picks it up via `existingUtm` / `existingReferrer`.
     if (!userId) {
-      return { setCookieHeader }
+      return { setCookieHeader, referrerCookieHeader }
     }
 
-    // Build traits — setOnce in the service means these won't overwrite
-    const traits: UserTraits = {}
+    const traits: UserTraits = {
+      ...referrerTraits(referrerData),
+      ...utmTraits(mergedUtm),
+    }
     const country = getClientCountry(request)
-    const browser = parseBrowser(ua)
-
+    const browser = parseBrowser(request.headers.get('user-agent') ?? '')
     if (browser !== 'Other') {
       traits.browser = browser
     }
     if (country) {
       traits.country = country
     }
-    if (referrer) {
-      traits.referrer = stripQueryParams(referrer)
-      traits.referringDomain = extractDomain(referrer)
-    }
-
-    // Prefer URL params; fall back to the cookie for users who arrived
-    // anonymously and are now authenticated. setOnce on the service side
-    // guarantees we never overwrite an earlier first-touch value.
-    const utmSource = utmData['utm_source'] ?? existingUtm?.['utm_source']
-    const utmMedium = utmData['utm_medium'] ?? existingUtm?.['utm_medium']
-    const utmCampaign = utmData['utm_campaign'] ?? existingUtm?.['utm_campaign']
-    const utmContent = utmData['utm_content'] ?? existingUtm?.['utm_content']
-
-    if (utmSource) {
-      traits.utmSource = utmSource
-    }
-    if (utmMedium) {
-      traits.utmMedium = utmMedium
-    }
-    if (utmCampaign) {
-      traits.utmCampaign = utmCampaign
-    }
-    if (utmContent) {
-      traits.utmContent = utmContent
-    }
 
     // Only identify if we have something meaningful to set
-    const hasTraits = Object.keys(traits).length > 0
-    if (hasTraits) {
+    if (Object.keys(traits).length > 0) {
       analyticsService.identify(userId, traits)
     }
 
-    return { setCookieHeader }
+    return { setCookieHeader, referrerCookieHeader }
   }
 }

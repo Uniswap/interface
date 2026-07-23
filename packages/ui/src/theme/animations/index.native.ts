@@ -73,6 +73,13 @@ export const animations = createAnimations({
     mass: 1.2,
     stiffness: 250,
   },
+  // Same easing curve as `quick` (web cubic-bezier(0.25, 0.46, 0.45, 0.94)) with a 300ms duration,
+  // for transitions where the default `quick` feels too snappy.
+  quickLong: {
+    type: 'timing',
+    duration: 300,
+    easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+  },
   quicker: {
     type: 'spring',
     damping: 18,

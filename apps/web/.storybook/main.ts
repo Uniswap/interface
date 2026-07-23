@@ -2,6 +2,7 @@ import { dirname, join, resolve } from 'path'
 import type { StorybookConfig } from '@storybook/react-webpack5'
 import TerserPlugin from 'terser-webpack-plugin'
 import { DefinePlugin } from 'webpack'
+import { globals as testEnvGlobals } from '../../../config/vitest-presets/vitest/globals.js'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -39,7 +40,13 @@ const config: StorybookConfig = {
 
     config.plugins.push(
       new DefinePlugin({
+        // Inject the shared test/dev config placeholders so getConfig() resolves in the
+        // Storybook bundle. Mirrors the vitest test env (config/vitest-presets/vitest/globals.js).
+        ...Object.fromEntries(
+          Object.entries(testEnvGlobals).map(([key, value]) => [`process.env.${key}`, JSON.stringify(String(value))]),
+        ),
         __DEV__: process.env.NODE_ENV === 'development',
+        // Keep the explicit APP_ID after the spread so the extension/web toggle wins.
         'process.env.APP_ID': JSON.stringify(process.env.STORYBOOK_EXTENSION === 'true' ? 'extension' : 'web'),
       }),
     )

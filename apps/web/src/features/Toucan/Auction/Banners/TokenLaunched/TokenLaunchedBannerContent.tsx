@@ -19,6 +19,15 @@ interface TokenLaunchedBannerContentProps {
   auctionTokenDecimals: number
   accentColor: string
   currentTickValue?: number
+  isTradeAvailable: boolean
+  tradeAvailabilityDurationRemaining: string | undefined
+  // Redeemable virtual tokens display the real token's FDV from indexed market data rather than
+  // computing it from currentTickValue x totalSupply (which would use the virtual token's supply).
+  // `number` → show it; `null` → redeem mode but FDV unavailable, show "--"; `undefined` → compute.
+  fdvUsdOverride?: number | null
+  // TDP address for the "Trade now" link. Defaults to the auctioned token; set to the real token
+  // when the auctioned token is a redeemable virtual token.
+  tokenDetailsAddress?: string
 }
 
 export function TokenLaunchedBannerContent({
@@ -27,6 +36,10 @@ export function TokenLaunchedBannerContent({
   auctionTokenDecimals,
   accentColor,
   currentTickValue,
+  isTradeAvailable,
+  tradeAvailabilityDurationRemaining,
+  fdvUsdOverride,
+  tokenDetailsAddress,
 }: TokenLaunchedBannerContentProps) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -34,6 +47,9 @@ export function TokenLaunchedBannerContent({
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
 
   const displayValue = useMemo(() => {
+    if (fdvUsdOverride !== undefined) {
+      return fdvUsdOverride === null ? '--' : convertFiatAmountFormatted(fdvUsdOverride, NumberType.FiatTokenStats)
+    }
     if (currentTickValue === undefined) {
       return '--'
     }
@@ -53,20 +69,34 @@ export function TokenLaunchedBannerContent({
     }
 
     return convertFiatAmountFormatted(currentFdvUsd, NumberType.FiatTokenStats)
-  }, [auctionTokenDecimals, convertFiatAmountFormatted, currentTickValue, totalSupply])
+  }, [auctionTokenDecimals, convertFiatAmountFormatted, currentTickValue, fdvUsdOverride, totalSupply])
 
   const onPress = useCallback(() => {
     if (!auctionDetails) {
       return
     }
     const tokenDetailsURL = getTokenDetailsURL({
-      address: auctionDetails.tokenAddress,
+      address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
       chain: toGraphQLChain(auctionDetails.chainId),
     })
     navigate(tokenDetailsURL)
-  }, [auctionDetails, navigate])
+  }, [auctionDetails, navigate, tokenDetailsAddress])
 
-  const isDisabled = !auctionDetails
+  const canPress = Boolean(auctionDetails && isTradeAvailable)
+  const isCountingDown = !isTradeAvailable && Boolean(tradeAvailabilityDurationRemaining)
+  // Only show the second line when it carries something actionable or temporal: the "Trade now" CTA
+  // once trading is live, or the countdown while it isn't. Without a countdown the status line stands
+  // alone ("Available to trade soon") so we don't stack a dangling label over a bare "Soon".
+  const showActionRow = isTradeAvailable || isCountingDown
+
+  let statusLabel: string
+  if (isTradeAvailable) {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTrade', { tokenName })
+  } else if (isCountingDown) {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTradeIn')
+  } else {
+    statusLabel = t('toucan.auction.tokenLaunchedBanner.availableToTradeSoon')
+  }
 
   return (
     <Flex width="100%" row justifyContent="space-between" alignItems="center" position="relative" zIndex={1}>
@@ -75,18 +105,24 @@ export function TokenLaunchedBannerContent({
         <PulsingIndicatorDot color={accentColor} />
         <Flex>
           <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.tokenLaunchedBanner.availableToTrade', { tokenName })}
+            {statusLabel}
           </Text>
-          <Trace logPress element={ElementName.AuctionTokenTradeNowButton}>
-            <TouchableArea onPress={onPress} disabled={isDisabled}>
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="buttonLabel2" color="$neutral1">
-                  {t('toucan.auction.tokenLaunchedBanner.tradeNow')}
-                </Text>
-                <ArrowRight size="$icon.16" color="$neutral1" />
-              </Flex>
-            </TouchableArea>
-          </Trace>
+          {showActionRow && (
+            <Trace logPress element={ElementName.AuctionTokenTradeNowButton}>
+              <TouchableArea onPress={canPress ? onPress : undefined} cursor={canPress ? 'pointer' : 'default'}>
+                <Flex row alignItems="center" gap="$spacing4">
+                  <Text variant="buttonLabel2" color="$neutral1">
+                    {isTradeAvailable
+                      ? t('toucan.auction.tokenLaunchedBanner.tradeNow')
+                      : t('toucan.auction.tokenLaunchedBanner.tradeAvailableIn', {
+                          time: tradeAvailabilityDurationRemaining ?? t('common.unknown'),
+                        })}
+                  </Text>
+                  {isTradeAvailable && <ArrowRight size="$icon.16" color="$neutral1" />}
+                </Flex>
+              </TouchableArea>
+            </Trace>
+          )}
         </Flex>
       </Flex>
 

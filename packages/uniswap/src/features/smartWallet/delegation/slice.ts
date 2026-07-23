@@ -37,10 +37,10 @@ export const delegationListenerMiddleware = createListenerMiddleware<{ delegatio
 // Track changes to the delegated state and update the user property
 delegationListenerMiddleware.startListening({
   actionCreator: updateDelegatedState,
-  effect: (action, { getOriginalState, getState }) => {
+  effect: (action, listenerApi) => {
     getHandleOnUpdateDelegatedState({
-      getOriginalState,
-      getState,
+      getOriginalState: () => listenerApi.getOriginalState(),
+      getState: () => listenerApi.getState(),
       onDelegationDetected: handleDelegationDetected,
       onNewDelegateState: handleNewDelegateState,
       logger: getDevLogger(),
@@ -51,9 +51,9 @@ delegationListenerMiddleware.startListening({
 // Listen for active chain changes to check for delegations on that chain
 delegationListenerMiddleware.startListening({
   actionCreator: setActiveChainId,
-  effect: (action, { getState }) => {
+  effect: (action, listenerApi) => {
     getHandleOnSetActiveChainId({
-      getState,
+      getState: () => listenerApi.getState(),
       onDelegationDetected: handleDelegationDetected,
       logger: getDevLogger(),
     })({ action })

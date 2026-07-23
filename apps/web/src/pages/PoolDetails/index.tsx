@@ -15,6 +15,7 @@ import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfall
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
+import { usePoolLpFeeFraction } from '~/appGraphql/data/pools/usePoolLpFeeFraction'
 import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
@@ -24,7 +25,6 @@ import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
 import { OrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
-import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
 import { PoolDetailsLink } from '~/pages/PoolDetails/components/PoolDetailsLink'
@@ -38,7 +38,8 @@ import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const PageWrapper = styled(Flex, {
   row: true,
-  py: 48,
+  pt: 24,
+  pb: 48,
   px: 40,
   justifyContent: 'center',
   width: '100%',
@@ -130,7 +131,6 @@ export function PoolDetailsPage() {
     protocolVersion: poolData?.protocolVersion,
   })
 
-  // oxlint-disable react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
   const waterfallDefault = useMemo(() => {
     if (!unwrappedTokens[0] || !unwrappedTokens[1]) {
       return false
@@ -138,8 +138,8 @@ export function PoolDetailsPage() {
     const currA = gqlToCurrency(unwrappedTokens[0])
     const currB = gqlToCurrency(unwrappedTokens[1])
     return Boolean(currA && currB && shouldReverseForWaterfall(currA, currB))
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
   }, [poolData?.token0, poolData?.token1, chainInfo?.id, poolData?.protocolVersion])
-  // oxlint-enable react-hooks/exhaustive-deps
 
   const [userFlipCount, setUserFlipCount] = useState(0)
   const toggleReversed = () => setUserFlipCount((n) => n + 1)
@@ -148,14 +148,21 @@ export function PoolDetailsPage() {
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
+  const lpFeeFraction = usePoolLpFeeFraction({
+    chainId: chainInfo?.id,
+    poolAddress: poolData?.idOrAddress,
+    protocolVersion: parseRestProtocolVersion(poolData?.protocolVersion),
+    feeTier: poolData?.feeTier?.feeAmount,
+  })
   const poolApr = useMemo(
     () =>
       calculateApr({
         volume24h: poolData?.volumeUSD24H,
         tvl: poolData?.tvlUSD,
         feeTier: poolData?.feeTier?.feeAmount,
+        lpFeeFraction,
       }),
-    [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
+    [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier, lpFeeFraction],
   )
   const [orderBookCurrencyA, orderBookCurrencyB] = useMemo(
     () => [
@@ -222,7 +229,7 @@ export function PoolDetailsPage() {
       token1={color1 !== colors.accent1.val ? color1 : undefined}
     >
       <Helmet>
-        <title>{getPoolDetailPageTitle(t, poolData)}</title>
+        <title>{getPoolDetailPageTitle(t, { token0, token1 })}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
@@ -282,28 +289,10 @@ export function PoolDetailsPage() {
             gap="$spacing24"
             width={360}
             flexShrink={0}
-            $lg={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
-            $xl={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
+            $lg={{ width: '100%', mt: 44, minWidth: 'unset' }}
+            $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}
           >
-            {showOrderBook &&
-              poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V2 &&
-              poolData?.feeTier &&
-              orderBookCurrencyA &&
-              orderBookCurrencyB && (
-                <OrderBook
-                  tokenA={orderBookCurrencyA}
-                  tokenB={orderBookCurrencyB}
-                  feeTier={Number(poolData.feeTier.feeAmount)}
-                  isReversed={isReversed}
-                  chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
-                  version={parseRestProtocolVersion(poolData.protocolVersion) ?? RestProtocolVersion.V3}
-                  hooks={poolData.hookAddress}
-                  poolId={poolData.idOrAddress}
-                  height={356}
-                  onLoadingChange={handleOrderBookLoadingChange}
-                />
-              )}
-            <Flex $lg={{ marginTop: -24 }} $xl={{ marginTop: -24 }} min-height="fit-content">
+            <Flex gap="$spacing24" min-height="fit-content">
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}
                 poolIdOrAddress={poolAddress}
@@ -316,13 +305,25 @@ export function PoolDetailsPage() {
                 protocolVersion={poolData?.protocolVersion}
                 loading={loading}
               />
+              {showOrderBook &&
+                poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V2 &&
+                poolData?.feeTier &&
+                orderBookCurrencyA &&
+                orderBookCurrencyB && (
+                  <OrderBook
+                    tokenA={orderBookCurrencyA}
+                    tokenB={orderBookCurrencyB}
+                    feeTier={Number(poolData.feeTier.feeAmount)}
+                    isReversed={isReversed}
+                    chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
+                    version={parseRestProtocolVersion(poolData.protocolVersion) ?? RestProtocolVersion.V3}
+                    hooks={poolData.hookAddress}
+                    poolId={poolData.idOrAddress}
+                    height={356}
+                    onLoadingChange={handleOrderBookLoadingChange}
+                  />
+                )}
             </Flex>
-            {poolData && (
-              <PoolDetailsApr
-                poolApr={poolApr}
-                rewardsApr={isLPIncentivesEnabled ? poolData.rewardsCampaign?.boostedApr : undefined}
-              />
-            )}
             {showRewardsDistribution && (
               <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
             )}
@@ -333,6 +334,9 @@ export function PoolDetailsPage() {
               tokenBColor={color1}
               chainId={chainInfo.id}
               loading={loading}
+              poolApr={poolApr}
+              lpFeeFraction={lpFeeFraction}
+              rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
             />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>

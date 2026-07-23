@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 import { Flex, styled } from 'ui/src'
 import { Snowflake } from 'ui/src/components/icons'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -140,7 +141,7 @@ function SnowflakeAnimated({ flake, fallDistance, totalRotation, onComplete }: S
       },
       (finished) => {
         if (finished) {
-          runOnJS(stableOnComplete)()
+          scheduleOnRN(stableOnComplete)
         }
       },
     )

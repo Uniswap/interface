@@ -12,6 +12,7 @@ import {
 } from 'viem'
 import {
   buildFlashbotsUrl,
+  DEFAULT_CALLDATA_HINTS_ENABLED,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
@@ -31,7 +32,7 @@ export function createFlashbotsRpcClient({
   chain,
   signerInfo,
   refundPercent = FLASHBOTS_DEFAULT_REFUND_PERCENT,
-  calldataHintsEnabled,
+  calldataHintsEnabled = DEFAULT_CALLDATA_HINTS_ENABLED,
   areAddressesEqual,
   observer,
 }: {
@@ -80,11 +81,13 @@ export function createFlashbotsRpcClient({
 export function createFlashbotsTransport({
   signerInfo,
   refundPercent = FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  calldataHintsEnabled = DEFAULT_CALLDATA_HINTS_ENABLED,
   url,
   areAddressesEqual,
 }: {
   signerInfo?: SignerInfo
   refundPercent?: number
+  calldataHintsEnabled?: boolean
   url?: string
   areAddressesEqual: (a: string, b: string) => boolean
 }): Transport {
@@ -94,6 +97,7 @@ export function createFlashbotsTransport({
     buildFlashbotsUrl({
       address: signerInfo?.address,
       refundPercent,
+      calldataHintsEnabled,
     })
 
   // Request ID generator

@@ -13,24 +13,33 @@ import {
   SwapReviewScreen,
   SwapReviewScreenProviders,
 } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 export function CurrentScreen({
   settings,
   onSubmitSwap,
   tokenColor,
+  onCurrencyPanelsLayout,
 }: {
   settings: TransactionSettingConfig[]
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
+  onCurrencyPanelsLayout?: (height: number) => void
 }): JSX.Element {
   const { screen } = useTransactionModalContext()
 
+  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
   const { onPrev } = useSwapOnPrevious()
 
   return (
     <>
       <Trace logImpression section={SectionName.SwapForm}>
-        <SwapFormScreen settings={settings} hideContent={false} tokenColor={tokenColor} />
+        <SwapFormScreen
+          settings={settings}
+          hideContent={false}
+          tokenColor={tokenColor}
+          onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+        />
       </Trace>
 
       {/*
@@ -42,6 +51,7 @@ export function CurrentScreen({
           height="auto"
           alignment={isWebApp ? 'center' : 'top'}
           isModalOpen={screen === TransactionScreen.Review}
+          isDismissible={!isSubmitting}
           name={ModalName.SwapReview}
           padding="$spacing12"
           gap={0}

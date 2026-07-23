@@ -1,7 +1,10 @@
 import { Anchor, styled } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { TableText } from '~/components/Table/shared/TableText'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
+import { useSyncedNowMs } from '~/components/Table/utils/useSyncedNowMs'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
@@ -50,11 +53,19 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
     .replace(/\s(am|pm)/, '$1')
 
   const abbreviatedTime = useAbbreviatedTimeString(timestamp * 1000)
+  const now = useSyncedNowMs()
+  const elapsedSeconds = Math.floor((now - timestamp * ONE_SECOND_MS) / ONE_SECOND_MS)
 
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <TableText>{abbreviatedTime}</TableText>
+        <AnimatedNumber
+          value={abbreviatedTime}
+          numericValue={elapsedSeconds}
+          textVariant="$body2"
+          color="$neutral1"
+          forceDirection={AnimatedNumberDirection.UP}
+        />
       </MouseoverTooltip>
     </StyledTimestampRow>
   )

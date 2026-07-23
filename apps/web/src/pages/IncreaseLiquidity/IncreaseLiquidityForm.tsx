@@ -94,7 +94,7 @@ export function IncreaseLiquidityForm() {
     return (
       <Flex row justifyContent="space-between" alignItems="center">
         <Text variant="body3" color="$neutral2">
-          {t('pool.addAs', { nativeWrappedSymbol: nativeCurrency.symbol })}
+          {t('pool.addAs', { nativeWrappedSymbol: nativeCurrency.symbol ?? t('common.token') })}
         </Text>
         <Switch
           id="add-as-weth"
@@ -147,7 +147,7 @@ export function IncreaseLiquidityForm() {
         <ErrorCallout
           errorMessage={true}
           title={t('token.safety.warning.fotLow.title')}
-          description={t('position.increase.fot', { token: fotErrorToken.currency.symbol })}
+          description={t('position.increase.fot', { token: fotErrorToken.currency.symbol ?? t('common.token') })}
         />
       )}
       <ErrorCallout errorMessage={dataFetchingError} onPress={refetch} />
